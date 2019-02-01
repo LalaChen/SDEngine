@@ -1,0 +1,14 @@
+*.user
+*.obj
+*.aps
+*.pch
+*.ncb
+*.suo
+*.bak
+*.cache
+*.ilk
+*.log
+*.tlog
+.vs/
+*.idb
+vc*.pdb
