@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <SDEngineRootDir>D:\Project\SDEngine\</SDEngineRootDir>
+    <SDIncludeDirs>$(SDEngineRootDir)SourceCode\include\;</SDIncludeDirs>
+    <SDLibraryDirs>$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration);</SDLibraryDirs>
+    <SDLibrary>SDEngine.lib</SDLibrary>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LibraryPath>$(SDLibraryDirs);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SDIncludeDirs);</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SDIncludeDirs);</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="SDEngineRootDir">
+      <Value>$(SDEngineRootDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SDIncludeDirs">
+      <Value>$(SDIncludeDirs)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SDLibraryDirs">
+      <Value>$(SDLibraryDirs)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SDLibrary">
+      <Value>$(SDLibrary)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
