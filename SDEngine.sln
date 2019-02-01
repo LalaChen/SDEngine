@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28306.52
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{CBFA495C-9FB0-4FD0-B48C-A6533BC886D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{4A218E84-8513-4EB5-B290-3575A336115E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{96896D9C-1D07-4DBE-AD92-28BCC2DEF314}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDEngine", "LibraryProject\Windows\SDEngine\SDEngine.vcxproj", "{91519087-B1B1-4962-A0A3-4C1E8CFF40CE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest_GraphicsAPI", "UnitTest_GraphicsAPI", "{72FBC1AC-3F2F-4B5D-A425-64ECA447220B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{DCDEACEA-3D61-482F-8B61-BB4414C5ED45}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{A2CC3CA5-57BE-429A-A662-1EF28ACF93D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE}.Debug|x64.ActiveCfg = Debug|x64
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE}.Debug|x64.Build.0 = Debug|x64
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE}.Debug|x86.ActiveCfg = Debug|Win32
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE}.Debug|x86.Build.0 = Debug|Win32
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE}.Release|x64.ActiveCfg = Release|x64
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE}.Release|x64.Build.0 = Release|x64
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE}.Release|x86.ActiveCfg = Release|Win32
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4A218E84-8513-4EB5-B290-3575A336115E} = {CBFA495C-9FB0-4FD0-B48C-A6533BC886D4}
+		{96896D9C-1D07-4DBE-AD92-28BCC2DEF314} = {CBFA495C-9FB0-4FD0-B48C-A6533BC886D4}
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE} = {4A218E84-8513-4EB5-B290-3575A336115E}
+		{DCDEACEA-3D61-482F-8B61-BB4414C5ED45} = {72FBC1AC-3F2F-4B5D-A425-64ECA447220B}
+		{A2CC3CA5-57BE-429A-A662-1EF28ACF93D6} = {72FBC1AC-3F2F-4B5D-A425-64ECA447220B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7720D377-96CE-4A38-9F57-91348F8F4682}
+	EndGlobalSection
+EndGlobal
