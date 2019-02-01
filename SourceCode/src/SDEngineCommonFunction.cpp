@@ -30,7 +30,7 @@ SOFTWARE.
 #include <windows.h>
 #endif
 
-#include "../include/SDEngineCommonFunction.h"
+#include "SDEngineCommonFunction.h"
 
 //---------------------------- start of namespace SDEngine ----------------------------
 namespace SDE
@@ -39,46 +39,42 @@ namespace SDE
 namespace Basic
 {
 
-std::string StringFormat(const std::string &i_fmt_str, ...)
+std::string StringFormat(const char *i_fmt_str, ...)
 {
-	const char * const fmt_str_cstr = i_fmt_str.c_str();
-	int final_n, n = ((int)i_fmt_str.size()) * 2; /* Reserve two times as much as the length of the fmt_str */
-	std::string str;
-	std::unique_ptr<char[]> formatted;
+	int final_n, n = static_cast<int>(strlen(i_fmt_str) * 2); /* Reserve two times as much as the length of the fmt_str */
+	std::vector<char> buffer;
 	va_list ap;
 	while (1) {
-		formatted.reset(new char[n]); /* Wrap the plain char array into the unique_ptr */
-		strcpy_s(&formatted[0], n, i_fmt_str.c_str());
-		va_start(ap, fmt_str_cstr);
-		final_n = vsnprintf(&formatted[0], n, i_fmt_str.c_str(), ap);
+		buffer.resize(n); /* Wrap the plain char array into the unique_ptr */
+		strcpy_s(&buffer[0], n, i_fmt_str);
+		va_start(ap, i_fmt_str);
+		final_n = vsnprintf(&buffer[0], n, i_fmt_str, ap);
 		va_end(ap);
 		if (final_n < 0 || final_n >= n)
 			n += abs(final_n - n + 1);
 		else
 			break;
 	}
-	return std::string(formatted.get());
+	return std::string(&buffer[0]);
 }
 
-std::wstring WStringFormat(const std::string &i_fmt_str, ...)
+std::wstring WStringFormat(const char *i_fmt_str, ...)
 {
-	const char * const fmt_str_cstr = i_fmt_str.c_str();
-	int final_n, n = ((int)i_fmt_str.size()) * 2; /* Reserve two times as much as the length of the fmt_str */
-	std::string str;
-	std::unique_ptr<char[]> formatted;
+	int final_n, n = static_cast<int>(strlen(i_fmt_str) * 2); /* Reserve two times as much as the length of the i_fmt_str */
+	std::vector<char> buffer;
 	va_list ap;
 	while (1) {
-		formatted.reset(new char[n]); /* Wrap the plain char array into the unique_ptr */
-		strcpy_s(&formatted[0], n, i_fmt_str.c_str());
-		va_start(ap, fmt_str_cstr);
-		final_n = vsnprintf(&formatted[0], n, i_fmt_str.c_str(), ap);
+		buffer.resize(n); /* Wrap the plain char array into the unique_ptr */
+		strcpy_s(&buffer[0], n, i_fmt_str);
+		va_start(ap, i_fmt_str);
+		final_n = vsnprintf(&buffer[0], n, i_fmt_str, ap);
 		va_end(ap);
 		if (final_n < 0 || final_n >= n)
 			n += abs(final_n - n + 1);
 		else
 			break;
 	}
-	return string_to_wstring(std::string(formatted.get()));
+	return string_to_wstring(std::string(&buffer[0]));
 }
 
 void StringSplit(const std::string &i_s, char i_delim, std::vector<std::string> &io_elems)

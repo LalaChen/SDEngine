@@ -48,19 +48,19 @@ namespace SDE
 namespace Basic
 {
 
-/*! \fn SDENGINE_API std::string StringFormat(const std::string &i_fmt_str, ...);
-    \param [in] i_fmt_str The format string.
+/*! \fn SDENGINE_API std::string StringFormat(const char *i_fmt_str, ...);
+    \param [in] const char *i_fmt_str; The format string.
     \brief Function StringFormat is used to composed string by some variables and return the result. It's just like sprintf. 
 	       The usage : std::string str = string_format("Number%d".int_var);
 */
-SDENGINE_API std::string StringFormat(const std::string &i_fmt_str, ...);
+SDENGINE_API std::string StringFormat(const char *i_fmt_str, ...);
 
 /*! \fn SDENGINE_API std::wstring WStringFormat(const std::string &i_fmt_str, ...);
 	\param [in] i_fmt_str The format string.
     \brief Function WStringFormat is used to composed string by some variables. It's just like sprintf and then output a wide char string.
            The usage : std::wstring str = wstring_format("Number%d".int_var);
 */
-SDENGINE_API std::wstring WStringFormat(const std::string &i_fmt_str, ...);
+SDENGINE_API std::wstring WStringFormat(const char *i_fmt_str, ...);
 
 /*! \fn SDENGINE_API void StringSplit(const std::string &i_s, char i_delim, std::vector<std::string> &io_elems)
     \brief Function StringSplit is used to split string to many toke by symbol i_delim.
