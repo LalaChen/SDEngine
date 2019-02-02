@@ -45,11 +45,10 @@ typedef int CodePageID;
 */
 typedef char Byte;
 
-/*! \typedef SDByte* SDBytePtr;
+/*! \typedef Byte* BytePtr;
 	\brief represent byte array pointer.
 */
 typedef Byte* BytePtr;
-
 
 /*! \typedef unsigned char UByte;
 	\brief represent byte.
@@ -68,7 +67,7 @@ namespace Graphics
 {
 
 /*! \typedef unsigned int GLCode; 
-    \brief represent GL define value.
+    \brief represent Open GL define value.
 */
 typedef unsigned int GLCode;
 
@@ -82,20 +81,30 @@ typedef std::string UniformVarName;
 */
 typedef unsigned int VertexAttribLocation;
 
-/*! \typedef unsigned int BufferObjectID;
-    \brief Buffer object ID.
+/*! \typedef uint64_t BufferHandle;
+    \brief Buffer object handle. In opengl, it means buffer object ID. In Vulkan, it means buffer handle.
 */
-typedef unsigned int BufferObjectID;
+typedef uint64_t BufferHandle;
 
-/*! \typedef unsigned int ShaderID;
-    \brief Represent all ID of all kind of shader.
+/*! \typedef unsigned int ShaderHandle;
+    \brief Represent all hande of all kind of shader. In opengl, it means shader ID. In Vulkan, it means shader module handle.
 */
-typedef unsigned int ShaderID;
+typedef uint64_t ShaderHandle;
 
-/*! \typedef unsigned int ShaderProgramID;
-	\brief Represent all ID of shader program.
+/*! \typedef unsigned int ShaderProgramHandle;
+	\brief Represent all ID of shader program. In opengl, it means shader ID. In Vulkan, it means shader module handle.
 */
-typedef unsigned int ShaderProgramID;
+typedef uint64_t ShaderProgramHandle;
+
+/*! \typedef uint64_t FrameBufferHandle; In opengl, it means shader ID. In Vulkan, it means framebuffer handle.
+	\brief Frame buffer object ID.
+*/
+typedef uint64_t FrameBufferHandle;
+
+/*! \typedef uint64_t TextureHandle;
+	\brief UI vertex index.
+*/
+typedef uint64_t TextureHandle;
 
 /*! \typedef int UniformLocation;
 	\brief Represent uniform location in shader.
@@ -106,11 +115,6 @@ typedef int UniformLocation;
 	\brief Represent active texture ID.
 */
 typedef int ActiveTextureID;
-
-/*! \typedef unsigned int FrameBufferObjectID;
-	\brief Frame buffer object ID.
-*/
-typedef unsigned int FrameBufferObjectID;
 
 /*! \typedef unsigned int ColorAttachmentID;
     \brief color attachment ID.
@@ -127,10 +131,6 @@ typedef unsigned short USVertexIndex;
 */
 typedef unsigned int UIVertexIndex;
 
-/*! \typedef unsigned int TextureID;
-	\brief UI vertex index.
-*/
-typedef unsigned int TextureID;
 //--- Image Related
 /*! \typedef typedef unsigned char* ImageBufferAddr;
     \brief Like void*

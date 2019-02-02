@@ -49,13 +49,13 @@ namespace Basic
 {
 
 /*! \fn SDENGINE_API std::string StringFormat(const char *i_fmt_str, ...);
-    \param [in] const char *i_fmt_str; The format string.
+    \param [in] i_fmt_str; The format string.
     \brief Function StringFormat is used to composed string by some variables and return the result. It's just like sprintf. 
 	       The usage : std::string str = string_format("Number%d".int_var);
 */
 SDENGINE_API std::string StringFormat(const char *i_fmt_str, ...);
 
-/*! \fn SDENGINE_API std::wstring WStringFormat(const std::string &i_fmt_str, ...);
+/*! \fn SDENGINE_API std::wstring WStringFormat(const char *i_fmt_str, ...);
 	\param [in] i_fmt_str The format string.
     \brief Function WStringFormat is used to composed string by some variables. It's just like sprintf and then output a wide char string.
            The usage : std::wstring str = wstring_format("Number%d".int_var);
@@ -87,7 +87,7 @@ SDENGINE_API std::vector<std::string> StringSplit(const std::string &i_s, char i
 	\param [inout] io_path The ref to save path result.
 	\param [inout] io_name The ref to save name result.
 */
-SDENGINE_API void SpliteFilePathAndName(const std::string& i_path, std::string &io_path, std::string &io_name);
+SDENGINE_API void SpliteFilePathAndName(const std::string &i_path, std::string &io_path, std::string &io_name);
 
 /*! \fn SDENGINE_API std::wstring string_to_wstring(const std::string& i_str, CodePageID i_code_page_id = 0)
     \brief Function string_to_wstring is used to convert std::string to std::wstring with codepage.
@@ -95,7 +95,7 @@ SDENGINE_API void SpliteFilePathAndName(const std::string& i_path, std::string &
     \param [in] i_str The target string
 	\param [in] i_code_page_id Target CodePage(default 0 (system default)).
 */
-SDENGINE_API std::wstring string_to_wstring(const std::string& i_str, CodePageID i_code_page_id = 0);
+SDENGINE_API std::wstring string_to_wstring(const std::string &i_str, CodePageID i_code_page_id = 0);
 
 /*! \fn SDENGINE_API std::string wstring_to_string(const std::wstring& i_wstr, CodePageID i_code_page_id = 0)
     \brief Function wstring_to_string is used to convert std::wstring to std::string with codepage.
@@ -103,7 +103,7 @@ SDENGINE_API std::wstring string_to_wstring(const std::string& i_str, CodePageID
     \param [in] i_wstr The target string
 	\param [in] i_code_page_id Target CodePage(default 0 (system default)).
 */
-SDENGINE_API std::string wstring_to_string(const std::wstring& i_wstr, CodePageID i_code_page_id = 0);
+SDENGINE_API std::string wstring_to_string(const std::wstring &i_wstr, CodePageID i_code_page_id = 0);
 
 /*! \fn SDENGINE_API std::string GetLocalTimeByFormat(time_t i_time, const std::string &i_format)
     \brief Convert time to string by specific format.(use strftime)
