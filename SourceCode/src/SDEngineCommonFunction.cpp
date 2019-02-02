@@ -74,7 +74,7 @@ std::wstring WStringFormat(const char *i_fmt_str, ...)
 		else
 			break;
 	}
-	return string_to_wstring(std::string(&buffer[0]));
+	return StringToWString(std::string(&buffer[0]));
 }
 
 void StringSplit(const std::string &i_s, char i_delim, std::vector<std::string> &io_elems)
@@ -145,7 +145,7 @@ void SpliteFilePathAndName(const std::string& i_path, std::string &io_path, std:
 	io_name = i_path.substr(found + 1);
 }
 
-std::wstring string_to_wstring(const std::string& i_str, CodePageID i_code_page_id)
+std::wstring StringToWString(const std::string& i_str, CodePageID i_code_page_id)
 {
 	// Convert an ASCII string to a Unicode String
 	std::wstring result;
@@ -159,7 +159,7 @@ std::wstring string_to_wstring(const std::string& i_str, CodePageID i_code_page_
 	return result;
 }
 
-std::string wstring_to_string(const std::wstring& i_wstr, CodePageID i_code_page_id)
+std::string WStringToString(const std::wstring& i_wstr, CodePageID i_code_page_id)
 {
 	// Convert a Unicode string to an ASCII string
 	std::string result;

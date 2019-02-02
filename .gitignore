@@ -13,5 +13,6 @@
 *.idb
 vc*.pdb
 Doc/SDEngine/
-UnitTest/Windows/
+LibraryProject/Windows/Build/
+UnitTest/Windows/Build/
 Bin/

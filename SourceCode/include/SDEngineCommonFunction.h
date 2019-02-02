@@ -1,5 +1,4 @@
-/*
-==============  SD Engine License ==============
+/* ==============  SD Engine License ==============
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -23,10 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/*! \file SDEngineCommonFunction.h
-    \brief SDEngineCommonFunction collects a lot of useful functions about time or string composition.
-	       Those function will be used widely in SDEngine and others side project made by me.
-*/
+/*! \file      SDEngineCommonFunction.h
+    \brief     SDEngineCommonFunction collects a lot of useful functions about time or string composition.
+               Those function will be used widely in SDEngine and others side project made by me.
+    \author    Kuan-Chih, Chen
+    \date      2019/02/01
+    \copyright MIT License.
+ */
 
 #pragma once
 
@@ -36,12 +38,11 @@ SOFTWARE.
 #include <string>
 #include <sstream>
 #include <vector>
-#include <memory>    // For std::unique_ptr
 
 #include "SDEngineCommonType.h"
 #include "SDEngineMacro.h"
 
-//---------------------------- start of namespace SDEngine ----------------------------
+//---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
 //---------------------------- start of namespace Basic ----------------------------
@@ -89,21 +90,21 @@ SDENGINE_API std::vector<std::string> StringSplit(const std::string &i_s, char i
 */
 SDENGINE_API void SpliteFilePathAndName(const std::string &i_path, std::string &io_path, std::string &io_name);
 
-/*! \fn SDENGINE_API std::wstring string_to_wstring(const std::string& i_str, CodePageID i_code_page_id = 0)
+/*! \fn SDENGINE_API std::wstring StringToWString(const std::string& i_str, CodePageID i_code_page_id = 0)
     \brief Function string_to_wstring is used to convert std::string to std::wstring with codepage.
 	       CodePage 0 is represented system default.
     \param [in] i_str The target string
 	\param [in] i_code_page_id Target CodePage(default 0 (system default)).
 */
-SDENGINE_API std::wstring string_to_wstring(const std::string &i_str, CodePageID i_code_page_id = 0);
+SDENGINE_API std::wstring StringToWString(const std::string &i_str, CodePageID i_code_page_id = 0);
 
-/*! \fn SDENGINE_API std::string wstring_to_string(const std::wstring& i_wstr, CodePageID i_code_page_id = 0)
+/*! \fn SDENGINE_API std::string WStringToString(const std::wstring& i_wstr, CodePageID i_code_page_id = 0)
     \brief Function wstring_to_string is used to convert std::wstring to std::string with codepage.
 	       CodePage 0 is represented system default.
     \param [in] i_wstr The target string
 	\param [in] i_code_page_id Target CodePage(default 0 (system default)).
 */
-SDENGINE_API std::string wstring_to_string(const std::wstring &i_wstr, CodePageID i_code_page_id = 0);
+SDENGINE_API std::string WStringToString(const std::wstring &i_wstr, CodePageID i_code_page_id = 0);
 
 /*! \fn SDENGINE_API std::string GetLocalTimeByFormat(time_t i_time, const std::string &i_format)
     \brief Convert time to string by specific format.(use strftime)
@@ -161,4 +162,4 @@ SDENGINE_API std::string ReplaceIllegalCharOfFile(const std::string &i_str, cons
 }
 //---------------------------- end of namespace Basic ----------------------------
 }
-//---------------------------- end of namespace SDEngine ----------------------------
+//---------------------------- end of namespace SDE ----------------------------

@@ -1,6 +1,4 @@
-#pragma once
-
-/* ==============  SD Engine License ==============
+/*==============  SD Engine License ==============
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -22,24 +20,33 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-/*! \file      SDEngine.h
- *  \brief     Total include header.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/02/01
- *  \copyright MIT License.
- */
-
-//-------- Common Function ---------
-#include "SDEngineCommonType.h"
-#include "SDEngineMacro.h"
-#include "SDEngineCommonFunction.h"
-
-//-------- Basic --------
 #include "LogManager.h"
 
-//-------- Windows --------
-#ifdef _WIN_PLATFORM_
-#include "WindowsLogManager.h"
-#endif
+using SDE::Basic::LogManager;
+
+//---------------------------- start of namespace SDE ----------------------------
+namespace SDE
+{
+//---------------------------- start of namespace Basic ----------------------------
+namespace Basic
+{
+
+SINGLETON_DECLARATION_IMPL(LogManager);
+
+LogManager::LogManager()
+: m_log_buffer{'\0'}
+{
+	SINGLETON_DECLARATION_REGISTER;
+}
+
+LogManager::~LogManager()
+{
+}
+
+//---------------------------- end of namespace Basic ----------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

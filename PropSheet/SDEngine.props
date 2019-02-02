@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <SDEngineRootDir>D:\Project\SDEngine\</SDEngineRootDir>
-    <SDIncludeDirs>$(SDEngineRootDir)SourceCode\include\;</SDIncludeDirs>
+    <SDIncludeDirs>$(SDEngineRootDir)SourceCode\include\;$(SDEngineRootDir)SourceCode\include\Basic;$(SDEngineRootDir)SourceCode\include\Basic\LogManager;$(SDEngineRootDir)SourceCode\include\Basic\LogManager\Windows;</SDIncludeDirs>
     <SDLibraryDirs>$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration);</SDLibraryDirs>
     <SDLibrary>SDEngine.lib</SDLibrary>
   </PropertyGroup>

@@ -18,10 +18,31 @@
     <Filter Include="src\Graphics">
       <UniqueIdentifier>{1840b7bd-5f93-4230-8450-2ac3f026a4fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Basic\LogManager">
+      <UniqueIdentifier>{e86138d1-cd8d-40b0-885f-38ef957be6ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Basic">
+      <UniqueIdentifier>{5fc76e85-354e-4bec-909e-491fb793981e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Basic\LogManager">
+      <UniqueIdentifier>{8bb0f0b9-9ee4-4b7c-8239-84d48c41ad28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Basic\LogManager\Windows">
+      <UniqueIdentifier>{12f078d3-6ed0-49a5-ae1b-233e8b287af3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\LogManager\Windows">
+      <UniqueIdentifier>{40a92655-e45b-4451-b77e-ecadf1d63f7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\LogManager\LogManager.cpp">
+      <Filter>src\Basic\LogManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\LogManager\Windows\WindowsLogManager.cpp">
+      <Filter>src\Basic\LogManager\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +57,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngine.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\LogManager\LogManager.h">
+      <Filter>include\Basic\LogManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\LogManager\Windows\WindowsLogManager.h">
+      <Filter>include\Basic\LogManager\Windows</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

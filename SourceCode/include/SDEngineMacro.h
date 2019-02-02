@@ -23,12 +23,17 @@ SOFTWARE.
 
 */
 
-/*! \file SDEngineMacro.h
-    \brief SDEngineMacro collects a lot of useful macro about attribute getter/setter.
-	       Those macro will be used widely in SDEngine and others side project made by me.
-*/
+/*! \file      SDEngineMacro.h
+    \brief     SDEngineMacro collects a lot of useful macro about attribute getter/setter.
+               Those macro will be used widely in SDEngine and others side project made by me.
+    \author    Kuan-Chih, Chen
+    \date      2019/02/01
+    \copyright MIT License.
+ */
 #pragma once
+#pragma warning( disable : 4251 ) //For dllexport warning of STL
 
+//DLL Import/Export
 #ifdef SDENGINE_EXPORTS
 #define SDENGINE_API __declspec(dllexport)
 #else
@@ -40,6 +45,71 @@ SOFTWARE.
 #else
 #define SDENGINE_CLASS __declspec(dllimport)
 #endif
+
+//Code Page
+#define LC_DEFAULT_CODE_PAGE 936
+
+#ifndef LC_CODE_PAGE
+#define LC_CODE_PAGE LC_DEFAULT_CODE_PAGE
+#endif
+
+#ifdef UNICODE 
+#define LC_ADT_OSLOGSTR(str) StringToWString(str, LC_CODE_PAGE)
+#define LC_ADT_OSLOGSTRCSTR(str) StringToWString(str, LC_CODE_PAGE).c_str()
+#define LC_CVT_OSFCHARTOSTR(chars) WStringToString(chars, LC_CODE_PAGE)
+#elif _UNICODE
+#define LC_ADT_OSLOGSTR(str) StringToWString(  str, LC_CODE_PAGE)
+#define LC_ADT_OSLOGSTRCSTR(str) StringToWString(  str, LC_CODE_PAGE).c_str()
+#define LC_CVT_OSFCHARTOSTR(chars) WStringToString(chars, LC_CODE_PAGE)
+#else
+#define LC_ADT_OSLOGSTR(str) (str)
+#define LC_ADT_OSLOGSTRCSTR(str) (str).c_str()
+#define LC_CVT_OSFCHARTOSTR(chars) std::string(chars)
+#endif
+
+
+//Singleton Define
+/*! \def SINGLETON_DECLARATION(ClassName)
+	\brief Declare singleton necessary method and member. Use this macro on the class declaration(.h).
+*/
+#define SINGLETON_DECLARATION( ClassName ) \
+	public: \
+		static ClassName &GetRef(); \
+		static ClassName *GetPtr(); \
+		static bool IsNull(); \
+	protected: \
+		static ClassName *m_instance;
+
+/*! \def SINGLETON_DECLARATION_IMPL(ClassName)
+	\brief implement singleton necessary method and member. Use this macro at class implementation(.cpp).
+*/
+#define SINGLETON_DECLARATION_IMPL( ClassName ) \
+	ClassName* ClassName::m_instance = nullptr; \
+	\
+	ClassName& ClassName::GetRef() \
+	{ \
+		return *m_instance;  \
+	} \
+	\
+	ClassName* ClassName::GetPtr() \
+	{ \
+		return m_instance; \
+	} \
+	\
+	bool ClassName::IsNull() \
+	{ \
+		return (m_instance == nullptr);  \
+	}
+
+/*! \def SINGLETON_DECLARATION_REGISTER
+	\brief assign instance. Use this macro at class ctor(.cpp).
+*/
+#define SINGLETON_DECLARATION_REGISTER \
+	if (m_instance != nullptr) \
+	{ \
+		/*SDLOGE("m_instance isn't nullptr!!!.");*/ \
+	} \
+	m_instance = this;
 
 //Variable Get/Set Declaration
 /*! \def DECLARE_ATTRIBUTE_VAR_GET(Type,VarName,FunctionName)
@@ -125,5 +195,3 @@ SOFTWARE.
     \brief convert enum to int.
 */
 #define ENUM_TO_INT( var )  static_cast<int>(var)
-
-//Reference Object Get/Set Declaration
