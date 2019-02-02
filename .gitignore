@@ -11,4 +11,7 @@
 *.tlog
 .vs/
 *.idb
-vc*.pdb Doc/SDEngine/
+vc*.pdb
+Doc/SDEngine/
+UnitTest/Windows/
+Bin/
