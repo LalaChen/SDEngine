@@ -1,6 +1,4 @@
-#pragma once
-
-/* ==============  SD Engine License ==============
+/*==============  SD Engine License ==============
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -22,24 +20,68 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-/*! \file      SDEngine.h
- *  \brief     Total include header.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/02/01
- *  \copyright MIT License.
- */
-
-//-------- Common Function ---------
-#include "SDEngineCommonType.h"
-#include "SDEngineMacro.h"
-#include "SDEngineCommonFunction.h"
-
-//-------- Basic --------
-#include "LogManager.h"
 #include "Application.h"
-//-------- Windows --------
-#ifdef _WIN_PLATFORM_
-#include "WindowsLogManager.h"
-#endif
+
+//---------------------------- start of namespace SDE ----------------------------
+namespace SDE
+{
+//---------------------------- start of namespace Basic ----------------------------
+namespace Basic
+{
+
+SINGLETON_DECLARATION_IMPL(Application);
+
+Application::Application()
+: m_full_window(false)
+{
+	SINGLETON_DECLARATION_REGISTER;
+}
+
+Application::Application(const Resolution &i_win_res, FullWindowOption i_full_window)
+: m_win_res(i_win_res)
+, m_full_window(i_full_window)
+{
+}
+
+Application::~Application()
+{
+
+}
+
+void Application::Initialize()
+{
+
+}
+
+void Application::InitializeGraphicsSystem(const Resolution &i_size)
+{
+
+}
+
+void Application::Resume()
+{
+
+}
+
+void Application::UpdateTimer()
+{
+
+}
+
+void Application::Pause()
+{
+
+}
+
+void Application::DestroyApplication()
+{
+
+}
+
+//---------------------------- end of namespace Basic ----------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <GLFWRootDir>D:\Library\glfw\</GLFWRootDir>
+    <GLFWIncludeDir>$(GLFWRootDir)include\</GLFWIncludeDir>
+    <GLFWLibDir>$(GLFWRootDir)bin\Library\$(Platform)\$(Configuration)\</GLFWLibDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <ReferencePath>$(VC_ReferencesPath_x86);</ReferencePath>
+    <LibraryPath>$(GLFWLibDir);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(GLFWIncludeDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>glfw3.lib;$(SDLibrary);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="GLFWRootDir">
+      <Value>$(GLFWRootDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GLFWIncludeDir">
+      <Value>$(GLFWIncludeDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GLFWLibDir">
+      <Value>$(GLFWLibDir)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

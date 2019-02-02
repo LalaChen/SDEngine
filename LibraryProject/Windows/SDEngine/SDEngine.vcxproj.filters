@@ -33,6 +33,18 @@
     <Filter Include="src\Basic\LogManager\Windows">
       <UniqueIdentifier>{40a92655-e45b-4451-b77e-ecadf1d63f7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Basic\Application">
+      <UniqueIdentifier>{160d0df7-c49c-4fb2-8ec2-d2563c2bf59c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\Application">
+      <UniqueIdentifier>{92fd383b-30b7-45e6-a6b8-f69958c9430f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics">
+      <UniqueIdentifier>{44b931ee-a748-439b-809c-c44b4ec11fcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\Resolution">
+      <UniqueIdentifier>{fb26df33-f551-4351-8038-8adbc09ad439}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -43,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\LogManager\Windows\WindowsLogManager.cpp">
       <Filter>src\Basic\LogManager\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\Application\Application.cpp">
+      <Filter>src\Basic\Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +78,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Basic\LogManager\Windows\WindowsLogManager.h">
       <Filter>include\Basic\LogManager\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\Application\Application.h">
+      <Filter>include\Basic\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h">
+      <Filter>include\Graphics\Resolution</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,7 +3,6 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <SDEngineRootDir>D:\Project\SDEngine\</SDEngineRootDir>
-    <SDIncludeDirs>$(SDEngineRootDir)SourceCode\include\;$(SDEngineRootDir)SourceCode\include\Basic;$(SDEngineRootDir)SourceCode\include\Basic\LogManager;$(SDEngineRootDir)SourceCode\include\Basic\LogManager\Windows;</SDIncludeDirs>
     <SDLibraryDirs>$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration);</SDLibraryDirs>
     <SDLibrary>SDEngine.lib</SDLibrary>
   </PropertyGroup>
@@ -13,15 +12,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SDIncludeDirs);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SDEngineRootDir)SourceCode\include\;$(SDEngineRootDir)SourceCode\include\Basic;$(SDEngineRootDir)SourceCode\include\Basic\LogManager;$(SDEngineRootDir)SourceCode\include\Basic\LogManager\Windows;$(SDEngineRootDir)SourceCode\include\Basic\Application;$(SDEngineRootDir)SourceCode\include\Graphics;$(SDEngineRootDir)SourceCode\include\Graphics\Resolution;$(SDEngineRootDir)SourceCode\include\Application</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="SDEngineRootDir">
       <Value>$(SDEngineRootDir)</Value>
-    </BuildMacro>
-    <BuildMacro Include="SDIncludeDirs">
-      <Value>$(SDIncludeDirs)</Value>
     </BuildMacro>
     <BuildMacro Include="SDLibraryDirs">
       <Value>$(SDLibraryDirs)</Value>
