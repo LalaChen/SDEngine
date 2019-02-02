@@ -11,4 +11,4 @@
 *.tlog
 .vs/
 *.idb
-vc*.pdb
+vc*.pdb Doc/SDEngine/
