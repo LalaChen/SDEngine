@@ -39,7 +39,6 @@ SOFTWARE.
 //-------- Basic --------
 #include "LogManager.h"
 #include "Application.h"
-//-------- Windows --------
-#ifdef _WIN_PLATFORM_
-#include "WindowsLogManager.h"
-#endif
+//-------- Graphics --------
+#include "Resolution.h"
+#include "GraphicsAPI.h"

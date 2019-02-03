@@ -5,6 +5,7 @@
     <SDEngineRootDir>D:\Project\SDEngine\</SDEngineRootDir>
     <SDLibraryDirs>$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration);</SDLibraryDirs>
     <SDLibrary>SDEngine.lib</SDLibrary>
+    <SDGLFWAppLib>SDEngine_GLFWApplication.lib</SDGLFWAppLib>
   </PropertyGroup>
   <PropertyGroup>
     <LibraryPath>$(SDLibraryDirs);$(LibraryPath)</LibraryPath>
@@ -12,7 +13,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SDEngineRootDir)SourceCode\include\;$(SDEngineRootDir)SourceCode\include\Basic;$(SDEngineRootDir)SourceCode\include\Basic\LogManager;$(SDEngineRootDir)SourceCode\include\Basic\LogManager\Windows;$(SDEngineRootDir)SourceCode\include\Basic\Application;$(SDEngineRootDir)SourceCode\include\Graphics;$(SDEngineRootDir)SourceCode\include\Graphics\Resolution;$(SDEngineRootDir)SourceCode\include\Application</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SDEngineRootDir)SourceCode\include\;$(SDEngineRootDir)SourceCode\include\Basic;$(SDEngineRootDir)SourceCode\include\Basic\LogManager;$(SDEngineRootDir)SourceCode\include\Basic\LogManager\Windows;$(SDEngineRootDir)SourceCode\include\Basic\Application;$(SDEngineRootDir)SourceCode\include\Graphics;$(SDEngineRootDir)SourceCode\include\Graphics\Resolution;$(SDEngineRootDir)SourceCode\include\Graphics\Manager;$(SDEngineRootDir)SourceCode\include\Graphics\Manager\OpenGL4;$(SDEngineRootDir)SourceCode\include\Graphics\Manager\Vulkan;$(SDEngineRootDir)SourceCode\include\Application</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -24,6 +25,9 @@
     </BuildMacro>
     <BuildMacro Include="SDLibrary">
       <Value>$(SDLibrary)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SDGLFWAppLib">
+      <Value>$(SDGLFWAppLib)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

@@ -34,16 +34,15 @@ namespace Basic
 
 SINGLETON_DECLARATION_IMPL(Application);
 
-Application::Application()
-: m_full_window(false)
-{
-	SINGLETON_DECLARATION_REGISTER;
-}
-
-Application::Application(const Resolution &i_win_res, FullWindowOption i_full_window)
-: m_win_res(i_win_res)
+Application::Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv)
+: m_win_title(i_win_title)
+, m_win_res(i_win_res)
 , m_full_window(i_full_window)
 {
+	//1. Register instance.
+	SINGLETON_DECLARATION_REGISTER;
+	//2. construct by argument.
+	ConstructByArguments(i_argc, i_argv);
 }
 
 Application::~Application()
@@ -51,14 +50,19 @@ Application::~Application()
 
 }
 
+void Application::ConstructByArguments(int i_argc, char **i_argv)
+{
+
+}
+
+
 void Application::Initialize()
 {
 
 }
 
-void Application::InitializeGraphicsSystem(const Resolution &i_size)
-{
-
+void Application::InitializeGraphicsSystem()
+{ 
 }
 
 void Application::Resume()
@@ -72,11 +76,6 @@ void Application::UpdateTimer()
 }
 
 void Application::Pause()
-{
-
-}
-
-void Application::DestroyApplication()
 {
 
 }

@@ -46,6 +46,8 @@ SOFTWARE.
 #define SDENGINE_CLASS __declspec(dllimport)
 #endif
 
+#define SDENGINE_STDCALL_API __stdcall
+
 //Code Page
 #define LC_DEFAULT_CODE_PAGE 936
 
@@ -77,6 +79,7 @@ SOFTWARE.
 		static ClassName &GetRef(); \
 		static ClassName *GetPtr(); \
 		static bool IsNull(); \
+        static void Destroy(); \
 	protected: \
 		static ClassName *m_instance;
 
@@ -99,7 +102,14 @@ SOFTWARE.
 	bool ClassName::IsNull() \
 	{ \
 		return (m_instance == nullptr);  \
-	}
+	} \
+    void ClassName::Destroy() \
+    { \
+        if(m_instance != nullptr){ \
+             delete m_instance; \
+             m_instance = nullptr; \
+		} \
+    }
 
 /*! \def SINGLETON_DECLARATION_REGISTER
 	\brief assign instance. Use this macro at class ctor(.cpp).

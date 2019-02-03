@@ -5,6 +5,7 @@
     <GLFWRootDir>D:\Library\glfw\</GLFWRootDir>
     <GLFWIncludeDir>$(GLFWRootDir)include\</GLFWIncludeDir>
     <GLFWLibDir>$(GLFWRootDir)bin\Library\$(Platform)\$(Configuration)\</GLFWLibDir>
+    <GLFWDepDir>$(GLFWRootDir)deps\</GLFWDepDir>
   </PropertyGroup>
   <PropertyGroup>
     <IncludePath>$(IncludePath)</IncludePath>
@@ -13,7 +14,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(GLFWIncludeDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GLFWIncludeDir);$(GLFWDepDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;$(SDLibrary);%(AdditionalDependencies)</AdditionalDependencies>
@@ -28,6 +29,9 @@
     </BuildMacro>
     <BuildMacro Include="GLFWLibDir">
       <Value>$(GLFWLibDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GLFWDepDir">
+      <Value>$(GLFWDepDir)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

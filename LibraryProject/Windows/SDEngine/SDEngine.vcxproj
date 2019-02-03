@@ -22,12 +22,16 @@
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Application\Application.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\LogManager\LogManager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\LogManager\Windows\WindowsLogManager.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\GraphicsAPI.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4API.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Application\Application.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\LogManager\LogManager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\LogManager\Windows\WindowsLogManager.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\GraphicsAPI.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4API.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngine.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h" />
@@ -76,18 +80,22 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

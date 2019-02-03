@@ -45,6 +45,24 @@
     <Filter Include="include\Graphics\Resolution">
       <UniqueIdentifier>{fb26df33-f551-4351-8038-8adbc09ad439}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\Manager">
+      <UniqueIdentifier>{56245db8-5511-4994-b61c-841c471d71df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\Manager">
+      <UniqueIdentifier>{87ca5a7c-a5b0-4285-a891-2b23db19f7ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\Manager\OpenGL4">
+      <UniqueIdentifier>{7c5e7bc4-b290-4a5b-bc37-da4767af121b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\Manager\Vulkan">
+      <UniqueIdentifier>{c9089b5e-dc92-48fa-aa50-950fc208db90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\Manager\OpenGL4">
+      <UniqueIdentifier>{8ac79b11-6a06-474f-8396-e37089110610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\Manager\Vulkan">
+      <UniqueIdentifier>{869f5bd8-171e-4cd4-9fe7-69c790c84ea8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -58,6 +76,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Application\Application.cpp">
       <Filter>src\Basic\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\GraphicsAPI.cpp">
+      <Filter>src\Graphics\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4API.cpp">
+      <Filter>src\Graphics\Manager\OpenGL4</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +108,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h">
       <Filter>include\Graphics\Resolution</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\GraphicsAPI.h">
+      <Filter>include\Graphics\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4API.h">
+      <Filter>include\Graphics\Manager\OpenGL4</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

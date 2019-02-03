@@ -30,7 +30,6 @@ SOFTWARE.
 	\copyright MIT License.
  */
 
-
 #pragma once
 
 #include "SDEngineMacro.h"
@@ -65,17 +64,15 @@ public:
 	SINGLETON_DECLARATION(Application);
 
 public:
-	/*! \fn explicit Application();
-		\brief The constructor of Application Class.
-	*/
-	explicit Application();
-
-	/*! \fn Application(const Resolution &i_win_res, FullWindowOption i_full_window);
+	/*! \fn explicit Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv);
+	    \param [in] i_win_title Window title
 	    \param [in] i_win_res Window resolution.
 		\param [in] i_full_window full window screen.
+		\param [in] i_argc argument count.
+		\param [in] i_argv arguments.
 		\brief The constructor of Application Class.
 	*/
-	Application(const Resolution &i_win_res, FullWindowOption i_full_window);
+	explicit Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv);
 
 	/*! \fn virtual ~Application();
 		\brief The destructor of Application Class.
@@ -88,12 +85,10 @@ public:
 	*/
 	virtual void Initialize();
 
-	/*! \fn virtual void InitializeGraphicsSystem(const Resolution &i_size);
-	    \param [in] i_size The resolution of this app.
-		\brief Initialize graphics system of this app. Please call this function \n
-		       after switching context.
+	/*! \fn virtual void InitializeGraphicsSystem();
+		\brief Initialize graphics system of this app.
 	*/
-	virtual void InitializeGraphicsSystem(const Resolution &i_size);
+	virtual void InitializeGraphicsSystem();
 
 	/*! \fn virtual void UpdateTimer();
 		\brief Update app. Please call this function each frame.
@@ -109,11 +104,6 @@ public:
 		\brief Resume app. Please call this function when app re-focus.
 	*/
 	virtual void Resume();
-
-	/*! \fn virtual void DestroyApplication();
-		\brief Destroy app. Please call this function when we want to destroy this app.
-	*/
-	virtual void DestroyApplication();
 public:
 	/*! \fn void SetWindowResolution(Size_ui i_width, Size_ui i_height);
 	    \param [in] i_width Width of app.
@@ -121,6 +111,13 @@ public:
 		\brief Set resolution of this app.
 	*/
 	void SetWindowResolution(Size_ui i_width, Size_ui i_height);
+protected:
+	/*! \fn virtual void ConstructByArguments(int i_argc, char **i_argv);
+		\param [in] i_argc argument count.
+		\param [in] i_argv arguments.
+		\brief This function will call at first line of Application Ctor. We can override it if we need to set something by argument.
+	*/
+	virtual void ConstructByArguments(int i_argc, char **i_argv);
 protected:
 	/*! \var Resolution m_win_res;
 	    \brief resolution of this app.
@@ -131,6 +128,11 @@ protected:
 		\brief is full screen or not.
 	*/
 	DECLARE_ATTRIBUTE_VAR_SET_VAR_GET(FullWindowOption, m_full_window, FullScreenSignal);
+
+	/*! \var std::string m_win_title;
+		\brief is full screen or not.
+	*/
+	DECLARE_ATTRIBUTE_VAR_GET(std::string, m_win_title, WinTitle);
 };
 
 inline void Application::SetWindowResolution(Size_ui i_width, Size_ui i_height)

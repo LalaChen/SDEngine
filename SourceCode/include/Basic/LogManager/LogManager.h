@@ -124,7 +124,7 @@ protected:
 	#define __func__ __FUNCTION__
 #endif
 
-#define INFO_PREFIX std::string(__FILE__) + StringFormat("(%d):", __LINE__) + std::string(__func__) + std::string("() : ")
+#define INFO_PREFIX std::string(__FILE__) + SDE::Basic::StringFormat("(%d):", __LINE__) + std::string(__func__) + std::string("() : ")
 
 /*! \def SDLOGD(log,...)
     \brief Print debug log.
