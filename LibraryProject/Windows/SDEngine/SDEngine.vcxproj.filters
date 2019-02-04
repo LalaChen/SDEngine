@@ -75,6 +75,18 @@
     <Filter Include="include\Basic\Timer\Windows">
       <UniqueIdentifier>{c8413857-4856-4d3f-8175-686c74047c5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Basic\FileSystem">
+      <UniqueIdentifier>{b3d9fde5-b162-43f0-9057-da9fb4a28023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Basic\FileSystem\Windows">
+      <UniqueIdentifier>{1d5de13a-8dfd-408e-8cae-680440736d85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\FileSystem">
+      <UniqueIdentifier>{433165fc-ce52-4caf-9ec7-068097b09268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\FileSystem\Windows">
+      <UniqueIdentifier>{b9a1b15c-46c5-42fc-a59b-adde8f16e6a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -100,6 +112,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Timer\Timer.cpp">
       <Filter>src\Basic\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\FileSystemManager.cpp">
+      <Filter>include\Graphics\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\Windows\WindowsFileSystemManager.cpp">
+      <Filter>include\Graphics\FileSystem\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\FileData.cpp">
+      <Filter>include\Graphics\FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +159,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Timer\Timer.h">
       <Filter>include\Basic\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\FileSystem\FileSystemManager.h">
+      <Filter>include\Basic\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\FileSystem\Windows\WindowsFileSystemManager.h">
+      <Filter>include\Basic\FileSystem\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\FileSystem\FileData.h">
+      <Filter>include\Basic\FileSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

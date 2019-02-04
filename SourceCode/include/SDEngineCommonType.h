@@ -43,6 +43,11 @@ namespace Basic
 */
 typedef int CodePageID;
 
+/*! \typedef std::string FilePathString
+	\brief String of file path.
+*/
+typedef std::string FilePathString;
+
 /*! \typedef char Byte;
 	\brief represent byte.
 */

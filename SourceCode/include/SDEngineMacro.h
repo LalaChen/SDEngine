@@ -49,24 +49,27 @@ SOFTWARE.
 #define SDENGINE_STDCALL_API __stdcall
 
 //Code Page
-#define LC_DEFAULT_CODE_PAGE 936
+#define SD_DEFAULT_CODE_PAGE 936
 
-#ifndef LC_CODE_PAGE
-#define LC_CODE_PAGE LC_DEFAULT_CODE_PAGE
+#ifndef SD_CODE_PAGE
+#define SD_CODE_PAGE SD_DEFAULT_CODE_PAGE
 #endif
 
 #ifdef UNICODE 
-#define LC_ADT_OSLOGSTR(str) StringToWString(str, LC_CODE_PAGE)
-#define LC_ADT_OSLOGSTRCSTR(str) StringToWString(str, LC_CODE_PAGE).c_str()
-#define LC_CVT_OSFCHARTOSTR(chars) WStringToString(chars, LC_CODE_PAGE)
+#define SD_ADT_OS_STR(str) StringToWString(str, SD_CODE_PAGE)
+#define SD_ADT_OS_STRCSTR(str) StringToWString(str, SD_CODE_PAGE).c_str()
+#define SD_CVT_OS_CHARS_TOSTR(chars) WStringToString(chars, SD_CODE_PAGE)
+typedef wchar_t SDStrChar;
 #elif _UNICODE
-#define LC_ADT_OSLOGSTR(str) StringToWString(  str, LC_CODE_PAGE)
-#define LC_ADT_OSLOGSTRCSTR(str) StringToWString(  str, LC_CODE_PAGE).c_str()
-#define LC_CVT_OSFCHARTOSTR(chars) WStringToString(chars, LC_CODE_PAGE)
+#define SD_ADT_OS_STR(str) StringToWString(  str, SD_CODE_PAGE)
+#define SD_ADT_OS_STRCSTR(str) StringToWString(  str, SD_CODE_PAGE).c_str()
+#define SD_CVT_OS_CHARS_TOSTR(chars) WStringToString(chars, SD_CODE_PAGE)
+typedef wchar_t SDStrChar;
 #else
-#define LC_ADT_OSLOGSTR(str) (str)
-#define LC_ADT_OSLOGSTRCSTR(str) (str).c_str()
-#define LC_CVT_OSFCHARTOSTR(chars) std::string(chars)
+#define SD_ADT_OS_STR(str) (str)
+#define SD_ADT_OS_STRCSTR(str) (str).c_str()
+#define SD_CVT_OS_CHARS_TOSTR(chars) std::string(chars)
+typedef char SDStrChar;
 #endif
 
 

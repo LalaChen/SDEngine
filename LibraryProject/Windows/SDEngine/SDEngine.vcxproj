@@ -20,6 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Application\Application.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\FileData.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\FileSystemManager.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\Windows\WindowsFileSystemManager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\LogManager\LogManager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\LogManager\Windows\WindowsLogManager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Timer\Timer.cpp" />
@@ -30,6 +33,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Application\Application.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\FileSystem\FileData.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\FileSystem\FileSystemManager.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\FileSystem\Windows\WindowsFileSystemManager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\LogManager\LogManager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\LogManager\Windows\WindowsLogManager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Timer\Timer.h" />
@@ -144,6 +150,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y "$(SolutionDir)\Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll" "$(SolutionDir)\Bin\UnitTest\Windows\$(Platform)\$(Configuration)\"</Command>

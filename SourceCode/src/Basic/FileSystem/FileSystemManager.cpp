@@ -23,14 +23,7 @@ SOFTWARE.
 
 */
 
-
-#include <windows.h>
-#include <cstdio>
-#include <cstdarg>
-#include <cstdlib>
-
-#include "WindowsLogManager.h"
-
+#include "FileSystemManager.h"
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
@@ -38,51 +31,69 @@ namespace SDE
 namespace Basic
 {
 
-WindowsLogManager::WindowsLogManager()
+//------------ File System Manager  ------------
+FileSystemManager::FileSystemManager()
+{
+	AddRelativePath("");
+	AddRelativePath("Resources\\");
+}
+
+FileSystemManager::~FileSystemManager()
 {
 }
 
-WindowsLogManager::~WindowsLogManager()
+void FileSystemManager::AddRelativePath(const FilePathString &i_path)
 {
+	FilePathString adj_path = AdjustFilePath(i_path);
+	if( IsExistedRelativePath(adj_path) == false) m_relative_paths.push_back(adj_path);
 }
 
-void WindowsLogManager::Log(LogType i_type, const std::string &i_prefix, const char *i_log, ...)
+bool FileSystemManager::IsExistedRelativePath(const FilePathString &i_path) const
 {
-	m_prefix = i_prefix;
-	va_list args;
-	va_start(args, i_log);
-	vsnprintf(m_log_buffer, SD_MAX_WORD_PER_LINE - 3 , i_log, args);
-    va_end(args);
-	LogToOutput(i_type);
+	for(auto path : m_relative_paths)
+	{
+		if(path.compare(i_path) == 0) return true;
+	}
+
+	return false;
 }
 
-void WindowsLogManager::Log(LogType i_type, const std::string &i_prefix, const char *i_log, va_list i_args)
+void FileSystemManager::SpliteFilePathAndName(const FilePathString &i_fn, FilePathString &io_dir, FilePathString &io_fn)
 {
-	m_prefix = i_prefix;
-	vsnprintf(m_log_buffer, SD_MAX_WORD_PER_LINE - 3 , i_log, i_args);
-	LogToOutput(i_type);
+	SpliteFilePathAndName(i_fn, io_dir, io_fn);
 }
 
-void WindowsLogManager::LogToOutput(LogType i_type)
+bool FileSystemManager::IsAbsolutePath(const FilePathString &i_filename)
 {
-	if(i_type == LogType::Normal)
+	//check absolute path.
+	if (i_filename.find(":\\") != FilePathString::npos || // :\ 
+		i_filename.find(":/") != FilePathString::npos || // :/
+		i_filename.find(":\\\\") != FilePathString::npos)   // :\\ 
 	{
-		OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Normal] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
+		return true;
 	}
-	else if(i_type == LogType::Warning)
+	else return false;
+}
+
+//------ Private work function
+FilePathString FileSystemManager::AdjustFilePath(const FilePathString &i_path) const
+{
+	FilePathString result = i_path;
+
+	if(result.empty() == false)
 	{
-		OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Warning] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
+		while(result[0] == '\\' || result[0] == '/')
+		{
+			result = result.substr(1,result.size() - 1);
+		}
+		
+		if(result[result.size() - 1] != '\\' && result[result.size() - 1] != '/')
+		{
+			result += '\\';
+		}
 	}
-	else if (i_type == LogType::Internal)
-	{
-#ifdef _DEBUG
-		OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Internal] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
-#endif
-	}
-	else
-	{
-		OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Error] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
-	}
+	return result;
+
 }
 
 //---------------------------- end of namespace Basic ----------------------------
