@@ -81,19 +81,20 @@ public:
 public:
 	/*! \fn virtual void Initialize();
 		\brief Initialize this game app. Please call this function once at executable \n
-		       starting.
+		       starting. Please implement this function by derived class.
 	*/
-	virtual void Initialize();
+	virtual void Initialize() = 0;
 
-	/*! \fn virtual void InitializeGraphicsSystem();
-		\brief Initialize graphics system of this app.
+	/*! \fn virtual void InitializeGraphicsSystem() = 0;
+		\brief Initialize graphics system of this app. Please implement this function by \n
+		       derived class.
 	*/
-	virtual void InitializeGraphicsSystem();
+	virtual void InitializeGraphicsSystem() = 0;
 
-	/*! \fn virtual void UpdateTimer();
+	/*! \fn virtual void Update();
 		\brief Update app. Please call this function each frame.
 	*/
-	virtual void UpdateTimer();
+	virtual void Update();
 
 	/*! \fn virtual void Pause();
 		\brief Pause app. Please call this function when app doesn't focus.
@@ -111,13 +112,7 @@ public:
 		\brief Set resolution of this app.
 	*/
 	void SetWindowResolution(Size_ui i_width, Size_ui i_height);
-protected:
-	/*! \fn virtual void ConstructByArguments(int i_argc, char **i_argv);
-		\param [in] i_argc argument count.
-		\param [in] i_argv arguments.
-		\brief This function will call at first line of Application Ctor. We can override it if we need to set something by argument.
-	*/
-	virtual void ConstructByArguments(int i_argc, char **i_argv);
+
 protected:
 	/*! \var Resolution m_win_res;
 	    \brief resolution of this app.

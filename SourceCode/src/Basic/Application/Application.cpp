@@ -39,10 +39,8 @@ Application::Application(const std::string &i_win_title, const Resolution &i_win
 , m_win_res(i_win_res)
 , m_full_window(i_full_window)
 {
-	//1. Register instance.
+	//Register instance.
 	SINGLETON_DECLARATION_REGISTER;
-	//2. construct by argument.
-	ConstructByArguments(i_argc, i_argv);
 }
 
 Application::~Application()
@@ -50,27 +48,12 @@ Application::~Application()
 
 }
 
-void Application::ConstructByArguments(int i_argc, char **i_argv)
-{
-
-}
-
-
-void Application::Initialize()
-{
-
-}
-
-void Application::InitializeGraphicsSystem()
-{ 
-}
-
 void Application::Resume()
 {
 
 }
 
-void Application::UpdateTimer()
+void Application::Update()
 {
 
 }
