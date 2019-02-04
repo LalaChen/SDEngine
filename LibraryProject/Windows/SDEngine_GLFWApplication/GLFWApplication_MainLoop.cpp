@@ -71,7 +71,7 @@ void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int 
 	while (!glfwWindowShouldClose(window))
 	{
 		// Draw gears
-		Application::GetRef().UpdateTimer();
+		Application::GetRef().Update();
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -79,6 +79,10 @@ void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int 
 
 	// Terminate GLFW
 	glfwTerminate();
+
+	//Destroy App.
+	Application::GetRef().TerminateApplication();
+	Application::Destroy();
 }
 
 }

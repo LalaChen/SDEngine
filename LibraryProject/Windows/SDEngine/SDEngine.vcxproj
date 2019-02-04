@@ -22,6 +22,8 @@
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Application\Application.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\LogManager\LogManager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\LogManager\Windows\WindowsLogManager.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\Timer\Timer.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\Timer\Windows\WindowsTimer.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\GraphicsAPI.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4API.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
@@ -30,6 +32,8 @@
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Application\Application.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\LogManager\LogManager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\LogManager\Windows\WindowsLogManager.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\Timer\Timer.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\Timer\Windows\WindowsTimer.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\GraphicsAPI.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4API.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />

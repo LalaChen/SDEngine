@@ -69,6 +69,11 @@ public:
 		\brief Initialize graphics system of this app.
 	*/
 	void InitializeGraphicsSystem() override;
+
+	/*! \fn void TerminateApplication() override;
+		\brief release all mamager for terminating app.
+	*/
+	void TerminateApplication() override;
 };
 
 }

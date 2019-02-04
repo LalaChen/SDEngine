@@ -63,6 +63,18 @@
     <Filter Include="include\Graphics\Manager\Vulkan">
       <UniqueIdentifier>{869f5bd8-171e-4cd4-9fe7-69c790c84ea8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Basic\Timer">
+      <UniqueIdentifier>{cf196ed9-bd77-41ea-9bec-17c4012feccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\Timer">
+      <UniqueIdentifier>{c7e2dd17-9353-4cf7-a052-c89e9539ef20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\Timer\Windows">
+      <UniqueIdentifier>{ba69d55b-a7ae-4353-ba4b-5b733a535b88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Basic\Timer\Windows">
+      <UniqueIdentifier>{c8413857-4856-4d3f-8175-686c74047c5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -82,6 +94,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4API.cpp">
       <Filter>src\Graphics\Manager\OpenGL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\Timer\Windows\WindowsTimer.cpp">
+      <Filter>src\Basic\Timer\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\Timer\Timer.cpp">
+      <Filter>src\Basic\Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +132,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4API.h">
       <Filter>include\Graphics\Manager\OpenGL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\Timer\Windows\WindowsTimer.h">
+      <Filter>include\Basic\Timer\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\Timer\Timer.h">
+      <Filter>include\Basic\Timer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

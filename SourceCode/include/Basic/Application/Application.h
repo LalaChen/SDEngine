@@ -91,6 +91,11 @@ public:
 	*/
 	virtual void InitializeGraphicsSystem() = 0;
 
+	/*! \fn virtual void TerminateApplication() = 0;
+		\brief release all mamager for terminating app.
+	*/
+	virtual void TerminateApplication() = 0;
+public:
 	/*! \fn virtual void Update();
 		\brief Update app. Please call this function each frame.
 	*/

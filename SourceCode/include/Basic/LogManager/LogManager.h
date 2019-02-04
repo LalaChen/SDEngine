@@ -43,7 +43,7 @@ SOFTWARE.
 
 #define SD_MAX_WORD_PER_LINE 65536
 
- //---------------------------- start of namespace SDE ----------------------------
+//---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
 //---------------------------- start of namespace Basic ----------------------------
