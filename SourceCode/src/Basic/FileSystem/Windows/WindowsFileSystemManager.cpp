@@ -28,6 +28,7 @@ SOFTWARE.
 #include <direct.h>
 #include <Shlwapi.h>
 
+#include "LogManager.h"
 #include "WindowsFileSystemManager.h"
 
 //---------------------------- start of namespace SDE ----------------------------
@@ -53,7 +54,6 @@ void WindowsFileSystemManager::Initialize()
 	_getcwd(current_dir_path,260);
 	//2. set current dir as work dir.
 	m_work_dir_path = AdjustFilePath(current_dir_path);
-	//std::cout<<"Current Dir = " << m_work_dir_path << std::endl;//Log Mgr haven't initialize yet.
 }
 
 bool WindowsFileSystemManager::OpenFile(const FilePathString &i_location, FileData &io_file)

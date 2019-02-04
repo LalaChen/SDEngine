@@ -1,6 +1,4 @@
-#include "WindowsLogManager.h"
-#include "WindowsTimer.h"
-#include "OpenGL4API.h"
+#include "SDEngine.h"
 #include "GLFWApplication.h"
 
 using namespace SDE;
@@ -30,8 +28,9 @@ void GLFWApplication::Initialize()
 	SDLOG("Initialize Application.");
 	//new LogManager.
 	new WindowsLogManager();
-	//new FileManager.
-
+	//new WindowsFileSystemManager.
+	new WindowsFileSystemManager();
+	FileSystemManager::GetRef().Initialize();
 	//new Timer.
 	new WindowsTimer();
 	Timer::GetRef().Start();
