@@ -50,7 +50,7 @@ namespace Basic
     In our system, FileSystemManager offer a series interface for file operating. We will \n
 	implement the real logic according OS.
 */
-class FileSystemManager
+class SDENGINE_CLASS FileSystemManager
 {
 public:
 	/*! \typedef FilePathString RelativePath
@@ -151,12 +151,12 @@ public:
 	*/
 	virtual int RenameFile(const FilePathString &i_src_fn, const FilePathString &i_new_fn) = 0;
 
-	/*! \fn virtual int CopyFileToDir(const FilePathString &i_src_location, const FilePathString &i_dst_location) = 0;
+	/*! \fn virtual int CopyFileTo(const FilePathString &i_src_location, const FilePathString &i_dst_location) = 0;
 		\param [in] i_src_location source location.
 		\param [in] i_dst_location destinated location.
 		\brief copy file from i_src_location to i_dst_location and then return error. Implement according OS.
 	*/
-	virtual int CopyFileToDir(const FilePathString &i_src_location, const FilePathString &i_dst_location) = 0;
+	virtual int CopyFileTo(const FilePathString &i_src_location, const FilePathString &i_dst_location) = 0;
 
 	/*! \fn virtual int DeleteTargetFile(const FilePathString &i_location) = 0;
 		\param [in] i_location target location.
@@ -194,25 +194,6 @@ public:
 	*/
 	virtual FilePathString GetExeFilePath() = 0;
 public:
-
-	/*! \fn const RelativePath& GetWorkDir();
-		\brief return current work directory.
-	*/
-	const RelativePath& GetWorkDir();
-
-	/*! \fn const RelativePaths& GetRelativePaths();
-		\brief return all relative paths.
-	*/
-	const RelativePaths& GetRelativePaths();
-
-	/*! \fn void SpliteFilePathAndName(const FilePathString &i_fn, FilePathString &io_dir, FilePathString &io_fn);
-		\param [in] i_fn file name.
-		\param [inout] io_dir directory.
-
-		\brief Find out the directory that is the location of file.
-	*/
-	void SpliteFilePathAndName(const FilePathString &i_fn, FilePathString &io_dir, FilePathString &io_fn);
-
 	/*! \fn bool IsAbsolutePath(const FilePathString &i_location);
 		\param [in] i_location location.
 		\brief Return ture if the i_location is absolute path.
@@ -239,12 +220,12 @@ protected:
 protected:
 
 	/*! \var FilePathString m_work_dir_path;
-		\brief work directory.
+		\brief work directory. [CRefGet Attribute]
 	*/
 	DECLARE_ATTRIBUTE_CONSTREF_GET(FilePathString, m_work_dir_path, WorkDir);
 
 	/*! \var RelativePaths m_relative_paths;
-		\brief container storing all relative paths.
+		\brief container storing all relative paths. [CRefGet Attribute]
 	*/
 	DECLARE_ATTRIBUTE_CONSTREF_GET(RelativePaths, m_relative_paths, RelativePaths);
 };

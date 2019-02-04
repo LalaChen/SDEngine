@@ -119,18 +119,18 @@ public:
 	void SetWindowResolution(Size_ui i_width, Size_ui i_height);
 
 protected:
-	/*! \var Resolution m_win_res;
+	/*! \var Resolution m_win_res; [VarGet Attribute]
 	    \brief resolution of this app.
 	*/
-	DECLARE_ATTRIBUTE_CONSTREF_SET_VAR_GET(Resolution, m_win_res, WindowResolution);
+	DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_win_res, WindowResolution);
 
-	/*! \var WindowSize m_full_window;
+	/*! \var WindowSize m_full_window; [VarGet Attribute]
 		\brief is full screen or not.
 	*/
-	DECLARE_ATTRIBUTE_VAR_SET_VAR_GET(FullWindowOption, m_full_window, FullScreenSignal);
+	DECLARE_ATTRIBUTE_VAR_GET(FullWindowOption, m_full_window, FullScreenSignal);
 
 	/*! \var std::string m_win_title;
-		\brief is full screen or not.
+		\brief is full screen or not. [VarGet Attribute]
 	*/
 	DECLARE_ATTRIBUTE_VAR_GET(std::string, m_win_title, WinTitle);
 };

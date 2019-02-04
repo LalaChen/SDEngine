@@ -82,13 +82,13 @@ SDENGINE_API void StringSplit(const std::string &i_s, char i_delim, std::vector<
 */
 SDENGINE_API std::vector<std::string> StringSplit(const std::string &i_s, char i_delim);
 
-/*! \fn SDENGINE_API void SpliteFilePathAndName(const std::string& i_path, std::string &io_path, std::string &io_name)
-    \brief Function SpliteFilePathAndName is used to separate file name and path by file last of '\\' or '/'.
+/*! \fn SDENGINE_API void SpliteTargetFileToPathAndName(const std::string& i_path, std::string &io_path, std::string &io_name)
+    \brief Function SpliteTargetFileToPathAndName is used to separate file name and path by file last of '\\' or '/'.
     \param [in] i_path The resource file path.
 	\param [inout] io_path The ref to save path result.
 	\param [inout] io_name The ref to save name result.
 */
-SDENGINE_API void SpliteFilePathAndName(const std::string &i_path, std::string &io_path, std::string &io_name);
+SDENGINE_API void SpliteTargetFileToPathAndName(const std::string &i_path, std::string &io_path, std::string &io_name);
 
 /*! \fn SDENGINE_API std::wstring StringToWString(const std::string& i_str, CodePageID i_code_page_id = 0)
     \brief Function string_to_wstring is used to convert std::string to std::wstring with codepage.

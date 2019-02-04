@@ -261,7 +261,7 @@ int WindowsFileSystemManager::RenameFile(const FilePathString &i_src_fn, const F
 #endif
 }
 
-int WindowsFileSystemManager::CopyFileToDir(const FilePathString &i_src_location, const FilePathString &i_dst_location)
+int WindowsFileSystemManager::CopyFileTo(const FilePathString &i_src_location, const FilePathString &i_dst_location)
 {
 	//If file exist, we don't copy.
 	if (IsExistedFileOrPath(i_dst_location) == false)
@@ -293,9 +293,15 @@ void WindowsFileSystemManager::VisitDir(const FilePathString &i_dir, const Entry
 	FilePathString filename, dirname;
 	FilePathString search_dir_name;
 	FilePathString total_path;
-	if (i_dir[i_dir.size() - 1] != '\\')
-		search_dir_name = i_dir + "\\*";
-	else search_dir_name = i_dir + "*";
+	FilePathString this_dir = i_dir;
+	
+	for (int c_id = static_cast<int>(this_dir.size() - 1); c_id >= 0; c_id--) {
+		if (this_dir[c_id] == '\\' || this_dir[c_id] == '/')
+			this_dir.erase(c_id, 1);
+		else break;
+	}
+
+	search_dir_name = this_dir + "\\*";
 
 	find_handle = FindFirstFile(SD_ADT_OS_STRCSTR(search_dir_name), &find_data);
 
@@ -309,14 +315,14 @@ void WindowsFileSystemManager::VisitDir(const FilePathString &i_dir, const Entry
 			{
 				filename = SD_CVT_OS_CHARS_TOSTR(find_data.cFileName);
 				if (i_file_callback != nullptr)
-					i_file_callback(i_dir, filename,i_level);
+					i_file_callback(this_dir + "\\", filename, i_level);
 			}
 			else //Dir
 			{
 				dirname = SD_CVT_OS_CHARS_TOSTR(find_data.cFileName);
 				if (dirname.compare(".") != 0 && dirname.compare("..") != 0 && i_is_recursive == true)
 				{
-					dirname = i_dir + "\\" + dirname + "\\";
+					dirname = this_dir + "\\" + dirname + "\\";
 					VisitDir(dirname, i_file_callback, i_dir_callback, i_is_recursive, (i_level+1));
 
 					if (i_dir_callback != nullptr)

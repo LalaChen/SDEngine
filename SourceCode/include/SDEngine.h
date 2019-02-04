@@ -35,10 +35,21 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "SDEngineMacro.h"
 #include "SDEngineCommonFunction.h"
-
 //-------- Basic --------
-#include "LogManager.h"
-#include "Application.h"
+#include "Basic/Application/Application.h"
+#include "Basic/LogManager/LogManager.h"
+#include "Basic/Timer/Timer.h"
+#include "Basic/FileSystem/FileSystemManager.h"
 //-------- Graphics --------
-#include "Resolution.h"
-#include "GraphicsAPI.h"
+#include "Graphics/Resolution/Resolution.h"
+#include "Graphics/Manager/GraphicsAPI.h"
+//------- OS Platform Only -------
+#ifdef _WIN_PLATFORM_
+#include "Basic/LogManager/Windows/WindowsLogManager.h"
+#include "Basic/Timer/Windows/WindowsTimer.h"
+#include "Basic/FileSystem/Windows/WindowsFileSystemManager.h"
+#elif _ANDROID_PLATFORM_
+
+#endif
+//------- OpenGL Platform -------
+#include "Graphics/Manager/OpenGL4/OpenGL4API.h"

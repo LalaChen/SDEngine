@@ -105,17 +105,17 @@ private:
 	void CalculateRatioBetweenWidthAndHeight();
 protected:
 	/* \var Size_ui m_width;
-	   \brief Width of Resolution.
+	   \brief Width of Resolution. [VarGet Attribute]
 	*/
 	DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_width, Width);
 
 	/* \var Size_ui m_width;
-	   \brief Width of Resolution.
+	   \brief Width of Resolution. [VarGet Attribute]
 	*/
 	DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_height, Height);
 
 	/* \var float m_aspect_ratio;
-	   \brief Aspect ratio of Resolution.
+	   \brief Aspect ratio of Resolution. [VarGet Attribute]
 	*/
 	DECLARE_ATTRIBUTE_VAR_GET(float, m_aspect_ratio, Ratio);
 };

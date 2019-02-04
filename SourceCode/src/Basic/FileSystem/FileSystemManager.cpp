@@ -31,9 +31,13 @@ namespace SDE
 namespace Basic
 {
 
+SINGLETON_DECLARATION_IMPL(FileSystemManager);
+
 //------------ File System Manager  ------------
 FileSystemManager::FileSystemManager()
 {
+	SINGLETON_DECLARATION_REGISTER
+	//Add default folder.
 	AddRelativePath("");
 	AddRelativePath("Resources\\");
 }
@@ -56,11 +60,6 @@ bool FileSystemManager::IsExistedRelativePath(const FilePathString &i_path) cons
 	}
 
 	return false;
-}
-
-void FileSystemManager::SpliteFilePathAndName(const FilePathString &i_fn, FilePathString &io_dir, FilePathString &io_fn)
-{
-	SpliteFilePathAndName(i_fn, io_dir, io_fn);
 }
 
 bool FileSystemManager::IsAbsolutePath(const FilePathString &i_filename)

@@ -44,7 +44,7 @@ namespace Basic
 /*! \class WindowsFileSystemManager
 	FileSystemManager in Windows OS.
 */
-class WindowsFileSystemManager : public FileSystemManager
+class SDENGINE_CLASS WindowsFileSystemManager : public FileSystemManager
 {
 public:
 	/*! \fn WindowsFileSystemManager();
@@ -130,12 +130,12 @@ public:
 	*/
 	int RenameFile(const FilePathString &i_src_fn, const FilePathString &i_new_fn) override;
 
-	/*! \fn int CopyFileToDir(const FilePathString &i_src_location, const FilePathString &i_dst_location) override;
+	/*! \fn int CopyFileTo(const FilePathString &i_src_location, const FilePathString &i_dst_location) override;
 		\param [in] i_src_location source location.
 		\param [in] i_dst_location destinated location.
 		\brief copy file from i_src_location to i_dst_location and then return error.
 	*/
-	int CopyFileToDir(const FilePathString &i_src_location, const FilePathString &i_dst_location) override;
+	int CopyFileTo(const FilePathString &i_src_location, const FilePathString &i_dst_location) override;
 
 	/*! \fn int DeleteTargetFile(const FilePathString &i_location) override;
 		\param [in] i_location target location.

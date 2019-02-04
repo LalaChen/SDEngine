@@ -24,10 +24,10 @@ SOFTWARE.
 */
 
 /*! \file      FileData.h
-	\brief     The introduction of FileData.
-	\author    Kuan-Chih, Chen
-	\date      2019/02/04
-	\copyright MIT License.
+    \brief     The introduction of FileData.
+    \author    Kuan-Chih, Chen
+    \date      2019/02/04
+    \copyright MIT License.
  */
 
 #include "SDEngineMacro.h"
@@ -44,7 +44,7 @@ namespace Basic
 /*! \class FileData
 	For save the content of file.
 */
-class FileData
+class SDENGINE_CLASS FileData
 {
 public:
 	/*! \fn FileData();

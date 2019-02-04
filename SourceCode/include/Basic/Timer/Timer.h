@@ -93,29 +93,29 @@ public:
 	virtual void GetCurrentTimeByOS(double &io_time) = 0;
 protected:
 	/*! \var double m_start_time;
-		\brief Program start time.
+		\brief Program start time. [VarGet Attribute]
 	*/
-	DECLARE_ATTRIBUTE_CONSTREF_GET(double, m_start_time, ProgramStartTime);
+	DECLARE_ATTRIBUTE_VAR_GET(double, m_start_time, ProgramStartTime);
 
 	/*! \var double m_previous_time;
-		\brief Program previous time.
+		\brief Program previous time. [VarGet Attribute]
 	*/
-	DECLARE_ATTRIBUTE_CONSTREF_GET(double, m_previous_time, ProgramPreviousTime);
+	DECLARE_ATTRIBUTE_VAR_GET(double, m_previous_time, ProgramPreviousTime);
 
 	/*! \var double m_current_time;
-		\brief Program current time.
+		\brief Program current time. [VarGet Attribute]
 	*/
-	DECLARE_ATTRIBUTE_CONSTREF_GET(double, m_current_time, ProgramCurrentTime);
+	DECLARE_ATTRIBUTE_VAR_GET(double, m_current_time, ProgramCurrentTime);
 
 	/*! \var double m_end_time;
-		\brief Program end time.
+		\brief Program end time. [VarGet Attribute]
 	*/
-	DECLARE_ATTRIBUTE_CONSTREF_GET(double, m_end_time, EndProgramTime);
+	DECLARE_ATTRIBUTE_VAR_GET(double, m_end_time, EndProgramTime);
 
 	/*! \var double m_delta_time;
-		\brief The delta time between two frames.
+		\brief The delta time between two frames. [VarGet Attribute]
 	*/
-	DECLARE_ATTRIBUTE_CONSTREF_GET(double, m_delta_time, ProgramDeltaTime);
+	DECLARE_ATTRIBUTE_VAR_GET(double, m_delta_time, ProgramDeltaTime);
 };
 
 //---------------------------- end of namespace Basic ----------------------------

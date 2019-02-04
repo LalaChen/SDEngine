@@ -138,7 +138,7 @@ std::vector<std::string> StringSplit(const std::string &i_s, char i_delim)
 	return elems;
 }
 
-void SpliteFilePathAndName(const std::string& i_path, std::string &io_path, std::string &io_name)
+void SpliteTargetFileToPathAndName(const std::string &i_path, std::string &io_path, std::string &io_name)
 {
 	size_t found = i_path.find_last_of("/\\");
 	io_path = i_path.substr(0, found);
