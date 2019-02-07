@@ -87,6 +87,12 @@
     <Filter Include="include\Graphics\FileSystem\Windows">
       <UniqueIdentifier>{b9a1b15c-46c5-42fc-a59b-adde8f16e6a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Basic\Object">
+      <UniqueIdentifier>{5b3ac033-ccaf-4ef7-8e4e-d353ae92e7fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\Object">
+      <UniqueIdentifier>{3810bb7f-23b9-48dc-81c5-2ae8a4ccf350}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -121,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\FileData.cpp">
       <Filter>include\Graphics\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\Object\Object.cpp">
+      <Filter>src\Basic\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +177,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Basic\FileSystem\FileData.h">
       <Filter>include\Basic\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\Object\StrongReferenceObject.h">
+      <Filter>include\Basic\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\Object\WeakReferenceObject.h">
+      <Filter>include\Basic\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\Object\NullRefException.h">
+      <Filter>include\Basic\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\Object\Object.h">
+      <Filter>include\Basic\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

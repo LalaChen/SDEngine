@@ -36,7 +36,6 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
 
-
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {

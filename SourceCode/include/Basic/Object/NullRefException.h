@@ -1,6 +1,4 @@
-#pragma once
-
-/* ==============  SD Engine License ==============
+/*==============  SD Engine License ==============
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -22,38 +20,45 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-/*! \file      SDEngine.h
- *  \brief     Total include header.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/02/01
- *  \copyright MIT License.
+/*! \file      NullReferenceException.h
+	\brief     Introduce of class Object
+	\author    Kuan-Chih, Chen
+	\date      2019/02/07
+	\copyright MIT License.
  */
 
-//-------- Common Function ---------
-#include "SDEngineCommonType.h"
-#include "SDEngineMacro.h"
-#include "SDEngineCommonFunction.h"
-//-------- Basic --------
-#include "Basic/Object/NullRefException.h"
-#include "Basic/Object/Object.h"
-#include "Basic/Object/StrongReferenceObject.h"
-#include "Basic/Object/WeakReferenceObject.h"
-#include "Basic/Application/Application.h"
-#include "Basic/LogManager/LogManager.h"
-#include "Basic/Timer/Timer.h"
-#include "Basic/FileSystem/FileSystemManager.h"
-//-------- Graphics --------
-#include "Graphics/Resolution/Resolution.h"
-#include "Graphics/Manager/GraphicsAPI.h"
-//------- OS Platform Only -------
-#ifdef _WIN_PLATFORM_
-#include "Basic/LogManager/Windows/WindowsLogManager.h"
-#include "Basic/Timer/Windows/WindowsTimer.h"
-#include "Basic/FileSystem/Windows/WindowsFileSystemManager.h"
-#elif _ANDROID_PLATFORM_
+#pragma once
 
-#endif
-//------- OpenGL Platform -------
-#include "Graphics/Manager/OpenGL4/OpenGL4API.h"
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
+//---------------------------- start of namespace SDE ----------------------------
+namespace SDE
+{
+//---------------------------- start of namespace Basic ----------------------------
+namespace Basic
+{
+
+#include <exception>
+
+/*! \class NullReferenceException
+	In our system, class NullReferenceException throw when we try to GetRef of null strong \n
+	or weak reference object.\n
+*/
+class NullReferenceException : public std::exception
+{
+public:
+	/*! \fn virtual const char* what() const throw();
+		\brief override what function for using.
+	*/
+	virtual const char* what() const throw() { return "NullReferenceException"; }
+};
+
+//---------------------------- end of namespace Basic ----------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

@@ -67,6 +67,11 @@ typedef unsigned char UByte;
 	\brief represent byte array pointer.
 */
 typedef UByte* UBytePtr;
+
+/*! \typedef std::string ObjectName;
+	\brief name of object.
+*/
+typedef std::string ObjectName;
 }
 //---------------------------- end of namespace Basic ---------------------------
 
