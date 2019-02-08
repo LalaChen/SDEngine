@@ -23,7 +23,7 @@ SOFTWARE.
 
 */
 
-/*! \file      WeakRefernceObject.h
+/*! \file      WeakReferenceObject.h
 	\brief     Introduce of class WeakRefernceObject
 	\author    Kuan-Chih, Chen
 	\date      2019/02/07
@@ -183,6 +183,21 @@ public:
 	{
 		if (this->lock().get() == nullptr) return 0;
 		else return this->use_count();
+	}
+
+	bool IsEqualTo(const WeakReferenceObject<Type> &i_src) const
+	{
+		Type *this_ptr = this->lock().get();
+		Type *src_ptr = i_src.lock().get();
+		if (this_ptr != nullptr && src_ptr != nullptr) {
+			if (this_ptr != src_ptr)
+				return this_ptr->IsEqualTo(*src_ptr);
+			else
+				return true;
+		}
+		else {
+			return false;
+		}
 	}
 };
 

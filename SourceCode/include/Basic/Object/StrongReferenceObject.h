@@ -130,7 +130,21 @@ public:
 	{
 		return std::weak_ptr<BasedType>( std::static_pointer_cast<BasedType>(*this) );
 	}
-
+public:
+	bool IsEqualTo(const StrongReferenceObject<Type> &i_src) const
+	{
+		Type *this_ptr = this->get();
+		Type *src_ptr = i_src.get();
+		if (this_ptr != nullptr && src_ptr != nullptr) {
+			if (this_ptr != src_ptr)
+				return this_ptr->IsEqualTo(*src_ptr);
+			else
+				return true;
+		}
+		else {
+			return false;
+		}
+	}
 public:
 	/*! \fn Type& GetRef() const;
 		\brief return reference of this.

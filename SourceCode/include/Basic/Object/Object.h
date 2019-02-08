@@ -1,5 +1,3 @@
-#pragma once
-
 /*==============  SD Engine License ==============
 MIT License
 
@@ -51,7 +49,7 @@ namespace Basic
 	In our system, class object is the root of all classes those instances will be kept \n
 	in several places. What's more, we will define some common behavior for those object.\n
 */
-class SDENGINE_API Object
+class SDENGINE_API Object : public std::enable_shared_from_this<Object>
 {
 public:
 	/*! \fn explicit Object(const ObjectName &i_object_name);
@@ -76,6 +74,22 @@ public:
 		\brief Compare i_src with this.
 	*/
 	virtual std::string ToString() const;
+public:
+	/* \fn std::shared_ptr<Object> GetThisSharedPtr()
+	   \brief Return this shared_ptr.
+	*/
+	std::shared_ptr<Object> GetThisSharedPtr()
+	{
+		return shared_from_this();
+	}
+
+	/* \fn template<class T> std::shared_ptr<T> GetThisSharedPtrByType()
+	   \brief Return this shared_ptr by type T.
+	*/
+	template<class T> std::shared_ptr<T> GetThisSharedPtrByType()
+	{
+		return std::dynamic_pointer_cast<T>(shared_from_this());
+	}
 protected:
 
 	/*! \var ObjectName m_object_name;

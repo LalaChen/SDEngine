@@ -61,7 +61,7 @@ bool WindowsFileSystemManager::OpenFile(const FilePathString &i_location, FileDa
 	std::ifstream  dest_file;
 	FilePathString file_path;
 	std::vector<UByte> file_buffer;
-	unsigned int file_length = 0;
+	std::streamoff file_length = 0;
 
 	//check absolute path.
 	if (IsAbsolutePath(i_location) == true)

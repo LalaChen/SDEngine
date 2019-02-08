@@ -2,7 +2,6 @@
 #include <memory>
 #include <iostream>
 
-#include "SDSmartObjectMacro.h"
 #include "SDEngine.h"
 
 using namespace SDE;
@@ -39,7 +38,7 @@ void UnitTestLogManager::LogToOutput(LogType i_type)
 	}
 }
 
-class BaseClass : SDE::Basic::Object
+class BaseClass : public SDE::Basic::Object
 {
 public:
 	explicit BaseClass(const std::string &i_object_name)
@@ -405,5 +404,10 @@ int main(int argc, char **argv)
 		L3_1_wref = L3_1_in_L1_wref.DynamicCastTo<L3_1Class>();
 		SDLOG("* Assign L3_1_in_L1_wref to L3_1_wref by dynamic cast. L3_1_wref info : %s. use_count %d.(should be 3)",
 			L3_1_wref.GetRef().ToString().c_str(), L3_1_wref.UseCount());
+
+		bool is_equal = L3_1_in_L1_wref.IsEqualTo(L3_1_wref.StaticCastTo<L1Class>());
+		if (is_equal == true) {
+			SDLOG("* L3_1_in_L1_wref is equal to L3_1_wref. (O)");
+		}
 	}
 }

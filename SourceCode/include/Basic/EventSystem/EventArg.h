@@ -23,39 +23,45 @@ SOFTWARE.
 
 */
 
-/*! \file      NullRefException.h
-	\brief     Introduce of class NullRefException
-	\author    Kuan-Chih, Chen
-	\date      2019/02/07
-	\copyright MIT License.
- */
+ /*! \file      EventArg.h
+     \brief     Introduce of class EventArg
+     \author    Kuan-Chih, Chen
+     \date      2019/02/07
+     \copyright MIT License.
+  */
 
 #pragma once
 
 #include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "SDEngineCommonFunction.h"
 
-//---------------------------- start of namespace SDE ----------------------------
+ //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
 //---------------------------- start of namespace Basic ----------------------------
 namespace Basic
 {
 
-#include <exception>
-
-/*! \class NullReferenceException
-	In our system, class NullReferenceException throw when we try to GetRef of null strong \n
-	or weak reference object.\n
+/*! \class EventArg
+    In our event system, we allow user delievrying parameters by inheriting Class EventArg. \n
+	It's used for unifying param of interface for all slot. User can check the real arg type \n
+	while slot triggered. \n
 */
-class NullReferenceException : public std::exception
+class SDENGINE_CLASS EventArg
 {
 public:
-	/*! \fn virtual const char* what() const throw();
-		\brief override what function for using.
+	/*! \fn EventArg()
+		\brief The constructor of EventArg Class.
 	*/
-	virtual const char* what() const throw() { return "NullReferenceException"; }
+    EventArg()
+	{
+	}
+
+	/*! \fn virtual ~EventArg()
+		\brief The destructor of EventArg Class.
+	*/
+	virtual ~EventArg()
+	{
+	}
 };
 
 //---------------------------- end of namespace Basic ----------------------------

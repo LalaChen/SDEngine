@@ -40,6 +40,10 @@ SOFTWARE.
 #include "Basic/Object/Object.h"
 #include "Basic/Object/StrongReferenceObject.h"
 #include "Basic/Object/WeakReferenceObject.h"
+#include "Basic/EventSystem/Event.h"
+#include "Basic/EventSystem/EventArg.h"
+#include "Basic/EventSystem/FunctionSlot.h"
+#include "Basic/EventSystem/EventObject.h"
 #include "Basic/Application/Application.h"
 #include "Basic/LogManager/LogManager.h"
 #include "Basic/Timer/Timer.h"
@@ -52,8 +56,7 @@ SOFTWARE.
 #include "Basic/LogManager/Windows/WindowsLogManager.h"
 #include "Basic/Timer/Windows/WindowsTimer.h"
 #include "Basic/FileSystem/Windows/WindowsFileSystemManager.h"
+#include "Graphics/Manager/OpenGL4/OpenGL4API.h"
 #elif _ANDROID_PLATFORM_
 
 #endif
-//------- OpenGL Platform -------
-#include "Graphics/Manager/OpenGL4/OpenGL4API.h"

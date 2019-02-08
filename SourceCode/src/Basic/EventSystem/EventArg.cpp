@@ -23,18 +23,7 @@ SOFTWARE.
 
 */
 
-/*! \file      NullRefException.h
-	\brief     Introduce of class NullRefException
-	\author    Kuan-Chih, Chen
-	\date      2019/02/07
-	\copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "SDEngineCommonFunction.h"
+#include "EventArg.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -43,20 +32,6 @@ namespace SDE
 namespace Basic
 {
 
-#include <exception>
-
-/*! \class NullReferenceException
-	In our system, class NullReferenceException throw when we try to GetRef of null strong \n
-	or weak reference object.\n
-*/
-class NullReferenceException : public std::exception
-{
-public:
-	/*! \fn virtual const char* what() const throw();
-		\brief override what function for using.
-	*/
-	virtual const char* what() const throw() { return "NullReferenceException"; }
-};
 
 //---------------------------- end of namespace Basic ----------------------------
 }

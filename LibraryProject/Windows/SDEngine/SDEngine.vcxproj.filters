@@ -93,6 +93,12 @@
     <Filter Include="src\Basic\Object">
       <UniqueIdentifier>{3810bb7f-23b9-48dc-81c5-2ae8a4ccf350}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Basic\EventSystem">
+      <UniqueIdentifier>{0fc70989-aec0-4305-9216-58ccb5261a60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\EventSystem">
+      <UniqueIdentifier>{d322a8dd-2668-4c5d-b33f-39fa045af86c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -130,6 +136,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Object\Object.cpp">
       <Filter>src\Basic\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\EventSystem\Event.cpp">
+      <Filter>src\Basic\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\EventSystem\EventArg.cpp">
+      <Filter>src\Basic\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\EventSystem\FunctionSlot.cpp">
+      <Filter>src\Basic\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\EventSystem\EventObject.cpp">
+      <Filter>src\Basic\EventSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +207,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Object\Object.h">
       <Filter>include\Basic\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\EventSystem\Event.h">
+      <Filter>include\Basic\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\EventSystem\EventArg.h">
+      <Filter>include\Basic\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\EventSystem\FunctionSlot.h">
+      <Filter>include\Basic\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\EventSystem\EventObject.h">
+      <Filter>include\Basic\EventSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

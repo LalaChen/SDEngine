@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Application\Application.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\EventSystem\Event.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\EventSystem\EventArg.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\EventSystem\EventObject.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Basic\EventSystem\FunctionSlot.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\FileData.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\FileSystemManager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\Windows\WindowsFileSystemManager.cpp" />
@@ -34,6 +38,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Application\Application.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\EventSystem\Event.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\EventSystem\EventArg.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\EventSystem\EventObject.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Basic\EventSystem\FunctionSlot.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\FileSystem\FileData.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\FileSystem\FileSystemManager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\FileSystem\Windows\WindowsFileSystemManager.h" />

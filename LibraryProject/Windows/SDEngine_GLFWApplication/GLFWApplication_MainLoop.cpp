@@ -70,8 +70,15 @@ void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int 
 	//3. launch main loop.
 	while (!glfwWindowShouldClose(window))
 	{
-		// Draw gears
-		Application::GetRef().Update();
+		try {
+			// Update Game.
+			Application::GetRef().Update();
+		}
+		catch (std::exception &e)
+		{
+			SDLOGE("Execption occur !!! %s.",e.what());
+		}
+
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();

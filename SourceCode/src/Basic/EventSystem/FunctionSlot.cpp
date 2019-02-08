@@ -23,18 +23,7 @@ SOFTWARE.
 
 */
 
-/*! \file      NullRefException.h
-	\brief     Introduce of class NullRefException
-	\author    Kuan-Chih, Chen
-	\date      2019/02/07
-	\copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "SDEngineCommonFunction.h"
+#include "FunctionSlot.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -43,20 +32,47 @@ namespace SDE
 namespace Basic
 {
 
-#include <exception>
+//class GlobalFunctionSlot
 
-/*! \class NullReferenceException
-	In our system, class NullReferenceException throw when we try to GetRef of null strong \n
-	or weak reference object.\n
-*/
-class NullReferenceException : public std::exception
+GlobalFunctionSlot::GlobalFunctionSlot(const ObjectName &i_object_name, GlobalSlotFunction i_fp)
+: FunctionSlotBase(i_object_name)
+, m_fp(i_fp)
 {
-public:
-	/*! \fn virtual const char* what() const throw();
-		\brief override what function for using.
-	*/
-	virtual const char* what() const throw() { return "NullReferenceException"; }
-};
+}
+
+GlobalFunctionSlot::~GlobalFunctionSlot()
+{
+}
+
+void GlobalFunctionSlot::RegisterFunction(GlobalFunctionSlot::GlobalSlotFunction i_function_pointer)
+{
+	m_fp = i_function_pointer;
+}
+
+bool GlobalFunctionSlot::NotifyFunction(const EventArg &i_src_arg)
+{
+	if(m_fp != 0){
+		m_fp(i_src_arg);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool GlobalFunctionSlot::IsEqualTo(const Object &i_src) const
+{
+	const GlobalFunctionSlot *src_ptr = dynamic_cast<const GlobalFunctionSlot*>(&i_src);
+
+	if(src_ptr != nullptr){
+		return (m_fp == src_ptr->m_fp);
+	}
+	else{
+		//error : Is not GlobalFunctionSlot object.
+		return false;
+	}
+}
 
 //---------------------------- end of namespace Basic ----------------------------
 }
