@@ -24,10 +24,10 @@ SOFTWARE.
 */
 
 /*! \file      LogManager.h
-    \brief     Introduce of class LogManager
-    \author    Kuan-Chih, Chen
-    \date      2019/02/02
-    \copyright MIT License.
+ *  \brief     Introduce of class LogManager
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/02
+ *  \copyright MIT License.
  */
 
 #pragma once

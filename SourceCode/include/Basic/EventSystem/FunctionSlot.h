@@ -24,10 +24,10 @@ SOFTWARE.
 */
 
 /*! \file      FunctionSlot.h
-    \brief     Introduce of class FunctionSlotBase, GlobalFunctionSlot and MemberFunctionSlot.
-    \author    Kuan-Chih, Chen
-    \date      2019/02/07
-    \copyright FreeBSD Public License.
+ *  \brief     Introduce of class FunctionSlotBase, GlobalFunctionSlot and MemberFunctionSlot.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/07
+ *  \copyright FreeBSD Public License.
  */
 
 #pragma once

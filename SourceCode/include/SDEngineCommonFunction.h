@@ -23,11 +23,11 @@ SOFTWARE.
 */
 
 /*! \file      SDEngineCommonFunction.h
-    \brief     SDEngineCommonFunction collects a lot of useful functions about time or string composition.
-               Those function will be used widely in SDEngine and others side project made by me.
-    \author    Kuan-Chih, Chen
-    \date      2019/02/01
-    \copyright MIT License.
+ *  \brief     SDEngineCommonFunction collects a lot of useful functions about time or string composition.
+ *             Those function will be used widely in SDEngine and others side project made by me.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/01
+ *  \copyright MIT License.
  */
 
 #pragma once

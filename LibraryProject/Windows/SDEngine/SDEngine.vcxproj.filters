@@ -81,12 +81,6 @@
     <Filter Include="include\Basic\FileSystem\Windows">
       <UniqueIdentifier>{1d5de13a-8dfd-408e-8cae-680440736d85}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Graphics\FileSystem">
-      <UniqueIdentifier>{433165fc-ce52-4caf-9ec7-068097b09268}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Graphics\FileSystem\Windows">
-      <UniqueIdentifier>{b9a1b15c-46c5-42fc-a59b-adde8f16e6a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\Basic\Object">
       <UniqueIdentifier>{5b3ac033-ccaf-4ef7-8e4e-d353ae92e7fc}</UniqueIdentifier>
     </Filter>
@@ -98,6 +92,12 @@
     </Filter>
     <Filter Include="src\Basic\EventSystem">
       <UniqueIdentifier>{d322a8dd-2668-4c5d-b33f-39fa045af86c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\FileSystem">
+      <UniqueIdentifier>{433165fc-ce52-4caf-9ec7-068097b09268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\FileSystem\Windows">
+      <UniqueIdentifier>{b9a1b15c-46c5-42fc-a59b-adde8f16e6a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -126,13 +126,13 @@
       <Filter>src\Basic\Timer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\FileSystemManager.cpp">
-      <Filter>include\Graphics\FileSystem</Filter>
+      <Filter>src\Basic\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\Windows\WindowsFileSystemManager.cpp">
-      <Filter>include\Graphics\FileSystem\Windows</Filter>
+      <Filter>src\Basic\FileSystem\Windows</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\FileSystem\FileData.cpp">
-      <Filter>include\Graphics\FileSystem</Filter>
+      <Filter>src\Basic\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Object\Object.cpp">
       <Filter>src\Basic\Object</Filter>

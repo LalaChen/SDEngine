@@ -24,10 +24,10 @@ SOFTWARE.
 */
 
 /*! \file      WindowsTimer.h
-	\brief     Introduce of class WindowsTimer
-	\author    Kuan-Chih, Chen
-	\date      2019/02/04
-	\copyright MIT License.
+ *  \brief     Introduce of class WindowsTimer
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/04
+ *  \copyright MIT License.
  */
 
 #pragma once

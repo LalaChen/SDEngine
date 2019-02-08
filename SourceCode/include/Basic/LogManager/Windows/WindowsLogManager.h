@@ -24,11 +24,12 @@ SOFTWARE.
 */
 
 /*! \file      WindowsLogManager.h
-    \brief     Introduce of class WindowsLogManager
-    \author    Kuan-Chih, Chen
-    \date      2019/02/02
-    \copyright MIT License.
+ *  \brief     Introduce of class WindowsLogManager
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/02
+ *  \copyright MIT License.
  */
+
 #pragma once
 
 #include "LogManager.h"

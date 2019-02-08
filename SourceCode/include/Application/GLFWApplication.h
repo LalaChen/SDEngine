@@ -1,3 +1,35 @@
+/*==============  SD Engine License ==============
+MIT License
+
+Copyright (c) 2019 Kuan-Chih, Chen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/*! \file      GLFWApplication.h
+ *  \brief     Introduce of class GLFWApplication.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/03
+ *  \copyright FreeBSD Public License.
+ */
+
 #pragma once
 
 #include <GLFW/glfw3.h>
@@ -11,10 +43,19 @@ namespace SDE
 //---------------------------- start of namespace App ----------------------------
 namespace App
 {
-
+/*! \class GLFWApplication
+    This class is used to create GLFW window. We use GLFWApplication::LaunchGLFWApplication to launch GLFW.
+*/
 class SDENGINE_CLASS GLFWApplication : public Application
 {
 public:
+	/*! \fn static void LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window);
+	    \param [in] i_win_title Title of window.
+		\param [in] i_argc number of arguments.
+		\param [in] i_argv arguments.
+		\param [in] i_win_res Resolution of this window.
+		\param [in] i_full_window Is full window or not.
+	*/
 	static void LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window);
 public:
 //------------ KeyEvent

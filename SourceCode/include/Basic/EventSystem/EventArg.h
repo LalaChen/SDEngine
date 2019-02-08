@@ -23,12 +23,12 @@ SOFTWARE.
 
 */
 
- /*! \file      EventArg.h
-     \brief     Introduce of class EventArg
-     \author    Kuan-Chih, Chen
-     \date      2019/02/07
-     \copyright MIT License.
-  */
+/*! \file      EventArg.h
+ *  \brief     Introduce of class EventArg
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/07
+ *  \copyright MIT License.
+ */
 
 #pragma once
 

@@ -24,10 +24,10 @@ SOFTWARE.
 */
 
 /*! \file      OpenGL4API.h
-	\brief     Introduce of class OpenGL4API
-	\author    Kuan-Chih, Chen
-	\date      2019/02/03
-	\copyright MIT License.
+ *  \brief     Introduce of class OpenGL4API
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/03
+ *  \copyright MIT License.
  */
 
 #include "GraphicsAPI.h"

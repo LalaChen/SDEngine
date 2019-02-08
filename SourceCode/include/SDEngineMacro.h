@@ -24,11 +24,11 @@ SOFTWARE.
 */
 
 /*! \file      SDEngineMacro.h
-    \brief     SDEngineMacro collects a lot of useful macro about attribute getter/setter.
-               Those macro will be used widely in SDEngine and others side project made by me.
-    \author    Kuan-Chih, Chen
-    \date      2019/02/01
-    \copyright MIT License.
+ *  \brief     SDEngineMacro collects a lot of useful macro about attribute getter/setter.
+ *             Those macro will be used widely in SDEngine and others side project made by me.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/01
+ *  \copyright MIT License.
  */
 #pragma once
 #pragma warning( disable : 4251 ) //For dllexport warning of STL

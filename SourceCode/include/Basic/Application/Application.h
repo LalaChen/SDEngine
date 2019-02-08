@@ -24,10 +24,10 @@ SOFTWARE.
 */
 
 /*! \file      Application.h
-	\brief     Introduce of class Application
-	\author    Kuan-Chih, Chen
-	\date      2019/02/02
-	\copyright MIT License.
+ *  \brief     Introduce of class Application
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/02
+ *  \copyright MIT License.
  */
 
 #pragma once

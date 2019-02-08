@@ -24,10 +24,10 @@ SOFTWARE.
 */
 
 /*! \file      Object.h
-	\brief     Introduce of class Object
-	\author    Kuan-Chih, Chen
-	\date      2019/02/07
-	\copyright MIT License.
+ *  \brief     Introduce of class Object
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/07
+ *  \copyright MIT License.
  */
 
 #pragma once

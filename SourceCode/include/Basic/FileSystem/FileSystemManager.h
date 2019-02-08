@@ -24,10 +24,10 @@ SOFTWARE.
 */
 
 /*! \file      FileSystemManager.h
-    \brief     The introduction of FileSystemManager.
-    \author    Kuan-Chih, Chen
-	\date      2019/02/04
-	\copyright MIT License.
+ *  \brief     The introduction of FileSystemManager.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/04
+ *  \copyright MIT License.
  */
 
 #pragma once

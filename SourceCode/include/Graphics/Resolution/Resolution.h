@@ -24,10 +24,10 @@ SOFTWARE.
 */
 
 /*! \file      Resolution.h
-	\brief     The class resolution is used to record the size of framebuffer or screen.
-	\author    Kuan-Chih, Chen
-	\date      2019/02/02
-	\copyright MIT License.
+ *  \brief     The class resolution is used to record the size of framebuffer or screen.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/02
+ *  \copyright MIT License.
  */
 
 #pragma once

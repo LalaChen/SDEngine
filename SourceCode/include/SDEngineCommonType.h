@@ -23,12 +23,11 @@ SOFTWARE.
 */
 
 /*! \file      SDEngineCommonType.h
-    \brief     Declare some basic type in engine.
-    \author    Kuan-Chih, Chen
-    \date      2019/02/02
-    \copyright MIT License.
-*/
-
+ *  \brief     Declare some basic type in engine.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/02
+ *  \copyright MIT License.
+ */
 #include <string>
 
 //---------------------------- start of namespace SDEngine ----------------------------
