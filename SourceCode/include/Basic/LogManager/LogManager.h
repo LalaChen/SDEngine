@@ -51,14 +51,14 @@ namespace Basic
 {
 
 /*! \class LogManager
-	Class LogManager is used to print log. It's singleton class.
+    Class LogManager is used to print log. It's singleton class.
 */
 class SDENGINE_CLASS LogManager
 {
 public:
 	/*! \enum LogManager::LogType
-	    \brief Represent the log type.
-	*/
+     *  \brief Represent the log type.
+	 */
 	enum LogType
 	{
 		Normal   = 1, /*!< Show log with prefix Normal. */
@@ -70,46 +70,46 @@ public:
 	SINGLETON_DECLARATION(LogManager);
 public:
 	/*! \fn explicit LogManager();
-		\brief Constructor of LogManager.
-	*/
+	 *	\brief Constructor of LogManager.
+	 */
 	explicit LogManager();
 
 	/*! \fn virtual ~LogManager();
-		\brief Destructor of LogManager.
-	*/
+	 *	\brief Destructor of LogManager.
+	 */
 	virtual ~LogManager();
 public:
 	/*! \fn virtual void Log(LogType i_type, const std::string &i_prefix, const char *i_log, ...) = 0;
-	    \param [in] i_type type of log.
-		\param [in] i_prefix prefix string.
-		\param [in] i_log log string.
-		\brief Compose log string to buffer.
-	*/
+	 *  \param [in] i_type type of log.
+	 *  \param [in] i_prefix prefix string.
+	 *  \param [in] i_log log string.
+	 *  \brief Compose log string to buffer.
+	 */
 	virtual void Log(LogType i_type, const std::string &i_prefix, const char *i_log, ...) = 0;
 
 	/*! \fn virtual void Log(LogType i_type, const std::string &i_prefix, const char *i_log , va_list i_args) = 0;
-		\param [in] i_type type of log.
-		\param [in] i_prefix prefix string.
-		\param [in] i_log log string.
-		\param [in] i_args all arguments in log.
-		\brief Compose log string to buffer.
-	*/
+	 *  \param [in] i_type type of log.
+	 *  \param [in] i_prefix prefix string.
+	 *  \param [in] i_log log string.
+	 *  \param [in] i_args all arguments in log.
+	 *  \brief Compose log string to buffer.
+	 */
 	virtual void Log(LogType i_type, const std::string &i_prefix, const char *i_log , va_list i_args) = 0;
 protected:
 	/*! \fn virtual void LogToOutput(LogType i_type) = 0;
-		\param [in] i_type type of log.
-		\brief Flush this log to output.
-	*/
+	 *  \param [in] i_type type of log.
+	 *  \brief Flush this log to output.
+	 */
 	virtual void LogToOutput(LogType i_type) = 0;
 protected:
 	/*! \var char m_log_buffer[MAX_WORD_PER_LINE];
-	    \brief store log result.
-	*/
+	 *  \brief store log result.
+	 */
 	char m_log_buffer[SD_MAX_WORD_PER_LINE];
 
 	/*! \var std::string m_prefix;
-		\brief store log prefix.
-	*/
+	 *  \brief store log prefix.
+	 */
 	std::string m_prefix;
 };
 
@@ -127,29 +127,29 @@ protected:
 #define INFO_PREFIX std::string(__FILE__) + SDE::Basic::StringFormat("(%d):", __LINE__) + std::string(__func__) + std::string("() : ")
 
 /*! \def SDLOGD(log,...)
-    \brief Print debug log.
-*/
+ *  \brief Print debug log.
+ */
 #define SDLOGD(log,...) \
 	if(SDE::Basic::LogManager::IsNull() == false) \
 		SDE::Basic::LogManager::GetRef().Log(SDE::Basic::LogManager::Internal, INFO_PREFIX, log, ##__VA_ARGS__);
 
 /*! \def SDLOGE(log,...)
-	\brief Print error log.
-*/
+ *  \brief Print error log.
+ */
 #define SDLOGE(log,...) \
 	if(SDE::Basic::LogManager::IsNull() == false) \
 		SDE::Basic::LogManager::GetRef().Log(SDE::Basic::LogManager::Error, INFO_PREFIX , log, ##__VA_ARGS__);
 
 /*! \def SDLOGW(log,...)
-	\brief Print warning log.
-*/
+ *  \brief Print warning log.
+ */
 #define SDLOGW(log,...) \
 	if(SDE::Basic::LogManager::IsNull() == false) \
 		SDE::Basic::LogManager::GetRef().Log(SDE::Basic::LogManager::Warning, INFO_PREFIX , log, ##__VA_ARGS__); 
 
 /*! \def SDLOG(log,...)
-	\brief Print log.
-*/
+ *  \brief Print log.
+ */
 #define SDLOG(log,...) \
 	if(SDE::Basic::LogManager::IsNull() == false) \
 		SDE::Basic::LogManager::GetRef().Log(SDE::Basic::LogManager::LogType::Normal, INFO_PREFIX, log,##__VA_ARGS__); 

@@ -48,46 +48,46 @@ namespace Basic
 {
 
 /*! \class StrongReferenceObject
-	In our system, StrongReferenceObject is a template class for making strong reference object of \n
-	Type class. Actually, this class is extended class about std::shared_ptr.
-*/
+ *  In our system, StrongReferenceObject is a template class for making strong reference object of \n
+ *  Type class. Actually, this class is extended class about std::shared_ptr.
+ */
 template <class Type> class StrongReferenceObject : public std::shared_ptr<Type>
 {
 public:
 	/*! \fn StrongReferenceObject<Type>();
-		\tparam Type class Type.
-		\brief The constructor of StrongReferenceObject Class.
-	*/
+	 *  \tparam Type class Type.
+	 *  \brief The constructor of StrongReferenceObject Class.
+	 */
 	StrongReferenceObject<Type>()
 	: std::shared_ptr<Type>(nullptr)
 	{
 	}
 
 	/*! \fn StrongReferenceObject<Type>(const StrongReferenceObject<Type> &i_src);
-		\tparam Type class Type.
-		\param i_src Target reference.
-		\brief The copy constructor of StrongReferenceObject Class.
-	*/
+	 *  \tparam Type class Type.
+	 *  \param i_src Target reference.
+	 *  \brief The copy constructor of StrongReferenceObject Class.
+	 */
 	StrongReferenceObject<Type>(const StrongReferenceObject<Type> &i_src)
 	: std::shared_ptr<Type>(i_src)
 	{
 	}
 
 	/*! \fn StrongReferenceObject<Type>(const std::shared_ptr<Type> &i_src);
-		\tparam Type class Type.
-		\param i_src Target std::shared_ptr.
-		\brief The copy constructor of StrongReferenceObject Class.
-	*/
+	 *  \tparam Type class Type.
+	 *  \param i_src Target std::shared_ptr.
+	 *  \brief The copy constructor of StrongReferenceObject Class.
+	 */
 	StrongReferenceObject<Type>(const std::shared_ptr<Type> &i_src)
 	: std::shared_ptr<Type>(i_src)
 	{
 	}
 
 	/*! \fn StrongReferenceObject<Type>(Type *i_ptr);
-		\tparam Type class Type.
-		\param i_ptr Target object.
-		\brief The copy constructor of StrongReferenceObject Class.
-	*/
+	 *  \tparam Type class Type.
+	 *  \param i_ptr Target object.
+	 *  \brief The copy constructor of StrongReferenceObject Class.
+	 */
 	StrongReferenceObject<Type>(Type *i_ptr)
 	: std::shared_ptr<Type>(i_ptr)
 	{
@@ -96,41 +96,47 @@ public:
 public:
 
 	/*! \fn template<class DerivedType> StrongReferenceObject<DerivedType> DynamicCastTo() const;
-		\tparam DerivedType target derived class type.
-		\brief Try to dynamic cast this to derived class type.
-	*/
+	 *  \tparam DerivedType target derived class type.
+	 *  \brief Try to dynamic cast this to derived class type.
+	 */
 	template<class DerivedType> StrongReferenceObject<DerivedType> DynamicCastTo() const
 	{
 		return std::dynamic_pointer_cast<DerivedType>(*this);
 	}
 
 	/*! \fn template<class DerivedType> std::weak_ptr<DerivedType> DynamicCastToPtr() const;
-		\tparam DerivedType target derived class type.
-		\brief Try to dynamic cast this to derived class type.
-	*/
+	 *  \tparam DerivedType target derived class type.
+	 *  \brief Try to dynamic cast this to derived class type.
+	 */
 	template<class DerivedType> std::weak_ptr<DerivedType> DynamicCastToPtr() const
 	{
 		return std::weak_ptr<DerivedType>( std::dynamic_pointer_cast<DerivedType>(*this) );
 	}
 
 	/*! \fn template<class BasedType> StrongReferenceObject<BasedType> StaticCastTo() const;
-		\tparam BasedType target derived class type.
-		\brief Try to static cast this to based class type.
-	*/
+	 *  \tparam BasedType target derived class type.
+	 *  \brief Try to static cast this to based class type.
+	 */
 	template<class BasedType> StrongReferenceObject<BasedType> StaticCastTo() const
 	{
 		return std::static_pointer_cast<BasedType>(*this);
 	}
 
 	/*! \fn template<class BasedType> std::weak_ptr<BasedType> StaticCastToWeakPtr() const;
-		\tparam BasedType target derived class type.
-		\brief Try to static cast this to based class type.
-	*/
+	 *  \tparam BasedType target based class type.
+	 *  \brief Try to static cast this to based class type.
+	 */
 	template<class BasedType> std::weak_ptr<BasedType> StaticCastToWeakPtr() const
 	{
 		return std::weak_ptr<BasedType>( std::static_pointer_cast<BasedType>(*this) );
 	}
 public:
+	/*! \fn bool IsEqualTo(const StrongReferenceObject<Type> &i_src) const
+	 *  \param i_src target ref.
+	 *  \tparam Type target class type.
+	 *  \brief Try to static cast this to based class type. Please note we should use this \n
+	 *         template on class with IsEqualTo method(Inherit class Object).
+	 */
 	bool IsEqualTo(const StrongReferenceObject<Type> &i_src) const
 	{
 		Type *this_ptr = this->get();
@@ -147,8 +153,8 @@ public:
 	}
 public:
 	/*! \fn Type& GetRef() const;
-		\brief return reference of this.
-	*/
+	 *  \brief return reference of this.
+	 */
 	Type& GetRef() const
 	{
 		if ((*this))
@@ -158,8 +164,8 @@ public:
 	}
 
 	/*! \fn const Type& GetConstRef() const;
-		\brief return const reference of this.
-	*/
+	 *  \brief return const reference of this.
+	 */
 	const Type& GetConstRef() const
 	{
 		if ((*this))
@@ -169,32 +175,32 @@ public:
 	}
 
 	/*! \fn Type* GetPtr() const;
-		\brief return pointer of this.
-	*/
+	 *  \brief return pointer of this.
+	 */
 	Type* GetPtr() const
 	{
 		return this->get();
 	}
 
 	/*! \fn const Type* GetConstPtr() const;
-		\brief return const pointer of this.
-	*/
+	 *  \brief return const pointer of this.
+	 */
 	const Type* GetConstPtr() const
 	{
 		return this->get();
 	}
 
 	/*! \fn bool IsNull() const;
-		\brief return true if this reference is null.
-	*/
+	 *  \brief return true if this reference is null.
+	 */
 	bool IsNull() const
 	{
 		return (this->get() == nullptr);
 	}
 
 	/*! \fn long UseCount() const;
-		\brief return how many references keeping this instance.
-	*/
+	 *  \brief return how many references keeping this instance.
+	 */
 	long UseCount() const
 	{
 		if (this->get() == nullptr) return 0;

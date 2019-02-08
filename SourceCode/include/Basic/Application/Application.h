@@ -49,66 +49,66 @@ namespace Basic
 {
 
 /*! \class Application
-	In our system, Application is used to manager application lifecycle. We also record \n
-	the resolution in this class.
-*/
+ *  In our system, Application is used to manager application lifecycle. We also record \n
+ *  the resolution in this class.
+ */
 class SDENGINE_CLASS Application
 {
 public:
 	/*! \typedef bool FullWindowOption;
-	    \brief full window option. 
-	*/
+	 *  \brief full window option. 
+	 */
 	typedef bool FullWindowOption;
-
+	
 public:
 	SINGLETON_DECLARATION(Application);
-
+	
 public:
 	/*! \fn explicit Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv);
-	    \param [in] i_win_title Window title
-	    \param [in] i_win_res Window resolution.
-		\param [in] i_full_window full window screen.
-		\param [in] i_argc argument count.
-		\param [in] i_argv arguments.
-		\brief The constructor of Application Class.
-	*/
+	 *  \param [in] i_win_title Window title
+	 *  \param [in] i_win_res Window resolution.
+	 *  \param [in] i_full_window full window screen.
+	 *  \param [in] i_argc argument count.
+	 *  \param [in] i_argv arguments.
+	 *  \brief The constructor of Application Class.
+	 */
 	explicit Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv);
-
+	
 	/*! \fn virtual ~Application();
-		\brief The destructor of Application Class.
-	*/
+	 *  \brief The destructor of Application Class.
+	 */
 	virtual ~Application();
 public:
 	/*! \fn virtual void Initialize();
-		\brief Initialize this game app. Please call this function once at executable \n
-		       starting. Please implement this function by derived class.
-	*/
+	 *  \brief Initialize this game app. Please call this function once at executable \n
+	 *         starting. Please implement this function by derived class.
+	 */
 	virtual void Initialize() = 0;
-
+	
 	/*! \fn virtual void InitializeGraphicsSystem() = 0;
-		\brief Initialize graphics system of this app. Please implement this function by \n
-		       derived class.
-	*/
+	 *  \brief Initialize graphics system of this app. Please implement this function by \n
+	 *         derived class.
+	 */
 	virtual void InitializeGraphicsSystem() = 0;
-
+	
 	/*! \fn virtual void TerminateApplication() = 0;
-		\brief release all mamager for terminating app.
-	*/
+	 *  \brief release all mamager for terminating app.
+	 */
 	virtual void TerminateApplication() = 0;
 public:
 	/*! \fn virtual void Update();
-		\brief Update app. Please call this function each frame.
-	*/
+	 *  \brief Update app. Please call this function each frame.
+	 */
 	virtual void Update();
-
+	
 	/*! \fn virtual void Pause();
-		\brief Pause app. Please call this function when app doesn't focus.
-	*/
+	 *  \brief Pause app. Please call this function when app doesn't focus.
+	 */
 	virtual void Pause();
-
+	
 	/*! \fn virtual void Resume();
-		\brief Resume app. Please call this function when app re-focus.
-	*/
+	 *  \brief Resume app. Please call this function when app re-focus.
+	 */
 	virtual void Resume();
 public:
 	/*! \fn void SetWindowResolution(Size_ui i_width, Size_ui i_height);
@@ -123,12 +123,12 @@ protected:
 	    \brief resolution of this app.
 	*/
 	DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_win_res, WindowResolution);
-
+	
 	/*! \var WindowSize m_full_window; [VarGet Attribute]
 		\brief is full screen or not.
 	*/
 	DECLARE_ATTRIBUTE_VAR_GET(FullWindowOption, m_full_window, FullScreenSignal);
-
+	
 	/*! \var std::string m_win_title;
 		\brief is full screen or not. [VarGet Attribute]
 	*/

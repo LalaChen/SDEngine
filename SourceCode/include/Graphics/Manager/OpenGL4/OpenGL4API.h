@@ -40,33 +40,32 @@ namespace Graphics
 {
 
 /*! \class OpenGL4API
-	In our system, OpenGL4API is a implementation for opengl4 graphics API. \n
-	We integrate some opengl APIs some for behaviors of common usage.
-*/
+ *  In our system, OpenGL4API is a implementation for opengl4 graphics API. \n
+ *  We integrate some opengl APIs some for behaviors of common usage.
+ */
 class SDENGINE_CLASS OpenGL4API : public GraphicsAPI
 {
 public:
-	/*! \fn explicit OpenGL4API();
-		\brief The constructor of OpenGL4API Class.
-	*/
-	explicit OpenGL4API();
-
+	/*! \fn OpenGL4API();
+	 *  \brief The constructor of OpenGL4API Class.
+	 */
+	OpenGL4API();
+	
 	/*! \fn virtual ~GraphicsAPI();
-		\brief The destructor of GraphicsAPI Class.
-	*/
+	 *  \brief The destructor of GraphicsAPI Class.
+	 */
 	virtual ~OpenGL4API();
 public:
 	/*! \fn void InitializeGraphicsSystem() override;
-		\brief Initialize graphics API. (link dll, ...)
-	*/
+	 *  \brief Initialize graphics API. (link dll, ...)
+	 */
 	void InitializeGraphicsSystem() override;
-
+	
 	/*! \fn void ReleaseGraphicsSystem() override;
-		\brief Release graphics API.
-	*/
+	 *  \brief Release graphics API.
+	 */
 	void ReleaseGraphicsSystem() override;
 };
-
 
 //---------------------------- end of namespace Graphics ----------------------------
 }

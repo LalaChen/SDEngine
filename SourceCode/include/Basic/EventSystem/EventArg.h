@@ -42,23 +42,23 @@ namespace Basic
 {
 
 /*! \class EventArg
-    In our event system, we allow user delievrying parameters by inheriting Class EventArg. \n
-	It's used for unifying param of interface for all slot. User can check the real arg type \n
-	while slot triggered. \n
-*/
+ *  In our event system, we allow user delievrying parameters by inheriting Class EventArg. \n
+ *  It's used for unifying param of interface for all slot. User can check the real arg type \n
+ *  while slot triggered. \n
+ */
 class SDENGINE_CLASS EventArg
 {
 public:
 	/*! \fn EventArg()
-		\brief The constructor of EventArg Class.
-	*/
+	 *  \brief The constructor of EventArg Class.
+	 */
     EventArg()
 	{
 	}
 
 	/*! \fn virtual ~EventArg()
-		\brief The destructor of EventArg Class.
-	*/
+	 *  \brief The destructor of EventArg Class.
+	 */
 	virtual ~EventArg()
 	{
 	}

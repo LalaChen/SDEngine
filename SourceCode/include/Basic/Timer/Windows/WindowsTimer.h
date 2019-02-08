@@ -42,26 +42,26 @@ namespace Basic
 {
 
 /*! \class WindowsTimer \n
-	Timer in Windows OS.
-	\sa Timer
-*/
+ *  Timer in Windows OS.
+ *  \sa Timer
+ */
 class SDENGINE_CLASS WindowsTimer : public Timer
 {
 public:
 	/*! \fn explicit WindowsTimer();
-		\brief The constructor of WindowsTimer Class.
-	*/
+	 *  \brief The constructor of WindowsTimer Class.
+	 */
 	explicit WindowsTimer();
 
 	/*! \fn virtual ~WindowsTimer();
-		\brief The destructor of WindowsTimer Class.
-	*/
+	 *  \brief The destructor of WindowsTimer Class.
+	 */
 	virtual ~WindowsTimer();
 public:
 	/*! \fn void GetCurrentTimeByOS(double &io_time) override;
-		\param [inout] io_time double time variable.(unit : second)
-		\brief Get current time by QueryPerformanceFrequency and QueryPerformanceCounter functions.
-	*/
+	 *  \param [inout] io_time double time variable.(unit : second)
+	 *  \brief Get current time by QueryPerformanceFrequency and QueryPerformanceCounter functions.
+	 */
 	void GetCurrentTimeByOS(double &io_time) override;
 };
 

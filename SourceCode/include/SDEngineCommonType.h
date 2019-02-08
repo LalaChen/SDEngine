@@ -38,23 +38,23 @@ namespace Basic
 {
 
 /*! \typedef int CodePageID
-	\brief CodePageID is the type for ID about text code. For example, CodePageID 936 is GBK2312, 950 is Big5, ...etc.
-*/
+ * \brief CodePageID is the type for ID about text code. For example, CodePageID 936 is GBK2312, 950 is Big5, ...etc.
+ */
 typedef int CodePageID;
 
 /*! \typedef std::string FilePathString
-	\brief String of file path.
-*/
+ *  \brief String of file path.
+ */
 typedef std::string FilePathString;
 
 /*! \typedef char Byte;
-	\brief represent byte.
-*/
+ *  \brief represent byte.
+ */
 typedef char Byte;
 
 /*! \typedef Byte* BytePtr;
-	\brief represent byte array pointer.
-*/
+ *  \brief represent byte array pointer.
+ */
 typedef Byte* BytePtr;
 
 /*! \typedef unsigned char UByte;
@@ -63,13 +63,13 @@ typedef Byte* BytePtr;
 typedef unsigned char UByte;
 
 /*! \typedef UByte* UBytePtr;
-	\brief represent byte array pointer.
-*/
+ *  \brief represent byte array pointer.
+ */
 typedef UByte* UBytePtr;
 
 /*! \typedef std::string ObjectName;
-	\brief name of object.
-*/
+ *  \brief name of object.
+ */
 typedef std::string ObjectName;
 }
 //---------------------------- end of namespace Basic ---------------------------
@@ -79,105 +79,105 @@ namespace Graphics
 {
 
 /*! \typedef unsigned int GLCode; 
-    \brief represent Open GL define value.
-*/
+ *  \brief represent Open GL define value.
+ */
 typedef unsigned int GLCode;
 
 /*! \typedef std::string UniformVarName;
-	\brief Type of uniform variable name.
-*/
+ *  \brief Type of uniform variable name.
+ */
 typedef std::string UniformVarName;
 
 /*! \typedef unsigned int VertexAttribLocation;
-    \brief VA location.
-*/
+ *  \brief VA location.
+ */
 typedef unsigned int VertexAttribLocation;
 
 /*! \typedef uint64_t BufferHandle;
-    \brief Buffer object handle. In opengl, it means buffer object ID. In Vulkan, it means buffer handle.
-*/
+ *  \brief Buffer object handle. In opengl, it means buffer object ID. In Vulkan, it means buffer handle.
+ */
 typedef uint64_t BufferHandle;
 
 /*! \typedef unsigned int ShaderHandle;
-    \brief Represent all hande of all kind of shader. In opengl, it means shader ID. In Vulkan, it means shader module handle.
-*/
+ *  \brief Represent all hande of all kind of shader. In opengl, it means shader ID. In Vulkan, it means shader module handle.
+ */
 typedef uint64_t ShaderHandle;
 
 /*! \typedef unsigned int ShaderProgramHandle;
-	\brief Represent all ID of shader program. In opengl, it means shader ID. In Vulkan, it means shader module handle.
-*/
+ *  \brief Represent all ID of shader program. In opengl, it means shader ID. In Vulkan, it means shader module handle.
+ */
 typedef uint64_t ShaderProgramHandle;
 
 /*! \typedef uint64_t FrameBufferHandle; In opengl, it means shader ID. In Vulkan, it means framebuffer handle.
-	\brief Frame buffer object ID.
-*/
+ *  \brief Frame buffer object ID.
+ */
 typedef uint64_t FrameBufferHandle;
 
 /*! \typedef uint64_t TextureHandle;
-	\brief UI vertex index.
-*/
+ *  \brief UI vertex index.
+ */
 typedef uint64_t TextureHandle;
 
 /*! \typedef int UniformLocation;
-	\brief Represent uniform location in shader.
-*/
+ *  \brief Represent uniform location in shader.
+ */
 typedef int UniformLocation;
 
 /*! \typedef int ActiveTextureID;
-	\brief Represent active texture ID.
-*/
+ *	\brief Represent active texture ID.
+ */
 typedef int ActiveTextureID;
 
 /*! \typedef unsigned int ColorAttachmentID;
-    \brief color attachment ID.
-*/
+ *  \brief color attachment ID.
+ */
 typedef unsigned int ColorAttachmentID;
 
 /*! \typedef unsigned short USVertexIndex;
-	\brief US vertex index.
-*/
+ *	\brief US vertex index.
+ */
 typedef unsigned short USVertexIndex;
 
 /*! \typedef unsigned short UIVertexIndex;
-	\brief UI vertex index.
-*/
+ *  \brief UI vertex index.
+ */
 typedef unsigned int UIVertexIndex;
 
 //--- Image Related
 /*! \typedef typedef unsigned char* ImageBufferAddr;
-    \brief Like void*
-*/
+ *  \brief Like void*
+ */
 typedef unsigned char* ImageBufferAddr;
 
 /*! \typedef size_t ImageBufferSize;
-    \brief Memory buffer size
-*/
+ *  \brief Memory buffer size
+ */
 typedef size_t ImageBufferSize;
 
 /*! \typedef unsigned int Size_ui;
-	\brief represent size.
-*/
+ *  \brief represent size.
+ */
 typedef unsigned int Size_ui;
 //--- Layer ID.
 
 /*! \typedef unsigned int LayerID;
-	\brief represent LayerID.
-*/
+ *  \brief represent LayerID.
+ */
 typedef unsigned int LayerID;
 
 /*! \typedef unsigned int LayerMaskValue;
-	\brief represent layer mask value.
-*/
+ *  \brief represent layer mask value.
+ */
 typedef unsigned int LayerMaskValue;
 
 /*! \typedef unsigned int RenderOrder;
-	\brief Type of render order.
-*/
+ *  \brief Type of render order.
+ */
 typedef unsigned int RenderOrder;
 
 /*! \typedef unsigned int RenderOrderOffset;
-	\brief Type of render order offset.
-*/
+ *  \brief Type of render order offset.
+ */
 typedef unsigned int RenderOrderOffset;
 
 }

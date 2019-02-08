@@ -42,43 +42,43 @@ namespace Basic
 {
 
 /*! \class WindowsLogManager
-	LogManager on Windows OS.
-*/
+ *  LogManager on Windows OS.
+ */
 class SDENGINE_CLASS WindowsLogManager : public LogManager
 {
 public:
 	/*! \fn explicit WindowsLogManager();
-		\brief Constructor of WindowsLogManager.
-	*/
+	 *  \brief Constructor of WindowsLogManager.
+	 */
 	explicit WindowsLogManager();
 
 	/*! \fn virtual ~WindowsLogManager();
-		\brief Destructor of WindowsLogManager.
-	*/
+	 *  \brief Destructor of WindowsLogManager.
+	 */
 	virtual ~WindowsLogManager();
 public:
 	/*! \fn void Log(LogType i_type, const std::string &i_prefix, const char *i_log, ...) override;
-		\param [in] i_type type of log.
-		\param [in] i_prefix prefix string.
-		\param [in] i_log log string.
-		\brief Compose log string to buffer.
-	*/
+	 *  \param [in] i_type type of log.
+	 *  \param [in] i_prefix prefix string.
+	 *  \param [in] i_log log string.
+	 *  \brief Compose log string to buffer.
+	 */
 	void Log(LogType i_type, const std::string &i_prefix, const char *i_log, ...) override;
 
 	/*! \fn void Log(LogType i_type, const std::string &i_prefix, const char *i_log, va_list i_args) override;
-		\param [in] i_type type of log.
-		\param [in] i_prefix prefix string.
-		\param [in] i_log log string.
-		\param [in] i_args all arguments in log.
-		\brief Compose log string to buffer.
-	*/
+	 *  \param [in] i_type type of log.
+	 *  \param [in] i_prefix prefix string.
+	 *  \param [in] i_log log string.
+	 *  \param [in] i_args all arguments in log.
+	 *  \brief Compose log string to buffer.
+	 */
 	void Log(LogType i_type, const std::string &i_prefix, const char *i_log, va_list i_args) override;
 protected:
 
 	/*! \fn void LogToOutput(LogType i_type) override;
-		\param [in] i_type type of log.
-		\brief Flush this log to OutputDebugString.
-	*/
+	 *  \param [in] i_type type of log.
+	 *  \brief Flush this log to OutputDebugString.
+	 */
 	void LogToOutput(LogType i_type) override;
 };
 

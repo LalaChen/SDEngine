@@ -46,15 +46,15 @@ namespace Basic
 #include <exception>
 
 /*! \class NullReferenceException
-	In our system, class NullReferenceException throw when we try to GetRef of null strong \n
-	or weak reference object.\n
-*/
+ *  In our system, class NullReferenceException throw when we try to GetRef of null strong \n
+ *  or weak reference object.\n
+ */
 class NullReferenceException : public std::exception
 {
 public:
 	/*! \fn virtual const char* what() const throw();
-		\brief override what function for using.
-	*/
+	 *  \brief override what function for using.
+	 */
 	virtual const char* what() const throw() { return "NullReferenceException"; }
 };
 
