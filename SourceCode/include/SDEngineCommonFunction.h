@@ -63,26 +63,26 @@ SDENGINE_API std::string StringFormat(const char *i_fmt_str, ...);
  */
 SDENGINE_API std::wstring WStringFormat(const char *i_fmt_str, ...);
 
-/*! \fn SDENGINE_API void StringSplit(const std::string &i_s, char i_delim, std::vector<std::string> &io_elems)
- *  \brief Function StringSplit is used to split string to many toke by symbol i_delim.
- *         Please notice that \\r\\n or \\n will be seen as i_delim.
- *         The usage : StringSplit(\"a,b,c\",\',\',tokens);
+/*! \fn SDENGINE_API void StringSplit(const std::string &i_s, char i_delim, std::vector<std::string> &io_elems);
  *  \param [in] i_s The source string.
  *  \param [in] _delim The delimiter.
  *  \param [inout] io_elems The tokens storage.
+ *  \brief Function StringSplit is used to split string to many toke by symbol i_delim.
+ *         Please notice that \\r\\n or \\n will be seen as i_delim.
+ *         The usage : StringSplit(\"a,b,c\",\',\',tokens);
  */
 SDENGINE_API void StringSplit(const std::string &i_s, char i_delim, std::vector<std::string> &io_elems);
 
-/*! \fn SDENGINE_API std::vector<std::string> StringSplit(const std::string &i_s, char i_delim)
+/*! \fn SDENGINE_API std::vector<std::string> StringSplit(const std::string &i_s, char i_delim);
+ *  \param [in] i_s The source string.
+ *  \param [in] i_delim The delimiter.
  *  \brief Function StringSplit is used to split string to many toke by symbol i_delim and return token storages.
  *         Please notice that \\r\\n or \\n will be seen as i_delim.
  *         The usage : tokens = StringSplit(\"a,b,c\",\',\');
- *  \param [in] i_s The source string.
- *  \param [in] i_delim The delimiter.
  */
 SDENGINE_API std::vector<std::string> StringSplit(const std::string &i_s, char i_delim);
 
-/*! \fn SDENGINE_API void SpliteTargetFileToPathAndName(const std::string& i_path, std::string &io_path, std::string &io_name)
+/*! \fn SDENGINE_API void SpliteTargetFileToPathAndName(const std::string& i_path, std::string &io_path, std::string &io_name);
  *  \brief Function SpliteTargetFileToPathAndName is used to separate file name and path by file last of '\\' or '/'.
  *  \param [in] i_path The resource file path.
  *  \param [inout] io_path The ref to save path result.
@@ -90,7 +90,7 @@ SDENGINE_API std::vector<std::string> StringSplit(const std::string &i_s, char i
  */
 SDENGINE_API void SpliteTargetFileToPathAndName(const std::string &i_path, std::string &io_path, std::string &io_name);
 
-/*! \fn SDENGINE_API std::wstring StringToWString(const std::string& i_str, CodePageID i_code_page_id = 0)
+/*! \fn SDENGINE_API std::wstring StringToWString(const std::string& i_str, CodePageID i_code_page_id = 0);
  *  \brief Function string_to_wstring is used to convert std::string to std::wstring with codepage.
  *         CodePage 0 is represented system default.
  *  \param [in] i_str The target string
@@ -98,65 +98,64 @@ SDENGINE_API void SpliteTargetFileToPathAndName(const std::string &i_path, std::
  */
 SDENGINE_API std::wstring StringToWString(const std::string &i_str, CodePageID i_code_page_id = 0);
 
-/*! \fn SDENGINE_API std::string WStringToString(const std::wstring& i_wstr, CodePageID i_code_page_id = 0)
- *  \brief Function wstring_to_string is used to convert std::wstring to std::string with codepage.
- *         CodePage 0 is represented system default.
+/*! \fn SDENGINE_API std::string WStringToString(const std::wstring& i_wstr, CodePageID i_code_page_id = 0);
  *  \param [in] i_wstr The target string
  *  \param [in] i_code_page_id Target CodePage(default 0 (system default)).
+ *  \brief Function wstring_to_string is used to convert std::wstring to std::string with codepage.
+ *         CodePage 0 is represented system default.
  */
 SDENGINE_API std::string WStringToString(const std::wstring &i_wstr, CodePageID i_code_page_id = 0);
 
-/*! \fn SDENGINE_API std::string GetLocalTimeByFormat(time_t i_time, const std::string &i_format)
+/*! \fn SDENGINE_API std::string GetLocalTimeByFormat(time_t i_time, const std::string &i_format);
+ *  \param [in] i_time a time long integer time_t
+ *  \param [in] i_format format of time.
  *  \brief Convert time to string by specific format.(use strftime)
  *         Usage :GetLocalTimeByFormat(time(0), \"%Y-%m-%d %H:%M:%S\");
- *  \param [in] i_time a time long integer time_t
- *  \param [in] i_format format
  */
 SDENGINE_API std::string GetLocalTimeByFormat(time_t i_time, const std::string &i_format);
 
-/*!! \fn SDENGINE_API std::string GetLocalTimeYMDHMS(time_t i_time)
- *   \brief Convert time to string by YYYY/MM/DD HH:MM:SS
- *          Usage : GetLocalTimeYMDHMS(time(0));
- *   \param i_time    a time long integer time_t
- *
+/*! \fn SDENGINE_API std::string GetLocalTimeYMDHMS(time_t i_time);
+ *  \param [in] i_time A time long integer time_t
+ *  \brief Convert time to string by YYYY/MM/DD HH:MM:SS
+ *         Usage : GetLocalTimeYMDHMS(time(0));
  */
 SDENGINE_API std::string GetLocalTimeYMDHMS(time_t i_time);
 
-/*! \fn SDENGINE_API std::string GetLocalTimeYMDHMSForFile(time_t i_time)
+/*! \fn SDENGINE_API std::string GetLocalTimeYMDHMSForFile(time_t i_time);
+ *  \param [in] i_time A time long integer time_t
  *  \brief Convert time to string by YYYY-MM-DD-HH-MM-SS
  *         Usage : GetLocalTimeYMDHMSForFile(time(0));
- *  \param i_time a time long integer time_t
  */
 SDENGINE_API std::string GetLocalTimeYMDHMSForFile(time_t i_time);
 
-/*! \fn SDENGINE_API std::string GetCurrentLocalTimeByFormat(const std::string &i_format)
+/*! \fn SDENGINE_API std::string GetCurrentLocalTimeByFormat(const std::string &i_format);
  *  \brief Convert current time to string by specific format.(use strftime)
  *         Usage : GetLocalTimeYMDHMSForFile(time(0));
- *  \param i_format format
+ *  \param [in] i_format format of time.
  */
 SDENGINE_API std::string GetCurrentLocalTimeByFormat(const std::string &i_format);
 
-/*! \fn SDENGINE_API std::string GetCurrentLocalTimeYMDHMS()
+/*! \fn SDENGINE_API std::string GetCurrentLocalTimeYMDHMS();
  *  \brief Convert current time to string by YYYY/MM/DD HH:MM:SS
  */
 SDENGINE_API std::string GetCurrentLocalTimeYMDHMS();
 
-/*! \fn SDENGINE_API std::string GetCurrentLocalTimeYMDHMSForFile()
+/*! \fn SDENGINE_API std::string GetCurrentLocalTimeYMDHMSForFile();
  *  \brief Convert current time to string by YYYY-MM-DD-HH-MM-SS
  */
 SDENGINE_API std::string GetCurrentLocalTimeYMDHMSForFile();
 
-/*! \fn SDENGINE_API time_t ConvertTMToTimeT(const tm &i_monent)
+/*! \fn SDENGINE_API time_t ConvertTMToTimeT(const tm &i_monent);
+ *  \param [in] i_monent is tm struct.
  *  \brief Convert struct tm to time_t.
- *  \param i_monent is tm struct.
  */
 SDENGINE_API time_t ConvertTMToTimeT(const tm &i_monent);
 
-/*! \fn SDENGINE_API std::string ReplaceIllegalCharOfFile(const std::string &i_str, const char i_replace_symbol = ' ')
+/*! \fn SDENGINE_API std::string ReplaceIllegalCharOfFile(const std::string &i_str, const char i_replace_symbol = ' ');
+ *  \param [in] i_str is file path.
+ *  \param [in] i_replace_symbol is the char be used to replace illegal char.
  *  \brief replace all illegal character in file path i_str.
  *         For rule of function name, illegal chars are \\ / : ! * ? < > |
- *  \param i_str is file path.
- *  \param i_replace_symbol is the char be used to replace illegal char.
  */
 SDENGINE_API std::string ReplaceIllegalCharOfFile(const std::string &i_str, const char i_replace_symbol = ' ');
 
