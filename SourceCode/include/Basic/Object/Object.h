@@ -46,8 +46,8 @@ namespace Basic
 {
 
 /*! \class Object
- *  In our system, class object is the root of all classes those instances will be kept \n
- *  in several places. What's more, we will define some common behavior for those object.\n
+ *  In our system, class object is the root of all classes those instances will be kept
+ *  in several places. What's more, we will define some common behavior for those object.
  */
 class SDENGINE_API Object : public std::enable_shared_from_this<Object>
 {
@@ -65,26 +65,27 @@ public:
 
 	/*! \fn virtual bool IsEqualTo(const Object &i_src) const;
 	 *  \param [in] i_src Target object.
-	 *  \brief Compare i_src with this.
+	 *  \brief Common behavior of all derived class. It used to compare two
+	 *         objects is equivalent. In class object, we return true if
+	 *         the result that compare name of i_src and this is equal 0.
 	 */
 	virtual bool IsEqualTo(const Object &i_src) const;
 
-	/*! \fn virtual bool IsEqualTo(const Object &i_src) const;
-	 *  \param [in] i_src Target object.
-	 *  \brief Compare i_src with this.
+	/*! \fn virtual std::string ToString() const;
+	 *  \brief Common behavior of all derived class
 	 */
 	virtual std::string ToString() const;
 public:
-	/* \fn std::shared_ptr<Object> GetThisSharedPtr()
-	 * \brief Return this shared_ptr.
+	/*! \fn std::shared_ptr<Object> GetThisSharedPtr();
+	 *  \brief Return this shared_ptr.
 	 */
 	std::shared_ptr<Object> GetThisSharedPtr()
 	{
 		return shared_from_this();
 	}
 
-	/* \fn template<class T> std::shared_ptr<T> GetThisSharedPtrByType()
-	 * \brief Return this shared_ptr by type T.
+	/*! \fn template<class T> std::shared_ptr<T> GetThisSharedPtrByType();
+	 *  \brief Return this shared_ptr by type T.
 	 */
 	template<class T> std::shared_ptr<T> GetThisSharedPtrByType()
 	{
