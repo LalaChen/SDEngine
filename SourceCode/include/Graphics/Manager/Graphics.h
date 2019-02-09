@@ -44,8 +44,8 @@ namespace SDE
 //---------------------------- start of namespace Graphics ----------------------------
 namespace Graphics
 {
-/*! \class GraphicsAPI
- *  In our system, GraphicsAPI is a interface for all graphics API(opengl, gles, vulkan) and manage \n
+/*! \class Graphics
+ *  In our system, Graphics is a interface for all graphics API(opengl, gles, vulkan) and manage \n
  *  graphics resource those need kept.
  */
 class SDENGINE_CLASS Graphics
