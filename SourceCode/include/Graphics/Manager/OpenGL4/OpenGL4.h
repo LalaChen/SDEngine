@@ -20,41 +20,51 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-#include <GL/glew.h>
+/*! \file      OpenGL4API.h
+ *  \brief     Introduce of class OpenGL4API
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/03
+ *  \copyright MIT License.
+ */
 
-#include "LogManager.h"
-#include "OpenGL4API.h"
+#include "Graphics.h"
 
-//---------------------------- start of namespace SDE ----------------------------
+ //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
 //---------------------------- start of namespace Graphics ----------------------------
 namespace Graphics
 {
 
-OpenGL4API::OpenGL4API()
-: GraphicsAPI()
+/*! \class OpenGL4
+ *  In our system, OpenGL4 is a implementation for opengl4 graphics API and manage graphics some resource.
+ */
+class SDENGINE_CLASS OpenGL4 : public Graphics
 {
-
-}
-
-OpenGL4API::~OpenGL4API()
-{
-	SDLOG("Delete OpenGL4API object.");
-}
-
-void OpenGL4API::InitializeGraphicsSystem()
-{
-	SDLOG("Initialize OpenGL4API.");
-	glewInit();
-}
-
-void OpenGL4API::ReleaseGraphicsSystem()
-{
-	SDLOG("Release OpenGL4API.");
-}
+public:
+	/*! \fn OpenGL4();
+	 *  \brief The constructor of OpenGL4 Class.
+	 */
+	OpenGL4();
+	
+	/*! \fn virtual ~GraphicsAPI();
+	 *  \brief The destructor of OpenGL4 Class.
+	 */
+	virtual ~OpenGL4();
+public:
+	/*! \fn void InitializeGraphicsSystem() override;
+	 *  \brief Initialize graphics API. (link dll, ...)
+	 */
+	void InitializeGraphicsSystem() override;
+	
+	/*! \fn void ReleaseGraphicsSystem() override;
+	 *  \brief Release graphics API.
+	 */
+	void ReleaseGraphicsSystem() override;
+};
 
 //---------------------------- end of namespace Graphics ----------------------------
 }

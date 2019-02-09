@@ -61,6 +61,7 @@ void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int 
 	glfwSetWindowFocusCallback(window, GLFWApplication::WindowFocusCallback);
 	glfwSetDropCallback(window, GLFWApplication::DropCallback);
 	glfwSetScrollCallback(window, GLFWApplication::ScrollCallback);
+	
 	//--- iv. make current.
 	glfwMakeContextCurrent(window);
 	//--- v. initialize glew.

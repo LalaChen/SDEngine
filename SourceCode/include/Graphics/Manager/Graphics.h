@@ -23,7 +23,20 @@ SOFTWARE.
 
 */
 
-#include "GraphicsAPI.h"
+/*! \file      GraphicsAPI.h
+ *  \brief     Introduce of class GraphicsAPI
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/02/03
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
+using SDE::Graphics::Size_ui;
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -31,18 +44,37 @@ namespace SDE
 //---------------------------- start of namespace Graphics ----------------------------
 namespace Graphics
 {
-
-SINGLETON_DECLARATION_IMPL(GraphicsAPI);
-
-GraphicsAPI::GraphicsAPI()
+/*! \class GraphicsAPI
+ *  In our system, GraphicsAPI is a interface for all graphics API(opengl, gles, vulkan) and manage \n
+ *  graphics resource those need kept.
+ */
+class SDENGINE_CLASS Graphics
 {
-	//Register instance.
-	SINGLETON_DECLARATION_REGISTER;
-}
-
-GraphicsAPI::~GraphicsAPI()
-{
-}
+public:
+	SINGLETON_DECLARATION(Graphics);
+public:
+	/*! \fn Graphics();
+	 *  \brief The constructor of GraphicsAPI Class. 
+	 */
+	Graphics();
+	
+	/*! \fn virtual ~Graphics();
+	 *  \brief The destructor of GraphicsAPI Class.
+	 */
+	virtual ~Graphics();
+public: //---------------- Initialize and Release -----------------
+	/*! \fn virtual void InitializeGraphicsSystem() = 0;
+	 *  \brief Initialize graphics system. (link dll, ...)
+	 */
+	virtual void InitializeGraphicsSystem() = 0;
+	
+	/*! \fn virtual void ReleaseGraphicsSystem() = 0;
+	 *  \brief Release graphics system.
+	 */
+	virtual void ReleaseGraphicsSystem() = 0;
+	
+public: //---------------- API -----------------
+};
 
 //---------------------------- end of namespace Graphics ----------------------------
 }

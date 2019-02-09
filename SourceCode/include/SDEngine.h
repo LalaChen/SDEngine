@@ -50,13 +50,13 @@ SOFTWARE.
 #include "Basic/FileSystem/FileSystemManager.h"
 //-------- Graphics --------
 #include "Graphics/Resolution/Resolution.h"
-#include "Graphics/Manager/GraphicsAPI.h"
+#include "Graphics/Manager/Graphics.h"
 //------- OS Platform Only -------
 #ifdef _WIN_PLATFORM_
 #include "Basic/LogManager/Windows/WindowsLogManager.h"
 #include "Basic/Timer/Windows/WindowsTimer.h"
 #include "Basic/FileSystem/Windows/WindowsFileSystemManager.h"
-#include "Graphics/Manager/OpenGL4/OpenGL4API.h"
+#include "Graphics/Manager/OpenGL4/OpenGL4.h"
 #elif _ANDROID_PLATFORM_
 
 #endif
