@@ -23,47 +23,55 @@ SOFTWARE.
 
 */
 
-/*! \file      OpenGL4API.h
- *  \brief     Introduce of class OpenGL4API
+/*! \file      GraphicsManager.h
+ *  \brief     Introduce of class GraphicsManager
  *  \author    Kuan-Chih, Chen
  *  \date      2019/02/03
  *  \copyright MIT License.
  */
 
-#include "Graphics.h"
+#pragma once
 
- //---------------------------- start of namespace SDE ----------------------------
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
+//---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
 //---------------------------- start of namespace Graphics ----------------------------
 namespace Graphics
 {
-
-/*! \class OpenGL4
- *  In our system, OpenGL4 is a implementation for opengl4 graphics API and manage graphics some resource.
+/*! \class GraphicsManager
+ *  In our system, GraphicsManager is a interface for all graphics API(opengl, gles, vulkan) and manage \n
+ *  graphics resource those need to be managed.
  */
-class SDENGINE_CLASS OpenGL4 : public Graphics
+class SDENGINE_CLASS GraphicsManager
 {
 public:
-	/*! \fn OpenGL4();
-	 *  \brief The constructor of OpenGL4 Class.
-	 */
-	OpenGL4();
-	
-	/*! \fn virtual ~GraphicsAPI();
-	 *  \brief The destructor of OpenGL4 Class.
-	 */
-	virtual ~OpenGL4();
+	SINGLETON_DECLARATION(GraphicsManager);
 public:
-	/*! \fn void InitializeGraphicsSystem() override;
-	 *  \brief Initialize graphics API. (link dll, ...)
+	/*! \fn GraphicsManager();
+	 *  \brief The constructor of GraphicsAPI Class. 
 	 */
-	void InitializeGraphicsSystem() override;
+	GraphicsManager();
 	
-	/*! \fn void ReleaseGraphicsSystem() override;
-	 *  \brief Release graphics API.
+	/*! \fn virtual ~GraphicsManager();
+	 *  \brief The destructor of GraphicsAPI Class.
 	 */
-	void ReleaseGraphicsSystem() override;
+	virtual ~GraphicsManager();
+public: //---------------- Initialize and Release -----------------
+	/*! \fn virtual void InitializeGraphicsSystem() = 0;
+	 *  \brief Initialize graphics system. (link dll, ...)
+	 */
+	virtual void InitializeGraphicsSystem() = 0;
+	
+	/*! \fn virtual void ReleaseGraphicsSystem() = 0;
+	 *  \brief Release graphics system.
+	 */
+	virtual void ReleaseGraphicsSystem() = 0;
+	
+public: //---------------- API -----------------
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

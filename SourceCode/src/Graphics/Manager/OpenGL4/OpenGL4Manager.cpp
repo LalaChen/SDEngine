@@ -25,7 +25,7 @@ SOFTWARE.
 #include <GL/glew.h>
 
 #include "LogManager.h"
-#include "OpenGL4.h"
+#include "OpenGL4Manager.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -34,26 +34,26 @@ namespace SDE
 namespace Graphics
 {
 
-OpenGL4::OpenGL4()
-: Graphics()
+OpenGL4Manager::OpenGL4Manager()
+: GraphicsManager()
 {
-	SDLOG("New OpenGL4 object.");
+	SDLOG("New OpenGL4Manager object.");
 }
 
-OpenGL4::~OpenGL4()
+OpenGL4Manager::~OpenGL4Manager()
 {
-	SDLOG("Delete OpenGL4 object.");
+	SDLOG("Delete OpenGL4Manager object.");
 }
 
-void OpenGL4::InitializeGraphicsSystem()
+void OpenGL4Manager::InitializeGraphicsSystem()
 {
-	SDLOG("Initialize OpenGL4.");
+	SDLOG("Initialize OpenGL4Manager.");
 	glewInit();
 }
 
-void OpenGL4::ReleaseGraphicsSystem()
+void OpenGL4Manager::ReleaseGraphicsSystem()
 {
-	SDLOG("Release OpenGL4.");
+	SDLOG("Release OpenGL4Manager.");
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

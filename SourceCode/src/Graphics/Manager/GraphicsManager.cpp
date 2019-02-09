@@ -23,7 +23,7 @@ SOFTWARE.
 
 */
 
-#include "Graphics.h"
+#include "GraphicsManager.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -32,15 +32,15 @@ namespace SDE
 namespace Graphics
 {
 
-SINGLETON_DECLARATION_IMPL(Graphics);
+SINGLETON_DECLARATION_IMPL(GraphicsManager);
 
-Graphics::Graphics()
+GraphicsManager::GraphicsManager()
 {
 	//Register instance.
 	SINGLETON_DECLARATION_REGISTER;
 }
 
-Graphics::~Graphics()
+GraphicsManager::~GraphicsManager()
 {
 }
 
