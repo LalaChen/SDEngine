@@ -49,14 +49,15 @@ namespace App
 class SDENGINE_CLASS GLFWApplication : public Application
 {
 public:
-	/*! \fn static void LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window);
+	/*! \fn static void LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library);
 	 *  \param [in] i_win_title Title of window.
 	 *  \param [in] i_argc number of arguments.
 	 *  \param [in] i_argv arguments.
 	 *  \param [in] i_win_res Resolution of this window.
 	 *  \param [in] i_full_window Is full window or not.
+	 *  \param [in] i_adopt_library Which graphics library you use.
 	 */
-	static void LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window);
+	static void LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library);
 public:
 //------------ KeyEvent
 	static void KeyEventCallback(GLFWwindow *i_window, int i_key, int i_scancode, int i_action, int i_mod_keys);
@@ -87,19 +88,27 @@ public:
 
 	static void ScrollCallback(GLFWwindow *i_window, double i_x, double i_y);
 public:
-	/*! \fn explicit GLFWApplication(const Resolution &i_win_res, FullWindowOption i_full_window);
+	/*! \fn explicit GLFWApplication(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv);
 	 *  \param [in] i_win_res Window resolution.
 	 *  \param [in] i_full_window full window screen.
+	 *  \param [in] i_adopt_library Which graphics library you use.
 	 *  \param [in] i_argc argument count.
 	 *  \param [in] i_argv arguments.
 	 *  \brief The constructor of GLFWApplication Class.
 	 */
-	explicit GLFWApplication(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv);
+	explicit GLFWApplication(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv);
 	
 	/*! \fn virtual ~GLFWApplication();
 	 *  \brief The destructor of GLFWApplication Class.
 	 */
 	virtual ~GLFWApplication();
+public:
+	/*! \fn void RegisterGLFW(GLFWwindow *i_window, GLFWmonitor *i_monitor);
+	 *  \param [in] i_window Window instance of GLFW.
+	 *  \param [in] i_monitor Monitor instance of GLFW.
+	 *  \brief Register window and monitor.
+	 */
+	void RegisterGLFW(GLFWwindow *i_window, GLFWmonitor *i_monitor);
 public:
 	/*! \fn void Initialize() override;
 	 *  \brief Initialize this app. We will create WindowsLogManager, OpenGL4 API and Manager for GLFW.
@@ -111,10 +120,18 @@ public:
 	 */
 	void InitializeGraphicsSystem() override;
 
+	/*! \fn void ReleaseGraphicsSystem() override;
+	 *  \brief release graphics system of this app.
+	 */
+	void ReleaseGraphicsSystem() override;
+
 	/*! \fn void TerminateApplication() override;
 	 *  \brief release all mamager for terminating app.
 	 */
 	void TerminateApplication() override;
+protected:
+	GLFWwindow *m_window;
+	GLFWmonitor *m_monitor;
 };
 
 }

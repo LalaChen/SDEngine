@@ -13,6 +13,7 @@ int main(int argc, char **argv)
 		argc,
 		argv,
 		Resolution(800, 600),
-		false
+		false,
+		GraphicsLibrary_Vulkan
 	);
 }

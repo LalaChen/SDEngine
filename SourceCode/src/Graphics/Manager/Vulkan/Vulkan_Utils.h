@@ -23,15 +23,15 @@ SOFTWARE.
 
 */
 
-/*! \file      OpenGL4Manager.h
- *  \brief     Introduce of class OpenGL4Manager
- *  \author    Kuan-Chih, Chen
- *  \date      2019/02/03
- *  \copyright MIT License.
- */
 #pragma once
 
-#include "GraphicsManager.h"
+#include <vector>
+
+#include <vulkan/vulkan.h>
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -40,33 +40,48 @@ namespace SDE
 namespace Graphics
 {
 
-/*! \class OpenGL4Manager
- *  In our system, OpenGL4Manager is a implementation for opengl4 graphics API.
- */
-class SDENGINE_CLASS OpenGL4Manager : public GraphicsManager
+class SDENGINE_CLASS SwapChainDetails
 {
 public:
-	/*! \fn OpenGL4Manager();
-	 *  \brief The constructor of OpenGL4Manager Class.
-	 */
-	OpenGL4Manager();
-	
-	/*! \fn virtual ~OpenGL4Manager();
-	 *  \brief The destructor of OpenGL4Manager Class.
-	 */
-	virtual ~OpenGL4Manager();
+	explicit SwapChainDetails(VkPhysicalDevice i_p_device, VkSurfaceKHR i_surface);
 public:
-	/*! \fn void InitializeGraphicsSystem() override;
-	 *  \param [in] i_arg Nothing. implement for following interface.
-	 *  \brief Initialize graphics API. (link dll, ...)
-	 */
-	void InitializeGraphicsSystem(const EventArg &i_arg) override;
-	
-	/*! \fn void ReleaseGraphicsSystem() override;
-	 *  \brief Release graphics API.
-	 */
-	void ReleaseGraphicsSystem() override;
+	VkSurfaceCapabilitiesKHR m_caps;
+	std::vector<VkSurfaceFormatKHR> m_formats;
+	std::vector<VkPresentModeKHR> m_present_modes;
 };
+
+class SDENGINE_CLASS QueueFamilyIndices
+{
+public:
+	explicit QueueFamilyIndices(VkPhysicalDevice i_p_device, VkSurfaceKHR i_surface);
+public:
+	int m_graphics_fid;
+	int m_present_fid;
+	std::vector<VkQueueFamilyProperties> m_queue_families;
+};
+
+VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
+	VkDebugReportFlagsEXT i_flags,
+	VkDebugReportObjectTypeEXT i_object_type,
+	uint64_t i_obj,
+	size_t i_location,
+	int32_t i_code,
+	const char* i_layer_prefix,
+	const char* i_msg,
+	void* i_use_data);
+
+SDENGINE_API bool CheckDeviceExtensionSupport(
+	VkPhysicalDevice i_p_device,
+	std::vector<const char*> i_necessary_exts
+);
+
+SDENGINE_API VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
+	const std::vector<VkSurfaceFormatKHR>& i_avaible_fmts);
+
+SDENGINE_API VkPresentModeKHR ChooseSwapPresentMode(
+	const std::vector<VkPresentModeKHR> &i_avaible_present_modes);
+
+SDENGINE_API VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR &i_capabilities);
 
 //---------------------------- end of namespace Graphics ----------------------------
 }

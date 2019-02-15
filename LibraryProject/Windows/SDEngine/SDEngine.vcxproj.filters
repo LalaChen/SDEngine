@@ -113,12 +113,6 @@
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Application\Application.cpp">
       <Filter>src\Basic\Application</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\GraphicsAPI.cpp">
-      <Filter>src\Graphics\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4API.cpp">
-      <Filter>src\Graphics\Manager\OpenGL4</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Timer\Windows\WindowsTimer.cpp">
       <Filter>src\Basic\Timer\Windows</Filter>
     </ClCompile>
@@ -149,6 +143,21 @@
     <ClCompile Include="..\..\..\SourceCode\src\Basic\EventSystem\EventObject.cpp">
       <Filter>src\Basic\EventSystem</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\GraphicsManager.cpp">
+      <Filter>src\Graphics\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager.cpp">
+      <Filter>src\Graphics\Manager\OpenGL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_InitializeVulkan.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\Vulkan_Utils.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h">
@@ -174,12 +183,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h">
       <Filter>include\Graphics\Resolution</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\GraphicsAPI.h">
-      <Filter>include\Graphics\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4API.h">
-      <Filter>include\Graphics\Manager\OpenGL4</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Timer\Windows\WindowsTimer.h">
       <Filter>include\Basic\Timer\Windows</Filter>
@@ -219,6 +222,21 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Basic\EventSystem\EventObject.h">
       <Filter>include\Basic\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\GraphicsManager.h">
+      <Filter>include\Graphics\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4Manager.h">
+      <Filter>include\Graphics\Manager\OpenGL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h">
+      <Filter>include\Graphics\Manager\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h">
+      <Filter>include\Graphics\Manager\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\Vulkan_Utils.h">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

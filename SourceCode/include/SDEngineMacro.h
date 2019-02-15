@@ -87,6 +87,15 @@ typedef char SDStrChar;
 		static ClassName *GetPtr(); \
 		static bool IsNull(); \
         static void Destroy(); \
+    public: \
+        template<class DerivedType> static DerivedType* GetDynamicCastPtr() \
+        { \
+            return dynamic_cast<DerivedType*>(ClassName::GetPtr()); \
+        } \
+		template<class DerivedType> static DerivedType& GetDynamicCastRef() \
+        { \
+            return dynamic_cast<DerivedType&>(ClassName::GetRef()); \
+        } \
 	protected: \
 		static ClassName *m_instance;
 

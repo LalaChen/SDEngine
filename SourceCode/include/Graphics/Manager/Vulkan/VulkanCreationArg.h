@@ -23,15 +23,21 @@ SOFTWARE.
 
 */
 
-/*! \file      OpenGL4Manager.h
- *  \brief     Introduce of class OpenGL4Manager
+/*! \file      VulkanInstanceArg.h
+ *  \brief     Introduce of class VulkanInstanceArg
  *  \author    Kuan-Chih, Chen
  *  \date      2019/02/03
  *  \copyright MIT License.
  */
+
 #pragma once
 
-#include "GraphicsManager.h"
+#include <vulkan/vulkan.h>
+
+#include "SDEngineMacro.h"
+#include "EventArg.h"
+
+using SDE::Basic::EventArg;
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -40,32 +46,21 @@ namespace SDE
 namespace Graphics
 {
 
-/*! \class OpenGL4Manager
- *  In our system, OpenGL4Manager is a implementation for opengl4 graphics API.
- */
-class SDENGINE_CLASS OpenGL4Manager : public GraphicsManager
+class SDENGINE_CLASS VulkanCreationArg : public EventArg
 {
 public:
-	/*! \fn OpenGL4Manager();
-	 *  \brief The constructor of OpenGL4Manager Class.
-	 */
-	OpenGL4Manager();
-	
-	/*! \fn virtual ~OpenGL4Manager();
-	 *  \brief The destructor of OpenGL4Manager Class.
-	 */
-	virtual ~OpenGL4Manager();
+	VulkanCreationArg()
+	: m_instance{nullptr}
+    , m_surface(nullptr)
+	{
+	}
+
+	virtual ~VulkanCreationArg()
+	{
+	}
 public:
-	/*! \fn void InitializeGraphicsSystem() override;
-	 *  \param [in] i_arg Nothing. implement for following interface.
-	 *  \brief Initialize graphics API. (link dll, ...)
-	 */
-	void InitializeGraphicsSystem(const EventArg &i_arg) override;
-	
-	/*! \fn void ReleaseGraphicsSystem() override;
-	 *  \brief Release graphics API.
-	 */
-	void ReleaseGraphicsSystem() override;
+	VkInstance m_instance;
+	VkSurfaceKHR m_surface;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

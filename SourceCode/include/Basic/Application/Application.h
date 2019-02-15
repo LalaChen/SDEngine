@@ -36,9 +36,11 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
 
+#include "GraphicsManager.h"
 #include "Resolution.h"
 
 using SDE::Graphics::Resolution;
+using SDE::Graphics::GraphicsLibraryEnum;
 using SDE::Graphics::Size_ui;
 
 //---------------------------- start of namespace SDE ----------------------------
@@ -67,12 +69,13 @@ public:
 	/*! \fn explicit Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv);
 	 *  \param [in] i_win_title Window title
 	 *  \param [in] i_win_res Window resolution.
-	 *  \param [in] i_full_window full window screen.
-	 *  \param [in] i_argc argument count.
-	 *  \param [in] i_argv arguments.
+	 *  \param [in] i_full_window Full window screen.
+	 *  \param [in] i_adopt_library Which graphics library you use. 
+	 *  \param [in] i_argc Argument count.
+	 *  \param [in] i_argv Arguments.
 	 *  \brief The constructor of Application Class.
 	 */
-	explicit Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv);
+	explicit Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv);
 	
 	/*! \fn virtual ~Application();
 	 *  \brief The destructor of Application Class.
@@ -90,6 +93,11 @@ public:
 	 *         derived class.
 	 */
 	virtual void InitializeGraphicsSystem() = 0;
+
+	/*! \fn virtual void ReleaseGraphicsSystem() = 0;
+	 *  \brief release graphics system of this app.
+	 */
+	virtual void ReleaseGraphicsSystem() = 0;
 	
 	/*! \fn virtual void TerminateApplication() = 0;
 	 *  \brief release all mamager for terminating app.
@@ -133,6 +141,11 @@ protected:
 		\brief is full screen or not. [VarGet Attribute]
 	*/
 	DECLARE_ATTRIBUTE_VAR_GET(std::string, m_win_title, WinTitle);
+
+	/*! \var GraphicsLibraryEnum m_adopt_library;
+		\brief Adopt library. [VarGet Attribute]
+	*/
+	DECLARE_ATTRIBUTE_VAR_GET(GraphicsLibraryEnum, m_adopt_library, AdoptLibrary);
 };
 
 inline void Application::SetWindowResolution(Size_ui i_width, Size_ui i_height)

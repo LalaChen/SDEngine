@@ -35,6 +35,9 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
+#include "EventArg.h"
+
+using SDE::Basic::EventArg;
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -42,6 +45,14 @@ namespace SDE
 //---------------------------- start of namespace Graphics ----------------------------
 namespace Graphics
 {
+
+enum GraphicsLibraryEnum {
+	GraphicsLibrary_OpenGL4 = 0,
+	GraphicsLibrary_Vulkan  = 1,
+	GraphicsLibrary_MaxEnum,
+	GraphicsLibrary_Unknown = GraphicsLibrary_MaxEnum
+};
+
 /*! \class GraphicsManager
  *  In our system, GraphicsManager is a interface for all graphics API(opengl, gles, vulkan) and manage \n
  *  graphics resource those need to be managed.
@@ -52,19 +63,20 @@ public:
 	SINGLETON_DECLARATION(GraphicsManager);
 public:
 	/*! \fn GraphicsManager();
-	 *  \brief The constructor of GraphicsAPI Class. 
+	 *  \brief The constructor of GraphicsManager Class. 
 	 */
 	GraphicsManager();
 	
 	/*! \fn virtual ~GraphicsManager();
-	 *  \brief The destructor of GraphicsAPI Class.
+	 *  \brief The destructor of GraphicsManager Class.
 	 */
 	virtual ~GraphicsManager();
 public: //---------------- Initialize and Release -----------------
-	/*! \fn virtual void InitializeGraphicsSystem() = 0;
+	/*! \fn virtual void InitializeGraphicsSystem(const EventArg &i_arg) = 0;
+	 *  \param [in] i_arg argumnet for initializing manager. We should define necessary arguments class(derived EventArg) and input those arguments.
 	 *  \brief Initialize graphics system. (link dll, ...)
 	 */
-	virtual void InitializeGraphicsSystem() = 0;
+	virtual void InitializeGraphicsSystem(const EventArg &i_arg) = 0;
 	
 	/*! \fn virtual void ReleaseGraphicsSystem() = 0;
 	 *  \brief Release graphics system.
@@ -72,6 +84,7 @@ public: //---------------- Initialize and Release -----------------
 	virtual void ReleaseGraphicsSystem() = 0;
 	
 public: //---------------- API -----------------
+	GraphicsLibraryEnum m_library;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

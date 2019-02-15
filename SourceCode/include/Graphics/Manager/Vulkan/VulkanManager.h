@@ -23,12 +23,13 @@ SOFTWARE.
 
 */
 
-/*! \file      OpenGL4Manager.h
- *  \brief     Introduce of class OpenGL4Manager
+/*! \file      VulkanManager.h
+ *  \brief     Introduce of class VulkanManager
  *  \author    Kuan-Chih, Chen
- *  \date      2019/02/03
+ *  \date      2019/02/09
  *  \copyright MIT License.
  */
+
 #pragma once
 
 #include "GraphicsManager.h"
@@ -40,32 +41,61 @@ namespace SDE
 namespace Graphics
 {
 
-/*! \class OpenGL4Manager
- *  In our system, OpenGL4Manager is a implementation for opengl4 graphics API.
+/*! \class VulkanManager
+ *  In our system, VulkanManager is a implementation for opengl4 graphics API.
  */
-class SDENGINE_CLASS OpenGL4Manager : public GraphicsManager
+class SDENGINE_CLASS VulkanManager : public GraphicsManager
 {
 public:
-	/*! \fn OpenGL4Manager();
-	 *  \brief The constructor of OpenGL4Manager Class.
-	 */
-	OpenGL4Manager();
-	
-	/*! \fn virtual ~OpenGL4Manager();
-	 *  \brief The destructor of OpenGL4Manager Class.
-	 */
-	virtual ~OpenGL4Manager();
+	typedef void* SDVKHandle;
+	typedef int32_t SDVKValue;
+protected:
+	static std::vector<const char*> ValidLayers;
+	static std::vector<const char*> NecessaryExtensions;
 public:
-	/*! \fn void InitializeGraphicsSystem() override;
-	 *  \param [in] i_arg Nothing. implement for following interface.
+	static const std::vector<const char*>& GetValidLayers();
+public:
+	/*! \fn VulkanManager();
+	 *  \brief The constructor of VulkanManager Class.
+	 */
+	VulkanManager();
+
+	/*! \fn virtual ~VulkanManager();
+	 *  \brief The destructor of VulkanManager Class.
+	 */
+	virtual ~VulkanManager();
+public:
+	/*! \fn void InitializeGraphicsSystem(const EventArg &i_arg) override;
+	 *  \param [in] i_arg Vulkan creating arguments.
 	 *  \brief Initialize graphics API. (link dll, ...)
 	 */
 	void InitializeGraphicsSystem(const EventArg &i_arg) override;
-	
+
 	/*! \fn void ReleaseGraphicsSystem() override;
 	 *  \brief Release graphics API.
 	 */
 	void ReleaseGraphicsSystem() override;
+protected:
+	void InitializeDebugMessage();
+	void InitializePhysicalDevice();
+	void InitializeLogicDevice();
+	void InitializeSwapChain();
+	void InitializeImageViews();
+protected:
+	SDVKHandle m_VK_instance; //VkInstance
+	SDVKHandle m_VK_surface; //VkSurfaceKHR
+	SDVKHandle m_VK_debug_report_cbk; //VkDebugReportCallbackEXT
+	SDVKHandle m_VK_physical_device; //VkPhysicalDevice
+	SDVKHandle m_VK_logic_device; //VkDevice
+	SDVKHandle m_VK_graphics_queue;//VkQueue
+	SDVKHandle m_VK_present_queue;//VkQueue
+	SDVKHandle m_VK_swap_chain;//VkSwapchainKHR
+	std::vector<SDVKHandle> m_VK_sc_images; //VkImage
+	std::vector<SDVKHandle> m_VK_sc_image_views; //VkImageView
+protected:
+	SDVKValue m_scimg_format;
+	Size_ui m_viewport_width;
+	Size_ui m_viewport_height;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

@@ -8,23 +8,22 @@ namespace SDE
 namespace App
 {
 
-void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window)
+void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library)
 {
 	GLFWwindow* window = nullptr;
 	GLFWmonitor *monitor = nullptr;
 	Resolution final_win_res = i_win_res;
-	//1. new application and initialize without graphics.
-	new GLFWApplication(i_win_title, i_win_res, i_full_window, i_argc, i_argv);
-	Application::GetRef().Initialize();
-	//2. set error callback.
+	//1. set error callback.
 	glfwSetErrorCallback(GLFWApplication::ErrorCallback);
-	//3. create glfw window.
+	//2. create glfw window.
 	//--- i. initialize glfw.
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	//--- ii. create window.
 	if (i_full_window == true) {
 		monitor = glfwGetPrimaryMonitor();
@@ -61,12 +60,14 @@ void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int 
 	glfwSetWindowFocusCallback(window, GLFWApplication::WindowFocusCallback);
 	glfwSetDropCallback(window, GLFWApplication::DropCallback);
 	glfwSetScrollCallback(window, GLFWApplication::ScrollCallback);
+
+	//3. new application and initialize without graphics.
+	new GLFWApplication(i_win_title, i_win_res, i_full_window, i_adopt_library, i_argc, i_argv);
+	Application::GetDynamicCastPtr<GLFWApplication>()->RegisterGLFW(window, monitor);
+	Application::GetRef().Initialize();
 	
-	//--- iv. make current.
-	glfwMakeContextCurrent(window);
 	//--- v. initialize glew.
 	Application::GetRef().InitializeGraphicsSystem();
-	glfwSwapInterval(1);
 
 	//3. launch main loop.
 	while (!glfwWindowShouldClose(window))
@@ -81,10 +82,11 @@ void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int 
 		}
 
 		// Swap buffers
-		glfwSwapBuffers(window);
+		//glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
+	Application::GetRef().ReleaseGraphicsSystem();
 	// Terminate GLFW
 	glfwTerminate();
 

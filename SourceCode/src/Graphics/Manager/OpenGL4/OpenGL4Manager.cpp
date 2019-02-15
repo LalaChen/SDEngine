@@ -37,6 +37,7 @@ namespace Graphics
 OpenGL4Manager::OpenGL4Manager()
 : GraphicsManager()
 {
+	m_library = GraphicsLibrary_OpenGL4;
 	SDLOG("New OpenGL4Manager object.");
 }
 
@@ -45,7 +46,7 @@ OpenGL4Manager::~OpenGL4Manager()
 	SDLOG("Delete OpenGL4Manager object.");
 }
 
-void OpenGL4Manager::InitializeGraphicsSystem()
+void OpenGL4Manager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
 	SDLOG("Initialize OpenGL4Manager.");
 	glewInit();

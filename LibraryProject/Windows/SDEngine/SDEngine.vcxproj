@@ -32,8 +32,11 @@
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Object\Object.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Timer\Timer.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Basic\Timer\Windows\WindowsTimer.cpp" />
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\GraphicsAPI.cpp" />
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4API.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\GraphicsManager.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_InitializeVulkan.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\Vulkan_Utils.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -53,13 +56,16 @@
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Object\WeakReferenceObject.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Timer\Timer.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Basic\Timer\Windows\WindowsTimer.h" />
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\GraphicsAPI.h" />
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4API.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\GraphicsManager.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4Manager.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngine.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineMacro.h" />
+    <ClInclude Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\Vulkan_Utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -104,25 +110,25 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
-    <Import Project="..\..\..\PropSheet\Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
-    <Import Project="..\..\..\PropSheet\Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
-    <Import Project="..\..\..\PropSheet\Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
-    <Import Project="..\..\..\PropSheet\Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

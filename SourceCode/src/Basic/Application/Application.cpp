@@ -34,10 +34,11 @@ namespace Basic
 
 SINGLETON_DECLARATION_IMPL(Application);
 
-Application::Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv)
+Application::Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv)
 : m_win_title(i_win_title)
 , m_win_res(i_win_res)
 , m_full_window(i_full_window)
+, m_adopt_library(i_adopt_library)
 {
 	//Register instance.
 	SINGLETON_DECLARATION_REGISTER;
