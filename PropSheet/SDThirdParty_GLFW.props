@@ -2,9 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <GLFWRootDir>D:\Library\glfw\</GLFWRootDir>
+    <GLFWRootDir>$(SolutionDir)\ThirdParty\GLFW\</GLFWRootDir>
     <GLFWIncludeDir>$(GLFWRootDir)include\</GLFWIncludeDir>
-    <GLFWLibDir>$(GLFWRootDir)bin\Library\$(Platform)\$(Configuration)\</GLFWLibDir>
+    <GLFWLibDir>$(GLFWRootDir)\lib\$(Platform)\$(Configuration)\</GLFWLibDir>
     <GLFWDepDir>$(GLFWRootDir)deps\</GLFWDepDir>
   </PropertyGroup>
   <PropertyGroup>
