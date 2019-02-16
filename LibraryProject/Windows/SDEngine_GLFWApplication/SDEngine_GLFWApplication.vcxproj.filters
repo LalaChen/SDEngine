@@ -11,18 +11,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\SourceCode\include\Application\GLFWApplication.h">
+    <ClInclude Include="..\..\..\SourceCode\include\Application\GLFW\GLFWApplication.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\SourceCode\src\Application\GLFWApplication.cpp">
+    <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="GLFWApplication_Callback.cpp">
+    <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication_Callback.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="GLFWApplication_MainLoop.cpp">
+    <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication_MainLoop.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

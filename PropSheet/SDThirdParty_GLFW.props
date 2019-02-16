@@ -14,7 +14,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(GLFWIncludeDir);$(GLFWDepDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GLFWIncludeDir);$(GLFWDepDir);$(SDEngineRootDir)SourceCode\include\Application\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;$(SDLibrary);%(AdditionalDependencies)</AdditionalDependencies>

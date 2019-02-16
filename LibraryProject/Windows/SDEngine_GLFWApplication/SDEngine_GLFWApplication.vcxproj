@@ -19,12 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\SourceCode\include\Application\GLFWApplication.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Application\GLFW\GLFWApplication.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\SourceCode\src\Application\GLFWApplication.cpp" />
-    <ClCompile Include="GLFWApplication_Callback.cpp" />
-    <ClCompile Include="GLFWApplication_MainLoop.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication_Callback.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication_MainLoop.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
