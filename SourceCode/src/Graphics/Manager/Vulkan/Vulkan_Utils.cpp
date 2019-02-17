@@ -66,6 +66,7 @@ QueueFamilyIndices::QueueFamilyIndices(VkPhysicalDevice i_p_device, VkSurfaceKHR
 		VK_QUEUE_COMPUTE_BIT |
 		VK_QUEUE_TRANSFER_BIT |
 		VK_QUEUE_SPARSE_BINDING_BIT;
+	//I want all!!!
 
     uint32_t queue_families_count = 0;
 	vkGetPhysicalDeviceQueueFamilyProperties((VkPhysicalDevice)i_p_device, &queue_families_count, nullptr);
