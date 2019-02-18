@@ -26,7 +26,7 @@ SOFTWARE.
 /*! \file      VulkanInstanceArg.h
  *  \brief     Introduce of class VulkanInstanceArg
  *  \author    Kuan-Chih, Chen
- *  \date      2019/02/03
+ *  \date      2019/02/13
  *  \copyright MIT License.
  */
 

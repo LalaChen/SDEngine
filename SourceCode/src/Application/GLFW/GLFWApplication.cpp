@@ -1,5 +1,7 @@
 #include "SDEngine.h"
 #include "VulkanCreationArg.h"
+#include "VulkanManager.h"
+#include "OpenGL4Manager.h"
 #include "GLFWApplication.h"
 
 using namespace SDE;

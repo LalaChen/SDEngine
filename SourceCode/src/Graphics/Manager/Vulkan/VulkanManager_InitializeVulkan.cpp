@@ -270,7 +270,7 @@ void VulkanManager::InitializeLogicDevice()
 	logic_dev_c_info.pQueueCreateInfos = queue_c_infos.data();
 	logic_dev_c_info.queueCreateInfoCount = static_cast<uint32_t>(queue_c_infos.size());
 
-	logic_dev_c_info.pEnabledFeatures = &dev_features;
+	logic_dev_c_info.pEnabledFeatures = &dev_features; //use all features physical device support.
 
 	logic_dev_c_info.ppEnabledExtensionNames = NecessaryExtensions.data();
 	logic_dev_c_info.enabledExtensionCount = static_cast<uint32_t>(NecessaryExtensions.size());
