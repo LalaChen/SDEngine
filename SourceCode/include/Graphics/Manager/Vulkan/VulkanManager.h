@@ -32,6 +32,8 @@ SOFTWARE.
 
 #pragma once
 
+#include <vulkan/vulkan.h>
+
 #include "GraphicsManager.h"
 
 //---------------------------- start of namespace SDE ----------------------------
@@ -46,9 +48,6 @@ namespace Graphics
  */
 class SDENGINE_CLASS VulkanManager : public GraphicsManager
 {
-public:
-	typedef void* SDVKHandle;
-	typedef int32_t SDVKValue;
 protected:
 	static std::vector<const char*> ValidLayers;
 	static std::vector<const char*> NecessaryExtensions;
@@ -82,20 +81,25 @@ protected:
 	void InitializeSwapChain();
 	void InitializeImageViews();
 protected:
-	SDVKHandle m_VK_instance; //VkInstance
-	SDVKHandle m_VK_surface; //VkSurfaceKHR
-	SDVKHandle m_VK_debug_report_cbk; //VkDebugReportCallbackEXT
-	SDVKHandle m_VK_physical_device; //VkPhysicalDevice
-	SDVKHandle m_VK_logic_device; //VkDevice
-	SDVKHandle m_VK_graphics_queue;//VkQueue
-	SDVKHandle m_VK_present_queue;//VkQueue
-	SDVKHandle m_VK_swap_chain;//VkSwapchainKHR
-	std::vector<SDVKHandle> m_VK_sc_images; //VkImage
-	std::vector<SDVKHandle> m_VK_sc_image_views; //VkImageView
+	VkQueueFlags m_VK_desired_queue_abilities;
+	VkSurfaceFormatKHR m_VK_desired_sur_fmt;
+	std::vector<VkPresentModeKHR> m_Vk_desired_pre_mode_list;
 protected:
-	SDVKValue m_scimg_format;
-	Size_ui m_viewport_width;
-	Size_ui m_viewport_height;
+	VkInstance m_VK_instance; //VkInstance
+	VkSurfaceKHR m_VK_surface; //VkSurfaceKHR
+protected:
+	VkDebugReportCallbackEXT m_VK_debug_report_cbk; //VkDebugReportCallbackEXT
+protected:
+	VkPhysicalDevice m_VK_physical_device; //VkPhysicalDevice
+	VkDevice m_VK_logic_device; //VkDevice
+	int32_t m_Vk_picked_queue_family_id;
+	VkQueue m_VK_present_queue;//VkQueue
+protected:
+	VkExtent2D m_screen_size;
+	VkPresentModeKHR m_final_present_mode;
+	VkSwapchainKHR m_VK_swap_chain;//VkSwapchainKHR
+	std::vector<VkImage> m_VK_sc_images; //VkImage
+	std::vector<VkImageView> m_VK_sc_image_views; //VkImageView
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

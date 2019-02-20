@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <vulkan/vulkan.h>
-
 #include "Vulkan_Utils.h"
 #include "VulkanCreationArg.h"
 #include "LogManager.h"
@@ -55,15 +53,21 @@ std::vector<const char*> VulkanManager::NecessaryExtensions = {
 VulkanManager::VulkanManager()
 : m_VK_instance(VK_NULL_HANDLE)
 , m_VK_surface(VK_NULL_HANDLE)
+// debug cbk
 , m_VK_debug_report_cbk(VK_NULL_HANDLE)
+// desired device properities
+, m_VK_desired_queue_abilities(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT | VK_QUEUE_SPARSE_BINDING_BIT)
+, m_VK_desired_sur_fmt{ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR }
+, m_Vk_desired_pre_mode_list{VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR}
+// device(phy and logical)
 , m_VK_physical_device(VK_NULL_HANDLE)
+, m_Vk_picked_queue_family_id(-1)
 , m_VK_logic_device(VK_NULL_HANDLE)
-, m_VK_graphics_queue(VK_NULL_HANDLE)
 , m_VK_present_queue(VK_NULL_HANDLE)
+// swap chain
 , m_VK_swap_chain(VK_NULL_HANDLE)
-, m_scimg_format(0)
-, m_viewport_width(0)
-, m_viewport_height(0)
+, m_screen_size{0,0}
+, m_final_present_mode(VK_PRESENT_MODE_RANGE_SIZE_KHR)
 {
 	m_library = GraphicsLibrary_Vulkan;
 	SDLOG("New VulkanManager object.");
@@ -102,19 +106,23 @@ void VulkanManager::ReleaseGraphicsSystem()
 	SDLOG("Release VulkanManager.");
 
 	PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT =
-		(PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr((VkInstance)m_VK_instance, "vkDestroyDebugReportCallbackEXT");
+		(PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_VK_instance, "vkDestroyDebugReportCallbackEXT");
 
-	if (vkDestroyDebugReportCallbackEXT != nullptr && (VkDebugReportCallbackEXT)m_VK_debug_report_cbk != VK_NULL_HANDLE) {
-		vkDestroyDebugReportCallbackEXT((VkInstance)m_VK_instance, (VkDebugReportCallbackEXT)m_VK_debug_report_cbk, nullptr);
+	if (vkDestroyDebugReportCallbackEXT != nullptr && m_VK_debug_report_cbk != VK_NULL_HANDLE) {
+		vkDestroyDebugReportCallbackEXT(m_VK_instance, m_VK_debug_report_cbk, nullptr);
 		m_VK_debug_report_cbk = VK_NULL_HANDLE;
 	}
 	else {
 		SDLOG("failed to load set up destroy debug messenger function!");
 	}
 
-	vkDestroySwapchainKHR((VkDevice)m_VK_logic_device, (VkSwapchainKHR)m_VK_swap_chain, nullptr);
-	vkDestroySurfaceKHR((VkInstance)m_VK_instance, (VkSurfaceKHR)m_VK_surface, nullptr);
-	vkDestroyInstance((VkInstance)m_VK_instance, nullptr);
+	for (auto &iv : m_VK_sc_image_views) {
+		vkDestroyImageView(m_VK_logic_device, iv, nullptr);
+	}
+
+	vkDestroySwapchainKHR(m_VK_logic_device, m_VK_swap_chain, nullptr);
+	vkDestroySurfaceKHR(m_VK_instance, m_VK_surface, nullptr);
+	vkDestroyInstance(m_VK_instance, nullptr);
 	m_VK_instance = VK_NULL_HANDLE;
 
 	m_VK_physical_device = VK_NULL_HANDLE;

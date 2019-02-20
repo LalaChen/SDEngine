@@ -40,26 +40,6 @@ namespace SDE
 namespace Graphics
 {
 
-class SDENGINE_CLASS SwapChainDetails
-{
-public:
-	explicit SwapChainDetails(VkPhysicalDevice i_p_device, VkSurfaceKHR i_surface);
-public:
-	VkSurfaceCapabilitiesKHR m_caps;
-	std::vector<VkSurfaceFormatKHR> m_formats;
-	std::vector<VkPresentModeKHR> m_present_modes;
-};
-
-class SDENGINE_CLASS QueueFamilyIndices
-{
-public:
-	explicit QueueFamilyIndices(VkPhysicalDevice i_p_device, VkSurfaceKHR i_surface);
-public:
-	int m_graphics_fid;
-	int m_present_fid;
-	std::vector<VkQueueFamilyProperties> m_queue_families;
-};
-
 VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
 	VkDebugReportFlagsEXT i_flags,
 	VkDebugReportObjectTypeEXT i_object_type,
@@ -70,18 +50,6 @@ VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
 	const char* i_msg,
 	void* i_use_data);
 
-SDENGINE_API bool CheckDeviceExtensionSupport(
-	VkPhysicalDevice i_p_device,
-	std::vector<const char*> i_necessary_exts
-);
-
-SDENGINE_API VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
-	const std::vector<VkSurfaceFormatKHR>& i_avaible_fmts);
-
-SDENGINE_API VkPresentModeKHR ChooseSwapPresentMode(
-	const std::vector<VkPresentModeKHR> &i_avaible_present_modes);
-
-SDENGINE_API VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR &i_capabilities);
 
 //---------------------------- end of namespace Graphics ----------------------------
 }
