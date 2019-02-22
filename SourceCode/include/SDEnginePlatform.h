@@ -1,5 +1,4 @@
 #pragma once
-
 /* ==============  SD Engine License ==============
 MIT License
 
@@ -24,30 +23,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/*! \file      SDEngine.h
- *  \brief     Total include header.
+/*! \file      SDEnginePlatform.h
+ *  \brief     platform include header.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/02/01
+ *  \date      2019/02/21
  *  \copyright MIT License.
  */
 
-//-------- Common Function ---------
-#include "SDEngineCommonType.h"
-#include "SDEngineMacro.h"
-#include "SDEngineCommonFunction.h"
-//-------- Basic --------
-#include "Basic/Object/NullRefException.h"
-#include "Basic/Object/Object.h"
-#include "Basic/Object/StrongReferenceObject.h"
-#include "Basic/Object/WeakReferenceObject.h"
-#include "Basic/EventSystem/Event.h"
-#include "Basic/EventSystem/EventArg.h"
-#include "Basic/EventSystem/FunctionSlot.h"
-#include "Basic/EventSystem/EventObject.h"
-#include "Basic/Application/Application.h"
-#include "Basic/LogManager/LogManager.h"
-#include "Basic/Timer/Timer.h"
-#include "Basic/FileSystem/FileSystemManager.h"
-//-------- Graphics --------
-#include "Graphics/Resolution/Resolution.h"
-#include "Graphics/Manager/GraphicsManager.h"
+//------- OS Platform Only -------
+#ifdef _WIN_PLATFORM_
+#include "Basic/LogManager/Windows/WindowsLogManager.h"
+#include "Basic/Timer/Windows/WindowsTimer.h"
+#include "Basic/FileSystem/Windows/WindowsFileSystemManager.h"
+#include "Graphics/Manager/OpenGL4/OpenGL4Manager.h"
+#include "Graphics/Manager/Vulkan/VulkanManager.h"
+#include "Graphics/Manager/Vulkan/VulkanCreationArg.h"
+#elif _ANDROID_PLATFORM_
+
+#endif

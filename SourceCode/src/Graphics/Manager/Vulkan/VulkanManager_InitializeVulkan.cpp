@@ -73,7 +73,7 @@ void VulkanManager::InitializePhysicalDevice()
 	std::vector<VkPhysicalDevice> devices(dev_count);
 	vkEnumeratePhysicalDevices(m_VK_instance, &dev_count, devices.data());
 	uint32_t pickup_dev_score = 0;
-	for (VkPhysicalDevice& device : devices) {
+	for (VkPhysicalDevice &device : devices) {
 		VkPhysicalDeviceProperties dev_property;
 		vkGetPhysicalDeviceProperties(device, &dev_property);
 		SDLOGD("--- DeviceID[%d] name : %s DevType : %d.", dev_property.deviceID, dev_property.deviceName, dev_property.deviceType);
@@ -265,21 +265,21 @@ void VulkanManager::InitializeLogicDevice()
 			VkBool32 present_support = VK_FALSE;
 			vkGetPhysicalDeviceSurfaceSupportKHR(m_VK_physical_device, fam_id, m_VK_surface, &present_support);
 			if (present_support == VK_TRUE) {
-				m_Vk_picked_queue_family_id = fam_id;
+				m_VK_picked_queue_family_id = fam_id;
 				break;
 			}
 		}
 	}
 
-	if (m_Vk_picked_queue_family_id >= 0) {
+	if (m_VK_picked_queue_family_id >= 0) {
 		SDLOGD("Final Present Queue Family[%d] : TimeStamp[%d] Flag(%x) Count:%d Extent3D(%d,%d,%d) ",
-			m_Vk_picked_queue_family_id,
-			queue_families[m_Vk_picked_queue_family_id].timestampValidBits,
-			queue_families[m_Vk_picked_queue_family_id].queueFlags,
-			queue_families[m_Vk_picked_queue_family_id].queueCount,
-			queue_families[m_Vk_picked_queue_family_id].minImageTransferGranularity.width,
-			queue_families[m_Vk_picked_queue_family_id].minImageTransferGranularity.height,
-			queue_families[m_Vk_picked_queue_family_id].minImageTransferGranularity.depth);
+			m_VK_picked_queue_family_id,
+			queue_families[m_VK_picked_queue_family_id].timestampValidBits,
+			queue_families[m_VK_picked_queue_family_id].queueFlags,
+			queue_families[m_VK_picked_queue_family_id].queueCount,
+			queue_families[m_VK_picked_queue_family_id].minImageTransferGranularity.width,
+			queue_families[m_VK_picked_queue_family_id].minImageTransferGranularity.height,
+			queue_families[m_VK_picked_queue_family_id].minImageTransferGranularity.depth);
 	}
 	else{
 		throw std::runtime_error("Can't find desired queue family.");
@@ -289,10 +289,10 @@ void VulkanManager::InitializeLogicDevice()
 	float quene_priorities[1] = { 1.0f };
 	VkDeviceQueueCreateInfo queue_c_info = {};
 
-	if (m_Vk_picked_queue_family_id >= 0) {
+	if (m_VK_picked_queue_family_id >= 0) {
 		
 		queue_c_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-		queue_c_info.queueFamilyIndex = static_cast<uint32_t>(m_Vk_picked_queue_family_id);
+		queue_c_info.queueFamilyIndex = static_cast<uint32_t>(m_VK_picked_queue_family_id);
 		queue_c_info.queueCount = 1; //use signal queue. extend in future.
 		queue_c_info.pQueuePriorities = quene_priorities;
 	}
@@ -302,12 +302,9 @@ void VulkanManager::InitializeLogicDevice()
 
 	VkDeviceCreateInfo logic_dev_c_info = {};
 	logic_dev_c_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-
 	logic_dev_c_info.pQueueCreateInfos = &queue_c_info;
 	logic_dev_c_info.queueCreateInfoCount = 1;
-
 	logic_dev_c_info.pEnabledFeatures = &dev_features; //use all features physical device support.
-
 	logic_dev_c_info.ppEnabledExtensionNames = NecessaryExtensions.data();
 	logic_dev_c_info.enabledExtensionCount = static_cast<uint32_t>(NecessaryExtensions.size());
 
@@ -323,20 +320,13 @@ void VulkanManager::InitializeLogicDevice()
 	}
 
 
-	if (m_Vk_picked_queue_family_id >= 0) {
-		vkGetDeviceQueue(m_VK_logic_device, static_cast<uint32_t>(m_Vk_picked_queue_family_id), 0, &m_VK_present_queue);
+	if (m_VK_picked_queue_family_id >= 0) {
+		vkGetDeviceQueue(m_VK_logic_device, static_cast<uint32_t>(m_VK_picked_queue_family_id), 0, &m_VK_present_queue);
 	}
 }
 
 void VulkanManager::InitializeSwapChain()
 {
-	VkPresentModeKHR best_modes[VK_PRESENT_MODE_RANGE_SIZE_KHR] = {
-		VK_PRESENT_MODE_MAILBOX_KHR, //Triple buffers.
-		VK_PRESENT_MODE_FIFO_KHR, //Vsync
-		VK_PRESENT_MODE_FIFO_RELAXED_KHR,//Vsync but will cause tearing.
-		VK_PRESENT_MODE_IMMEDIATE_KHR //will cause tearing.
-	};
-
 	SDLOG("--- Vulkan initialize swap chains.(Create swap chain)");
 	VkSurfaceCapabilitiesKHR sur_caps;
 	SDLOGD("------- Get surface capability : ");
@@ -406,18 +396,18 @@ void VulkanManager::InitializeSwapChain()
 
 	for (int mode_id = 0; mode_id < VK_PRESENT_MODE_RANGE_SIZE_KHR; mode_id++) {
 		for (const VkPresentModeKHR& p_mode : present_modes) {
-			if (m_Vk_desired_pre_mode_list[mode_id] == p_mode) {
-				m_final_present_mode = m_Vk_desired_pre_mode_list[mode_id];
+			if (m_VK_desired_pre_mode_list[mode_id] == p_mode) {
+				m_VK_final_present_mode = m_VK_desired_pre_mode_list[mode_id];
 				break;
 			}
 		}
 	}
 
-	if (m_final_present_mode == VK_PRESENT_MODE_RANGE_SIZE_KHR) {
+	if (m_VK_final_present_mode == VK_PRESENT_MODE_RANGE_SIZE_KHR) {
 		throw std::runtime_error("No desired present mode supported.");
 	}
 	else {
-		SDLOGD("final present mode : %d", m_final_present_mode);
+		SDLOGD("final present mode : %d", m_VK_final_present_mode);
 	}
 
 	//m_screen_size = ChooseSwapExtent(sur_caps);
@@ -445,10 +435,10 @@ void VulkanManager::InitializeSwapChain()
 	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 	createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
 	createInfo.queueFamilyIndexCount = 1;
-	createInfo.pQueueFamilyIndices = reinterpret_cast<const uint32_t*>(&m_Vk_picked_queue_family_id);
+	createInfo.pQueueFamilyIndices = reinterpret_cast<const uint32_t*>(&m_VK_picked_queue_family_id);
 	createInfo.preTransform = sur_caps.currentTransform;
 	createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-	createInfo.presentMode = m_final_present_mode;
+	createInfo.presentMode = m_VK_final_present_mode;
 	createInfo.clipped = VK_TRUE;
 	createInfo.oldSwapchain = VK_NULL_HANDLE;
 
@@ -460,6 +450,19 @@ void VulkanManager::InitializeSwapChain()
 	m_VK_sc_images.resize(image_count);
 	vkGetSwapchainImagesKHR(m_VK_logic_device, m_VK_swap_chain, &image_count, m_VK_sc_images.data());
 	SDLOG("SwapChainImages number : %u, ViewPort(%d,%d)", image_count, m_screen_size.width, m_screen_size.height);
+
+	VkSemaphoreCreateInfo semaphore_c_info = {};
+	semaphore_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+	semaphore_c_info.pNext = nullptr;
+	semaphore_c_info.flags = 0;
+
+	if (vkCreateSemaphore(m_VK_logic_device, &semaphore_c_info, nullptr, &m_VK_acq_img_semaphore) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create acq img semaphore!");
+	}
+
+	if (vkCreateSemaphore(m_VK_logic_device, &semaphore_c_info, nullptr, &m_VK_present_semaphore) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create present semaphore!");
+	}
 }
 
 void VulkanManager::InitializeImageViews()
@@ -484,6 +487,33 @@ void VulkanManager::InitializeImageViews()
 		if (vkCreateImageView(m_VK_logic_device, &image_view_c_info, nullptr, (VkImageView*)&m_VK_sc_image_views[imgv_id]) != VK_SUCCESS) {
 			throw std::runtime_error(SDE::Basic::StringFormat("failed to create image views[%d]!").c_str());
 		}
+	}
+}
+
+void VulkanManager::InitializeCommandPoolAndBuffers()
+{
+	SDLOG("--- Vulkan initialize command pool and buffer.");
+	VkCommandPoolCreateInfo cmd_pool_c_info = {};
+	cmd_pool_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	cmd_pool_c_info.pNext = nullptr;
+	cmd_pool_c_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; //VkCommandPoolCreateFlags
+	cmd_pool_c_info.queueFamilyIndex = m_VK_picked_queue_family_id;
+
+	if (vkCreateCommandPool(m_VK_logic_device, &cmd_pool_c_info, nullptr, &m_VK_main_cmd_pool) != VK_SUCCESS) {
+		throw std::runtime_error("Create command pool failure!");
+	}
+
+	VkCommandBufferAllocateInfo cmd_buf_a_info = {};
+	cmd_buf_a_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	cmd_buf_a_info.pNext = nullptr;
+	cmd_buf_a_info.commandPool = m_VK_main_cmd_pool;
+	cmd_buf_a_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; //VkCommandBufferLevel
+	cmd_buf_a_info.commandBufferCount = static_cast<uint32_t>(m_VK_main_cmd_buffer_number);
+
+	m_VK_main_cmd_buffers.resize(m_VK_main_cmd_buffer_number);
+
+	if (vkAllocateCommandBuffers(m_VK_logic_device, &cmd_buf_a_info, m_VK_main_cmd_buffers.data()) != VK_SUCCESS) {
+		throw std::runtime_error("Create command failure failure!");
 	}
 }
 

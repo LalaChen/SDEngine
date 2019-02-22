@@ -66,6 +66,10 @@ public:
 	 *  \brief Release graphics API.
 	 */
 	void ReleaseGraphicsSystem() override;
+protected: //--------------- Render Flow Function ------------------
+	void RenderBegin() override;
+	void RenderToScreen() override;
+	void RenderEnd() override;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

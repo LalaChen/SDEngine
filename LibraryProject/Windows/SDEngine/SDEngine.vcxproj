@@ -65,6 +65,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineMacro.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\SDEnginePlatform.h" />
     <ClInclude Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\Vulkan_Utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -238,5 +238,8 @@
     <ClInclude Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\Vulkan_Utils.h">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\SDEnginePlatform.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

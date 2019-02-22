@@ -1,4 +1,5 @@
 #include "SDEngine.h"
+#include "WindowsLogManager.h"
 
 using namespace SDE;
 using namespace SDE::Basic;

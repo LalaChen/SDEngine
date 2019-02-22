@@ -49,6 +49,8 @@ namespace Graphics
 class SDENGINE_CLASS VulkanManager : public GraphicsManager
 {
 protected:
+	static const uint32_t MaxImgAcqirationTime;
+protected:
 	static std::vector<const char*> ValidLayers;
 	static std::vector<const char*> NecessaryExtensions;
 public:
@@ -74,16 +76,22 @@ public:
 	 *  \brief Release graphics API.
 	 */
 	void ReleaseGraphicsSystem() override;
+protected: //--------------- Render Flow Function ------------------
+	void RenderBegin() override;
+	void RenderToScreen() override;
+	void RenderEnd() override;
 protected:
 	void InitializeDebugMessage();
 	void InitializePhysicalDevice();
 	void InitializeLogicDevice();
 	void InitializeSwapChain();
 	void InitializeImageViews();
+	void InitializeCommandPoolAndBuffers();
 protected:
 	VkQueueFlags m_VK_desired_queue_abilities;
 	VkSurfaceFormatKHR m_VK_desired_sur_fmt;
-	std::vector<VkPresentModeKHR> m_Vk_desired_pre_mode_list;
+	std::vector<VkPresentModeKHR> m_VK_desired_pre_mode_list;
+	size_t m_VK_main_cmd_buffer_number;
 protected:
 	VkInstance m_VK_instance; //VkInstance
 	VkSurfaceKHR m_VK_surface; //VkSurfaceKHR
@@ -92,14 +100,19 @@ protected:
 protected:
 	VkPhysicalDevice m_VK_physical_device; //VkPhysicalDevice
 	VkDevice m_VK_logic_device; //VkDevice
-	int32_t m_Vk_picked_queue_family_id;
+	int32_t m_VK_picked_queue_family_id;
 	VkQueue m_VK_present_queue;//VkQueue
 protected:
 	VkExtent2D m_screen_size;
-	VkPresentModeKHR m_final_present_mode;
+	VkPresentModeKHR m_VK_final_present_mode;
 	VkSwapchainKHR m_VK_swap_chain;//VkSwapchainKHR
+	VkSemaphore m_VK_acq_img_semaphore;
+	VkSemaphore m_VK_present_semaphore;
 	std::vector<VkImage> m_VK_sc_images; //VkImage
 	std::vector<VkImageView> m_VK_sc_image_views; //VkImageView
+protected:
+	VkCommandPool m_VK_main_cmd_pool;
+	std::vector<VkCommandBuffer> m_VK_main_cmd_buffers;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

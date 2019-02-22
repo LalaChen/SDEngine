@@ -57,6 +57,18 @@ void OpenGL4Manager::ReleaseGraphicsSystem()
 	SDLOG("Release OpenGL4Manager.");
 }
 
+void OpenGL4Manager::RenderBegin()
+{
+}
+
+void OpenGL4Manager::RenderToScreen()
+{
+}
+
+void OpenGL4Manager::RenderEnd() 
+{
+}
+
 //---------------------------- end of namespace Graphics ----------------------------
 }
 //---------------------------- end of namespace SDE ----------------------------
