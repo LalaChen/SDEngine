@@ -23,7 +23,10 @@ SOFTWARE.
 
 */
 
+#include "GraphicsManager.h"
 #include "Application.h"
+
+using SDE::Graphics::GraphicsManager;
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -56,6 +59,8 @@ void Application::Resume()
 
 void Application::Update()
 {
+    //Rendering.
+    GraphicsManager::GetRef().Render();
 
 }
 
