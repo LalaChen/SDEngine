@@ -49,7 +49,8 @@ namespace Graphics
 class SDENGINE_CLASS VulkanManager : public GraphicsManager
 {
 protected:
-	static const uint32_t MaxImgAcqirationTime;
+	static const uint32_t MaxImgAcqirationTime; //nanosecond.
+    static const uint32_t MaxFenceWaitTime;
 protected:
 	static std::vector<const char*> ValidLayers;
 	static std::vector<const char*> NecessaryExtensions;
@@ -76,43 +77,47 @@ public:
 	 *  \brief Release graphics API.
 	 */
 	void ReleaseGraphicsSystem() override;
+
 protected: //--------------- Render Flow Function ------------------
 	void RenderBegin() override;
 	void RenderToScreen() override;
 	void RenderEnd() override;
 protected:
+    void RenderDebug();
+protected:
 	void InitializeDebugMessage();
 	void InitializePhysicalDevice();
 	void InitializeLogicDevice();
 	void InitializeSwapChain();
-	void InitializeImageViews();
+	void InitializeImageViewsAndFBOs();
 	void InitializeCommandPoolAndBuffers();
 protected:
 	VkQueueFlags m_VK_desired_queue_abilities;
 	VkSurfaceFormatKHR m_VK_desired_sur_fmt;
 	std::vector<VkPresentModeKHR> m_VK_desired_pre_mode_list;
-	size_t m_VK_main_cmd_buffer_number;
 protected:
-	VkInstance m_VK_instance; //VkInstance
-	VkSurfaceKHR m_VK_surface; //VkSurfaceKHR
+	VkInstance m_VK_instance;
+	VkSurfaceKHR m_VK_surface;
 protected:
-	VkDebugReportCallbackEXT m_VK_debug_report_cbk; //VkDebugReportCallbackEXT
+	VkDebugReportCallbackEXT m_VK_debug_report_cbk;
 protected:
-	VkPhysicalDevice m_VK_physical_device; //VkPhysicalDevice
-	VkDevice m_VK_logic_device; //VkDevice
+	VkPhysicalDevice m_VK_physical_device;
+	VkDevice m_VK_logic_device;
 	int32_t m_VK_picked_queue_family_id;
-	VkQueue m_VK_present_queue;//VkQueue
+	VkQueue m_VK_present_queue;
 protected:
 	VkExtent2D m_screen_size;
 	VkPresentModeKHR m_VK_final_present_mode;
-	VkSwapchainKHR m_VK_swap_chain;//VkSwapchainKHR
-	VkSemaphore m_VK_acq_img_semaphore;
-	VkSemaphore m_VK_present_semaphore;
-	std::vector<VkImage> m_VK_sc_images; //VkImage
-	std::vector<VkImageView> m_VK_sc_image_views; //VkImageView
+	VkSwapchainKHR m_VK_swap_chain;
+	VkSemaphore m_VK_acq_img_semaphore; //GPU to GPU lock
+	VkSemaphore m_VK_present_semaphore; //GPU to GPU lock
+	std::vector<VkImage> m_VK_sc_images;
+	std::vector<VkImageView> m_VK_sc_image_views;
+    std::vector<VkFramebuffer> m_VK_sc_image_fbos;
 protected:
-	VkCommandPool m_VK_main_cmd_pool;
-	std::vector<VkCommandBuffer> m_VK_main_cmd_buffers;
+	VkCommandPool m_VK_main_cmd_pool; //main render thread use.
+    VkCommandBuffer m_VK_main_cmd_buffer;
+    VkFence m_VK_main_cmd_buf_fence;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

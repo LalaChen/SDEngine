@@ -42,6 +42,8 @@ namespace SDE
 namespace Basic
 {
 
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(EventObject);
+
 /*! \class EventObject
  *  In our event system, EventObject is used to keep Events. The EventObject offer a EventContainer for \n
  *  storing events. Developer can design events for purpose and register the ones into EventContainer. \n

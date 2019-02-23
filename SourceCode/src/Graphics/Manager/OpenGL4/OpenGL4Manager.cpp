@@ -57,6 +57,7 @@ void OpenGL4Manager::ReleaseGraphicsSystem()
 	SDLOG("Release OpenGL4Manager.");
 }
 
+//----------------------- Render Flow -----------------------
 void OpenGL4Manager::RenderBegin()
 {
 }

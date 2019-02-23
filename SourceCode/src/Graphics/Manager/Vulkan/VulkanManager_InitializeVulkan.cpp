@@ -288,14 +288,10 @@ void VulkanManager::InitializeLogicDevice()
 	//Create queues.
 	float quene_priorities[1] = { 1.0f };
 	VkDeviceQueueCreateInfo queue_c_info = {};
-
-	if (m_VK_picked_queue_family_id >= 0) {
-		
-		queue_c_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-		queue_c_info.queueFamilyIndex = static_cast<uint32_t>(m_VK_picked_queue_family_id);
-		queue_c_info.queueCount = 1; //use signal queue. extend in future.
-		queue_c_info.pQueuePriorities = quene_priorities;
-	}
+    queue_c_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queue_c_info.queueFamilyIndex = static_cast<uint32_t>(m_VK_picked_queue_family_id);
+    queue_c_info.queueCount = 1; //use signal queue. extend in future.
+    queue_c_info.pQueuePriorities = quene_priorities;
 
 	VkPhysicalDeviceFeatures dev_features = {};
 	vkGetPhysicalDeviceFeatures(m_VK_physical_device, &dev_features);
@@ -386,7 +382,7 @@ void VulkanManager::InitializeSwapChain()
 		vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &present_mode_count, present_modes.data());
 	}
 	else {
-		throw std::runtime_error("No present mode supported.");
+		throw std::runtime_error("No present mode supported!");
 	}
 
 
@@ -404,7 +400,7 @@ void VulkanManager::InitializeSwapChain()
 	}
 
 	if (m_VK_final_present_mode == VK_PRESENT_MODE_RANGE_SIZE_KHR) {
-		throw std::runtime_error("No desired present mode supported.");
+		throw std::runtime_error("No desired present mode supported!");
 	}
 	else {
 		SDLOGD("final present mode : %d", m_VK_final_present_mode);
@@ -465,28 +461,33 @@ void VulkanManager::InitializeSwapChain()
 	}
 }
 
-void VulkanManager::InitializeImageViews()
+void VulkanManager::InitializeImageViewsAndFBOs()
 {
 	SDLOG("--- Vulkan initialize image views.");
-	for (size_t imgv_id = 0; m_VK_sc_image_views.size(); imgv_id++) {
-		VkImageViewCreateInfo image_view_c_info = {};
-		image_view_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-		image_view_c_info.image = m_VK_sc_images[imgv_id];
-		image_view_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-		image_view_c_info.format = m_VK_desired_sur_fmt.format;
-		image_view_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-		image_view_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-		image_view_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-		image_view_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-		image_view_c_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		image_view_c_info.subresourceRange.baseMipLevel = 0;
-		image_view_c_info.subresourceRange.levelCount = 1;
-		image_view_c_info.subresourceRange.baseArrayLayer = 0;
-		image_view_c_info.subresourceRange.layerCount = 1;
+    m_VK_sc_image_views.resize(m_VK_sc_images.size());
+    m_VK_sc_image_fbos.resize(m_VK_sc_images.size());
+	for (size_t imgv_id = 0; imgv_id < m_VK_sc_image_views.size(); imgv_id++) {
+        //create image view for sc img[id].
+        VkImageViewCreateInfo image_view_c_info = {};
+        image_view_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        image_view_c_info.image = m_VK_sc_images[imgv_id];
+        image_view_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        image_view_c_info.format = m_VK_desired_sur_fmt.format;
+        image_view_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        image_view_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        image_view_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        image_view_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        image_view_c_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        image_view_c_info.subresourceRange.baseMipLevel = 0;
+        image_view_c_info.subresourceRange.levelCount = 1;
+        image_view_c_info.subresourceRange.baseArrayLayer = 0;
+        image_view_c_info.subresourceRange.layerCount = 1;
 
-		if (vkCreateImageView(m_VK_logic_device, &image_view_c_info, nullptr, (VkImageView*)&m_VK_sc_image_views[imgv_id]) != VK_SUCCESS) {
-			throw std::runtime_error(SDE::Basic::StringFormat("failed to create image views[%d]!").c_str());
-		}
+        if (vkCreateImageView(m_VK_logic_device, &image_view_c_info, nullptr, (VkImageView*)&m_VK_sc_image_views[imgv_id]) != VK_SUCCESS) {
+        	throw std::runtime_error(SDE::Basic::StringFormat("failed to create image views[%d]!", imgv_id).c_str());
+        }
+
+        //create fbo for sc img[id].
 	}
 }
 
@@ -500,21 +501,28 @@ void VulkanManager::InitializeCommandPoolAndBuffers()
 	cmd_pool_c_info.queueFamilyIndex = m_VK_picked_queue_family_id;
 
 	if (vkCreateCommandPool(m_VK_logic_device, &cmd_pool_c_info, nullptr, &m_VK_main_cmd_pool) != VK_SUCCESS) {
-		throw std::runtime_error("Create command pool failure!");
+		throw std::runtime_error("Create main command pool failure!");
 	}
 
 	VkCommandBufferAllocateInfo cmd_buf_a_info = {};
 	cmd_buf_a_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	cmd_buf_a_info.pNext = nullptr;
 	cmd_buf_a_info.commandPool = m_VK_main_cmd_pool;
-	cmd_buf_a_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; //VkCommandBufferLevel
-	cmd_buf_a_info.commandBufferCount = static_cast<uint32_t>(m_VK_main_cmd_buffer_number);
+    cmd_buf_a_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; //VkCommandBufferLevel
+	cmd_buf_a_info.commandBufferCount = 1;
 
-	m_VK_main_cmd_buffers.resize(m_VK_main_cmd_buffer_number);
-
-	if (vkAllocateCommandBuffers(m_VK_logic_device, &cmd_buf_a_info, m_VK_main_cmd_buffers.data()) != VK_SUCCESS) {
-		throw std::runtime_error("Create command failure failure!");
+	if (vkAllocateCommandBuffers(m_VK_logic_device, &cmd_buf_a_info, &m_VK_main_cmd_buffer) != VK_SUCCESS) {
+		throw std::runtime_error("Create main command buffer failure!");
 	}
+
+    VkFenceCreateInfo fence_c_info = {};
+    fence_c_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fence_c_info.pNext = nullptr;
+    fence_c_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+    if (vkCreateFence(m_VK_logic_device, &fence_c_info, nullptr, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
+        throw std::runtime_error("Create main cmd buf fence failure failure!");
+    }
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

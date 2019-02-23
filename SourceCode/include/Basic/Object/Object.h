@@ -45,6 +45,8 @@ namespace SDE
 namespace Basic
 {
 
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Object);
+
 /*! \class Object
  *  In our system, class object is the root of all classes those instances will be kept
  *  in several places. What's more, we will define some common behavior for those object.
@@ -98,8 +100,6 @@ protected:
 	 */
 	DECLARE_ATTRIBUTE_VAR_GET(ObjectName, m_object_name, ObjectName);
 };
-
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Object);
 
 //---------------------------- end of namespace Basic ----------------------------
 }

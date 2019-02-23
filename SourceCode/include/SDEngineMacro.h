@@ -74,6 +74,7 @@ typedef char SDStrChar;
 
 //Strong And Weak Reference.
 #define SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Type) \
+    class Type; \
     typedef SDE::Basic::StrongReferenceObject<Type> Type##StrongReferenceObject; \
     typedef SDE::Basic::WeakReferenceObject<Type> Type##WeakReferenceObject;
 

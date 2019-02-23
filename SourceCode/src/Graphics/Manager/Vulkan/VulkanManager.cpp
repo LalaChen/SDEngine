@@ -34,7 +34,8 @@ namespace SDE
 namespace Graphics
 {
 
-const uint32_t VulkanManager::MaxImgAcqirationTime = 2000000000;
+const uint32_t VulkanManager::MaxImgAcqirationTime = 2000000000; //2s
+const uint32_t VulkanManager::MaxFenceWaitTime = 2000000; //2ms
 
 const std::vector<const char*>& VulkanManager::GetValidLayers()
 {
@@ -60,8 +61,7 @@ VulkanManager::VulkanManager()
 // desired device properities
 , m_VK_desired_queue_abilities(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT | VK_QUEUE_SPARSE_BINDING_BIT)
 , m_VK_desired_sur_fmt{ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR }
-, m_VK_desired_pre_mode_list{VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR}
-, m_VK_main_cmd_buffer_number(1)
+, m_VK_desired_pre_mode_list{ VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR}
 // device(phy and logical)
 , m_VK_physical_device(VK_NULL_HANDLE)
 , m_VK_picked_queue_family_id(-1)
@@ -75,6 +75,8 @@ VulkanManager::VulkanManager()
 , m_VK_final_present_mode(VK_PRESENT_MODE_RANGE_SIZE_KHR)
 // main command pool
 , m_VK_main_cmd_pool(VK_NULL_HANDLE)
+, m_VK_main_cmd_buffer(VK_NULL_HANDLE)
+, m_VK_main_cmd_buf_fence(VK_NULL_HANDLE)
 {
 	m_library = GraphicsLibrary_Vulkan;
 	SDLOG("New VulkanManager object.");
@@ -100,7 +102,7 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
 			InitializePhysicalDevice();
 			InitializeLogicDevice();
 			InitializeSwapChain();
-			InitializeImageViews();
+            InitializeImageViewsAndFBOs();
 			InitializeCommandPoolAndBuffers();
 		}
 		else {
@@ -124,9 +126,9 @@ void VulkanManager::ReleaseGraphicsSystem()
 		SDLOG("failed to load set up destroy debug messenger function!");
 	}
 
-	if (m_VK_main_cmd_buffers.size() > 0) {
-		vkFreeCommandBuffers(m_VK_logic_device, m_VK_main_cmd_pool, static_cast<uint32_t>(m_VK_main_cmd_buffers.size()), m_VK_main_cmd_buffers.data());
-		m_VK_main_cmd_buffers.clear();
+	if (m_VK_main_cmd_buffer != VK_NULL_HANDLE) {
+		vkFreeCommandBuffers(m_VK_logic_device, m_VK_main_cmd_pool, 1, &m_VK_main_cmd_buffer);
+        m_VK_main_cmd_buffer = VK_NULL_HANDLE;
 	}
 
 	if (m_VK_main_cmd_pool != VK_NULL_HANDLE) {
@@ -175,14 +177,15 @@ void VulkanManager::ReleaseGraphicsSystem()
 	}
 }
 
+//----------------------- Render Flow -----------------------
 void VulkanManager::RenderBegin()
 {
-	
+    vkDeviceWaitIdle(m_VK_logic_device);
 }
 
 void VulkanManager::RenderToScreen()
 {
-	//Get SwapChain Image.
+	//Get swapchain image.
 	uint32_t image_index;
 
 	VkResult result = vkAcquireNextImageKHR(
@@ -193,24 +196,48 @@ void VulkanManager::RenderToScreen()
 		SDLOGW("We can't get nxt swapchain image.");
 		return;
 	}
-	//Begin Command Buffer
+	//Begin command buffer
 	VkCommandBufferBeginInfo cmd_buf_c_info = {};
 	cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	cmd_buf_c_info.pNext = nullptr;
 	cmd_buf_c_info.pInheritanceInfo = nullptr;
 	cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-	if (vkBeginCommandBuffer(m_VK_main_cmd_buffers[0], &cmd_buf_c_info) != VK_SUCCESS) {
-		SDLOGW("We can't begin command buffer(%x)!!!", m_VK_main_cmd_buffers[0]);
+	if (vkBeginCommandBuffer(m_VK_main_cmd_buffer, &cmd_buf_c_info) != VK_SUCCESS) {
+		SDLOGW("We can't begin command buffer(%x)!!!", m_VK_main_cmd_buffer);
 		return;
 	}
-	//
+	//Try composite images of all camera to present image.
+    RenderDebug();//Test
+	//End command buffer
+	if (vkEndCommandBuffer(m_VK_main_cmd_buffer) != VK_SUCCESS) {
+		SDLOGW("We can't end command buffer(%x)!!!", m_VK_main_cmd_buffer);
+		return;
+	}
+    //Push command buffer to queue.
+    VkSubmitInfo submit_info = {};
+    VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submit_info.pNext = nullptr;
+    submit_info.waitSemaphoreCount = 1;
+    submit_info.pWaitSemaphores = &m_VK_acq_img_semaphore; //wait acq image.
+    submit_info.pWaitDstStageMask = &submit_wait_flag;
+    submit_info.signalSemaphoreCount = 1;
+    submit_info.pSignalSemaphores = &m_VK_present_semaphore; //set present semaphore.
+    submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
 
-	//End Command Buffer
-	if (vkEndCommandBuffer(m_VK_main_cmd_buffers[0]) != VK_SUCCESS) {
-		SDLOGW("We can't end command buffer(%x)!!!", m_VK_main_cmd_buffers[0]);
-		return;
-	}
+    if (vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
+        SDLOGW("Submit command buffer failure!!!");
+    }
+    
+    if (vkWaitForFences(m_VK_logic_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime) != VK_SUCCESS) {
+        SDLOGW("Wait sync failure!!!");
+    }
+    //Reset main command buffer sync.
+    if (vkResetFences(m_VK_logic_device, 1, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
+        SDLOGW("reset main command buffer fence failure!!!");
+    }
+
 	//Present to screen
 	VkPresentInfoKHR p_info = {};
 	p_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -230,7 +257,15 @@ void VulkanManager::RenderToScreen()
 
 void VulkanManager::RenderEnd()
 {
+    //Reset command buffers in pool.
+    if (vkResetCommandPool(m_VK_logic_device, m_VK_main_cmd_pool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT) != VK_SUCCESS) {
+        SDLOGW("reset command buffer in main pool failure!!!");
+    }
+}
 
+void VulkanManager::RenderDebug()
+{
+    
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

@@ -36,7 +36,7 @@ void GLFWApplication::CursorEnterCallback(GLFWwindow *i_window, int entered)
 void GLFWApplication::CursorPositionCallback(GLFWwindow *i_window, double i_x, double i_y)
 {
 	//Motion
-	SDLOGD(" Mouse Motion (%lf,%lf)", i_x, i_y);
+	//SDLOGD(" Mouse Motion (%lf,%lf)", i_x, i_y);
 }
 
 //----- JoyStick ------
