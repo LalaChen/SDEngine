@@ -525,6 +525,20 @@ void VulkanManager::InitializeCommandPoolAndBuffers()
     }
 }
 
+void VulkanManager::InitializeRenderToScreenRenderPass()
+{
+    VkAttachmentDescription clr_attachment = {};
+    clr_attachment.flags = 0;
+    clr_attachment.format = m_VK_desired_sur_fmt.format;
+    clr_attachment.samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
+    clr_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    clr_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    clr_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    clr_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    clr_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    clr_attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+}
+
 //---------------------------- end of namespace Graphics ----------------------------
 }
 //---------------------------- end of namespace SDE ----------------------------

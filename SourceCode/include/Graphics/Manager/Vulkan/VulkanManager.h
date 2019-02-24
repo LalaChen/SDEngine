@@ -91,6 +91,7 @@ protected:
 	void InitializeSwapChain();
 	void InitializeImageViewsAndFBOs();
 	void InitializeCommandPoolAndBuffers();
+    void InitializeRenderToScreenRenderPass();
 protected:
 	VkQueueFlags m_VK_desired_queue_abilities;
 	VkSurfaceFormatKHR m_VK_desired_sur_fmt;
@@ -109,6 +110,7 @@ protected:
 	VkExtent2D m_screen_size;
 	VkPresentModeKHR m_VK_final_present_mode;
 	VkSwapchainKHR m_VK_swap_chain;
+    VkRenderPass m_VK_screen_render_pass;
 	VkSemaphore m_VK_acq_img_semaphore; //GPU to GPU lock
 	VkSemaphore m_VK_present_semaphore; //GPU to GPU lock
 	std::vector<VkImage> m_VK_sc_images;

@@ -69,6 +69,7 @@ VulkanManager::VulkanManager()
 , m_VK_present_queue(VK_NULL_HANDLE)
 // swap chain
 , m_VK_swap_chain(VK_NULL_HANDLE)
+, m_VK_screen_render_pass(VK_NULL_HANDLE)
 , m_VK_acq_img_semaphore(VK_NULL_HANDLE)
 , m_VK_present_semaphore(VK_NULL_HANDLE)
 , m_screen_size{0,0}
@@ -125,6 +126,11 @@ void VulkanManager::ReleaseGraphicsSystem()
 	else {
 		SDLOG("failed to load set up destroy debug messenger function!");
 	}
+
+    if (m_VK_screen_render_pass != VK_NULL_HANDLE) {
+        vkDestroyRenderPass(m_VK_logic_device, m_VK_screen_render_pass, nullptr);
+        m_VK_screen_render_pass = VK_NULL_HANDLE;
+    }
 
 	if (m_VK_main_cmd_buffer != VK_NULL_HANDLE) {
 		vkFreeCommandBuffers(m_VK_logic_device, m_VK_main_cmd_pool, 1, &m_VK_main_cmd_buffer);
