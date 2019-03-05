@@ -39,7 +39,7 @@ SINGLETON_DECLARATION_IMPL(LogManager);
 LogManager::LogManager()
 : m_log_buffer{'\0'}
 {
-	SINGLETON_DECLARATION_REGISTER;
+    SINGLETON_DECLARATION_REGISTER;
 }
 
 LogManager::~LogManager()

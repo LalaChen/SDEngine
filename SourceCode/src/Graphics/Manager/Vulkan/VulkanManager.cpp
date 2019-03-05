@@ -39,19 +39,19 @@ const uint32_t VulkanManager::MaxFenceWaitTime = 2000000; //2ms
 
 const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
 {
-	return DesiredValidLayers;
+    return DesiredValidLayers;
 }
 
 std::vector<const char*> VulkanManager::DesiredValidLayers = {
-	"VK_LAYER_LUNARG_standard_validation",
+    "VK_LAYER_LUNARG_standard_validation",
     "VK_LAYER_RENDERDOC_Capture",
-    "VK_LAYER_VALVE_steam_overlay",
-    "VK_LAYER_VALVE_steam_fossilize",
+    //"VK_LAYER_VALVE_steam_overlay",
+    //"VK_LAYER_VALVE_steam_fossilize", // will create a lot of json file.
     "VK_LAYER_NV_optimus"
 };
 
 std::vector<const char*> VulkanManager::NecessaryExtensions = {
-	VK_KHR_SWAPCHAIN_EXTENSION_NAME
+    VK_KHR_SWAPCHAIN_EXTENSION_NAME
 };
 
 
@@ -83,108 +83,108 @@ VulkanManager::VulkanManager()
 , m_VK_main_cmd_buffer(VK_NULL_HANDLE)
 , m_VK_main_cmd_buf_fence(VK_NULL_HANDLE)
 {
-	m_library = GraphicsLibrary_Vulkan;
-	SDLOG("New VulkanManager object.");
+    m_library = GraphicsLibrary_Vulkan;
+    SDLOG("New VulkanManager object.");
 }
 
 VulkanManager::~VulkanManager()
 {
-	SDLOG("Delete VulkanManager object.");
+    SDLOG("Delete VulkanManager object.");
 }
 
 void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
-	SDLOG("Initialize VulkanManager.");
-	if (typeid(i_arg).hash_code() == typeid(VulkanCreationArg).hash_code())
-	{
-		VulkanCreationArg vk_c_arg = dynamic_cast<const VulkanCreationArg&>(i_arg);
-		
-		m_VK_instance = vk_c_arg.m_instance;
-		m_VK_surface = vk_c_arg.m_surface;
+    SDLOG("Initialize VulkanManager.");
+    if (typeid(i_arg).hash_code() == typeid(VulkanCreationArg).hash_code())
+    {
+        VulkanCreationArg vk_c_arg = dynamic_cast<const VulkanCreationArg&>(i_arg);
+        
+        m_VK_instance = vk_c_arg.m_instance;
+        m_VK_surface = vk_c_arg.m_surface;
 
-		if (m_VK_instance != nullptr) {
-			InitializeDebugMessage();
-			InitializePhysicalDevice();
-			InitializeLogicDevice();
-			InitializeSwapChain();
+        if (m_VK_instance != nullptr) {
+            InitializeDebugMessage();
+            InitializePhysicalDevice();
+            InitializeLogicDevice();
+            InitializeSwapChain();
             InitializeImageViewsAndFBOs();
-			InitializeCommandPoolAndBuffers();
-		}
-		else {
-			throw std::runtime_error("VkInstance in arg is nullptr!!!");
-		}
-	}
+            InitializeCommandPoolAndBuffers();
+        }
+        else {
+            throw std::runtime_error("VkInstance in arg is nullptr!!!");
+        }
+    }
 }
 
 void VulkanManager::ReleaseGraphicsSystem()
 {
-	SDLOG("Release VulkanManager.");
+    SDLOG("Release VulkanManager.");
 
-	PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT =
-		(PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_VK_instance, "vkDestroyDebugReportCallbackEXT");
+    PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT =
+        (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_VK_instance, "vkDestroyDebugReportCallbackEXT");
 
-	if (vkDestroyDebugReportCallbackEXT != nullptr && m_VK_debug_report_cbk != VK_NULL_HANDLE) {
-		vkDestroyDebugReportCallbackEXT(m_VK_instance, m_VK_debug_report_cbk, nullptr);
-		m_VK_debug_report_cbk = VK_NULL_HANDLE;
-	}
-	else {
-		SDLOG("failed to load set up destroy debug messenger function!");
-	}
+    if (vkDestroyDebugReportCallbackEXT != nullptr && m_VK_debug_report_cbk != VK_NULL_HANDLE) {
+        vkDestroyDebugReportCallbackEXT(m_VK_instance, m_VK_debug_report_cbk, nullptr);
+        m_VK_debug_report_cbk = VK_NULL_HANDLE;
+    }
+    else {
+        SDLOG("failed to load set up destroy debug messenger function!");
+    }
 
     if (m_VK_screen_render_pass != VK_NULL_HANDLE) {
         vkDestroyRenderPass(m_VK_logic_device, m_VK_screen_render_pass, nullptr);
         m_VK_screen_render_pass = VK_NULL_HANDLE;
     }
 
-	if (m_VK_main_cmd_buffer != VK_NULL_HANDLE) {
-		vkFreeCommandBuffers(m_VK_logic_device, m_VK_main_cmd_pool, 1, &m_VK_main_cmd_buffer);
+    if (m_VK_main_cmd_buffer != VK_NULL_HANDLE) {
+        vkFreeCommandBuffers(m_VK_logic_device, m_VK_main_cmd_pool, 1, &m_VK_main_cmd_buffer);
         m_VK_main_cmd_buffer = VK_NULL_HANDLE;
-	}
+    }
 
-	if (m_VK_main_cmd_pool != VK_NULL_HANDLE) {
-		vkDestroyCommandPool(m_VK_logic_device, m_VK_main_cmd_pool, nullptr);
-		m_VK_main_cmd_pool = VK_NULL_HANDLE;
-	}
+    if (m_VK_main_cmd_pool != VK_NULL_HANDLE) {
+        vkDestroyCommandPool(m_VK_logic_device, m_VK_main_cmd_pool, nullptr);
+        m_VK_main_cmd_pool = VK_NULL_HANDLE;
+    }
 
-	if (m_VK_acq_img_semaphore != VK_NULL_HANDLE) {
-		vkDestroySemaphore(m_VK_logic_device, m_VK_acq_img_semaphore, nullptr);
-		m_VK_acq_img_semaphore = VK_NULL_HANDLE;
-	}
+    if (m_VK_acq_img_semaphore != VK_NULL_HANDLE) {
+        vkDestroySemaphore(m_VK_logic_device, m_VK_acq_img_semaphore, nullptr);
+        m_VK_acq_img_semaphore = VK_NULL_HANDLE;
+    }
 
-	if (m_VK_present_semaphore != VK_NULL_HANDLE) {
-		vkDestroySemaphore(m_VK_logic_device, m_VK_present_semaphore, nullptr);
-		m_VK_present_semaphore = VK_NULL_HANDLE;
-	}
+    if (m_VK_present_semaphore != VK_NULL_HANDLE) {
+        vkDestroySemaphore(m_VK_logic_device, m_VK_present_semaphore, nullptr);
+        m_VK_present_semaphore = VK_NULL_HANDLE;
+    }
 
-	for (auto &iv : m_VK_sc_image_views) {
-		if (iv != VK_NULL_HANDLE) {
-			vkDestroyImageView(m_VK_logic_device, iv, nullptr);
-			iv = VK_NULL_HANDLE;
-		}
-	}
-	m_VK_sc_image_views.clear();
+    for (auto &iv : m_VK_sc_image_views) {
+        if (iv != VK_NULL_HANDLE) {
+            vkDestroyImageView(m_VK_logic_device, iv, nullptr);
+            iv = VK_NULL_HANDLE;
+        }
+    }
+    m_VK_sc_image_views.clear();
 
-	if (m_VK_swap_chain != VK_NULL_HANDLE) {
-		vkDestroySwapchainKHR(m_VK_logic_device, m_VK_swap_chain, nullptr);
-		m_VK_swap_chain = VK_NULL_HANDLE;
-	}
+    if (m_VK_swap_chain != VK_NULL_HANDLE) {
+        vkDestroySwapchainKHR(m_VK_logic_device, m_VK_swap_chain, nullptr);
+        m_VK_swap_chain = VK_NULL_HANDLE;
+    }
 
-	if (m_VK_logic_device != VK_NULL_HANDLE) {
-		vkDestroyDevice(m_VK_logic_device, nullptr);
-		m_VK_logic_device = VK_NULL_HANDLE;
-	}
+    if (m_VK_logic_device != VK_NULL_HANDLE) {
+        vkDestroyDevice(m_VK_logic_device, nullptr);
+        m_VK_logic_device = VK_NULL_HANDLE;
+    }
 
-	m_VK_physical_device = VK_NULL_HANDLE;
+    m_VK_physical_device = VK_NULL_HANDLE;
 
-	if (m_VK_surface != VK_NULL_HANDLE) {
-		vkDestroySurfaceKHR(m_VK_instance, m_VK_surface, nullptr);
-		m_VK_surface = VK_NULL_HANDLE;
-	}
+    if (m_VK_surface != VK_NULL_HANDLE) {
+        vkDestroySurfaceKHR(m_VK_instance, m_VK_surface, nullptr);
+        m_VK_surface = VK_NULL_HANDLE;
+    }
 
-	if (m_VK_instance != VK_NULL_HANDLE) {
-		vkDestroyInstance(m_VK_instance, nullptr);
-		m_VK_instance = VK_NULL_HANDLE;
-	}
+    if (m_VK_instance != VK_NULL_HANDLE) {
+        vkDestroyInstance(m_VK_instance, nullptr);
+        m_VK_instance = VK_NULL_HANDLE;
+    }
 }
 
 //----------------------- Render Flow -----------------------
@@ -195,35 +195,35 @@ void VulkanManager::RenderBegin()
 
 void VulkanManager::RenderToScreen()
 {
-	//Get swapchain image.
-	uint32_t image_index;
+    //Get swapchain image.
+    uint32_t image_index;
 
-	VkResult result = vkAcquireNextImageKHR(
-		m_VK_logic_device, m_VK_swap_chain, MaxImgAcqirationTime, 
-		m_VK_acq_img_semaphore, nullptr, &image_index);
+    VkResult result = vkAcquireNextImageKHR(
+        m_VK_logic_device, m_VK_swap_chain, MaxImgAcqirationTime, 
+        m_VK_acq_img_semaphore, nullptr, &image_index);
 
-	if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-		SDLOGW("We can't get nxt swapchain image.");
-		return;
-	}
-	//Begin command buffer
-	VkCommandBufferBeginInfo cmd_buf_c_info = {};
-	cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	cmd_buf_c_info.pNext = nullptr;
-	cmd_buf_c_info.pInheritanceInfo = nullptr;
-	cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+        SDLOGW("We can't get nxt swapchain image.");
+        return;
+    }
+    //Begin command buffer
+    VkCommandBufferBeginInfo cmd_buf_c_info = {};
+    cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    cmd_buf_c_info.pNext = nullptr;
+    cmd_buf_c_info.pInheritanceInfo = nullptr;
+    cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-	if (vkBeginCommandBuffer(m_VK_main_cmd_buffer, &cmd_buf_c_info) != VK_SUCCESS) {
-		SDLOGW("We can't begin command buffer(%x)!!!", m_VK_main_cmd_buffer);
-		return;
-	}
-	//Try composite images of all camera to present image.
+    if (vkBeginCommandBuffer(m_VK_main_cmd_buffer, &cmd_buf_c_info) != VK_SUCCESS) {
+        SDLOGW("We can't begin command buffer(%x)!!!", m_VK_main_cmd_buffer);
+        return;
+    }
+    //Try composite images of all camera to present image.
     RenderDebug();//Test
-	//End command buffer
-	if (vkEndCommandBuffer(m_VK_main_cmd_buffer) != VK_SUCCESS) {
-		SDLOGW("We can't end command buffer(%x)!!!", m_VK_main_cmd_buffer);
-		return;
-	}
+    //End command buffer
+    if (vkEndCommandBuffer(m_VK_main_cmd_buffer) != VK_SUCCESS) {
+        SDLOGW("We can't end command buffer(%x)!!!", m_VK_main_cmd_buffer);
+        return;
+    }
     //Push command buffer to queue.
     VkSubmitInfo submit_info = {};
     VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
@@ -248,20 +248,20 @@ void VulkanManager::RenderToScreen()
         SDLOGW("reset main command buffer fence failure!!!");
     }
 
-	//Present to screen
-	VkPresentInfoKHR p_info = {};
-	p_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-	p_info.pNext = nullptr;
-	p_info.waitSemaphoreCount = 1;
-	p_info.pWaitSemaphores = &m_VK_present_semaphore;
-	p_info.swapchainCount = 1;
-	p_info.pSwapchains = &m_VK_swap_chain;
-	p_info.pImageIndices = &image_index;
+    //Present to screen
+    VkPresentInfoKHR p_info = {};
+    p_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    p_info.pNext = nullptr;
+    p_info.waitSemaphoreCount = 1;
+    p_info.pWaitSemaphores = &m_VK_present_semaphore;
+    p_info.swapchainCount = 1;
+    p_info.pSwapchains = &m_VK_swap_chain;
+    p_info.pImageIndices = &image_index;
 
-	if (vkQueuePresentKHR(m_VK_present_queue, &p_info) != VK_SUCCESS) {
-		SDLOGW("We can't present image by queue.");
-		return;
-	}
+    if (vkQueuePresentKHR(m_VK_present_queue, &p_info) != VK_SUCCESS) {
+        SDLOGW("We can't present image by queue.");
+        return;
+    }
 
 }
 

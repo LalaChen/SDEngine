@@ -34,32 +34,32 @@ namespace Graphics
 {
 
 VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
-	VkDebugReportFlagsEXT i_flags,
-	VkDebugReportObjectTypeEXT i_object_type,
-	uint64_t i_obj,
-	size_t i_location,
-	int32_t i_code,
-	const char* i_layer_prefix,
-	const char* i_msg,
-	void* i_use_data)
+    VkDebugReportFlagsEXT i_flags,
+    VkDebugReportObjectTypeEXT i_object_type,
+    uint64_t i_obj,
+    size_t i_location,
+    int32_t i_code,
+    const char* i_layer_prefix,
+    const char* i_msg,
+    void* i_use_data)
 {
-	if (i_flags == VK_DEBUG_REPORT_INFORMATION_BIT_EXT) {
-		SDLOG("Vulkan Verbose : %s", i_msg);
-	}
-	else if (i_flags == VK_DEBUG_REPORT_DEBUG_BIT_EXT) {
-		SDLOGD("Vulkan Info : %s", i_msg);
-	}
-	else if (i_flags == VK_DEBUG_REPORT_WARNING_BIT_EXT) {
-		SDLOGW("Vulkan Warning : %s", i_msg);
-	}
-	else if (i_flags == VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT) {
-		SDLOGW("Vulkan Performance Warning : %s", i_msg);
-	}
-	else {
-		SDLOGE("Vulkan Error : %s", i_msg);
-	}
+    if (i_flags == VK_DEBUG_REPORT_INFORMATION_BIT_EXT) {
+        SDLOG("Vulkan Verbose : %s", i_msg);
+    }
+    else if (i_flags == VK_DEBUG_REPORT_DEBUG_BIT_EXT) {
+        SDLOGD("Vulkan Info : %s", i_msg);
+    }
+    else if (i_flags == VK_DEBUG_REPORT_WARNING_BIT_EXT) {
+        SDLOGW("Vulkan Warning : %s", i_msg);
+    }
+    else if (i_flags == VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT) {
+        SDLOGW("Vulkan Performance Warning : %s", i_msg);
+    }
+    else {
+        SDLOGE("Vulkan Error : %s", i_msg);
+    }
 
-	return VK_FALSE;
+    return VK_FALSE;
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

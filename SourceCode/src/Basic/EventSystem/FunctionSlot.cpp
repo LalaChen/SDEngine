@@ -46,32 +46,32 @@ GlobalFunctionSlot::~GlobalFunctionSlot()
 
 void GlobalFunctionSlot::RegisterFunction(GlobalFunctionSlot::GlobalSlotFunction i_function_pointer)
 {
-	m_fp = i_function_pointer;
+    m_fp = i_function_pointer;
 }
 
 bool GlobalFunctionSlot::NotifyFunction(const EventArg &i_src_arg)
 {
-	if(m_fp != 0){
-		m_fp(i_src_arg);
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    if(m_fp != 0){
+        m_fp(i_src_arg);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool GlobalFunctionSlot::IsEqualTo(const Object &i_src) const
 {
-	const GlobalFunctionSlot *src_ptr = dynamic_cast<const GlobalFunctionSlot*>(&i_src);
+    const GlobalFunctionSlot *src_ptr = dynamic_cast<const GlobalFunctionSlot*>(&i_src);
 
-	if(src_ptr != nullptr){
-		return (m_fp == src_ptr->m_fp);
-	}
-	else{
-		//error : Is not GlobalFunctionSlot object.
-		return false;
-	}
+    if(src_ptr != nullptr){
+        return (m_fp == src_ptr->m_fp);
+    }
+    else{
+        //error : Is not GlobalFunctionSlot object.
+        return false;
+    }
 }
 
 //---------------------------- end of namespace Basic ----------------------------

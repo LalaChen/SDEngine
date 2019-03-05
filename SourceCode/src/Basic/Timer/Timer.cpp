@@ -44,7 +44,7 @@ Timer::Timer()
 , m_end_time(0.0)
 , m_delta_time(0.0)
 {
-	SINGLETON_DECLARATION_REGISTER;
+    SINGLETON_DECLARATION_REGISTER;
 }
 
 Timer::~Timer()
@@ -53,21 +53,21 @@ Timer::~Timer()
 
 void Timer::Start()
 {
-	GetCurrentTimeByOS(m_start_time);
-	m_previous_time = m_start_time;
-	m_current_time = m_start_time;
+    GetCurrentTimeByOS(m_start_time);
+    m_previous_time = m_start_time;
+    m_current_time = m_start_time;
 }
 
 void Timer::Update()
 {
-	m_previous_time = m_current_time;
-	GetCurrentTimeByOS(m_current_time);
-	m_delta_time = m_current_time - m_previous_time;
+    m_previous_time = m_current_time;
+    GetCurrentTimeByOS(m_current_time);
+    m_delta_time = m_current_time - m_previous_time;
 }
 
 void Timer::End()
 {
-	GetCurrentTimeByOS(m_end_time);
+    GetCurrentTimeByOS(m_end_time);
 }
 
 

@@ -49,18 +49,18 @@ namespace Graphics
 class SDENGINE_CLASS VulkanCreationArg : public EventArg
 {
 public:
-	VulkanCreationArg()
-	: m_instance{nullptr}
+    VulkanCreationArg()
+    : m_instance{nullptr}
     , m_surface(nullptr)
-	{
-	}
+    {
+    }
 
-	virtual ~VulkanCreationArg()
-	{
-	}
+    virtual ~VulkanCreationArg()
+    {
+    }
 public:
-	VkInstance m_instance;
-	VkSurfaceKHR m_surface;
+    VkInstance m_instance;
+    VkSurfaceKHR m_surface;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

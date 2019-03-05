@@ -52,10 +52,10 @@ namespace Basic
 class NullReferenceException : public std::exception
 {
 public:
-	/*! \fn virtual const char* what() const throw();
-	 *  \brief override what function for using.
-	 */
-	virtual const char* what() const throw() { return "NullReferenceException"; }
+    /*! \fn virtual const char* what() const throw();
+     *  \brief override what function for using.
+     */
+    virtual const char* what() const throw() { return "NullReferenceException"; }
 };
 
 //---------------------------- end of namespace Basic ----------------------------

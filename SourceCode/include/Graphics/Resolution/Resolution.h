@@ -46,78 +46,78 @@ namespace Graphics
 {
 
 /*! \class Resolution
-	Class Resolution is used to record the size of framebuffer or screen. We also calcuate \n
-	aspect ratio of this resolution.
+    Class Resolution is used to record the size of framebuffer or screen. We also calcuate \n
+    aspect ratio of this resolution.
 */
 class SDENGINE_CLASS Resolution
 {
 public:
-	/*! \var const static Size_ui DEFAULT_WIDTH;
-		\brief default width(px) of resolution. It's 1920.
-	*/
-	const static Size_ui DEFAULT_WIDTH = 1920;
+    /*! \var const static Size_ui DEFAULT_WIDTH;
+        \brief default width(px) of resolution. It's 1920.
+    */
+    const static Size_ui DEFAULT_WIDTH = 1920;
 
-	/*! \var const static Size_ui DEFAULT_HEIGHT;
-		\brief default height(px) of resolution. It's 1080.
-	*/
-	const static Size_ui DEFAULT_HEIGHT = 1080;
+    /*! \var const static Size_ui DEFAULT_HEIGHT;
+        \brief default height(px) of resolution. It's 1080.
+    */
+    const static Size_ui DEFAULT_HEIGHT = 1080;
 public:
 
-	/*! \fn Resolution();
-		\brief Constructor of Resolution. We will initialize by default w and h.
-	*/
-	Resolution();
+    /*! \fn Resolution();
+        \brief Constructor of Resolution. We will initialize by default w and h.
+    */
+    Resolution();
 
-	/*! \fn Resolution(Size_ui i_w, Size_ui i_h);
-	    \param i_w Width of resolution.
-		\param i_h Height of resolution.
-		\brief Constructor of Resolution. We will initialize by i_w and i_h.
-	*/
-	Resolution(Size_ui i_w, Size_ui i_h);
+    /*! \fn Resolution(Size_ui i_w, Size_ui i_h);
+        \param i_w Width of resolution.
+        \param i_h Height of resolution.
+        \brief Constructor of Resolution. We will initialize by i_w and i_h.
+    */
+    Resolution(Size_ui i_w, Size_ui i_h);
 
-	/*! \fn Resolution(const Resolution &i_src);
-	    \param i_src The target resolution.
-		\brief Copy Constructor of Resolution.
-	*/
-	Resolution(const Resolution &i_src);
+    /*! \fn Resolution(const Resolution &i_src);
+        \param i_src The target resolution.
+        \brief Copy Constructor of Resolution.
+    */
+    Resolution(const Resolution &i_src);
 
-	/*! \fn ~Resolution();
-		\brief destructor of Resolution.
-	*/
-	~Resolution();
+    /*! \fn ~Resolution();
+        \brief destructor of Resolution.
+    */
+    ~Resolution();
 public:
-	/*! \fn void SetResolution(Size_ui i_w, Size_ui i_h);
-     	\param i_w Width of resolution.
-		\param i_h Height of resolution.
-		\brief Setter of class Resolution. We will set this one by i_w and i_h.
-	*/
-	void SetResolution(Size_ui i_w, Size_ui i_h);
+    /*! \fn void SetResolution(Size_ui i_w, Size_ui i_h);
+        \param i_w Width of resolution.
+        \param i_h Height of resolution.
+        \brief Setter of class Resolution. We will set this one by i_w and i_h.
+    */
+    void SetResolution(Size_ui i_w, Size_ui i_h);
 
-	/*! \fn void GetWindowSize(Size_ui &io_w, Size_ui &io_h) const;
-		\param io_w The storage of width.
-		\param io_h The storage of height.
-		\brief Getter of class Resolution. We need offering initialized storage.
-	*/
-	void GetResolution(Size_ui &io_w, Size_ui &io_h) const;
+    /*! \fn void GetWindowSize(Size_ui &io_w, Size_ui &io_h) const;
+        \param io_w The storage of width.
+        \param io_h The storage of height.
+        \brief Getter of class Resolution. We need offering initialized storage.
+    */
+    void GetResolution(Size_ui &io_w, Size_ui &io_h) const;
 public:
-	Resolution& operator=(const Resolution& i_src);
+    Resolution& operator=(const Resolution& i_src);
 private:
-	void CalculateRatioBetweenWidthAndHeight();
+    void CalculateRatioBetweenWidthAndHeight();
 protected:
-	/* \var Size_ui m_width;
-	   \brief Width of Resolution. [VarGet Attribute]
-	*/
-	DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_width, Width);
+    /* \var Size_ui m_width;
+       \brief Width of Resolution. [VarGet Attribute]
+    */
+    DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_width, Width);
 
-	/* \var Size_ui m_width;
-	   \brief Width of Resolution. [VarGet Attribute]
-	*/
-	DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_height, Height);
+    /* \var Size_ui m_width;
+       \brief Width of Resolution. [VarGet Attribute]
+    */
+    DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_height, Height);
 
-	/* \var float m_aspect_ratio;
-	   \brief Aspect ratio of Resolution. [VarGet Attribute]
-	*/
-	DECLARE_ATTRIBUTE_VAR_GET(float, m_aspect_ratio, Ratio);
+    /* \var float m_aspect_ratio;
+       \brief Aspect ratio of Resolution. [VarGet Attribute]
+    */
+    DECLARE_ATTRIBUTE_VAR_GET(float, m_aspect_ratio, Ratio);
 };
 
 //--------------------------------- ctor and dtor -------------------------------------------
@@ -126,7 +126,7 @@ inline Resolution::Resolution()
 , m_height(DEFAULT_HEIGHT)
 , m_aspect_ratio(1.0f)
 {
-	CalculateRatioBetweenWidthAndHeight();
+    CalculateRatioBetweenWidthAndHeight();
 }
 
 inline Resolution::Resolution(Size_ui i_w, Size_ui i_h)
@@ -134,7 +134,7 @@ inline Resolution::Resolution(Size_ui i_w, Size_ui i_h)
 , m_height(i_h)
 , m_aspect_ratio(1.0f)
 {
-	CalculateRatioBetweenWidthAndHeight();
+    CalculateRatioBetweenWidthAndHeight();
 }
 
 inline Resolution::Resolution(const Resolution &i_src)
@@ -142,7 +142,7 @@ inline Resolution::Resolution(const Resolution &i_src)
 , m_height(i_src.m_height)
 , m_aspect_ratio(1.0f)
 {
-	CalculateRatioBetweenWidthAndHeight();
+    CalculateRatioBetweenWidthAndHeight();
 }
 
 inline Resolution::~Resolution()
@@ -152,31 +152,31 @@ inline Resolution::~Resolution()
 //--------------------------------- private working function --------------------------------
 inline void Resolution::CalculateRatioBetweenWidthAndHeight()
 {
-	m_aspect_ratio = static_cast<float>(m_width) / static_cast<float>(m_height);
+    m_aspect_ratio = static_cast<float>(m_width) / static_cast<float>(m_height);
 }
 
 //--------------------------------- public working function ---------------------------------
 inline void Resolution::SetResolution(Size_ui i_w, Size_ui i_h)
 {
-	m_width  = i_w;
-	m_height = i_h;
-	CalculateRatioBetweenWidthAndHeight();
+    m_width  = i_w;
+    m_height = i_h;
+    CalculateRatioBetweenWidthAndHeight();
 }
 
 inline void Resolution::GetResolution(Size_ui &io_w, Size_ui &io_h) const
 {
-	io_w = m_width;
-	io_h = m_height;
+    io_w = m_width;
+    io_h = m_height;
 }
 
 inline Resolution& Resolution::operator =(const Resolution &i_src)
 {
-	if(this != &i_src){
-		m_width  = i_src.m_width;
-		m_height = i_src.m_height;
-		CalculateRatioBetweenWidthAndHeight();
-	}
-	return *this;
+    if(this != &i_src){
+        m_width  = i_src.m_width;
+        m_height = i_src.m_height;
+        CalculateRatioBetweenWidthAndHeight();
+    }
+    return *this;
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

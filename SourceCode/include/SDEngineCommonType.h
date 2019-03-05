@@ -58,7 +58,7 @@ typedef char Byte;
 typedef Byte* BytePtr;
 
 /*! \typedef unsigned char UByte;
-	\brief represent byte.
+    \brief represent byte.
 */
 typedef unsigned char UByte;
 

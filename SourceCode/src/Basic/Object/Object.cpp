@@ -43,12 +43,12 @@ Object::~Object()
 
 bool Object::IsEqualTo(const Object &i_src) const
 {
-	return (m_object_name.compare(i_src.m_object_name) == 0);
+    return (m_object_name.compare(i_src.m_object_name) == 0);
 }
 
 std::string Object::ToString() const
 {
-	return StringFormat("Name(%s)[%x]", m_object_name.c_str(), this);
+    return StringFormat("Name(%s)[%x]", m_object_name.c_str(), this);
 }
 //---------------------------- end of namespace Basic ----------------------------
 }

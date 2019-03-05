@@ -10,89 +10,89 @@ namespace App
 
 void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library)
 {
-	GLFWwindow* window = nullptr;
-	GLFWmonitor *monitor = nullptr;
-	Resolution final_win_res = i_win_res;
-	//1. set error callback.
-	glfwSetErrorCallback(GLFWApplication::ErrorCallback);
-	//2. create glfw window.
-	//--- i. initialize glfw.
-	if (!glfwInit())
-		exit(EXIT_FAILURE);
+    GLFWwindow* window = nullptr;
+    GLFWmonitor *monitor = nullptr;
+    Resolution final_win_res = i_win_res;
+    //1. set error callback.
+    glfwSetErrorCallback(GLFWApplication::ErrorCallback);
+    //2. create glfw window.
+    //--- i. initialize glfw.
+    if (!glfwInit())
+        exit(EXIT_FAILURE);
 
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-	//--- ii. create window.
-	if (i_full_window == true) {
-		monitor = glfwGetPrimaryMonitor();
+    //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    //--- ii. create window.
+    if (i_full_window == true) {
+        monitor = glfwGetPrimaryMonitor();
 
-		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 
-		final_win_res.SetResolution(mode->width, mode->height);
-	}
+        final_win_res.SetResolution(mode->width, mode->height);
+    }
 
-	window = glfwCreateWindow(final_win_res.GetWidth(), final_win_res.GetHeight(), i_win_title.c_str(), monitor, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
-	//--- iii. register key cbk.
-	//------ keyboard
-	glfwSetKeyCallback(window, GLFWApplication::KeyEventCallback);
-	//------ Mouse
-	glfwSetCursorPosCallback(window, GLFWApplication::CursorPositionCallback);
-	glfwSetMouseButtonCallback(window, GLFWApplication::CursorMouseButtonCallback);
-	glfwSetCursorPosCallback(window, GLFWApplication::CursorPositionCallback);
-	glfwSetCursorEnterCallback(window, GLFWApplication::CursorEnterCallback);
-	//------ Windows
-	glfwSetWindowCloseCallback(window, GLFWApplication::WindowCloseCallback);
-	glfwSetWindowMaximizeCallback(window, GLFWApplication::WindowMaximizeCallback);
-	glfwSetWindowSizeCallback(window, GLFWApplication::WindowSizeCallback);
-	glfwSetWindowPosCallback(window, GLFWApplication::WindowPosCallback);
-	glfwSetWindowFocusCallback(window, GLFWApplication::WindowFocusCallback);
-	glfwSetDropCallback(window, GLFWApplication::DropCallback);
-	glfwSetScrollCallback(window, GLFWApplication::ScrollCallback);
+    window = glfwCreateWindow(final_win_res.GetWidth(), final_win_res.GetHeight(), i_win_title.c_str(), monitor, NULL);
+    if (!window)
+    {
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+    //--- iii. register key cbk.
+    //------ keyboard
+    glfwSetKeyCallback(window, GLFWApplication::KeyEventCallback);
+    //------ Mouse
+    glfwSetCursorPosCallback(window, GLFWApplication::CursorPositionCallback);
+    glfwSetMouseButtonCallback(window, GLFWApplication::CursorMouseButtonCallback);
+    glfwSetCursorPosCallback(window, GLFWApplication::CursorPositionCallback);
+    glfwSetCursorEnterCallback(window, GLFWApplication::CursorEnterCallback);
+    //------ Windows
+    glfwSetWindowCloseCallback(window, GLFWApplication::WindowCloseCallback);
+    glfwSetWindowMaximizeCallback(window, GLFWApplication::WindowMaximizeCallback);
+    glfwSetWindowSizeCallback(window, GLFWApplication::WindowSizeCallback);
+    glfwSetWindowPosCallback(window, GLFWApplication::WindowPosCallback);
+    glfwSetWindowFocusCallback(window, GLFWApplication::WindowFocusCallback);
+    glfwSetDropCallback(window, GLFWApplication::DropCallback);
+    glfwSetScrollCallback(window, GLFWApplication::ScrollCallback);
 
-	//3. new application and initialize without graphics.
-	new GLFWApplication(i_win_title, i_win_res, i_full_window, i_adopt_library, i_argc, i_argv);
-	Application::GetDynamicCastPtr<GLFWApplication>()->RegisterGLFW(window, monitor);
-	Application::GetRef().Initialize();
-	
-	//--- v. initialize glew.
-	Application::GetRef().InitializeGraphicsSystem();
+    //3. new application and initialize without graphics.
+    new GLFWApplication(i_win_title, i_win_res, i_full_window, i_adopt_library, i_argc, i_argv);
+    Application::GetDynamicCastPtr<GLFWApplication>()->RegisterGLFW(window, monitor);
+    Application::GetRef().Initialize();
+    
+    //--- v. initialize glew.
+    Application::GetRef().InitializeGraphicsSystem();
 
-	//3. launch main loop.
-	while (!glfwWindowShouldClose(window))
-	{
-		try {
-			// Update Game.
-			Application::GetRef().Update();
-		}
-		catch (std::exception &e)
-		{
-			SDLOGE("Execption occur !!! %s.",e.what());
-		}
+    //3. launch main loop.
+    while (!glfwWindowShouldClose(window))
+    {
+        try {
+            // Update Game.
+            Application::GetRef().Update();
+        }
+        catch (std::exception &e)
+        {
+            SDLOGE("Execption occur !!! %s.",e.what());
+        }
 
-		// Swap buffers
-		//glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
+        // Swap buffers
+        //glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
 
-	Application::GetRef().ReleaseGraphicsSystem();
-	// Terminate GLFW
-	glfwTerminate();
+    Application::GetRef().ReleaseGraphicsSystem();
+    // Terminate GLFW
+    glfwTerminate();
 
-	//Destroy App.
-	Application::GetRef().TerminateApplication();
-	Application::Destroy();
+    //Destroy App.
+    Application::GetRef().TerminateApplication();
+    Application::Destroy();
 }
 
 }

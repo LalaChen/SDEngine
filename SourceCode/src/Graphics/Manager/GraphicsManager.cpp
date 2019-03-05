@@ -36,8 +36,8 @@ SINGLETON_DECLARATION_IMPL(GraphicsManager);
 
 GraphicsManager::GraphicsManager()
 {
-	//Register instance.
-	SINGLETON_DECLARATION_REGISTER;
+    //Register instance.
+    SINGLETON_DECLARATION_REGISTER;
 }
 
 GraphicsManager::~GraphicsManager()
@@ -46,14 +46,14 @@ GraphicsManager::~GraphicsManager()
 
 void GraphicsManager::Render()
 {
-	//1. Execute some operations for each graphics API before rendering.
-	RenderBegin();
-	//2. Render scene by each camera.
+    //1. Execute some operations for each graphics API before rendering.
+    RenderBegin();
+    //2. Render scene by each camera.
 
-	//3. Execute some operations for each graphics API when render to screen.
-	RenderToScreen();
-	//4. Execute some operations for each graphics API after rendering.
-	RenderEnd();
+    //3. Execute some operations for each graphics API when render to screen.
+    RenderToScreen();
+    //4. Execute some operations for each graphics API after rendering.
+    RenderEnd();
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

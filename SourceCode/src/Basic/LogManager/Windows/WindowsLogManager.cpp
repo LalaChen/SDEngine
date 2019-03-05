@@ -48,41 +48,41 @@ WindowsLogManager::~WindowsLogManager()
 
 void WindowsLogManager::Log(LogType i_type, const std::string &i_prefix, const char *i_log, ...)
 {
-	m_prefix = i_prefix;
-	va_list args;
-	va_start(args, i_log);
-	vsnprintf(m_log_buffer, SD_MAX_WORD_PER_LINE - 3 , i_log, args);
+    m_prefix = i_prefix;
+    va_list args;
+    va_start(args, i_log);
+    vsnprintf(m_log_buffer, SD_MAX_WORD_PER_LINE - 3 , i_log, args);
     va_end(args);
-	LogToOutput(i_type);
+    LogToOutput(i_type);
 }
 
 void WindowsLogManager::Log(LogType i_type, const std::string &i_prefix, const char *i_log, va_list i_args)
 {
-	m_prefix = i_prefix;
-	vsnprintf(m_log_buffer, SD_MAX_WORD_PER_LINE - 3 , i_log, i_args);
-	LogToOutput(i_type);
+    m_prefix = i_prefix;
+    vsnprintf(m_log_buffer, SD_MAX_WORD_PER_LINE - 3 , i_log, i_args);
+    LogToOutput(i_type);
 }
 
 void WindowsLogManager::LogToOutput(LogType i_type)
 {
-	if(i_type == LogType::Normal)
-	{
-		OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Normal] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
-	}
-	else if(i_type == LogType::Warning)
-	{
-		OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Warning] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
-	}
-	else if (i_type == LogType::Internal)
-	{
+    if(i_type == LogType::Normal)
+    {
+        OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Normal] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
+    }
+    else if(i_type == LogType::Warning)
+    {
+        OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Warning] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
+    }
+    else if (i_type == LogType::Internal)
+    {
 #ifdef _DEBUG
-		OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Internal] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
+        OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Internal] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
 #endif
-	}
-	else
-	{
-		OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Error] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
-	}
+    }
+    else
+    {
+        OutputDebugString(SD_ADT_OS_STRCSTR(std::string("[Error] ") + m_prefix + std::string(m_log_buffer) + std::string("\n")));
+    }
 }
 
 //---------------------------- end of namespace Basic ----------------------------

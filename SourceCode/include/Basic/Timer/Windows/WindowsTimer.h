@@ -48,21 +48,21 @@ namespace Basic
 class SDENGINE_CLASS WindowsTimer : public Timer
 {
 public:
-	/*! \fn explicit WindowsTimer();
-	 *  \brief The constructor of WindowsTimer Class.
-	 */
-	explicit WindowsTimer();
+    /*! \fn explicit WindowsTimer();
+     *  \brief The constructor of WindowsTimer Class.
+     */
+    explicit WindowsTimer();
 
-	/*! \fn virtual ~WindowsTimer();
-	 *  \brief The destructor of WindowsTimer Class.
-	 */
-	virtual ~WindowsTimer();
+    /*! \fn virtual ~WindowsTimer();
+     *  \brief The destructor of WindowsTimer Class.
+     */
+    virtual ~WindowsTimer();
 public:
-	/*! \fn void GetCurrentTimeByOS(double &io_time) override;
-	 *  \param [inout] io_time double time variable.(unit : second)
-	 *  \brief Get current time by QueryPerformanceFrequency and QueryPerformanceCounter functions.
-	 */
-	void GetCurrentTimeByOS(double &io_time) override;
+    /*! \fn void GetCurrentTimeByOS(double &io_time) override;
+     *  \param [inout] io_time double time variable.(unit : second)
+     *  \brief Get current time by QueryPerformanceFrequency and QueryPerformanceCounter functions.
+     */
+    void GetCurrentTimeByOS(double &io_time) override;
 };
 
 //--------------------------- end of namespace Basic ----------------------------

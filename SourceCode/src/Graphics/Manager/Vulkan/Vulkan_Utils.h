@@ -41,14 +41,14 @@ namespace Graphics
 {
 
 VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
-	VkDebugReportFlagsEXT i_flags,
-	VkDebugReportObjectTypeEXT i_object_type,
-	uint64_t i_obj,
-	size_t i_location,
-	int32_t i_code,
-	const char* i_layer_prefix,
-	const char* i_msg,
-	void* i_use_data);
+    VkDebugReportFlagsEXT i_flags,
+    VkDebugReportObjectTypeEXT i_object_type,
+    uint64_t i_obj,
+    size_t i_location,
+    int32_t i_code,
+    const char* i_layer_prefix,
+    const char* i_msg,
+    void* i_use_data);
 
 
 //---------------------------- end of namespace Graphics ----------------------------

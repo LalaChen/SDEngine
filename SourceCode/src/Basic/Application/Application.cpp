@@ -43,8 +43,8 @@ Application::Application(const std::string &i_win_title, const Resolution &i_win
 , m_full_window(i_full_window)
 , m_adopt_library(i_adopt_library)
 {
-	//Register instance.
-	SINGLETON_DECLARATION_REGISTER;
+    //Register instance.
+    SINGLETON_DECLARATION_REGISTER;
 }
 
 Application::~Application()
@@ -61,7 +61,6 @@ void Application::Update()
 {
     //Rendering.
     GraphicsManager::GetRef().Render();
-
 }
 
 void Application::Pause()

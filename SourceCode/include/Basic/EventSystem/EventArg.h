@@ -49,19 +49,19 @@ namespace Basic
 class SDENGINE_CLASS EventArg
 {
 public:
-	/*! \fn EventArg()
-	 *  \brief The constructor of EventArg Class.
-	 */
+    /*! \fn EventArg()
+     *  \brief The constructor of EventArg Class.
+     */
     EventArg()
-	{
-	}
+    {
+    }
 
-	/*! \fn virtual ~EventArg()
-	 *  \brief The destructor of EventArg Class.
-	 */
-	virtual ~EventArg()
-	{
-	}
+    /*! \fn virtual ~EventArg()
+     *  \brief The destructor of EventArg Class.
+     */
+    virtual ~EventArg()
+    {
+    }
 };
 
 //---------------------------- end of namespace Basic ----------------------------

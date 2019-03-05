@@ -46,30 +46,30 @@ namespace Graphics
 class SDENGINE_CLASS OpenGL4Manager : public GraphicsManager
 {
 public:
-	/*! \fn OpenGL4Manager();
-	 *  \brief The constructor of OpenGL4Manager Class.
-	 */
-	OpenGL4Manager();
-	
-	/*! \fn virtual ~OpenGL4Manager();
-	 *  \brief The destructor of OpenGL4Manager Class.
-	 */
-	virtual ~OpenGL4Manager();
+    /*! \fn OpenGL4Manager();
+     *  \brief The constructor of OpenGL4Manager Class.
+     */
+    OpenGL4Manager();
+    
+    /*! \fn virtual ~OpenGL4Manager();
+     *  \brief The destructor of OpenGL4Manager Class.
+     */
+    virtual ~OpenGL4Manager();
 public:
-	/*! \fn void InitializeGraphicsSystem() override;
-	 *  \param [in] i_arg Nothing. implement for following interface.
-	 *  \brief Initialize graphics API. (link dll, ...)
-	 */
-	void InitializeGraphicsSystem(const EventArg &i_arg) override;
-	
-	/*! \fn void ReleaseGraphicsSystem() override;
-	 *  \brief Release graphics API.
-	 */
-	void ReleaseGraphicsSystem() override;
+    /*! \fn void InitializeGraphicsSystem() override;
+     *  \param [in] i_arg Nothing. implement for following interface.
+     *  \brief Initialize graphics API. (link dll, ...)
+     */
+    void InitializeGraphicsSystem(const EventArg &i_arg) override;
+    
+    /*! \fn void ReleaseGraphicsSystem() override;
+     *  \brief Release graphics API.
+     */
+    void ReleaseGraphicsSystem() override;
 protected: //--------------- Render Flow Function ------------------
-	void RenderBegin() override;
-	void RenderToScreen() override;
-	void RenderEnd() override;
+    void RenderBegin() override;
+    void RenderToScreen() override;
+    void RenderEnd() override;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

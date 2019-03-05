@@ -47,10 +47,10 @@ namespace Graphics
 {
 
 enum GraphicsLibraryEnum {
-	GraphicsLibrary_OpenGL4 = 0,
-	GraphicsLibrary_Vulkan  = 1,
-	GraphicsLibrary_MaxEnum,
-	GraphicsLibrary_Unknown = GraphicsLibrary_MaxEnum
+    GraphicsLibrary_OpenGL4 = 0,
+    GraphicsLibrary_Vulkan  = 1,
+    GraphicsLibrary_MaxEnum,
+    GraphicsLibrary_Unknown = GraphicsLibrary_MaxEnum
 };
 
 /*! \class GraphicsManager
@@ -60,37 +60,37 @@ enum GraphicsLibraryEnum {
 class SDENGINE_CLASS GraphicsManager
 {
 public:
-	SINGLETON_DECLARATION(GraphicsManager);
+    SINGLETON_DECLARATION(GraphicsManager);
 public:
-	/*! \fn GraphicsManager();
-	 *  \brief The constructor of GraphicsManager Class. 
-	 */
-	GraphicsManager();
-	
-	/*! \fn virtual ~GraphicsManager();
-	 *  \brief The destructor of GraphicsManager Class.
-	 */
-	virtual ~GraphicsManager();
+    /*! \fn GraphicsManager();
+     *  \brief The constructor of GraphicsManager Class. 
+     */
+    GraphicsManager();
+    
+    /*! \fn virtual ~GraphicsManager();
+     *  \brief The destructor of GraphicsManager Class.
+     */
+    virtual ~GraphicsManager();
 public: //---------------- Initialize and Release -----------------
-	/*! \fn virtual void InitializeGraphicsSystem(const EventArg &i_arg) = 0;
-	 *  \param [in] i_arg argumnet for initializing manager. We should define necessary arguments class(derived EventArg) and input those arguments.
-	 *  \brief Initialize graphics system. (link dll, ...)
-	 */
-	virtual void InitializeGraphicsSystem(const EventArg &i_arg) = 0;
-	
-	/*! \fn virtual void ReleaseGraphicsSystem() = 0;
-	 *  \brief Release graphics system.
-	 */
-	virtual void ReleaseGraphicsSystem() = 0;
-	
+    /*! \fn virtual void InitializeGraphicsSystem(const EventArg &i_arg) = 0;
+     *  \param [in] i_arg argumnet for initializing manager. We should define necessary arguments class(derived EventArg) and input those arguments.
+     *  \brief Initialize graphics system. (link dll, ...)
+     */
+    virtual void InitializeGraphicsSystem(const EventArg &i_arg) = 0;
+    
+    /*! \fn virtual void ReleaseGraphicsSystem() = 0;
+     *  \brief Release graphics system.
+     */
+    virtual void ReleaseGraphicsSystem() = 0;
+    
 public: //--------------- Render Function ------------------
-	void Render();
+    void Render();
 protected: //--------------- Render Flow Function ------------------
-	virtual void RenderBegin() = 0;
-	virtual void RenderToScreen() = 0;
-	virtual void RenderEnd() = 0;
+    virtual void RenderBegin() = 0;
+    virtual void RenderToScreen() = 0;
+    virtual void RenderEnd() = 0;
 protected: //---------------- API -----------------
-	GraphicsLibraryEnum m_library;
+    GraphicsLibraryEnum m_library;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

@@ -36,10 +36,10 @@ SINGLETON_DECLARATION_IMPL(FileSystemManager);
 //------------ File System Manager  ------------
 FileSystemManager::FileSystemManager()
 {
-	SINGLETON_DECLARATION_REGISTER
-	//Add default folder.
-	AddRelativePath("");
-	AddRelativePath("Resources\\");
+    SINGLETON_DECLARATION_REGISTER
+    //Add default folder.
+    AddRelativePath("");
+    AddRelativePath("Resources\\");
 }
 
 FileSystemManager::~FileSystemManager()
@@ -48,50 +48,50 @@ FileSystemManager::~FileSystemManager()
 
 void FileSystemManager::AddRelativePath(const FilePathString &i_path)
 {
-	FilePathString adj_path = AdjustFilePath(i_path);
-	if( IsExistedRelativePath(adj_path) == false) m_relative_paths.push_back(adj_path);
+    FilePathString adj_path = AdjustFilePath(i_path);
+    if( IsExistedRelativePath(adj_path) == false) m_relative_paths.push_back(adj_path);
 }
 
 bool FileSystemManager::IsExistedRelativePath(const FilePathString &i_path) const
 {
-	for(auto path : m_relative_paths)
-	{
-		if(path.compare(i_path) == 0) return true;
-	}
+    for(auto path : m_relative_paths)
+    {
+        if(path.compare(i_path) == 0) return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool FileSystemManager::IsAbsolutePath(const FilePathString &i_filename)
 {
-	//check absolute path.
-	if (i_filename.find(":\\") != FilePathString::npos || // :\ 
-		i_filename.find(":/") != FilePathString::npos || // :/
-		i_filename.find(":\\\\") != FilePathString::npos)   // :\\ 
-	{
-		return true;
-	}
-	else return false;
+    //check absolute path.
+    if (i_filename.find(":\\") != FilePathString::npos || // :\ 
+        i_filename.find(":/") != FilePathString::npos || // :/
+        i_filename.find(":\\\\") != FilePathString::npos)   // :\\ 
+    {
+        return true;
+    }
+    else return false;
 }
 
 //------ Private work function
 FilePathString FileSystemManager::AdjustFilePath(const FilePathString &i_path) const
 {
-	FilePathString result = i_path;
+    FilePathString result = i_path;
 
-	if(result.empty() == false)
-	{
-		while(result[0] == '\\' || result[0] == '/')
-		{
-			result = result.substr(1,result.size() - 1);
-		}
-		
-		if(result[result.size() - 1] != '\\' && result[result.size() - 1] != '/')
-		{
-			result += '\\';
-		}
-	}
-	return result;
+    if(result.empty() == false)
+    {
+        while(result[0] == '\\' || result[0] == '/')
+        {
+            result = result.substr(1,result.size() - 1);
+        }
+        
+        if(result[result.size() - 1] != '\\' && result[result.size() - 1] != '/')
+        {
+            result += '\\';
+        }
+    }
+    return result;
 
 }
 

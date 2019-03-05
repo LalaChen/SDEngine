@@ -11,15 +11,15 @@ namespace App
 //----- Keyboard ------
 void GLFWApplication::KeyEventCallback(GLFWwindow* i_window, int i_key, int i_scancode, int i_action, int i_mod_keys)
 {
-	if (i_key == GLFW_KEY_ESCAPE && i_action == GLFW_PRESS) {
-		glfwSetWindowShouldClose(i_window, GLFW_TRUE);
-	}
+    if (i_key == GLFW_KEY_ESCAPE && i_action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(i_window, GLFW_TRUE);
+    }
 }
 
 //----- error return ------
 void GLFWApplication::ErrorCallback(int i_error, const char* i_error_str)
 {
-	SDLOGE("GLFW Error : %s(%d)", i_error_str, i_error);
+    SDLOGE("GLFW Error : %s(%d)", i_error_str, i_error);
 }
 
 //----- Mouse ------
@@ -30,13 +30,13 @@ void GLFWApplication::CursorMouseButtonCallback(GLFWwindow *i_window, int i_butt
 
 void GLFWApplication::CursorEnterCallback(GLFWwindow *i_window, int entered)
 {
-	//Enter or leave
+    //Enter or leave
 }
 
 void GLFWApplication::CursorPositionCallback(GLFWwindow *i_window, double i_x, double i_y)
 {
-	//Motion
-	//SDLOGD(" Mouse Motion (%lf,%lf)", i_x, i_y);
+    //Motion
+    //SDLOGD(" Mouse Motion (%lf,%lf)", i_x, i_y);
 }
 
 //----- JoyStick ------

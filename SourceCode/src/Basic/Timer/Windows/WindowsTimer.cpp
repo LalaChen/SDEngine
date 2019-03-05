@@ -45,11 +45,11 @@ WindowsTimer::~WindowsTimer()
 
 void WindowsTimer::GetCurrentTimeByOS(double &io_time)
 {
-	LARGE_INTEGER freq;
-	LARGE_INTEGER time;
-	QueryPerformanceFrequency(&freq);
-	QueryPerformanceCounter(&time);
-	io_time = static_cast<double>(time.QuadPart) / static_cast<double>(freq.QuadPart);
+    LARGE_INTEGER freq;
+    LARGE_INTEGER time;
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&time);
+    io_time = static_cast<double>(time.QuadPart) / static_cast<double>(freq.QuadPart);
 }
 
 

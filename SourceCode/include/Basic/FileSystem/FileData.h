@@ -42,72 +42,72 @@ namespace Basic
 {
 
 /*! \class FileData
-	For save the content of file.
+    For save the content of file.
 */
 class SDENGINE_CLASS FileData
 {
 public:
-	/*! \fn FileData();
-		\brief Constructor of FileData.
-	*/
-	FileData();
+    /*! \fn FileData();
+        \brief Constructor of FileData.
+    */
+    FileData();
 
-	/*! \fn FileData(const FileData &i_src);
-		\brief Copy constructor of FileData.
-	*/
-	FileData(const FileData &i_src);
+    /*! \fn FileData(const FileData &i_src);
+        \brief Copy constructor of FileData.
+    */
+    FileData(const FileData &i_src);
 
-	/*! \fn ~FileData();
-		\brief Destructor of FileData.
-	*/
-	~FileData();
+    /*! \fn ~FileData();
+        \brief Destructor of FileData.
+    */
+    ~FileData();
 public:
-	/*! \fn void SetFileData(const std::vector<UByte> &i_src);
-		\param [in] i_src file content.
-		\brief Set file content to this data.
-	*/
-	void SetFileData(const std::vector<UByte> &i_src);
+    /*! \fn void SetFileData(const std::vector<UByte> &i_src);
+        \param [in] i_src file content.
+        \brief Set file content to this data.
+    */
+    void SetFileData(const std::vector<UByte> &i_src);
 
-	/*! \fn void SetFileData(const std::string &i_src);
-		\param [in] i_src file content.
-		\brief Set string content to this data.
-	*/
-	void SetFileData(const std::string &i_src);
+    /*! \fn void SetFileData(const std::string &i_src);
+        \param [in] i_src file content.
+        \brief Set string content to this data.
+    */
+    void SetFileData(const std::string &i_src);
 
-	/*! \fn bool IsEmpty() const;
-		\brief Set string content to this data.
-	*/
-	bool IsEmpty() const;
+    /*! \fn bool IsEmpty() const;
+        \brief Set string content to this data.
+    */
+    bool IsEmpty() const;
 
-	/*! \fn size_t GetSize() const;
-		\brief return size of container.
-	*/
-	size_t GetSize() const;
+    /*! \fn size_t GetSize() const;
+        \brief return size of container.
+    */
+    size_t GetSize() const;
 
-	/*! \fn const char* GetDataCharAddr() const;
-		\brief return address with byte ptr of first element of container.
-	*/
-	const BytePtr GetDataCharAddr() const;
+    /*! \fn const char* GetDataCharAddr() const;
+        \brief return address with byte ptr of first element of container.
+    */
+    const BytePtr GetDataCharAddr() const;
 
-	/*! \fn const UBytePtr GetDataUCharAddr() const;
-		\brief return address with ubyte ptr of first element of container.
-	*/
-	const UBytePtr GetDataUCharAddr() const;
+    /*! \fn const UBytePtr GetDataUCharAddr() const;
+        \brief return address with ubyte ptr of first element of container.
+    */
+    const UBytePtr GetDataUCharAddr() const;
 
-	/*! \fn std::string GetDataString() const;
-		\brief return content with string.
-	*/
-	std::string GetDataString() const;
+    /*! \fn std::string GetDataString() const;
+        \brief return content with string.
+    */
+    std::string GetDataString() const;
 
-	/*! \fn std::string GetDataString() const;
-		\brief return content with wstring.
-	*/
-	std::wstring GetDataWString() const;
+    /*! \fn std::string GetDataString() const;
+        \brief return content with wstring.
+    */
+    std::wstring GetDataWString() const;
 public:
-	/*! \var std::vector<UByte> m_file_content;
-		\brief file content.
-	*/
-	std::vector<UByte> m_file_content;
+    /*! \var std::vector<UByte> m_file_content;
+        \brief file content.
+    */
+    std::vector<UByte> m_file_content;
 };
 
 //---------------------------- end of namespace Basic ----------------------------

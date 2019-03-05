@@ -37,24 +37,24 @@ namespace Graphics
 OpenGL4Manager::OpenGL4Manager()
 : GraphicsManager()
 {
-	m_library = GraphicsLibrary_OpenGL4;
-	SDLOG("New OpenGL4Manager object.");
+    m_library = GraphicsLibrary_OpenGL4;
+    SDLOG("New OpenGL4Manager object.");
 }
 
 OpenGL4Manager::~OpenGL4Manager()
 {
-	SDLOG("Delete OpenGL4Manager object.");
+    SDLOG("Delete OpenGL4Manager object.");
 }
 
 void OpenGL4Manager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
-	SDLOG("Initialize OpenGL4Manager.");
-	glewInit();
+    SDLOG("Initialize OpenGL4Manager.");
+    glewInit();
 }
 
 void OpenGL4Manager::ReleaseGraphicsSystem()
 {
-	SDLOG("Release OpenGL4Manager.");
+    SDLOG("Release OpenGL4Manager.");
 }
 
 //----------------------- Render Flow -----------------------
