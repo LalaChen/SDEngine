@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 		argc,
 		argv,
 		Resolution(800, 600),
-		true,
+		false, //full screen can't debug.
 		GraphicsLibrary_Vulkan
 	);
 }

@@ -245,6 +245,24 @@ void VulkanManager::InitializeLogicDevice()
 	vkGetPhysicalDeviceQueueFamilyProperties(m_VK_physical_device, &queue_families_count, nullptr);
 	queue_families.resize(queue_families_count);
 	vkGetPhysicalDeviceQueueFamilyProperties(m_VK_physical_device, &queue_families_count, queue_families.data());
+
+    SDLOG("------ Get avaiable layer again properties.");
+    uint32_t layer_count = 0;
+    std::vector<VkLayerProperties> avaiable_valid_layers;
+    std::vector<const char*> desired_valid_layer_names;
+    vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
+    if (layer_count > 0) {
+        avaiable_valid_layers.resize(layer_count);
+        vkEnumerateInstanceLayerProperties(&layer_count, avaiable_valid_layers.data());
+        for (uint32_t ext_id = 0; ext_id < avaiable_valid_layers.size(); ext_id++) {
+            for (const char *desired_name : DesiredValidLayers) {
+                if (strcmp(desired_name, avaiable_valid_layers[ext_id].layerName) == 0) {
+                    desired_valid_layer_names.push_back(desired_name);
+                    break;
+                }
+            }
+        }
+    }
 	
 	for (uint32_t fam_id = 0; fam_id < queue_families.size(); fam_id++) {
 		SDLOGD("Queue Family [%d]: TimeStamp[%d] Flag(%x) Count:%d Extent3D(%d,%d,%d) ",
@@ -306,9 +324,10 @@ void VulkanManager::InitializeLogicDevice()
 
 #ifdef _NDEBUG
 	logic_dev_c_info.enabledLayerCount = 0;
+    logic_dev_c_info.ppEnabledLayerNames = nullptr;
 #else
-	logic_dev_c_info.enabledLayerCount = static_cast<uint32_t>(ValidLayers.size());
-	logic_dev_c_info.ppEnabledLayerNames = ValidLayers.data();
+	logic_dev_c_info.enabledLayerCount = static_cast<uint32_t>(desired_valid_layer_names.size());
+	logic_dev_c_info.ppEnabledLayerNames = desired_valid_layer_names.data();
 #endif
 
 	if (vkCreateDevice(m_VK_physical_device, &logic_dev_c_info, nullptr, &m_VK_logic_device) != VK_SUCCESS) {

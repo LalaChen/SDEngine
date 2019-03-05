@@ -58,56 +58,71 @@ void GLFWApplication::InitializeGraphicsSystem()
 	{
 		new VulkanManager();
 
-		VkApplicationInfo appInfo = {};
-		VkInstanceCreateInfo ins_c_info = {};
-		VkInstance instance = nullptr;
-		VkSurfaceKHR surface = nullptr;
+		VkInstance instance = VK_NULL_HANDLE;
+		VkSurfaceKHR surface = VK_NULL_HANDLE;
 
+        SDLOG("Adjust extension layers.");
+        uint32_t ins_ext_prop_count = 0;
+        std::vector<VkExtensionProperties> ins_ext_props;
+        std::vector<const char*> ins_ext_prop_names;
+        vkEnumerateInstanceExtensionProperties(nullptr, &ins_ext_prop_count, nullptr);
+        if (ins_ext_prop_count > 0) {
+            ins_ext_props.resize(ins_ext_prop_count);
+            ins_ext_prop_names.resize(ins_ext_prop_count);
+            vkEnumerateInstanceExtensionProperties(nullptr, &ins_ext_prop_count, ins_ext_props.data());
+            for (uint32_t ext_id = 0; ext_id < ins_ext_prop_names.size(); ext_id++) {
+                ins_ext_prop_names[ext_id] = ins_ext_props[ext_id].extensionName;
+                SDLOGD("--- Ext[%s](%d)", ins_ext_props[ext_id].extensionName, ins_ext_props[ext_id].specVersion);
+            }
+        }
+
+        SDLOG("Adjust valid layers.");
+        uint32_t layer_count = 0;
+        std::vector<VkLayerProperties> avaiable_valid_layers;
+        std::vector<const char*> desired_valid_layer_names;
+        vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
+        if (layer_count > 0) {
+            avaiable_valid_layers.resize(layer_count);
+            vkEnumerateInstanceLayerProperties(&layer_count, avaiable_valid_layers.data());
+            for (uint32_t ext_id = 0; ext_id < avaiable_valid_layers.size(); ext_id++) {
+                
+                SDLOG("--- Avaiable valid layer :%s[%s](%d)(%d)", 
+                    avaiable_valid_layers[ext_id].layerName, 
+                    avaiable_valid_layers[ext_id].description,
+                    avaiable_valid_layers[ext_id].implementationVersion, 
+                    avaiable_valid_layers[ext_id].specVersion);
+
+                for (const char *desired_name : VulkanManager::GetDesiredValidLayers()) {
+                    if (strcmp(desired_name, avaiable_valid_layers[ext_id].layerName) == 0) {
+                        desired_valid_layer_names.push_back(desired_name);
+                        break;
+                    }
+                }
+            }
+        }
+
+        VkApplicationInfo appInfo = {};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 		appInfo.pApplicationName = m_win_title.c_str();
 		appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 		appInfo.pEngineName = "SD Engine";
 		appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
 		appInfo.apiVersion = VK_API_VERSION_1_0;
+
+        VkInstanceCreateInfo ins_c_info = {};
 		ins_c_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		ins_c_info.pApplicationInfo = &appInfo;
-
-		uint32_t glfw_ext_count = 0;
-		const char** glfw_exts;
-		glfw_exts = glfwGetRequiredInstanceExtensions(&glfw_ext_count);
-		std::vector<const char*> glfw_extensions(glfw_exts, glfw_exts + glfw_ext_count);
-		glfw_extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
-		ins_c_info.enabledExtensionCount = static_cast<uint32_t>(glfw_extensions.size());
-		ins_c_info.ppEnabledExtensionNames = glfw_extensions.data();
-		SDLOG("Vulkan instance creation !!!");
-		SDLOG("--- Adjust valid layers.");
-		uint32_t layer_count;
-		vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
-		std::vector<VkLayerProperties> avaiable_valid_layer(layer_count);
-		vkEnumerateInstanceLayerProperties(&layer_count, avaiable_valid_layer.data());
-		for (auto &layer : avaiable_valid_layer) {
-			SDLOG("--- Avaiable valid layer :%s[%s](%d)(%d)", layer.layerName, layer.description, layer.implementationVersion, layer.specVersion);
-		}
+		ins_c_info.enabledExtensionCount = static_cast<uint32_t>(ins_ext_prop_names.size());
+		ins_c_info.ppEnabledExtensionNames = ins_ext_prop_names.data();
 #ifdef _NDEBUG
-		ins_c_info.enabledLayerCount = 0;
+        ins_c_info.enabledLayerCount = 0;
+        ins_c_info.ppEnabledLayerNames = nullptr;
 #else
-		bool layer_valid = false;
-		for (VkLayerProperties &layer : avaiable_valid_layer) {
-			for (const char* layer_name : VulkanManager::GetValidLayers()) {
-				if (strcmp(layer.layerName, layer_name) == 0) {
-					layer_valid = true;
-					break;
-				}
-			}
-			if (layer_valid == true)
-				break;
-		}
-		ins_c_info.enabledLayerCount = static_cast<uint32_t>(VulkanManager::GetValidLayers().size());
-		ins_c_info.ppEnabledLayerNames = VulkanManager::GetValidLayers().data();
-		if (layer_valid == false) {
-			throw std::runtime_error("failed to valid!");
-		}
+        ins_c_info.enabledLayerCount = static_cast<uint32_t>(desired_valid_layer_names.size());
+        ins_c_info.ppEnabledLayerNames = desired_valid_layer_names.data();
 #endif 
+
+		SDLOG("Vulkan instance creation !!!");
 		SDLOG("--- Vulkan create instance.");
 		if (vkCreateInstance(&ins_c_info, nullptr, (VkInstance*)&instance) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create instance!");
@@ -118,7 +133,6 @@ void GLFWApplication::InitializeGraphicsSystem()
 			throw std::runtime_error("failed to create window surface!");
 		}
 		SDLOG("Vulkan instance creation end!!!");
-
 
 		VulkanCreationArg arg;
 		arg.m_instance = instance;

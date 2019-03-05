@@ -37,13 +37,17 @@ namespace Graphics
 const uint32_t VulkanManager::MaxImgAcqirationTime = 2000000000; //2s
 const uint32_t VulkanManager::MaxFenceWaitTime = 2000000; //2ms
 
-const std::vector<const char*>& VulkanManager::GetValidLayers()
+const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
 {
-	return ValidLayers;
+	return DesiredValidLayers;
 }
 
-std::vector<const char*> VulkanManager::ValidLayers = {
-	"VK_LAYER_LUNARG_standard_validation"
+std::vector<const char*> VulkanManager::DesiredValidLayers = {
+	"VK_LAYER_LUNARG_standard_validation",
+    "VK_LAYER_RENDERDOC_Capture",
+    "VK_LAYER_VALVE_steam_overlay",
+    "VK_LAYER_VALVE_steam_fossilize",
+    "VK_LAYER_NV_optimus"
 };
 
 std::vector<const char*> VulkanManager::NecessaryExtensions = {

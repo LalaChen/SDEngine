@@ -52,10 +52,10 @@ protected:
 	static const uint32_t MaxImgAcqirationTime; //nanosecond.
     static const uint32_t MaxFenceWaitTime;
 protected:
-	static std::vector<const char*> ValidLayers;
+	static std::vector<const char*> DesiredValidLayers;
 	static std::vector<const char*> NecessaryExtensions;
 public:
-	static const std::vector<const char*>& GetValidLayers();
+	static const std::vector<const char*>& GetDesiredValidLayers();
 public:
 	/*! \fn VulkanManager();
 	 *  \brief The constructor of VulkanManager Class.
