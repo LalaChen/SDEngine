@@ -107,7 +107,7 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializePhysicalDevice();
             InitializeLogicDevice();
             InitializeSwapChain();
-            InitializeImageViewsAndFBOs();
+            InitializeSCImageViewsAndFBOs();
             InitializeCommandPoolAndBuffers();
         }
         else {
