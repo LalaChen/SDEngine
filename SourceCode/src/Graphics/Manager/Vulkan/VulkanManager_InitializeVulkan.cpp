@@ -41,10 +41,9 @@ namespace Graphics
 void VulkanManager::InitializeDebugMessage()
 {
     SDLOG("--- Vulkan initialize debug message.");
-
+    //I want all!!!
     VkDebugReportCallbackCreateInfoEXT create_info = {};
     create_info.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
-    //I want all!!!
     create_info.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT | VK_DEBUG_REPORT_DEBUG_BIT_EXT | VK_DEBUG_REPORT_INFORMATION_BIT_EXT;
     create_info.pfnCallback = VulkanDebugCallback;
 
@@ -334,7 +333,6 @@ void VulkanManager::InitializeLogicDevice()
         throw std::runtime_error("failed to create logical device!");
     }
 
-   
     if (m_VK_picked_queue_family_id >= 0) {
         vkGetDeviceQueue(m_VK_logic_device, static_cast<uint32_t>(m_VK_picked_queue_family_id), 0, &m_VK_present_queue);
     }
@@ -392,25 +390,24 @@ void VulkanManager::InitializeSwapChain()
     
     SDLOGD("Desired SurfaceFormat:(VK_FORMAT_B8G8R8A8_UNORM)%d, (VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)%d", VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR);
 
-    std::vector<VkPresentModeKHR> present_modes;
-    uint32_t present_mode_count;
-    vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &present_mode_count, nullptr);
+    std::vector<VkPresentModeKHR> supported_p_modes;
+    uint32_t supported_p_mode_count;
+    vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &supported_p_mode_count, nullptr);
 
-    if (present_mode_count != 0) {
-        present_modes.resize(present_mode_count);
-        vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &present_mode_count, present_modes.data());
+    if (supported_p_mode_count != 0) {
+        supported_p_modes.resize(supported_p_mode_count);
+        vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &supported_p_mode_count, supported_p_modes.data());
     }
     else {
         throw std::runtime_error("No present mode supported!");
     }
 
-
-    for (const VkPresentModeKHR &p_mode : present_modes) {
+    for (const VkPresentModeKHR &p_mode : supported_p_modes) {
         SDLOGD("Supported present mode : %d", p_mode);
     }
 
     for (int mode_id = 0; mode_id < VK_PRESENT_MODE_RANGE_SIZE_KHR; mode_id++) {
-        for (const VkPresentModeKHR& p_mode : present_modes) {
+        for (const VkPresentModeKHR &p_mode : supported_p_modes) {
             if (m_VK_desired_pre_mode_list[mode_id] == p_mode) {
                 m_VK_final_present_mode = m_VK_desired_pre_mode_list[mode_id];
                 break;
@@ -425,7 +422,6 @@ void VulkanManager::InitializeSwapChain()
         SDLOGD("final present mode : %d", m_VK_final_present_mode);
     }
 
-    //m_screen_size = ChooseSwapExtent(sur_caps);
     if (sur_caps.currentExtent.width != 0 && sur_caps.currentExtent.height != 0) {
         m_screen_size = sur_caps.currentExtent;
     }
@@ -548,8 +544,7 @@ void VulkanManager::InitializePresentRenderPass()
         throw std::runtime_error("Create present render pass failure!");
     }
 }
-
-void VulkanManager::InitializeImageViewsAndFBOs()
+void VulkanManager::InitializeSCImageViewsAndFBOs()
 {
     SDLOG("--- Vulkan initialize image views.");
     m_VK_sc_image_views.resize(m_VK_sc_images.size());
@@ -574,7 +569,6 @@ void VulkanManager::InitializeImageViewsAndFBOs()
         if (vkCreateImageView(m_VK_logic_device, &image_view_c_info, nullptr, (VkImageView*)&m_VK_sc_image_views[imgv_id]) != VK_SUCCESS) {
             throw std::runtime_error(SDE::Basic::StringFormat("failed to create image views[%d]!", imgv_id).c_str());
         }
-
         //create fbo for sc img[id].
         VkFramebufferCreateInfo fbo_c_info;
         fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

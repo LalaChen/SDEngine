@@ -91,7 +91,7 @@ protected:
     void InitializeLogicDevice();
     void InitializeSwapChain();
     void InitializePresentRenderPass();
-    void InitializeImageViewsAndFBOs();
+    void InitializeSCImageViewsAndFBOs();
     void InitializeCommandPoolAndBuffers();
 protected:
     VkQueueFlags m_VK_desired_queue_abilities;
