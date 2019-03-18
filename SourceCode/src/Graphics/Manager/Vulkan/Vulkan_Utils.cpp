@@ -44,16 +44,16 @@ VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
     void* i_use_data)
 {
     if (i_flags == VK_DEBUG_REPORT_INFORMATION_BIT_EXT) {
-        SDLOG("Vulkan Verbose : %s", i_msg);
+        SDLOG("L[%s] O(%x) T:%d VK Verbose : %s", i_layer_prefix, i_obj, i_object_type, i_msg);
     }
     else if (i_flags == VK_DEBUG_REPORT_DEBUG_BIT_EXT) {
-        SDLOGD("Vulkan Info : %s", i_msg);
+        SDLOGD("L[%s] O(%x) T:%d VK Info : %s", i_layer_prefix, i_obj, i_object_type, i_msg);
     }
     else if (i_flags == VK_DEBUG_REPORT_WARNING_BIT_EXT) {
-        SDLOGW("Vulkan Warning : %s", i_msg);
+        SDLOGW("L[%s] O(%x) T:%d VK Warning : %s", i_layer_prefix, i_obj, i_object_type, i_msg);
     }
     else if (i_flags == VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT) {
-        SDLOGW("Vulkan Performance Warning : %s", i_msg);
+        SDLOGW("L[%s] O(%x) T:%d VK Performance Warning : %s", i_layer_prefix, i_obj, i_object_type, i_msg);
     }
     else {
         SDLOGE("Vulkan Error : %s", i_msg);

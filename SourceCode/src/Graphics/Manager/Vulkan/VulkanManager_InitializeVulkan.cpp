@@ -334,7 +334,7 @@ void VulkanManager::InitializeLogicDevice()
         throw std::runtime_error("failed to create logical device!");
     }
 
-
+   
     if (m_VK_picked_queue_family_id >= 0) {
         vkGetDeviceQueue(m_VK_logic_device, static_cast<uint32_t>(m_VK_picked_queue_family_id), 0, &m_VK_present_queue);
     }
@@ -439,25 +439,26 @@ void VulkanManager::InitializeSwapChain()
         image_count = sur_caps.maxImageCount;
     }
 
-    VkSwapchainCreateInfoKHR createInfo = {};
-    createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    createInfo.surface = m_VK_surface;
-    createInfo.minImageCount = image_count;
-    createInfo.imageFormat = m_VK_desired_sur_fmt.format;
-    createInfo.imageColorSpace = m_VK_desired_sur_fmt.colorSpace;
-    createInfo.imageExtent = m_screen_size;
-    createInfo.imageArrayLayers = 1;
-    createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-    createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    createInfo.queueFamilyIndexCount = 1;
-    createInfo.pQueueFamilyIndices = reinterpret_cast<const uint32_t*>(&m_VK_picked_queue_family_id);
-    createInfo.preTransform = sur_caps.currentTransform;
-    createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-    createInfo.presentMode = m_VK_final_present_mode;
-    createInfo.clipped = VK_TRUE;
-    createInfo.oldSwapchain = VK_NULL_HANDLE;
+    VkSwapchainCreateInfoKHR sw_c_info = {};
+    sw_c_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    sw_c_info.pNext = nullptr;
+    sw_c_info.surface = m_VK_surface;
+    sw_c_info.minImageCount = image_count;
+    sw_c_info.imageFormat = m_VK_desired_sur_fmt.format;
+    sw_c_info.imageColorSpace = m_VK_desired_sur_fmt.colorSpace;
+    sw_c_info.imageExtent = m_screen_size;
+    sw_c_info.imageArrayLayers = 1;
+    sw_c_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    sw_c_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    sw_c_info.queueFamilyIndexCount = 0;
+    sw_c_info.pQueueFamilyIndices = nullptr;
+    sw_c_info.preTransform = sur_caps.currentTransform;
+    sw_c_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    sw_c_info.presentMode = m_VK_final_present_mode;
+    sw_c_info.clipped = VK_TRUE;
+    sw_c_info.oldSwapchain = VK_NULL_HANDLE;
 
-    if (vkCreateSwapchainKHR(m_VK_logic_device, &createInfo, nullptr, &m_VK_swap_chain) != VK_SUCCESS) {
+    if (vkCreateSwapchainKHR(m_VK_logic_device, &sw_c_info, nullptr, &m_VK_swap_chain) != VK_SUCCESS) {
         throw std::runtime_error("failed to create swap chain!");
     }
 
@@ -480,6 +481,74 @@ void VulkanManager::InitializeSwapChain()
     }
 }
 
+void VulkanManager::InitializePresentRenderPass()
+{
+    VkAttachmentDescription clr_attachment_desc = {};
+    clr_attachment_desc.flags = 0;
+    clr_attachment_desc.format = m_VK_desired_sur_fmt.format;
+    clr_attachment_desc.samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
+    clr_attachment_desc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    clr_attachment_desc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    clr_attachment_desc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    clr_attachment_desc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    clr_attachment_desc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    clr_attachment_desc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    //bind the output to color attachment. 
+    VkAttachmentReference clr_attachment_ref = {};
+    clr_attachment_ref.attachment = 0;
+    clr_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    //create present subpass.
+    VkSubpassDescription present_sp_desc = {};
+    present_sp_desc.flags = 0;
+    present_sp_desc.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    present_sp_desc.inputAttachmentCount = 0;
+    present_sp_desc.pInputAttachments = nullptr;
+    present_sp_desc.colorAttachmentCount = 1;
+    present_sp_desc.pColorAttachments = &clr_attachment_ref;
+    present_sp_desc.pResolveAttachments = nullptr; //for multisample.
+    present_sp_desc.pDepthStencilAttachment = nullptr;
+    present_sp_desc.preserveAttachmentCount = 0;
+    present_sp_desc.pPreserveAttachments = nullptr;
+
+    //Create subpass dependecy for present pass.
+    std::vector<VkSubpassDependency> sp_dependencies;
+    sp_dependencies.resize(2);
+    //begin dep.
+    sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+    sp_dependencies[0].dstSubpass = 0;
+    sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+    //end dep.
+    sp_dependencies[1].srcSubpass = 0;
+    sp_dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+    sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    VkRenderPassCreateInfo pass_c_info = {};
+    pass_c_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    pass_c_info.pNext = nullptr;
+    pass_c_info.flags = 0; //Not implement in Vulkan, it say 'reversed for future use.'
+    pass_c_info.attachmentCount = 1;
+    pass_c_info.pAttachments = &clr_attachment_desc;
+    pass_c_info.subpassCount = 1;
+    pass_c_info.pSubpasses = &present_sp_desc;
+    pass_c_info.dependencyCount = static_cast<uint32_t>(sp_dependencies.size());
+    pass_c_info.pDependencies = sp_dependencies.data();
+
+
+    if (vkCreateRenderPass(m_VK_logic_device, &pass_c_info, nullptr, &m_VK_present_render_pass) != VK_SUCCESS) {
+        throw std::runtime_error("Create present render pass failure!");
+    }
+}
+
 void VulkanManager::InitializeImageViewsAndFBOs()
 {
     SDLOG("--- Vulkan initialize image views.");
@@ -498,15 +567,29 @@ void VulkanManager::InitializeImageViewsAndFBOs()
         image_view_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         image_view_c_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         image_view_c_info.subresourceRange.baseMipLevel = 0;
-        image_view_c_info.subresourceRange.levelCount = 1;
+        image_view_c_info.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
         image_view_c_info.subresourceRange.baseArrayLayer = 0;
-        image_view_c_info.subresourceRange.layerCount = 1;
+        image_view_c_info.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
 
         if (vkCreateImageView(m_VK_logic_device, &image_view_c_info, nullptr, (VkImageView*)&m_VK_sc_image_views[imgv_id]) != VK_SUCCESS) {
             throw std::runtime_error(SDE::Basic::StringFormat("failed to create image views[%d]!", imgv_id).c_str());
         }
 
         //create fbo for sc img[id].
+        VkFramebufferCreateInfo fbo_c_info;
+        fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        fbo_c_info.pNext = nullptr;
+        fbo_c_info.flags = 0; //Reserved for future use
+        fbo_c_info.renderPass = m_VK_present_render_pass;
+        fbo_c_info.attachmentCount = 1;
+        fbo_c_info.pAttachments = &m_VK_sc_image_views[imgv_id];
+        fbo_c_info.width = m_screen_size.width;
+        fbo_c_info.height = m_screen_size.height;
+        fbo_c_info.layers = 1;
+
+        if (vkCreateFramebuffer(m_VK_logic_device, &fbo_c_info, nullptr, &m_VK_sc_image_fbos[imgv_id]) != VK_SUCCESS) {
+            throw std::runtime_error(SDE::Basic::StringFormat("failed to create FBO[%d]!", imgv_id).c_str());
+        }
     }
 }
 
@@ -540,22 +623,8 @@ void VulkanManager::InitializeCommandPoolAndBuffers()
     fence_c_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
     if (vkCreateFence(m_VK_logic_device, &fence_c_info, nullptr, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
-        throw std::runtime_error("Create main cmd buf fence failure failure!");
+        throw std::runtime_error("Create main cmd buf fence failure!");
     }
-}
-
-void VulkanManager::InitializeRenderToScreenRenderPass()
-{
-    VkAttachmentDescription clr_attachment = {};
-    clr_attachment.flags = 0;
-    clr_attachment.format = m_VK_desired_sur_fmt.format;
-    clr_attachment.samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
-    clr_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    clr_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    clr_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    clr_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    clr_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    clr_attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

@@ -51,6 +51,7 @@ class SDENGINE_CLASS VulkanManager : public GraphicsManager
 protected:
     static const uint32_t MaxImgAcqirationTime; //nanosecond.
     static const uint32_t MaxFenceWaitTime;
+    static const VkClearValue ClearColor;
 protected:
     static std::vector<const char*> DesiredValidLayers;
     static std::vector<const char*> NecessaryExtensions;
@@ -89,9 +90,9 @@ protected:
     void InitializePhysicalDevice();
     void InitializeLogicDevice();
     void InitializeSwapChain();
+    void InitializePresentRenderPass();
     void InitializeImageViewsAndFBOs();
     void InitializeCommandPoolAndBuffers();
-    void InitializeRenderToScreenRenderPass();
 protected:
     VkQueueFlags m_VK_desired_queue_abilities;
     VkSurfaceFormatKHR m_VK_desired_sur_fmt;
@@ -110,7 +111,7 @@ protected:
     VkExtent2D m_screen_size;
     VkPresentModeKHR m_VK_final_present_mode;
     VkSwapchainKHR m_VK_swap_chain;
-    VkRenderPass m_VK_screen_render_pass;
+    VkRenderPass m_VK_present_render_pass;
     VkSemaphore m_VK_acq_img_semaphore; //GPU to GPU lock
     VkSemaphore m_VK_present_semaphore; //GPU to GPU lock
     std::vector<VkImage> m_VK_sc_images;

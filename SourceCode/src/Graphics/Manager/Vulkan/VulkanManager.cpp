@@ -36,6 +36,7 @@ namespace Graphics
 
 const uint32_t VulkanManager::MaxImgAcqirationTime = 2000000000; //2s
 const uint32_t VulkanManager::MaxFenceWaitTime = 2000000; //2ms
+const VkClearValue VulkanManager::ClearColor = { 0.2f, 0.5f, 0.8f, 1.0f };
 
 const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
 {
@@ -73,7 +74,7 @@ VulkanManager::VulkanManager()
 , m_VK_present_queue(VK_NULL_HANDLE)
 // swap chain
 , m_VK_swap_chain(VK_NULL_HANDLE)
-, m_VK_screen_render_pass(VK_NULL_HANDLE)
+, m_VK_present_render_pass(VK_NULL_HANDLE)
 , m_VK_acq_img_semaphore(VK_NULL_HANDLE)
 , m_VK_present_semaphore(VK_NULL_HANDLE)
 , m_screen_size{0,0}
@@ -107,8 +108,9 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializePhysicalDevice();
             InitializeLogicDevice();
             InitializeSwapChain();
-            InitializeImageViewsAndFBOs();
             InitializeCommandPoolAndBuffers();
+            InitializePresentRenderPass();
+            InitializeImageViewsAndFBOs();
         }
         else {
             throw std::runtime_error("VkInstance in arg is nullptr!!!");
@@ -131,9 +133,9 @@ void VulkanManager::ReleaseGraphicsSystem()
         SDLOG("failed to load set up destroy debug messenger function!");
     }
 
-    if (m_VK_screen_render_pass != VK_NULL_HANDLE) {
-        vkDestroyRenderPass(m_VK_logic_device, m_VK_screen_render_pass, nullptr);
-        m_VK_screen_render_pass = VK_NULL_HANDLE;
+    if (m_VK_present_render_pass != VK_NULL_HANDLE) {
+        vkDestroyRenderPass(m_VK_logic_device, m_VK_present_render_pass, nullptr);
+        m_VK_present_render_pass = VK_NULL_HANDLE;
     }
 
     if (m_VK_main_cmd_buffer != VK_NULL_HANDLE) {
@@ -156,13 +158,21 @@ void VulkanManager::ReleaseGraphicsSystem()
         m_VK_present_semaphore = VK_NULL_HANDLE;
     }
 
-    for (auto &iv : m_VK_sc_image_views) {
+    for (VkImageView &iv : m_VK_sc_image_views) {
         if (iv != VK_NULL_HANDLE) {
             vkDestroyImageView(m_VK_logic_device, iv, nullptr);
             iv = VK_NULL_HANDLE;
         }
     }
     m_VK_sc_image_views.clear();
+
+    for (VkFramebuffer &fbo : m_VK_sc_image_fbos) {
+        if (fbo != VK_NULL_HANDLE) {
+            vkDestroyFramebuffer(m_VK_logic_device, fbo, nullptr);
+        }
+        fbo = VK_NULL_HANDLE;
+    }
+    m_VK_sc_image_fbos.clear();
 
     if (m_VK_swap_chain != VK_NULL_HANDLE) {
         vkDestroySwapchainKHR(m_VK_logic_device, m_VK_swap_chain, nullptr);
@@ -190,7 +200,7 @@ void VulkanManager::ReleaseGraphicsSystem()
 //----------------------- Render Flow -----------------------
 void VulkanManager::RenderBegin()
 {
-    vkDeviceWaitIdle(m_VK_logic_device);
+    //vkDeviceWaitIdle(m_VK_logic_device);
 }
 
 void VulkanManager::RenderToScreen()
@@ -217,8 +227,28 @@ void VulkanManager::RenderToScreen()
         SDLOGW("We can't begin command buffer(%x)!!!", m_VK_main_cmd_buffer);
         return;
     }
+
+    //Begin RenderPass.
+    VkRect2D render_area = {};
+    render_area.offset = { 0, 0 };
+    render_area.extent = m_screen_size;
+
+    VkRenderPassBeginInfo rp_begin_info = {};
+    rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    rp_begin_info.pNext = nullptr;
+    rp_begin_info.renderPass = m_VK_present_render_pass;
+    rp_begin_info.framebuffer = m_VK_sc_image_fbos[image_index];
+    rp_begin_info.renderArea = render_area;
+    rp_begin_info.clearValueCount = 1;
+    rp_begin_info.pClearValues = &ClearColor;
+
+    vkCmdBeginRenderPass(m_VK_main_cmd_buffer, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
+
     //Try composite images of all camera to present image.
-    RenderDebug();//Test
+    //RenderDebug();//Test
+
+    //End RenderPass.
+    vkCmdEndRenderPass(m_VK_main_cmd_buffer);
     //End command buffer
     if (vkEndCommandBuffer(m_VK_main_cmd_buffer) != VK_SUCCESS) {
         SDLOGW("We can't end command buffer(%x)!!!", m_VK_main_cmd_buffer);
@@ -268,9 +298,9 @@ void VulkanManager::RenderToScreen()
 void VulkanManager::RenderEnd()
 {
     //Reset command buffers in pool.
-    if (vkResetCommandPool(m_VK_logic_device, m_VK_main_cmd_pool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT) != VK_SUCCESS) {
-        SDLOGW("reset command buffer in main pool failure!!!");
-    }
+    //if (vkResetCommandPool(m_VK_logic_device, m_VK_main_cmd_pool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT) != VK_SUCCESS) {
+    //    SDLOGW("reset command buffer in main pool failure!!!");
+    //}
 }
 
 void VulkanManager::RenderDebug()
