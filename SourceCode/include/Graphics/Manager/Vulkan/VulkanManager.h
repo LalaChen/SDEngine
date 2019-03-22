@@ -79,6 +79,7 @@ public:
      */
     void ReleaseGraphicsSystem() override;
 
+    void Resize(int i_w, int i_h) override;
 protected: //--------------- Render Flow Function ------------------
     void RenderBegin() override;
     void RenderToScreen() override;

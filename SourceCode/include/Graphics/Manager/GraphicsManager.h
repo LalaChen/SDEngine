@@ -82,7 +82,9 @@ public: //---------------- Initialize and Release -----------------
      *  \brief Release graphics system.
      */
     virtual void ReleaseGraphicsSystem() = 0;
-    
+
+public:
+    virtual void Resize(int i_w, int i_h) = 0;
 public: //--------------- Render Function ------------------
     void Render();
 protected: //--------------- Render Flow Function ------------------

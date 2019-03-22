@@ -101,17 +101,17 @@ void GLFWApplication::InitializeGraphicsSystem()
             }
         }
 
-        VkApplicationInfo appInfo = {};
-        appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName = m_win_title.c_str();
-        appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.pEngineName = "SD Engine";
-        appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.apiVersion = VK_API_VERSION_1_0;
+        VkApplicationInfo app_info = {};
+        app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+        app_info.pApplicationName = m_win_title.c_str();
+        app_info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+        app_info.pEngineName = "SD Engine";
+        app_info.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+        app_info.apiVersion = VK_API_VERSION_1_0;
 
         VkInstanceCreateInfo ins_c_info = {};
         ins_c_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-        ins_c_info.pApplicationInfo = &appInfo;
+        ins_c_info.pApplicationInfo = &app_info;
         ins_c_info.enabledExtensionCount = static_cast<uint32_t>(ins_ext_prop_names.size());
         ins_c_info.ppEnabledExtensionNames = ins_ext_prop_names.data();
 #ifdef _NDEBUG
@@ -132,6 +132,7 @@ void GLFWApplication::InitializeGraphicsSystem()
         if (glfwCreateWindowSurface(instance, m_window, nullptr, &surface) != VK_SUCCESS) {
             throw std::runtime_error("failed to create window surface!");
         }
+
         SDLOG("Vulkan instance creation end!!!");
 
         VulkanCreationArg arg;

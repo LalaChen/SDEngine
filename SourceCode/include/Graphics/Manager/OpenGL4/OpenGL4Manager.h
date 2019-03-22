@@ -66,6 +66,8 @@ public:
      *  \brief Release graphics API.
      */
     void ReleaseGraphicsSystem() override;
+public:
+    void Resize(int i_w, int i_h) override;
 protected: //--------------- Render Flow Function ------------------
     void RenderBegin() override;
     void RenderToScreen() override;

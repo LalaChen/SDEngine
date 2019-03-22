@@ -68,6 +68,11 @@ void Application::Pause()
 
 }
 
+void Application::Resize(int i_w, int i_h)
+{
+    GraphicsManager::GetRef().Resize(i_w, i_h);
+}
+
 //---------------------------- end of namespace Basic ----------------------------
 }
 //---------------------------- end of namespace SDE ----------------------------

@@ -22,8 +22,15 @@ void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int 
 
     //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    if (glfwVulkanSupported() && i_adopt_library == Graphics::GraphicsLibrary_Vulkan) {
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    }
+    else {
+        i_adopt_library = Graphics::GraphicsLibrary_OpenGL4;
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+    }
+
+    //glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
     //--- ii. create window.
     if (i_full_window == true) {
         monitor = glfwGetPrimaryMonitor();
@@ -55,7 +62,7 @@ void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int 
     //------ Windows
     glfwSetWindowCloseCallback(window, GLFWApplication::WindowCloseCallback);
     glfwSetWindowMaximizeCallback(window, GLFWApplication::WindowMaximizeCallback);
-    glfwSetWindowSizeCallback(window, GLFWApplication::WindowSizeCallback);
+    glfwSetFramebufferSizeCallback(window, GLFWApplication::WindowSizeCallback);
     glfwSetWindowPosCallback(window, GLFWApplication::WindowPosCallback);
     glfwSetWindowFocusCallback(window, GLFWApplication::WindowFocusCallback);
     glfwSetDropCallback(window, GLFWApplication::DropCallback);
@@ -68,22 +75,36 @@ void GLFWApplication::LaunchGLFWApplication(const std::string &i_win_title, int 
     
     //--- v. initialize glew.
     Application::GetRef().InitializeGraphicsSystem();
-
+    
     //3. launch main loop.
-    while (!glfwWindowShouldClose(window))
-    {
-        try {
-            // Update Game.
-            Application::GetRef().Update();
-        }
-        catch (std::exception &e)
-        {
-            SDLOGE("Execption occur !!! %s.",e.what());
-        }
+    if (i_adopt_library == Graphics::GraphicsLibrary_OpenGL4) {
+        while (!glfwWindowShouldClose(window)){
+            try {
+                // Update Game.
+                Application::GetRef().Update();
+            }
+            catch (std::exception &e)
+            {
+                SDLOGE("Execption occur !!! %s.", e.what());
+            }
 
-        // Swap buffers
-        //glfwSwapBuffers(window);
-        glfwPollEvents();
+            // Swap buffers
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+        }
+    }
+    else {
+        while (!glfwWindowShouldClose(window)){
+            try {
+                // Update Game.
+                Application::GetRef().Update();
+            }
+            catch (std::exception &e)
+            {
+                SDLOGE("Execption occur !!! %s.", e.what());
+            }
+            glfwPollEvents();
+        }
     }
 
     Application::GetRef().ReleaseGraphicsSystem();

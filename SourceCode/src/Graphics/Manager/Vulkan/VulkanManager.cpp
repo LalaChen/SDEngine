@@ -44,11 +44,11 @@ const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
 }
 
 std::vector<const char*> VulkanManager::DesiredValidLayers = {
-    "VK_LAYER_LUNARG_standard_validation",
-    "VK_LAYER_RENDERDOC_Capture",
+    "VK_LAYER_LUNARG_standard_validation"//,
+    //"VK_LAYER_RENDERDOC_Capture",
     //"VK_LAYER_VALVE_steam_overlay",
     //"VK_LAYER_VALVE_steam_fossilize", // will create a lot of json file.
-    "VK_LAYER_NV_optimus"
+    //"VK_LAYER_NV_optimus"
 };
 
 std::vector<const char*> VulkanManager::NecessaryExtensions = {
@@ -66,7 +66,7 @@ VulkanManager::VulkanManager()
 // desired device properities
 , m_VK_desired_queue_abilities(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT | VK_QUEUE_SPARSE_BINDING_BIT)
 , m_VK_desired_sur_fmt{ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR }
-, m_VK_desired_pre_mode_list{ VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR}
+, m_VK_desired_pre_mode_list{ VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR}
 // device(phy and logical)
 , m_VK_physical_device(VK_NULL_HANDLE)
 , m_VK_picked_queue_family_id(-1)
@@ -107,8 +107,8 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializeDebugMessage();
             InitializePhysicalDevice();
             InitializeLogicDevice();
-            InitializeSwapChain();
             InitializeCommandPoolAndBuffers();
+            InitializeSwapChain();
             InitializePresentRenderPass();
             InitializeSCImageViewsAndFBOs();
         }
@@ -158,14 +158,6 @@ void VulkanManager::ReleaseGraphicsSystem()
         m_VK_present_semaphore = VK_NULL_HANDLE;
     }
 
-    for (VkImageView &iv : m_VK_sc_image_views) {
-        if (iv != VK_NULL_HANDLE) {
-            vkDestroyImageView(m_VK_logic_device, iv, nullptr);
-            iv = VK_NULL_HANDLE;
-        }
-    }
-    m_VK_sc_image_views.clear();
-
     for (VkFramebuffer &fbo : m_VK_sc_image_fbos) {
         if (fbo != VK_NULL_HANDLE) {
             vkDestroyFramebuffer(m_VK_logic_device, fbo, nullptr);
@@ -173,6 +165,14 @@ void VulkanManager::ReleaseGraphicsSystem()
         fbo = VK_NULL_HANDLE;
     }
     m_VK_sc_image_fbos.clear();
+
+    for (VkImageView &iv : m_VK_sc_image_views) {
+        if (iv != VK_NULL_HANDLE) {
+            vkDestroyImageView(m_VK_logic_device, iv, nullptr);
+            iv = VK_NULL_HANDLE;
+        }
+    }
+    m_VK_sc_image_views.clear();
 
     if (m_VK_swap_chain != VK_NULL_HANDLE) {
         vkDestroySwapchainKHR(m_VK_logic_device, m_VK_swap_chain, nullptr);
@@ -198,9 +198,36 @@ void VulkanManager::ReleaseGraphicsSystem()
 }
 
 //----------------------- Render Flow -----------------------
+void VulkanManager::Resize(int i_w, int i_h)
+{
+    for (VkFramebuffer &fbo : m_VK_sc_image_fbos) {
+        if (fbo != VK_NULL_HANDLE) {
+            vkDestroyFramebuffer(m_VK_logic_device, fbo, nullptr);
+        }
+        fbo = VK_NULL_HANDLE;
+    }
+    m_VK_sc_image_fbos.clear();
+
+    for (VkImageView &iv : m_VK_sc_image_views) {
+        if (iv != VK_NULL_HANDLE) {
+            vkDestroyImageView(m_VK_logic_device, iv, nullptr);
+            iv = VK_NULL_HANDLE;
+        }
+    }
+    m_VK_sc_image_views.clear();
+
+    if (m_VK_swap_chain != VK_NULL_HANDLE) {
+        vkDestroySwapchainKHR(m_VK_logic_device, m_VK_swap_chain, nullptr);
+        m_VK_swap_chain = VK_NULL_HANDLE;
+    }
+
+    InitializeSwapChain();
+    InitializeSCImageViewsAndFBOs();
+}
+
 void VulkanManager::RenderBegin()
 {
-    //vkDeviceWaitIdle(m_VK_logic_device);
+    vkDeviceWaitIdle(m_VK_logic_device);
 }
 
 void VulkanManager::RenderToScreen()
@@ -216,12 +243,13 @@ void VulkanManager::RenderToScreen()
         SDLOGW("We can't get nxt swapchain image.");
         return;
     }
+
     //Begin command buffer
     VkCommandBufferBeginInfo cmd_buf_c_info = {};
     cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     cmd_buf_c_info.pNext = nullptr;
-    cmd_buf_c_info.pInheritanceInfo = nullptr;
     cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    cmd_buf_c_info.pInheritanceInfo = nullptr;
 
     if (vkBeginCommandBuffer(m_VK_main_cmd_buffer, &cmd_buf_c_info) != VK_SUCCESS) {
         SDLOGW("We can't begin command buffer(%x)!!!", m_VK_main_cmd_buffer);
@@ -245,8 +273,7 @@ void VulkanManager::RenderToScreen()
     vkCmdBeginRenderPass(m_VK_main_cmd_buffer, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
 
     //Try composite images of all camera to present image.
-    //RenderDebug();//Test
-
+  
     //End RenderPass.
     vkCmdEndRenderPass(m_VK_main_cmd_buffer);
     //End command buffer
@@ -255,8 +282,9 @@ void VulkanManager::RenderToScreen()
         return;
     }
     //Push command buffer to queue.
-    VkSubmitInfo submit_info = {};
+
     VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+    VkSubmitInfo submit_info = {};
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submit_info.pNext = nullptr;
     submit_info.waitSemaphoreCount = 1;
@@ -264,7 +292,9 @@ void VulkanManager::RenderToScreen()
     submit_info.pWaitDstStageMask = &submit_wait_flag;
     submit_info.signalSemaphoreCount = 1;
     submit_info.pSignalSemaphores = &m_VK_present_semaphore; //set present semaphore.
+    submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
+    
 
     if (vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
         SDLOGW("Submit command buffer failure!!!");
@@ -273,6 +303,7 @@ void VulkanManager::RenderToScreen()
     if (vkWaitForFences(m_VK_logic_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime) != VK_SUCCESS) {
         SDLOGW("Wait sync failure!!!");
     }
+
     //Reset main command buffer sync.
     if (vkResetFences(m_VK_logic_device, 1, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
         SDLOGW("reset main command buffer fence failure!!!");
@@ -287,12 +318,12 @@ void VulkanManager::RenderToScreen()
     p_info.swapchainCount = 1;
     p_info.pSwapchains = &m_VK_swap_chain;
     p_info.pImageIndices = &image_index;
+    p_info.pResults = nullptr;
 
     if (vkQueuePresentKHR(m_VK_present_queue, &p_info) != VK_SUCCESS) {
         SDLOGW("We can't present image by queue.");
         return;
     }
-
 }
 
 void VulkanManager::RenderEnd()

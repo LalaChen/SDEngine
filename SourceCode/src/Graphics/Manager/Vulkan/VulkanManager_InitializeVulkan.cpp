@@ -280,9 +280,9 @@ void VulkanManager::InitializeLogicDevice()
             queue_families[fam_id].queueCount > 0) {
             //check this family can be used to present on screen.
             VkBool32 present_support = VK_FALSE;
-            vkGetPhysicalDeviceSurfaceSupportKHR(m_VK_physical_device, fam_id, m_VK_surface, &present_support);
-            if (present_support == VK_TRUE) {
-                m_VK_picked_queue_family_id = fam_id;
+            VkResult rst = vkGetPhysicalDeviceSurfaceSupportKHR(m_VK_physical_device, fam_id, m_VK_surface, &present_support);
+            if (present_support == VK_TRUE && rst == VK_SUCCESS) {
+                m_VK_picked_queue_family_id = static_cast<int32_t>(fam_id);
                 break;
             }
         }
@@ -306,6 +306,8 @@ void VulkanManager::InitializeLogicDevice()
     float quene_priorities[1] = { 1.0f };
     VkDeviceQueueCreateInfo queue_c_info = {};
     queue_c_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queue_c_info.pNext = nullptr;
+    queue_c_info.flags = 0;
     queue_c_info.queueFamilyIndex = static_cast<uint32_t>(m_VK_picked_queue_family_id);
     queue_c_info.queueCount = 1; //use signal queue. extend in future.
     queue_c_info.pQueuePriorities = quene_priorities;
@@ -315,9 +317,11 @@ void VulkanManager::InitializeLogicDevice()
 
     VkDeviceCreateInfo logic_dev_c_info = {};
     logic_dev_c_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    logic_dev_c_info.pNext = nullptr;
+    logic_dev_c_info.flags = 0;
     logic_dev_c_info.pQueueCreateInfos = &queue_c_info;
     logic_dev_c_info.queueCreateInfoCount = 1;
-    logic_dev_c_info.pEnabledFeatures = &dev_features; //use all features physical device support.
+    logic_dev_c_info.pEnabledFeatures = nullptr; //use all features physical device support.
     logic_dev_c_info.ppEnabledExtensionNames = NecessaryExtensions.data();
     logic_dev_c_info.enabledExtensionCount = static_cast<uint32_t>(NecessaryExtensions.size());
 
@@ -413,6 +417,9 @@ void VulkanManager::InitializeSwapChain()
                 break;
             }
         }
+        if (m_VK_final_present_mode != VK_PRESENT_MODE_RANGE_SIZE_KHR) {
+            break;
+        }
     }
 
     if (m_VK_final_present_mode == VK_PRESENT_MODE_RANGE_SIZE_KHR) {
@@ -435,9 +442,12 @@ void VulkanManager::InitializeSwapChain()
         image_count = sur_caps.maxImageCount;
     }
 
+    uint32_t present_queue_fam_id = static_cast<uint32_t>(m_VK_picked_queue_family_id);
+
     VkSwapchainCreateInfoKHR sw_c_info = {};
     sw_c_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     sw_c_info.pNext = nullptr;
+    sw_c_info.flags = 0;
     sw_c_info.surface = m_VK_surface;
     sw_c_info.minImageCount = image_count;
     sw_c_info.imageFormat = m_VK_desired_sur_fmt.format;
@@ -446,8 +456,8 @@ void VulkanManager::InitializeSwapChain()
     sw_c_info.imageArrayLayers = 1;
     sw_c_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     sw_c_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    sw_c_info.queueFamilyIndexCount = 0;
-    sw_c_info.pQueueFamilyIndices = nullptr;
+    sw_c_info.queueFamilyIndexCount = 1;
+    sw_c_info.pQueueFamilyIndices = &present_queue_fam_id;
     sw_c_info.preTransform = sur_caps.currentTransform;
     sw_c_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
     sw_c_info.presentMode = m_VK_final_present_mode;
@@ -458,27 +468,42 @@ void VulkanManager::InitializeSwapChain()
         throw std::runtime_error("failed to create swap chain!");
     }
 
-    vkGetSwapchainImagesKHR(m_VK_logic_device, m_VK_swap_chain, &image_count, nullptr);
-    m_VK_sc_images.resize(image_count);
-    vkGetSwapchainImagesKHR(m_VK_logic_device, m_VK_swap_chain, &image_count, m_VK_sc_images.data());
-    SDLOG("SwapChainImages number : %u, ViewPort(%d,%d)", image_count, m_screen_size.width, m_screen_size.height);
+    if ( vkGetSwapchainImagesKHR(m_VK_logic_device, m_VK_swap_chain, &image_count, nullptr) != VK_SUCCESS){
+        throw std::runtime_error("failed to get image number of swap chain!");
+    }
 
-    VkSemaphoreCreateInfo semaphore_c_info = {};
-    semaphore_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-    semaphore_c_info.pNext = nullptr;
-    semaphore_c_info.flags = 0;
+    if (image_count > 0) {
+        m_VK_sc_images.resize(image_count);
+        if (vkGetSwapchainImagesKHR(m_VK_logic_device, m_VK_swap_chain, &image_count, m_VK_sc_images.data()) == VK_SUCCESS) {
+            SDLOG("SwapChainImages number : %u, ViewPort(%d,%d)", image_count, m_screen_size.width, m_screen_size.height);
+        }
+        else {
+            throw std::runtime_error("failed to get image handle of swap chain!");
+        }
+    }
 
-    if (vkCreateSemaphore(m_VK_logic_device, &semaphore_c_info, nullptr, &m_VK_acq_img_semaphore) != VK_SUCCESS) {
+    VkSemaphoreCreateInfo acq_sem_c_info = {};
+    acq_sem_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    acq_sem_c_info.pNext = nullptr;
+    acq_sem_c_info.flags = 0;
+
+    if (vkCreateSemaphore(m_VK_logic_device, &acq_sem_c_info, nullptr, &m_VK_acq_img_semaphore) != VK_SUCCESS) {
         throw std::runtime_error("failed to create acq img semaphore!");
     }
 
-    if (vkCreateSemaphore(m_VK_logic_device, &semaphore_c_info, nullptr, &m_VK_present_semaphore) != VK_SUCCESS) {
+    VkSemaphoreCreateInfo present_sem_c_info = {};
+    acq_sem_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    acq_sem_c_info.pNext = nullptr;
+    acq_sem_c_info.flags = 0;
+
+    if (vkCreateSemaphore(m_VK_logic_device, &present_sem_c_info, nullptr, &m_VK_present_semaphore) != VK_SUCCESS) {
         throw std::runtime_error("failed to create present semaphore!");
     }
 }
 
 void VulkanManager::InitializePresentRenderPass()
 {
+    SDLOG("--- Vulkan initialize present render pass.");
     VkAttachmentDescription clr_attachment_desc = {};
     clr_attachment_desc.flags = 0;
     clr_attachment_desc.format = m_VK_desired_sur_fmt.format;
@@ -510,6 +535,7 @@ void VulkanManager::InitializePresentRenderPass()
 
     //Create subpass dependecy for present pass.
     std::vector<VkSubpassDependency> sp_dependencies;
+    ///*
     sp_dependencies.resize(2);
     //begin dep.
     sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
@@ -527,7 +553,17 @@ void VulkanManager::InitializePresentRenderPass()
     sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
+    //*/
+    /*
+    sp_dependencies.resize(1);
+    sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+    sp_dependencies[0].dstSubpass = 0;
+    sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[0].srcAccessMask = 0;
+    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+    //*/
     VkRenderPassCreateInfo pass_c_info = {};
     pass_c_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     pass_c_info.pNext = nullptr;
@@ -539,36 +575,39 @@ void VulkanManager::InitializePresentRenderPass()
     pass_c_info.dependencyCount = static_cast<uint32_t>(sp_dependencies.size());
     pass_c_info.pDependencies = sp_dependencies.data();
 
-
     if (vkCreateRenderPass(m_VK_logic_device, &pass_c_info, nullptr, &m_VK_present_render_pass) != VK_SUCCESS) {
         throw std::runtime_error("Create present render pass failure!");
     }
 }
+
 void VulkanManager::InitializeSCImageViewsAndFBOs()
 {
     SDLOG("--- Vulkan initialize image views.");
     m_VK_sc_image_views.resize(m_VK_sc_images.size());
     m_VK_sc_image_fbos.resize(m_VK_sc_images.size());
-    for (size_t imgv_id = 0; imgv_id < m_VK_sc_image_views.size(); imgv_id++) {
+    for (uint32_t imgv_id = 0; imgv_id < m_VK_sc_image_views.size(); imgv_id++) {
         //create image view for sc img[id].
-        VkImageViewCreateInfo image_view_c_info = {};
-        image_view_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        image_view_c_info.image = m_VK_sc_images[imgv_id];
-        image_view_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        image_view_c_info.format = m_VK_desired_sur_fmt.format;
-        image_view_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-        image_view_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-        image_view_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-        image_view_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-        image_view_c_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        image_view_c_info.subresourceRange.baseMipLevel = 0;
-        image_view_c_info.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
-        image_view_c_info.subresourceRange.baseArrayLayer = 0;
-        image_view_c_info.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+        VkImageViewCreateInfo iv_c_info = {};
+        iv_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        iv_c_info.pNext = nullptr;
+        iv_c_info.flags = 0;
+        iv_c_info.image = m_VK_sc_images[imgv_id];
+        iv_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        iv_c_info.format = m_VK_desired_sur_fmt.format;
+        iv_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        iv_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        iv_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        iv_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        iv_c_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        iv_c_info.subresourceRange.baseMipLevel = 0;
+        iv_c_info.subresourceRange.levelCount = 1;
+        iv_c_info.subresourceRange.baseArrayLayer = 0;
+        iv_c_info.subresourceRange.layerCount = 1;
 
-        if (vkCreateImageView(m_VK_logic_device, &image_view_c_info, nullptr, (VkImageView*)&m_VK_sc_image_views[imgv_id]) != VK_SUCCESS) {
+        if (vkCreateImageView(m_VK_logic_device, &iv_c_info, nullptr, &m_VK_sc_image_views[imgv_id]) != VK_SUCCESS) {
             throw std::runtime_error(SDE::Basic::StringFormat("failed to create image views[%d]!", imgv_id).c_str());
         }
+
         //create fbo for sc img[id].
         VkFramebufferCreateInfo fbo_c_info;
         fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

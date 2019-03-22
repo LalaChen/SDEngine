@@ -118,6 +118,8 @@ public:
      *  \brief Resume app. Please call this function when app re-focus.
      */
     virtual void Resume();
+
+    virtual void Resize(int i_w, int i_h);
 public:
     /*! \fn void SetWindowResolution(Size_ui i_width, Size_ui i_height);
         \param [in] i_width Width of app.

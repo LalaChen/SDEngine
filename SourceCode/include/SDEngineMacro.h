@@ -56,14 +56,14 @@ SOFTWARE.
 #endif
 
 #ifdef UNICODE 
-#define SD_ADT_OS_STR(str) StringToWString(str, SD_CODE_PAGE)
-#define SD_ADT_OS_STRCSTR(str) StringToWString(str, SD_CODE_PAGE).c_str()
-#define SD_CVT_OS_CHARS_TOSTR(chars) WStringToString(chars, SD_CODE_PAGE)
+#define SD_ADT_OS_STR(str) SDE::Basic::StringToWString(str, SD_CODE_PAGE)
+#define SD_ADT_OS_STRCSTR(str) SDE::Basic::StringToWString(str, SD_CODE_PAGE).c_str()
+#define SD_CVT_OS_CHARS_TOSTR(chars) SDE::Basic::WStringToString(chars, SD_CODE_PAGE)
 typedef wchar_t SDStrChar;
 #elif _UNICODE
-#define SD_ADT_OS_STR(str) StringToWString(  str, SD_CODE_PAGE)
-#define SD_ADT_OS_STRCSTR(str) StringToWString(  str, SD_CODE_PAGE).c_str()
-#define SD_CVT_OS_CHARS_TOSTR(chars) WStringToString(chars, SD_CODE_PAGE)
+#define SD_ADT_OS_STR(str) SDE::Basic::StringToWString(  str, SD_CODE_PAGE)
+#define SD_ADT_OS_STRCSTR(str) SDE::Basic::StringToWString(  str, SD_CODE_PAGE).c_str()
+#define SD_CVT_OS_CHARS_TOSTR(chars) SDE::Basic::WStringToString(chars, SD_CODE_PAGE)
 typedef wchar_t SDStrChar;
 #else
 #define SD_ADT_OS_STR(str) (str)

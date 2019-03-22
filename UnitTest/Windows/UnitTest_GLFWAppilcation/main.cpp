@@ -12,7 +12,7 @@ int main(int argc, char **argv)
         std::string("UnitTest_GLFWApplication"),
         argc,
         argv,
-        Resolution(800, 600),
+        Resolution(1200, 800),
         false, //full screen can't debug.
         GraphicsLibrary_Vulkan
     );

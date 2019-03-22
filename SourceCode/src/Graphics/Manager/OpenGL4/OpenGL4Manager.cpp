@@ -57,6 +57,14 @@ void OpenGL4Manager::ReleaseGraphicsSystem()
     SDLOG("Release OpenGL4Manager.");
 }
 
+void OpenGL4Manager::Resize(int i_w, int i_h)
+{
+    glViewport(0, 0, i_w, i_h);
+    glClearColor(0.2f, 0.5f, 0.8f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+}
+
 //----------------------- Render Flow -----------------------
 void OpenGL4Manager::RenderBegin()
 {
@@ -64,6 +72,10 @@ void OpenGL4Manager::RenderBegin()
 
 void OpenGL4Manager::RenderToScreen()
 {
+    glViewport(0, 0, 800, 600);
+    glClearColor(0.2f, 0.5f, 0.8f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void OpenGL4Manager::RenderEnd() 
