@@ -36,7 +36,6 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_InitializeVulkan.cpp" />
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\Vulkan_Utils.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -66,7 +65,6 @@
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineMacro.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEnginePlatform.h" />
-    <ClInclude Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\Vulkan_Utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -178,7 +176,8 @@
       <AdditionalDependencies>shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y "$(SolutionDir)\Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll" "$(SolutionDir)\Bin\UnitTest\Windows\$(Platform)\$(Configuration)\"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

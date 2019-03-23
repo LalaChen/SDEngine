@@ -38,6 +38,36 @@ namespace SDE
 namespace Graphics
 {
 
+//------------- Debug Callback.
+VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
+    VkDebugReportFlagsEXT i_flags,
+    VkDebugReportObjectTypeEXT i_object_type,
+    uint64_t i_obj,
+    size_t i_location,
+    int32_t i_code,
+    const char* i_layer_prefix,
+    const char* i_msg,
+    void* i_use_data)
+{
+    if (i_flags == VK_DEBUG_REPORT_INFORMATION_BIT_EXT) {
+        SDLOG("L[%s] O(%x) T:%d VK Verbose : %s", i_layer_prefix, i_obj, i_object_type, i_msg);
+    }
+    else if (i_flags == VK_DEBUG_REPORT_DEBUG_BIT_EXT) {
+        SDLOGD("L[%s] O(%x) T:%d VK Info : %s", i_layer_prefix, i_obj, i_object_type, i_msg);
+    }
+    else if (i_flags == VK_DEBUG_REPORT_WARNING_BIT_EXT) {
+        SDLOGW("L[%s] O(%x) T:%d VK Warning : %s", i_layer_prefix, i_obj, i_object_type, i_msg);
+    }
+    else if (i_flags == VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT) {
+        SDLOGW("L[%s] O(%x) T:%d VK Performance Warning : %s", i_layer_prefix, i_obj, i_object_type, i_msg);
+    }
+    else {
+        SDLOGE("Vulkan Error : %s", i_msg);
+    }
+
+    return VK_FALSE;
+}
+
 void VulkanManager::InitializeDebugMessage()
 {
     SDLOG("--- Vulkan initialize debug message.");
@@ -315,30 +345,30 @@ void VulkanManager::InitializeLogicDevice()
     VkPhysicalDeviceFeatures dev_features = {};
     vkGetPhysicalDeviceFeatures(m_VK_physical_device, &dev_features);
 
-    VkDeviceCreateInfo logic_dev_c_info = {};
-    logic_dev_c_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    logic_dev_c_info.pNext = nullptr;
-    logic_dev_c_info.flags = 0;
-    logic_dev_c_info.pQueueCreateInfos = &queue_c_info;
-    logic_dev_c_info.queueCreateInfoCount = 1;
-    logic_dev_c_info.pEnabledFeatures = nullptr; //use all features physical device support.
-    logic_dev_c_info.ppEnabledExtensionNames = NecessaryExtensions.data();
-    logic_dev_c_info.enabledExtensionCount = static_cast<uint32_t>(NecessaryExtensions.size());
+    VkDeviceCreateInfo dev_c_info = {};
+    dev_c_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    dev_c_info.pNext = nullptr;
+    dev_c_info.flags = 0;
+    dev_c_info.pQueueCreateInfos = &queue_c_info;
+    dev_c_info.queueCreateInfoCount = 1;
+    dev_c_info.pEnabledFeatures = nullptr; //use all features physical device support.
+    dev_c_info.ppEnabledExtensionNames = NecessaryExtensions.data();
+    dev_c_info.enabledExtensionCount = static_cast<uint32_t>(NecessaryExtensions.size());
 
 #ifdef _NDEBUG
-    logic_dev_c_info.enabledLayerCount = 0;
-    logic_dev_c_info.ppEnabledLayerNames = nullptr;
+    dev_c_info.enabledLayerCount = 0;
+    dev_c_info.ppEnabledLayerNames = nullptr;
 #else
-    logic_dev_c_info.enabledLayerCount = static_cast<uint32_t>(desired_valid_layer_names.size());
-    logic_dev_c_info.ppEnabledLayerNames = desired_valid_layer_names.data();
+    dev_c_info.enabledLayerCount = static_cast<uint32_t>(desired_valid_layer_names.size());
+    dev_c_info.ppEnabledLayerNames = desired_valid_layer_names.data();
 #endif
 
-    if (vkCreateDevice(m_VK_physical_device, &logic_dev_c_info, nullptr, &m_VK_logic_device) != VK_SUCCESS) {
+    if (vkCreateDevice(m_VK_physical_device, &dev_c_info, nullptr, &m_VK_device) != VK_SUCCESS) {
         throw std::runtime_error("failed to create logical device!");
     }
 
     if (m_VK_picked_queue_family_id >= 0) {
-        vkGetDeviceQueue(m_VK_logic_device, static_cast<uint32_t>(m_VK_picked_queue_family_id), 0, &m_VK_present_queue);
+        vkGetDeviceQueue(m_VK_device, static_cast<uint32_t>(m_VK_picked_queue_family_id), 0, &m_VK_present_queue);
     }
 }
 
@@ -464,17 +494,17 @@ void VulkanManager::InitializeSwapChain()
     sw_c_info.clipped = VK_TRUE;
     sw_c_info.oldSwapchain = VK_NULL_HANDLE;
 
-    if (vkCreateSwapchainKHR(m_VK_logic_device, &sw_c_info, nullptr, &m_VK_swap_chain) != VK_SUCCESS) {
+    if (vkCreateSwapchainKHR(m_VK_device, &sw_c_info, nullptr, &m_VK_swap_chain) != VK_SUCCESS) {
         throw std::runtime_error("failed to create swap chain!");
     }
 
-    if ( vkGetSwapchainImagesKHR(m_VK_logic_device, m_VK_swap_chain, &image_count, nullptr) != VK_SUCCESS){
+    if ( vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, nullptr) != VK_SUCCESS){
         throw std::runtime_error("failed to get image number of swap chain!");
     }
 
     if (image_count > 0) {
         m_VK_sc_images.resize(image_count);
-        if (vkGetSwapchainImagesKHR(m_VK_logic_device, m_VK_swap_chain, &image_count, m_VK_sc_images.data()) == VK_SUCCESS) {
+        if (vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, m_VK_sc_images.data()) == VK_SUCCESS) {
             SDLOG("SwapChainImages number : %u, ViewPort(%d,%d)", image_count, m_screen_size.width, m_screen_size.height);
         }
         else {
@@ -487,7 +517,7 @@ void VulkanManager::InitializeSwapChain()
     acq_sem_c_info.pNext = nullptr;
     acq_sem_c_info.flags = 0;
 
-    if (vkCreateSemaphore(m_VK_logic_device, &acq_sem_c_info, nullptr, &m_VK_acq_img_semaphore) != VK_SUCCESS) {
+    if (vkCreateSemaphore(m_VK_device, &acq_sem_c_info, nullptr, &m_VK_acq_img_semaphore) != VK_SUCCESS) {
         throw std::runtime_error("failed to create acq img semaphore!");
     }
 
@@ -496,7 +526,7 @@ void VulkanManager::InitializeSwapChain()
     acq_sem_c_info.pNext = nullptr;
     acq_sem_c_info.flags = 0;
 
-    if (vkCreateSemaphore(m_VK_logic_device, &present_sem_c_info, nullptr, &m_VK_present_semaphore) != VK_SUCCESS) {
+    if (vkCreateSemaphore(m_VK_device, &present_sem_c_info, nullptr, &m_VK_present_semaphore) != VK_SUCCESS) {
         throw std::runtime_error("failed to create present semaphore!");
     }
 }
@@ -554,16 +584,6 @@ void VulkanManager::InitializePresentRenderPass()
     sp_dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //*/
-    /*
-    sp_dependencies.resize(1);
-    sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-    sp_dependencies[0].dstSubpass = 0;
-    sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    sp_dependencies[0].srcAccessMask = 0;
-    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-    //*/
     VkRenderPassCreateInfo pass_c_info = {};
     pass_c_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     pass_c_info.pNext = nullptr;
@@ -575,16 +595,16 @@ void VulkanManager::InitializePresentRenderPass()
     pass_c_info.dependencyCount = static_cast<uint32_t>(sp_dependencies.size());
     pass_c_info.pDependencies = sp_dependencies.data();
 
-    if (vkCreateRenderPass(m_VK_logic_device, &pass_c_info, nullptr, &m_VK_present_render_pass) != VK_SUCCESS) {
+    if (vkCreateRenderPass(m_VK_device, &pass_c_info, nullptr, &m_VK_present_render_pass) != VK_SUCCESS) {
         throw std::runtime_error("Create present render pass failure!");
     }
 }
 
-void VulkanManager::InitializeSCImageViewsAndFBOs()
+void VulkanManager::InitializeSCImageViewsAndFBs()
 {
     SDLOG("--- Vulkan initialize image views.");
     m_VK_sc_image_views.resize(m_VK_sc_images.size());
-    m_VK_sc_image_fbos.resize(m_VK_sc_images.size());
+    m_VK_sc_image_fbs.resize(m_VK_sc_images.size());
     for (uint32_t imgv_id = 0; imgv_id < m_VK_sc_image_views.size(); imgv_id++) {
         //create image view for sc img[id].
         VkImageViewCreateInfo iv_c_info = {};
@@ -604,7 +624,7 @@ void VulkanManager::InitializeSCImageViewsAndFBOs()
         iv_c_info.subresourceRange.baseArrayLayer = 0;
         iv_c_info.subresourceRange.layerCount = 1;
 
-        if (vkCreateImageView(m_VK_logic_device, &iv_c_info, nullptr, &m_VK_sc_image_views[imgv_id]) != VK_SUCCESS) {
+        if (vkCreateImageView(m_VK_device, &iv_c_info, nullptr, &m_VK_sc_image_views[imgv_id]) != VK_SUCCESS) {
             throw std::runtime_error(SDE::Basic::StringFormat("failed to create image views[%d]!", imgv_id).c_str());
         }
 
@@ -620,7 +640,7 @@ void VulkanManager::InitializeSCImageViewsAndFBOs()
         fbo_c_info.height = m_screen_size.height;
         fbo_c_info.layers = 1;
 
-        if (vkCreateFramebuffer(m_VK_logic_device, &fbo_c_info, nullptr, &m_VK_sc_image_fbos[imgv_id]) != VK_SUCCESS) {
+        if (vkCreateFramebuffer(m_VK_device, &fbo_c_info, nullptr, &m_VK_sc_image_fbs[imgv_id]) != VK_SUCCESS) {
             throw std::runtime_error(SDE::Basic::StringFormat("failed to create FBO[%d]!", imgv_id).c_str());
         }
     }
@@ -635,7 +655,7 @@ void VulkanManager::InitializeCommandPoolAndBuffers()
     cmd_pool_c_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; //VkCommandPoolCreateFlags
     cmd_pool_c_info.queueFamilyIndex = m_VK_picked_queue_family_id;
 
-    if (vkCreateCommandPool(m_VK_logic_device, &cmd_pool_c_info, nullptr, &m_VK_main_cmd_pool) != VK_SUCCESS) {
+    if (vkCreateCommandPool(m_VK_device, &cmd_pool_c_info, nullptr, &m_VK_main_cmd_pool) != VK_SUCCESS) {
         throw std::runtime_error("Create main command pool failure!");
     }
 
@@ -646,7 +666,7 @@ void VulkanManager::InitializeCommandPoolAndBuffers()
     cmd_buf_a_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; //VkCommandBufferLevel
     cmd_buf_a_info.commandBufferCount = 1;
 
-    if (vkAllocateCommandBuffers(m_VK_logic_device, &cmd_buf_a_info, &m_VK_main_cmd_buffer) != VK_SUCCESS) {
+    if (vkAllocateCommandBuffers(m_VK_device, &cmd_buf_a_info, &m_VK_main_cmd_buffer) != VK_SUCCESS) {
         throw std::runtime_error("Create main command buffer failure!");
     }
 
@@ -655,7 +675,7 @@ void VulkanManager::InitializeCommandPoolAndBuffers()
     fence_c_info.pNext = nullptr;
     fence_c_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-    if (vkCreateFence(m_VK_logic_device, &fence_c_info, nullptr, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
+    if (vkCreateFence(m_VK_device, &fence_c_info, nullptr, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
         throw std::runtime_error("Create main cmd buf fence failure!");
     }
 }

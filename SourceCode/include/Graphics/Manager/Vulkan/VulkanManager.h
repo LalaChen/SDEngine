@@ -92,7 +92,7 @@ protected:
     void InitializeLogicDevice();
     void InitializeSwapChain();
     void InitializePresentRenderPass();
-    void InitializeSCImageViewsAndFBOs();
+    void InitializeSCImageViewsAndFBs();
     void InitializeCommandPoolAndBuffers();
 protected:
     VkQueueFlags m_VK_desired_queue_abilities;
@@ -105,7 +105,7 @@ protected:
     VkDebugReportCallbackEXT m_VK_debug_report_cbk;
 protected:
     VkPhysicalDevice m_VK_physical_device;
-    VkDevice m_VK_logic_device;
+    VkDevice m_VK_device;
     int32_t m_VK_picked_queue_family_id;
     VkQueue m_VK_present_queue;
 protected:
@@ -117,7 +117,7 @@ protected:
     VkSemaphore m_VK_present_semaphore; //GPU to GPU lock
     std::vector<VkImage> m_VK_sc_images;
     std::vector<VkImageView> m_VK_sc_image_views;
-    std::vector<VkFramebuffer> m_VK_sc_image_fbos;
+    std::vector<VkFramebuffer> m_VK_sc_image_fbs;
 protected:
     VkCommandPool m_VK_main_cmd_pool; //main render thread use.
     VkCommandBuffer m_VK_main_cmd_buffer;

@@ -70,7 +70,7 @@ VulkanManager::VulkanManager()
 // device(phy and logical)
 , m_VK_physical_device(VK_NULL_HANDLE)
 , m_VK_picked_queue_family_id(-1)
-, m_VK_logic_device(VK_NULL_HANDLE)
+, m_VK_device(VK_NULL_HANDLE)
 , m_VK_present_queue(VK_NULL_HANDLE)
 // swap chain
 , m_VK_swap_chain(VK_NULL_HANDLE)
@@ -110,7 +110,7 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializeCommandPoolAndBuffers();
             InitializeSwapChain();
             InitializePresentRenderPass();
-            InitializeSCImageViewsAndFBOs();
+            InitializeSCImageViewsAndFBs();
         }
         else {
             throw std::runtime_error("VkInstance in arg is nullptr!!!");
@@ -134,54 +134,54 @@ void VulkanManager::ReleaseGraphicsSystem()
     }
 
     if (m_VK_present_render_pass != VK_NULL_HANDLE) {
-        vkDestroyRenderPass(m_VK_logic_device, m_VK_present_render_pass, nullptr);
+        vkDestroyRenderPass(m_VK_device, m_VK_present_render_pass, nullptr);
         m_VK_present_render_pass = VK_NULL_HANDLE;
     }
 
     if (m_VK_main_cmd_buffer != VK_NULL_HANDLE) {
-        vkFreeCommandBuffers(m_VK_logic_device, m_VK_main_cmd_pool, 1, &m_VK_main_cmd_buffer);
+        vkFreeCommandBuffers(m_VK_device, m_VK_main_cmd_pool, 1, &m_VK_main_cmd_buffer);
         m_VK_main_cmd_buffer = VK_NULL_HANDLE;
     }
 
     if (m_VK_main_cmd_pool != VK_NULL_HANDLE) {
-        vkDestroyCommandPool(m_VK_logic_device, m_VK_main_cmd_pool, nullptr);
+        vkDestroyCommandPool(m_VK_device, m_VK_main_cmd_pool, nullptr);
         m_VK_main_cmd_pool = VK_NULL_HANDLE;
     }
 
     if (m_VK_acq_img_semaphore != VK_NULL_HANDLE) {
-        vkDestroySemaphore(m_VK_logic_device, m_VK_acq_img_semaphore, nullptr);
+        vkDestroySemaphore(m_VK_device, m_VK_acq_img_semaphore, nullptr);
         m_VK_acq_img_semaphore = VK_NULL_HANDLE;
     }
 
     if (m_VK_present_semaphore != VK_NULL_HANDLE) {
-        vkDestroySemaphore(m_VK_logic_device, m_VK_present_semaphore, nullptr);
+        vkDestroySemaphore(m_VK_device, m_VK_present_semaphore, nullptr);
         m_VK_present_semaphore = VK_NULL_HANDLE;
     }
 
-    for (VkFramebuffer &fbo : m_VK_sc_image_fbos) {
+    for (VkFramebuffer &fbo : m_VK_sc_image_fbs) {
         if (fbo != VK_NULL_HANDLE) {
-            vkDestroyFramebuffer(m_VK_logic_device, fbo, nullptr);
+            vkDestroyFramebuffer(m_VK_device, fbo, nullptr);
         }
         fbo = VK_NULL_HANDLE;
     }
-    m_VK_sc_image_fbos.clear();
+    m_VK_sc_image_fbs.clear();
 
     for (VkImageView &iv : m_VK_sc_image_views) {
         if (iv != VK_NULL_HANDLE) {
-            vkDestroyImageView(m_VK_logic_device, iv, nullptr);
+            vkDestroyImageView(m_VK_device, iv, nullptr);
             iv = VK_NULL_HANDLE;
         }
     }
     m_VK_sc_image_views.clear();
 
     if (m_VK_swap_chain != VK_NULL_HANDLE) {
-        vkDestroySwapchainKHR(m_VK_logic_device, m_VK_swap_chain, nullptr);
+        vkDestroySwapchainKHR(m_VK_device, m_VK_swap_chain, nullptr);
         m_VK_swap_chain = VK_NULL_HANDLE;
     }
 
-    if (m_VK_logic_device != VK_NULL_HANDLE) {
-        vkDestroyDevice(m_VK_logic_device, nullptr);
-        m_VK_logic_device = VK_NULL_HANDLE;
+    if (m_VK_device != VK_NULL_HANDLE) {
+        vkDestroyDevice(m_VK_device, nullptr);
+        m_VK_device = VK_NULL_HANDLE;
     }
 
     m_VK_physical_device = VK_NULL_HANDLE;
@@ -200,34 +200,34 @@ void VulkanManager::ReleaseGraphicsSystem()
 //----------------------- Render Flow -----------------------
 void VulkanManager::Resize(int i_w, int i_h)
 {
-    for (VkFramebuffer &fbo : m_VK_sc_image_fbos) {
+    for (VkFramebuffer &fbo : m_VK_sc_image_fbs) {
         if (fbo != VK_NULL_HANDLE) {
-            vkDestroyFramebuffer(m_VK_logic_device, fbo, nullptr);
+            vkDestroyFramebuffer(m_VK_device, fbo, nullptr);
         }
         fbo = VK_NULL_HANDLE;
     }
-    m_VK_sc_image_fbos.clear();
+    m_VK_sc_image_fbs.clear();
 
     for (VkImageView &iv : m_VK_sc_image_views) {
         if (iv != VK_NULL_HANDLE) {
-            vkDestroyImageView(m_VK_logic_device, iv, nullptr);
+            vkDestroyImageView(m_VK_device, iv, nullptr);
             iv = VK_NULL_HANDLE;
         }
     }
     m_VK_sc_image_views.clear();
 
     if (m_VK_swap_chain != VK_NULL_HANDLE) {
-        vkDestroySwapchainKHR(m_VK_logic_device, m_VK_swap_chain, nullptr);
+        vkDestroySwapchainKHR(m_VK_device, m_VK_swap_chain, nullptr);
         m_VK_swap_chain = VK_NULL_HANDLE;
     }
 
     InitializeSwapChain();
-    InitializeSCImageViewsAndFBOs();
+    InitializeSCImageViewsAndFBs();
 }
 
 void VulkanManager::RenderBegin()
 {
-    vkDeviceWaitIdle(m_VK_logic_device);
+    vkDeviceWaitIdle(m_VK_device);
 }
 
 void VulkanManager::RenderToScreen()
@@ -236,7 +236,7 @@ void VulkanManager::RenderToScreen()
     uint32_t image_index;
 
     VkResult result = vkAcquireNextImageKHR(
-        m_VK_logic_device, m_VK_swap_chain, MaxImgAcqirationTime, 
+        m_VK_device, m_VK_swap_chain, MaxImgAcqirationTime, 
         m_VK_acq_img_semaphore, nullptr, &image_index);
 
     if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
@@ -265,14 +265,14 @@ void VulkanManager::RenderToScreen()
     rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     rp_begin_info.pNext = nullptr;
     rp_begin_info.renderPass = m_VK_present_render_pass;
-    rp_begin_info.framebuffer = m_VK_sc_image_fbos[image_index];
+    rp_begin_info.framebuffer = m_VK_sc_image_fbs[image_index];
     rp_begin_info.renderArea = render_area;
     rp_begin_info.clearValueCount = 1;
     rp_begin_info.pClearValues = &ClearColor;
 
     vkCmdBeginRenderPass(m_VK_main_cmd_buffer, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
 
-    //Try composite images of all camera to present image.
+    //Render to screen
   
     //End RenderPass.
     vkCmdEndRenderPass(m_VK_main_cmd_buffer);
@@ -300,12 +300,12 @@ void VulkanManager::RenderToScreen()
         SDLOGW("Submit command buffer failure!!!");
     }
     
-    if (vkWaitForFences(m_VK_logic_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime) != VK_SUCCESS) {
+    if (vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime) != VK_SUCCESS) {
         SDLOGW("Wait sync failure!!!");
     }
 
     //Reset main command buffer sync.
-    if (vkResetFences(m_VK_logic_device, 1, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
+    if (vkResetFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
         SDLOGW("reset main command buffer fence failure!!!");
     }
 
@@ -329,9 +329,9 @@ void VulkanManager::RenderToScreen()
 void VulkanManager::RenderEnd()
 {
     //Reset command buffers in pool.
-    //if (vkResetCommandPool(m_VK_logic_device, m_VK_main_cmd_pool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT) != VK_SUCCESS) {
-    //    SDLOGW("reset command buffer in main pool failure!!!");
-    //}
+    if (vkResetCommandPool(m_VK_device, m_VK_main_cmd_pool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT) != VK_SUCCESS) {
+        SDLOGW("reset command buffer in main pool failure!!!");
+    }
 }
 
 void VulkanManager::RenderDebug()
