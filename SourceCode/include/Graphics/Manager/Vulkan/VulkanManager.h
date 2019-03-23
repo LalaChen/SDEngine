@@ -85,8 +85,6 @@ protected: //--------------- Render Flow Function ------------------
     void RenderToScreen() override;
     void RenderEnd() override;
 protected:
-    void RenderDebug();
-protected:
     void InitializeDebugMessage();
     void InitializePhysicalDevice();
     void InitializeLogicDevice();

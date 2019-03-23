@@ -18,12 +18,64 @@ GLFWApplication::GLFWApplication(const std::string &i_win_title, const Resolutio
 , m_window(nullptr)
 , m_monitor(nullptr)
 {
+    //1. set error callback.
+    glfwSetErrorCallback(GLFWApplication::ErrorCallback);
+    //2. create glfw window.
+    //--- i. initialize glfw.
+    if (!glfwInit())
+        exit(EXIT_FAILURE);
 
+    //3. According engine type to set API.
+    if (glfwVulkanSupported() && i_adopt_library == Graphics::GraphicsLibrary_Vulkan) {
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    }
+    else {
+        i_adopt_library = Graphics::GraphicsLibrary_OpenGL4;
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+    }
+
+    //4. create window.
+    if (i_full_window == true) {
+        m_monitor = glfwGetPrimaryMonitor();
+
+        const GLFWvidmode* mode = glfwGetVideoMode(m_monitor);
+
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+
+        m_win_res.SetResolution(mode->width, mode->height);
+    }
+
+    m_window = glfwCreateWindow(m_win_res.GetWidth(), m_win_res.GetHeight(), i_win_title.c_str(), m_monitor, NULL);
+    if (!m_window) {
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+
+    //5. register key cbk.
+    //--- keyboard
+    glfwSetKeyCallback(m_window, GLFWApplication::KeyEventCallback);
+    //--- Mouse
+    glfwSetCursorPosCallback(m_window, GLFWApplication::CursorPositionCallback);
+    glfwSetMouseButtonCallback(m_window, GLFWApplication::CursorMouseButtonCallback);
+    glfwSetCursorPosCallback(m_window, GLFWApplication::CursorPositionCallback);
+    glfwSetCursorEnterCallback(m_window, GLFWApplication::CursorEnterCallback);
+    //------ Windows
+    glfwSetWindowCloseCallback(m_window, GLFWApplication::WindowCloseCallback);
+    glfwSetWindowMaximizeCallback(m_window, GLFWApplication::WindowMaximizeCallback);
+    glfwSetFramebufferSizeCallback(m_window, GLFWApplication::WindowSizeCallback);
+    glfwSetWindowPosCallback(m_window, GLFWApplication::WindowPosCallback);
+    glfwSetWindowFocusCallback(m_window, GLFWApplication::WindowFocusCallback);
+    glfwSetDropCallback(m_window, GLFWApplication::DropCallback);
+    glfwSetScrollCallback(m_window, GLFWApplication::ScrollCallback);
 }
 
 GLFWApplication::~GLFWApplication()
 {
-
+    // Terminate GLFW
+    glfwTerminate();
 }
 
 void GLFWApplication::Initialize()
@@ -170,10 +222,44 @@ void GLFWApplication::TerminateApplication()
     LogManager::Destroy();
 }
 
-void GLFWApplication::RegisterGLFW(GLFWwindow *i_window, GLFWmonitor *i_monitor)
+void GLFWApplication::RunMainLoop()
 {
-    m_window = i_window;
-    m_monitor = i_monitor;
+    //--- v. initialize glew.
+    Application::GetRef().InitializeGraphicsSystem();
+
+    //3. launch main loop.
+    if (m_adopt_library == Graphics::GraphicsLibrary_OpenGL4) {
+        while (!glfwWindowShouldClose(m_window)) {
+            try {
+                // Update Game.
+                Application::GetRef().Update();
+            }
+            catch (std::exception &e) {
+                SDLOGE("Execption occur !!! %s.", e.what());
+            }
+
+            // Swap buffers
+            glfwSwapBuffers(m_window);
+            glfwPollEvents();
+        }
+    }
+    else {
+        while (!glfwWindowShouldClose(m_window)) {
+            try {
+                // Update Game.
+                Application::GetRef().Update();
+            }
+            catch (std::exception &e) {
+                SDLOGE("Execption occur !!! %s.", e.what());
+            }
+            glfwPollEvents();
+        }
+    }
+
+    Application::GetRef().ReleaseGraphicsSystem();
+  
+    //Destroy App.
+    Application::GetRef().TerminateApplication();
 }
 
 }

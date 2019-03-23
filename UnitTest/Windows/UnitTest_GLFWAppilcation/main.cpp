@@ -8,12 +8,16 @@ using namespace SDE::App;
 
 int main(int argc, char **argv)
 {
-    GLFWApplication::LaunchGLFWApplication(
+    GLFWApplication app(
         std::string("UnitTest_GLFWApplication"),
-        argc,
-        argv,
         Resolution(1200, 800),
         false, //full screen can't debug.
-        GraphicsLibrary_Vulkan
+        GraphicsLibrary_Vulkan,
+        argc,
+        argv
     );
+
+    app.Initialize();
+
+    app.RunMainLoop();
 }

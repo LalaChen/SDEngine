@@ -47,17 +47,7 @@ namespace App
  *  This class is used to create GLFW window. We use GLFWApplication::LaunchGLFWApplication to launch GLFW.
  */
 class SDENGINE_CLASS GLFWApplication : public Application
-{
-public:
-    /*! \fn static void LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library);
-     *  \param [in] i_win_title Title of window.
-     *  \param [in] i_argc number of arguments.
-     *  \param [in] i_argv arguments.
-     *  \param [in] i_win_res Resolution of this window.
-     *  \param [in] i_full_window Is full window or not.
-     *  \param [in] i_adopt_library Which graphics library you use.
-     */
-    static void LaunchGLFWApplication(const std::string &i_win_title, int i_argc, char **i_argv, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library);
+{ 
 public:
 //------------ KeyEvent
     static void KeyEventCallback(GLFWwindow *i_window, int i_key, int i_scancode, int i_action, int i_mod_keys);
@@ -103,13 +93,6 @@ public:
      */
     virtual ~GLFWApplication();
 public:
-    /*! \fn void RegisterGLFW(GLFWwindow *i_window, GLFWmonitor *i_monitor);
-     *  \param [in] i_window Window instance of GLFW.
-     *  \param [in] i_monitor Monitor instance of GLFW.
-     *  \brief Register window and monitor.
-     */
-    void RegisterGLFW(GLFWwindow *i_window, GLFWmonitor *i_monitor);
-public:
     /*! \fn void Initialize() override;
      *  \brief Initialize this app. We will create WindowsLogManager, OpenGL4 API and Manager for GLFW.
      */
@@ -129,6 +112,8 @@ public:
      *  \brief release all mamager for terminating app.
      */
     void TerminateApplication() override;
+public:
+    void RunMainLoop();
 protected:
     GLFWwindow *m_window;
     GLFWmonitor *m_monitor;

@@ -22,8 +22,5 @@
     <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication_Callback.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication_MainLoop.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

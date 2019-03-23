@@ -273,7 +273,7 @@ void VulkanManager::RenderToScreen()
     vkCmdBeginRenderPass(m_VK_main_cmd_buffer, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
 
     //Render to screen
-  
+
     //End RenderPass.
     vkCmdEndRenderPass(m_VK_main_cmd_buffer);
     //End command buffer
@@ -282,7 +282,6 @@ void VulkanManager::RenderToScreen()
         return;
     }
     //Push command buffer to queue.
-
     VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
     VkSubmitInfo submit_info = {};
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -294,12 +293,11 @@ void VulkanManager::RenderToScreen()
     submit_info.pSignalSemaphores = &m_VK_present_semaphore; //set present semaphore.
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
-    
 
     if (vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
         SDLOGW("Submit command buffer failure!!!");
     }
-    
+   
     if (vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime) != VK_SUCCESS) {
         SDLOGW("Wait sync failure!!!");
     }
@@ -332,11 +330,6 @@ void VulkanManager::RenderEnd()
     if (vkResetCommandPool(m_VK_device, m_VK_main_cmd_pool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT) != VK_SUCCESS) {
         SDLOGW("reset command buffer in main pool failure!!!");
     }
-}
-
-void VulkanManager::RenderDebug()
-{
-    
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

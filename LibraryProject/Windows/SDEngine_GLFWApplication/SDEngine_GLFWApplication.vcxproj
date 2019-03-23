@@ -24,7 +24,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication_Callback.cpp" />
-    <ClCompile Include="..\..\..\SourceCode\src\Application\GLFW\GLFWApplication_MainLoop.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
