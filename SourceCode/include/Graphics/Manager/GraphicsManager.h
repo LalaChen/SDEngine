@@ -91,8 +91,6 @@ protected: //--------------- Render Flow Function ------------------
     virtual void RenderBegin() = 0;
     virtual void RenderToScreen() = 0;
     virtual void RenderEnd() = 0;
-protected: //---------------- API -----------------
-    GraphicsLibraryEnum m_library;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

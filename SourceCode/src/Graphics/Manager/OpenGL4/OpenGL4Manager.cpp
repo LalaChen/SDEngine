@@ -37,7 +37,6 @@ namespace Graphics
 OpenGL4Manager::OpenGL4Manager()
 : GraphicsManager()
 {
-    m_library = GraphicsLibrary_OpenGL4;
     SDLOG("New OpenGL4Manager object.");
 }
 

@@ -19,6 +19,10 @@
     <Link>
       <AdditionalDependencies>glfw3.lib;$(SDLibrary);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="GLFWRootDir">

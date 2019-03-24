@@ -90,6 +90,13 @@ void GLFWApplication::Initialize()
     new WindowsTimer();
     Timer::GetRef().Start();
     SDLOG("APP Starting at %lf.", Timer::GetRef().GetProgramStartTime());
+    //new graphics engine.
+    if (m_adopt_library == GraphicsLibrary_OpenGL4) {
+        new OpenGL4Manager();
+    }
+    else {
+        new VulkanManager();
+    }
     //Initialize KeyBoard Mapping.
 }
 
@@ -98,18 +105,12 @@ void GLFWApplication::InitializeGraphicsSystem()
     SDLOG("Initialize Graphics System of Application.");
     //new Graphics Manager.
     //--- iv. make current.
-    if (m_adopt_library == GraphicsLibrary_OpenGL4) 
-    {
-        new OpenGL4Manager();
-
+    if (m_adopt_library == GraphicsLibrary_OpenGL4) {
         glfwMakeContextCurrent(m_window);
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
         glfwSwapInterval(1);
     }
-    else if (m_adopt_library == GraphicsLibrary_Vulkan)
-    {
-        new VulkanManager();
-
+    else if (m_adopt_library == GraphicsLibrary_Vulkan) {
         VkInstance instance = VK_NULL_HANDLE;
         VkSurfaceKHR surface = VK_NULL_HANDLE;
 
@@ -137,7 +138,6 @@ void GLFWApplication::InitializeGraphicsSystem()
             avaiable_valid_layers.resize(layer_count);
             vkEnumerateInstanceLayerProperties(&layer_count, avaiable_valid_layers.data());
             for (uint32_t ext_id = 0; ext_id < avaiable_valid_layers.size(); ext_id++) {
-                
                 SDLOG("--- Avaiable valid layer :%s[%s](%d)(%d)", 
                     avaiable_valid_layers[ext_id].layerName, 
                     avaiable_valid_layers[ext_id].description,

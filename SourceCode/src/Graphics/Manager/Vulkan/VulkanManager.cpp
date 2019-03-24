@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Vulkan_Utils.h"
 #include "VulkanCreationArg.h"
 #include "LogManager.h"
 #include "VulkanManager.h"
@@ -84,7 +83,6 @@ VulkanManager::VulkanManager()
 , m_VK_main_cmd_buffer(VK_NULL_HANDLE)
 , m_VK_main_cmd_buf_fence(VK_NULL_HANDLE)
 {
-    m_library = GraphicsLibrary_Vulkan;
     SDLOG("New VulkanManager object.");
 }
 
