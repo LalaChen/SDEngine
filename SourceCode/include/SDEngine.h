@@ -49,5 +49,6 @@ SOFTWARE.
 #include "Basic/Timer/Timer.h"
 #include "Basic/FileSystem/FileSystemManager.h"
 //-------- Graphics --------
+#include "Graphics/Vec/Vec.h"
 #include "Graphics/Resolution/Resolution.h"
 #include "Graphics/Manager/GraphicsManager.h"

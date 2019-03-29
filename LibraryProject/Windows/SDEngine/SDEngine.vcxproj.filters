@@ -99,6 +99,12 @@
     <Filter Include="src\Basic\FileSystem\Windows">
       <UniqueIdentifier>{b9a1b15c-46c5-42fc-a59b-adde8f16e6a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\Vec">
+      <UniqueIdentifier>{a185828f-0129-45af-a26e-7b5b2e50f26c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\Vec">
+      <UniqueIdentifier>{ded3a05e-38fb-4646-b881-685a37d490a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -154,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_InitializeVulkan.cpp">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Vec.cpp">
+      <Filter>src\Graphics\Vec</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +243,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\SDEnginePlatform.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Vec.h">
+      <Filter>include\Graphics\Vec</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

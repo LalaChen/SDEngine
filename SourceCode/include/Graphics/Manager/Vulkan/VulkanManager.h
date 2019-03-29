@@ -44,7 +44,7 @@ namespace Graphics
 {
 
 /*! \class VulkanManager
- *  In our system, VulkanManager is a implementation for opengl4 graphics API.
+ *  In our system, VulkanManager is a integration for Vulkan graphics API.
  */
 class SDENGINE_CLASS VulkanManager : public GraphicsManager
 {
