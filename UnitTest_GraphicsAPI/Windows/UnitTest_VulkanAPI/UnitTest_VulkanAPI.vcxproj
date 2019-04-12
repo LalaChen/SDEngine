@@ -171,6 +171,9 @@
     <ClCompile Include="VulkanAPITestManager.cpp" />
     <ClCompile Include="VulkanTestGLFWApplication.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\MainShader.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
