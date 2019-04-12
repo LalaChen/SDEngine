@@ -172,6 +172,7 @@
     <ClCompile Include="VulkanTestGLFWApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shader\MainShader.frag" />
     <None Include="Shader\MainShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
