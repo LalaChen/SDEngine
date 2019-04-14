@@ -10,9 +10,17 @@ layout(location = 1) in vec4 colors;
 //Output varing.
 //format : layout(location = X) out GenType VarName;
 //X is corresponding with layout(location = X) in frag shader(or other stage).
-layout(location = 0) out vec3 fragColor;
+layout(location = 0) out vec4 fragColor;
+
+//Uniform Buffer --- basic.
+layout(set = 0, binding = 0) uniform BasicUnifroms {
+    mat4 transform;
+    mat4 view;
+    mat4 proj;
+} basic;
 
 void main()
 {
-     gl_Position = vertice;
+     fragColor = colors;
+     gl_Position = basic.proj * basic.view * basic.transform * vertice;
 }

@@ -164,6 +164,9 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Vec.cpp">
       <Filter>src\Graphics\Vec</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Color4f.cpp">
+      <Filter>src\Graphics\Vec</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h">
@@ -245,6 +248,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Vec.h">
+      <Filter>include\Graphics\Vec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Color4f.h">
       <Filter>include\Graphics\Vec</Filter>
     </ClInclude>
   </ItemGroup>

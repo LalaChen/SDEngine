@@ -134,7 +134,6 @@ void VulkanAPITestManager::RenderDebug()
 }
 
 //------------- API ------------
-
 VkResult VulkanAPITestManager::CreateBuffer(VkBufferUsageFlags i_buffer_usage, VkSharingMode i_sharing_mode, VkDeviceSize i_size, VkBuffer &io_VK_buffer)
 {
     //1. create buffer information.
@@ -356,5 +355,31 @@ void VulkanAPITestManager::DestroyBuffer(VkBuffer i_VK_buffer)
 {
     if (i_VK_buffer != VK_NULL_HANDLE) {
         vkDestroyBuffer(m_VK_device, i_VK_buffer, nullptr);
+    }
+}
+
+//----------- shader related
+VkResult VulkanAPITestManager::CreateDescriptorSetLayout(
+    std::vector<VkDescriptorSetLayoutCreateInfo> &i_c_infos,
+    std::vector<VkDescriptorSetLayout> &io_layouts)
+{
+    VkResult result = VK_SUCCESS;
+    io_layouts.clear();
+    io_layouts.resize(i_c_infos.size());
+    for (uint32_t layout_id = 0; layout_id < i_c_infos.size(); layout_id++) {
+        result = vkCreateDescriptorSetLayout(m_VK_device, &i_c_infos[layout_id], nullptr, &io_layouts[layout_id]);
+        if (result != VK_SUCCESS) {
+            SDLOGW("Create descriptor %d failure. Result = %x.", layout_id, result);
+            return result;
+        }
+    }
+
+    return result;
+}
+
+void VulkanAPITestManager::DestroyDesciptorSetLayout(VkDescriptorSetLayout i_VK_layout)
+{
+    if (i_VK_layout != VK_NULL_HANDLE) {
+        vkDestroyDescriptorSetLayout(m_VK_device, i_VK_layout, nullptr);
     }
 }

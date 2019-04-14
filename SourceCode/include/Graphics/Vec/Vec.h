@@ -206,7 +206,7 @@ public:
     vec2(const vec2 &i_src):x(i_src.x),y(i_src.y){}
     
     /*! \fn ~vec2();
-     *  \brief Donstructor of vec2.
+     *  \brief Destructor of vec2.
      */
     ~vec2(){}
 public://------------------------------ operator function ---------------------------
