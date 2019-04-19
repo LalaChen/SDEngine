@@ -4,6 +4,7 @@
   <PropertyGroup Label="UserMacros">
     <SDEngineRootDir>D:\Project\SDEngine\</SDEngineRootDir>
     <SDLibraryDirs>$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration);</SDLibraryDirs>
+    <GLMIncludeDirs>$(SDEngineRootDir)\ThirdParty\GLM</GLMIncludeDirs>
     <SDLibrary>SDEngine.lib;</SDLibrary>
     <SDGLFWAppLib>SDEngine_GLFWApplication.lib</SDGLFWAppLib>
   </PropertyGroup>
@@ -13,7 +14,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SDEngineRootDir)SourceCode\include\;$(SDEngineRootDir)SourceCode\include\Basic;$(SDEngineRootDir)SourceCode\include\Basic\LogManager;$(SDEngineRootDir)SourceCode\include\Basic\LogManager\Windows;$(SDEngineRootDir)SourceCode\include\Basic\Timer;$(SDEngineRootDir)SourceCode\include\Basic\Timer\Windows;$(SDEngineRootDir)SourceCode\include\Basic\FileSystem;$(SDEngineRootDir)SourceCode\include\Basic\FileSystem\Windows;$(SDEngineRootDir)SourceCode\include\Basic\EventSystem;$(SDEngineRootDir)SourceCode\include\Basic\Application;$(SDEngineRootDir)SourceCode\include\Basic\Object;$(SDEngineRootDir)SourceCode\include\Graphics;$(SDEngineRootDir)SourceCode\include\Graphics\Resolution;$(SDEngineRootDir)SourceCode\include\Graphics\Manager;$(SDEngineRootDir)SourceCode\include\Graphics\Manager\OpenGL4;$(SDEngineRootDir)SourceCode\include\Graphics\Manager\Vulkan;$(SDEngineRootDir)SourceCode\include\Graphics\Vec;$(SDEngineRootDir)SourceCode\include\Application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SDEngineRootDir)SourceCode\include\;$(SDEngineRootDir)SourceCode\include\Math;$(SDEngineRootDir)SourceCode\include\Basic;$(SDEngineRootDir)SourceCode\include\Basic\LogManager;$(SDEngineRootDir)SourceCode\include\Basic\LogManager\Windows;$(SDEngineRootDir)SourceCode\include\Basic\Timer;$(SDEngineRootDir)SourceCode\include\Basic\Timer\Windows;$(SDEngineRootDir)SourceCode\include\Basic\FileSystem;$(SDEngineRootDir)SourceCode\include\Basic\FileSystem\Windows;$(SDEngineRootDir)SourceCode\include\Basic\EventSystem;$(SDEngineRootDir)SourceCode\include\Basic\Application;$(SDEngineRootDir)SourceCode\include\Basic\Object;$(SDEngineRootDir)SourceCode\include\Graphics;$(SDEngineRootDir)SourceCode\include\Graphics\Resolution;$(SDEngineRootDir)SourceCode\include\Graphics\Manager;$(SDEngineRootDir)SourceCode\include\Graphics\Manager\OpenGL4;$(SDEngineRootDir)SourceCode\include\Graphics\Manager\Vulkan;$(SDEngineRootDir)SourceCode\include\Graphics\Vec;$(SDEngineRootDir)SourceCode\include\Application;$(GLMIncludeDirs);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>xcopy /y "$(SDEngineRootDir)ThirdParty\GLEW\bin\$(Configuration)\$(Platform)\glew32.dll" "$(OutDir)"
@@ -28,6 +29,9 @@ xcopy /y "$(SDEngineRootDir)\Bin\Library\Windows\$(Platform)\$(Configuration)\SD
     </BuildMacro>
     <BuildMacro Include="SDLibraryDirs">
       <Value>$(SDLibraryDirs)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GLMIncludeDirs">
+      <Value>$(GLMIncludeDirs)</Value>
     </BuildMacro>
     <BuildMacro Include="SDLibrary">
       <Value>$(SDLibrary)</Value>

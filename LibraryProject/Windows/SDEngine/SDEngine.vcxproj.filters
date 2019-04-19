@@ -105,6 +105,9 @@
     <Filter Include="src\Graphics\Vec">
       <UniqueIdentifier>{ded3a05e-38fb-4646-b881-685a37d490a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Math">
+      <UniqueIdentifier>{8fe3d84b-b17f-406a-9974-7aa727326bd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -166,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Color4f.cpp">
       <Filter>src\Graphics\Vec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Math\Matrix4X4f.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Math\Vector3f.cpp">
+      <Filter>src\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -252,6 +261,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Color4f.h">
       <Filter>include\Graphics\Vec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Math\Quaternion.h">
+      <Filter>include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Math\Vector3f.h">
+      <Filter>include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Math\Matrix4X4f.h">
+      <Filter>include\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

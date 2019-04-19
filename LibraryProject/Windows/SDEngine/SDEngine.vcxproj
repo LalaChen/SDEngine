@@ -38,6 +38,8 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_InitializeVulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Color4f.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Vec.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Math\Matrix4X4f.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Math\Vector3f.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +66,9 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Color4f.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Vec.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Math\Matrix4X4f.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Math\Quaternion.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Math\Vector3f.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngine.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonType.h" />
