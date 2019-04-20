@@ -22,16 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/*! \file      Matrix4X4f.h
- *  \brief     4X4 matrix.
+/*! \file      Vector3f.h
+ *  \brief     Vector3f.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/04/18
+ *  \date      2019/04/19
  *  \copyright MIT License.
  */
 
+#pragma once
+
+#include <string>
+
 #include <glm/glm.hpp>
 
-//--------------------------- start of namespace SDE ---------------------------
+//-------------------------- start of namespace SDE ---------------------------
 namespace SDE
 {
 //-------------------------- start of namespace Math --------------------------
@@ -47,12 +51,30 @@ namespace Math
 class Vector3f
 {
 public:
-    static Vector3f Zero;
+    /*! \var static const Vector3f PositiveX;
+     *  \brief Zero vector.
+     */
+    static const Vector3f PositiveX;
+
+    /*! \var static const Vector3f PositiveY;
+     *  \brief Zero vector.
+     */
+    static const Vector3f PositiveY;
+
+    /*! \var static const Vector3f PositiveZ;
+     *  \brief Zero vector.
+     */
+    static const Vector3f PositiveZ;
+
+    /*! \var static const Vector3f Zero;
+     *  \brief Zero vector.
+     */
+    static const Vector3f Zero;
 public:
     /*! \fn Vector3f();
      *  \brief Default constructor. We will initialize this vector by zero vector.
      */
-    Vector3f(): m_vec(glm::vec4(0.0, 0.0, 0.0, 0.0)) {}
+    Vector3f();
 
     /*! \fn Vector3f(float i_x, float i_y, float i_z);
      *  \param [in] i_x x component.
@@ -60,7 +82,7 @@ public:
      *  \param [in] i_z z component.
      *  \brief Vector constructor. We will initialize this vector by (i_x, i_y, i_z).
      */
-    Vector3f(float i_x, float i_y, float i_z): m_vec(glm::vec4(i_x, i_y, i_z, 0.0)) {}
+    Vector3f(float i_x, float i_y, float i_z);
 
     /*! \fn Vector3f(float i_x, float i_y, float i_z, float i_w);
      *  \param [in] i_x x component.
@@ -69,18 +91,28 @@ public:
      *  \param [in] i_w w component.
      *  \brief The constructor. We will initialize this vector by (i_x, i_y, i_z, i_w).
      */
-    Vector3f(float i_x, float i_y, float i_z, float i_w): m_vec(glm::vec4(i_x, i_y, i_z, i_w)) {}
+    Vector3f(float i_x, float i_y, float i_z, float i_w);
 
     /*! \fn Vector3f(const Vector3f &i_src);
      *  \param [in] i_src target vector.
      *  \brief The copy constructor.
      */
-    Vector3f(const Vector3f &i_src): m_vec(i_src.m_vec) {}
+    Vector3f(const Vector3f &i_src);
+
+    /*! \fn Vector3f(const glm::vec4 &b);
+     *  \brief Private constructor.
+     */
+    Vector3f(const glm::vec4 &b);
+
+    /*! \fn Vector3f(const glm::vec3 &b);
+     *  \brief Private constructor.
+     */
+    Vector3f(const glm::vec3 &b);
 
     /*! \fn ~Vector3f();
      *  \brief The destructor.
      */
-    ~Vector3f() {}
+    ~Vector3f();
 public: //operator
     /*! \fn Vector3f& operator=(const Vector3f &b);
      *  \param [in] b target vector
@@ -159,29 +191,41 @@ public: //operator
      */
     bool operator==(const Vector3f &b) const;
 
-    /*! \fn bool is_parallel(const Vector3f &b) const;
+    /*! \fn bool parallel(const Vector3f &b) const;
      *  \param [in] b target vector.
      *  \brief Return the result about whether a is parallel to b or not. \n
      *         If a or b is position, we will use its x,y,z to make unit vector.
      */
-    bool is_parallel(const Vector3f &b) const;
+    bool parallel(const Vector3f &b) const;
 
-    /*! \fn bool is_vertical(const Vector3f &b) const;
+    /*! \fn bool vertical(const Vector3f &b) const;
      *  \param [in] b target vector.
      *  \brief Return the result about whether a is vertical to b or not. \n
      *         If a or b is position, we will use its x,y,z to make unit vector.
      */
-    bool is_vertical(const Vector3f &b) const;
-private:
-    /*! \fn Vector3f(const glm::vec4 &b);
-     *  \brief Private constructor.
-     */
-    Vector3f(const glm::vec4 &b): m_vec(b) {}
+    bool vertical(const Vector3f &b) const;
 
-    /*! \fn Vector3f(const glm::vec3 &b);
-     *  \brief Private constructor.
+public:
+    /*! \fn void RepresentPosition();
+     *  \brief Modify the w component of this Vector3f to 1.0.
      */
-    Vector3f(const glm::vec3 &b): m_vec(b.x, b.y, b.z, 0.0f) {}
+    void RepresentPosition();
+
+    /*! \fn void RepresentVector();
+     *  \brief Modify the w component of this Vector3f to 0.0.
+     */
+    void RepresentVector();
+
+    /*! \fn std::string ToString() const;
+        \brief Return vector by format (%lf,%lf,%lf).
+    */
+    std::string ToString() const;
+
+    /*! \fn const float* GetDataAddr() const;
+     *  \brief return raw pointer.
+     */
+    const float* GetDataAddr() const;
+
 public:
     /*! \var glm::vec4 m_vec;
      *  \brief vector data.

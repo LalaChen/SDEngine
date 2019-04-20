@@ -39,6 +39,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Color4f.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Vec.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Math\Matrix4X4f.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Math\Quaternion.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Math\Vector3f.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>

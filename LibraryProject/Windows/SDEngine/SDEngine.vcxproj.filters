@@ -176,6 +176,9 @@
     <ClCompile Include="..\..\..\SourceCode\src\Math\Vector3f.cpp">
       <Filter>src\Math</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Math\Quaternion.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h">

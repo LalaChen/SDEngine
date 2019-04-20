@@ -25,7 +25,10 @@ SOFTWARE.
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "SDEngineCommonFunction.h"
 #include "Matrix4X4f.h"
+
+using namespace SDE::Basic;
 
 //--------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -84,18 +87,32 @@ Matrix4X4f Matrix4X4f::operator *(const Matrix4X4f &i_src) const
     return result;
 }
 
-Matrix4X4f Matrix4X4f::Inverse() const
+Vector3f Matrix4X4f::operator *(const Vector3f &i_src) const
+{
+    return Vector3f(m_matrix * i_src.m_vec);
+}
+
+Matrix4X4f Matrix4X4f::inverse() const
 {
     return Matrix4X4f(glm::inverse(m_matrix));
 }
 
-Matrix4X4f Matrix4X4f::Transpose() const
+Matrix4X4f Matrix4X4f::transpose() const
 {
     return Matrix4X4f(glm::transpose(m_matrix));
 }
 
-//
-const float* Matrix4X4f::GetMatAddr() const
+std::string Matrix4X4f::ToString() const
+{
+    std::string result =
+        StringFormat("m = | %.3lf %.3lf %.3lf %.3lf | \n", m_matrix[ 0], m_matrix[ 1], m_matrix[ 2], m_matrix[ 3]) +
+        StringFormat("m = | %.3lf %.3lf %.3lf %.3lf | \n", m_matrix[ 4], m_matrix[ 5], m_matrix[ 6], m_matrix[ 7]) +
+        StringFormat("m = | %.3lf %.3lf %.3lf %.3lf | \n", m_matrix[ 8], m_matrix[ 9], m_matrix[10], m_matrix[11]) +
+        StringFormat("m = | %.3lf %.3lf %.3lf %.3lf | \n", m_matrix[12], m_matrix[13], m_matrix[14], m_matrix[15]);
+    return result;
+}
+
+const float* Matrix4X4f::GetDataAddr() const
 {
     return (const float*)glm::value_ptr(m_matrix);
 }

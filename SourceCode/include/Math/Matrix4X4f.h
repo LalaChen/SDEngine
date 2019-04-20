@@ -62,6 +62,12 @@ public:
      */
     Matrix4X4f(const Matrix4X4f &i_src);
 
+    /*! \fn Matrix4X4f(const glm::mat &i_src);
+     *  \param [in] i_src target matrix
+     *  \brief Copy constructor.
+     */
+    Matrix4X4f(const glm::mat4 &i_src);
+
     /*! \fn Matrix4X4f();
      *  \brief Destructor.
      */
@@ -92,28 +98,27 @@ public: //operator
      */
     Vector3f operator*(const Vector3f &i_src) const;
 
-    /*! \fn Matrix4X4f Inverse() const;
+    /*! \fn Matrix4X4f inverse() const;
      *  \brief return inverse matrix.
      */
-    Matrix4X4f Inverse() const;
+    Matrix4X4f inverse() const;
 
-    /*! \fn Matrix4X4f Transpose() const;
+    /*! \fn Matrix4X4f transpose() const;
      *  \brief return transpose matrix.
      */
-    Matrix4X4f Transpose() const;
+    Matrix4X4f transpose() const;
 
 public:
-    /*! \fn const float *GetMatAddr() const;
+    /*! \fn std::string ToString() const;
+     *  \brief Return vector by format (%lf,%lf,%lf).
+     */
+    std::string ToString() const;
+
+    /*! \fn const float *GetDataAddr() const;
      *  \brief return raw pointer.
      */
-    const float *GetMatAddr() const;
+    const float *GetDataAddr() const;
 
-private:
-    /*! \fn Matrix4X4f(const glm::mat &i_src);
-     *  \param [in] i_src target matrix
-     *  \brief Copy constructor.
-     */
-    Matrix4X4f(const glm::mat4 &i_src);
 public:
     /*! \var glm::mat4 m_matrix;
      *  \brief matrix data.
