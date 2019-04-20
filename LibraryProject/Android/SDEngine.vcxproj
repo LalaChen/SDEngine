@@ -34,6 +34,60 @@
       <Platform>x86</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\SourceCode\include\Basic\Application\Application.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\EventSystem\Event.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\EventSystem\EventArg.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\EventSystem\EventObject.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\EventSystem\FunctionSlot.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\FileSystem\FileData.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\FileSystem\FileSystemManager.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\FileSystem\Windows\WindowsFileSystemManager.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\LogManager\LogManager.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\LogManager\Windows\WindowsLogManager.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\Object\NullRefException.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\Object\Object.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\Object\StrongReferenceObject.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\Object\WeakReferenceObject.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\Timer\Timer.h" />
+    <ClInclude Include="..\..\SourceCode\include\Basic\Timer\Windows\WindowsTimer.h" />
+    <ClInclude Include="..\..\SourceCode\include\Graphics\Manager\GraphicsManager.h" />
+    <ClInclude Include="..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4Manager.h" />
+    <ClInclude Include="..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h" />
+    <ClInclude Include="..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h" />
+    <ClInclude Include="..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
+    <ClInclude Include="..\..\SourceCode\include\Graphics\Vec\Color4f.h" />
+    <ClInclude Include="..\..\SourceCode\include\Graphics\Vec\Vec.h" />
+    <ClInclude Include="..\..\SourceCode\include\Math\Matrix4X4f.h" />
+    <ClInclude Include="..\..\SourceCode\include\Math\Quaternion.h" />
+    <ClInclude Include="..\..\SourceCode\include\Math\Vector3f.h" />
+    <ClInclude Include="..\..\SourceCode\include\SDEngine.h" />
+    <ClInclude Include="..\..\SourceCode\include\SDEngineCommonFunction.h" />
+    <ClInclude Include="..\..\SourceCode\include\SDEngineCommonType.h" />
+    <ClInclude Include="..\..\SourceCode\include\SDEngineMacro.h" />
+    <ClInclude Include="..\..\SourceCode\include\SDEnginePlatform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\SourceCode\src\Basic\Application\Application.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Basic\EventSystem\Event.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Basic\EventSystem\EventArg.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Basic\EventSystem\EventObject.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Basic\EventSystem\FunctionSlot.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Basic\FileSystem\FileData.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Basic\FileSystem\FileSystemManager.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Basic\LogManager\LogManager.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Basic\Object\Object.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Basic\Timer\Timer.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Graphics\Manager\GraphicsManager.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_InitializeVulkan.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Graphics\Vec\Color4f.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Graphics\Vec\Vec.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Math\Matrix4X4f.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Math\Quaternion.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\Math\Vector3f.cpp" />
+    <ClCompile Include="..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ad998961-99d3-430b-af01-b11ded5d6e9f}</ProjectGuid>
     <Keyword>Android</Keyword>

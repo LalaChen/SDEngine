@@ -32,6 +32,10 @@ SOFTWARE.
 
 #include <cstdint>
 
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
 #define COLORF_CLAMP_01(channel) \
     if(channel < 0.0f) channel = 0.0f; \
     else if(channel > 1.0f) channel = 1.0f;
@@ -46,7 +50,7 @@ namespace Graphics
 /*! \class Color4B
  *  In our system, Color4B is use to record r,g,b,a with unsigned char format.
  */
-class Color4B
+class SDENGINE_CLASS Color4B
 {
 public:
     /*! \fn Color4B();
@@ -119,7 +123,7 @@ public:
  *  In our system, Color4f is use to record r,g,b,a with float pointing format.
     But the valid domain is [0.0, 1,0]. So we will clamp value to [0,1] after each operation done.
  */
-class Color4f
+class SDENGINE_CLASS Color4f
 {
 public:
     /*! \fn static Color4f Red(float i_scale = 1.0f);

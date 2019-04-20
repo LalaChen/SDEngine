@@ -26,6 +26,8 @@ SOFTWARE.
 #include <glm/gtc/type_ptr.hpp>
 
 #include "SDEngineCommonFunction.h"
+#include "Quaternion.h"
+#include "Vector3f.h"
 #include "Matrix4X4f.h"
 
 using namespace SDE::Basic;
@@ -36,7 +38,19 @@ namespace SDE
 //--------------------------- start of namespace Math ----------------------------
 namespace Math
 {
-
+//static
+bool Matrix4X4f::decompose(const Matrix4X4f &i_mat, Vector3f &io_scale, Quaternion &io_rot, Vector3f &io_skew, Vector3f &io_translation, Vector3f &io_prespective)
+{
+    glm::vec3 scale, trans, skew;
+    bool result = glm::decompose(i_mat.m_matrix, scale, io_rot.m_quat, trans, skew, io_prespective.m_vec);
+    if (result == true) {
+        io_scale = Vector3f(scale);
+        io_skew = Vector3f(skew);
+        io_translation = Vector3f(trans);
+    }
+    return result;
+}
+//matrix
 Matrix4X4f::Matrix4X4f()
 : m_matrix(glm::identity<glm::mat4>())
 {
@@ -102,13 +116,40 @@ Matrix4X4f Matrix4X4f::transpose() const
     return Matrix4X4f(glm::transpose(m_matrix));
 }
 
+void Matrix4X4f::translate(const Vector3f &i_trans)
+{
+    m_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(i_trans.m_vec.x, i_trans.m_vec.y, i_trans.m_vec.z));
+}
+
+void Matrix4X4f::rotate(const Quaternion &i_rotate)
+{
+    Matrix4X4f rot = i_rotate.toMatrix4X4f();
+    m_matrix[0][0] = rot.m_matrix[0][0]; m_matrix[0][1] = rot.m_matrix[0][1]; m_matrix[0][2] = rot.m_matrix[0][2];
+    m_matrix[1][0] = rot.m_matrix[1][0]; m_matrix[1][1] = rot.m_matrix[1][1]; m_matrix[1][2] = rot.m_matrix[1][2];
+    m_matrix[2][0] = rot.m_matrix[2][0]; m_matrix[2][1] = rot.m_matrix[2][1]; m_matrix[2][2] = rot.m_matrix[2][2];
+}
+
+void Matrix4X4f::scale(float i_scale)
+{
+    m_matrix[0][0] *= i_scale;
+    m_matrix[1][1] *= i_scale;
+    m_matrix[2][2] *= i_scale;
+}
+
+void Matrix4X4f::scale(const Vector3f &i_scale)
+{
+    m_matrix[0][0] *= i_scale.m_vec.x;
+    m_matrix[1][1] *= i_scale.m_vec.y;
+    m_matrix[2][2] *= i_scale.m_vec.z;
+}
+
 std::string Matrix4X4f::ToString() const
 {
     std::string result =
-        StringFormat("m = | %.3lf %.3lf %.3lf %.3lf | \n", m_matrix[ 0], m_matrix[ 1], m_matrix[ 2], m_matrix[ 3]) +
-        StringFormat("m = | %.3lf %.3lf %.3lf %.3lf | \n", m_matrix[ 4], m_matrix[ 5], m_matrix[ 6], m_matrix[ 7]) +
-        StringFormat("m = | %.3lf %.3lf %.3lf %.3lf | \n", m_matrix[ 8], m_matrix[ 9], m_matrix[10], m_matrix[11]) +
-        StringFormat("m = | %.3lf %.3lf %.3lf %.3lf | \n", m_matrix[12], m_matrix[13], m_matrix[14], m_matrix[15]);
+        StringFormat("\n m = | %.3lf %.3lf %.3lf %.3lf |", m_matrix[0][0], m_matrix[0][1], m_matrix[0][2], m_matrix[0][3]) +
+        StringFormat("\n m = | %.3lf %.3lf %.3lf %.3lf |", m_matrix[1][0], m_matrix[1][1], m_matrix[1][2], m_matrix[1][3]) +
+        StringFormat("\n m = | %.3lf %.3lf %.3lf %.3lf |", m_matrix[2][0], m_matrix[2][1], m_matrix[2][2], m_matrix[2][3]) +
+        StringFormat("\n m = | %.3lf %.3lf %.3lf %.3lf |", m_matrix[3][0], m_matrix[3][1], m_matrix[3][2], m_matrix[3][3]);
     return result;
 }
 

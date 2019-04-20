@@ -34,8 +34,7 @@ SOFTWARE.
 #include <string>
 
 #include <glm/glm.hpp>
-
-#include "Vector3f.h"
+#include <glm/gtx/matrix_decompose.hpp>
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -44,12 +43,26 @@ namespace SDE
 namespace Math
 {
 
+class Quaternion;
+class Vector3f;
+
 /*! \class Matrix4X4f
     Class Matrix4X4f is used to represent the transformation of objects in 3D space. Please note that \n
     the Matrix4X4f is column-major. (glm::mat4)
 */
-class Matrix4X4f
+class SDENGINE_CLASS Matrix4X4f
 {
+public:
+    /*! \fn static bool decompose(const Matrix4X4f &i_mat, Vector3f &io_scale, Quaternion &io_rot, Vector3f &io_skew, Vector3f &io_translation);
+     *  \param [in] i_mat target matrix.
+     *  \paran [inout] io_scale the scale factor decomposed from matrix.
+     *  \paran [inout] io_rot the rotation decomposed from matrix.
+     *  \paran [inout] io_skew the sharing decomposed from matrix.
+     *  \paran [inout] io_translation the io_translation decomposed from matrix.
+     *  \paran [inout] io_prespective the io_prespective decomposed from matrix.
+     *  \brief decompose matrix to transformation.
+     */
+    static bool decompose(const Matrix4X4f &i_mat, Vector3f &io_scale, Quaternion &io_rot, Vector3f &io_skew, Vector3f &io_translation, Vector3f &io_prespective);
 public:
     /*! \fn Matrix4X4f();
      *  \brief Default constructor. Initialize matrix by identity.
@@ -108,6 +121,29 @@ public: //operator
      */
     Matrix4X4f transpose() const;
 
+    /*! \fn void translate(const Vector3f &i_trans);
+     *  \param [in] i_trans set translation.
+     *  \brief translate matrix. 
+     */
+    void translate(const Vector3f &i_trans);
+
+    /*! \fn void rotate(const Quaternion &i_rotate);
+     *  \param [in] i_rotate set rotate matrix.
+     *  \brief rotate matrix.
+     */
+    void rotate(const Quaternion &i_rotate);
+
+    /*! \fn void scale(float i_scale);
+     *  \param [in] i_scale set scale factor.
+     *  \brief translate matrix.
+     */
+    void scale(float i_scale);
+
+    /*! \fn void scale(const Vector3f &i_scale);
+     *  \param [in] i_scale set scale factor for (x,y,z).
+     *  \brief scale matrix.
+     */
+    void scale(const Vector3f &i_scale);
 public:
     /*! \fn std::string ToString() const;
      *  \brief Return vector by format (%lf,%lf,%lf).

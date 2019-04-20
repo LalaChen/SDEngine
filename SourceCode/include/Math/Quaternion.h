@@ -35,19 +35,20 @@ SOFTWARE.
 
 #include <glm/gtx/quaternion.hpp>
 
-#include "Matrix4X4f.h"
-#include "Vector3f.h"
-
 //-------------------------- start of namespace SDE ---------------------------
 namespace SDE
 {
 //-------------------------- start of namespace Math --------------------------
 namespace Math
 {
+
+class Matrix4X4f;
+class Vector3f;
+
 /*! \class Quaternion
     Class Quaternion is used to represent rotation in 3D space.
  */
-class Quaternion
+class SDENGINE_CLASS Quaternion
 {
 public:
     /*! \fn static float Angle(const Quaternion &i_a, const Quaternion &i_b);
@@ -152,10 +153,20 @@ public://operator
      */
     Vector3f rotate(const Vector3f &b) const;
 
+    /*! \fn Quaternion normalize() const;
+     *  \brief normalize.
+     */
+    Quaternion normalize() const;
+
     /*! \fn Vector3f toEulerianAngles() const;
      *  \brief convert quaternion to Eulerian Angles.
      */
     Vector3f toEulerianAngles() const;
+
+    /*! \fn Matrix4X4f toMatrix4X4f() const;
+     *  \brief convert quaternion to Matrix4X4f.
+     */
+    Matrix4X4f toMatrix4X4f() const;
 
 public:
     /*! \fn std::string ToString() const;

@@ -25,6 +25,8 @@ SOFTWARE.
 #include <glm/gtc/type_ptr.hpp>
 
 #include "SDEngineCommonFunction.h"
+#include "Matrix4X4f.h"
+#include "Vector3f.h"
 #include "Quaternion.h"
 
 using namespace SDE::Basic;
@@ -127,9 +129,19 @@ Vector3f Quaternion::rotate(const Vector3f &b) const
     return glm::vec4(rst.x, rst.y, rst.z, b.m_vec.w);
 }
 
+Quaternion Quaternion::normalize() const
+{
+    return glm::normalize(m_quat);
+}
+
 Vector3f Quaternion::toEulerianAngles() const
 {
     return glm::eulerAngles(m_quat);
+}
+
+Matrix4X4f Quaternion::toMatrix4X4f() const
+{
+    return glm::toMat4(m_quat);
 }
 
 std::string Quaternion::ToString() const

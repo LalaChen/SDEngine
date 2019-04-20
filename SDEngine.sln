@@ -55,6 +55,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest_EventSlotSystem", 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest_WindowsApplication", "UnitTest\Windows\UnitTest_WindowsApplication\UnitTest_WindowsApplication.vcxproj", "{C5E5A416-2DA6-4553-9434-3B67C15DB2DC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE} = {91519087-B1B1-4962-A0A3-4C1E8CFF40CE}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDEngine", "LibraryProject\Android\SDEngine.vcxproj", "{AD998961-99D3-430B-AF01-B11DED5D6E9F}"
 EndProject
@@ -63,6 +66,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{35CA8864-0D53-4C5C-8D58-A40126A60F86}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest_VulkanAPI", "UnitTest_GraphicsAPI\Windows\UnitTest_VulkanAPI\UnitTest_VulkanAPI.vcxproj", "{98ED0BEB-A954-4EE4-AA56-B3645574F3FD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE} = {91519087-B1B1-4962-A0A3-4C1E8CFF40CE}
+		{98030AE2-9A49-45F4-8626-78793B65A22A} = {98030AE2-9A49-45F4-8626-78793B65A22A}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest_MathTest", "UnitTest\Windows\UnitTest_MathTest\UnitTest_MathTest.vcxproj", "{48CCB863-0241-415B-94E2-C3406E7A670C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE} = {91519087-B1B1-4962-A0A3-4C1E8CFF40CE}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -212,6 +224,18 @@ Global
 		{98ED0BEB-A954-4EE4-AA56-B3645574F3FD}.Release|x64.Build.0 = Release|x64
 		{98ED0BEB-A954-4EE4-AA56-B3645574F3FD}.Release|x86.ActiveCfg = Release|Win32
 		{98ED0BEB-A954-4EE4-AA56-B3645574F3FD}.Release|x86.Build.0 = Release|Win32
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Debug|ARM.ActiveCfg = Debug|Win32
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Debug|x64.ActiveCfg = Debug|x64
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Debug|x64.Build.0 = Debug|x64
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Debug|x86.ActiveCfg = Debug|Win32
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Debug|x86.Build.0 = Debug|Win32
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Release|ARM.ActiveCfg = Release|Win32
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Release|ARM64.ActiveCfg = Release|Win32
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Release|x64.ActiveCfg = Release|x64
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Release|x64.Build.0 = Release|x64
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Release|x86.ActiveCfg = Release|Win32
+		{48CCB863-0241-415B-94E2-C3406E7A670C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -232,6 +256,7 @@ Global
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F} = {96896D9C-1D07-4DBE-AD92-28BCC2DEF314}
 		{35CA8864-0D53-4C5C-8D58-A40126A60F86} = {13722F64-C977-4180-AB8B-CEB3600C4BE0}
 		{98ED0BEB-A954-4EE4-AA56-B3645574F3FD} = {35CA8864-0D53-4C5C-8D58-A40126A60F86}
+		{48CCB863-0241-415B-94E2-C3406E7A670C} = {F0640846-8B42-4026-B513-88B00E0747A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7720D377-96CE-4A38-9F57-91348F8F4682}

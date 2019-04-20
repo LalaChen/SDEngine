@@ -25,6 +25,8 @@ SOFTWARE.
 #include <glm/gtc/type_ptr.hpp>
 
 #include "SDEngineCommonFunction.h"
+
+#include "Matrix4X4f.h"
 #include "Vector3f.h"
 
 using namespace SDE::Basic;

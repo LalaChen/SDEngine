@@ -35,6 +35,10 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "SDEngineMacro.h"
 #include "SDEngineCommonFunction.h"
+//-------- Math --------
+#include "Matrix4X4f.h"
+#include "Vector3f.h"
+#include "Quaternion.h"
 //-------- Basic --------
 #include "Basic/Object/NullRefException.h"
 #include "Basic/Object/Object.h"

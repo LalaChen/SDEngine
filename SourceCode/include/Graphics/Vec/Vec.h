@@ -32,6 +32,10 @@ SOFTWARE.
 
 #include <string>
 
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
@@ -49,7 +53,7 @@ namespace Graphics
  *  representation of position.It will make programmer confuse. I will use class (such like Vector3f) \n
  *  for these situations rather than vec. \n
  */
-class vec3
+class SDENGINE_CLASS vec3
 {
 public:
     /*! \fn static vec3 normalize(const vec3 &i_v);
