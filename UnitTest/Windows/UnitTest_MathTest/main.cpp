@@ -40,9 +40,9 @@ int main(int argc, char **argv)
     new UnitTestLogManager();
 
     //T2
-    Vector3f t2(0.0f, 0.0f, 0.0f, 1.0f);
-    Quaternion r2(Vector3f(0.0f, 1.0f, 0.0f), 45.0f);
-    Vector3f s2(1.0f, 1.0f, 1.0f, 0.0f);
+    Vector3f t2(1.0f, 2.0f, 3.0f, 1.0f);
+    Quaternion r2(Vector3f(0.0f, 1.0f, 0.0f), 260.0f);
+    Vector3f s2(1.0f, 2.0f, 3.0f, 0.0f);
     Matrix4X4f tr2;
     tr2.translate(t2);
     tr2.rotate(r2);
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     //T0
     Vector3f t0(3.0f, 4.0f, 5.0f, 1.0f);
     Quaternion r0(Vector3f(0.0f, 1.0f, 1.0f), 45.0f);
-    Vector3f s0(1.0f, 1.0f, 1.0f, 0.0f);
+    Vector3f s0(3.0f, 4.0f, 5.0f, 0.0f);
     Matrix4X4f tr0;
     tr0.translate(t0);
     tr0.rotate(r0);

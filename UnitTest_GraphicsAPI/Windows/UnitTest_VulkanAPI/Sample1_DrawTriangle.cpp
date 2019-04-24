@@ -28,6 +28,7 @@ void Sample1_DrawTriangle::Initialize()
 
 void Sample1_DrawTriangle::Render()
 {
+
 }
 
 void Sample1_DrawTriangle::Destroy()
