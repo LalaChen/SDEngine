@@ -274,5 +274,8 @@
     <ClInclude Include="..\..\..\SourceCode\include\Math\Matrix4X4f.h">
       <Filter>include\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Math\MathConstant.h">
+      <Filter>include\Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

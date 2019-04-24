@@ -25,6 +25,7 @@ SOFTWARE.
 #include <glm/gtc/type_ptr.hpp>
 
 #include "SDEngineCommonFunction.h"
+#include "MathConstant.h"
 #include "Matrix4X4f.h"
 #include "Vector3f.h"
 #include "Quaternion.h"
@@ -71,12 +72,17 @@ Quaternion::Quaternion(const Quaternion &i_src)
 
 Quaternion::Quaternion(const Vector3f &i_axis, float i_angle)
 {
-    m_quat = glm::angleAxis(i_angle, glm::vec3(i_axis.m_vec.x, i_axis.m_vec.y, i_axis.m_vec.z));
+    glm::vec3 unit_vec = glm::normalize(glm::vec3(i_axis.m_vec.x, i_axis.m_vec.y, i_axis.m_vec.z));
+    m_quat = glm::angleAxis(i_angle * ONE_DEGREE_OF_PI, unit_vec);
 }
 
 Quaternion::Quaternion(float i_x_angle, float i_y_angle, float i_z_angle)
 {
-    m_quat = glm::quat(glm::vec3(i_x_angle, i_y_angle, i_z_angle));
+    m_quat = glm::quat(
+        glm::vec3(
+            i_x_angle * ONE_DEGREE_OF_PI,
+            i_y_angle * ONE_DEGREE_OF_PI,
+            i_z_angle * ONE_DEGREE_OF_PI));
 }
 
 Quaternion::Quaternion(const glm::quat &i_src)

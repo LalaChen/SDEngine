@@ -67,6 +67,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Color4f.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Vec.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Math\MathConstant.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Math\Matrix4X4f.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Math\Quaternion.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Math\Vector3f.h" />

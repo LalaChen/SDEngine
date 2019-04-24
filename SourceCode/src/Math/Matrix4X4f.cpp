@@ -118,7 +118,7 @@ Matrix4X4f Matrix4X4f::transpose() const
 
 void Matrix4X4f::translate(const Vector3f &i_trans)
 {
-    m_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(i_trans.m_vec.x, i_trans.m_vec.y, i_trans.m_vec.z));
+    m_matrix *= glm::translate(glm::mat4(1.0f), glm::vec3(i_trans.m_vec.x, i_trans.m_vec.y, i_trans.m_vec.z));
 }
 
 void Matrix4X4f::rotate(const Quaternion &i_rotate)
@@ -131,16 +131,12 @@ void Matrix4X4f::rotate(const Quaternion &i_rotate)
 
 void Matrix4X4f::scale(float i_scale)
 {
-    m_matrix[0][0] *= i_scale;
-    m_matrix[1][1] *= i_scale;
-    m_matrix[2][2] *= i_scale;
+    m_matrix *= glm::scale(glm::mat4(1.0f), glm::vec3(i_scale, i_scale, i_scale));
 }
 
 void Matrix4X4f::scale(const Vector3f &i_scale)
 {
-    m_matrix[0][0] *= i_scale.m_vec.x;
-    m_matrix[1][1] *= i_scale.m_vec.y;
-    m_matrix[2][2] *= i_scale.m_vec.z;
+    m_matrix *= glm::scale(glm::mat4(1.0f), glm::vec3(i_scale.m_vec.x, i_scale.m_vec.y, i_scale.m_vec.z));
 }
 
 std::string Matrix4X4f::ToString() const

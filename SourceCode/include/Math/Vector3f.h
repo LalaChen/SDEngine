@@ -116,6 +116,7 @@ public:
      *  \brief The destructor.
      */
     ~Vector3f();
+
 public: //operator
     /*! \fn Vector3f& operator=(const Vector3f &b);
      *  \param [in] b target vector
