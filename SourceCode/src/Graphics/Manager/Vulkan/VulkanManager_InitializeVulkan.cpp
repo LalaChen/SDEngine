@@ -460,11 +460,12 @@ void VulkanManager::InitializeSwapChain()
     }
 
     if (sur_caps.currentExtent.width != 0 && sur_caps.currentExtent.height != 0) {
-        m_screen_size = sur_caps.currentExtent;
+        m_screen_size.SetResolution(sur_caps.currentExtent.width, sur_caps.currentExtent.height);
     }
     else {
-        m_screen_size.width = std::max(sur_caps.minImageExtent.width, std::min(sur_caps.maxImageExtent.width, sur_caps.minImageExtent.width));
-        m_screen_size.height = std::max(sur_caps.minImageExtent.height, std::min(sur_caps.maxImageExtent.height, sur_caps.minImageExtent.height));
+        m_screen_size.SetResolution(
+            std::max(sur_caps.minImageExtent.width, std::min(sur_caps.maxImageExtent.width, sur_caps.minImageExtent.width)),
+            std::max(sur_caps.minImageExtent.height, std::min(sur_caps.maxImageExtent.height, sur_caps.minImageExtent.height)));
     }
 
     uint32_t image_count = sur_caps.minImageCount + 1;
@@ -482,7 +483,7 @@ void VulkanManager::InitializeSwapChain()
     sw_c_info.minImageCount = image_count;
     sw_c_info.imageFormat = m_VK_desired_sur_fmt.format;
     sw_c_info.imageColorSpace = m_VK_desired_sur_fmt.colorSpace;
-    sw_c_info.imageExtent = m_screen_size;
+    sw_c_info.imageExtent = {m_screen_size.GetWidth(), m_screen_size.GetHeight()};
     sw_c_info.imageArrayLayers = 1;
     sw_c_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     sw_c_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
@@ -505,7 +506,7 @@ void VulkanManager::InitializeSwapChain()
     if (image_count > 0) {
         m_VK_sc_images.resize(image_count);
         if (vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, m_VK_sc_images.data()) == VK_SUCCESS) {
-            SDLOG("SwapChainImages number : %u, ViewPort(%d,%d)", image_count, m_screen_size.width, m_screen_size.height);
+            SDLOG("SwapChainImages number : %u, ViewPort(%u,%u)", image_count, m_screen_size.GetWidth(), m_screen_size.GetHeight());
         }
         else {
             throw std::runtime_error("failed to get image handle of swap chain!");
@@ -636,8 +637,8 @@ void VulkanManager::InitializeSCImageViewsAndFBs()
         fbo_c_info.renderPass = m_VK_present_render_pass;
         fbo_c_info.attachmentCount = 1;
         fbo_c_info.pAttachments = &m_VK_sc_image_views[imgv_id];
-        fbo_c_info.width = m_screen_size.width;
-        fbo_c_info.height = m_screen_size.height;
+        fbo_c_info.width = m_screen_size.GetWidth();
+        fbo_c_info.height = m_screen_size.GetHeight();
         fbo_c_info.layers = 1;
 
         if (vkCreateFramebuffer(m_VK_device, &fbo_c_info, nullptr, &m_VK_sc_image_fbs[imgv_id]) != VK_SUCCESS) {

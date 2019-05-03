@@ -76,7 +76,6 @@ VulkanManager::VulkanManager()
 , m_VK_present_render_pass(VK_NULL_HANDLE)
 , m_VK_acq_img_semaphore(VK_NULL_HANDLE)
 , m_VK_present_semaphore(VK_NULL_HANDLE)
-, m_screen_size{0,0}
 , m_VK_final_present_mode(VK_PRESENT_MODE_RANGE_SIZE_KHR)
 // main command pool
 , m_VK_main_cmd_pool(VK_NULL_HANDLE)
@@ -257,7 +256,7 @@ void VulkanManager::RenderToScreen()
     //Begin RenderPass.
     VkRect2D render_area = {};
     render_area.offset = { 0, 0 };
-    render_area.extent = m_screen_size;
+    render_area.extent = { m_screen_size.GetWidth(), m_screen_size.GetHeight() };
 
     VkRenderPassBeginInfo rp_begin_info = {};
     rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

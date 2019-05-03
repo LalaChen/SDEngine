@@ -107,7 +107,6 @@ protected:
     int32_t m_VK_picked_queue_family_id;
     VkQueue m_VK_present_queue;
 protected:
-    VkExtent2D m_screen_size;
     VkPresentModeKHR m_VK_final_present_mode;
     VkSwapchainKHR m_VK_swap_chain;
     VkRenderPass m_VK_present_render_pass;

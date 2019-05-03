@@ -35,6 +35,7 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
+#include "Resolution.h"
 #include "EventArg.h"
 
 using SDE::Basic::EventArg;
@@ -91,6 +92,8 @@ protected: //--------------- Render Flow Function ------------------
     virtual void RenderBegin() = 0;
     virtual void RenderToScreen() = 0;
     virtual void RenderEnd() = 0;
+protected:
+    DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_screen_size, ScreenResolution);
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

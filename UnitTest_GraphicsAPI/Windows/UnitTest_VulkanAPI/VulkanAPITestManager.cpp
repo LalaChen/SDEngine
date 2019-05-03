@@ -18,16 +18,12 @@ VulkanAPITestManager::~VulkanAPITestManager()
 void VulkanAPITestManager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
     VulkanManager::InitializeGraphicsSystem(i_arg);
-    //To do : initialize necessary graphics resources.
     m_draw_triangle.Initialize();
-    //
 }
 
 void VulkanAPITestManager::ReleaseGraphicsSystem()
 {
-    //To do : release graphics resources.
     m_draw_triangle.Destroy();
-    //
     VulkanManager::ReleaseGraphicsSystem();
 }
 
@@ -60,7 +56,7 @@ void VulkanAPITestManager::RenderToScreen()
     //Begin RenderPass.
     VkRect2D render_area = {};
     render_area.offset = { 0, 0 };
-    render_area.extent = m_screen_size;
+    render_area.extent = { m_screen_size.GetWidth(), m_screen_size.GetHeight() };
 
     VkRenderPassBeginInfo rp_begin_info = {};
     rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -228,8 +224,10 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
     }
 
     //--- ii. map memory.
+    VkMemoryRequirements mem_req;
+    vkGetBufferMemoryRequirements(m_VK_device, i_VK_buffer, &mem_req);
     void *local_ptr = nullptr;
-    result = vkMapMemory(m_VK_device, staging_memory, 0, i_data_size, 0, &local_ptr);
+    result = vkMapMemory(m_VK_device, staging_memory, 0, mem_req.size, 0, &local_ptr);
     if (result != VK_SUCCESS) {
         SDLOGE("Map buffer memory failure!!!");
         return result;
@@ -340,8 +338,28 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
         return result;
     }
 
-
     return VK_SUCCESS;
+}
+
+VkResult VulkanAPITestManager::RefreshHostDeviceBufferData(VkBuffer i_VK_buffer, VkDeviceMemory i_VK_buffer_mem, void *i_data_ptr, VkDeviceSize i_size)
+{
+    VkResult result;
+    VkMemoryRequirements mem_req;
+    vkGetBufferMemoryRequirements(m_VK_device, i_VK_buffer, &mem_req);
+    void *buffer_device_ptr = VK_NULL_HANDLE;
+    result = vkMapMemory(m_VK_device, i_VK_buffer_mem, 0, mem_req.size, 0, (void **)&buffer_device_ptr);
+
+    if (result == VK_SUCCESS) {
+        memcpy(buffer_device_ptr, i_data_ptr, i_size);
+    }
+
+    vkUnmapMemory(m_VK_device, i_VK_buffer_mem);
+    return result;
+}
+
+void VulkanAPITestManager::UpdateDescriptorSet(const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos)
+{
+    vkUpdateDescriptorSets(m_VK_device, static_cast<uint32_t>(i_descriptor_w_infos.size()), i_descriptor_w_infos.data(), 0, nullptr);
 }
 
 void VulkanAPITestManager::ReleaseMemory(VkDeviceMemory i_VK_memory)
@@ -359,19 +377,13 @@ void VulkanAPITestManager::DestroyBuffer(VkBuffer i_VK_buffer)
 }
 
 //----------- shader related
-VkResult VulkanAPITestManager::CreateDescriptorSetLayout(
-    std::vector<VkDescriptorSetLayoutCreateInfo> &i_c_infos,
-    std::vector<VkDescriptorSetLayout> &io_layouts)
+VkResult VulkanAPITestManager::CreateDescriptorSetLayout(const VkDescriptorSetLayoutCreateInfo &i_c_info, VkDescriptorSetLayout &io_layout)
 {
     VkResult result = VK_SUCCESS;
-    io_layouts.clear();
-    io_layouts.resize(i_c_infos.size());
-    for (uint32_t layout_id = 0; layout_id < i_c_infos.size(); layout_id++) {
-        result = vkCreateDescriptorSetLayout(m_VK_device, &i_c_infos[layout_id], nullptr, &io_layouts[layout_id]);
-        if (result != VK_SUCCESS) {
-            SDLOGW("Create descriptor %d failure. Result = %x.", layout_id, result);
-            return result;
-        }
+
+    result = vkCreateDescriptorSetLayout(m_VK_device, &i_c_info, nullptr, &io_layout);
+    if (result != VK_SUCCESS) {
+        SDLOGW("Create descriptor failure. Result = %x.", result);
     }
 
     return result;
@@ -382,4 +394,131 @@ void VulkanAPITestManager::DestroyDesciptorSetLayout(VkDescriptorSetLayout i_VK_
     if (i_VK_layout != VK_NULL_HANDLE) {
         vkDestroyDescriptorSetLayout(m_VK_device, i_VK_layout, nullptr);
     }
+}
+
+VkResult VulkanAPITestManager::CreateShaderModule(const std::vector<SDE::Basic::UByte> &i_program_binary, VkShaderModule &io_VK_shader_module)
+{
+    VkResult result = VK_SUCCESS;
+
+    VkShaderModuleCreateInfo c_info = {};
+    c_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    c_info.pNext = nullptr;
+    c_info.flags = 0;
+    c_info.codeSize = i_program_binary.size();
+    c_info.pCode = reinterpret_cast<const uint32_t*>(i_program_binary.data());
+
+    result = vkCreateShaderModule(m_VK_device, &c_info, nullptr, &io_VK_shader_module);
+    if (result != VK_SUCCESS) {
+        SDLOGW("Failed to create shader module! Result = %x.");
+    }
+
+    return result;
+}
+
+void VulkanAPITestManager::DestroyShaderModule(VkShaderModule i_VK_shader_module)
+{
+    if (i_VK_shader_module != VK_NULL_HANDLE) {
+        vkDestroyShaderModule(m_VK_device, i_VK_shader_module, nullptr);
+    }
+}
+
+VkResult VulkanAPITestManager::CreatePipelineLayout(const VkPipelineLayoutCreateInfo &i_pipeline_layout_c_info, VkPipelineLayout &io_VK_pipeline_layout)
+{
+    VkResult result = vkCreatePipelineLayout(m_VK_device, &i_pipeline_layout_c_info, nullptr, &io_VK_pipeline_layout);
+    if (result != VK_SUCCESS) {
+        SDLOGW("failed to create pipeline layout!");
+    }
+    return result;
+}
+
+void VulkanAPITestManager::DestroyPipelineLayout(VkPipelineLayout i_VK_pipeline_layout)
+{
+    if (i_VK_pipeline_layout != VK_NULL_HANDLE) {
+        vkDestroyPipelineLayout(m_VK_device, i_VK_pipeline_layout, nullptr);
+    }
+}
+
+VkResult VulkanAPITestManager::CreateMainRenderPassGraphicsPipeline(const VkGraphicsPipelineCreateInfo &i_c_info, VkPipelineCache i_VK_pipeline_cache, uint32_t i_subpass_id, VkPipeline &io_VK_pipeline)
+{
+    VkGraphicsPipelineCreateInfo c_info = i_c_info;
+    c_info.renderPass = m_VK_present_render_pass;
+    c_info.subpass = i_subpass_id;
+
+    VkResult result = vkCreateGraphicsPipelines(m_VK_device, i_VK_pipeline_cache, 1, &c_info, nullptr, &io_VK_pipeline);
+    if (result != VK_SUCCESS) {
+        SDLOGW("failed to create pipeline!");
+    }
+
+    return result;
+}
+
+void VulkanAPITestManager::DestroyGraphicsPipeline(VkPipeline i_VK_pipeline)
+{
+    if (i_VK_pipeline != VK_NULL_HANDLE) {
+        SDLOGW("failed to create pipeline!");
+    }
+}
+
+VkResult VulkanAPITestManager::CreateDescriptorPool(const std::vector<VkDescriptorPoolSize> &i_descriptor_pool_sizes, uint32_t i_max_set_num, bool i_free_individual_sets, VkDescriptorPool &io_descriptor_pool)
+{
+    VkDescriptorPoolCreateInfo descriptor_pool_c_info = {};
+    descriptor_pool_c_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    descriptor_pool_c_info.pNext = nullptr;
+    if (i_free_individual_sets == true) {
+        descriptor_pool_c_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+    }
+    else {
+        descriptor_pool_c_info.flags = 0u;
+    }
+    descriptor_pool_c_info.maxSets = i_max_set_num;
+    descriptor_pool_c_info.pPoolSizes = i_descriptor_pool_sizes.data();
+    descriptor_pool_c_info.poolSizeCount = static_cast<uint32_t>(i_descriptor_pool_sizes.size());
+
+    VkResult result = vkCreateDescriptorPool(m_VK_device, &descriptor_pool_c_info, nullptr, &io_descriptor_pool);
+    if (result != VK_SUCCESS) {
+        SDLOG("Could not create a descriptor pool.");
+    }
+    return result;
+}
+
+void VulkanAPITestManager::DestroyDescriptorPool(VkDescriptorPool i_VK_descriptor_pool)
+{
+    if (i_VK_descriptor_pool != VK_NULL_HANDLE) {
+        vkDestroyDescriptorPool(m_VK_device, i_VK_descriptor_pool, nullptr);
+    }
+}
+
+VkResult VulkanAPITestManager::AllocateDescriptorSet(const VkDescriptorSetAllocateInfo &i_a_info, VkDescriptorSet &io_descriptor_set)
+{
+    VkResult result = vkAllocateDescriptorSets(m_VK_device, &i_a_info, &io_descriptor_set);
+    if (result != VK_SUCCESS) {
+        SDLOG("Could not allocate a descriptor set.");
+    }
+    return result;
+}
+//----------- Draw function.
+void VulkanAPITestManager::BindVertexBuffer(VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, uint32_t i_binding_id)
+{
+    if (i_VK_buffer != VK_NULL_HANDLE) {
+        vkCmdBindVertexBuffers(m_VK_main_cmd_buffer, i_binding_id, 1, &i_VK_buffer, &i_VK_offset);
+    }
+}
+
+void VulkanAPITestManager::BindIndiceBuffer(VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, VkIndexType i_index_type)
+{
+    if (i_VK_buffer != VK_NULL_HANDLE) {
+        vkCmdBindIndexBuffer(m_VK_main_cmd_buffer, i_VK_buffer, i_VK_offset, i_index_type);
+    }
+}
+
+void VulkanAPITestManager::BindGraphicsPipeline(VkPipeline i_VK_graphics_pipeline)
+{
+    if (i_VK_graphics_pipeline != VK_NULL_HANDLE) {
+        vkCmdBindPipeline(m_VK_main_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, i_VK_graphics_pipeline);
+    }
+}
+
+void VulkanAPITestManager::DrawByIndice(uint32_t i_indice_size, uint32_t i_instance_count, uint32_t i_first_index, int32_t i_vertex_offset, uint32_t i_first_instance)
+{
+    vkCmdDrawIndexed(m_VK_main_cmd_buffer, i_indice_size, i_instance_count, i_first_index, i_vertex_offset, i_first_instance);
 }
