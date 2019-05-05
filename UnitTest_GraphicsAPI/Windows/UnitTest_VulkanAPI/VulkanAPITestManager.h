@@ -31,6 +31,9 @@ public: //Shader Related.
     void DestroyDescriptorPool(VkDescriptorPool i_VK_descriptor_pool);
     VkResult AllocateDescriptorSet(const VkDescriptorSetAllocateInfo &i_a_info, VkDescriptorSet &io_descriptor_set);
     void UpdateDescriptorSet(const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos);
+public: //Set Dynamic State Function.
+    void SetViewportsDynamically(const std::vector<VkViewport> &i_viewports);
+    void SetMainViewportDynamically(const VkViewport &i_viewport);
 public: //Draw function.
     void BindVertexBuffer(VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, uint32_t i_binding_id);
     void BindIndiceBuffer(VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, VkIndexType i_index_type);

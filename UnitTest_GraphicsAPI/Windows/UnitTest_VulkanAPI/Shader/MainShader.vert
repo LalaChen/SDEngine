@@ -1,4 +1,5 @@
 #version 450
+#extension GL_ARB_separate_shader_objects : enable
 
 //Input attribute.
 //format : layout(location = X) in GenType VarName;
@@ -14,9 +15,9 @@ layout(location = 0) out vec4 fragColor;
 
 //Uniform Buffer --- basic.
 layout(set = 0, binding = 0) uniform BasicUnifroms {
-    mat4 transform;
-    mat4 view;
     mat4 proj;
+	mat4 view;
+	mat4 transform;
 } basic;
 
 void main()

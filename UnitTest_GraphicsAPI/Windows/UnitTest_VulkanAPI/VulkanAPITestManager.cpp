@@ -471,8 +471,8 @@ VkResult VulkanAPITestManager::CreateDescriptorPool(const std::vector<VkDescript
         descriptor_pool_c_info.flags = 0u;
     }
     descriptor_pool_c_info.maxSets = i_max_set_num;
-    descriptor_pool_c_info.pPoolSizes = i_descriptor_pool_sizes.data();
     descriptor_pool_c_info.poolSizeCount = static_cast<uint32_t>(i_descriptor_pool_sizes.size());
+    descriptor_pool_c_info.pPoolSizes = i_descriptor_pool_sizes.data();
 
     VkResult result = vkCreateDescriptorPool(m_VK_device, &descriptor_pool_c_info, nullptr, &io_descriptor_pool);
     if (result != VK_SUCCESS) {
@@ -496,6 +496,17 @@ VkResult VulkanAPITestManager::AllocateDescriptorSet(const VkDescriptorSetAlloca
     }
     return result;
 }
+//----------- Set Dynamic State
+void VulkanAPITestManager::SetViewportsDynamically(const std::vector<VkViewport> &i_viewports)
+{
+    vkCmdSetViewport(m_VK_main_cmd_buffer, 0, static_cast<uint32_t>(i_viewports.size()), i_viewports.data());
+}
+
+void VulkanAPITestManager::SetMainViewportDynamically(const VkViewport &i_viewport)
+{
+    vkCmdSetViewport(m_VK_main_cmd_buffer, 0, 1, &i_viewport);
+}
+
 //----------- Draw function.
 void VulkanAPITestManager::BindVertexBuffer(VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, uint32_t i_binding_id)
 {
