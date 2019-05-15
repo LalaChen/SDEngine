@@ -116,6 +116,7 @@ Matrix4X4f Matrix4X4f::transpose() const
     return Matrix4X4f(glm::transpose(m_matrix));
 }
 
+//--------------- World Space Using --------------------
 void Matrix4X4f::translate(const Vector3f &i_trans)
 {
     m_matrix *= glm::translate(glm::mat4(1.0f), glm::vec3(i_trans.m_vec.x, i_trans.m_vec.y, i_trans.m_vec.z));
@@ -138,7 +139,15 @@ void Matrix4X4f::scale(const Vector3f &i_scale)
 {
     m_matrix *= glm::scale(glm::mat4(1.0f), glm::vec3(i_scale.m_vec.x, i_scale.m_vec.y, i_scale.m_vec.z));
 }
-
+//----------------- View Space Using ---------------------
+void Matrix4X4f::lookAt(const Vector3f &i_eye, const Vector3f &i_view_center, const Vector3f &i_up)
+{
+    m_matrix = glm::lookAt(
+        glm::vec3(i_eye.m_vec.x, i_eye.m_vec.y, i_eye.m_vec.z),
+        glm::vec3(i_view_center.m_vec.x, i_view_center.m_vec.y, i_view_center.m_vec.z),
+        glm::vec3(i_up.m_vec.x, i_up.m_vec.y, i_up.m_vec.z));
+}
+//--------------- Project Space Using --------------------
 void Matrix4X4f::perspective(float i_fovy, float i_aspect, float i_near, float i_far)
 {
     m_matrix = glm::perspective(i_fovy, i_aspect, i_near, i_far);

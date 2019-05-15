@@ -120,7 +120,7 @@ public: //operator
      *  \brief return transpose matrix.
      */
     Matrix4X4f transpose() const;
-
+//--------------- World Space Using --------------------
     /*! \fn void translate(const Vector3f &i_trans);
      *  \param [in] i_trans set translation.
      *  \brief translate matrix. 
@@ -144,7 +144,16 @@ public: //operator
      *  \brief scale matrix.
      */
     void scale(const Vector3f &i_scale);
+//----------------- View Space Using ---------------------
+    /*! \fn void lookAt(const Vector3f &i_eye, const Vector3f &i_view_center, const Vector3f &i_up);
+     *  \param [in] i_eye eye position.
+     *  \param [in] i_view_center set view center.
+     *  \param [in] i_up view up.
+     *  \brief set view matrix.
+     */
+    void lookAt(const Vector3f &i_eye, const Vector3f &i_view_center, const Vector3f &i_up);
 
+//--------------- Project Space Using --------------------
     /*! \fn void perspective(float i_fovy, float i_aspect, float i_near, float i_far);
      *  \param [in] i_fovy set angle.
      *  \param [in] i_aspect set ratio between w and h.

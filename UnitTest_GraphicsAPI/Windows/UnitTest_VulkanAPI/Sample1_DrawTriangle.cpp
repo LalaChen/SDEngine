@@ -57,12 +57,18 @@ void Sample1_DrawTriangle::Render()
         viewport.maxDepth = 1.0f;
         m_mgr->SetMainViewportDynamically(viewport);
         //Update uniform buffer.
+        //--- projection space.
         float asratio = viewport.height / viewport.width;
+        m_uniform_buffer_data.m_proj.perspective(45, asratio, 0.01f, 10.0f);
+        //m_uniform_buffer_data.m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
+
+        //--- view space.
+        m_uniform_buffer_data.m_view.lookAt(Vector3f(0.0f, 0.0f, 5.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
+
+        //--- world space. 
         static float angle = 0.0f;
         static float addAngle = 1.0f;
         angle += addAngle;
-        //m_uniform_buffer_data.m_proj.perspective(45, asratio, 0.01f, 10.0f);
-        m_uniform_buffer_data.m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
         m_uniform_buffer_data.m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffer, m_VK_basic_uniform_buffer_memory, &m_uniform_buffer_data, sizeof(BasicUniformBuffer));
         if (result != VK_SUCCESS) {
