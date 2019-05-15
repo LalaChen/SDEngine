@@ -523,9 +523,9 @@ void VulkanManager::InitializeSwapChain()
     }
 
     VkSemaphoreCreateInfo present_sem_c_info = {};
-    acq_sem_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-    acq_sem_c_info.pNext = nullptr;
-    acq_sem_c_info.flags = 0;
+    present_sem_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    present_sem_c_info.pNext = nullptr;
+    present_sem_c_info.flags = 0;
 
     if (vkCreateSemaphore(m_VK_device, &present_sem_c_info, nullptr, &m_VK_present_semaphore) != VK_SUCCESS) {
         throw std::runtime_error("failed to create present semaphore!");

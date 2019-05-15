@@ -139,6 +139,16 @@ void Matrix4X4f::scale(const Vector3f &i_scale)
     m_matrix *= glm::scale(glm::mat4(1.0f), glm::vec3(i_scale.m_vec.x, i_scale.m_vec.y, i_scale.m_vec.z));
 }
 
+void Matrix4X4f::perspective(float i_fovy, float i_aspect, float i_near, float i_far)
+{
+    m_matrix = glm::perspective(i_fovy, i_aspect, i_near, i_far);
+}
+
+void Matrix4X4f::ortho(float i_left, float i_right, float i_bottom, float i_top, float i_near, float i_far)
+{
+    m_matrix = glm::ortho(i_left, i_right, i_bottom, i_top, i_near, i_far);
+}
+
 std::string Matrix4X4f::ToString() const
 {
     std::string result =

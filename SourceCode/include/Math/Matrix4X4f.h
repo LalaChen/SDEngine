@@ -144,16 +144,37 @@ public: //operator
      *  \brief scale matrix.
      */
     void scale(const Vector3f &i_scale);
+
+    /*! \fn void perspective(float i_fovy, float i_aspect, float i_near, float i_far);
+     *  \param [in] i_fovy set angle.
+     *  \param [in] i_aspect set ratio between w and h.
+     *  \param [in] i_near near distance.
+     *  \param [in] i_far far distance.
+     *  \brief set perspective projection matrix.
+     */
+    void perspective(float i_fovy, float i_aspect, float i_near, float i_far);
+
+    /*! \fn void ortho(float i_left, float i_right, float i_bottom, float i_top, float i_near, float i_far);
+     *  \param [in] i_left x left.
+     *  \param [in] i_right x right.
+     *  \param [in] i_bottom set y buttom.
+     *  \param [in] i_top y top.
+     *  \param [in] i_near set z near.
+     *  \param [in] i_far set z far.
+     *  \brief set orthogonal projection matrix.
+     */
+    void ortho(float i_left, float i_right, float i_bottom, float i_top, float i_near, float i_far);
+
 public:
     /*! \fn std::string ToString() const;
      *  \brief Return vector by format (%lf,%lf,%lf).
      */
     std::string ToString() const;
 
-    /*! \fn const float *GetDataAddr() const;
+    /*! \fn const float* GetDataAddr() const;
      *  \brief return raw pointer.
      */
-    const float *GetDataAddr() const;
+    const float* GetDataAddr() const;
 
 public:
     /*! \var glm::mat4 m_matrix;

@@ -5,7 +5,7 @@
 //format : layout(location = X) in GenType VarName;
 //X is means we need to bind buffer to attribute location X.
 //--- Attribute vertice.
-layout(location = 0) in vec4 vertice;
+layout(location = 0) in vec3 vertice;
 layout(location = 1) in vec4 colors;
 
 //Output varing.
@@ -22,6 +22,9 @@ layout(set = 0, binding = 0) uniform BasicUnifroms {
 
 void main()
 {
+     vec4 vertex = vec4(vertice.x, vertice.y, vertice.z, 1.0);
      fragColor = colors;
-     gl_Position = basic.proj * basic.view * basic.transform * vertice;
+     gl_Position = basic.proj * basic.view * basic.transform * vertex;
+	 //gl_Position = basic.proj * vertex;
+	 //gl_Position = vec4(vertice.x, vertice.y, vertice.z, 1.0);
 }

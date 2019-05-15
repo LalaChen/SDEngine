@@ -151,7 +151,7 @@ VkResult VulkanAPITestManager::CreateBuffer(VkBufferUsageFlags i_buffer_usage, V
     return vkCreateBuffer(m_VK_device, &vec_buf_c_info, nullptr, &io_VK_buffer);
 }
 
-VkResult VulkanAPITestManager::AllocateMemoryAndBindToBuffer(VkMemoryPropertyFlagBits i_memo_prop_flags, VkDeviceSize i_VK_offset, VkBuffer i_VK_buffer, VkDeviceMemory &io_VK_memory)
+VkResult VulkanAPITestManager::AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkBuffer i_VK_buffer, VkDeviceMemory &io_VK_memory)
 {
     //1. Get device info.
     VkResult result;
@@ -357,11 +357,6 @@ VkResult VulkanAPITestManager::RefreshHostDeviceBufferData(VkBuffer i_VK_buffer,
     return result;
 }
 
-void VulkanAPITestManager::UpdateDescriptorSet(const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos)
-{
-    vkUpdateDescriptorSets(m_VK_device, static_cast<uint32_t>(i_descriptor_w_infos.size()), i_descriptor_w_infos.data(), 0, nullptr);
-}
-
 void VulkanAPITestManager::ReleaseMemory(VkDeviceMemory i_VK_memory)
 {
     if (i_VK_memory != VK_NULL_HANDLE) {
@@ -455,7 +450,7 @@ VkResult VulkanAPITestManager::CreateMainRenderPassGraphicsPipeline(const VkGrap
 void VulkanAPITestManager::DestroyGraphicsPipeline(VkPipeline i_VK_pipeline)
 {
     if (i_VK_pipeline != VK_NULL_HANDLE) {
-        SDLOGW("failed to create pipeline!");
+        vkDestroyPipeline(m_VK_device, i_VK_pipeline, nullptr);
     }
 }
 
@@ -496,6 +491,20 @@ VkResult VulkanAPITestManager::AllocateDescriptorSet(const VkDescriptorSetAlloca
     }
     return result;
 }
+
+void VulkanAPITestManager::BindDescriptorSets(VkPipelineLayout i_VK_pipeline_layout, VkPipelineBindPoint i_VK_pipeline_type, uint32_t i_first_set_id, const std::vector<VkDescriptorSet> &i_VK_desc_sets, const std::vector<uint32_t> &i_dynamic_offsets)
+{
+    vkCmdBindDescriptorSets(m_VK_main_cmd_buffer, i_VK_pipeline_type,
+        i_VK_pipeline_layout, i_first_set_id,
+        static_cast<uint32_t>(i_VK_desc_sets.size()), i_VK_desc_sets.data(),
+        static_cast<uint32_t>(i_dynamic_offsets.size()), i_dynamic_offsets.data());
+}
+
+void VulkanAPITestManager::UpdateDescriptorSet(const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos)
+{
+    vkUpdateDescriptorSets(m_VK_device, static_cast<uint32_t>(i_descriptor_w_infos.size()), i_descriptor_w_infos.data(), 0, nullptr);
+}
+
 //----------- Set Dynamic State
 void VulkanAPITestManager::SetViewportsDynamically(const std::vector<VkViewport> &i_viewports)
 {
@@ -512,6 +521,13 @@ void VulkanAPITestManager::BindVertexBuffer(VkBuffer i_VK_buffer, VkDeviceSize i
 {
     if (i_VK_buffer != VK_NULL_HANDLE) {
         vkCmdBindVertexBuffers(m_VK_main_cmd_buffer, i_binding_id, 1, &i_VK_buffer, &i_VK_offset);
+    }
+}
+
+void VulkanAPITestManager::BindVertexBuffers(const std::vector<VkBuffer> &i_va_buffers, const std::vector<VkDeviceSize> &i_va_offset, uint32_t i_first_bind_id)
+{
+    if (i_va_buffers.size() != 0) {
+        vkCmdBindVertexBuffers(m_VK_main_cmd_buffer, i_first_bind_id, static_cast<uint32_t>(i_va_buffers.size()), i_va_buffers.data(), i_va_offset.data());
     }
 }
 
