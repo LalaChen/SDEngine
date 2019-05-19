@@ -53,23 +53,30 @@ void Sample1_DrawTriangle::Render()
         viewport.y = 0;
         viewport.width = static_cast<float>(res.GetWidth());
         viewport.height = static_cast<float>(res.GetHeight());
-        viewport.minDepth = -1.0f;
+        viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
         m_mgr->SetMainViewportDynamically(viewport);
         //Update uniform buffer.
+        //--- clip space.
+        float clip_mat[16] = {
+            1.0f,  0.0f, 0.0f, 0.0f,
+            0.0f, -1.0f, 0.0f, 0.0f,
+            0.0f,  0.0f, 0.5f, 0.0f,
+            0.0f,  0.0f, 0.5f, 1.0f };
+        m_uniform_buffer_data.m_clip = Matrix4X4f(clip_mat);
         //--- projection space.
         float asratio = viewport.height / viewport.width;
-        m_uniform_buffer_data.m_proj.perspective(45, asratio, 0.01f, 10.0f);
+        m_uniform_buffer_data.m_proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
         //m_uniform_buffer_data.m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
 
         //--- view space.
-        m_uniform_buffer_data.m_view.lookAt(Vector3f(0.0f, 0.0f, 5.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
+        m_uniform_buffer_data.m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
 
         //--- world space. 
         static float angle = 0.0f;
         static float addAngle = 1.0f;
         angle += addAngle;
-        m_uniform_buffer_data.m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
+        //m_uniform_buffer_data.m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffer, m_VK_basic_uniform_buffer_memory, &m_uniform_buffer_data, sizeof(BasicUniformBuffer));
         if (result != VK_SUCCESS) {
             SDLOGE("Refresg Host Buffer Data failure!!!");
@@ -199,7 +206,7 @@ void Sample1_DrawTriangle::CreateBuffers()
     //2. create color buffer.
     //--- i. create buffer information.
     result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE,
-        static_cast<VkDeviceSize>(sizeof(Color4f)*quad_colors.size()), m_VK_ver_color_buffer);
+        static_cast<VkDeviceSize>(sizeof(Color4f) * quad_colors.size()), m_VK_ver_color_buffer);
 
 #ifndef USE_HOST_BUFFER
     //--- ii. get memory.
@@ -492,7 +499,7 @@ void Sample1_DrawTriangle::CreateShaders()
     raster_state_c_info.flags = 0;
     raster_state_c_info.rasterizerDiscardEnable = VK_FALSE;
     raster_state_c_info.polygonMode = VK_POLYGON_MODE_FILL; //glPolygonMode(GL_FILL)
-    raster_state_c_info.cullMode = VK_CULL_MODE_NONE; //glCullFace(GL_BACK)
+    raster_state_c_info.cullMode = VK_CULL_MODE_BACK_BIT; //glCullFace(GL_BACK)
     raster_state_c_info.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE; //glFrontFace(GL_CCW)
     raster_state_c_info.depthBiasEnable = VK_FALSE; //change depth result by new d = Bsloop * origin d + Bconstant.
     raster_state_c_info.depthBiasConstantFactor = 0.0f;
