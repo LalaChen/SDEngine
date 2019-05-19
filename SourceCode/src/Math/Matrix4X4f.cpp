@@ -66,6 +66,11 @@ Matrix4X4f::Matrix4X4f(const glm::mat4 &i_src)
 {
 }
 
+Matrix4X4f::Matrix4X4f(float i_datas[])
+{
+    m_matrix = glm::make_mat4(i_datas);
+}
+
 Matrix4X4f::~Matrix4X4f()
 {
 }

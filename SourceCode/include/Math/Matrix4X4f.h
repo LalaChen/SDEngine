@@ -69,6 +69,12 @@ public:
      */
     Matrix4X4f();
 
+    /*! \fn Matrix4X4f(float i_datas[]);
+     *  \param [in] i_data.
+     *  \brief array constructor.
+     */
+    Matrix4X4f(float i_datas[]);
+
     /*! \fn Matrix4X4f(const Matrix4X4f &i_src);
      *  \param [in] i_src target matrix
      *  \brief Copy constructor.
