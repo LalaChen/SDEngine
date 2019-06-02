@@ -328,7 +328,7 @@ void VulkanManager::InitializeLogicDevice()
             queue_families[m_VK_picked_queue_family_id].minImageTransferGranularity.height,
             queue_families[m_VK_picked_queue_family_id].minImageTransferGranularity.depth);
     }
-    else{
+    else {
         throw std::runtime_error("Can't find desired queue family.");
     }
 
@@ -535,23 +535,26 @@ void VulkanManager::InitializeSwapChain()
 void VulkanManager::InitializePresentRenderPass()
 {
     SDLOG("--- Vulkan initialize present render pass.");
+    //1. Write all used attachment descriptions in RenderPass--- PresentRenderPass.
+    //--- Attachment about color buffer for subpass 0, it's used to store rendering result to image getted from swapchain.
     VkAttachmentDescription clr_attachment_desc = {};
-    clr_attachment_desc.flags = 0;
+    clr_attachment_desc.flags = 0; //Write the other purpose about this attachment. We don't have other usage about this flag.
     clr_attachment_desc.format = m_VK_desired_sur_fmt.format;
     clr_attachment_desc.samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
-    clr_attachment_desc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    clr_attachment_desc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    clr_attachment_desc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //Clear before using. If we set VK_ATTACHMENT_LOAD_OP_DONT_CARE, we can't clear via clearcolor.
+    clr_attachment_desc.storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
     clr_attachment_desc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     clr_attachment_desc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     clr_attachment_desc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     clr_attachment_desc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-    //bind the output to color attachment. 
+    //2. Specify all subpass in this render pass.
+    //--- i. Subpass 0 for present rendering result.
+    //------ a. Bind the output to color attachment.
     VkAttachmentReference clr_attachment_ref = {};
     clr_attachment_ref.attachment = 0;
     clr_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-    //create present subpass.
+    //------ b. Create present subpass.
     VkSubpassDescription present_sp_desc = {};
     present_sp_desc.flags = 0;
     present_sp_desc.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -564,11 +567,10 @@ void VulkanManager::InitializePresentRenderPass()
     present_sp_desc.preserveAttachmentCount = 0;
     present_sp_desc.pPreserveAttachments = nullptr;
 
-    //Create subpass dependecy for present pass.
+    //3. Create subpass dependecy for present pass.
     std::vector<VkSubpassDependency> sp_dependencies;
-    ///*
     sp_dependencies.resize(2);
-    //begin dep.
+    //--- Begin dep.
     sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     sp_dependencies[0].dstSubpass = 0;
     sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
@@ -576,7 +578,7 @@ void VulkanManager::InitializePresentRenderPass()
     sp_dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-    //end dep.
+    //--- End dep.
     sp_dependencies[1].srcSubpass = 0;
     sp_dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
     sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -584,7 +586,8 @@ void VulkanManager::InitializePresentRenderPass()
     sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-    //*/
+
+    //4. Write created information for present pass.
     VkRenderPassCreateInfo pass_c_info = {};
     pass_c_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     pass_c_info.pNext = nullptr;
@@ -615,10 +618,10 @@ void VulkanManager::InitializeSCImageViewsAndFBs()
         iv_c_info.image = m_VK_sc_images[imgv_id];
         iv_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
         iv_c_info.format = m_VK_desired_sur_fmt.format;
-        iv_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-        iv_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-        iv_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-        iv_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        iv_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_R(r is r channel).
+        iv_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_G(g is g channel).
+        iv_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_B(b is b channel).
+        iv_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_A(a is a channel).
         iv_c_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         iv_c_info.subresourceRange.baseMipLevel = 0;
         iv_c_info.subresourceRange.levelCount = 1;
