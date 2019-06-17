@@ -101,11 +101,13 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
         m_VK_surface = vk_c_arg.m_surface;
 
         if (m_VK_instance != nullptr) {
+            //egl like
             InitializeDebugMessage();
             InitializePhysicalDevice();
             InitializeLogicDevice();
-            InitializeCommandPoolAndBuffers();
             InitializeSwapChain();
+            //graphics
+            InitializeCommandPoolAndBuffers();
             InitializePresentRenderPass();
             InitializeSCImageViewsAndFBs();
         }
@@ -269,7 +271,7 @@ void VulkanManager::RenderToScreen()
 
     vkCmdBeginRenderPass(m_VK_main_cmd_buffer, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
 
-    //Render to screen
+    //Render to screen (To do)
 
     //End RenderPass.
     vkCmdEndRenderPass(m_VK_main_cmd_buffer);

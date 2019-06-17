@@ -532,6 +532,40 @@ void VulkanManager::InitializeSwapChain()
     }
 }
 
+void VulkanManager::InitializeCommandPoolAndBuffers()
+{
+    SDLOG("--- Vulkan initialize command pool and buffer.");
+    VkCommandPoolCreateInfo cmd_pool_c_info = {};
+    cmd_pool_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    cmd_pool_c_info.pNext = nullptr;
+    cmd_pool_c_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; //VkCommandPoolCreateFlags
+    cmd_pool_c_info.queueFamilyIndex = m_VK_picked_queue_family_id;
+
+    if (vkCreateCommandPool(m_VK_device, &cmd_pool_c_info, nullptr, &m_VK_main_cmd_pool) != VK_SUCCESS) {
+        throw std::runtime_error("Create main command pool failure!");
+    }
+
+    VkCommandBufferAllocateInfo cmd_buf_a_info = {};
+    cmd_buf_a_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    cmd_buf_a_info.pNext = nullptr;
+    cmd_buf_a_info.commandPool = m_VK_main_cmd_pool;
+    cmd_buf_a_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; //VkCommandBufferLevel
+    cmd_buf_a_info.commandBufferCount = 1;
+
+    if (vkAllocateCommandBuffers(m_VK_device, &cmd_buf_a_info, &m_VK_main_cmd_buffer) != VK_SUCCESS) {
+        throw std::runtime_error("Create main command buffer failure!");
+    }
+
+    VkFenceCreateInfo fence_c_info = {};
+    fence_c_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fence_c_info.pNext = nullptr;
+    fence_c_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+    if (vkCreateFence(m_VK_device, &fence_c_info, nullptr, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
+        throw std::runtime_error("Create main cmd buf fence failure!");
+    }
+}
+
 void VulkanManager::InitializePresentRenderPass()
 {
     SDLOG("--- Vulkan initialize present render pass.");
@@ -547,14 +581,16 @@ void VulkanManager::InitializePresentRenderPass()
     clr_attachment_desc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     clr_attachment_desc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     clr_attachment_desc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    //--- Bind the output to color attachment.
+    VkAttachmentReference attachment_ref = {};
+    attachment_ref.attachment = 0; //ID of attachment in RenderPass.
+    attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     //2. Specify all subpass in this render pass.
     //--- i. Subpass 0 for present rendering result.
-    //------ a. Bind the output to color attachment.
-    VkAttachmentReference clr_attachment_ref = {};
-    clr_attachment_ref.attachment = 0;
-    clr_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-    //------ b. Create present subpass.
+    //--- Collect necessary attachments
+    VkAttachmentReference clr_attachment_ref = attachment_ref;
+    //--- Create present subpass.
     VkSubpassDescription present_sp_desc = {};
     present_sp_desc.flags = 0;
     present_sp_desc.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -647,40 +683,6 @@ void VulkanManager::InitializeSCImageViewsAndFBs()
         if (vkCreateFramebuffer(m_VK_device, &fbo_c_info, nullptr, &m_VK_sc_image_fbs[imgv_id]) != VK_SUCCESS) {
             throw std::runtime_error(SDE::Basic::StringFormat("failed to create FBO[%d]!", imgv_id).c_str());
         }
-    }
-}
-
-void VulkanManager::InitializeCommandPoolAndBuffers()
-{
-    SDLOG("--- Vulkan initialize command pool and buffer.");
-    VkCommandPoolCreateInfo cmd_pool_c_info = {};
-    cmd_pool_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    cmd_pool_c_info.pNext = nullptr;
-    cmd_pool_c_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; //VkCommandPoolCreateFlags
-    cmd_pool_c_info.queueFamilyIndex = m_VK_picked_queue_family_id;
-
-    if (vkCreateCommandPool(m_VK_device, &cmd_pool_c_info, nullptr, &m_VK_main_cmd_pool) != VK_SUCCESS) {
-        throw std::runtime_error("Create main command pool failure!");
-    }
-
-    VkCommandBufferAllocateInfo cmd_buf_a_info = {};
-    cmd_buf_a_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    cmd_buf_a_info.pNext = nullptr;
-    cmd_buf_a_info.commandPool = m_VK_main_cmd_pool;
-    cmd_buf_a_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; //VkCommandBufferLevel
-    cmd_buf_a_info.commandBufferCount = 1;
-
-    if (vkAllocateCommandBuffers(m_VK_device, &cmd_buf_a_info, &m_VK_main_cmd_buffer) != VK_SUCCESS) {
-        throw std::runtime_error("Create main command buffer failure!");
-    }
-
-    VkFenceCreateInfo fence_c_info = {};
-    fence_c_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fence_c_info.pNext = nullptr;
-    fence_c_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-    if (vkCreateFence(m_VK_device, &fence_c_info, nullptr, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
-        throw std::runtime_error("Create main cmd buf fence failure!");
     }
 }
 

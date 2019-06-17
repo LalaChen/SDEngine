@@ -31,7 +31,7 @@ public:
 private:
     void CreateBuffers();
     void CreateUniformBuffer();
-    void CreateShaders();
+    void CreateShaderPrograms();
 protected:
     VulkanAPITestManager *m_mgr;
 protected:

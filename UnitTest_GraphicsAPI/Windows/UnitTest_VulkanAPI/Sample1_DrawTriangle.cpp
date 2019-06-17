@@ -39,7 +39,7 @@ void Sample1_DrawTriangle::Initialize()
 {
     CreateBuffers();
     CreateUniformBuffer();
-    CreateShaders();
+    CreateShaderPrograms();
 }
 
 void Sample1_DrawTriangle::Render()
@@ -75,8 +75,8 @@ void Sample1_DrawTriangle::Render()
         //--- world space. 
         static float angle = 0.0f;
         static float addAngle = 1.0f;
-        angle += addAngle;
-        //m_uniform_buffer_data.m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
+        //angle += addAngle;
+        m_uniform_buffer_data.m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffer, m_VK_basic_uniform_buffer_memory, &m_uniform_buffer_data, sizeof(BasicUniformBuffer));
         if (result != VK_SUCCESS) {
             SDLOGE("Refresg Host Buffer Data failure!!!");
@@ -157,7 +157,6 @@ void Sample1_DrawTriangle::CreateBuffers()
         Color4f(1.0f, 1.0f, 1.0f, 1.0f)
     };
 
-    //To do : Find out the root cause why it's back face in vulkan.
     std::vector<uint16_t> quad_indices = {
         0,1,2,
         0,2,3
@@ -291,9 +290,9 @@ void Sample1_DrawTriangle::CreateUniformBuffer()
     }
 }
 
-void Sample1_DrawTriangle::CreateShaders()
+void Sample1_DrawTriangle::CreateShaderPrograms()
 {
-    SDLOG("Create Shader!!!");
+    SDLOG("Create Shader Programs!!!");
     VkResult result = VK_SUCCESS;
     //1. bind vertex attribute array.
     //(such like glVertexAttribBinding and glVertexAttribFormat.)
@@ -360,7 +359,6 @@ void Sample1_DrawTriangle::CreateShaders()
 
     //--- ii. Write create descriptor set layout info.
     std::vector<VkDescriptorSetLayoutBinding> uniform_var_location_set0;
-    uniform_var_location_set0.resize(1);
     uniform_var_location_set0.push_back(var_basic_uniform_buffer);
 
     VkDescriptorSetLayoutCreateInfo desc_set_c_info = {}; //One set one layout.
@@ -381,7 +379,7 @@ void Sample1_DrawTriangle::CreateShaders()
     std::vector<VkDescriptorPoolSize> types;
     VkDescriptorPoolSize uniform_buffer_type = {};
     uniform_buffer_type.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    uniform_buffer_type.descriptorCount = 1;
+    uniform_buffer_type.descriptorCount = 1; //Count is equal to number of descriptor set.
     types.push_back(uniform_buffer_type);
     result = m_mgr->CreateDescriptorPool(types, 1, false, m_VK_descriptor_pool);
     if (result != VK_SUCCESS) {
@@ -506,6 +504,7 @@ void Sample1_DrawTriangle::CreateShaders()
     raster_state_c_info.depthBiasSlopeFactor = 0.0f;
     raster_state_c_info.depthBiasClamp = 0.0f;
     raster_state_c_info.lineWidth = 1.0f; //glLineWidth(1.0);
+
     //------ multi sampling.
     VkPipelineMultisampleStateCreateInfo multisample_state_c_info = {};
     multisample_state_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
