@@ -192,6 +192,7 @@ VkResult VulkanAPITestManager::AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop
             buffer_mem_a_info.memoryTypeIndex = mem_type_ID;
             result = vkAllocateMemory(m_VK_device, &buffer_mem_a_info, nullptr, &io_VK_memory);
             if (result != VK_SUCCESS) {
+                SDLOGE("Allocate memory failure.");
                 return result;
             }
             else {
@@ -225,9 +226,9 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
 
     //--- ii. map memory.
     VkMemoryRequirements mem_req;
-    vkGetBufferMemoryRequirements(m_VK_device, i_VK_buffer, &mem_req);
-    void *local_ptr = nullptr;
-    result = vkMapMemory(m_VK_device, staging_memory, 0, mem_req.size, 0, &local_ptr);
+    vkGetBufferMemoryRequirements(m_VK_device, staging_buffer, &mem_req);
+    void *local_ptr = VK_NULL_HANDLE;
+    result = vkMapMemory(m_VK_device, staging_memory, 0, mem_req.size, 0, (void**)&local_ptr);
     if (result != VK_SUCCESS) {
         SDLOGE("Map buffer memory failure!!!");
         return result;
@@ -236,14 +237,19 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
     std::memcpy(local_ptr, i_data_ptr, i_data_size);
 
     //--- iv. flush 
+    ///*
     VkMappedMemoryRange mem_ranges = {};
     mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     mem_ranges.pNext = nullptr;
     mem_ranges.memory = staging_memory;
     mem_ranges.offset = 0;
     mem_ranges.size = VK_WHOLE_SIZE;
-    vkFlushMappedMemoryRanges(m_VK_device, 1, &mem_ranges);
-
+    result = vkFlushMappedMemoryRanges(m_VK_device, 1, &mem_ranges);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Map buffer flush failure!!!");
+        return result;
+    }
+    //*/
     //--- iv. unmap memory.
     vkUnmapMemory(m_VK_device, staging_memory);
 
@@ -266,9 +272,11 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
     beg_mem_barrier.pNext = nullptr;
     beg_mem_barrier.srcAccessMask = 0; //The buffer doesn't have access state.
     beg_mem_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    beg_mem_barrier.srcQueueFamilyIndex = m_VK_picked_queue_family_id;
-    beg_mem_barrier.dstQueueFamilyIndex = m_VK_picked_queue_family_id;
+    beg_mem_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    beg_mem_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     beg_mem_barrier.buffer = i_VK_buffer;
+    beg_mem_barrier.offset = 0;
+    beg_mem_barrier.size = VK_WHOLE_SIZE;
 
     vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
         0,
@@ -290,11 +298,13 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
     end_mem_barrier.pNext = nullptr;
     end_mem_barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
     end_mem_barrier.dstAccessMask = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
-    end_mem_barrier.srcQueueFamilyIndex = m_VK_picked_queue_family_id;
-    end_mem_barrier.dstQueueFamilyIndex = m_VK_picked_queue_family_id;
+    end_mem_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    end_mem_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     end_mem_barrier.buffer = i_VK_buffer;
+    end_mem_barrier.offset = 0;
+    end_mem_barrier.size = VK_WHOLE_SIZE;
 
-    vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+    vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT,
         0,
         0, nullptr, //memory barrier
         1, &end_mem_barrier, //buffer memory barrier
@@ -308,14 +318,16 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
     }
 
     //3. Submit command.
+    VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+
     VkSubmitInfo submit_info = {};
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submit_info.pNext = nullptr;
     submit_info.waitSemaphoreCount = 0;
-    submit_info.pWaitSemaphores = nullptr; //wait acq image.
-    submit_info.pWaitDstStageMask = nullptr;
+    submit_info.pWaitSemaphores = nullptr;
+    submit_info.pWaitDstStageMask = &submit_wait_flag;
     submit_info.signalSemaphoreCount = 0;
-    submit_info.pSignalSemaphores = nullptr; //set present semaphore.
+    submit_info.pSignalSemaphores = nullptr;
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
 
@@ -325,9 +337,9 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
         return result;
     }
 
-    result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
+    result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_FALSE, MaxFenceWaitTime);
     if (result != VK_SUCCESS) {
-        SDLOGW("Wait sync failure!!!");
+        SDLOGW("Wait copy sync failure!!!");
         return result;
     }
 
@@ -335,6 +347,15 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
     result = vkResetFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence);
     if (result != VK_SUCCESS) {
         SDLOGW("reset main command buffer fence failure!!!");
+        return result;
+    }
+
+    ReleaseMemory(staging_memory);
+    DestroyBuffer(staging_buffer);
+
+    result = vkResetCommandBuffer(m_VK_main_cmd_buffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
+    if (result != VK_SUCCESS) {
+        SDLOGW("reset main command buffer failure!!!");
         return result;
     }
 
@@ -351,6 +372,18 @@ VkResult VulkanAPITestManager::RefreshHostDeviceBufferData(VkBuffer i_VK_buffer,
 
     if (result == VK_SUCCESS) {
         memcpy(buffer_device_ptr, i_data_ptr, i_size);
+    }
+
+    VkMappedMemoryRange mem_ranges = {};
+    mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+    mem_ranges.pNext = nullptr;
+    mem_ranges.memory = i_VK_buffer_mem;
+    mem_ranges.offset = 0;
+    mem_ranges.size = VK_WHOLE_SIZE;
+    result = vkFlushMappedMemoryRanges(m_VK_device, 1, &mem_ranges);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Map buffer flush failure!!!");
+        return result;
     }
 
     vkUnmapMemory(m_VK_device, i_VK_buffer_mem);

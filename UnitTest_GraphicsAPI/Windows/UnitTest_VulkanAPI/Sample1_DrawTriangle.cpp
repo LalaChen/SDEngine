@@ -74,8 +74,8 @@ void Sample1_DrawTriangle::Render()
 
         //--- world space. 
         static float angle = 0.0f;
-        static float addAngle = 1.0f;
-        //angle += addAngle;
+        static float addAngle = 0.1f;
+        angle += addAngle;
         m_uniform_buffer_data.m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffer, m_VK_basic_uniform_buffer_memory, &m_uniform_buffer_data, sizeof(BasicUniformBuffer));
         if (result != VK_SUCCESS) {
@@ -188,7 +188,7 @@ void Sample1_DrawTriangle::CreateBuffers()
     }
 #else
     //--- ii. get memory.
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_vertice_buffer, m_VK_vbuf_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_vertice_buffer, m_VK_vbuf_memory);
     if (result != VK_SUCCESS) {
         SDLOGE("Allocate vertex buffer failure!!!");
         return;
@@ -223,7 +223,7 @@ void Sample1_DrawTriangle::CreateBuffers()
     }
 #else
     //--- ii. get memory.
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_ver_color_buffer, m_VK_ver_color_buf_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_ver_color_buffer, m_VK_ver_color_buf_memory);
     if (result != VK_SUCCESS) {
         SDLOGE("Allocate vertex color buffer failure!!!");
         return;
@@ -239,7 +239,8 @@ void Sample1_DrawTriangle::CreateBuffers()
 
     //3. create indice buffer.
     //--- i. create buffer information.
-    result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, static_cast<VkDeviceSize>(sizeof(uint16_t) * quad_indices.size()), m_VK_indices_buffer);
+    result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, 
+        static_cast<VkDeviceSize>(sizeof(uint16_t) * quad_indices.size()), m_VK_indices_buffer);
     if (result != VK_SUCCESS) {
         SDLOGE("Create indice buffer failure");
         return;
@@ -260,7 +261,7 @@ void Sample1_DrawTriangle::CreateBuffers()
     }
 #else
     //--- ii. get memory.
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_indices_buffer, m_VK_ibuf_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_indices_buffer, m_VK_ibuf_memory);
     if (result != VK_SUCCESS) {
         SDLOGE("Allocate indice buffer failure!!!");
         return;
@@ -284,7 +285,7 @@ void Sample1_DrawTriangle::CreateUniformBuffer()
     if (result != VK_SUCCESS) {
         SDLOGE("Create uniform buffer failure!!!");
     }
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_basic_uniform_buffer, m_VK_basic_uniform_buffer_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_basic_uniform_buffer, m_VK_basic_uniform_buffer_memory);
     if (result != VK_SUCCESS) {
         SDLOGE("Allocate uniform buffer failure!!!");
     }

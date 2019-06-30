@@ -44,7 +44,7 @@ const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
 
 std::vector<const char*> VulkanManager::DesiredValidLayers = {
     "VK_LAYER_LUNARG_standard_validation",
-    "VK_LAYER_RENDERDOC_Capture",
+    "VK_LAYER_RENDERDOC_Capture"//,
     //"VK_LAYER_VALVE_steam_overlay",
     //"VK_LAYER_VALVE_steam_fossilize", // will create a lot of json file.
     //"VK_LAYER_NV_optimus"

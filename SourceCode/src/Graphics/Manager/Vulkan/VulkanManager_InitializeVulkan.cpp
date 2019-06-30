@@ -355,10 +355,10 @@ void VulkanManager::InitializeLogicDevice()
     dev_c_info.ppEnabledExtensionNames = NecessaryExtensions.data();
     dev_c_info.enabledExtensionCount = static_cast<uint32_t>(NecessaryExtensions.size());
 
-#ifdef _NDEBUG
+#ifdef NDEBUG
     dev_c_info.enabledLayerCount = 0;
     dev_c_info.ppEnabledLayerNames = nullptr;
-#else
+//#else
     dev_c_info.enabledLayerCount = static_cast<uint32_t>(desired_valid_layer_names.size());
     dev_c_info.ppEnabledLayerNames = desired_valid_layer_names.data();
 #endif
@@ -559,7 +559,7 @@ void VulkanManager::InitializeCommandPoolAndBuffers()
     VkFenceCreateInfo fence_c_info = {};
     fence_c_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     fence_c_info.pNext = nullptr;
-    fence_c_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+    fence_c_info.flags = 0;
 
     if (vkCreateFence(m_VK_device, &fence_c_info, nullptr, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
         throw std::runtime_error("Create main cmd buf fence failure!");
@@ -655,9 +655,9 @@ void VulkanManager::InitializeSCImageViewsAndFBs()
         iv_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
         iv_c_info.format = m_VK_desired_sur_fmt.format;
         iv_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_R(r is r channel).
-        iv_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_G(g is g channel).
-        iv_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_B(b is b channel).
-        iv_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_A(a is a channel).
+        iv_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable g in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_G(g is g channel).
+        iv_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable b in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_B(b is b channel).
+        iv_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable a in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_A(a is a channel).
         iv_c_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         iv_c_info.subresourceRange.baseMipLevel = 0;
         iv_c_info.subresourceRange.levelCount = 1;

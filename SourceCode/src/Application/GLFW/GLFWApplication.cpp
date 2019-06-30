@@ -166,7 +166,7 @@ void GLFWApplication::InitializeGraphicsSystem()
         ins_c_info.pApplicationInfo = &app_info;
         ins_c_info.enabledExtensionCount = static_cast<uint32_t>(ins_ext_prop_names.size());
         ins_c_info.ppEnabledExtensionNames = ins_ext_prop_names.data();
-#ifdef _NDEBUG
+#ifdef NDEBUG
         ins_c_info.enabledLayerCount = 0;
         ins_c_info.ppEnabledLayerNames = nullptr;
 #else
