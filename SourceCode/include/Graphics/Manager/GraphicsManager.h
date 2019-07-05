@@ -35,6 +35,8 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
+#include "ManagerParam.h"
+#include "ManagerIdentity.h"
 #include "Resolution.h"
 #include "EventArg.h"
 
@@ -61,7 +63,7 @@ enum GraphicsLibraryEnum {
 class SDENGINE_CLASS GraphicsManager
 {
 public:
-    SINGLETON_DECLARATION(GraphicsManager);
+    SD_SINGLETON_DECLARATION(GraphicsManager);
 public:
     /*! \fn GraphicsManager();
      *  \brief The constructor of GraphicsManager Class. 
@@ -72,7 +74,8 @@ public:
      *  \brief The destructor of GraphicsManager Class.
      */
     virtual ~GraphicsManager();
-public: //---------------- Initialize and Release -----------------
+public:
+//------------ Initialize and Release -------------
     /*! \fn virtual void InitializeGraphicsSystem(const EventArg &i_arg) = 0;
      *  \param [in] i_arg argumnet for initializing manager. We should define necessary arguments class(derived EventArg) and input those arguments.
      *  \brief Initialize graphics system. (link dll, ...)
@@ -83,17 +86,25 @@ public: //---------------- Initialize and Release -----------------
      *  \brief Release graphics system.
      */
     virtual void ReleaseGraphicsSystem() = 0;
-
 public:
+//----------- Vertex Buffer Function ------------
+    virtual void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type) = 0;
+    virtual void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, Size_ui64 i_data_size) = 0;
+    virtual void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, Size_ui64 i_data_size) = 0;
+    virtual void DeleteVertexBuffer(const VertexBufferIdentity &i_identity) = 0;
+public:
+//------------- Resize Function -----------------
     virtual void Resize(int i_w, int i_h) = 0;
-public: //--------------- Render Function ------------------
+public:
+//------------- Render Function -----------------
     void Render();
-protected: //--------------- Render Flow Function ------------------
+protected:
+//------------ Render Flow Function -------------
     virtual void RenderBegin() = 0;
     virtual void RenderToScreen() = 0;
     virtual void RenderEnd() = 0;
 protected:
-    DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_screen_size, ScreenResolution);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_screen_size, ScreenResolution);
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

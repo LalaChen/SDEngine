@@ -27,7 +27,7 @@ SOFTWARE.
  *  \brief     Introduce of class EventObject.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/02/08
- *  \copyright FreeBSD Public License.
+ *  \copyright MIT Public License.
  */
 
 #pragma once
@@ -35,7 +35,7 @@ SOFTWARE.
 #include "Event.h"
 #include "Object.h"
 
- //---------------------------- start of namespace SDE ----------------------------
+//---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
 //---------------------------- start of namespace Basic ----------------------------

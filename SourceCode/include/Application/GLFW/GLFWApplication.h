@@ -26,8 +26,8 @@ SOFTWARE.
 /*! \file      GLFWApplication.h
  *  \brief     Introduce of class GLFWApplication.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/02/03
- *  \copyright FreeBSD Public License.
+ *  \date      2019/06/30
+ *  \copyright MIT License.
  */
 
 #pragma once

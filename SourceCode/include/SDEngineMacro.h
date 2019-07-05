@@ -79,10 +79,10 @@ typedef char SDStrChar;
     typedef SDE::Basic::WeakReferenceObject<Type> Type##WeakReferenceObject;
 
 //Singleton Define
-/*! \def SINGLETON_DECLARATION(ClassName)
+/*! \def SD_SINGLETON_DECLARATION(ClassName)
  *  \brief Declare singleton necessary method and member. Use this macro on the class declaration(.h).
  */
-#define SINGLETON_DECLARATION( ClassName ) \
+#define SD_SINGLETON_DECLARATION( ClassName ) \
     public: \
         static ClassName &GetRef(); \
         static ClassName *GetPtr(); \
@@ -100,10 +100,10 @@ typedef char SDStrChar;
     protected: \
         static ClassName *m_instance;
 
-/*! \def SINGLETON_DECLARATION_IMPL(ClassName)
+/*! \def SD_SINGLETON_DECLARATION_IMPL(ClassName)
  *  \brief implement singleton necessary method and member. Use this macro at class implementation(.cpp).
  */
-#define SINGLETON_DECLARATION_IMPL( ClassName ) \
+#define SD_SINGLETON_DECLARATION_IMPL( ClassName ) \
     ClassName* ClassName::m_instance = nullptr; \
     \
     ClassName& ClassName::GetRef() \
@@ -128,10 +128,10 @@ typedef char SDStrChar;
         } \
     }
 
-/*! \def SINGLETON_DECLARATION_REGISTER
+/*! \def SD_SINGLETON_DECLARATION_REGISTER
  *  \brief assign instance. Use this macro at class ctor(.cpp).
  */
-#define SINGLETON_DECLARATION_REGISTER \
+#define SD_SINGLETON_DECLARATION_REGISTER \
     if (m_instance != nullptr) \
     { \
         /*SDLOGE("m_instance isn't nullptr!!!.");*/ \
@@ -139,29 +139,29 @@ typedef char SDStrChar;
     m_instance = this;
 
 //Variable Get/Set Declaration
-/*! \def DECLARE_ATTRIBUTE_VAR_GET(Type,VarName,FunctionName)
+/*! \def SD_DECLARE_ATTRIBUTE_VAR_GET(Type,VarName,FunctionName)
  *   \brief Implement a c++ attribute with an getter. \n
  *          Type is the type of attribute. \n
  *          VarName is the name of class member var. \n
  *          FunctionName is name of getter. \n
  *          The getter return variable. So we suggest we use it to declare a based type attribute.
  */
-#define DECLARE_ATTRIBUTE_VAR_GET(Type,VarName,FunctionName) \
+#define SD_DECLARE_ATTRIBUTE_VAR_GET(Type,VarName,FunctionName) \
     protected: Type VarName; \
     public:    Type Get##FunctionName() const{ return VarName; }
 
-/*! \def DECLARE_ATTRIBUTE_CONSTREF_GET(Type,VarName,FunctionName)
+/*! \def SD_DECLARE_ATTRIBUTE_CONSTREF_GET(Type,VarName,FunctionName)
  *  \brief Implement a c++ attribute with an getter. \n
  *         Type is the type of attribute. \n
  *         VarName is the name of class member var. \n
  *         FunctionName is name of getter. \n
  *         The getter return referenece.
  */
-#define DECLARE_ATTRIBUTE_CONSTREF_GET(Type,VarName,FunctionName) \
+#define SD_DECLARE_ATTRIBUTE_CONSTREF_GET(Type,VarName,FunctionName) \
     protected: Type VarName; \
     public:    const Type& Get##FunctionName() const{return VarName;}
 
-/*! \def DECLARE_ATTRIBUTE_VAR_SET_VAR_GET(Type,VarName,FunctionName)
+/*! \def SD_DECLARE_ATTRIBUTE_VAR_SET_VAR_GET(Type,VarName,FunctionName)
  *  \brief Implement a c++ attribute with an getter and an getter. \n
  *         Type is the type of attribute. \n
  *         VarName is the name of class member var. \n
@@ -170,12 +170,12 @@ typedef char SDStrChar;
  *         The setter is setted by variable.
  */
 
-#define DECLARE_ATTRIBUTE_VAR_SET_VAR_GET(Type,VarName,FunctionName) \
+#define SD_DECLARE_ATTRIBUTE_VAR_SET_VAR_GET(Type,VarName,FunctionName) \
     protected: Type VarName; \
     public:    Type Get##FunctionName() const{return VarName;} \
     public:    void Set##FunctionName(Type i_##VarName){VarName = i_##VarName;}
 
-/*! \def DECLARE_ATTRIBUTE_CONSTREF_SET_VAR_GET(Type,VarName,FunctionName)
+/*! \def SD_DECLARE_ATTRIBUTE_CONSTREF_SET_VAR_GET(Type,VarName,FunctionName)
  *  \brief Implement a c++ attribute with an getter and an getter. \n
  *         Type is the type of attribute. \n
  *         VarName is the name of class member var. \n
@@ -183,12 +183,12 @@ typedef char SDStrChar;
  *         The getter return variable. So we suggest we use it to declare a based type attribute. \n
  *         The setter is setted by variable.
  */
-#define DECLARE_ATTRIBUTE_CONSTREF_SET_VAR_GET(Type,VarName,FunctionName) \
+#define SD_DECLARE_ATTRIBUTE_CONSTREF_SET_VAR_GET(Type,VarName,FunctionName) \
     protected: Type VarName; \
     public:    Type Get##FunctionName() const{return VarName;} \
     public:    void Set##FunctionName(const Type &i_##VarName){VarName = i_##VarName;}
 
-/*! \def DECLARE_ATTRIBUTE_VAR_SET_CONSTREF_GET(Type,VarName,FunctionName)
+/*! \def SD_DECLARE_ATTRIBUTE_VAR_SET_CONSTREF_GET(Type,VarName,FunctionName)
  *  \brief Implement a c++ attribute with an getter and an getter. \n
  *         Type is the type of attribute. \n
  *         VarName is the name of class member var. \n
@@ -196,12 +196,12 @@ typedef char SDStrChar;
  *         The getter return reference. \n
  *         The setter is setted by variable.
  */
-#define DECLARE_ATTRIBUTE_VAR_SET_CONSTREF_GET(Type,VarName,FunctionName) \
+#define SD_DECLARE_ATTRIBUTE_VAR_SET_CONSTREF_GET(Type,VarName,FunctionName) \
     protected: Type VarName; \
     public:    const Type& Get##FunctionName() const{return VarName;} \
     public:    void        Set##FunctionName(Type i_##VarName){VarName = i_##VarName;}
 
-/*! \def DECLARE_ATTRIBUTE_CONSTREF_SET_CONSTREF_GET(Type,VarName,FunctionName)
+/*! \def SD_DECLARE_ATTRIBUTE_CONSTREF_SET_CONSTREF_GET(Type,VarName,FunctionName)
  *  \brief Implement a c++ attribute with an getter and an getter. \n
  *         Type is the type of attribute. \n
  *         VarName is the name of class member var. \n
@@ -209,7 +209,7 @@ typedef char SDStrChar;
  *         The getter return reference. \n
  *         The setter is setted by reference.
  */
-#define DECLARE_ATTRIBUTE_CONSTREF_SET_CONSTREF_GET(Type,VarName,FunctionName) \
+#define SD_DECLARE_ATTRIBUTE_CONSTREF_SET_CONSTREF_GET(Type,VarName,FunctionName) \
     protected: Type VarName; \
     public:    const Type& Get##FunctionName() const{return VarName;} \
     public:    void        Set##FunctionName(const Type &i_##VarName){VarName = i_##VarName;}
@@ -223,3 +223,5 @@ typedef char SDStrChar;
  *  \brief convert enum to int.
  */
 #define ENUM_TO_INT( var )  static_cast<int>(var)
+
+#define SD_NULL_HANDLE 0

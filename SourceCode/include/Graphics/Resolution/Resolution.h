@@ -46,78 +46,82 @@ namespace Graphics
 {
 
 /*! \class Resolution
-    Class Resolution is used to record the size of framebuffer or screen. We also calcuate \n
-    aspect ratio of this resolution.
-*/
+ *  Class Resolution is used to record the size of framebuffer or screen. We also calcuate \n
+ *  aspect ratio of this resolution.
+ */
 class SDENGINE_CLASS Resolution
 {
 public:
     /*! \var const static Size_ui DEFAULT_WIDTH;
-        \brief default width(px) of resolution. It's 1920.
-    */
+     *  \brief default width(px) of resolution. It's 1920.
+     */
     const static Size_ui DEFAULT_WIDTH = 1920;
 
     /*! \var const static Size_ui DEFAULT_HEIGHT;
-        \brief default height(px) of resolution. It's 1080.
-    */
+     *  \brief default height(px) of resolution. It's 1080.
+     */
     const static Size_ui DEFAULT_HEIGHT = 1080;
 public:
 
     /*! \fn Resolution();
-        \brief Constructor of Resolution. We will initialize by default w and h.
-    */
+     *  \brief Constructor of Resolution. We will initialize by default w and h.
+     */
     Resolution();
 
     /*! \fn Resolution(Size_ui i_w, Size_ui i_h);
-        \param i_w Width of resolution.
-        \param i_h Height of resolution.
-        \brief Constructor of Resolution. We will initialize by i_w and i_h.
-    */
+     *  \param [in] i_w Width of resolution.
+     *  \param [in] i_h Height of resolution.
+     *  \brief Constructor of Resolution. We will initialize by i_w and i_h.
+     */
     Resolution(Size_ui i_w, Size_ui i_h);
 
     /*! \fn Resolution(const Resolution &i_src);
-        \param i_src The target resolution.
-        \brief Copy Constructor of Resolution.
-    */
+     *  \param [in] i_src The target resolution.
+     *  \brief Copy Constructor of Resolution.
+     */
     Resolution(const Resolution &i_src);
 
     /*! \fn ~Resolution();
-        \brief destructor of Resolution.
-    */
+     *  \brief destructor of Resolution.
+     */
     ~Resolution();
 public:
     /*! \fn void SetResolution(Size_ui i_w, Size_ui i_h);
-        \param i_w Width of resolution.
-        \param i_h Height of resolution.
-        \brief Setter of class Resolution. We will set this one by i_w and i_h.
-    */
+     *  \param [in] i_w Width of resolution.
+     *  \param [in] i_h Height of resolution.
+     *  \brief Setter of class Resolution. We will set this one by i_w and i_h.
+     */
     void SetResolution(Size_ui i_w, Size_ui i_h);
 
     /*! \fn void GetWindowSize(Size_ui &io_w, Size_ui &io_h) const;
-        \param io_w The storage of width.
-        \param io_h The storage of height.
-        \brief Getter of class Resolution. We need offering initialized storage.
-    */
+     *  \param io_w The storage of width.
+     *  \param io_h The storage of height.
+     *  \brief Getter of class Resolution. We need offering initialized storage.
+     */
     void GetResolution(Size_ui &io_w, Size_ui &io_h) const;
 public:
-    Resolution& operator=(const Resolution& i_src);
+    /*! \var Resolution& operator=(const Resolution &i_src);
+     *  \param [in] i_src
+     *  \brief 
+     */
+    Resolution& operator=(const Resolution &i_src);
 private:
     void CalculateRatioBetweenWidthAndHeight();
 protected:
     /* \var Size_ui m_width;
-       \brief Width of Resolution. [VarGet Attribute]
-    */
-    DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_width, Width);
+     * \brief Width of Resolution. [VarGet Attribute]
+     */
+    SD_DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_width, Width);
 
     /* \var Size_ui m_width;
-       \brief Width of Resolution. [VarGet Attribute]
-    */
-    DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_height, Height);
+     * \brief Width of Resolution. [VarGet Attribute]
+     */
+    SD_DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_height, Height);
 
     /* \var float m_aspect_ratio;
-       \brief Aspect ratio of Resolution. [VarGet Attribute]
-    */
-    DECLARE_ATTRIBUTE_VAR_GET(float, m_aspect_ratio, Ratio);
+     * \brief Aspect ratio of Resolution. [VarGet Attribute]
+     */
+    SD_DECLARE_ATTRIBUTE_VAR_GET(float, m_aspect_ratio, Ratio);
 };
 
 //--------------------------------- ctor and dtor -------------------------------------------

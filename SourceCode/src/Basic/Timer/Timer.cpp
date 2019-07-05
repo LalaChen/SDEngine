@@ -35,7 +35,7 @@ namespace SDE
 namespace Basic
 {
 
-SINGLETON_DECLARATION_IMPL(Timer);
+SD_SINGLETON_DECLARATION_IMPL(Timer);
 
 Timer::Timer()
 : m_start_time(0.0)
@@ -44,7 +44,7 @@ Timer::Timer()
 , m_end_time(0.0)
 , m_delta_time(0.0)
 {
-    SINGLETON_DECLARATION_REGISTER;
+    SD_SINGLETON_DECLARATION_REGISTER;
 }
 
 Timer::~Timer()

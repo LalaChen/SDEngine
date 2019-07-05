@@ -69,7 +69,7 @@ public:
     typedef std::function<void(const FilePathString &i_fp, const FilePathString &i_fn, int i_level) > EntryCallback;
 
 public:
-    SINGLETON_DECLARATION(FileSystemManager);
+    SD_SINGLETON_DECLARATION(FileSystemManager);
 public:
     /*! \fn FileSystemManager();
      *  \brief Constructor of FileSystemManager.
@@ -222,12 +222,12 @@ protected:
     /*! \var FilePathString m_work_dir_path;
      *  \brief work directory. [CRefGet Attribute]
      */
-    DECLARE_ATTRIBUTE_CONSTREF_GET(FilePathString, m_work_dir_path, WorkDir);
+    SD_DECLARE_ATTRIBUTE_CONSTREF_GET(FilePathString, m_work_dir_path, WorkDir);
 
     /*! \var RelativePaths m_relative_paths;
      *  \brief container storing all relative paths. [CRefGet Attribute]
      */
-    DECLARE_ATTRIBUTE_CONSTREF_GET(RelativePaths, m_relative_paths, RelativePaths);
+    SD_DECLARE_ATTRIBUTE_CONSTREF_GET(RelativePaths, m_relative_paths, RelativePaths);
 };
 
 //---------------------------- end of namespace Basic ----------------------------

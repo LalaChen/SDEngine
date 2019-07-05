@@ -23,7 +23,7 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
+#include "VertexBuffer.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -32,28 +32,18 @@ namespace SDE
 namespace Graphics
 {
 
-SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
-
-GraphicsManager::GraphicsManager()
+//------------------- class VertexBuffer -----------------
+VertexBuffer::VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VBufferFormatEnum i_format, VertexBufferMemoryTypeEnum i_memory_type)
+: Object(i_object_name)
+, m_location(i_va_location)
+, m_memory_type(i_memory_type)
+, m_size(0u)
 {
-    //Register instance.
-    SD_SINGLETON_DECLARATION_REGISTER;
+    m_identity.m_format = i_format;
 }
 
-GraphicsManager::~GraphicsManager()
+VertexBuffer::~VertexBuffer()
 {
-}
-
-void GraphicsManager::Render()
-{
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
-
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

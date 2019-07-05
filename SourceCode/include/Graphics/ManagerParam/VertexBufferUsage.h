@@ -23,7 +23,12 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
+/*! \file      VertexBufferUsage.h
+ *  \brief     Introduce of class VertexBufferUsageEnum.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/07/05
+ *  \copyright MIT License.
+ */
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -32,31 +37,23 @@ namespace SDE
 namespace Graphics
 {
 
-SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
-
-GraphicsManager::GraphicsManager()
+//------------------------- enum VertexBufferUsageKindEnum----------------------
+/*! \enum VertexBufferUsageKindEnum
+ *  The vertex buffer usage kind.
+ */
+enum VertexBufferUsageEnum
 {
-    //Register instance.
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
+    VertexBufferUsage_VERTEX_BUFFER = 0, /*!< Use for storing vertice.*/
+    VertexBufferUsage_NORMAL_BUFFER = 1, /*!< Use for storing normals.*/
+    VertexBufferUsage_TEX_COORD_BUFFER = 2, /*!< Use for storing texture coordinates.*/
+    VertexBufferUsage_COLOR_BUFFER = 3, /*!< Use for storing colors.*/
+    VertexBufferUsage_TANGENT_BUFFER = 4, /*!< Use for storing tangents.*/
+    VertexBufferUsage_BINORMAL_BUFFER = 5, /*!< Use for storing binormals.*/
+    VertexBufferUsage_ELEMENT_BUFFER = 6, /*!< Use for storing elements.*/
+    VertexBufferUsage_MAX_DEFINE_VALUE /*!< Bound of basic usage.*/
+};
 
-GraphicsManager::~GraphicsManager()
-{
+//-------------------------- end of namespace Graphics ----------------------------
 }
-
-void GraphicsManager::Render()
-{
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
-
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
-}
-
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
+//---------------------------- end of namespace SDE -------------------------------
 }

@@ -108,6 +108,36 @@
     <Filter Include="include\Math">
       <UniqueIdentifier>{8fe3d84b-b17f-406a-9974-7aa727326bd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\ManagerParam">
+      <UniqueIdentifier>{00d0a97f-84f4-4deb-ba47-6b70e758a010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\ManagerParam\Vulkan">
+      <UniqueIdentifier>{460c95a2-a353-4475-aa4d-c18f81f90e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\VertexBuffer">
+      <UniqueIdentifier>{4f6e11fd-94bd-402d-8c4f-37d1c21c2951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\ManagerParam\OpenGL4">
+      <UniqueIdentifier>{afa67856-f938-46dc-b86e-42e49d666128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\ManagerParam">
+      <UniqueIdentifier>{93e98e27-5830-40ec-a6e0-5a804c60b698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\ManagerParam\Vulkan">
+      <UniqueIdentifier>{8f8c915c-7a5f-4b62-8203-e9a6a49ded5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\ManagerParam\OpenGL4">
+      <UniqueIdentifier>{fbf34673-34d8-461d-96d8-811ab5a57319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\VertexBuffer">
+      <UniqueIdentifier>{cd5b20d8-4de0-4d22-9913-d5956ccc4693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\ManagerIdentity">
+      <UniqueIdentifier>{2a10e5b6-7012-4f90-81b7-5d03b8756c6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\ManagerIdentity">
+      <UniqueIdentifier>{c358c4c1-ba36-4926-b239-4ea6f0ef9193}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -178,6 +208,27 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Math\Quaternion.cpp">
       <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\VBufferFormat_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\VertexBuffer.cpp">
+      <Filter>src\Graphics\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\DynamicVertexBuffer.cpp">
+      <Filter>src\Graphics\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\StaticVertexBuffer.cpp">
+      <Filter>src\Graphics\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\VertexBufferIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VertexBuffer.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager_VertexBuffer.cpp">
+      <Filter>src\Graphics\Manager\OpenGL4</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +327,36 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Math\MathConstant.h">
       <Filter>include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\VertexBuffer\VertexBuffer.h">
+      <Filter>include\Graphics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\VBufferFormat_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VBufferFormat.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\VertexBuffer\DynamicVertexBuffer.h">
+      <Filter>include\Graphics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\VertexBuffer\StaticVertexBuffer.h">
+      <Filter>include\Graphics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ManagerParam.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\VertexBufferIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\ManagerIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferUsage.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferMemoryType.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

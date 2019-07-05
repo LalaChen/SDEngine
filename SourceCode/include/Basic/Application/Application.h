@@ -63,7 +63,7 @@ public:
     typedef bool FullWindowOption;
     
 public:
-    SINGLETON_DECLARATION(Application);
+    SD_SINGLETON_DECLARATION(Application);
     
 public:
     /*! \fn explicit Application(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv);
@@ -132,22 +132,22 @@ protected:
     /*! \var Resolution m_win_res; [VarGet Attribute]
         \brief resolution of this app.
     */
-    DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_win_res, WindowResolution);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_win_res, WindowResolution);
     
     /*! \var WindowSize m_full_window; [VarGet Attribute]
         \brief is full screen or not.
     */
-    DECLARE_ATTRIBUTE_VAR_GET(FullWindowOption, m_full_window, FullScreenSignal);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(FullWindowOption, m_full_window, FullScreenSignal);
     
     /*! \var std::string m_win_title;
         \brief is full screen or not. [VarGet Attribute]
     */
-    DECLARE_ATTRIBUTE_VAR_GET(std::string, m_win_title, WinTitle);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(std::string, m_win_title, WinTitle);
 
     /*! \var GraphicsLibraryEnum m_adopt_library;
         \brief Adopt library. [VarGet Attribute]
     */
-    DECLARE_ATTRIBUTE_VAR_GET(GraphicsLibraryEnum, m_adopt_library, AdoptLibrary);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(GraphicsLibraryEnum, m_adopt_library, AdoptLibrary);
 };
 
 inline void Application::SetWindowResolution(Size_ui i_width, Size_ui i_height)

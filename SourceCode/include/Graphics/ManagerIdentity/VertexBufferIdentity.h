@@ -23,7 +23,17 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
+/*! \file      VertexBuffer.h
+ *  \brief     Introduce of class VertexBufferIdentity.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/07/03
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include "SDEngineCommonType.h"
+#include "VBufferFormat.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -32,29 +42,37 @@ namespace SDE
 namespace Graphics
 {
 
-SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
-
-GraphicsManager::GraphicsManager()
+/*! \class VertexBufferIdentity
+ *  Keep all graphics handle or ID in this struct.
+ */
+class VertexBufferIdentity
 {
-    //Register instance.
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
+public:
+    /*! \fn explicit VertexBufferIdentity();
+     *  \brief The constructor of VertexBufferIdentity Class.
+     */
+    VertexBufferIdentity();
 
-GraphicsManager::~GraphicsManager()
-{
-}
+    /*! \fn explicit ~VertexBufferIdentity();
+     *  \brief The destructor of VertexBufferIdentity Class.
+     */
+    ~VertexBufferIdentity();
+public:
+    /*! \var BufferHandle m_buffer_handle;
+     *  \brief The buffer handle. It is valid while the value is not equal 0.
+     */
+    BufferHandle m_buffer_handle;
 
-void GraphicsManager::Render()
-{
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
+    /*! \var DeviceMemoryHandle m_memory_handle;
+     *  \brief The memory handle. This value is nullptr in opengl system.
+     */
+    DeviceMemoryHandle m_memory_handle;
 
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
-}
+    /*! \var ValueTypeEnum m_format;
+     *  \brief Record the buffer format.
+     */
+    VBufferFormatEnum m_format;
+};
 
 //---------------------------- end of namespace Graphics ----------------------------
 }

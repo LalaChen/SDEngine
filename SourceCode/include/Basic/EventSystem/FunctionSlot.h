@@ -27,7 +27,7 @@ SOFTWARE.
  *  \brief     Introduce of class FunctionSlotBase, GlobalFunctionSlot and MemberFunctionSlot.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/02/07
- *  \copyright FreeBSD Public License.
+ *  \copyright MIT License.
  */
 
 #pragma once

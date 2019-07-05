@@ -23,7 +23,16 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
+/*! \file      StaticVertexBuffer.h
+ *  \brief     Introduce of class StaticVertexBuffer.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/07/03
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include "VertexBuffer.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -32,29 +41,34 @@ namespace SDE
 namespace Graphics
 {
 
-SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
+/*! \class StaticVertexBuffer
+ *  In our graphic system, StaticVertexBuffer objects are used to keep vertex datas.
+ */
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(StaticVertexBuffer);
 
-GraphicsManager::GraphicsManager()
+class SDENGINE_API StaticVertexBuffer : public VertexBuffer
 {
-    //Register instance.
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
+public:
+    /*! \fn explicit StaticVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VBufferFormatEnum i_format);
+     *  \param [in] i_object_name Name of this buffer.
+     *  \param [in] i_va_location Attribute location of this buffer.
+     *  \param [in] i_value_type The value type of this buffer.
+     *  \brief The constructor of StaticVertexBuffer Class.
+     */
+    explicit StaticVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VBufferFormatEnum i_format);
 
-GraphicsManager::~GraphicsManager()
-{
-}
-
-void GraphicsManager::Render()
-{
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
-
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
-}
+    /*! \fn ~StaticVertexBuffer()
+     *  \brief The destructor of StaticVertexBuffer Class.
+     */
+    virtual ~StaticVertexBuffer();
+public:
+    /* \fn void RefreshBufferData(void *i_data_ptr, uint32_t i_data_size) override;
+     * \param [in] i_data_ptr Data pointer.
+     * \param [in] i_data_size Data size.
+     * \brief Refresh data into buffer.
+     */
+    void RefreshBufferData(void *i_data_ptr, uint32_t i_data_size) override;
+};
 
 //---------------------------- end of namespace Graphics ----------------------------
 }

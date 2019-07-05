@@ -166,7 +166,7 @@ void Sample1_DrawTriangle::CreateBuffers()
 
     //1. create vertex buffer.
     //--- i. create buffer information.
-    result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE,
+    result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE,
         static_cast<VkDeviceSize>(sizeof(vec3)*quad_vecs.size()), m_VK_vertice_buffer);
     if (result != VK_SUCCESS) {
         SDLOGE("Create vertice buffer failure");
@@ -204,7 +204,7 @@ void Sample1_DrawTriangle::CreateBuffers()
 
     //2. create color buffer.
     //--- i. create buffer information.
-    result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE,
+    result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE,
         static_cast<VkDeviceSize>(sizeof(Color4f) * quad_colors.size()), m_VK_ver_color_buffer);
 
 #ifndef USE_HOST_BUFFER
@@ -239,7 +239,7 @@ void Sample1_DrawTriangle::CreateBuffers()
 
     //3. create indice buffer.
     //--- i. create buffer information.
-    result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, 
+    result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE,
         static_cast<VkDeviceSize>(sizeof(uint16_t) * quad_indices.size()), m_VK_indices_buffer);
     if (result != VK_SUCCESS) {
         SDLOGE("Create indice buffer failure");

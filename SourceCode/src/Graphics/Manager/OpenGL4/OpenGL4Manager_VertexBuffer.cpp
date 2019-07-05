@@ -20,43 +20,36 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-#include "GraphicsManager.h"
+#include "OpenGL4Manager.h"
 
-//---------------------------- start of namespace SDE ----------------------------
+//---------------------------- start of namespace SDE -----------------------------
 namespace SDE
 {
-//---------------------------- start of namespace Graphics ----------------------------
+//------------------------- start of namespace Graphics ---------------------------
 namespace Graphics
 {
 
-SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
-
-GraphicsManager::GraphicsManager()
+//----------- Vertex Buffer Function ------------
+void OpenGL4Manager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type)
 {
-    //Register instance.
-    SD_SINGLETON_DECLARATION_REGISTER;
+
 }
 
-GraphicsManager::~GraphicsManager()
+void OpenGL4Manager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, Size_ui64 i_data_size)
 {
 }
 
-void GraphicsManager::Render()
+void OpenGL4Manager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, Size_ui64 i_data_size)
 {
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
-
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
 }
 
-//---------------------------- end of namespace Graphics ----------------------------
+void OpenGL4Manager::DeleteVertexBuffer(const VertexBufferIdentity &i_identity)
+{
 }
-//---------------------------- end of namespace SDE ----------------------------
+
+//-------------------------- end of namespace Graphics ----------------------------
+}
+//---------------------------- end of namespace SDE -------------------------------
 }

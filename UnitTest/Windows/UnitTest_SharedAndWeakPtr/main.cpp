@@ -56,7 +56,7 @@ public:
         return SDE::Basic::StringFormat("Obj:%s(%s)[adr:%x]", m_object_name.c_str(), m_class_name.c_str(), this);
     }
 protected:;
-    DECLARE_ATTRIBUTE_CONSTREF_GET(std::string, m_class_name, ClassName);
+    SD_DECLARE_ATTRIBUTE_CONSTREF_GET(std::string, m_class_name, ClassName);
 };
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(BaseClass);

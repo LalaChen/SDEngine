@@ -53,7 +53,7 @@ namespace Basic
 class SDENGINE_CLASS Timer
 {
 public:
-    SINGLETON_DECLARATION(Timer);
+    SD_SINGLETON_DECLARATION(Timer);
 public:
     /*! \fn explicit Timer();
      *  \brief The constructor of Timer Class.
@@ -94,27 +94,27 @@ protected:
     /*! \var double m_start_time;
      *  \brief Program start time. [VarGet Attribute]
      */
-    DECLARE_ATTRIBUTE_VAR_GET(double, m_start_time, ProgramStartTime);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(double, m_start_time, ProgramStartTime);
     
     /*! \var double m_previous_time;
      *  \brief Program previous time. [VarGet Attribute]
      */
-    DECLARE_ATTRIBUTE_VAR_GET(double, m_previous_time, ProgramPreviousTime);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(double, m_previous_time, ProgramPreviousTime);
     
     /*! \var double m_current_time;
      *  \brief Program current time. [VarGet Attribute]
      */
-    DECLARE_ATTRIBUTE_VAR_GET(double, m_current_time, ProgramCurrentTime);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(double, m_current_time, ProgramCurrentTime);
     
     /*! \var double m_end_time;
      *  \brief Program end time. [VarGet Attribute]
      */
-    DECLARE_ATTRIBUTE_VAR_GET(double, m_end_time, EndProgramTime);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(double, m_end_time, EndProgramTime);
     
     /*! \var double m_delta_time;
      *  \brief The delta time between two frames. [VarGet Attribute]
      */
-    DECLARE_ATTRIBUTE_VAR_GET(double, m_delta_time, ProgramDeltaTime);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(double, m_delta_time, ProgramDeltaTime);
 };
 
 //---------------------------- end of namespace Basic ----------------------------

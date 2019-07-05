@@ -23,7 +23,12 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
+/*! \file      VertexBufferMemoryType.h
+ *  \brief     Introduce of class VertexBufferMemoryTypeEnum.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/07/05
+ *  \copyright MIT License.
+ */
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -32,31 +37,21 @@ namespace SDE
 namespace Graphics
 {
 
-SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
-
-GraphicsManager::GraphicsManager()
+//------------------------- enum VertexBufferMemoryTypeEnum----------------------
+/*! \enum VertexBufferMemoryTypeEnum
+ *  The memory type of this buffer.
+ *  The dynamic memory means the content in this buffer will be modified in future using.
+ *  The static memory means the content is immutable after initializing.
+ */
+enum VertexBufferMemoryTypeEnum
 {
-    //Register instance.
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
+    VertexBufferMemoryType_DYNAMIC = 0, /*!< Dynamic buffer.*/
+    VertexBufferMemoryType_STATIC = 1, /*!< Static buffer.*/
+    VertexBufferMemoryType_MAX_DEFINE_VALUE /*!< Use for return error.*/
+};
 
-GraphicsManager::~GraphicsManager()
-{
-}
 
-void GraphicsManager::Render()
-{
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
-
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
+//-------------------------- end of namespace Graphics ----------------------------
 }
-
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
+//---------------------------- end of namespace SDE -------------------------------
 }

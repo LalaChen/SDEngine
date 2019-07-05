@@ -98,7 +98,7 @@ protected:
     /*! \var ObjectName m_object_name;
      *  \brief object name. [VarGet Attribute]
      */
-    DECLARE_ATTRIBUTE_VAR_GET(ObjectName, m_object_name, ObjectName);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(ObjectName, m_object_name, ObjectName);
 };
 
 //---------------------------- end of namespace Basic ----------------------------

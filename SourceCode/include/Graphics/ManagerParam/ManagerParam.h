@@ -23,40 +23,13 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
+/*! \file      ManagerParam.h
+ *  \brief     Include all ManagerParam.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/07/03
+ *  \copyright MIT License.
+ */
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
-
-SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
-
-GraphicsManager::GraphicsManager()
-{
-    //Register instance.
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
-
-GraphicsManager::~GraphicsManager()
-{
-}
-
-void GraphicsManager::Render()
-{
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
-
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
-}
-
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+#include "VBufferFormat.h"
+#include "VertexBufferUsage.h"
+#include "VertexBufferMemoryType.h"

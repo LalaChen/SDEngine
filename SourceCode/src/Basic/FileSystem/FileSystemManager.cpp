@@ -31,12 +31,12 @@ namespace SDE
 namespace Basic
 {
 
-SINGLETON_DECLARATION_IMPL(FileSystemManager);
+SD_SINGLETON_DECLARATION_IMPL(FileSystemManager);
 
 //------------ File System Manager  ------------
 FileSystemManager::FileSystemManager()
 {
-    SINGLETON_DECLARATION_REGISTER
+    SD_SINGLETON_DECLARATION_REGISTER
     //Add default folder.
     AddRelativePath("");
     AddRelativePath("Resources\\");

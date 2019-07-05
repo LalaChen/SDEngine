@@ -23,7 +23,8 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
+#include "SDEngineMacro.h"
+#include "StaticVertexBuffer.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -32,28 +33,26 @@ namespace SDE
 namespace Graphics
 {
 
-SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
-
-GraphicsManager::GraphicsManager()
-{
-    //Register instance.
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
-
-GraphicsManager::~GraphicsManager()
+StaticVertexBuffer::StaticVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VBufferFormatEnum i_format)
+: VertexBuffer(i_object_name, i_va_location, i_format, VertexBufferMemoryType_STATIC)
 {
 }
 
-void GraphicsManager::Render()
+StaticVertexBuffer::~StaticVertexBuffer()
 {
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
+}
 
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
+void StaticVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui i_data_size)
+{
+    //1. Ckeck BufferHandle is null handle or not.
+    if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
+        //--- No, compare current buffer size with new one.
+        if (m_size < i_data_size) {
+            //----- Smaller than new one, delete old buffer.
+            //----- Create new one.
+        }
+    }
+    //2. refresh static buffer.(staging)
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

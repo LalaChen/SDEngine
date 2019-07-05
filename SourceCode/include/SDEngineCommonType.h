@@ -78,32 +78,37 @@ typedef std::string ObjectName;
 namespace Graphics
 {
 
-/*! \typedef unsigned int GLCode; 
- *  \brief represent Open GL define value.
+/*! \typedef unsigned int APICode; 
+ *  \brief represent API define value or enum.
  */
-typedef unsigned int GLCode;
+typedef unsigned int APICode;
 
 /*! \typedef std::string UniformVarName;
  *  \brief Type of uniform variable name.
  */
 typedef std::string UniformVarName;
 
-/*! \typedef unsigned int VertexAttribLocation;
+/*! \typedef uint32_t VertexAttribLocation;
  *  \brief VA location.
  */
-typedef unsigned int VertexAttribLocation;
+typedef uint32_t VertexAttribLocation;
 
 /*! \typedef uint64_t BufferHandle;
  *  \brief Buffer object handle. In opengl, it means buffer object ID. In Vulkan, it means buffer handle.
  */
 typedef uint64_t BufferHandle;
 
-/*! \typedef unsigned int ShaderHandle;
+/*! \typedef uint64_t DeviceMemoryHandle;
+ *  \brief Device memory handle. In opengl, it's null handle(Don't care). In Vulkan, it means memory handle.
+ */
+typedef uint64_t DeviceMemoryHandle;
+
+/*! \typedef uint64_t ShaderHandle;
  *  \brief Represent all hande of all kind of shader. In opengl, it means shader ID. In Vulkan, it means shader module handle.
  */
 typedef uint64_t ShaderHandle;
 
-/*! \typedef unsigned int ShaderProgramHandle;
+/*! \typedef uint64_t ShaderProgramHandle;
  *  \brief Represent all ID of shader program. In opengl, it means shader ID. In Vulkan, it means shader module handle.
  */
 typedef uint64_t ShaderProgramHandle;
@@ -118,30 +123,30 @@ typedef uint64_t FrameBufferHandle;
  */
 typedef uint64_t TextureHandle;
 
-/*! \typedef int UniformLocation;
+/*! \typedef int32_t UniformLocation;
  *  \brief Represent uniform location in shader.
  */
-typedef int UniformLocation;
+typedef int32_t UniformLocation;
 
-/*! \typedef int ActiveTextureID;
+/*! \typedef int32_t ActiveTextureID;
  *	\brief Represent active texture ID.
  */
-typedef int ActiveTextureID;
+typedef int32_t ActiveTextureID;
 
-/*! \typedef unsigned int ColorAttachmentID;
+/*! \typedef uint32_t ColorAttachmentID;
  *  \brief color attachment ID.
  */
-typedef unsigned int ColorAttachmentID;
+typedef uint32_t ColorAttachmentID;
 
-/*! \typedef unsigned short USVertexIndex;
+/*! \typedef uint16_t USVertexIndex;
  *	\brief US vertex index.
  */
-typedef unsigned short USVertexIndex;
+typedef uint16_t USVertexIndex;
 
-/*! \typedef unsigned short UIVertexIndex;
+/*! \typedef uint32_t UIVertexIndex;
  *  \brief UI vertex index.
  */
-typedef unsigned int UIVertexIndex;
+typedef uint32_t UIVertexIndex;
 
 //--- Image Related
 /*! \typedef typedef unsigned char* ImageBufferAddr;
@@ -154,31 +159,36 @@ typedef unsigned char* ImageBufferAddr;
  */
 typedef size_t ImageBufferSize;
 
-/*! \typedef unsigned int Size_ui;
+/*! \typedef uint32_t Size_ui32;
  *  \brief represent size.
  */
-typedef unsigned int Size_ui;
+typedef uint32_t Size_ui32;
+
+/*! \typedef uint64_t Size_ui64;
+ *  \brief represent size.
+ */
+typedef uint64_t Size_ui64;
 //--- Layer ID.
 
-/*! \typedef unsigned int LayerID;
+/*! \typedef uint32_t LayerID;
  *  \brief represent LayerID.
  */
-typedef unsigned int LayerID;
+typedef uint32_t LayerID;
 
-/*! \typedef unsigned int LayerMaskValue;
+/*! \typedef uint32_t LayerMaskValue;
  *  \brief represent layer mask value.
  */
-typedef unsigned int LayerMaskValue;
+typedef uint32_t LayerMaskValue;
 
-/*! \typedef unsigned int RenderOrder;
+/*! \typedef uint32_t RenderOrder;
  *  \brief Type of render order.
  */
-typedef unsigned int RenderOrder;
+typedef uint32_t RenderOrder;
 
-/*! \typedef unsigned int RenderOrderOffset;
+/*! \typedef uint32_t RenderOrderOffset;
  *  \brief Type of render order offset.
  */
-typedef unsigned int RenderOrderOffset;
+typedef uint32_t RenderOrderOffset;
 
 }
 //---------------------------- end of namespace Graphics ----------------------------

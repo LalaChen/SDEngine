@@ -23,7 +23,17 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
+/*! \file      VBufferFormatType_Vulkan.h
+ *  \brief     Introduce of class VBufferFormatType_Vulkan.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/06/30
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include "SDEngineCommonType.h"
+#include "VBufferFormat.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -32,30 +42,13 @@ namespace SDE
 namespace Graphics
 {
 
-SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
-
-GraphicsManager::GraphicsManager()
+class VBufferFormat_Vulkan
 {
-    //Register instance.
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
-
-GraphicsManager::~GraphicsManager()
-{
-}
-
-void GraphicsManager::Render()
-{
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
-
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
-}
-
+public:
+    static APICode Convert(const VBufferFormatEnum &i_src);
+public:
+    static APICode VBufferFormatTypes[VBufferFormat_MAX_DEFINE_VALUE];
+};
 //---------------------------- end of namespace Graphics ----------------------------
 }
 //---------------------------- end of namespace SDE ----------------------------

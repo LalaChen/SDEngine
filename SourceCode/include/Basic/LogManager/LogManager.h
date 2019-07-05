@@ -67,7 +67,7 @@ public:
         Internal = 4  /*!< Show log with prefix Internal. It only show when app build by debug configuration.*/
     };
 public:
-    SINGLETON_DECLARATION(LogManager);
+    SD_SINGLETON_DECLARATION(LogManager);
 public:
     /*! \fn explicit LogManager();
      *	\brief Constructor of LogManager.
