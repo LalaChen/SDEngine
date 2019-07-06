@@ -36,7 +36,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
 
-using SDE::Graphics::Size_ui;
+using SDE::Graphics::Size_ui32;
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -52,15 +52,15 @@ namespace Graphics
 class SDENGINE_CLASS Resolution
 {
 public:
-    /*! \var const static Size_ui DEFAULT_WIDTH;
+    /*! \var const static Size_ui32 DEFAULT_WIDTH;
      *  \brief default width(px) of resolution. It's 1920.
      */
-    const static Size_ui DEFAULT_WIDTH = 1920;
+    const static Size_ui32 DEFAULT_WIDTH = 1920;
 
-    /*! \var const static Size_ui DEFAULT_HEIGHT;
+    /*! \var const static Size_ui32 DEFAULT_HEIGHT;
      *  \brief default height(px) of resolution. It's 1080.
      */
-    const static Size_ui DEFAULT_HEIGHT = 1080;
+    const static Size_ui32 DEFAULT_HEIGHT = 1080;
 public:
 
     /*! \fn Resolution();
@@ -68,12 +68,12 @@ public:
      */
     Resolution();
 
-    /*! \fn Resolution(Size_ui i_w, Size_ui i_h);
+    /*! \fn Resolution(Size_ui32 i_w, Size_ui32 i_h);
      *  \param [in] i_w Width of resolution.
      *  \param [in] i_h Height of resolution.
      *  \brief Constructor of Resolution. We will initialize by i_w and i_h.
      */
-    Resolution(Size_ui i_w, Size_ui i_h);
+    Resolution(Size_ui32 i_w, Size_ui32 i_h);
 
     /*! \fn Resolution(const Resolution &i_src);
      *  \param [in] i_src The target resolution.
@@ -91,14 +91,14 @@ public:
      *  \param [in] i_h Height of resolution.
      *  \brief Setter of class Resolution. We will set this one by i_w and i_h.
      */
-    void SetResolution(Size_ui i_w, Size_ui i_h);
+    void SetResolution(Size_ui32 i_w, Size_ui32 i_h);
 
     /*! \fn void GetWindowSize(Size_ui &io_w, Size_ui &io_h) const;
      *  \param io_w The storage of width.
      *  \param io_h The storage of height.
      *  \brief Getter of class Resolution. We need offering initialized storage.
      */
-    void GetResolution(Size_ui &io_w, Size_ui &io_h) const;
+    void GetResolution(Size_ui32 &io_w, Size_ui32 &io_h) const;
 public:
     /*! \var Resolution& operator=(const Resolution &i_src);
      *  \param [in] i_src
@@ -111,12 +111,12 @@ protected:
     /* \var Size_ui m_width;
      * \brief Width of Resolution. [VarGet Attribute]
      */
-    SD_DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_width, Width);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(Size_ui32, m_width, Width);
 
     /* \var Size_ui m_width;
      * \brief Width of Resolution. [VarGet Attribute]
      */
-    SD_DECLARE_ATTRIBUTE_VAR_GET(Size_ui, m_height, Height);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(Size_ui32, m_height, Height);
 
     /* \var float m_aspect_ratio;
      * \brief Aspect ratio of Resolution. [VarGet Attribute]
@@ -133,7 +133,7 @@ inline Resolution::Resolution()
     CalculateRatioBetweenWidthAndHeight();
 }
 
-inline Resolution::Resolution(Size_ui i_w, Size_ui i_h)
+inline Resolution::Resolution(Size_ui32 i_w, Size_ui32 i_h)
 : m_width(i_w)
 , m_height(i_h)
 , m_aspect_ratio(1.0f)
@@ -160,14 +160,14 @@ inline void Resolution::CalculateRatioBetweenWidthAndHeight()
 }
 
 //--------------------------------- public working function ---------------------------------
-inline void Resolution::SetResolution(Size_ui i_w, Size_ui i_h)
+inline void Resolution::SetResolution(Size_ui32 i_w, Size_ui32 i_h)
 {
     m_width  = i_w;
     m_height = i_h;
     CalculateRatioBetweenWidthAndHeight();
 }
 
-inline void Resolution::GetResolution(Size_ui &io_w, Size_ui &io_h) const
+inline void Resolution::GetResolution(Size_ui32 &io_w, Size_ui32 &io_h) const
 {
     io_w = m_width;
     io_h = m_height;

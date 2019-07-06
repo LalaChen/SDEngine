@@ -37,11 +37,11 @@ void OpenGL4Manager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_
 
 }
 
-void OpenGL4Manager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, Size_ui64 i_data_size)
+void OpenGL4Manager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
 {
 }
 
-void OpenGL4Manager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, Size_ui64 i_data_size)
+void OpenGL4Manager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
 {
 }
 

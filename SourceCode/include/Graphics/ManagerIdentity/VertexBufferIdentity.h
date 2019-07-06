@@ -32,6 +32,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "VBufferFormat.h"
 
@@ -45,7 +46,7 @@ namespace Graphics
 /*! \class VertexBufferIdentity
  *  Keep all graphics handle or ID in this struct.
  */
-class VertexBufferIdentity
+class SDENGINE_CLASS VertexBufferIdentity
 {
 public:
     /*! \fn explicit VertexBufferIdentity();

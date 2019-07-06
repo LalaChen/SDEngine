@@ -62,12 +62,12 @@ public:
      */
     virtual ~DynamicVertexBuffer();
 public:
-    /* \fn void RefreshBufferData(void *i_data_ptr, uint32_t i_data_size) override;
+    /* \fn void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) override;
      * \param [in] i_data_ptr Data pointer.
      * \param [in] i_data_size Data size.
      * \brief Refresh data into buffer.
      */
-    void RefreshBufferData(void *i_data_ptr, Size_ui i_data_size) override;
+    void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) override;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

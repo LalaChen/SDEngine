@@ -41,7 +41,7 @@ DynamicVertexBuffer::~DynamicVertexBuffer()
 {
 }
 
-void DynamicVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui i_data_size)
+void DynamicVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size)
 {
     //1. Ckeck BufferHandle is null handle or not.
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {

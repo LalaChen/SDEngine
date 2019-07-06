@@ -69,8 +69,8 @@ public:
 public:
 //----------- Vertex Buffer Function ------------
     void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type) override;
-    void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, Size_ui64 i_data_size) override;
-    void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, Size_ui64 i_data_size) override;
+    void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
+    void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
     void DeleteVertexBuffer(const VertexBufferIdentity &i_identity) override;
 public:
     void Resize(int i_w, int i_h) override;

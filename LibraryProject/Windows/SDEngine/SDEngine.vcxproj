@@ -40,6 +40,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_InitializeVulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VertexBuffer.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKBuffer.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Color4f.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Vec.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\DynamicVertexBuffer.cpp" />

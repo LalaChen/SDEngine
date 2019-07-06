@@ -41,7 +41,7 @@ SOFTWARE.
 
 using SDE::Graphics::Resolution;
 using SDE::Graphics::GraphicsLibraryEnum;
-using SDE::Graphics::Size_ui;
+using SDE::Graphics::Size_ui32;
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -121,12 +121,12 @@ public:
 
     virtual void Resize(int i_w, int i_h);
 public:
-    /*! \fn void SetWindowResolution(Size_ui i_width, Size_ui i_height);
+    /*! \fn void SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height);
         \param [in] i_width Width of app.
         \param [in] i_height Height of app.
         \brief Set resolution of this app.
     */
-    void SetWindowResolution(Size_ui i_width, Size_ui i_height);
+    void SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height);
 
 protected:
     /*! \var Resolution m_win_res; [VarGet Attribute]
@@ -150,7 +150,7 @@ protected:
     SD_DECLARE_ATTRIBUTE_VAR_GET(GraphicsLibraryEnum, m_adopt_library, AdoptLibrary);
 };
 
-inline void Application::SetWindowResolution(Size_ui i_width, Size_ui i_height)
+inline void Application::SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height)
 {
     m_win_res.SetResolution(i_width, i_height);
 }
