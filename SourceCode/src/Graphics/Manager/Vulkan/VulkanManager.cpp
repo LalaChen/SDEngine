@@ -34,7 +34,7 @@ namespace Graphics
 {
 
 const uint32_t VulkanManager::MaxImgAcqirationTime = 2000000000; //2s
-const uint32_t VulkanManager::MaxFenceWaitTime = 2000000; //2ms
+const uint32_t VulkanManager::MaxFenceWaitTime = 17000000; //17ms
 const VkClearValue VulkanManager::ClearColor = { 0.2f, 0.5f, 0.8f, 1.0f };
 
 const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
