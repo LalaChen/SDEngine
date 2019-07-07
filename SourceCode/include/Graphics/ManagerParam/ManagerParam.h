@@ -30,6 +30,8 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#pragma once
+
 #include "VBufferFormat.h"
 #include "VertexBufferUsage.h"
 #include "VertexBufferMemoryType.h"

@@ -215,12 +215,6 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\VertexBuffer.cpp">
       <Filter>src\Graphics\VertexBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\DynamicVertexBuffer.cpp">
-      <Filter>src\Graphics\VertexBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\StaticVertexBuffer.cpp">
-      <Filter>src\Graphics\VertexBuffer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\VertexBufferIdentity.cpp">
       <Filter>src\Graphics\ManagerIdentity</Filter>
     </ClCompile>
@@ -232,6 +226,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKBuffer.cpp">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\StaticVertexBuffer.cpp">
+      <Filter>src\Graphics\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\DynamicVertexBuffer.cpp">
+      <Filter>src\Graphics\VertexBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,12 +340,6 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VBufferFormat.h">
       <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\VertexBuffer\DynamicVertexBuffer.h">
-      <Filter>include\Graphics\VertexBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\VertexBuffer\StaticVertexBuffer.h">
-      <Filter>include\Graphics\VertexBuffer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ManagerParam.h">
       <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
@@ -360,6 +354,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferMemoryType.h">
       <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\VertexBuffer\DynamicVertexBuffer.h">
+      <Filter>include\Graphics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\VertexBuffer\StaticVertexBuffer.h">
+      <Filter>include\Graphics\VertexBuffer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

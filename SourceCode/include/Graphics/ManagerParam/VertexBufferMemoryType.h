@@ -30,6 +30,8 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#pragma once
+
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {

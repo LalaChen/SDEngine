@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "GraphicsManager.h"
 #include "VertexBuffer.h"
 
 //---------------------------- start of namespace SDE ----------------------------

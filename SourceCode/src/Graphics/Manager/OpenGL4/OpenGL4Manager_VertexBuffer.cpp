@@ -45,7 +45,7 @@ void OpenGL4Manager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_id
 {
 }
 
-void OpenGL4Manager::DeleteVertexBuffer(const VertexBufferIdentity &i_identity)
+void OpenGL4Manager::DeleteVertexBuffer(VertexBufferIdentity &io_identity)
 {
 }
 

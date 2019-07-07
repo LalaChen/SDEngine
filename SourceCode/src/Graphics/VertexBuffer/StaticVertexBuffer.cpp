@@ -24,6 +24,8 @@ SOFTWARE.
 */
 
 #include "SDEngineMacro.h"
+#include "LogManager.h"
+#include "GraphicsManager.h"
 #include "StaticVertexBuffer.h"
 
 //---------------------------- start of namespace SDE ----------------------------
@@ -46,13 +48,18 @@ void StaticVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_si
 {
     //1. Ckeck BufferHandle is null handle or not.
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
-        //--- No, compare current buffer size with new one.
-        if (m_size < i_data_size) {
-            //----- Smaller than new one, delete old buffer.
-            //----- Create new one.
-        }
+        SDLOGW("Static vertex buffer had been initialized. Please refresh data after clear old one.");
     }
-    //2. refresh static buffer.(staging)
+    //2. Create new one.
+    GraphicsManager::GetRef().CreateVertexBuffer(m_identity, i_data_size, m_memory_type);
+    //3. refresh static buffer.(staging)
+    if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
+        GraphicsManager::GetRef().RefreshStaticVertexBuffer(m_identity, i_data_ptr, i_data_size);
+        m_size = i_data_size;
+    }
+    else {
+        SDLOG("Reallocate or initialize buffer failure.");
+    }
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

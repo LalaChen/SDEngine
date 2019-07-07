@@ -91,7 +91,7 @@ public:
     virtual void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type) = 0;
     virtual void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
     virtual void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
-    virtual void DeleteVertexBuffer(const VertexBufferIdentity &i_identity) = 0;
+    virtual void DeleteVertexBuffer(VertexBufferIdentity &io_identity) = 0;
 public:
 //------------- Resize Function -----------------
     virtual void Resize(int i_w, int i_h) = 0;

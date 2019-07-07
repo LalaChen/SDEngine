@@ -23,6 +23,8 @@ SOFTWARE.
 
 */
 
+#include "LogManager.h"
+#include "GraphicsManager.h"
 #include "DynamicVertexBuffer.h"
 
 //---------------------------- start of namespace SDE ----------------------------
@@ -39,6 +41,9 @@ DynamicVertexBuffer::DynamicVertexBuffer(const ObjectName &i_object_name, Vertex
 
 DynamicVertexBuffer::~DynamicVertexBuffer()
 {
+    if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
+        GraphicsManager::GetRef().DeleteVertexBuffer(m_identity);
+    }
 }
 
 void DynamicVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size)
@@ -47,11 +52,27 @@ void DynamicVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_s
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
         //--- No, compare current buffer size with new one.
         if (m_size < i_data_size) {
+            SDLOG("Dynamic buffer size is small than input datas. Delete old and allocate new one!!!");
             //----- Smaller than new one, delete old buffer.
+            GraphicsManager::GetRef().DeleteVertexBuffer(m_identity);
             //----- Create new one.
+            GraphicsManager::GetRef().CreateVertexBuffer(m_identity, i_data_size, m_memory_type);
         }
     }
+    else {
+        //----- Create new one.
+        SDLOG("Dynamic buffer is initialized first time. Allocate new one!!!");
+        GraphicsManager::GetRef().CreateVertexBuffer(m_identity, i_data_size, m_memory_type);
+    }
+
     //2. refresh dynamic buffer.(host)
+    if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
+        GraphicsManager::GetRef().RefreshDynamicVertexBuffer(m_identity, i_data_ptr, i_data_size);
+        m_size = i_data_size;
+    } 
+    else {
+        SDLOG("Reallocate or initialize buffer failure.");
+    }
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

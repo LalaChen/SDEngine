@@ -130,12 +130,14 @@ void VulkanManager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_ide
     }
 }
 
-void VulkanManager::DeleteVertexBuffer(const VertexBufferIdentity &i_identity)
+void VulkanManager::DeleteVertexBuffer(VertexBufferIdentity &io_identity)
 {
-    const VkBuffer &vk_buffer_handle = reinterpret_cast<const VkBuffer&>(i_identity.m_buffer_handle);
-    const VkDeviceMemory &vk_memory_handle = reinterpret_cast<const VkDeviceMemory&>(i_identity.m_memory_handle);
+    VkBuffer &vk_buffer_handle = reinterpret_cast<VkBuffer&>(io_identity.m_buffer_handle);
+    VkDeviceMemory &vk_memory_handle = reinterpret_cast<VkDeviceMemory&>(io_identity.m_memory_handle);
     FreeVkDeviceMemory(vk_memory_handle);
+    io_identity.m_memory_handle = SD_NULL_HANDLE;
     DestroyVkBuffer(vk_buffer_handle);
+    io_identity.m_buffer_handle = SD_NULL_HANDLE;
 }
 
 //-------------------------- end of namespace Graphics ----------------------------
