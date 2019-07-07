@@ -101,6 +101,11 @@ protected:
      *  \brief current buffer size.
      */
     SD_DECLARE_ATTRIBUTE_VAR_GET(Size_ui64, m_size, Size);
+
+    /*! \var ValueTypeEnum m_format;
+     *  \brief Record the buffer format.
+     */
+    SD_DECLARE_ATTRIBUTE_VAR_GET(VBufferFormatEnum, m_format, Format);
 };
 
 //-------------------------- end of namespace Graphics ----------------------------

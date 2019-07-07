@@ -10,7 +10,6 @@ namespace Graphics
 VertexBufferIdentity::VertexBufferIdentity()
 : m_buffer_handle(0)
 , m_memory_handle(0)
-, m_format(VBufferFormat_MAX_DEFINE_VALUE)
 {
 }
 

@@ -68,11 +68,6 @@ public:
      *  \brief The memory handle. This value is nullptr in opengl system.
      */
     DeviceMemoryHandle m_memory_handle;
-
-    /*! \var ValueTypeEnum m_format;
-     *  \brief Record the buffer format.
-     */
-    VBufferFormatEnum m_format;
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

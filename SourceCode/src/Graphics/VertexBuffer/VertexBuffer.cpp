@@ -38,9 +38,9 @@ VertexBuffer::VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation
 : Object(i_object_name)
 , m_location(i_va_location)
 , m_memory_type(i_memory_type)
+, m_format(i_format)
 , m_size(0u)
 {
-    m_identity.m_format = i_format;
 }
 
 VertexBuffer::~VertexBuffer()
