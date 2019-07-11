@@ -158,7 +158,7 @@ VkResult VulkanAPITestManager::AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop
     VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
     vkGetPhysicalDeviceMemoryProperties(m_VK_physical_device, &phy_dev_memory_props);
     for (uint32_t type = 0; type < phy_dev_memory_props.memoryTypeCount; ++type) {
-        SDLOGD("Type[%d] : Flags(%u) HeadID(%llu)", type,
+        SDLOGD("Type[%d] : Flags(%u) HeadID(%u)", type,
             phy_dev_memory_props.memoryTypes[type].propertyFlags,
             phy_dev_memory_props.memoryTypes[type].heapIndex);
     }
