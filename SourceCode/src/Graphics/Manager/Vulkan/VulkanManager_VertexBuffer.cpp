@@ -54,7 +54,7 @@ void VulkanManager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_u
     VkBufferUsageFlags buf_usage_flags = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     result = CreateVkBuffer(buf_usage_flags, VK_SHARING_MODE_EXCLUSIVE, i_data_size, vk_buffer_handle);
     if (result != VK_SUCCESS) {
-        SDLOGE("VK Error: Create buffer error. code=%d", result);
+        SDLOGE("VKError : Create buffer error. code=%d", result);
         if (vk_buffer_handle != VK_NULL_HANDLE) {
             DestroyVkBuffer(vk_buffer_handle);
             vk_buffer_handle = VK_NULL_HANDLE;
@@ -65,7 +65,7 @@ void VulkanManager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_u
     //3. create device memory.
     result = AllocatVkDeviceMemoryForBuffer(memo_prop_flags, 0, vk_buffer_handle, vk_memory_handle);
     if (result != VK_SUCCESS) {
-        SDLOGE("VK Error: Create memory error. code=%d", result);
+        SDLOGE("VKError: Create memory error. code=%d", result);
         if (vk_memory_handle != VK_NULL_HANDLE) {
             FreeVkDeviceMemory(vk_memory_handle);
             vk_memory_handle = VK_NULL_HANDLE;

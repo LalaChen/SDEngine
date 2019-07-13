@@ -67,6 +67,11 @@ public:
      */
     void ReleaseGraphicsSystem() override;
 public:
+    /*! \fn void PrintSystemInformation() override;
+     *  \brief Print system information.
+     */
+    void PrintSystemInformation() override;
+public:
 //----------- Vertex Buffer Function ------------
     void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type) override;
     void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;

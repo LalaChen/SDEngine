@@ -87,6 +87,11 @@ public:
      */
     virtual void ReleaseGraphicsSystem() = 0;
 public:
+    /*! \fn virtual void PrintSystemInformation() = 0;
+     *  \brief Print system information.
+     */
+    virtual void PrintSystemInformation() = 0;
+public:
 //----------- Vertex Buffer Function ------------
     virtual void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type) = 0;
     virtual void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
