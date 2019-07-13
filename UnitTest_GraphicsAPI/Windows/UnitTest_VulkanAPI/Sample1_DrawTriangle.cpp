@@ -285,7 +285,7 @@ void Sample1_DrawTriangle::CreateUniformBuffer()
     if (result != VK_SUCCESS) {
         SDLOGE("Create uniform buffer failure!!!");
     }
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_basic_uniform_buffer, m_VK_basic_uniform_buffer_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_basic_uniform_buffer, m_VK_basic_uniform_buffer_memory);
     if (result != VK_SUCCESS) {
         SDLOGE("Allocate uniform buffer failure!!!");
     }

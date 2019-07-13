@@ -43,7 +43,7 @@ void VulkanManager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_u
         memo_prop_flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     }
     else if (i_memory_type == VertexBufferMemoryType_DYNAMIC) {
-        memo_prop_flags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+        memo_prop_flags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
     }
     else {
         SDLOGE("VKError : Wrong memory type. type=%d", i_memory_type);
@@ -88,7 +88,7 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
         return;
     }
 
-    result = AllocatVkDeviceMemoryForBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0u, staging_buffer, staging_memory);
+    result = AllocatVkDeviceMemoryForBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0u, staging_buffer, staging_memory);
     if (result != VK_SUCCESS) {
         SDLOGW("Allocate staging memory failure.");
         return;

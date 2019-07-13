@@ -218,7 +218,7 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
         return result;
     }
 
-    result = AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0u, staging_buffer, staging_memory);
+    result = AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0u, staging_buffer, staging_memory);
     if (result != VK_SUCCESS) {
         SDLOGW("Allocate staging memory failure.");
         return result;
@@ -369,7 +369,7 @@ VkResult VulkanAPITestManager::RefreshHostDeviceBufferData(VkBuffer i_VK_buffer,
     vkGetBufferMemoryRequirements(m_VK_device, i_VK_buffer, &mem_req);
     void *buffer_device_ptr = VK_NULL_HANDLE;
     result = vkMapMemory(m_VK_device, i_VK_buffer_mem, 0, mem_req.size, 0, (void **)&buffer_device_ptr);
-
+    SDLOG("buffer_device_ptr = %p", buffer_device_ptr);
     if (result == VK_SUCCESS) {
         memcpy(buffer_device_ptr, i_data_ptr, i_size);
     }
