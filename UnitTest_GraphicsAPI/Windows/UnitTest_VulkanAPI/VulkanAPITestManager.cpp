@@ -369,7 +369,6 @@ VkResult VulkanAPITestManager::RefreshHostDeviceBufferData(VkBuffer i_VK_buffer,
     vkGetBufferMemoryRequirements(m_VK_device, i_VK_buffer, &mem_req);
     void *buffer_device_ptr = VK_NULL_HANDLE;
     result = vkMapMemory(m_VK_device, i_VK_buffer_mem, 0, mem_req.size, 0, (void **)&buffer_device_ptr);
-    SDLOG("buffer_device_ptr = %p", buffer_device_ptr);
     if (result == VK_SUCCESS) {
         memcpy(buffer_device_ptr, i_data_ptr, i_size);
     }
