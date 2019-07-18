@@ -49,6 +49,16 @@ void OpenGL4Manager::DeleteVertexBuffer(VertexBufferIdentity &io_identity)
 {
 }
 
+void OpenGL4Manager::MapBuffer(const VertexBufferIdentity &i_identity, VoidHandle &io_buffer_handle)
+{
+    
+}
+
+void OpenGL4Manager::UnmapBuffer(const VertexBufferIdentity &i_identity)
+{
+
+}
+
 //-------------------------- end of namespace Graphics ----------------------------
 }
 //---------------------------- end of namespace SDE -------------------------------

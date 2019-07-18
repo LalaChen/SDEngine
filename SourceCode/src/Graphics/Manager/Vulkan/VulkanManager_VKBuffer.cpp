@@ -93,32 +93,21 @@ VkResult VulkanManager::AllocatVkDeviceMemoryForBuffer(VkFlags i_memo_prop_flags
 VkResult VulkanManager::RefreshDataInHostVisibleVkBuffer(VkBuffer i_buffer_handle, VkDeviceMemory i_memory_handle, void *i_data_ptr, Size_ui64 i_data_size)
 {
     VkResult result = VK_SUCCESS;
-    VkMemoryRequirements mem_req;
-    vkGetBufferMemoryRequirements(m_VK_device, i_buffer_handle, &mem_req);
-    void *local_ptr = VK_NULL_HANDLE;
-    result = vkMapMemory(m_VK_device, i_memory_handle, 0, mem_req.size, 0, (void**)&local_ptr);
+    void *local_ptr = nullptr;
+    result = MapBufferMemory(i_buffer_handle, i_memory_handle, local_ptr);
     if (result != VK_SUCCESS) {
-        SDLOGE("Map buffer memory failure!!!");
         return result;
     }
-    //--- iii. memory copy.
+    //--- i. memory copy.
     std::memcpy(local_ptr, i_data_ptr, i_data_size);
 
-    //--- iv. flush memory.
-    VkMappedMemoryRange mem_ranges = {};
-    mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-    mem_ranges.pNext = nullptr;
-    mem_ranges.memory = i_memory_handle;
-    mem_ranges.offset = 0;
-    mem_ranges.size = VK_WHOLE_SIZE;
-    result = vkFlushMappedMemoryRanges(m_VK_device, 1, &mem_ranges);
+    //--- ii. flush memory.
+    result = FlushMappedMemoryRanges(i_memory_handle);
     if (result != VK_SUCCESS) {
-        SDLOGE("Map buffer flush failure!!!");
         return result;
     }
-
-    //--- iv. unmap memory.
-    vkUnmapMemory(m_VK_device, i_memory_handle);
+    //--- iii. unmap memory.
+    UnmapBufferMemory(i_memory_handle);
     return result;
 }
 
@@ -239,6 +228,40 @@ void VulkanManager::DestroyVkBuffer(VkBuffer i_buffer_handle)
     if (i_buffer_handle != VK_NULL_HANDLE) {
         vkDestroyBuffer(m_VK_device, i_buffer_handle, nullptr);
     }
+}
+
+VkResult VulkanManager::MapBufferMemory(VkBuffer i_buffer_handle, VkDeviceMemory i_memory_handle, VoidHandle &i_local_ptr)
+{
+    VkResult result = VK_SUCCESS;
+    VkMemoryRequirements mem_req;
+    vkGetBufferMemoryRequirements(m_VK_device, i_buffer_handle, &mem_req);
+    i_local_ptr = VK_NULL_HANDLE;
+    result = vkMapMemory(m_VK_device, i_memory_handle, 0, mem_req.size, 0, (void**)&i_local_ptr);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Map buffer memory failure!!!");
+    }
+    return result;
+}
+
+VkResult VulkanManager::FlushMappedMemoryRanges(VkDeviceMemory i_memory_handle)
+{
+    VkResult result = VK_SUCCESS;
+    VkMappedMemoryRange mem_ranges = {};
+    mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+    mem_ranges.pNext = nullptr;
+    mem_ranges.memory = i_memory_handle;
+    mem_ranges.offset = 0;
+    mem_ranges.size = VK_WHOLE_SIZE;
+    result = vkFlushMappedMemoryRanges(m_VK_device, 1, &mem_ranges);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Map buffer flush failure!!!");
+    }
+    return result;
+}
+
+void VulkanManager::UnmapBufferMemory(VkDeviceMemory i_memory_handle)
+{
+    vkUnmapMemory(m_VK_device, i_memory_handle);
 }
 
 //-------------------------- end of namespace Graphics ----------------------------

@@ -140,6 +140,19 @@ void VulkanManager::DeleteVertexBuffer(VertexBufferIdentity &io_identity)
     io_identity.m_buffer_handle = SD_NULL_HANDLE;
 }
 
+void VulkanManager::MapBuffer(const VertexBufferIdentity &i_identity, VoidHandle &io_buffer_handle)
+{
+    const VkBuffer &vk_buffer_handle = reinterpret_cast<const VkBuffer&>(i_identity.m_buffer_handle);
+    const VkDeviceMemory &vk_memory_handle = reinterpret_cast<const VkDeviceMemory&>(i_identity.m_memory_handle);
+    MapBufferMemory(vk_buffer_handle, vk_memory_handle, io_buffer_handle);
+}
+
+void VulkanManager::UnmapBuffer(const VertexBufferIdentity &i_identity)
+{
+    const VkDeviceMemory &vk_memory_handle = reinterpret_cast<const VkDeviceMemory&>(i_identity.m_memory_handle);
+    UnmapBufferMemory(vk_memory_handle);
+}
+
 //-------------------------- end of namespace Graphics ----------------------------
 }
 //---------------------------- end of namespace SDE -------------------------------

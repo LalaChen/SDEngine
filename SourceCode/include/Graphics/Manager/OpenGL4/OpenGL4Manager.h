@@ -77,6 +77,8 @@ public:
     void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
     void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
     void DeleteVertexBuffer(VertexBufferIdentity &io_identity) override;
+    void MapBuffer(const VertexBufferIdentity &i_identity, VoidHandle &io_buffer_handle) override;
+    void UnmapBuffer(const VertexBufferIdentity &i_identity) override;
 public:
     void Resize(int i_w, int i_h) override;
 protected:

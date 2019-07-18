@@ -75,6 +75,18 @@ void DynamicVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_s
     }
 }
 
+VoidHandle DynamicVertexBuffer::MapBufferMemory()
+{
+    VoidHandle local_ptr = nullptr;
+    GraphicsManager::GetRef().MapBuffer(m_identity, local_ptr);
+    return local_ptr;
+}
+
+void DynamicVertexBuffer::UnmapBufferMemory()
+{
+    GraphicsManager::GetRef().UnmapBuffer(m_identity);
+}
+
 //---------------------------- end of namespace Graphics ----------------------------
 }
 //---------------------------- end of namespace SDE ----------------------------
