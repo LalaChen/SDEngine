@@ -26,7 +26,6 @@ SOFTWARE.
 
 #include <vulkan/vulkan.h>
 
-#include "Vulkan_Utils.h"
 #include "VulkanCreationArg.h"
 #include "LogManager.h"
 #include "VulkanManager.h"

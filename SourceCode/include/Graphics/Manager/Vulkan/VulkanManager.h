@@ -115,7 +115,6 @@ protected:
     VkResult FlushMappedMemoryRanges(VkDeviceMemory i_memory_handle);
 
     void UnmapBufferMemory(VkDeviceMemory i_memory_handle);
-
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;

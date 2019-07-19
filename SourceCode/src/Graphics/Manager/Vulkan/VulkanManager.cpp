@@ -93,10 +93,9 @@ VulkanManager::~VulkanManager()
 void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
     SDLOG("Initialize VulkanManager.");
-    if (typeid(i_arg).hash_code() == typeid(VulkanCreationArg).hash_code())
-    {
+    if (typeid(i_arg).hash_code() == typeid(VulkanCreationArg).hash_code()) {
         VulkanCreationArg vk_c_arg = dynamic_cast<const VulkanCreationArg&>(i_arg);
-        
+
         m_VK_instance = vk_c_arg.m_instance;
         m_VK_surface = vk_c_arg.m_surface;
 
@@ -273,7 +272,7 @@ void VulkanManager::RenderToScreen()
 
     vkCmdBeginRenderPass(m_VK_main_cmd_buffer, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
 
-    //Render to screen (To do)
+    //Render to screen (To do : Compose buffers.)
 
     //End RenderPass.
     vkCmdEndRenderPass(m_VK_main_cmd_buffer);
