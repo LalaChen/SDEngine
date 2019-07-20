@@ -28,7 +28,7 @@ SOFTWARE.
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
-//---------------------------- start of namespace Basic ----------------------------
+//--------------------------- start of namespace Basic ---------------------------
 namespace Basic
 {
 
@@ -74,7 +74,7 @@ bool GlobalFunctionSlot::IsEqualTo(const Object &i_src) const
     }
 }
 
-//---------------------------- end of namespace Basic ----------------------------
+//--------------------------- end of namespace Basic ---------------------------
 }
 //---------------------------- end of namespace SDE ----------------------------
 }

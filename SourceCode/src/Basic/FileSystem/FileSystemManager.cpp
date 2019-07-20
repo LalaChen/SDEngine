@@ -95,7 +95,7 @@ FilePathString FileSystemManager::AdjustFilePath(const FilePathString &i_path) c
 
 }
 
-//---------------------------- end of namespace Basic ----------------------------
+//--------------------------- end of namespace Basic ----------------------------
 }
 //---------------------------- end of namespace SDE ----------------------------
 }

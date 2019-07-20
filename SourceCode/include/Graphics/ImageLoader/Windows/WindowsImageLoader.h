@@ -23,17 +23,34 @@ SOFTWARE.
 
 */
 
-#include "EventArg.h"
+/*! \file      WindowsImageLoader.h
+ *  \brief     Introduce of class WindowsDevILImageLoader.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/07/20
+ *  \copyright MIT License.
+ */
+
+#include "ImageLoader.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
-//--------------------------- start of namespace Basic ---------------------------
-namespace Basic
+//-------------------------- start of namespace Graphics -------------------------
+namespace Graphics
 {
 
+class SDENGINE_CLASS WindowsImageLoader : public ImageLoader
+{
+public:
+	explicit WindowsImageLoader();
+	virtual ~WindowsImageLoader();
+public:
+    void Initialize() override;
+public:
+    BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const override;
+};
 
-//--------------------------- end of namespace Basic ----------------------------
+//-------------------------- end of namespace Graphics -------------------------
 }
-//---------------------------- end of namespace SDE -----------------------------
+//---------------------------- end of namespace SDE ----------------------------
 }

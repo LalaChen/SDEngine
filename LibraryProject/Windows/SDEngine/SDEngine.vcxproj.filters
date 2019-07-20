@@ -138,6 +138,18 @@
     <Filter Include="include\Graphics\ManagerIdentity">
       <UniqueIdentifier>{c358c4c1-ba36-4926-b239-4ea6f0ef9193}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\ImageLoader">
+      <UniqueIdentifier>{99683e41-7194-4e85-bbcd-f4812c7cf925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\ImageLoader">
+      <UniqueIdentifier>{81680078-6190-4aef-9157-5984fa38891e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\ImageLoader\Windows">
+      <UniqueIdentifier>{88c6ed71-2320-4f6e-8bb5-31f3702d9b81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\ImageLoader\Windows">
+      <UniqueIdentifier>{d0b468a2-538e-4172-a5af-d3b631b10a4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -238,6 +250,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager_PrintInformation.cpp">
       <Filter>src\Graphics\Manager\OpenGL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ImageLoader\Bitmap.cpp">
+      <Filter>src\Graphics\ImageLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ImageLoader\ImageLoader.cpp">
+      <Filter>src\Graphics\ImageLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ImageLoader\Windows\WindowsImageLoader.cpp">
+      <Filter>src\Graphics\ImageLoader\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -366,6 +387,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\VertexBuffer\StaticVertexBuffer.h">
       <Filter>include\Graphics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ImageLoader\Bitmap.h">
+      <Filter>include\Graphics\ImageLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ImageLoader\ImageLoader.h">
+      <Filter>include\Graphics\ImageLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PixelDataType.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ImageLoader\Windows\WindowsImageLoader.h">
+      <Filter>include\Graphics\ImageLoader\Windows</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

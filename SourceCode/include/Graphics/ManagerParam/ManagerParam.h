@@ -35,3 +35,4 @@ SOFTWARE.
 #include "VBufferFormat.h"
 #include "VertexBufferUsage.h"
 #include "VertexBufferMemoryType.h"
+#include "PixelDataType.h"

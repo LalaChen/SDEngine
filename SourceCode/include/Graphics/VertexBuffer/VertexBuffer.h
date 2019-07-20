@@ -41,7 +41,7 @@ using SDE::Basic::UByte;
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
 
-//------------------------------- start of namespace SDE ------------------------------
+//------------------------------ start of namespace SDE -------------------------------
 namespace SDE
 {
 //---------------------------- start of namespace Graphics ----------------------------

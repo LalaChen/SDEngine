@@ -87,7 +87,7 @@ void DynamicVertexBuffer::UnmapBufferMemory()
     GraphicsManager::GetRef().UnmapBuffer(m_identity);
 }
 
-//---------------------------- end of namespace Graphics ----------------------------
+//-------------------------- end of namespace Graphics ----------------------------
 }
-//---------------------------- end of namespace SDE ----------------------------
+//----------------------------- end of namespace SDE ------------------------------
 }
