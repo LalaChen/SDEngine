@@ -227,9 +227,7 @@ void VulkanManager::InitializePhysicalDevice()
         std::list<const char*> check_ext_names(NecessaryExtensions.begin(), NecessaryExtensions.end());
 
         for (VkExtensionProperties &avaible_ext : avaible_exts) {
-
-            for (std::list<const char*>::iterator c_iter = check_ext_names.begin();
-                c_iter != check_ext_names.end(); ) {
+            for (std::list<const char*>::iterator c_iter = check_ext_names.begin(); c_iter != check_ext_names.end(); ) {
                 if (strcmp(avaible_ext.extensionName, (*c_iter)) == 0) {
                     c_iter = check_ext_names.erase(c_iter);
                     break;
@@ -357,7 +355,7 @@ void VulkanManager::InitializeLogicDevice()
 #ifdef NDEBUG
     dev_c_info.enabledLayerCount = 0;
     dev_c_info.ppEnabledLayerNames = nullptr;
-//#else
+#else
     dev_c_info.enabledLayerCount = static_cast<uint32_t>(desired_valid_layer_names.size());
     dev_c_info.ppEnabledLayerNames = desired_valid_layer_names.data();
 #endif

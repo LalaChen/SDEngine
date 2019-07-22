@@ -78,8 +78,8 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ImageLoader\Windows\WindowsImageLoader.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\ManagerIdentity.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\VertexBufferIdentity.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\BitmapPixelDataType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ManagerParam.h" />
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PixelDataType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VBufferFormat.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferMemoryType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferUsage.h" />

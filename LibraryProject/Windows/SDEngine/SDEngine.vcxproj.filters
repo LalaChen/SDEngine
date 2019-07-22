@@ -394,11 +394,11 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ImageLoader\ImageLoader.h">
       <Filter>include\Graphics\ImageLoader</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PixelDataType.h">
-      <Filter>include\Graphics\ManagerParam</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ImageLoader\Windows\WindowsImageLoader.h">
       <Filter>include\Graphics\ImageLoader\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\BitmapPixelDataType.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

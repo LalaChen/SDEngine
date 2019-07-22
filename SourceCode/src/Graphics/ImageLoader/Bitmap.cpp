@@ -43,23 +43,23 @@ namespace SDE
 namespace Graphics
 {
 
-Bitmap::Bitmap(const std::string &i_object_name)
+Bitmap::Bitmap(const ObjectName &i_object_name)
 : Object(i_object_name)
 , m_bitmap(nullptr)
 , m_width(0)
 , m_height(0)
 , m_num_of_c(0)
-, m_v_type(PixelDataType_MAX_DEFINE_VALUE)
+, m_v_type(BitmapPixelDataType_MAX_DEFINE_VALUE)
 {
 }
 
-Bitmap::Bitmap(const std::string &i_object_name, const BitmapConfig &i_conf, Size_ui32 i_width, Size_ui32 i_height, const ImageBufferAddr i_data, ImageBufferSize i_size, int i_n_of_c, const PixelValueType &i_v_type)
+Bitmap::Bitmap(const ObjectName &i_object_name, const BitmapConfig &i_conf, Size_ui32 i_width, Size_ui32 i_height, const ImageBufferAddr i_data, ImageBufferSize i_size, int i_n_of_c, const BitmapPixelValueType &i_v_type)
 : Object(i_object_name)
 , m_bitmap(nullptr)
 , m_width(0)
 , m_height(0)
 , m_num_of_c(0)
-, m_v_type(PixelDataType_MAX_DEFINE_VALUE)
+, m_v_type(BitmapPixelDataType_MAX_DEFINE_VALUE)
 {
 	SetBitmap(i_conf, i_width, i_height, i_data, i_size, i_n_of_c, i_v_type);
 }
@@ -81,23 +81,23 @@ void Bitmap::DecideNumberOfChannel(int i_n_of_c)
 	}
 	else if (m_config == BitmapConfig_RGBA_4444) {
 		m_num_of_c = 1;
-		m_v_type = PixelDataType_UNSIGNED_SHORT_4_4_4_4;
+		m_v_type = BitmapPixelDataType_UNSIGNED_SHORT_4_4_4_4;
 	}
 	else if (m_config == BitmapConfig_RGB_565) {
 		m_num_of_c = 1;
-		m_v_type = PixelDataType_UNSIGNED_SHORT_5_6_5;
+		m_v_type = BitmapPixelDataType_UNSIGNED_SHORT_5_6_5;
 	}
 	else if (m_config == BitmapConfig_RGBA_8888) {
 		m_num_of_c = 4;
-		m_v_type = PixelDataType_UNSIGNED_BYTE;
+		m_v_type = BitmapPixelDataType_UNSIGNED_BYTE;
 	}
 	else if (m_config == BitmapConfig_RGB_888) {
 		m_num_of_c = 3;
-		m_v_type = PixelDataType_UNSIGNED_BYTE;
+		m_v_type = BitmapPixelDataType_UNSIGNED_BYTE;
 	}
 	else if (m_config == BitmapConfig_ALPHA_8) {
 		m_num_of_c = 1;
-		m_v_type = PixelDataType_UNSIGNED_BYTE;
+		m_v_type = BitmapPixelDataType_UNSIGNED_BYTE;
 	}
 	else if (m_config == BitmapConfig_DevIL || m_config == BitmapConfig_HARDWARE) {
 		m_num_of_c   = i_n_of_c;
@@ -120,7 +120,7 @@ void Bitmap::ClearBitmap()
 //--- Public
 
 
-bool Bitmap::SetBitmap(const BitmapConfig &i_conf, Size_ui32 i_width, Size_ui32 i_height, const ImageBufferAddr i_data, ImageBufferSize i_size, int i_n_of_c, const PixelValueType &i_v_type)
+bool Bitmap::SetBitmap(const BitmapConfig &i_conf, Size_ui32 i_width, Size_ui32 i_height, const ImageBufferAddr i_data, ImageBufferSize i_size, int i_n_of_c, const BitmapPixelValueType &i_v_type)
 {
 	if (i_conf != BitmapConfig_UNKNOWN && i_data != nullptr) {
 		ClearBitmap();

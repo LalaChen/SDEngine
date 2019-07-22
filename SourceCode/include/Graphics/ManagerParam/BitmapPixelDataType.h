@@ -23,16 +23,36 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      BitmapPixelDataType.h
+ *  \brief     Introduce of enum BitmapPixelDataTypeEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/07/22
  *  \copyright MIT License.
  */
-
 #pragma once
 
-#include "VBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
+//---------------------------- start of namespace SDE ------------------------------
+namespace SDE
+{
+//-------------------------- start of namespace Graphics ---------------------------
+namespace Graphics
+{
+
+enum BitmapPixelDataTypeEnum
+{
+    BitmapPixelDataType_UNSIGNED_BYTE = 0,
+    BitmapPixelDataType_BYTE = 1,
+    BitmapPixelDataType_UNSIGNED_SHORT = 2,
+    BitmapPixelDataType_SHORT = 3,
+    BitmapPixelDataType_UNSIGNED_INT = 4,
+    BitmapPixelDataType_INT = 5,
+    BitmapPixelDataType_FLOAT = 6,
+    BitmapPixelDataType_UNSIGNED_SHORT_5_6_5 = 7,
+    BitmapPixelDataType_UNSIGNED_SHORT_4_4_4_4 = 8,
+    BitmapPixelDataType_MAX_DEFINE_VALUE
+};
+
+//-------------------------- end of namespace Graphics ---------------------------
+}
+//---------------------------- end of namespace SDE ------------------------------
+}

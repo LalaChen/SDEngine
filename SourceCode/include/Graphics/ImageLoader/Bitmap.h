@@ -84,22 +84,22 @@ public:
 	BitmapConfigEnum m_enum;
 };
 
-class SDENGINE_CLASS PixelValueType
+class SDENGINE_CLASS BitmapPixelValueType
 {
 public:
-	PixelValueType() : m_enum(PixelDataType_MAX_DEFINE_VALUE){}
-	PixelValueType(const PixelDataTypeEnum i_b) : m_enum(i_b){}
-	PixelValueType(const PixelValueType &i_b) : m_enum(i_b.m_enum){}
-	~PixelValueType(){}
+	BitmapPixelValueType() : m_enum(BitmapPixelDataType_MAX_DEFINE_VALUE){}
+	BitmapPixelValueType(const BitmapPixelDataTypeEnum i_b) : m_enum(i_b){}
+	BitmapPixelValueType(const BitmapPixelValueType &i_b) : m_enum(i_b.m_enum){}
+	~BitmapPixelValueType(){}
 public:
-	PixelValueType &operator=(const PixelValueType &i_b){ m_enum = i_b.m_enum; return *this; }
-	PixelValueType &operator=(const PixelDataTypeEnum &i_b){ m_enum = i_b; return *this; }
-	bool operator==(const PixelValueType &i_b) const{ return (m_enum == i_b.m_enum); }
-	bool operator==(const PixelDataTypeEnum &i_b) const{ return (m_enum == i_b); }
-	bool operator!=(const PixelValueType &i_b) const{ return (m_enum != i_b.m_enum); }
-	bool operator!=(const PixelDataTypeEnum &i_b) const{ return (m_enum != i_b); }
+    BitmapPixelValueType &operator=(const BitmapPixelValueType &i_b){ m_enum = i_b.m_enum; return *this; }
+    BitmapPixelValueType &operator=(const BitmapPixelDataTypeEnum &i_b){ m_enum = i_b; return *this; }
+	bool operator==(const BitmapPixelValueType &i_b) const{ return (m_enum == i_b.m_enum); }
+	bool operator==(const BitmapPixelDataTypeEnum &i_b) const{ return (m_enum == i_b); }
+	bool operator!=(const BitmapPixelValueType &i_b) const{ return (m_enum != i_b.m_enum); }
+	bool operator!=(const BitmapPixelDataTypeEnum &i_b) const{ return (m_enum != i_b); }
 public:
-	PixelDataTypeEnum m_enum;
+    BitmapPixelDataTypeEnum m_enum;
 };
 
 /*! \class VertexBuffer
@@ -110,26 +110,26 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Bitmap);
 class SDENGINE_API Bitmap : public Object
 {
 public:
-	Bitmap(const std::string &i_object_name);
+	Bitmap(const ObjectName &i_object_name);
 
-	Bitmap(const std::string    &i_object_name, 
-		   const BitmapConfig   &i_conf,
-		   Size_ui32             i_width,
-		   Size_ui32             i_height,
-		   const ImageBufferAddr i_data,
-		   ImageBufferSize       i_size,
-		   int                   i_n_of_c = -1, 
-		   const PixelValueType &i_v_type = PixelDataType_MAX_DEFINE_VALUE);
+	Bitmap(const ObjectName           &i_object_name,
+		   const BitmapConfig         &i_conf,
+		   Size_ui32                   i_width,
+		   Size_ui32                   i_height,
+		   const ImageBufferAddr       i_data,
+		   ImageBufferSize             i_size,
+		   int                         i_n_of_c = -1, 
+		   const BitmapPixelValueType &i_v_type = BitmapPixelDataType_MAX_DEFINE_VALUE);
 	
 	virtual ~Bitmap();
 public:
-	bool SetBitmap(const BitmapConfig    &i_conf,
-                   Size_ui32              i_width, 
-                   Size_ui32              i_height,
-                   const ImageBufferAddr  i_data,
-                   ImageBufferSize        i_size,
-                   int                    i_n_of_c = -1,
-                   const PixelValueType  &i_v_type = PixelDataType_MAX_DEFINE_VALUE);
+	bool SetBitmap(const BitmapConfig          &i_conf,
+                   Size_ui32                    i_width, 
+                   Size_ui32                    i_height,
+                   const ImageBufferAddr        i_data,
+                   ImageBufferSize              i_size,
+                   int                          i_n_of_c = -1,
+                   const BitmapPixelValueType  &i_v_type = BitmapPixelDataType_MAX_DEFINE_VALUE);
 	const ImageBufferAddr GetBitmap() const;
 	bool  InNull() const;
 protected:
@@ -137,7 +137,7 @@ protected:
 	void ClearBitmap();
 protected:
 	SD_DECLARE_ATTRIBUTE_VAR_GET(BitmapConfig, m_config , BitmapConfig);
-	SD_DECLARE_ATTRIBUTE_VAR_GET(PixelValueType, m_v_type , PixelValueType);
+	SD_DECLARE_ATTRIBUTE_VAR_GET(BitmapPixelValueType, m_v_type , PixelValueType);
 	SD_DECLARE_ATTRIBUTE_VAR_GET(Size_ui32, m_width, Width);
 	SD_DECLARE_ATTRIBUTE_VAR_GET(Size_ui32, m_height, Height);
 	SD_DECLARE_ATTRIBUTE_VAR_GET(uint32_t, m_num_of_c, NumOfChannel);

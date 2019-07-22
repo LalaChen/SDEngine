@@ -76,7 +76,7 @@ BitmapStrongReferenceObject WindowsImageLoader::LoadBitmap(const FilePathString 
 		Size_ui32 width, height;
 		size_t image_size;
 		ILubyte *image_data_ptr = nullptr;
-		PixelValueType img_pv_type;
+		BitmapPixelValueType img_pv_type;
 		int temp_n_of_c;
 		int pixel_type;
 		//1. load source image
@@ -93,25 +93,25 @@ BitmapStrongReferenceObject WindowsImageLoader::LoadBitmap(const FilePathString 
 
 			//--- pixel format.
 			if (pixel_type == IL_UNSIGNED_BYTE) {
-				img_pv_type = PixelDataType_UNSIGNED_BYTE;
+				img_pv_type = BitmapPixelDataType_UNSIGNED_BYTE;
 			}
 			else if (pixel_type == IL_BYTE) {
-				img_pv_type = PixelDataType_BYTE;
+				img_pv_type = BitmapPixelDataType_BYTE;
 			}
 			else if (pixel_type == IL_UNSIGNED_SHORT) {
-				img_pv_type = PixelDataType_UNSIGNED_SHORT;
+				img_pv_type = BitmapPixelDataType_UNSIGNED_SHORT;
 			}
 			else if (pixel_type == IL_SHORT) {
-				img_pv_type = PixelDataType_SHORT;
+				img_pv_type = BitmapPixelDataType_SHORT;
 			}
 			else if (pixel_type == IL_UNSIGNED_INT) {
-				img_pv_type = PixelDataType_UNSIGNED_INT;
+				img_pv_type = BitmapPixelDataType_UNSIGNED_INT;
 			}
 			else if (pixel_type == IL_INT) {
-				img_pv_type = PixelDataType_INT;
+				img_pv_type = BitmapPixelDataType_INT;
 			}
 			else if (pixel_type == IL_FLOAT) {
-				img_pv_type = PixelDataType_FLOAT;
+				img_pv_type = BitmapPixelDataType_FLOAT;
 			}
 			else if (pixel_type == IL_DOUBLE) {
                 SDLOGW("Image [%s] exist non-supported double pixel type!!!", fullpath.c_str());
@@ -120,7 +120,7 @@ BitmapStrongReferenceObject WindowsImageLoader::LoadBitmap(const FilePathString 
                 SDLOGW("Image [%s] exists illegal pixel type!!! (pixel_type = %d)", fullpath.c_str(), pixel_type);
 			}
 
-			if (img_pv_type != PixelDataType_MAX_DEFINE_VALUE) {
+			if (img_pv_type != BitmapPixelDataType_MAX_DEFINE_VALUE) {
 				//--- format
 				if (temp_n_of_c == 3) {//RGB
 					success = ilConvertImage(IL_RGB, pixel_type);
