@@ -61,14 +61,14 @@ public:
 	 */
 	typedef std::vector<UByte> VertexDatas;
 public:
-	/*! \fn explicit VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VBufferFormatEnum i_format);
+	/*! \fn explicit VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format);
 	 *  \param [in] i_object_name Name of this buffer.
 	 *  \param [in] i_va_location Attribute location of this buffer.
 	 *  \param [in] i_value_type The value type of this buffer.
      *  \param [in] i_memory_type The memory type of this buffer memory.
 	 *  \brief The constructor of VertexBuffer Class.
 	 */
-	explicit VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VBufferFormatEnum i_format, VertexBufferMemoryTypeEnum i_memory_type);
+	explicit VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format, VertexBufferMemoryTypeEnum i_memory_type);
 
 	/*! \fn ~VertexBuffer()
 	 *  \brief The destructor of VertexBuffer Class.
@@ -105,7 +105,7 @@ protected:
     /*! \var ValueTypeEnum m_format;
      *  \brief Record the buffer format.
      */
-    SD_DECLARE_ATTRIBUTE_VAR_GET(VBufferFormatEnum, m_format, Format);
+    SD_DECLARE_ATTRIBUTE_VAR_GET(VertexBufferFormatEnum, m_format, Format);
 };
 
 //-------------------------- end of namespace Graphics ----------------------------

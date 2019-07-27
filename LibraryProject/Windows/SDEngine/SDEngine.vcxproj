@@ -36,7 +36,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ImageLoader\ImageLoader.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ImageLoader\Windows\WindowsImageLoader.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\VertexBufferIdentity.cpp" />
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\VBufferFormat_Vulkan.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\VertexBufferFormat_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\GraphicsManager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager_PrintInformation.cpp" />
@@ -80,10 +80,10 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\VertexBufferIdentity.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\BitmapPixelDataType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ManagerParam.h" />
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VBufferFormat.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferFormat.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferMemoryType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferUsage.h" />
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\VBufferFormat_Vulkan.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\VertexBufferFormat_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\GraphicsManager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4Manager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h" />

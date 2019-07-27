@@ -34,7 +34,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "VBufferFormat.h"
+#include "VertexBufferFormat.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE

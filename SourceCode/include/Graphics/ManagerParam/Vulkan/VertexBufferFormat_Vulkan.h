@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      VBufferFormatType_Vulkan.h
- *  \brief     Introduce of class VBufferFormatType_Vulkan.
+/*! \file      VertexBufferFormatType_Vulkan.h
+ *  \brief     Introduce of class VertexBufferFormatType_Vulkan.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/06/30
  *  \copyright MIT License.
@@ -33,7 +33,7 @@ SOFTWARE.
 #pragma once
 
 #include "SDEngineCommonType.h"
-#include "VBufferFormat.h"
+#include "VertexBufferFormat.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -42,12 +42,12 @@ namespace SDE
 namespace Graphics
 {
 
-class VBufferFormat_Vulkan
+class VertexBufferFormat_Vulkan
 {
 public:
-    static APICode Convert(const VBufferFormatEnum &i_src);
+    static APICode Convert(const VertexBufferFormatEnum &i_src);
 public:
-    static APICode VBufferFormatTypes[VBufferFormat_MAX_DEFINE_VALUE];
+    static APICode VertexBufferFormatTypes[VertexBufferFormat_MAX_DEFINE_VALUE];
 };
 //---------------------------- end of namespace Graphics ----------------------------
 }

@@ -34,7 +34,7 @@ namespace SDE
 namespace Graphics
 {
 
-DynamicVertexBuffer::DynamicVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VBufferFormatEnum i_format)
+DynamicVertexBuffer::DynamicVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format)
 : VertexBuffer(i_object_name, i_va_location, i_format, VertexBufferMemoryType_DYNAMIC)
 {
 }

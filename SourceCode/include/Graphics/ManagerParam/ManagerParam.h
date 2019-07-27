@@ -32,7 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "VBufferFormat.h"
+#include "VertexBufferFormat.h"
 #include "VertexBufferUsage.h"
 #include "VertexBufferMemoryType.h"
 #include "BitmapPixelDataType.h"

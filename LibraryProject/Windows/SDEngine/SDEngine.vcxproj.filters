@@ -221,9 +221,6 @@
     <ClCompile Include="..\..\..\SourceCode\src\Math\Quaternion.cpp">
       <Filter>src\Math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\VBufferFormat_Vulkan.cpp">
-      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\VertexBuffer.cpp">
       <Filter>src\Graphics\VertexBuffer</Filter>
     </ClCompile>
@@ -259,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ImageLoader\Windows\WindowsImageLoader.cpp">
       <Filter>src\Graphics\ImageLoader\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\VertexBufferFormat_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -361,12 +361,6 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\VertexBuffer\VertexBuffer.h">
       <Filter>include\Graphics\VertexBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\VBufferFormat_Vulkan.h">
-      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VBufferFormat.h">
-      <Filter>include\Graphics\ManagerParam</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ManagerParam.h">
       <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
@@ -399,6 +393,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\BitmapPixelDataType.h">
       <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferFormat.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\VertexBufferFormat_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

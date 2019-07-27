@@ -25,7 +25,7 @@ SOFTWARE.
 
 #include <vulkan/vulkan.h>
 
-#include "VBufferFormat_Vulkan.h"
+#include "VertexBufferFormat_Vulkan.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -34,7 +34,7 @@ namespace SDE
 namespace Graphics
 {
 
-APICode VBufferFormat_Vulkan::VBufferFormatTypes[VBufferFormat_MAX_DEFINE_VALUE] = {
+APICode VertexBufferFormat_Vulkan::VertexBufferFormatTypes[VertexBufferFormat_MAX_DEFINE_VALUE] = {
 //------ unsigned byte.
     VK_FORMAT_R8_UINT,
     VK_FORMAT_R8G8_UINT,
@@ -87,10 +87,10 @@ APICode VBufferFormat_Vulkan::VBufferFormatTypes[VBufferFormat_MAX_DEFINE_VALUE]
     VK_FORMAT_R64G64B64A64_SFLOAT
 };
 
-APICode VBufferFormat_Vulkan::Convert(const VBufferFormatEnum &i_src)
+APICode VertexBufferFormat_Vulkan::Convert(const VertexBufferFormatEnum &i_src)
 {
-    if (i_src != VBufferFormat_MAX_DEFINE_VALUE) {
-        return VBufferFormatTypes[static_cast<uint32_t>(i_src)];
+    if (i_src != VertexBufferFormat_MAX_DEFINE_VALUE) {
+        return VertexBufferFormatTypes[static_cast<uint32_t>(i_src)];
     }
     else {
         return VK_FORMAT_UNDEFINED;

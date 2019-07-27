@@ -35,7 +35,7 @@ namespace SDE
 namespace Graphics
 {
 
-StaticVertexBuffer::StaticVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VBufferFormatEnum i_format)
+StaticVertexBuffer::StaticVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format)
 : VertexBuffer(i_object_name, i_va_location, i_format, VertexBufferMemoryType_STATIC)
 {
 }
