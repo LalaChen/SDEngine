@@ -101,7 +101,7 @@ public:
     virtual void UnmapBuffer(const VertexBufferIdentity &i_identity) = 0;
 public:
 //------------- Resize Function -----------------
-    virtual void Resize(int i_w, int i_h) = 0;
+    virtual void Resize(Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:
 //------------- Render Function -----------------
     void Render();

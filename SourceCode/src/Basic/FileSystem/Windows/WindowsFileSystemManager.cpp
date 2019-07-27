@@ -39,7 +39,7 @@ namespace Basic
 {
 
 WindowsFileSystemManager::WindowsFileSystemManager()
-:FileSystemManager()
+: FileSystemManager()
 {
 }
 

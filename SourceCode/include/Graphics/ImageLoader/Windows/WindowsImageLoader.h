@@ -24,7 +24,7 @@ SOFTWARE.
 */
 
 /*! \file      WindowsImageLoader.h
- *  \brief     Introduce of class WindowsDevILImageLoader.
+ *  \brief     Introduce of class WindowsImageLoader.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/07/20
  *  \copyright MIT License.
@@ -39,14 +39,31 @@ namespace SDE
 namespace Graphics
 {
 
+/*! \class WindowsImageLoader
+ *  In our system, WindowsImageLoader is used at windows OS and based on DevIL. 
+ */
 class SDENGINE_CLASS WindowsImageLoader : public ImageLoader
 {
 public:
+    /*! \fn explicit WindowsImageLoader();
+     *  \brief Constructor of WindowsImageLoader.
+     */
 	explicit WindowsImageLoader();
+
+    /*! \fn explicit ~WindowsImageLoader();
+     *  \brief Destructor of WindowsImageLoader.
+     */
 	virtual ~WindowsImageLoader();
 public:
+    /*! \fn virtual void Initialize() = 0;
+     *  \brief Initialize image loader.
+     */
     void Initialize() override;
 public:
+    /*! \fn virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
+     *  \param [in] i_fp File path of image data.
+     *  \brief Load data.
+     */
     BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const override;
 };
 

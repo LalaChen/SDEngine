@@ -82,7 +82,7 @@ public:
      */
     virtual ~Application();
 public:
-    /*! \fn virtual void Initialize();
+    /*! \fn virtual void Initialize() = 0;
      *  \brief Initialize this game app. Please call this function once at executable \n
      *         starting. Please implement this function by derived class.
      */
@@ -119,7 +119,12 @@ public:
      */
     virtual void Resume();
 
-    virtual void Resize(int i_w, int i_h);
+    /*! \fn virtual void Resize(Size_ui32 i_w, Size_ui32 i_h);
+     *  \param [in] i_w Width.
+     *  \param [in] i_h Height.
+     *  \brief Resume app. Please call this function when app re-focus.
+     */
+    virtual void Resize(Size_ui32 i_w, Size_ui32 i_h);
 public:
     /*! \fn void SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height);
         \param [in] i_width Width of app.

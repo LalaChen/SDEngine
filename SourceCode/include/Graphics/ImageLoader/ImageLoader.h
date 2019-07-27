@@ -51,11 +51,27 @@ namespace Graphics
 class SDENGINE_CLASS ImageLoader
 {
 public:
-	ImageLoader();
+    /*! \fn explicit ImageLoader();
+     *  \brief Constructor of ImageLoader.
+     */
+	explicit ImageLoader();
+
+    /*! \fn explicit ~ImageLoader();
+     *  \brief Destructor of ImageLoader.
+     */
 	virtual ~ImageLoader();
 public:
+    SD_SINGLETON_DECLARATION(ImageLoader);
+public:
+    /*! \fn virtual void Initialize() = 0;
+     *  \brief Initialize image loader.
+     */
     virtual void Initialize() = 0;
 public:
+    /*! \fn virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
+     *  \param [in] i_fp File path of image data.
+     *  \brief Load data.
+     */
 	virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
 };
 

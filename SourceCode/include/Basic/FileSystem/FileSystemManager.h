@@ -71,7 +71,7 @@ public:
 public:
     SD_SINGLETON_DECLARATION(FileSystemManager);
 public:
-    /*! \fn FileSystemManager();
+    /*! \fn explicit FileSystemManager();
      *  \brief Constructor of FileSystemManager.
      */
     explicit FileSystemManager();

@@ -80,7 +80,7 @@ public:
     void MapBuffer(const VertexBufferIdentity &i_identity, VoidHandle &io_buffer_handle) override;
     void UnmapBuffer(const VertexBufferIdentity &i_identity) override;
 public:
-    void Resize(int i_w, int i_h) override;
+    void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;

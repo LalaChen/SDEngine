@@ -68,7 +68,7 @@ void Application::Pause()
 
 }
 
-void Application::Resize(int i_w, int i_h)
+void Application::Resize(Size_ui32 i_w, Size_ui32 i_h)
 {
     GraphicsManager::GetRef().Resize(i_w, i_h);
 }

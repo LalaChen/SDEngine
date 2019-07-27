@@ -65,7 +65,7 @@ VulkanManager::VulkanManager()
 // desired device properities
 , m_VK_desired_queue_abilities(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT | VK_QUEUE_SPARSE_BINDING_BIT)
 , m_VK_desired_sur_fmt{ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR }
-, m_VK_desired_pre_mode_list{ VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR}
+, m_VK_desired_pre_mode_list{ VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR }
 // device(phy and logical)
 , m_VK_physical_device(VK_NULL_HANDLE)
 , m_VK_picked_queue_family_id(-1)
@@ -198,7 +198,7 @@ void VulkanManager::ReleaseGraphicsSystem()
 }
 
 //----------------------- Render Flow -----------------------
-void VulkanManager::Resize(int i_w, int i_h)
+void VulkanManager::Resize(Size_ui32 i_w, Size_ui32 i_h)
 {
     for (VkFramebuffer &fbo : m_VK_sc_image_fbs) {
         if (fbo != VK_NULL_HANDLE) {

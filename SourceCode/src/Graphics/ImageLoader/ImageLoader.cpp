@@ -9,9 +9,11 @@ namespace SDE
 namespace Graphics
 {
 
+SD_SINGLETON_DECLARATION_IMPL(ImageLoader);
+
 ImageLoader::ImageLoader()
 {
-
+    SD_SINGLETON_DECLARATION_REGISTER
 }
 
 ImageLoader::~ImageLoader()

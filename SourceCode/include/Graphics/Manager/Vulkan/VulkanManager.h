@@ -92,7 +92,7 @@ public:
     void MapBuffer(const VertexBufferIdentity &i_identity, VoidHandle &io_buffer_handle) override;
     void UnmapBuffer(const VertexBufferIdentity &i_identity) override;
 public:
-    void Resize(int i_w, int i_h) override;
+    void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
 //----------- Vulkan buffer private Function ------------
     VkResult CreateVkBuffer(VkBufferUsageFlags i_buffer_usage, VkSharingMode i_sharing_mode, VkDeviceSize i_size, VkBuffer &io_buffer_handle);
