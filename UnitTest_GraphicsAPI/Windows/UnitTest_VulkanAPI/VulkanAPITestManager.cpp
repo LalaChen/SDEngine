@@ -93,17 +93,23 @@ void VulkanAPITestManager::RenderToScreen()
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
 
-    if (vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
+    result = vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence);
+    if (result != VK_SUCCESS) {
         SDLOGW("Submit command buffer failure!!!");
+        return;
     }
 
-    if (vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime) != VK_SUCCESS) {
+    result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
+    if (result != VK_SUCCESS) {
         SDLOGW("Wait sync failure!!!");
+        return;
     }
 
     //Reset main command buffer sync.
-    if (vkResetFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
+    result = vkResetFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence);
+    if (result != VK_SUCCESS) {
         SDLOGW("reset main command buffer fence failure!!!");
+        return;
     }
 
     //Present to screen
@@ -117,7 +123,8 @@ void VulkanAPITestManager::RenderToScreen()
     p_info.pImageIndices = &image_index;
     p_info.pResults = nullptr;
 
-    if (vkQueuePresentKHR(m_VK_present_queue, &p_info) != VK_SUCCESS) {
+    result = vkQueuePresentKHR(m_VK_present_queue, &p_info);
+    if (result != VK_SUCCESS) {
         SDLOGW("We can't present image by queue.");
         return;
     }
@@ -306,7 +313,6 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
 
     //3. Submit command.
     VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
-
     VkSubmitInfo submit_info = {};
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submit_info.pNext = nullptr;
@@ -337,14 +343,14 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
         return result;
     }
 
-    ReleaseMemory(staging_memory);
-    DestroyBuffer(staging_buffer);
-
     result = vkResetCommandBuffer(m_VK_main_cmd_buffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
     if (result != VK_SUCCESS) {
         SDLOGW("reset main command buffer failure!!!");
         return result;
     }
+
+    ReleaseMemory(staging_memory);
+    DestroyBuffer(staging_buffer);
 
     return VK_SUCCESS;
 }
@@ -497,6 +503,7 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceImage(VkImage i_VK_img, const v
             SDLOGW("We can't begin command buffer(%x)!!!", m_VK_main_cmd_buffer);
             return result;
         }
+
         //--- ii. set buffer memory barrier (block transfer).
         VkImageMemoryBarrier beg_mem_barrier = {};
         beg_mem_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -523,7 +530,7 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceImage(VkImage i_VK_img, const v
 
         //--- iii. copy buffer.
         VkBufferImageCopy buf_to_img_cpy_info = {};
-        buf_to_img_cpy_info.bufferOffset = i_data_size;
+        buf_to_img_cpy_info.bufferOffset = 0;
         buf_to_img_cpy_info.bufferRowLength = 0;
         buf_to_img_cpy_info.bufferImageHeight = 0;
         buf_to_img_cpy_info.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -556,7 +563,7 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceImage(VkImage i_VK_img, const v
         end_mem_barrier.subresourceRange.baseArrayLayer = 0;
         end_mem_barrier.subresourceRange.layerCount = 1;
 
-        vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+        vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
             0,
             0, nullptr, //memory barrier
             0, nullptr, //buffer memory barrier
@@ -571,21 +578,20 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceImage(VkImage i_VK_img, const v
 
         //4. Submit command.
         VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
-
         VkSubmitInfo submit_info = {};
         submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submit_info.pNext = nullptr;
         submit_info.waitSemaphoreCount = 0;
         submit_info.pWaitSemaphores = nullptr;
-        submit_info.pWaitDstStageMask = &submit_wait_flag;
         submit_info.signalSemaphoreCount = 0;
         submit_info.pSignalSemaphores = nullptr;
+        submit_info.pWaitDstStageMask = &submit_wait_flag;
         submit_info.commandBufferCount = 1;
         submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
 
         result = vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence);
         if (result != VK_SUCCESS) {
-            SDLOGW("Submit command buffer failure!!!");
+            SDLOGW("Submit image command buffer failure!!!");
             return result;
         }
 
@@ -594,6 +600,22 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceImage(VkImage i_VK_img, const v
             SDLOGW("Wait copy sync failure!!!");
             return result;
         }
+
+        //Reset main command buffer sync.
+        result = vkResetFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence);
+        if (result != VK_SUCCESS) {
+            SDLOGW("reset main command buffer fence failure!!!");
+            return result;
+        }
+
+        result = vkResetCommandBuffer(m_VK_main_cmd_buffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
+        if (result != VK_SUCCESS) {
+            SDLOGW("reset main command buffer failure!!!");
+            return result;
+        }
+
+        ReleaseMemory(staging_memory);
+        DestroyBuffer(staging_buffer);
     }
     return result;
 }
