@@ -130,6 +130,7 @@ void VulkanAPITestManager::RenderDebug()
 }
 
 //------------- API ------------
+//------ Buffer
 VkResult VulkanAPITestManager::CreateBuffer(VkBufferUsageFlags i_buffer_usage, VkSharingMode i_sharing_mode, VkDeviceSize i_size, VkBuffer &io_VK_buffer)
 {
     //1. create buffer information.
@@ -157,26 +158,13 @@ VkResult VulkanAPITestManager::AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop
     VkResult result;
     VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
     vkGetPhysicalDeviceMemoryProperties(m_VK_physical_device, &phy_dev_memory_props);
-    for (uint32_t type = 0; type < phy_dev_memory_props.memoryTypeCount; ++type) {
-        SDLOGD("Type[%d] : Flags(%u) HeadID(%u)", type,
-            phy_dev_memory_props.memoryTypes[type].propertyFlags,
-            phy_dev_memory_props.memoryTypes[type].heapIndex);
-    }
 
-    //2. Get memory info. We will get memory size of graphics card and main memory.
-    for (uint32_t heap_ID = 0; heap_ID < phy_dev_memory_props.memoryHeapCount; ++heap_ID) {
-        SDLOGD("Heap[%d] : Flag(%u) Size(%llu)", heap_ID,
-            phy_dev_memory_props.memoryHeaps[heap_ID].flags,
-            phy_dev_memory_props.memoryHeaps[heap_ID].size);
-    }
-
-    //3. get requirement info of vertices buffer.
+    //2. get requirement info of vertices buffer.
     VkMemoryRequirements mem_req;
     vkGetBufferMemoryRequirements(m_VK_device, i_VK_buffer, &mem_req);
-    SDLOGD("Req info : Size(%llu) Alignment(%llu) MemType(%u)",
-        mem_req.size, mem_req.alignment, mem_req.memoryTypeBits);
+    SDLOGD("Req info : Size(%llu) Alignment(%llu) MemType(%u)", mem_req.size, mem_req.alignment, mem_req.memoryTypeBits);
 
-    //4. allocate memory space following memory type and prop flag.
+    //3. allocate memory space following memory type and prop flag.
     for (uint32_t mem_type_ID = 0; mem_type_ID < phy_dev_memory_props.memoryTypeCount; ++mem_type_ID) {
         bool is_req_mem_of_this_type = mem_req.memoryTypeBits & (1 << mem_type_ID);
         bool is_req_mem_type_supported = 
@@ -237,7 +225,6 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
     std::memcpy(local_ptr, i_data_ptr, i_data_size);
 
     //--- iv. flush 
-    ///*
     VkMappedMemoryRange mem_ranges = {};
     mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     mem_ranges.pNext = nullptr;
@@ -249,8 +236,8 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
         SDLOGE("Map buffer flush failure!!!");
         return result;
     }
-    //*/
-    //--- iv. unmap memory.
+
+    //--- v. unmap memory.
     vkUnmapMemory(m_VK_device, staging_memory);
 
     //2. push copy command.
@@ -401,6 +388,245 @@ void VulkanAPITestManager::DestroyBuffer(VkBuffer i_VK_buffer)
     if (i_VK_buffer != VK_NULL_HANDLE) {
         vkDestroyBuffer(m_VK_device, i_VK_buffer, nullptr);
     }
+}
+//------ image
+VkResult VulkanAPITestManager::CreateImage(const VkImageCreateInfo &i_info, VkImage &io_VK_img)
+{
+    return vkCreateImage(m_VK_device, &i_info, nullptr, &io_VK_img);
+}
+
+VkResult VulkanAPITestManager::AllocateMemoryAndBindToImage(VkImage i_VK_img, VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkDeviceMemory &io_VK_memory)
+{
+    //1. Get device info.
+    VkResult result;
+    VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
+    vkGetPhysicalDeviceMemoryProperties(m_VK_physical_device, &phy_dev_memory_props);
+
+    //2. Get requirement info of vertices buffer.
+    VkMemoryRequirements mem_req;
+    vkGetImageMemoryRequirements(m_VK_device, i_VK_img, &mem_req);
+    SDLOGD("Req info : Size(%llu) Alignment(%llu) MemType(%u)", mem_req.size, mem_req.alignment, mem_req.memoryTypeBits);
+
+    //3. Allocate memory space following memory type and prop flag.
+    for (uint32_t mem_type_ID = 0; mem_type_ID < phy_dev_memory_props.memoryTypeCount; ++mem_type_ID) {
+        bool is_req_mem_of_this_type = mem_req.memoryTypeBits & (1 << mem_type_ID);
+        bool is_req_mem_type_supported =
+            ((phy_dev_memory_props.memoryTypes[mem_type_ID].propertyFlags & i_memo_prop_flags) == i_memo_prop_flags);
+
+        //--- i. Check this mem type.
+        if (is_req_mem_of_this_type == true && is_req_mem_type_supported == true) {
+            //------ find suitable type.
+            VkMemoryAllocateInfo buffer_mem_a_info = {};
+            buffer_mem_a_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+            buffer_mem_a_info.pNext = nullptr;
+            buffer_mem_a_info.allocationSize = mem_req.size;
+            buffer_mem_a_info.memoryTypeIndex = mem_type_ID;
+            result = vkAllocateMemory(m_VK_device, &buffer_mem_a_info, nullptr, &io_VK_memory);
+            if (result != VK_SUCCESS) {
+                SDLOGE("Allocate memory failure.");
+                return result;
+            }
+            else {
+                break;
+            }
+        }
+    }
+    //4. Bind memory to image.
+    return vkBindImageMemory(m_VK_device, i_VK_img, io_VK_memory, i_VK_offset);
+}
+
+VkResult VulkanAPITestManager::RefreshLocalDeviceImage(VkImage i_VK_img, const void *i_data_ptr, uint32_t i_width, uint32_t i_height, uint32_t i_depth, VkDeviceSize i_data_size)
+{
+    VkResult result = VK_NOT_READY;
+    VkBuffer staging_buffer = VK_NULL_HANDLE;
+    VkDeviceMemory staging_memory = VK_NULL_HANDLE;
+    if (i_data_ptr != nullptr) {
+        //1. create staging buffer in host and then refresh data into the one.
+        //--- i. create staging buffer(host memory).
+        result = CreateBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_SHARING_MODE_EXCLUSIVE, i_data_size, staging_buffer);
+        if (result != VK_SUCCESS) {
+            SDLOGW("Create staging buffer failure.");
+            return result;
+        }
+
+        result = AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0u, staging_buffer, staging_memory);
+        if (result != VK_SUCCESS) {
+            SDLOGW("Allocate staging memory failure.");
+            return result;
+        }
+
+        //2. refresh host stage buffer.
+        //--- ii. map memory.
+        VkMemoryRequirements mem_req;
+        vkGetBufferMemoryRequirements(m_VK_device, staging_buffer, &mem_req);
+        void *local_ptr = VK_NULL_HANDLE;
+        result = vkMapMemory(m_VK_device, staging_memory, 0, mem_req.size, 0, (void**)&local_ptr);
+        if (result != VK_SUCCESS) {
+            SDLOGE("Map buffer memory failure!!!");
+            return result;
+        }
+        //--- iii. memory copy.
+        std::memcpy(local_ptr, i_data_ptr, i_data_size);
+
+        //--- iv. flush 
+        VkMappedMemoryRange mem_ranges = {};
+        mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+        mem_ranges.pNext = nullptr;
+        mem_ranges.memory = staging_memory;
+        mem_ranges.offset = 0;
+        mem_ranges.size = VK_WHOLE_SIZE;
+        result = vkFlushMappedMemoryRanges(m_VK_device, 1, &mem_ranges);
+        if (result != VK_SUCCESS) {
+            SDLOGE("Map buffer flush failure!!!");
+            return result;
+        }
+
+        //--- v. unmap memory.
+        vkUnmapMemory(m_VK_device, staging_memory);
+        
+        //3. push copy command.
+        //--- i. begin command buffer.
+        VkCommandBufferBeginInfo cmd_buf_c_info = {};
+        cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        cmd_buf_c_info.pNext = nullptr;
+        cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+        cmd_buf_c_info.pInheritanceInfo = nullptr;
+
+        result = vkBeginCommandBuffer(m_VK_main_cmd_buffer, &cmd_buf_c_info);
+        if (result != VK_SUCCESS) {
+            SDLOGW("We can't begin command buffer(%x)!!!", m_VK_main_cmd_buffer);
+            return result;
+        }
+        //--- ii. set buffer memory barrier (block transfer).
+        VkImageMemoryBarrier beg_mem_barrier = {};
+        beg_mem_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        beg_mem_barrier.pNext = nullptr;
+        beg_mem_barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        beg_mem_barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        beg_mem_barrier.srcAccessMask = 0; //The buffer doesn't have access state.
+        beg_mem_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        beg_mem_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        beg_mem_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        beg_mem_barrier.image = i_VK_img;
+        beg_mem_barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        beg_mem_barrier.subresourceRange.baseMipLevel = 0;
+        beg_mem_barrier.subresourceRange.levelCount = 1;
+        beg_mem_barrier.subresourceRange.baseArrayLayer = 0;
+        beg_mem_barrier.subresourceRange.layerCount = 1;
+
+        vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+            0,
+            0, nullptr, //memory barrier
+            0, nullptr, //buffer memory barrier
+            1, &beg_mem_barrier //image memory barrier
+        );
+
+        //--- iii. copy buffer.
+        VkBufferImageCopy buf_to_img_cpy_info = {};
+        buf_to_img_cpy_info.bufferOffset = i_data_size;
+        buf_to_img_cpy_info.bufferRowLength = 0;
+        buf_to_img_cpy_info.bufferImageHeight = 0;
+        buf_to_img_cpy_info.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        buf_to_img_cpy_info.imageSubresource.mipLevel = 0;
+        buf_to_img_cpy_info.imageSubresource.baseArrayLayer = 0;
+        buf_to_img_cpy_info.imageSubresource.layerCount = 1;
+        buf_to_img_cpy_info.imageOffset.x = 0;
+        buf_to_img_cpy_info.imageOffset.y = 0;
+        buf_to_img_cpy_info.imageOffset.z = 0;
+        buf_to_img_cpy_info.imageExtent.width = i_width;
+        buf_to_img_cpy_info.imageExtent.height = i_height;
+        buf_to_img_cpy_info.imageExtent.depth = i_depth;
+
+        vkCmdCopyBufferToImage(m_VK_main_cmd_buffer, staging_buffer, i_VK_img, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &buf_to_img_cpy_info);
+
+        //--- iv. set buffer memory barrier (block transfer).
+        VkImageMemoryBarrier end_mem_barrier = {};
+        end_mem_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        end_mem_barrier.pNext = nullptr;
+        end_mem_barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        end_mem_barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        end_mem_barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        end_mem_barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+        end_mem_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        end_mem_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        end_mem_barrier.image = i_VK_img;
+        end_mem_barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        end_mem_barrier.subresourceRange.baseMipLevel = 0;
+        end_mem_barrier.subresourceRange.levelCount = 1;
+        end_mem_barrier.subresourceRange.baseArrayLayer = 0;
+        end_mem_barrier.subresourceRange.layerCount = 1;
+
+        vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            0,
+            0, nullptr, //memory barrier
+            0, nullptr, //buffer memory barrier
+            1, &end_mem_barrier //image memory barrier
+        );
+        //--- v. end command buffer.
+        result = vkEndCommandBuffer(m_VK_main_cmd_buffer);
+        if (result != VK_SUCCESS) {
+            SDLOGW("We can't end command buffer(%x)!!!", m_VK_main_cmd_buffer);
+            return result;
+        }
+
+        //4. Submit command.
+        VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+
+        VkSubmitInfo submit_info = {};
+        submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submit_info.pNext = nullptr;
+        submit_info.waitSemaphoreCount = 0;
+        submit_info.pWaitSemaphores = nullptr;
+        submit_info.pWaitDstStageMask = &submit_wait_flag;
+        submit_info.signalSemaphoreCount = 0;
+        submit_info.pSignalSemaphores = nullptr;
+        submit_info.commandBufferCount = 1;
+        submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
+
+        result = vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence);
+        if (result != VK_SUCCESS) {
+            SDLOGW("Submit command buffer failure!!!");
+            return result;
+        }
+
+        result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_FALSE, MaxFenceWaitTime);
+        if (result != VK_SUCCESS) {
+            SDLOGW("Wait copy sync failure!!!");
+            return result;
+        }
+    }
+    return result;
+}
+
+VkResult VulkanAPITestManager::RefreshHostDeviceImage(VkImage i_VK_img, VkDeviceMemory i_VK_img_mem, const void *i_data_ptr, VkDeviceSize i_size)
+{
+    VkResult result;
+    VkMemoryRequirements mem_req;
+    //1. map.
+    vkGetImageMemoryRequirements(m_VK_device, i_VK_img, &mem_req);
+    void *buffer_device_ptr = VK_NULL_HANDLE;
+    result = vkMapMemory(m_VK_device, i_VK_img_mem, 0, mem_req.size, 0, (void **)&buffer_device_ptr);
+    //2. refresh memory.
+    if (result == VK_SUCCESS) {
+        memcpy(buffer_device_ptr, i_data_ptr, i_size);
+    }
+
+    //3. flush data.
+    VkMappedMemoryRange mem_ranges = {};
+    mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+    mem_ranges.pNext = nullptr;
+    mem_ranges.memory = i_VK_img_mem;
+    mem_ranges.offset = 0;
+    mem_ranges.size = VK_WHOLE_SIZE;
+    result = vkFlushMappedMemoryRanges(m_VK_device, 1, &mem_ranges);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Map buffer flush failure!!!");
+        return result;
+    }
+
+    //4. unmap.
+    vkUnmapMemory(m_VK_device, i_VK_img_mem);
+    return result;
 }
 
 //----------- shader related

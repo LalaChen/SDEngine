@@ -57,3 +57,5 @@ SOFTWARE.
 #include "Graphics/Vec/Color4f.h"
 #include "Graphics/Resolution/Resolution.h"
 #include "Graphics/Manager/GraphicsManager.h"
+#include "Graphics/ImageLoader/Bitmap.h"
+#include "Graphics/ImageLoader/ImageLoader.h"

@@ -17,6 +17,9 @@ Sample1_DrawTriangle::Sample1_DrawTriangle(VulkanAPITestManager *i_mgr)
 , m_VK_indices_buffer(VK_NULL_HANDLE)
 , m_VK_ibuf_memory(VK_NULL_HANDLE)
 //
+, m_VK_main_texture(VK_NULL_HANDLE)
+, m_VK_main_texture_memory(VK_NULL_HANDLE)
+//
 , m_VK_basic_uniform_buffer(VK_NULL_HANDLE)
 , m_VK_basic_uniform_buffer_memory(VK_NULL_HANDLE)
 //
@@ -38,6 +41,7 @@ Sample1_DrawTriangle::~Sample1_DrawTriangle()
 void Sample1_DrawTriangle::Initialize()
 {
     CreateBuffers();
+    CreateTexture();
     CreateUniformBuffer();
     CreateShaderPrograms();
 }
@@ -274,6 +278,69 @@ void Sample1_DrawTriangle::CreateBuffers()
         return;
     }
 #endif
+}
+
+void Sample1_DrawTriangle::CreateTexture()
+{
+    SDLOG("Create Texture!!!");
+    VkResult result = VK_SUCCESS;
+    //1. load data and get w and h.
+    BitmapStrongReferenceObject bitmap_ref = ImageLoader::GetRef().LoadBitmap("Texture/Lenna.png");
+    //2. create info.
+    if (bitmap_ref.IsNull() == false) {
+        Size_ui32 img_w = bitmap_ref.GetRef().GetWidth();
+        Size_ui32 img_h = bitmap_ref.GetRef().GetHeight();
+        Size_ui32 img_n_of_c = bitmap_ref.GetRef().GetNumOfChannel();
+        Size_ui32 img_buf_size = static_cast<Size_ui32>(bitmap_ref.GetRef().GetBufferSize());
+        BitmapPixelValueType bitmap_p_type = bitmap_ref.GetRef().GetPixelValueType();
+        const void *img_ptr = reinterpret_cast<const void*>(bitmap_ref.GetRef().GetBitmap());
+
+        VkImageCreateInfo img_c_info = {};
+        img_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        img_c_info.pNext = nullptr;
+        img_c_info.flags = 0; //We need to set flag when we want to use sparse texture data or sth.
+        img_c_info.imageType = VK_IMAGE_TYPE_2D;
+        img_c_info.mipLevels = 1;// mipmap levels. We don't want to create mip map in here.
+        img_c_info.arrayLayers = 1; //Use it when data is 2d texture array.
+        img_c_info.tiling = VK_IMAGE_TILING_OPTIMAL; //Set texture tiling mode. If the image is linked data in system memory, we need to use VK_IMAGE_TILING_LINEAR.
+        img_c_info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        img_c_info.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT; //We will copy data to this image(trasnfer dst) and use it in shader(sampled).
+        img_c_info.samples = VK_SAMPLE_COUNT_1_BIT;
+        img_c_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        img_c_info.queueFamilyIndexCount = 0;
+        img_c_info.pQueueFamilyIndices = nullptr;
+        img_c_info.extent.width = img_w;
+        img_c_info.extent.height = img_h;
+        img_c_info.extent.depth = 1;
+        if (bitmap_p_type.m_enum == BitmapPixelDataType_UNSIGNED_BYTE && img_n_of_c == 3) {
+            img_c_info.format = VK_FORMAT_R8G8B8_UNORM;//byte and [0,1]
+        }
+        else if (bitmap_p_type.m_enum == BitmapPixelDataType_UNSIGNED_BYTE && img_n_of_c == 4) {
+            img_c_info.format = VK_FORMAT_R8G8B8A8_UNORM;//byte and [0,1]
+        } 
+        else {
+            SDLOGE("We can't find suitable image format.");
+            return;
+        }
+        //3. create VKImage.
+        result = m_mgr->CreateImage(img_c_info, m_VK_main_texture);
+        if (result != VK_SUCCESS) {
+            throw std::runtime_error("Create image error.");
+        }
+        //4. allocate memory.
+        result = m_mgr->AllocateMemoryAndBindToImage(m_VK_main_texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0, m_VK_main_texture_memory);
+        if (result != VK_SUCCESS) {
+            throw std::runtime_error("Create image buffer error.");
+        }
+        //5. update data.
+        result = m_mgr->RefreshLocalDeviceImage(m_VK_main_texture, img_ptr, img_w, img_h, img_w, img_buf_size);
+        if (result != VK_SUCCESS) {
+            throw std::runtime_error("Refresh image buffer error.");
+        }
+    }
+    else {
+        SDLOGW("Image isn't opened.");
+    }
 }
 
 void Sample1_DrawTriangle::CreateUniformBuffer()

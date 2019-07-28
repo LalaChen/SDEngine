@@ -18,6 +18,11 @@ public: //Buffer Related.
     VkResult RefreshHostDeviceBufferData(VkBuffer i_VK_buffer, VkDeviceMemory i_VK_buffer_mem, void *i_data_ptr, VkDeviceSize i_size);
     void ReleaseMemory(VkDeviceMemory i_VK_memory);
     void DestroyBuffer(VkBuffer i_VK_buffer);
+public:
+    VkResult CreateImage(const VkImageCreateInfo &i_info, VkImage &io_VK_img);
+    VkResult AllocateMemoryAndBindToImage(VkImage i_VK_img, VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkDeviceMemory &io_VK_memory);
+    VkResult RefreshLocalDeviceImage(VkImage i_VK_img, const void *i_data_ptr, uint32_t i_width, uint32_t i_height, uint32_t i_depth, VkDeviceSize i_data_size);
+    VkResult RefreshHostDeviceImage(VkImage i_VK_img, VkDeviceMemory i_VK_img_mem, const void *i_data_ptr, VkDeviceSize i_size);
 public: //Shader Related.
     VkResult CreateDescriptorSetLayout(const VkDescriptorSetLayoutCreateInfo &i_c_info, VkDescriptorSetLayout &io_layout);
     void DestroyDesciptorSetLayout(VkDescriptorSetLayout i_VK_layout);

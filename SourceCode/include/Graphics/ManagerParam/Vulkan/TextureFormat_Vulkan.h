@@ -1,5 +1,4 @@
-#pragma once
-/* ==============  SD Engine License ==============
+/*==============  SD Engine License ==============
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -21,24 +20,43 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-/*! \file      SDEnginePlatform.h
- *  \brief     platform include header.
+/*! \file      TextureFormatType_Vulkan.h
+ *  \brief     Introduce of class TextureFormatType_Vulkan.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/02/21
+ *  \date      2019/07/27
  *  \copyright MIT License.
  */
 
-//------- OS Platform Only -------
-#ifdef _WIN_PLATFORM_
-#include "Basic/LogManager/Windows/WindowsLogManager.h"
-#include "Basic/Timer/Windows/WindowsTimer.h"
-#include "Basic/FileSystem/Windows/WindowsFileSystemManager.h"
-#include "Graphics/ImageLoader/Windows/WindowsImageLoader.h"
-#include "Graphics/Manager/OpenGL4/OpenGL4Manager.h"
-#include "Graphics/Manager/Vulkan/VulkanManager.h"
-#include "Graphics/Manager/Vulkan/VulkanCreationArg.h"
-#elif _ANDROID_PLATFORM_
+#pragma once
 
-#endif
+#include <vulkan/vulkan.h>
+
+#include "SDEngineCommonType.h"
+#include "BitmapPixelDataType.h"
+#include "TextureFormat.h"
+
+//---------------------------- start of namespace SDE ----------------------------
+namespace SDE
+{
+//---------------------------- start of namespace Graphics ----------------------------
+namespace Graphics
+{
+
+class TextureFormat_Vulkan
+{
+public:
+    static VkFormat Convert(const TextureFormatEnum &i_src);
+    static const char* GetTextureFormatName(const TextureFormatEnum &i_src);
+public:
+    static VkFormat TextureFormatTypes[TextureFormat_MAX_DEFINE_VALUE];
+    static std::string TextureFormatNames[TextureFormat_MAX_DEFINE_VALUE];
+    static std::string DummyName;
+};
+
+//---------------------------- end of namespace Graphics ----------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

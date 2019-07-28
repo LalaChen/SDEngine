@@ -122,14 +122,15 @@ BitmapStrongReferenceObject WindowsImageLoader::LoadBitmap(const FilePathString 
 
 			if (img_pv_type != BitmapPixelDataType_MAX_DEFINE_VALUE) {
 				//--- format
-				if (temp_n_of_c == 3) {//RGB
-					success = ilConvertImage(IL_RGB, pixel_type);
+				if (temp_n_of_c == 3) {//RGB to RGBA
+					success = ilConvertImage(IL_RGBA, pixel_type);
 					if (success == IL_TRUE) {
 						image_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
 						image_data_ptr = ilGetData();
+                        temp_n_of_c = 4;
 					}
 					else {
-                        SDLOGW("Image [%s] can't convert to RGB!!!", fullpath.c_str());
+                        SDLOGW("Image [%s] can't convert RGB to RGBA!!!", fullpath.c_str());
 						result = false;
 					}
 				}
@@ -140,7 +141,7 @@ BitmapStrongReferenceObject WindowsImageLoader::LoadBitmap(const FilePathString 
 						image_data_ptr = ilGetData();
 					}
 					else {
-                        SDLOGW("Image [%s] can't convert to GRBA!!!", fullpath.c_str());
+                        SDLOGW("Image [%s] can't convert to RGBA!!!", fullpath.c_str());
 					}
 				}
 				else if (temp_n_of_c == 1) { //Gray

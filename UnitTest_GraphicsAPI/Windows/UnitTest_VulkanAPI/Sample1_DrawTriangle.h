@@ -30,12 +30,14 @@ public:
     void Destroy();
 private:
     void CreateBuffers();
+    void CreateTexture();
     void CreateUniformBuffer();
     void CreateShaderPrograms();
 protected:
     VulkanAPITestManager *m_mgr;
 protected:
-    //Device Local memory buffer. (Memory type VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT can't use map and unmap)
+//Vertex Device Local memory buffer.
+//(Memory type VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT can't use map and unmap)
     VkBuffer m_VK_vertice_buffer;
     VkDeviceMemory m_VK_vbuf_memory;
     VkBuffer m_VK_ver_color_buffer;
@@ -43,10 +45,15 @@ protected:
     VkBuffer m_VK_indices_buffer;
     VkDeviceMemory m_VK_ibuf_memory;
 protected:
+//Vertex Host memory buffer.
     VkBuffer m_VK_basic_uniform_buffer;
     VkDeviceMemory m_VK_basic_uniform_buffer_memory;
 protected:
-    //shader
+//Texture
+    VkImage m_VK_main_texture;
+    VkDeviceMemory m_VK_main_texture_memory;
+protected:
+//shader
     VkPipelineLayout m_VK_pipeline_layout;
     VkShaderModule m_vert_module;
     VkShaderModule m_frag_module;

@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "TextureFormat_Vulkan.h"
 #include "LogManager.h"
 #include "VulkanManager.h"
 
@@ -51,6 +52,17 @@ void VulkanManager::PrintSystemInformation()
             phy_dev_memory_props.memoryHeaps[heap_ID].flags,
             phy_dev_memory_props.memoryHeaps[heap_ID].size);
     }
+
+    SDLOG("Support Image Information :");
+    for (uint32_t format_ID = 0; format_ID < TextureFormat_MAX_DEFINE_VALUE; ++format_ID) {
+        VkFormatProperties format_prop;
+        TextureFormatEnum format_enum = static_cast<TextureFormatEnum>(format_ID);
+        VkFormat format = static_cast<VkFormat>(TextureFormat_Vulkan::Convert(format_enum));
+        vkGetPhysicalDeviceFormatProperties(m_VK_physical_device, format, &format_prop);
+        SDLOG("Format[%d](%s) : features(%d), linearTile(%d), optinalTile(%d)", format_ID, TextureFormat_Vulkan::GetTextureFormatName(format_enum),
+            format_prop.bufferFeatures, format_prop.linearTilingFeatures, format_prop.optimalTilingFeatures);
+    }
+
 }
 
 //-------------------------- end of namespace Graphics ----------------------------
