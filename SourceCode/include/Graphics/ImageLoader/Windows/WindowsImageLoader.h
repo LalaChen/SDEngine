@@ -62,7 +62,7 @@ public:
 public:
     /*! \fn virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
      *  \param [in] i_fp File path of image data.
-     *  \brief Load data.
+     *  \brief Load data. Please note that we will convert RGB to RGBA automatically.
      */
     BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const override;
 };
