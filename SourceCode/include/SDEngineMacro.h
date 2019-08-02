@@ -224,4 +224,9 @@ typedef char SDStrChar;
  */
 #define ENUM_TO_INT( var )  static_cast<int>(var)
 
+/* \def  IS_FEATURE( var, feature_bit )
+ * \brief chcek var has the feature or not.
+ */
+#define IS_FEATURE( var, feature_bit ) ((var & feature_bit) == feature_bit)
+
 #define SD_NULL_HANDLE 0

@@ -53,14 +53,28 @@ void VulkanManager::PrintSystemInformation()
             phy_dev_memory_props.memoryHeaps[heap_ID].size);
     }
 
-    SDLOG("Support Image Information :");
+    SDLOG("Support Texture Image Information :");
     for (uint32_t format_ID = 0; format_ID < TextureFormat_MAX_DEFINE_VALUE; ++format_ID) {
         VkFormatProperties format_prop;
         TextureFormatEnum format_enum = static_cast<TextureFormatEnum>(format_ID);
         VkFormat format = static_cast<VkFormat>(TextureFormat_Vulkan::Convert(format_enum));
         vkGetPhysicalDeviceFormatProperties(m_VK_physical_device, format, &format_prop);
-        SDLOG("Format[%d](%s) : features(%d), linearTile(%d), optinalTile(%d)", format_ID, TextureFormat_Vulkan::GetTextureFormatName(format_enum),
-            format_prop.bufferFeatures, format_prop.linearTilingFeatures, format_prop.optimalTilingFeatures);
+        SDLOG("Format[%d](%d)(%s) :"
+              " features(%08x)(StorageImage:%d),"
+              " linearTile(%08x)(Sampler:%d)(ColorAttachment:%d)(DepthAttachment:%d),"
+              " optinalTile(%08x)(Sampler:%d)(ColorAttachment:%d)(DepthAttachment:%d)",
+            format_ID, format, TextureFormat_Vulkan::GetTextureFormatName(format_enum),
+            format_prop.bufferFeatures,
+            IS_FEATURE(format_prop.bufferFeatures, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT),
+            format_prop.linearTilingFeatures,
+            IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT),
+            IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT),
+            IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
+            format_prop.optimalTilingFeatures,
+            IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT),
+            IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT),
+            IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+            );
     }
 
 }
