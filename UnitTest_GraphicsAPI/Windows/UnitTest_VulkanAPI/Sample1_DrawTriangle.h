@@ -38,10 +38,12 @@ protected:
 protected:
 //Vertex Device Local memory buffer.
 //(Memory type VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT can't use map and unmap)
-    VkBuffer m_VK_vertice_buffer;
-    VkDeviceMemory m_VK_vbuf_memory;
+    VkBuffer m_VK_ver_buffer;
+    VkDeviceMemory m_VK_ver_buf_memory;
     VkBuffer m_VK_ver_color_buffer;
     VkDeviceMemory m_VK_ver_color_buf_memory;
+    VkBuffer m_VK_ver_tex_buffer;
+    VkDeviceMemory m_VK_ver_tex_buf_memory;
     VkBuffer m_VK_indices_buffer;
     VkDeviceMemory m_VK_ibuf_memory;
 protected:
@@ -52,6 +54,8 @@ protected:
 //Texture
     VkImage m_VK_main_texture;
     VkDeviceMemory m_VK_main_texture_memory;
+    VkImageView m_VK_main_texture_image_view;
+    VkSampler m_VK_main_texture_sampler;
 protected:
 //shader
     VkPipelineLayout m_VK_pipeline_layout;

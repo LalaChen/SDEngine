@@ -10,15 +10,19 @@ using namespace::SDE::Graphics;
 
 Sample1_DrawTriangle::Sample1_DrawTriangle(VulkanAPITestManager *i_mgr)
 : m_mgr(i_mgr)
+, m_VK_ver_buffer(VK_NULL_HANDLE)
+, m_VK_ver_buf_memory(VK_NULL_HANDLE)
 , m_VK_ver_color_buffer(VK_NULL_HANDLE)
 , m_VK_ver_color_buf_memory(VK_NULL_HANDLE)
-, m_VK_vertice_buffer(VK_NULL_HANDLE)
-, m_VK_vbuf_memory(VK_NULL_HANDLE)
+, m_VK_ver_tex_buffer(VK_NULL_HANDLE)
+, m_VK_ver_tex_buf_memory(VK_NULL_HANDLE)
 , m_VK_indices_buffer(VK_NULL_HANDLE)
 , m_VK_ibuf_memory(VK_NULL_HANDLE)
 //
 , m_VK_main_texture(VK_NULL_HANDLE)
 , m_VK_main_texture_memory(VK_NULL_HANDLE)
+, m_VK_main_texture_image_view(VK_NULL_HANDLE)
+, m_VK_main_texture_sampler(VK_NULL_HANDLE)
 //
 , m_VK_basic_uniform_buffer(VK_NULL_HANDLE)
 , m_VK_basic_uniform_buffer_memory(VK_NULL_HANDLE)
@@ -35,7 +39,8 @@ Sample1_DrawTriangle::Sample1_DrawTriangle(VulkanAPITestManager *i_mgr)
 
 Sample1_DrawTriangle::~Sample1_DrawTriangle()
 {
-
+    
+    
 }
 
 void Sample1_DrawTriangle::Initialize()
@@ -95,10 +100,11 @@ void Sample1_DrawTriangle::Render()
         m_mgr->BindDescriptorSets(m_VK_pipeline_layout, VK_PIPELINE_BIND_POINT_GRAPHICS, 0, descs, dynamic_offs);
         
         //Bind Vertex Buffer.
-        m_mgr->BindVertexBuffer(m_VK_vertice_buffer, 0, 0); //vertex
+        m_mgr->BindVertexBuffer(m_VK_ver_buffer, 0, 0); //vertex
         m_mgr->BindVertexBuffer(m_VK_ver_color_buffer, 0, 1); //color
+        m_mgr->BindVertexBuffer(m_VK_ver_tex_buffer, 0, 2); //tex
         
-        //std::vector<VkBuffer> va_buffers = { m_VK_vertice_buffer, m_VK_ver_color_buffer};
+        //std::vector<VkBuffer> va_buffers = { m_VK_ver_buffer, m_VK_ver_color_buffer};
         //std::vector<VkDeviceSize> va_buffer_offsets = {0, 0};
         //m_mgr->BindVertexBuffers(va_buffers, va_buffer_offsets, 0);
        
@@ -113,20 +119,32 @@ void Sample1_DrawTriangle::Render()
 void Sample1_DrawTriangle::Destroy()
 {
     if (m_mgr != nullptr) {
-        m_mgr->ReleaseMemory(m_VK_vbuf_memory);
-        m_mgr->DestroyBuffer(m_VK_vertice_buffer);
-        m_VK_vbuf_memory = VK_NULL_HANDLE;
-        m_VK_vertice_buffer = VK_NULL_HANDLE;
+        m_mgr->ReleaseMemory(m_VK_ver_buf_memory);
+        m_mgr->DestroyBuffer(m_VK_ver_buffer);
+        m_VK_ver_buf_memory = VK_NULL_HANDLE;
+        m_VK_ver_buffer = VK_NULL_HANDLE;
 
         m_mgr->ReleaseMemory(m_VK_ver_color_buf_memory);
         m_mgr->DestroyBuffer(m_VK_ver_color_buffer);
         m_VK_ver_color_buf_memory = VK_NULL_HANDLE;
         m_VK_ver_color_buffer = VK_NULL_HANDLE;
 
+        m_mgr->ReleaseMemory(m_VK_ver_tex_buf_memory);
+        m_mgr->DestroyBuffer(m_VK_ver_tex_buffer);
+        m_VK_ver_tex_buf_memory = VK_NULL_HANDLE;
+        m_VK_ver_tex_buffer = VK_NULL_HANDLE;
+
         m_mgr->ReleaseMemory(m_VK_ibuf_memory);
         m_mgr->DestroyBuffer(m_VK_indices_buffer);
         m_VK_ibuf_memory = VK_NULL_HANDLE;
         m_VK_indices_buffer = VK_NULL_HANDLE;
+        //
+        m_mgr->ReleaseMemory(m_VK_main_texture_memory);
+        m_mgr->DestroyImage(m_VK_main_texture);
+        m_mgr->DestroySampler(m_VK_main_texture_sampler);
+        m_VK_main_texture_memory = VK_NULL_HANDLE;
+        m_VK_main_texture = VK_NULL_HANDLE;
+        m_VK_main_texture_sampler = VK_NULL_HANDLE;
         //
         m_mgr->ReleaseMemory(m_VK_basic_uniform_buffer_memory);
         m_mgr->DestroyBuffer(m_VK_basic_uniform_buffer);
@@ -154,6 +172,13 @@ void Sample1_DrawTriangle::CreateBuffers()
         vec3( 0.5f, -0.5f, -0.01f)
     };
 
+    std::vector<vec2> quad_texs = {
+        vec2( 0.0f, 0.0f),
+        vec2( 1.0f, 0.0f),
+        vec2( 1.0f, 1.0f),
+        vec2( 0.0f, 1.0f)
+    };
+
     std::vector<Color4f> quad_colors = {
         Color4f(1.0f, 0.0f, 0.0f, 1.0f),
         Color4f(0.0f, 1.0f, 0.0f, 1.0f),
@@ -171,35 +196,35 @@ void Sample1_DrawTriangle::CreateBuffers()
     //1. create vertex buffer.
     //--- i. create buffer information.
     result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE,
-        static_cast<VkDeviceSize>(sizeof(vec3)*quad_vecs.size()), m_VK_vertice_buffer);
+        static_cast<VkDeviceSize>(sizeof(vec3)*quad_vecs.size()), m_VK_ver_buffer);
     if (result != VK_SUCCESS) {
         SDLOGE("Create vertice buffer failure");
         return;
     }
 #ifndef USE_HOST_BUFFER
     //--- ii. get memory.
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0, m_VK_vertice_buffer, m_VK_vbuf_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0, m_VK_ver_buffer, m_VK_ver_buf_memory);
     if (result != VK_SUCCESS) {
         SDLOGE("Allocate vertex buffer failure!!!");
         return;
     }
 
     //--- iii. refresh data.
-    result = m_mgr->RefreshLocalDeviceBufferData(m_VK_vertice_buffer, quad_vecs.data(), static_cast<VkDeviceSize>(sizeof(vec3) * quad_vecs.size()));
+    result = m_mgr->RefreshLocalDeviceBufferData(m_VK_ver_buffer, quad_vecs.data(), static_cast<VkDeviceSize>(sizeof(vec3) * quad_vecs.size()));
     if (result != VK_SUCCESS) {
         SDLOGE("Refresh vertex buffer failure!!!");
         return;
     }
 #else
     //--- ii. get memory.
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_vertice_buffer, m_VK_vbuf_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_ver_buffer, m_VK_ver_buf_memory);
     if (result != VK_SUCCESS) {
         SDLOGE("Allocate vertex buffer failure!!!");
         return;
     }
 
     //--- iii. refresh data.
-    result = m_mgr->RefreshHostDeviceBufferData(m_VK_vertice_buffer, m_VK_vbuf_memory, quad_vecs.data(), static_cast<VkDeviceSize>(sizeof(vec3) * quad_vecs.size()));
+    result = m_mgr->RefreshHostDeviceBufferData(m_VK_ver_buffer, m_VK_ver_buf_memory, quad_vecs.data(), static_cast<VkDeviceSize>(sizeof(vec3) * quad_vecs.size()));
     if (result != VK_SUCCESS) {
         SDLOGE("Refresh vertex buffer failure!!!");
         return;
@@ -241,7 +266,42 @@ void Sample1_DrawTriangle::CreateBuffers()
     }
 #endif
 
-    //3. create indice buffer.
+    //3. create ver tex buffer.
+    //--- i. create buffer information.
+    result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE,
+        static_cast<VkDeviceSize>(sizeof(vec2) * quad_texs.size()), m_VK_ver_tex_buffer);
+
+#ifndef USE_HOST_BUFFER
+    //--- ii. get memory.
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0, m_VK_ver_tex_buffer, m_VK_ver_tex_buf_memory);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Allocate vertex color buffer failure!!!");
+        return;
+    }
+
+    //--- iii. refresh data.
+    result = m_mgr->RefreshLocalDeviceBufferData(m_VK_ver_tex_buffer, quad_texs.data(), static_cast<VkDeviceSize>(sizeof(vec2) * quad_texs.size()));
+    if (result != VK_SUCCESS) {
+        SDLOGE("Refresh vertex color buffer failure!!!");
+        return;
+    }
+#else
+    //--- ii. get memory.
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_ver_tex_buffer, m_VK_ver_tex_buf_memory);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Allocate vertex color buffer failure!!!");
+        return;
+    }
+
+    //--- iii. refresh data.
+    result = m_mgr->RefreshHostDeviceBufferData(m_VK_ver_tex_buffer, m_VK_ver_tex_buf_memory, quad_texs.data(), static_cast<VkDeviceSize>(sizeof(vec2) * quad_texs.size()));
+    if (result != VK_SUCCESS) {
+        SDLOGE("Refresh vertex color buffer failure!!!");
+        return;
+    }
+#endif
+
+    //4. create indice buffer.
     //--- i. create buffer information.
     result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE,
         static_cast<VkDeviceSize>(sizeof(uint16_t) * quad_indices.size()), m_VK_indices_buffer);
@@ -333,7 +393,10 @@ void Sample1_DrawTriangle::CreateTexture()
             throw std::runtime_error("Create image buffer error.");
         }
         //5. update data.
-        result = m_mgr->RefreshLocalDeviceImage(m_VK_main_texture, img_ptr, img_w, img_h, img_w, img_buf_size);
+        //uint8_t dummy_tex[16] = { 255,255,255,255, 255,0,0,255, 0,255,0,255, 0,0,255,255 };
+        //img_w = 2;
+        //img_h = 2;
+        result = m_mgr->RefreshLocalDeviceImage(m_VK_main_texture, img_ptr, img_w, img_h, 1, img_buf_size);
         if (result != VK_SUCCESS) {
             throw std::runtime_error("Refresh image buffer error.");
         }
@@ -366,8 +429,8 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     //(such like glVertexAttribBinding and glVertexAttribFormat.)
     //--- i. bind pointer.
     //------ one buffer one binding. (glVertexAttribFormat)
-    VkVertexInputBindingDescription vert_input_binding_des_infos[2] = {
-        {}, {}
+    VkVertexInputBindingDescription vert_input_binding_des_infos[3] = {
+        {}, {}, {}
     };
     vert_input_binding_des_infos[0].binding = 0;
     vert_input_binding_des_infos[0].stride = sizeof(vec3);
@@ -377,9 +440,13 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     vert_input_binding_des_infos[1].stride = sizeof(Color4f);
     vert_input_binding_des_infos[1].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
+    vert_input_binding_des_infos[2].binding = 2;
+    vert_input_binding_des_infos[2].stride = sizeof(vec2);
+    vert_input_binding_des_infos[2].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
     //--- ii. link bind pointer. (glVertexAttribBinding)m_VK_main_shader_set_layouts
-    VkVertexInputAttributeDescription vert_input_attrib_des_infos[2] = {
-        {},{}
+    VkVertexInputAttributeDescription vert_input_attrib_des_infos[3] = {
+        {},{},{}
     };
     //------ bind vertice attribute.
     vert_input_attrib_des_infos[0].binding = 0; //input buffer binding. (VkPhysicalDeviceLimits::maxVertexInputBindings)
@@ -391,14 +458,19 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     vert_input_attrib_des_infos[1].location = 1; //shader location. (VkPhysicalDeviceLimits::maxVertexInputAttributes)
     vert_input_attrib_des_infos[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
     vert_input_attrib_des_infos[1].offset = 0;
+    //------ bind color attribute.
+    vert_input_attrib_des_infos[2].binding = 2; //input buffer binding. (VkPhysicalDeviceLimits::maxVertexInputBindings)
+    vert_input_attrib_des_infos[2].location = 2; //shader location. (VkPhysicalDeviceLimits::maxVertexInputAttributes)
+    vert_input_attrib_des_infos[2].format = VK_FORMAT_R32G32_SFLOAT;
+    vert_input_attrib_des_infos[2].offset = 0;
 
     VkPipelineVertexInputStateCreateInfo v_input_state_c_info = {};
     v_input_state_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     v_input_state_c_info.pNext = nullptr;
     v_input_state_c_info.pVertexBindingDescriptions = vert_input_binding_des_infos;
-    v_input_state_c_info.vertexBindingDescriptionCount = 2;
+    v_input_state_c_info.vertexBindingDescriptionCount = 3;
     v_input_state_c_info.pVertexAttributeDescriptions = vert_input_attrib_des_infos;
-    v_input_state_c_info.vertexAttributeDescriptionCount = 2;
+    v_input_state_c_info.vertexAttributeDescriptionCount = 3;
 
     //--- iii. create input assembly states.(GL_TRIANGLE, ...etc.)
     VkPipelineInputAssemblyStateCreateInfo v_input_assembly_state_c_info = {};
@@ -416,18 +488,76 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     tessellation_state_c_info.patchControlPoints = 3; //3 : triangle. 4 : quad.
 
     //2. Create VkDescriptorSetLayout for main shader.
-    //--- i. Create basic block decriptor set layout.
-    //VkDescriptorSetLayoutBinding --- BasicUnifromBuffer
+    //--- i. Create sampler for main shader.
+    VkSamplerCreateInfo sampler_c_info = {};
+    sampler_c_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+    sampler_c_info.pNext = nullptr;
+    sampler_c_info.flags = 0; //
+    sampler_c_info.minFilter = VK_FILTER_LINEAR;
+    sampler_c_info.magFilter = VK_FILTER_LINEAR;
+    sampler_c_info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+    sampler_c_info.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    sampler_c_info.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    sampler_c_info.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    sampler_c_info.mipLodBias = 0.0f;
+    sampler_c_info.anisotropyEnable = VK_FALSE;
+    sampler_c_info.maxAnisotropy = 1.0f;
+    sampler_c_info.compareEnable = VK_FALSE; //Use depth compare operation.
+    sampler_c_info.compareOp = VK_COMPARE_OP_ALWAYS; //Use depth compare operation.
+    sampler_c_info.minLod = 0.0f;
+    sampler_c_info.maxLod = 1.0f;
+    sampler_c_info.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
+    sampler_c_info.unnormalizedCoordinates = VK_FALSE;
+
+    result = m_mgr->CreateSampler(sampler_c_info, m_VK_main_texture_sampler);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create sampler failure!!!");
+        return;
+    }
+
+    VkImageViewCreateInfo img_view_c_info = {};
+    img_view_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    img_view_c_info.pNext = nullptr;
+    img_view_c_info.flags = 0;
+    img_view_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    img_view_c_info.image = m_VK_main_texture;
+    img_view_c_info.format = VK_FORMAT_R8G8B8A8_UNORM;
+    img_view_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_c_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    img_view_c_info.subresourceRange.baseMipLevel = 0;
+    img_view_c_info.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+    img_view_c_info.subresourceRange.baseArrayLayer = 0;
+    img_view_c_info.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+
+    result = m_mgr->CreateImageView(img_view_c_info, m_VK_main_texture_image_view);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create sampler failure!!!");
+        return;
+    }
+
+    //--- ii. Create basic block decriptor set layout.
+    //------ VkDescriptorSetLayoutBinding(BasicUnifromBuffer)
     VkDescriptorSetLayoutBinding var_basic_uniform_buffer = {};
     var_basic_uniform_buffer.binding = 0;
-    var_basic_uniform_buffer.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    var_basic_uniform_buffer.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER; //uniform buffer
     var_basic_uniform_buffer.descriptorCount = 1; //Only one block.
     var_basic_uniform_buffer.stageFlags = VK_SHADER_STAGE_ALL_GRAPHICS; //use at all shader.
     var_basic_uniform_buffer.pImmutableSamplers = nullptr;
+    //------ VkDescriptorSetLayoutBinding(sampler2D)
+    VkDescriptorSetLayoutBinding var_main_texture = {};
+    var_main_texture.binding = 1;
+    var_main_texture.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER; //sampler2D
+    var_main_texture.descriptorCount = 1;
+    var_main_texture.stageFlags = VK_SHADER_STAGE_ALL_GRAPHICS; //use at all shader. 
+    var_main_texture.pImmutableSamplers = &m_VK_main_texture_sampler;
 
     //--- ii. Write create descriptor set layout info.
     std::vector<VkDescriptorSetLayoutBinding> uniform_var_location_set0;
     uniform_var_location_set0.push_back(var_basic_uniform_buffer);
+    uniform_var_location_set0.push_back(var_main_texture);
 
     VkDescriptorSetLayoutCreateInfo desc_set_c_info = {}; //One set one layout.
     desc_set_c_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -445,10 +575,17 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
 
     //--- iv. Create descriptor pools. (Create pool about VkDescriptorSet)
     std::vector<VkDescriptorPoolSize> types;
+    //------ VkDescriptorPoolSize(BasicUnifromBuffer)
     VkDescriptorPoolSize uniform_buffer_type = {};
     uniform_buffer_type.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     uniform_buffer_type.descriptorCount = 1; //Count is equal to number of descriptor set.
     types.push_back(uniform_buffer_type);
+    //------ VkDescriptorPoolSize(MainTexture)
+    VkDescriptorPoolSize image_type = {};
+    image_type.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    image_type.descriptorCount = 1;
+    types.push_back(image_type);
+
     result = m_mgr->CreateDescriptorPool(types, 1, false, m_VK_descriptor_pool);
     if (result != VK_SUCCESS) {
         SDLOGE("Create descriptror pool failure!!!");
@@ -469,6 +606,7 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     }
 
     //--- vi. Update descriptor set.(call it before binding and call it once. don't need to call it every frame.)
+    //------ VkDescriptorBufferInfo(BasicUnifromBuffer)
     VkDescriptorBufferInfo basic_uniform_b_info = {};
     basic_uniform_b_info.buffer = m_VK_basic_uniform_buffer;
     basic_uniform_b_info.offset = 0;
@@ -478,15 +616,37 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     mvp_descriptor_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     mvp_descriptor_set_info.pNext = nullptr;
     mvp_descriptor_set_info.dstSet = m_VK_descriptor_set0;
+    mvp_descriptor_set_info.dstBinding = 0; //binding 0, set 0
     mvp_descriptor_set_info.descriptorCount = 1;
     mvp_descriptor_set_info.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     mvp_descriptor_set_info.pBufferInfo = &basic_uniform_b_info;
     mvp_descriptor_set_info.pImageInfo = nullptr;
     mvp_descriptor_set_info.pTexelBufferView = nullptr;
     mvp_descriptor_set_info.dstArrayElement = 0;
-    mvp_descriptor_set_info.dstBinding = 0; //binding 0, set 0
 
-    std::vector<VkWriteDescriptorSet> descriptor_set_infos = { mvp_descriptor_set_info };
+
+    //------ VkDescriptorSetLayoutBinding(MainTexture)
+    VkDescriptorImageInfo main_texture_i_info = {};
+    main_texture_i_info.sampler = m_VK_main_texture_sampler;
+    main_texture_i_info.imageView = m_VK_main_texture_image_view;
+    main_texture_i_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+    VkWriteDescriptorSet main_descriptor_set_info = {};
+    main_descriptor_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    main_descriptor_set_info.pNext = nullptr;
+    main_descriptor_set_info.dstSet = m_VK_descriptor_set0;
+    main_descriptor_set_info.dstBinding = 1; //binding 1, set 0
+    main_descriptor_set_info.descriptorCount = 1;
+    main_descriptor_set_info.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    main_descriptor_set_info.pBufferInfo = nullptr;
+    main_descriptor_set_info.pImageInfo = &main_texture_i_info;
+    main_descriptor_set_info.pTexelBufferView = nullptr;
+    main_descriptor_set_info.dstArrayElement = 0;
+
+    std::vector<VkWriteDescriptorSet> descriptor_set_infos = {
+        mvp_descriptor_set_info,
+        main_descriptor_set_info
+    };
 
     m_mgr->UpdateDescriptorSet(descriptor_set_infos);
 
@@ -535,6 +695,7 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     frag_stage_c_info.pNext = nullptr; // NULL or a pointer to an extension-specific structure.
     frag_stage_c_info.flags = 0; //reverse for future use.
     stage_c_infos.push_back(frag_stage_c_info);
+
     //--- ii. Set states (like glEnable XXX, and set glXXXXFunc)
     Resolution res = m_mgr->GetScreenResolution();
     //------ Viewport and scissor.
@@ -558,6 +719,7 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     viewport_state_c_info.viewportCount = 1;
     viewport_state_c_info.pScissors = &scissor_region;
     viewport_state_c_info.scissorCount = 1;
+
     //------ rasterize (face order, polygon mode, face culling)
     VkPipelineRasterizationStateCreateInfo raster_state_c_info = {};
     raster_state_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;

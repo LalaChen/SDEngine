@@ -137,28 +137,7 @@ void VulkanAPITestManager::RenderDebug()
 }
 
 //------------- API ------------
-//------ Buffer
-VkResult VulkanAPITestManager::CreateBuffer(VkBufferUsageFlags i_buffer_usage, VkSharingMode i_sharing_mode, VkDeviceSize i_size, VkBuffer &io_VK_buffer)
-{
-    //1. create buffer information.
-    VkBufferCreateInfo vec_buf_c_info = {};
-    vec_buf_c_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    vec_buf_c_info.pNext = nullptr;
-    vec_buf_c_info.flags = 0;
-    vec_buf_c_info.usage = i_buffer_usage;
-    vec_buf_c_info.size = i_size;
-    vec_buf_c_info.sharingMode = i_sharing_mode;
-    if (i_sharing_mode == VK_SHARING_MODE_EXCLUSIVE) {
-        vec_buf_c_info.queueFamilyIndexCount = 0; //VK_SHARING_MODE_EXCLUSIVE don't need.
-        vec_buf_c_info.pQueueFamilyIndices = nullptr;
-    } 
-    else {
-        SDLOGW("Not support concurrent mode (I haven't design for concurrent res now)!!");
-    }
-
-    return vkCreateBuffer(m_VK_device, &vec_buf_c_info, nullptr, &io_VK_buffer);
-}
-
+//------ Memory Related
 VkResult VulkanAPITestManager::AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkBuffer i_VK_buffer, VkDeviceMemory &io_VK_memory)
 {
     //1. Get device info.
@@ -174,7 +153,7 @@ VkResult VulkanAPITestManager::AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop
     //3. allocate memory space following memory type and prop flag.
     for (uint32_t mem_type_ID = 0; mem_type_ID < phy_dev_memory_props.memoryTypeCount; ++mem_type_ID) {
         bool is_req_mem_of_this_type = mem_req.memoryTypeBits & (1 << mem_type_ID);
-        bool is_req_mem_type_supported = 
+        bool is_req_mem_type_supported =
             ((phy_dev_memory_props.memoryTypes[mem_type_ID].propertyFlags & i_memo_prop_flags) == i_memo_prop_flags);
 
         //--- i. Check this mem type.
@@ -198,6 +177,75 @@ VkResult VulkanAPITestManager::AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop
 
     //5. bind memory
     return vkBindBufferMemory(m_VK_device, i_VK_buffer, io_VK_memory, i_VK_offset);
+}
+
+VkResult VulkanAPITestManager::AllocateMemoryAndBindToImage(VkImage i_VK_img, VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkDeviceMemory &io_VK_memory)
+{
+    //1. Get device info.
+    VkResult result;
+    VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
+    vkGetPhysicalDeviceMemoryProperties(m_VK_physical_device, &phy_dev_memory_props);
+
+    //2. Get requirement info of vertices buffer.
+    VkMemoryRequirements mem_req;
+    vkGetImageMemoryRequirements(m_VK_device, i_VK_img, &mem_req);
+    SDLOGD("Req info : Size(%llu) Alignment(%llu) MemType(%u)", mem_req.size, mem_req.alignment, mem_req.memoryTypeBits);
+
+    //3. Allocate memory space following memory type and prop flag.
+    for (uint32_t mem_type_ID = 0; mem_type_ID < phy_dev_memory_props.memoryTypeCount; ++mem_type_ID) {
+        bool is_req_mem_of_this_type = mem_req.memoryTypeBits & (1 << mem_type_ID);
+        bool is_req_mem_type_supported =
+            ((phy_dev_memory_props.memoryTypes[mem_type_ID].propertyFlags & i_memo_prop_flags) == i_memo_prop_flags);
+
+        //--- i. Check this mem type.
+        if (is_req_mem_of_this_type == true && is_req_mem_type_supported == true) {
+            //------ find suitable type.
+            VkMemoryAllocateInfo buffer_mem_a_info = {};
+            buffer_mem_a_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+            buffer_mem_a_info.pNext = nullptr;
+            buffer_mem_a_info.allocationSize = mem_req.size;
+            buffer_mem_a_info.memoryTypeIndex = mem_type_ID;
+            result = vkAllocateMemory(m_VK_device, &buffer_mem_a_info, nullptr, &io_VK_memory);
+            if (result != VK_SUCCESS) {
+                SDLOGE("Allocate memory failure.");
+                return result;
+            }
+            else {
+                break;
+            }
+        }
+    }
+    //4. Bind memory to image.
+    return vkBindImageMemory(m_VK_device, i_VK_img, io_VK_memory, i_VK_offset);
+}
+
+void VulkanAPITestManager::ReleaseMemory(VkDeviceMemory i_VK_memory)
+{
+    if (i_VK_memory != VK_NULL_HANDLE) {
+        vkFreeMemory(m_VK_device, i_VK_memory, nullptr);
+    }
+}
+
+//------ Buffer Related
+VkResult VulkanAPITestManager::CreateBuffer(VkBufferUsageFlags i_buffer_usage, VkSharingMode i_sharing_mode, VkDeviceSize i_size, VkBuffer &io_VK_buffer)
+{
+    //1. create buffer information.
+    VkBufferCreateInfo vec_buf_c_info = {};
+    vec_buf_c_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    vec_buf_c_info.pNext = nullptr;
+    vec_buf_c_info.flags = 0;
+    vec_buf_c_info.usage = i_buffer_usage;
+    vec_buf_c_info.size = i_size;
+    vec_buf_c_info.sharingMode = i_sharing_mode;
+    if (i_sharing_mode == VK_SHARING_MODE_EXCLUSIVE) {
+        vec_buf_c_info.queueFamilyIndexCount = 0; //VK_SHARING_MODE_EXCLUSIVE don't need.
+        vec_buf_c_info.pQueueFamilyIndices = nullptr;
+    } 
+    else {
+        SDLOGW("Not support concurrent mode (I haven't design for concurrent res now)!!");
+    }
+
+    return vkCreateBuffer(m_VK_device, &vec_buf_c_info, nullptr, &io_VK_buffer);
 }
 
 VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer, void *i_data_ptr, VkDeviceSize i_data_size)
@@ -382,63 +430,17 @@ VkResult VulkanAPITestManager::RefreshHostDeviceBufferData(VkBuffer i_VK_buffer,
     return result;
 }
 
-void VulkanAPITestManager::ReleaseMemory(VkDeviceMemory i_VK_memory)
-{
-    if (i_VK_memory != VK_NULL_HANDLE) {
-        vkFreeMemory(m_VK_device, i_VK_memory, nullptr);
-    }
-}
-
 void VulkanAPITestManager::DestroyBuffer(VkBuffer i_VK_buffer)
 {
     if (i_VK_buffer != VK_NULL_HANDLE) {
         vkDestroyBuffer(m_VK_device, i_VK_buffer, nullptr);
     }
 }
-//------ image
+
+//------ Image Related
 VkResult VulkanAPITestManager::CreateImage(const VkImageCreateInfo &i_info, VkImage &io_VK_img)
 {
     return vkCreateImage(m_VK_device, &i_info, nullptr, &io_VK_img);
-}
-
-VkResult VulkanAPITestManager::AllocateMemoryAndBindToImage(VkImage i_VK_img, VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkDeviceMemory &io_VK_memory)
-{
-    //1. Get device info.
-    VkResult result;
-    VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
-    vkGetPhysicalDeviceMemoryProperties(m_VK_physical_device, &phy_dev_memory_props);
-
-    //2. Get requirement info of vertices buffer.
-    VkMemoryRequirements mem_req;
-    vkGetImageMemoryRequirements(m_VK_device, i_VK_img, &mem_req);
-    SDLOGD("Req info : Size(%llu) Alignment(%llu) MemType(%u)", mem_req.size, mem_req.alignment, mem_req.memoryTypeBits);
-
-    //3. Allocate memory space following memory type and prop flag.
-    for (uint32_t mem_type_ID = 0; mem_type_ID < phy_dev_memory_props.memoryTypeCount; ++mem_type_ID) {
-        bool is_req_mem_of_this_type = mem_req.memoryTypeBits & (1 << mem_type_ID);
-        bool is_req_mem_type_supported =
-            ((phy_dev_memory_props.memoryTypes[mem_type_ID].propertyFlags & i_memo_prop_flags) == i_memo_prop_flags);
-
-        //--- i. Check this mem type.
-        if (is_req_mem_of_this_type == true && is_req_mem_type_supported == true) {
-            //------ find suitable type.
-            VkMemoryAllocateInfo buffer_mem_a_info = {};
-            buffer_mem_a_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-            buffer_mem_a_info.pNext = nullptr;
-            buffer_mem_a_info.allocationSize = mem_req.size;
-            buffer_mem_a_info.memoryTypeIndex = mem_type_ID;
-            result = vkAllocateMemory(m_VK_device, &buffer_mem_a_info, nullptr, &io_VK_memory);
-            if (result != VK_SUCCESS) {
-                SDLOGE("Allocate memory failure.");
-                return result;
-            }
-            else {
-                break;
-            }
-        }
-    }
-    //4. Bind memory to image.
-    return vkBindImageMemory(m_VK_device, i_VK_img, io_VK_memory, i_VK_offset);
 }
 
 VkResult VulkanAPITestManager::RefreshLocalDeviceImage(VkImage i_VK_img, const void *i_data_ptr, uint32_t i_width, uint32_t i_height, uint32_t i_depth, VkDeviceSize i_data_size)
@@ -651,7 +653,14 @@ VkResult VulkanAPITestManager::RefreshHostDeviceImage(VkImage i_VK_img, VkDevice
     return result;
 }
 
-//----------- shader related
+void VulkanAPITestManager::DestroyImage(VkImage i_VK_image)
+{
+    if (i_VK_image != VK_NULL_HANDLE) {
+        vkDestroyImage(m_VK_device, i_VK_image, nullptr);
+    }
+}
+
+//----------- Shader Related
 VkResult VulkanAPITestManager::CreateDescriptorSetLayout(const VkDescriptorSetLayoutCreateInfo &i_c_info, VkDescriptorSetLayout &io_layout)
 {
     VkResult result = VK_SUCCESS;
@@ -785,6 +794,29 @@ void VulkanAPITestManager::UpdateDescriptorSet(const std::vector<VkWriteDescript
     vkUpdateDescriptorSets(m_VK_device, static_cast<uint32_t>(i_descriptor_w_infos.size()), i_descriptor_w_infos.data(), 0, nullptr);
 }
 
+VkResult VulkanAPITestManager::CreateSampler(const VkSamplerCreateInfo &i_c_info, VkSampler &io_VK_sampler)
+{
+    return vkCreateSampler(m_VK_device, &i_c_info, nullptr, &io_VK_sampler);
+}
+
+void VulkanAPITestManager::DestroySampler(VkSampler i_VK_sampler)
+{
+    if (i_VK_sampler != VK_NULL_HANDLE) {
+        vkDestroySampler(m_VK_device, i_VK_sampler, nullptr);
+    }
+}
+
+VkResult VulkanAPITestManager::CreateImageView(const VkImageViewCreateInfo &i_iv_info, VkImageView &io_VK_image_view)
+{
+    return vkCreateImageView(m_VK_device, &i_iv_info, nullptr, &io_VK_image_view);
+}
+
+void VulkanAPITestManager::DestroyImageView(VkImageView i_VK_image_view)
+{
+    if (i_VK_image_view != VK_NULL_HANDLE) {
+        vkDestroyImageView(m_VK_device, i_VK_image_view, nullptr);
+    }
+}
 //----------- Set Dynamic State
 void VulkanAPITestManager::SetViewportsDynamically(const std::vector<VkViewport> &i_viewports)
 {
