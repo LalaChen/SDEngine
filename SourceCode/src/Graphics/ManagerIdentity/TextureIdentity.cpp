@@ -23,21 +23,30 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "TextureIdentity.h"
 
-#pragma once
+//---------------------------- start of namespace SDE ----------------------------
+namespace SDE
+{
+//-------------------------- start of namespace Graphics -------------------------
+namespace Graphics
+{
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "TextureFilterType.h"
-#include "TextureMipmapMode.h"
-#include "TextureWrapMode.h"
+TextureIdentity::TextureIdentity()
+: m_image_handle(SD_NULL_HANDLE)
+, m_memory_handle(SD_NULL_HANDLE)
+, m_texture_type(TextureType_MAX_DEFINE_VALUE)
+, m_texture_format(TextureFormat_MAX_DEFINE_VALUE)
+, m_texture_filter_type(TextureFilterType_MAX_DEFINE_VALUE)
+, m_texture_wrap_mode(TextureWrapMode_MAX_DEFINE_VALUE)
+{
+}
+
+TextureIdentity::~TextureIdentity()
+{
+}
+
+//-------------------------- end of namespace Graphics --------------------------
+}
+//---------------------------- end of namespace SDE -----------------------------
+}

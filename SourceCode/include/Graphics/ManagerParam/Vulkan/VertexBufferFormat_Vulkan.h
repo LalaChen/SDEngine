@@ -32,6 +32,8 @@ SOFTWARE.
 
 #pragma once
 
+#include <vulkan/vulkan.h>
+
 #include "SDEngineCommonType.h"
 #include "VertexBufferFormat.h"
 
@@ -45,9 +47,9 @@ namespace Graphics
 class VertexBufferFormat_Vulkan
 {
 public:
-    static APICode Convert(const VertexBufferFormatEnum &i_src);
+    static VkFormat Convert(const VertexBufferFormatEnum &i_src);
 public:
-    static APICode VertexBufferFormatTypes[VertexBufferFormat_MAX_DEFINE_VALUE];
+    static VkFormat VertexBufferFormatTypes[VertexBufferFormat_MAX_DEFINE_VALUE];
 };
 //---------------------------- end of namespace Graphics ----------------------------
 }

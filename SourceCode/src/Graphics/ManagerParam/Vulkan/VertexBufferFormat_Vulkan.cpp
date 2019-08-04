@@ -34,7 +34,7 @@ namespace SDE
 namespace Graphics
 {
 
-APICode VertexBufferFormat_Vulkan::VertexBufferFormatTypes[VertexBufferFormat_MAX_DEFINE_VALUE] = {
+VkFormat VertexBufferFormat_Vulkan::VertexBufferFormatTypes[VertexBufferFormat_MAX_DEFINE_VALUE] = {
 //------ unsigned byte.
     VK_FORMAT_R8_UINT,
     VK_FORMAT_R8G8_UINT,
@@ -87,7 +87,7 @@ APICode VertexBufferFormat_Vulkan::VertexBufferFormatTypes[VertexBufferFormat_MA
     VK_FORMAT_R64G64B64A64_SFLOAT
 };
 
-APICode VertexBufferFormat_Vulkan::Convert(const VertexBufferFormatEnum &i_src)
+VkFormat VertexBufferFormat_Vulkan::Convert(const VertexBufferFormatEnum &i_src)
 {
     if (i_src != VertexBufferFormat_MAX_DEFINE_VALUE) {
         return VertexBufferFormatTypes[static_cast<uint32_t>(i_src)];

@@ -23,8 +23,6 @@ SOFTWARE.
 
 */
 
-#include <vulkan/vulkan.h>
-
 #include "TextureFormat_Vulkan.h"
 
 //---------------------------- start of namespace SDE ----------------------------

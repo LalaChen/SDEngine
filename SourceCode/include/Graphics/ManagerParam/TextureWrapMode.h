@@ -23,21 +23,35 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      TextureFormat.h
+ *  \brief     Introduce of enum TextureFormat.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/08/04
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "TextureFilterType.h"
-#include "TextureMipmapMode.h"
-#include "TextureWrapMode.h"
+//---------------------------- start of namespace SDE ----------------------------
+namespace SDE
+{
+//-------------------------- start of namespace Graphics -------------------------
+namespace Graphics
+{
+
+/*! \enum TextureWrapModeEnum
+    *  TextureWrapModeEnum is enum for defining wrap type.
+    */
+enum TextureWrapModeEnum
+{
+    TextureWrapMode_REPEAT = 0, /*!< If the texture coordinate is large then 1.0, we will subtract floor integer from texture coordinate.*/
+    TextureWrapMode_MIRRORED_REPEAT, /*!< The texel value will be decide from that will make bi-linear interpolation in nearest neighboring level mipmaps.*/
+    TextureWrapMode_CLAMP_TO_EDGE,  /*!< The texel value will constrict in [0,1].*/
+    TextureWrapMode_CLAMP_TO_BORDER, /*!< The texel value will be the border color if texture coordinate isn't in [0,1].*/
+    TextureWrapMode_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
+
+//-------------------------- end of namespace Graphics -------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

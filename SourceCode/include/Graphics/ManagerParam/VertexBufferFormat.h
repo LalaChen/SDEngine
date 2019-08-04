@@ -95,7 +95,7 @@ enum VertexBufferFormatEnum
     VertexBufferFormat_X64Y64Z64_SFLOAT, /*!< xyz double.*/
     VertexBufferFormat_X64Y64Z64W64_SFLOAT, /*!< xyzw double.*/
 //------ MaxDefineValue
-    VertexBufferFormat_MAX_DEFINE_VALUE /*!< max define value for return error.*/
+    VertexBufferFormat_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

@@ -23,21 +23,35 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "TextureWrapMode_Vulkan.h"
 
-#pragma once
+//--------------------------- start of namespace SDE ---------------------------
+namespace SDE
+{
+//------------------------- start of namespace Graphics ------------------------
+namespace Graphics
+{
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "TextureFilterType.h"
-#include "TextureMipmapMode.h"
-#include "TextureWrapMode.h"
+VkSamplerAddressMode TextureWrapMode_Vulkan::TextureWrapModes[TextureWrapMode_MAX_DEFINE_VALUE] =
+{
+    VK_SAMPLER_ADDRESS_MODE_REPEAT,
+    VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
+    VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+    VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
+};
+
+VkSamplerAddressMode TextureWrapMode_Vulkan::Convert(const TextureWrapModeEnum &i_src)
+{
+    if (i_src != TextureWrapMode_MAX_DEFINE_VALUE) {
+        return TextureWrapModes[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_SAMPLER_ADDRESS_MODE_MAX_ENUM;
+    }
+}
+
+
+//-------------------------- end of namespace Graphics -------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

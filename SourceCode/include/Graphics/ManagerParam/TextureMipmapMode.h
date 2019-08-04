@@ -23,21 +23,33 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      TextureFormat.h
+ *  \brief     Introduce of enum TextureFormat.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/08/04
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "TextureFilterType.h"
-#include "TextureMipmapMode.h"
-#include "TextureWrapMode.h"
+//---------------------------- start of namespace SDE ----------------------------
+namespace SDE
+{
+//-------------------------- start of namespace Graphics -------------------------
+namespace Graphics
+{
+
+/*! \enum TextureMipmapModeEnum
+ *  TextureFilterTypeEnum is enum for defining filter type.
+ */
+enum TextureMipmapModeEnum
+{
+    TextureMipmapMode_NEAREST = 0, /*!< The texel value will be decide from the mipmaps whose level is round down.*/
+    TextureMipmapMode_LINEAR = 1, /*!< The texel value will be decide from that will make bi-linear interpolation in nearest neighboring level mipmaps.*/
+    TextureMipmapMode_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
+
+//-------------------------- end of namespace Graphics -------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

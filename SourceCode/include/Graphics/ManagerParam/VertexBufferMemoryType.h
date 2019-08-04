@@ -49,7 +49,7 @@ enum VertexBufferMemoryTypeEnum
 {
     VertexBufferMemoryType_DYNAMIC = 0, /*!< Dynamic buffer.*/
     VertexBufferMemoryType_STATIC = 1, /*!< Static buffer.*/
-    VertexBufferMemoryType_MAX_DEFINE_VALUE /*!< Use for return error.*/
+    VertexBufferMemoryType_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 
 

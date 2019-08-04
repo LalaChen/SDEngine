@@ -23,21 +23,36 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      TextureWrapMode_Vulkan.h
+ *  \brief     Introduce of class TextureWrapMode_Vulkan.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/08/04
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "TextureFilterType.h"
-#include "TextureMipmapMode.h"
+#include <vulkan/vulkan.h>
+
+#include "SDEngineCommonType.h"
 #include "TextureWrapMode.h"
+
+//--------------------------- start of namespace SDE ---------------------------
+namespace SDE
+{
+//------------------------- start of namespace Graphics ------------------------
+namespace Graphics
+{
+
+class TextureWrapMode_Vulkan
+{
+public:
+    static VkSamplerAddressMode Convert(const TextureWrapModeEnum &i_src);
+public:
+    static VkSamplerAddressMode TextureWrapModes[TextureWrapMode_MAX_DEFINE_VALUE];
+};
+
+//-------------------------- end of namespace Graphics -------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

@@ -32,27 +32,26 @@ SOFTWARE.
 
 #pragma once
 
-//---------------------------- start of namespace SDE ----------------------------
+//---------------------------- start of namespace SDE ------------------------------
 namespace SDE
 {
-//---------------------------- start of namespace Graphics ----------------------------
+//-------------------------- start of namespace Graphics ---------------------------
 namespace Graphics
 {
 
-//------------------------- enum VertexBufferUsageKindEnum----------------------
 /*! \enum VertexBufferUsageKindEnum
  *  The vertex buffer usage kind.
  */
 enum VertexBufferUsageEnum
 {
     VertexBufferUsage_VERTEX_BUFFER = 0, /*!< Use for storing vertice.*/
-    VertexBufferUsage_NORMAL_BUFFER = 1, /*!< Use for storing normals.*/
-    VertexBufferUsage_TEX_COORD_BUFFER = 2, /*!< Use for storing texture coordinates.*/
-    VertexBufferUsage_COLOR_BUFFER = 3, /*!< Use for storing colors.*/
-    VertexBufferUsage_TANGENT_BUFFER = 4, /*!< Use for storing tangents.*/
-    VertexBufferUsage_BINORMAL_BUFFER = 5, /*!< Use for storing binormals.*/
-    VertexBufferUsage_ELEMENT_BUFFER = 6, /*!< Use for storing elements.*/
-    VertexBufferUsage_MAX_DEFINE_VALUE /*!< Bound of basic usage.*/
+    VertexBufferUsage_NORMAL_BUFFER, /*!< Use for storing normals.*/
+    VertexBufferUsage_TEX_COORD_BUFFER, /*!< Use for storing texture coordinates.*/
+    VertexBufferUsage_COLOR_BUFFER, /*!< Use for storing colors.*/
+    VertexBufferUsage_TANGENT_BUFFER, /*!< Use for storing tangents.*/
+    VertexBufferUsage_BINORMAL_BUFFER , /*!< Use for storing binormals.*/
+    VertexBufferUsage_ELEMENT_BUFFER, /*!< Use for storing elements.*/
+    VertexBufferUsage_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 
 //-------------------------- end of namespace Graphics ----------------------------

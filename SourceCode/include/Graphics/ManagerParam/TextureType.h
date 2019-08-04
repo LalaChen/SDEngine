@@ -23,21 +23,36 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      TextureType.h
+ *  \brief     Introduce of enum TextureTypeEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/08/04
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "TextureFilterType.h"
-#include "TextureMipmapMode.h"
-#include "TextureWrapMode.h"
+//---------------------------- start of namespace SDE ----------------------------
+namespace SDE
+{
+//-------------------------- start of namespace Graphics -------------------------
+namespace Graphics
+{
+
+/*! \enum TextureTypeEnum
+ *  TextureTypeEnum is enum for defining texture type.
+ */
+enum TextureTypeEnum
+{
+    TextureType_TEXTURE_1D = 0, /*!< One dimension texture. It can be used to make lookuptable.*/
+    TextureType_TEXTURE_2D, /*!< Two dimension texture. It can be used to make general texture, color or depth buffer, ...etc.*/
+    TextureType_TEXTURE_2D_ARRAY, /*!< Two dimension texture array.*/
+    TextureType_TEXTURE_CUBE_MAP, /*!< Cube map. It will be used to simulate reflection of an object.*/
+    TextureType_TEXTURE_3D, /*!< Three dimension texture. It will be used to make volume rendering.*/
+    TextureType_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
+
+//-------------------------- end of namespace Graphics -------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

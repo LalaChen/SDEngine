@@ -23,21 +23,37 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      TextureFilterType_Vulkan.h
+ *  \brief     Introduce of class TextureFilterType_Vulkan.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/08/04
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
+#include <vulkan/vulkan.h>
+
+#include "SDEngineCommonType.h"
 #include "TextureFilterType.h"
-#include "TextureMipmapMode.h"
-#include "TextureWrapMode.h"
+
+//---------------------------- start of namespace SDE ----------------------------
+namespace SDE
+{
+//-------------------------- start of namespace Graphics -------------------------
+namespace Graphics
+{
+
+class TextureFilterType_Vulkan
+{
+public:
+    static VkFilter Convert(const TextureFilterTypeEnum &i_src);
+public:
+    static VkFilter TextureFilterTypes[TextureFilterType_MAX_DEFINE_VALUE];
+};
+
+
+//-------------------------- end of namespace Graphics -------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

@@ -23,10 +23,10 @@ SOFTWARE.
 
 */
 
-/*! \file      VertexBufferIdentity.h
- *  \brief     Introduce of class VertexBufferIdentity.
+/*! \file      TextureIdentity.h
+ *  \brief     Introduce of class TextureIdentity.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/08/04
  *  \copyright MIT License.
  */
 
@@ -34,7 +34,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "VertexBufferFormat.h"
+#include "ManagerParam.h"
 
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
@@ -43,31 +43,51 @@ namespace SDE
 namespace Graphics
 {
 
-/*! \class VertexBufferIdentity
+/*! \class TextureIdentity
  *  Keep all graphics handle or ID in this struct.
  */
-class SDENGINE_CLASS VertexBufferIdentity
+class SDENGINE_CLASS TextureIdentity
 {
 public:
-    /*! \fn explicit VertexBufferIdentity();
-     *  \brief The constructor of VertexBufferIdentity Class.
+    /*! \fn explicit TextureIdentity();
+     *  \brief The constructor of TextureIdentity Class.
      */
-    VertexBufferIdentity();
+    TextureIdentity();
 
-    /*! \fn explicit ~VertexBufferIdentity();
-     *  \brief The destructor of VertexBufferIdentity Class.
+    /*! \fn explicit ~TextureIdentity();
+     *  \brief The destructor of TextureIdentity Class.
      */
-    ~VertexBufferIdentity();
+    ~TextureIdentity();
 public:
-    /*! \var BufferHandle m_buffer_handle;
-     *  \brief The buffer handle. It is valid while the value is not equal 0.
+    /*! \var TextureHandle m_image_handle;
+     *  \brief The image handle. It is valid while the value is not equal 0.
      */
-    BufferHandle m_buffer_handle;
+    TextureHandle m_image_handle;
 
     /*! \var DeviceMemoryHandle m_memory_handle;
      *  \brief The memory handle. This value is nullptr in opengl system.
      */
     DeviceMemoryHandle m_memory_handle;
+
+    /*! \var TextureTypeEnum m_texture_type;
+     *  \brief The texture type.
+     */
+    TextureTypeEnum m_texture_type;
+
+    /*! \var TextureFormatEnum m_texture_format;
+     *  \brief The texture format.
+     */
+    TextureFormatEnum m_texture_format;
+
+    /*! \var TextureFilterTypeEnum m_texture_filter_type;
+     *  \brief The texture filter type.
+     */
+    TextureFilterTypeEnum m_texture_filter_type;
+
+    /*! \var TextureWrapModeEnum m_texture_wrap_mode;
+     *  \brief The texture wrap type.
+     */
+    TextureWrapModeEnum m_texture_wrap_mode;
 };
 
 //-------------------------- end of namespace Graphics --------------------------
