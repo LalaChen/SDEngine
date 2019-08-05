@@ -59,15 +59,15 @@ public:
      */
     ~TextureIdentity();
 public:
-    /*! \var TextureHandle m_image_handle;
+    /*! \var CompHandle m_image_handle;
      *  \brief The image handle. It is valid while the value is not equal 0.
      */
-    TextureHandle m_image_handle;
+    CompHandle m_image_handle;
 
-    /*! \var DeviceMemoryHandle m_memory_handle;
+    /*! \var CompHandle m_memory_handle;
      *  \brief The memory handle. This value is nullptr in opengl system.
      */
-    DeviceMemoryHandle m_memory_handle;
+    CompHandle m_memory_handle;
 
     /*! \var TextureTypeEnum m_texture_type;
      *  \brief The texture type.
@@ -79,15 +79,45 @@ public:
      */
     TextureFormatEnum m_texture_format;
 
-    /*! \var TextureFilterTypeEnum m_texture_filter_type;
-     *  \brief The texture filter type.
+    /*! \var TextureFilterTypeEnum m_texture_mag_filter_type;
+     *  \brief The texture mag filter type. Default is nearest.
      */
-    TextureFilterTypeEnum m_texture_filter_type;
+    TextureFilterTypeEnum m_texture_mag_filter_type;
 
-    /*! \var TextureWrapModeEnum m_texture_wrap_mode;
-     *  \brief The texture wrap type.
+    /*! \var TextureFilterTypeEnum m_texture_min_filter_type;
+     *  \brief The texture mag filter type.
      */
-    TextureWrapModeEnum m_texture_wrap_mode;
+    TextureFilterTypeEnum m_texture_min_filter_type;
+
+    /*! \var TextureWrapModeEnum m_texture_wrap_mode_s;
+     *  \brief The texture wrap type about coordinate s axis.
+     */
+    TextureWrapModeEnum m_texture_wrap_mode_s;
+
+    /*! \var TextureWrapModeEnum m_texture_wrap_mode_t;
+     *  \brief The texture wrap type about coordinate t axis.
+     */
+    TextureWrapModeEnum m_texture_wrap_mode_t;
+
+    /*! \var TextureWrapModeEnum m_texture_wrap_mode_r;
+     *  \brief The texture wrap type about coordinate r(z) axis.
+     */
+    TextureWrapModeEnum m_texture_wrap_mode_r;
+
+    /*! \var Size_ui32 m_width;
+     *  \brief The width of texture.
+     */
+    Size_ui32 m_width;
+
+    /*! \var Size_ui32 m_height;
+     *  \brief The height of texture.
+     */
+    Size_ui32 m_height;
+
+    /*! \var Size_ui32 m_length;
+     *  \brief The length of texture.
+     */
+    Size_ui32 m_length;
 };
 
 //-------------------------- end of namespace Graphics --------------------------

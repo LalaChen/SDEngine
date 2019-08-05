@@ -150,6 +150,12 @@
     <Filter Include="src\Graphics\ImageLoader\Windows">
       <UniqueIdentifier>{d0b468a2-538e-4172-a5af-d3b631b10a4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\Texture">
+      <UniqueIdentifier>{65aa71e1-8753-4b41-bea3-e0a79bc001fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\Texture">
+      <UniqueIdentifier>{f7387136-bdee-4b18-90bb-1081974740ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -274,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\TextureIdentity.cpp">
       <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Texture\Texture.cpp">
+      <Filter>src\Graphics\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -444,6 +453,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\TextureIdentity.h">
       <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Texture\Texture.h">
+      <Filter>include\Graphics\Texture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

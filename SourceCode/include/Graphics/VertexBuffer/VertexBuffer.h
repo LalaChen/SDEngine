@@ -48,11 +48,11 @@ namespace SDE
 namespace Graphics
 {
 
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(VertexBuffer);
+
 /*! \class VertexBuffer
  *  In our graphic system, VertexBuffer objects are used to keep vertex datas.
  */
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(VertexBuffer);
-
 class SDENGINE_API VertexBuffer : public Object
 {
 public:

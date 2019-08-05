@@ -98,35 +98,10 @@ typedef std::string UniformVarName;
  */
 typedef uint32_t VertexAttribLocation;
 
-/*! \typedef uint64_t BufferHandle;
- *  \brief Buffer object handle. In opengl, it means buffer object ID. In Vulkan, it means buffer handle.
+/*! \typedef uint64_t CompHandle;
+ *  \brief graphics component(Buffer, Texture, ...etc) handle. In opengl, it means object ID. In Vulkan, it means handle.
  */
-typedef uint64_t BufferHandle;
-
-/*! \typedef uint64_t DeviceMemoryHandle;
- *  \brief Device memory handle. In opengl, it's null handle(Don't care). In Vulkan, it means memory handle.
- */
-typedef uint64_t DeviceMemoryHandle;
-
-/*! \typedef uint64_t ShaderHandle;
- *  \brief Represent all hande of all kind of shader. In opengl, it means shader ID. In Vulkan, it means shader module handle.
- */
-typedef uint64_t ShaderHandle;
-
-/*! \typedef uint64_t ShaderProgramHandle;
- *  \brief Represent all ID of shader program. In opengl, it means shader ID. In Vulkan, it means shader module handle.
- */
-typedef uint64_t ShaderProgramHandle;
-
-/*! \typedef uint64_t FrameBufferHandle; In opengl, it means shader ID. In Vulkan, it means framebuffer handle.
- *  \brief Frame buffer object ID.
- */
-typedef uint64_t FrameBufferHandle;
-
-/*! \typedef uint64_t TextureHandle;
- *  \brief UI vertex index.
- */
-typedef uint64_t TextureHandle;
+typedef uint64_t CompHandle;
 
 /*! \typedef int32_t UniformLocation;
  *  \brief Represent uniform location in shader.

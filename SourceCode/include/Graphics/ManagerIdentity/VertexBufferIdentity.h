@@ -59,15 +59,15 @@ public:
      */
     ~VertexBufferIdentity();
 public:
-    /*! \var BufferHandle m_buffer_handle;
+    /*! \var CompHandle m_buffer_handle;
      *  \brief The buffer handle. It is valid while the value is not equal 0.
      */
-    BufferHandle m_buffer_handle;
+    CompHandle m_buffer_handle;
 
-    /*! \var DeviceMemoryHandle m_memory_handle;
+    /*! \var CompHandle m_memory_handle;
      *  \brief The memory handle. This value is nullptr in opengl system.
      */
-    DeviceMemoryHandle m_memory_handle;
+    CompHandle m_memory_handle;
 };
 
 //-------------------------- end of namespace Graphics --------------------------

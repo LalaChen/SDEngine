@@ -51,6 +51,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_PrintInformation.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VertexBuffer.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKBuffer.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Color4f.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Vec.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\DynamicVertexBuffer.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Texture\Texture.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Color4f.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Vec.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\VertexBuffer\DynamicVertexBuffer.h" />

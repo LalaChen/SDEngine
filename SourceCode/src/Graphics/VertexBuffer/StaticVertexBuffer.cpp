@@ -46,7 +46,7 @@ StaticVertexBuffer::~StaticVertexBuffer()
 
 void StaticVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size)
 {
-    //1. Ckeck BufferHandle is null handle or not.
+    //1. Ckeck CompHandle is null handle or not.
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
         SDLOGW("Static vertex buffer had been initialized. Please refresh data after clear old one.");
     }
