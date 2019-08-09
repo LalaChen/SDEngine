@@ -41,8 +41,8 @@ namespace SDE
 namespace Graphics
 {
 
-/*! \class StaticVertexBuffer
- *  In our graphic system, StaticVertexBuffer objects are used to keep vertex datas.
+/*! \class DynamicVertexBuffer
+ *  In our graphic system, DynamicVertexBuffer objects are used to keep vertex datas.
  */
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DynamicVertexBuffer);
 

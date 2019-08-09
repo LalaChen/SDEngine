@@ -58,7 +58,7 @@ public:
      *  \brief The destructor of TextureIdentity Class.
      */
     ~TextureIdentity();
-public:
+public://Raw Data Part.
     /*! \var CompHandle m_image_handle;
      *  \brief The image handle. It is valid while the value is not equal 0.
      */
@@ -78,6 +78,11 @@ public:
      *  \brief The texture format.
      */
     TextureFormatEnum m_texture_format;
+public://Sampler Part.
+    /*! \var CompHandle m_sampler;
+     *  \brief Tell us how to sample this texture.
+     */
+    CompHandle m_sampler;
 
     /*! \var TextureFilterTypeEnum m_texture_mag_filter_type;
      *  \brief The texture mag filter type. Default is nearest.
@@ -88,6 +93,11 @@ public:
      *  \brief The texture mag filter type.
      */
     TextureFilterTypeEnum m_texture_min_filter_type;
+
+    /*! \var TextureMipmapModeEnum m_texture_mipmap_mode;
+     *  \brief The texture mipmap mode.
+     */
+    TextureMipmapModeEnum m_texture_mipmap_mode;
 
     /*! \var TextureWrapModeEnum m_texture_wrap_mode_s;
      *  \brief The texture wrap type about coordinate s axis.
