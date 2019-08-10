@@ -41,7 +41,7 @@ void VulkanManager::PrintSystemInformation()
     //1. Get memory property.
     vkGetPhysicalDeviceMemoryProperties(m_VK_physical_device, &phy_dev_memory_props);
     for (uint32_t type = 0; type < phy_dev_memory_props.memoryTypeCount; ++type) {
-        SDLOG("Type[%d] : Flags(%u) HeadID(%u)", type,
+        SDLOG("Type[%d] : Flags(%u) HeapID(%u)", type,
             phy_dev_memory_props.memoryTypes[type].propertyFlags,
             phy_dev_memory_props.memoryTypes[type].heapIndex);
     }
