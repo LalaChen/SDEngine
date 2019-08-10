@@ -78,10 +78,10 @@ typedef std::string ObjectName;
 namespace Graphics
 {
 
-/*! \typedef void* VoidHandle;
+/*! \typedef void* VoidPtr;
  *  \brief Void handle.
  */
-typedef void* VoidHandle;
+typedef void* VoidPtr;
 
 /*! \typedef unsigned int APICode; 
  *  \brief represent API define value or enum.

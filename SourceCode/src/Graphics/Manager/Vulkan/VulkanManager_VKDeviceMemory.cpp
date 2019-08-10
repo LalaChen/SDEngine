@@ -22,7 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "OpenGL4Manager.h"
+#include "LogManager.h"
+#include "VulkanManager.h"
 
 //---------------------------- start of namespace SDE -----------------------------
 namespace SDE
@@ -31,33 +32,45 @@ namespace SDE
 namespace Graphics
 {
 
-//----------- Vertex Buffer Function ------------
-void OpenGL4Manager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type)
+VkResult VulkanManager::MapBufferMemory(VkDeviceMemory i_memory_handle, VkDeviceSize i_allocated_size, VoidPtr &i_local_ptr)
 {
-
+    VkResult result = VK_SUCCESS;
+    i_local_ptr = VK_NULL_HANDLE;
+    result = vkMapMemory(m_VK_device, i_memory_handle, 0, i_allocated_size, 0, (void**)&i_local_ptr);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Map buffer memory failure!!!");
+    }
+    return result;
 }
 
-void OpenGL4Manager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+VkResult VulkanManager::FlushMappedMemoryRanges(VkDeviceMemory i_memory_handle)
 {
+    VkResult result = VK_SUCCESS;
+    VkMappedMemoryRange mem_ranges = {};
+    mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+    mem_ranges.pNext = nullptr;
+    mem_ranges.memory = i_memory_handle;
+    mem_ranges.offset = 0;
+    mem_ranges.size = VK_WHOLE_SIZE;
+    result = vkFlushMappedMemoryRanges(m_VK_device, 1, &mem_ranges);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Map buffer flush failure!!!");
+    }
+    return result;
 }
 
-void OpenGL4Manager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+void VulkanManager::UnmapBufferMemory(VkDeviceMemory i_memory_handle)
 {
+    vkUnmapMemory(m_VK_device, i_memory_handle);
 }
 
-void OpenGL4Manager::DeleteVertexBuffer(VertexBufferIdentity &io_identity)
+void VulkanManager::FreeVkDeviceMemory(VkDeviceMemory i_memory_handle)
 {
+    if (i_memory_handle != VK_NULL_HANDLE) {
+        vkFreeMemory(m_VK_device, i_memory_handle, nullptr);
+    }
 }
 
-void OpenGL4Manager::MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle)
-{
-    
-}
-
-void OpenGL4Manager::UnmapBuffer(const VertexBufferIdentity &i_identity)
-{
-
-}
 
 //-------------------------- end of namespace Graphics ----------------------------
 }

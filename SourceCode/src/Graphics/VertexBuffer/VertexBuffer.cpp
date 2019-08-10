@@ -39,12 +39,24 @@ VertexBuffer::VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation
 , m_location(i_va_location)
 , m_memory_type(i_memory_type)
 , m_format(i_format)
-, m_size(0u)
 {
 }
 
 VertexBuffer::~VertexBuffer()
 {
+    if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
+        GraphicsManager::GetRef().DeleteVertexBuffer(m_identity);
+    }
+}
+
+Size_ui64 VertexBuffer::GetBufferSize() const
+{
+    return m_identity.m_data_size;
+}
+
+Size_ui64 VertexBuffer::GetDeviceSize() const
+{
+    return m_identity.m_memory_size;
 }
 
 //---------------------------- end of namespace Graphics ----------------------------

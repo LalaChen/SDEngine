@@ -51,7 +51,7 @@ void DynamicVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_s
     //1. Ckeck CompHandle is null handle or not.
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
         //--- No, compare current buffer size with new one.
-        if (m_size < i_data_size) {
+        if (m_identity.m_data_size < i_data_size) {
             SDLOG("Dynamic buffer size is small than input datas. Delete old and allocate new one!!!");
             //----- Smaller than new one, delete old buffer.
             GraphicsManager::GetRef().DeleteVertexBuffer(m_identity);
@@ -68,16 +68,15 @@ void DynamicVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_s
     //2. refresh dynamic buffer.(host)
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
         GraphicsManager::GetRef().RefreshDynamicVertexBuffer(m_identity, i_data_ptr, i_data_size);
-        m_size = i_data_size;
     } 
     else {
         SDLOG("Reallocate or initialize buffer failure.");
     }
 }
 
-VoidHandle DynamicVertexBuffer::MapBufferMemory()
+VoidPtr DynamicVertexBuffer::MapBufferMemory()
 {
-    VoidHandle local_ptr = nullptr;
+    VoidPtr local_ptr = nullptr;
     GraphicsManager::GetRef().MapBuffer(m_identity, local_ptr);
     return local_ptr;
 }

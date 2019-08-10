@@ -85,11 +85,14 @@ public:
     void PrintSystemInformation() override;
 public:
 //----------- Vertex Buffer Interface Function ------------
+    /*
+     * We will set i_data_size to VertexBufferIdentity::m_buffer_size and assign allocated memory size to m_memory_size
+     */
     void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type) override;
     void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
     void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
     void DeleteVertexBuffer(VertexBufferIdentity &io_identity) override;
-    void MapBuffer(const VertexBufferIdentity &i_identity, VoidHandle &io_buffer_handle) override;
+    void MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) override;
     void UnmapBuffer(const VertexBufferIdentity &i_identity) override;
 public:
     void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
@@ -97,24 +100,25 @@ protected:
 //----------- Vulkan buffer private Function ------------
     VkResult CreateVkBuffer(VkBufferUsageFlags i_buffer_usage, VkSharingMode i_sharing_mode, VkDeviceSize i_size, VkBuffer &io_buffer_handle);
 
-    VkResult AllocatVkDeviceMemoryForBuffer(VkFlags i_memo_prop_flags, VkDeviceSize i_mem_offset, VkBuffer i_buffer_handle, VkDeviceMemory &io_memory_handle);
-
-    VkResult RefreshDataInHostVisibleVkBuffer(VkBuffer i_buffer_handle, VkDeviceMemory i_memory_handle, void *i_data_ptr, Size_ui64 i_data_size);
-
     VkResult CopyDataToStaticVkBuffer(
         VkBuffer i_src_buffer_handle, VkAccessFlags i_src_access_flags, VkPipelineStageFlags i_src_pipe_stage_flags, 
         VkBuffer i_dst_buffer_handle, VkAccessFlags i_dst_access_flags, VkPipelineStageFlags i_dst_pipe_stage_flags,
         VkDeviceSize i_data_size);
 
-    void FreeVkDeviceMemory(VkDeviceMemory i_memory_handle);
+    VkResult RefreshDataInHostVisibleVKMemory(VkDeviceMemory i_memory_handle, VkDeviceSize i_mem_allocated_size, void *i_data_ptr, Size_ui64 i_data_size);
 
     void DestroyVkBuffer(VkBuffer i_buffer_handle);
+protected:
+//----------- Vulkan memory private Function ------------
+    VkResult AllocatDeviceMemoryForBuffer(VkFlags i_memo_prop_flags, VkDeviceSize i_mem_offset, VkBuffer i_buffer_handle, VkDeviceMemory &io_memory_handle, VkDeviceSize &io_allocated_size);
 
-    VkResult MapBufferMemory(VkBuffer i_buffer_handle, VkDeviceMemory i_memory_handle, VoidHandle &i_local_ptr);
+    VkResult MapBufferMemory(VkDeviceMemory i_memory_handle, VkDeviceSize i_allocated_size, VoidPtr &i_local_ptr);
 
     VkResult FlushMappedMemoryRanges(VkDeviceMemory i_memory_handle);
 
     void UnmapBufferMemory(VkDeviceMemory i_memory_handle);
+
+    void FreeVkDeviceMemory(VkDeviceMemory i_memory_handle);
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;

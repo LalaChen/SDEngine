@@ -75,6 +75,16 @@ public:
 	 */
 	virtual ~VertexBuffer();
 public:
+    /*! \fn Size_ui64 GetBufferSize() const;
+     *  \brief return data size of vertex buffer.
+     */
+    Size_ui64 GetBufferSize() const;
+
+    /*! \fn Size_ui64 GetDeviceSize() const;
+     *  \brief return allocated size of vertex buffer.
+     */
+    Size_ui64 GetDeviceSize() const;
+public:
     /* \fn virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
      * \param [in] i_data_ptr Data pointer.
      * \param [in] i_data_size Data size.
@@ -96,11 +106,6 @@ protected:
      *  \brief Keep memory type.
      */
     SD_DECLARE_ATTRIBUTE_VAR_GET(VertexBufferMemoryTypeEnum, m_memory_type, MemoryType);
-
-    /*! \var Size_ui64 m_size;
-     *  \brief current buffer size.
-     */
-    SD_DECLARE_ATTRIBUTE_VAR_GET(Size_ui64, m_size, Size);
 
     /*! \var ValueTypeEnum m_format;
      *  \brief Record the buffer format.

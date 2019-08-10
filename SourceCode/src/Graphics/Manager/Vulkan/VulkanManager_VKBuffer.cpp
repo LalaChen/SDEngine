@@ -54,7 +54,7 @@ VkResult VulkanManager::CreateVkBuffer(VkBufferUsageFlags i_buffer_usage, VkShar
     return vkCreateBuffer(m_VK_device, &vec_buf_c_info, nullptr, &io_buffer_handle);
 }
 
-VkResult VulkanManager::AllocatVkDeviceMemoryForBuffer(VkFlags i_memo_prop_flags, VkDeviceSize i_mem_offset, VkBuffer i_buffer_handle, VkDeviceMemory &io_memory_handle)
+VkResult VulkanManager::AllocatDeviceMemoryForBuffer(VkFlags i_memo_prop_flags, VkDeviceSize i_mem_offset, VkBuffer i_buffer_handle, VkDeviceMemory &io_memory_handle, VkDeviceSize &io_allocated_size)
 {
     //1. Get device info.
     VkResult result;
@@ -64,6 +64,7 @@ VkResult VulkanManager::AllocatVkDeviceMemoryForBuffer(VkFlags i_memo_prop_flags
     //--- ii. Get memory requirements.
     VkMemoryRequirements mem_req;
     vkGetBufferMemoryRequirements(m_VK_device, i_buffer_handle, &mem_req);
+    io_allocated_size = mem_req.size;
     //--- iii. find suitable type and then allocate memory.
     for (uint32_t mem_type_ID = 0; mem_type_ID < phy_dev_memory_props.memoryTypeCount; ++mem_type_ID) {
         bool is_req_mem_of_this_type = mem_req.memoryTypeBits & (1 << mem_type_ID);
@@ -90,11 +91,11 @@ VkResult VulkanManager::AllocatVkDeviceMemoryForBuffer(VkFlags i_memo_prop_flags
     return result;
 }
 
-VkResult VulkanManager::RefreshDataInHostVisibleVkBuffer(VkBuffer i_buffer_handle, VkDeviceMemory i_memory_handle, void *i_data_ptr, Size_ui64 i_data_size)
+VkResult VulkanManager::RefreshDataInHostVisibleVKMemory(VkDeviceMemory i_memory_handle, VkDeviceSize i_mem_allocated_size, void *i_data_ptr, Size_ui64 i_data_size)
 {
     VkResult result = VK_SUCCESS;
     void *local_ptr = nullptr;
-    result = MapBufferMemory(i_buffer_handle, i_memory_handle, local_ptr);
+    result = MapBufferMemory(i_memory_handle, i_mem_allocated_size, local_ptr);
     if (result != VK_SUCCESS) {
         return result;
     }
@@ -216,52 +217,11 @@ VkResult VulkanManager::CopyDataToStaticVkBuffer(
     return result;
 }
 
-void VulkanManager::FreeVkDeviceMemory(VkDeviceMemory i_memory_handle)
-{
-    if (i_memory_handle != VK_NULL_HANDLE) {
-        vkFreeMemory(m_VK_device, i_memory_handle, nullptr);
-    }
-}
-
 void VulkanManager::DestroyVkBuffer(VkBuffer i_buffer_handle)
 {
     if (i_buffer_handle != VK_NULL_HANDLE) {
         vkDestroyBuffer(m_VK_device, i_buffer_handle, nullptr);
     }
-}
-
-VkResult VulkanManager::MapBufferMemory(VkBuffer i_buffer_handle, VkDeviceMemory i_memory_handle, VoidHandle &i_local_ptr)
-{
-    VkResult result = VK_SUCCESS;
-    VkMemoryRequirements mem_req;
-    vkGetBufferMemoryRequirements(m_VK_device, i_buffer_handle, &mem_req);
-    i_local_ptr = VK_NULL_HANDLE;
-    result = vkMapMemory(m_VK_device, i_memory_handle, 0, mem_req.size, 0, (void**)&i_local_ptr);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Map buffer memory failure!!!");
-    }
-    return result;
-}
-
-VkResult VulkanManager::FlushMappedMemoryRanges(VkDeviceMemory i_memory_handle)
-{
-    VkResult result = VK_SUCCESS;
-    VkMappedMemoryRange mem_ranges = {};
-    mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-    mem_ranges.pNext = nullptr;
-    mem_ranges.memory = i_memory_handle;
-    mem_ranges.offset = 0;
-    mem_ranges.size = VK_WHOLE_SIZE;
-    result = vkFlushMappedMemoryRanges(m_VK_device, 1, &mem_ranges);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Map buffer flush failure!!!");
-    }
-    return result;
-}
-
-void VulkanManager::UnmapBufferMemory(VkDeviceMemory i_memory_handle)
-{
-    vkUnmapMemory(m_VK_device, i_memory_handle);
 }
 
 //-------------------------- end of namespace Graphics ----------------------------

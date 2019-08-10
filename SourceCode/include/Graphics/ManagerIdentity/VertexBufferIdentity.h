@@ -68,6 +68,16 @@ public:
      *  \brief The memory handle. This value is nullptr in opengl system.
      */
     CompHandle m_memory_handle;
+
+    /*! \var Size_ui64 m_data_size;
+     *  \brief current buffer data size.
+     */
+    Size_ui64 m_data_size;
+
+    /*! \var Size_ui64 m_memory_size;
+     *  \brief current allocated memory size.
+     */
+    Size_ui64 m_memory_size;
 };
 
 //-------------------------- end of namespace Graphics --------------------------

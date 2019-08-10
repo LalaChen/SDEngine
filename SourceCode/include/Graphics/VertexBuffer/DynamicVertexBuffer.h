@@ -70,10 +70,10 @@ public:
     void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) override;
 
 public:
-    /*! \fn VoidHandle MapBufferMemory();
+    /*! \fn VoidPtr MapBufferMemory();
      *  \brief Return map buffer memory.
      */
-    VoidHandle MapBufferMemory();
+    VoidPtr MapBufferMemory();
 
     /*! \fn void UnmapBufferMemory();
      *  \brief Unmap buffer memory.

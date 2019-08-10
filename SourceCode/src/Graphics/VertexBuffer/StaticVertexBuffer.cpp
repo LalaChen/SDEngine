@@ -56,7 +56,6 @@ void StaticVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_si
     //3. refresh static buffer.(staging)
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
         GraphicsManager::GetRef().RefreshStaticVertexBuffer(m_identity, i_data_ptr, i_data_size);
-        m_size = i_data_size;
     }
     else {
         SDLOG("Reallocate or initialize buffer failure.");
