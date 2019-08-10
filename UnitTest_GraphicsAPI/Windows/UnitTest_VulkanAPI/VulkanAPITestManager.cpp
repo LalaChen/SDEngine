@@ -148,7 +148,7 @@ VkResult VulkanAPITestManager::AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop
     //2. get requirement info of vertices buffer.
     VkMemoryRequirements mem_req;
     vkGetBufferMemoryRequirements(m_VK_device, i_VK_buffer, &mem_req);
-    SDLOGD("Req info : Size(%llu) Alignment(%llu) MemType(%u)", mem_req.size, mem_req.alignment, mem_req.memoryTypeBits);
+    SDLOG("Req info : Size(%llu) Alignment(%llu) MemType(%u)", mem_req.size, mem_req.alignment, mem_req.memoryTypeBits);
 
     //3. allocate memory space following memory type and prop flag.
     for (uint32_t mem_type_ID = 0; mem_type_ID < phy_dev_memory_props.memoryTypeCount; ++mem_type_ID) {
@@ -189,7 +189,7 @@ VkResult VulkanAPITestManager::AllocateMemoryAndBindToImage(VkImage i_VK_img, Vk
     //2. Get requirement info of vertices buffer.
     VkMemoryRequirements mem_req;
     vkGetImageMemoryRequirements(m_VK_device, i_VK_img, &mem_req);
-    SDLOGD("Req info : Size(%llu) Alignment(%llu) MemType(%u)", mem_req.size, mem_req.alignment, mem_req.memoryTypeBits);
+    SDLOG("Req info : Size(%llu) Alignment(%llu) MemType(%u)", mem_req.size, mem_req.alignment, mem_req.memoryTypeBits);
 
     //3. Allocate memory space following memory type and prop flag.
     for (uint32_t mem_type_ID = 0; mem_type_ID < phy_dev_memory_props.memoryTypeCount; ++mem_type_ID) {
@@ -224,6 +224,23 @@ void VulkanAPITestManager::ReleaseMemory(VkDeviceMemory i_VK_memory)
     if (i_VK_memory != VK_NULL_HANDLE) {
         vkFreeMemory(m_VK_device, i_VK_memory, nullptr);
     }
+}
+
+void* VulkanAPITestManager::MapDeviceMemoryTest(VkDeviceMemory i_VK_memory, const VkDeviceSize &i_size)
+{
+    VkResult result = VK_SUCCESS;
+    void *local_ptr = VK_NULL_HANDLE;
+    result = vkMapMemory(m_VK_device, i_VK_memory, 0, i_size, 0, (void**)&local_ptr);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Map buffer memory failure!!!");
+        return SD_NULL_HANDLE;
+    }
+    return local_ptr;
+}
+
+void VulkanAPITestManager::UnmapDeviceMemoryTest(VkDeviceMemory i_VK_memory)
+{
+    vkUnmapMemory(m_VK_device, i_VK_memory);
 }
 
 //------ Buffer Related
@@ -280,6 +297,7 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
     std::memcpy(local_ptr, i_data_ptr, i_data_size);
 
     //--- iv. flush 
+    /*
     VkMappedMemoryRange mem_ranges = {};
     mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     mem_ranges.pNext = nullptr;
@@ -291,6 +309,7 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
         SDLOGE("Map buffer flush failure!!!");
         return result;
     }
+    //*/
 
     //--- v. unmap memory.
     vkUnmapMemory(m_VK_device, staging_memory);
@@ -414,6 +433,7 @@ VkResult VulkanAPITestManager::RefreshHostDeviceBufferData(VkBuffer i_VK_buffer,
         memcpy(buffer_device_ptr, i_data_ptr, i_size);
     }
 
+    ///*
     VkMappedMemoryRange mem_ranges = {};
     mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     mem_ranges.pNext = nullptr;
@@ -425,6 +445,7 @@ VkResult VulkanAPITestManager::RefreshHostDeviceBufferData(VkBuffer i_VK_buffer,
         SDLOGE("Map buffer flush failure!!!");
         return result;
     }
+    //*/
 
     vkUnmapMemory(m_VK_device, i_VK_buffer_mem);
     return result;

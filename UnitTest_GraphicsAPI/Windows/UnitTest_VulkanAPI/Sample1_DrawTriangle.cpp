@@ -91,6 +91,14 @@ void Sample1_DrawTriangle::Render()
             SDLOGE("Refresg Host Buffer Data failure!!!");
         }
 
+#ifdef USE_HOST_BUFFER
+        float *vb_mem_ptr = reinterpret_cast<float*>(m_mgr->MapDeviceMemoryTest(m_VK_ver_buf_memory, sizeof(vec3) * 4));
+        if (vb_mem_ptr != nullptr) {
+            vb_mem_ptr[0] += 0.0001f;
+            m_mgr->UnmapDeviceMemoryTest(m_VK_ver_buf_memory);
+        }
+#endif
+
         //Open graphics pipeline.
         m_mgr->BindGraphicsPipeline(m_VK_main_graphics_pipeline);
 
@@ -104,7 +112,7 @@ void Sample1_DrawTriangle::Render()
         m_mgr->BindVertexBuffer(m_VK_ver_color_buffer, 0, 1); //color
         m_mgr->BindVertexBuffer(m_VK_ver_tex_buffer, 0, 2); //tex
         
-        //std::vector<VkBuffer> va_buffers = { m_VK_ver_buffer, m_VK_ver_color_buffer};
+        //std::vector<VkBuffer> va_buffers = {m_VK_ver_buffer, m_VK_ver_color_buffer};
         //std::vector<VkDeviceSize> va_buffer_offsets = {0, 0};
         //m_mgr->BindVertexBuffers(va_buffers, va_buffer_offsets, 0);
        
@@ -193,6 +201,19 @@ void Sample1_DrawTriangle::CreateBuffers()
 
     VkResult result = VK_SUCCESS;
 
+    // *** IMPORTANT ***
+    /* 
+        VkPhysicalDeviceMemoryProperties::memoryTypeBits of VkBuffer is 1665 at GTX960. Member memoryTypeBits is used to record 
+        types that we can allocate buffer with it in device. If it can be allocated with the type i, the [i]th bit will be set 1.
+        And then 1665 in binary is 11010000001. It represents we can allocate VkImage with type 0, 7, 9 and 10. We list all memory properties
+        of those types and the memory with those types will be allocate at which heap as below :
+           Type 0 : (No Property) heap 1 (host memory)
+           Type 7 : (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) heap 0 (device memory)
+           Type 9 : (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) heap 1 (host memory)
+           Type 10 : (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT) heap 1 (host memory)
+        It means we can allocate device memory for VkBuffer with those types. 
+    */
+
     //1. create vertex buffer.
     //--- i. create buffer information.
     result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE,
@@ -217,16 +238,16 @@ void Sample1_DrawTriangle::CreateBuffers()
     }
 #else
     //--- ii. get memory.
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_ver_buffer, m_VK_ver_buf_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_ver_buffer, m_VK_ver_buf_memory);
     if (result != VK_SUCCESS) {
-        SDLOGE("Allocate vertex buffer failure!!!");
+        SDLOGE("Allocate host vertex buffer failure!!!");
         return;
     }
 
     //--- iii. refresh data.
     result = m_mgr->RefreshHostDeviceBufferData(m_VK_ver_buffer, m_VK_ver_buf_memory, quad_vecs.data(), static_cast<VkDeviceSize>(sizeof(vec3) * quad_vecs.size()));
     if (result != VK_SUCCESS) {
-        SDLOGE("Refresh vertex buffer failure!!!");
+        SDLOGE("Refresh host vertex buffer failure!!!");
         return;
     }
 #endif
@@ -252,7 +273,7 @@ void Sample1_DrawTriangle::CreateBuffers()
     }
 #else
     //--- ii. get memory.
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_ver_color_buffer, m_VK_ver_color_buf_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_ver_color_buffer, m_VK_ver_color_buf_memory);
     if (result != VK_SUCCESS) {
         SDLOGE("Allocate vertex color buffer failure!!!");
         return;
@@ -287,16 +308,16 @@ void Sample1_DrawTriangle::CreateBuffers()
     }
 #else
     //--- ii. get memory.
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_ver_tex_buffer, m_VK_ver_tex_buf_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_ver_tex_buffer, m_VK_ver_tex_buf_memory);
     if (result != VK_SUCCESS) {
-        SDLOGE("Allocate vertex color buffer failure!!!");
+        SDLOGE("Allocate host vertex color buffer failure!!!");
         return;
     }
 
     //--- iii. refresh data.
     result = m_mgr->RefreshHostDeviceBufferData(m_VK_ver_tex_buffer, m_VK_ver_tex_buf_memory, quad_texs.data(), static_cast<VkDeviceSize>(sizeof(vec2) * quad_texs.size()));
     if (result != VK_SUCCESS) {
-        SDLOGE("Refresh vertex color buffer failure!!!");
+        SDLOGE("Refresh host vertex color buffer failure!!!");
         return;
     }
 #endif
@@ -325,16 +346,16 @@ void Sample1_DrawTriangle::CreateBuffers()
     }
 #else
     //--- ii. get memory.
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0, m_VK_indices_buffer, m_VK_ibuf_memory);
+    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_indices_buffer, m_VK_ibuf_memory);
     if (result != VK_SUCCESS) {
-        SDLOGE("Allocate indice buffer failure!!!");
+        SDLOGE("Allocate host indice buffer failure!!!");
         return;
     }
 
     //--- iii. refresh data.
     result = m_mgr->RefreshHostDeviceBufferData(m_VK_indices_buffer, m_VK_ibuf_memory, quad_indices.data(), static_cast<VkDeviceSize>(sizeof(uint16_t) * quad_indices.size()));
     if (result != VK_SUCCESS) {
-        SDLOGE("Refresh indice buffer failure!!!");
+        SDLOGE("Refresh host indice buffer failure!!!");
         return;
     }
 #endif
@@ -387,15 +408,22 @@ void Sample1_DrawTriangle::CreateTexture()
         if (result != VK_SUCCESS) {
             throw std::runtime_error("Create image error.");
         }
+        // *** IMPORTANT ***
+        /*
+            VkPhysicalDeviceMemoryProperties::memoryTypeBits of VkImage is 130 at GTX960. Member memoryTypeBits is used to record the types
+            that we can allocate buffer with it in device. If it can be allocated with the type i, the [i]th bit will be set 1.
+            And then 130 in binary is 10000010. It represent we can allocate VkImage at Type 1 and type 7. We list all memory properties
+            of those types and the memory with those types will be allocate at which heap as below :
+                Type 1 : (No Property) heap 1 (host memory)
+                Type 7 : (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) heap 0 (device memory)
+            It means we can allocate device memory for VkImage with those types.
+        */
         //4. allocate memory.
         result = m_mgr->AllocateMemoryAndBindToImage(m_VK_main_texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0, m_VK_main_texture_memory);
         if (result != VK_SUCCESS) {
             throw std::runtime_error("Create image buffer error.");
         }
         //5. update data.
-        //uint8_t dummy_tex[16] = { 255,255,255,255, 255,0,0,255, 0,255,0,255, 0,0,255,255 };
-        //img_w = 2;
-        //img_h = 2;
         result = m_mgr->RefreshLocalDeviceImage(m_VK_main_texture, img_ptr, img_w, img_h, 1, img_buf_size);
         if (result != VK_SUCCESS) {
             throw std::runtime_error("Refresh image buffer error.");
