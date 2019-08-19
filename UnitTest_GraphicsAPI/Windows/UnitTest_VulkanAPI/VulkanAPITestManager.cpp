@@ -586,7 +586,7 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceImage(VkImage i_VK_img, const v
         end_mem_barrier.subresourceRange.baseArrayLayer = 0;
         end_mem_barrier.subresourceRange.layerCount = 1;
 
-        vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+        vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
             0,
             0, nullptr, //memory barrier
             0, nullptr, //buffer memory barrier
