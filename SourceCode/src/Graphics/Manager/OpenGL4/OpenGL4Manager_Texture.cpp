@@ -20,16 +20,30 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "LogManager.h"
+#include "OpenGL4Manager.h"
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
+//---------------------------- start of namespace SDE -----------------------------
+namespace SDE
+{
+//------------------------- start of namespace Graphics ---------------------------
+namespace Graphics
+{
+void OpenGL4Manager::CreateTextureImage(TextureIdentity &io_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size)
+{
+}
+
+void OpenGL4Manager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size)
+{
+}
+
+void OpenGL4Manager::DeleteTextureImage(TextureIdentity &io_identity)
+{
+}
+
+//-------------------------- end of namespace Graphics ----------------------------
+}
+//---------------------------- end of namespace SDE -------------------------------
+}

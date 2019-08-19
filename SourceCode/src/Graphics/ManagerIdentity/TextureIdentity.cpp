@@ -37,15 +37,9 @@ TextureIdentity::TextureIdentity()
 , m_memory_handle(SD_NULL_HANDLE)
 , m_texture_type(TextureType_MAX_DEFINE_VALUE)
 , m_texture_format(TextureFormat_MAX_DEFINE_VALUE)
-, m_sampler(SD_NULL_HANDLE)
-, m_texture_mag_filter_type(TextureFilterType_NEAREST)
-, m_texture_min_filter_type(TextureFilterType_NEAREST)
-, m_texture_wrap_mode_s(TextureWrapMode_CLAMP_TO_EDGE)
-, m_texture_wrap_mode_t(TextureWrapMode_CLAMP_TO_EDGE)
-, m_texture_wrap_mode_r(TextureWrapMode_CLAMP_TO_EDGE)
-, m_width(0)
-, m_height(0)
-, m_length(0)
+, m_allocated_size(0u)
+, m_mipmap_levels(1)
+, m_array_layers(1)
 {
 }
 

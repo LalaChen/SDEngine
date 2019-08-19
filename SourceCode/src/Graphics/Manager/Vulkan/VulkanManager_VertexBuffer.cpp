@@ -56,7 +56,7 @@ void VulkanManager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_u
 
     //2. Create buffer.   
     VkBufferUsageFlags buf_usage_flags = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    result = CreateVkBuffer(buf_usage_flags, VK_SHARING_MODE_EXCLUSIVE, io_identity.m_data_size, vk_buffer_handle);
+    result = CreateVkBuffer(vk_buffer_handle, io_identity.m_data_size, buf_usage_flags, VK_SHARING_MODE_EXCLUSIVE);
     if (result != VK_SUCCESS) {
         SDLOGE("VKError : Create buffer error. code=%d", result);
         if (vk_buffer_handle != VK_NULL_HANDLE) {
@@ -67,7 +67,7 @@ void VulkanManager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_u
     }
 
     //3. Create device memory.
-    result = AllocatDeviceMemoryForBuffer(memo_prop_flags, 0, vk_buffer_handle, vk_memory_handle, vk_allocated_size);
+    result = AllocatVkDeviceMemoryForVkBuffer(vk_memory_handle, vk_allocated_size, vk_buffer_handle, 0, memo_prop_flags);
     if (result != VK_SUCCESS) {
         SDLOGE("VKError: Create memory error. code=%d", result);
         if (vk_memory_handle != VK_NULL_HANDLE) {
@@ -83,31 +83,32 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
     VkResult result = VK_SUCCESS;
     const VkBuffer &vk_buffer_handle = reinterpret_cast<const VkBuffer&>(i_identity.m_buffer_handle);
     VkBuffer staging_buffer_handle = VK_NULL_HANDLE;
-    VkDeviceSize staging_memory_size = 0;
     VkDeviceMemory staging_memory = VK_NULL_HANDLE;
+    VkDeviceSize staging_memory_size = 0;
+
     //1. create staging host visible buffer and then refresh data into the one.
     //--- i. create staging buffer(host memory).
-    result = CreateVkBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_SHARING_MODE_EXCLUSIVE, i_data_size, staging_buffer_handle);
+    result = CreateVkBuffer(staging_buffer_handle, i_data_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_SHARING_MODE_EXCLUSIVE);
     if (result != VK_SUCCESS) {
-        SDLOGW("Create staging buffer failure.");
+        SDLOGW("Create staging buffer for copying data to buffer failure.");
         return;
     }
 
-    result = AllocatDeviceMemoryForBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0u, staging_buffer_handle, staging_memory, staging_memory_size);
+    result = AllocatVkDeviceMemoryForVkBuffer(staging_memory, staging_memory_size, staging_buffer_handle, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0u);
     if (result != VK_SUCCESS) {
         SDLOGW("Allocate staging memory failure.");
         return;
     }
 
     //--- ii. refresh data to temporary buffer.
-    result = RefreshDataInHostVisibleVKMemory(staging_memory, staging_memory_size, i_data_ptr, i_data_size);
+    result = RefreshDataToHostVisibleVKDeviceMemory(staging_memory, staging_memory_size, i_data_ptr, i_data_size);
     if (result != VK_SUCCESS) {
         SDLOGW("Refresh host visible buffer failure.");
         return;
     }
 
     //2. Copy temporary host visible buffer to target static buffer.
-    CopyDataToStaticVkBuffer(
+    CopyVkBuffer(
         staging_buffer_handle, 0, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
         vk_buffer_handle, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT,
         i_data_size);
@@ -116,12 +117,6 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
     FreeVkDeviceMemory(staging_memory);
 
     DestroyVkBuffer(staging_buffer_handle);
-
-    result = vkResetCommandBuffer(m_VK_main_cmd_buffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
-    if (result != VK_SUCCESS) {
-        SDLOGW("reset main command buffer failure!!!");
-        return;
-    }
 }
 
 void VulkanManager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
@@ -129,7 +124,7 @@ void VulkanManager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_ide
     VkResult result;
     const VkBuffer &vk_buffer_handle = reinterpret_cast<const VkBuffer&>(i_identity.m_buffer_handle);
     const VkDeviceMemory &vk_memory_handle = reinterpret_cast<const VkDeviceMemory&>(i_identity.m_memory_handle);
-    result = RefreshDataInHostVisibleVKMemory(vk_memory_handle, i_identity.m_memory_size, i_data_ptr, i_data_size);
+    result = RefreshDataToHostVisibleVKDeviceMemory(vk_memory_handle, i_identity.m_memory_size, i_data_ptr, i_data_size);
     if (result != VK_SUCCESS) {
         SDLOGW("Refresh host visible buffer failure.");
         return;
@@ -150,13 +145,13 @@ void VulkanManager::MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &i
 {
     const VkBuffer &vk_buffer_handle = reinterpret_cast<const VkBuffer&>(i_identity.m_buffer_handle);
     const VkDeviceMemory &vk_memory_handle = reinterpret_cast<const VkDeviceMemory&>(i_identity.m_memory_handle);
-    MapBufferMemory(vk_memory_handle, i_identity.m_memory_size, io_buffer_handle);
+    MapVkDeviceMemory(vk_memory_handle, i_identity.m_memory_size, io_buffer_handle);
 }
 
 void VulkanManager::UnmapBuffer(const VertexBufferIdentity &i_identity)
 {
     const VkDeviceMemory &vk_memory_handle = reinterpret_cast<const VkDeviceMemory&>(i_identity.m_memory_handle);
-    UnmapBufferMemory(vk_memory_handle);
+    UnmapVkDeviceMemory(vk_memory_handle);
 }
 
 //-------------------------- end of namespace Graphics ----------------------------

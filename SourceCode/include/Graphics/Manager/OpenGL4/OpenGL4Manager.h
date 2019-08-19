@@ -80,6 +80,10 @@ public:
     void MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) override;
     void UnmapBuffer(const VertexBufferIdentity &i_identity) override;
 public:
+    void CreateTextureImage(TextureIdentity &io_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size) override;
+    void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size) override;
+    void DeleteTextureImage(TextureIdentity &io_identity) override;
+public:
     void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
 //--------------- Render Flow Function ------------------

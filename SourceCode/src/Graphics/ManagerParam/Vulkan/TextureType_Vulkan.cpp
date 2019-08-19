@@ -23,13 +23,35 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "TextureType_Vulkan.h"
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
+//---------------------------- start of namespace SDE ----------------------------
+namespace SDE
+{
+//-------------------------- start of namespace Graphics -------------------------
+namespace Graphics
+{
+
+VkImageType TextureType_Vulkan::TextureTypes[TextureType_MAX_DEFINE_VALUE] =
+{
+    VK_IMAGE_TYPE_1D,
+    VK_IMAGE_TYPE_2D,
+    VK_IMAGE_TYPE_2D,
+    VK_IMAGE_TYPE_2D,
+    VK_IMAGE_TYPE_3D
+};
+
+VkImageType TextureType_Vulkan::Convert(const TextureTypeEnum &i_src)
+{
+    if (i_src != TextureType_MAX_DEFINE_VALUE) {
+        return TextureTypes[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_IMAGE_TYPE_MAX_ENUM;
+    }
+}
+
+//-------------------------- end of namespace Graphics -------------------------
+}
+//---------------------------- end of namespace SDE ----------------------------
+}

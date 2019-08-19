@@ -25,7 +25,7 @@ SOFTWARE.
 #include "LogManager.h"
 #include "VulkanManager.h"
 
-//---------------------------- start of namespace SDE -----------------------------
+//--------------------------- start of namespace SDE ------------------------------
 namespace SDE
 {
 //------------------------- start of namespace Graphics ---------------------------
@@ -33,7 +33,11 @@ namespace Graphics
 {
 
 //----------- Vertex Buffer Function ------------
-VkResult VulkanManager::CreateVkBuffer(VkBufferUsageFlags i_buffer_usage, VkSharingMode i_sharing_mode, VkDeviceSize i_size, VkBuffer &io_buffer_handle)
+VkResult VulkanManager::CreateVkBuffer(
+    VkBuffer &io_buffer_handle,
+    VkDeviceSize i_size,
+    VkBufferUsageFlags i_buffer_usage,
+    VkSharingMode i_sharing_mode)
 {
     //1. create buffer information.
     VkBufferCreateInfo vec_buf_c_info = {};
@@ -54,48 +58,11 @@ VkResult VulkanManager::CreateVkBuffer(VkBufferUsageFlags i_buffer_usage, VkShar
     return vkCreateBuffer(m_VK_device, &vec_buf_c_info, nullptr, &io_buffer_handle);
 }
 
-VkResult VulkanManager::AllocatDeviceMemoryForBuffer(VkFlags i_memo_prop_flags, VkDeviceSize i_mem_offset, VkBuffer i_buffer_handle, VkDeviceMemory &io_memory_handle, VkDeviceSize &io_allocated_size)
-{
-    //1. Get device info.
-    VkResult result;
-    //--- i. Pick up memory properties 
-    VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
-    vkGetPhysicalDeviceMemoryProperties(m_VK_physical_device, &phy_dev_memory_props);
-    //--- ii. Get memory requirements.
-    VkMemoryRequirements mem_req;
-    vkGetBufferMemoryRequirements(m_VK_device, i_buffer_handle, &mem_req);
-    io_allocated_size = mem_req.size;
-    //--- iii. find suitable type and then allocate memory.
-    for (uint32_t mem_type_ID = 0; mem_type_ID < phy_dev_memory_props.memoryTypeCount; ++mem_type_ID) {
-        bool is_req_mem_of_this_type = mem_req.memoryTypeBits & (1 << mem_type_ID);
-        bool is_req_mem_type_supported = ((phy_dev_memory_props.memoryTypes[mem_type_ID].propertyFlags & i_memo_prop_flags) == i_memo_prop_flags);
-
-        //------ Check this mem type.
-        if (is_req_mem_of_this_type == true && is_req_mem_type_supported == true) {
-            //------ find suitable type.
-            VkMemoryAllocateInfo mem_a_info = {};
-            mem_a_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-            mem_a_info.pNext = nullptr;
-            mem_a_info.allocationSize = mem_req.size;
-            mem_a_info.memoryTypeIndex = mem_type_ID;
-            result = vkAllocateMemory(m_VK_device, &mem_a_info, nullptr, &io_memory_handle);
-            if (result != VK_SUCCESS) {
-                SDLOGE("VKError : Allocate memory failure. code=%d", result);
-                return result;
-            }
-            break;
-        }
-    }
-    //3. bind memory and buffer together.
-    result = vkBindBufferMemory(m_VK_device, i_buffer_handle, io_memory_handle, i_mem_offset);
-    return result;
-}
-
-VkResult VulkanManager::RefreshDataInHostVisibleVKMemory(VkDeviceMemory i_memory_handle, VkDeviceSize i_mem_allocated_size, void *i_data_ptr, Size_ui64 i_data_size)
+VkResult VulkanManager::RefreshDataToHostVisibleVKDeviceMemory(VkDeviceMemory i_memory_handle, VkDeviceSize i_mem_allocated_size, VoidPtr i_data_ptr, Size_ui64 i_data_size)
 {
     VkResult result = VK_SUCCESS;
     void *local_ptr = nullptr;
-    result = MapBufferMemory(i_memory_handle, i_mem_allocated_size, local_ptr);
+    result = MapVkDeviceMemory(i_memory_handle, i_mem_allocated_size, local_ptr);
     if (result != VK_SUCCESS) {
         return result;
     }
@@ -103,18 +70,22 @@ VkResult VulkanManager::RefreshDataInHostVisibleVKMemory(VkDeviceMemory i_memory
     std::memcpy(local_ptr, i_data_ptr, i_data_size);
 
     //--- ii. flush memory.
-    result = FlushMappedMemoryRanges(i_memory_handle);
+    result = FlushMappedVkDeviceMemoryRanges(i_memory_handle);
     if (result != VK_SUCCESS) {
         return result;
     }
     //--- iii. unmap memory.
-    UnmapBufferMemory(i_memory_handle);
+    UnmapVkDeviceMemory(i_memory_handle);
     return result;
 }
 
-VkResult VulkanManager::CopyDataToStaticVkBuffer(
-    VkBuffer i_src_buffer_handle, VkAccessFlags i_src_access_flags, VkPipelineStageFlags i_src_pipe_stage_flags,
-    VkBuffer i_dst_buffer_handle, VkAccessFlags i_dst_access_flags, VkPipelineStageFlags i_dst_pipe_stage_flags,
+VkResult VulkanManager::CopyVkBuffer(
+    VkBuffer i_src_buffer_handle,
+    VkAccessFlags i_src_access_flags,
+    VkPipelineStageFlags i_src_pipe_stage_flags,
+    VkBuffer i_dst_buffer_handle,
+    VkAccessFlags i_dst_access_flags,
+    VkPipelineStageFlags i_dst_pipe_stage_flags,
     VkDeviceSize i_data_size)
 {
     VkResult result = VK_SUCCESS;
@@ -130,7 +101,7 @@ VkResult VulkanManager::CopyDataToStaticVkBuffer(
         SDLOGW("We can't begin command buffer(%x)!!!", m_VK_main_cmd_buffer);
         return result;
     }
-    //--- ii. set buffer memory barrier (block transfer).
+    //--- i. set buffer memory barrier (block transfer).
     VkBufferMemoryBarrier beg_mem_barrier = {};
     beg_mem_barrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
     beg_mem_barrier.pNext = nullptr;
@@ -149,14 +120,14 @@ VkResult VulkanManager::CopyDataToStaticVkBuffer(
         0, nullptr //image memory barrier
     );
 
-    //--- iii. copy buffer.
+    //--- ii. copy buffer.
     VkBufferCopy buf_cpy_info = {};
     buf_cpy_info.size = i_data_size;
     buf_cpy_info.srcOffset = 0;
     buf_cpy_info.dstOffset = 0;
     vkCmdCopyBuffer(m_VK_main_cmd_buffer, i_src_buffer_handle, i_dst_buffer_handle, 1, &buf_cpy_info);
 
-    //--- iv. set buffer memory barrier (block transfer).
+    //--- iii. set buffer memory barrier (block transfer).
     VkBufferMemoryBarrier end_mem_barrier = {};
     end_mem_barrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
     end_mem_barrier.pNext = nullptr;
@@ -174,7 +145,7 @@ VkResult VulkanManager::CopyDataToStaticVkBuffer(
         1, &end_mem_barrier, //buffer memory barrier
         0, nullptr //image memory barrier
     );
-    //--- v. end command buffer.
+    //--- iv. end command buffer.
     result = vkEndCommandBuffer(m_VK_main_cmd_buffer);
     if (result != VK_SUCCESS) {
         SDLOGW("We can't end command buffer(%x)!!!", m_VK_main_cmd_buffer);
@@ -214,14 +185,21 @@ VkResult VulkanManager::CopyDataToStaticVkBuffer(
         return result;
     }
 
+    result = vkResetCommandBuffer(m_VK_main_cmd_buffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
+    if (result != VK_SUCCESS) {
+        SDLOGW("reset main command buffer failure!!!");
+        return result;
+    }
+
     return result;
 }
 
-void VulkanManager::DestroyVkBuffer(VkBuffer i_buffer_handle)
+void VulkanManager::DestroyVkBuffer(VkBuffer &io_buffer_handle)
 {
-    if (i_buffer_handle != VK_NULL_HANDLE) {
-        vkDestroyBuffer(m_VK_device, i_buffer_handle, nullptr);
+    if (io_buffer_handle != VK_NULL_HANDLE) {
+        vkDestroyBuffer(m_VK_device, io_buffer_handle, nullptr);
     }
+    io_buffer_handle = VK_NULL_HANDLE;
 }
 
 //-------------------------- end of namespace Graphics ----------------------------

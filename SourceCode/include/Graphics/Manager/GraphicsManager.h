@@ -32,11 +32,14 @@ SOFTWARE.
 
 #pragma once
 
+#include <list>
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
 #include "ManagerParam.h"
 #include "ManagerIdentity.h"
+#include "ImageLoader.h"
 #include "Resolution.h"
 #include "EventArg.h"
 
@@ -99,6 +102,10 @@ public:
     virtual void DeleteVertexBuffer(VertexBufferIdentity &io_identity) = 0;
     virtual void MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) = 0;
     virtual void UnmapBuffer(const VertexBufferIdentity &i_identity) = 0;
+public:
+    virtual void CreateTextureImage(TextureIdentity &io_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size) = 0;
+    virtual void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size) = 0;
+    virtual void DeleteTextureImage(TextureIdentity &io_identity) = 0;
 public:
 //------------- Resize Function -----------------
     virtual void Resize(Size_ui32 i_w, Size_ui32 i_h) = 0;
