@@ -39,8 +39,6 @@ Sample1_DrawTriangle::Sample1_DrawTriangle(VulkanAPITestManager *i_mgr)
 
 Sample1_DrawTriangle::~Sample1_DrawTriangle()
 {
-    
-    
 }
 
 void Sample1_DrawTriangle::Initialize()

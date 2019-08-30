@@ -297,7 +297,7 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
     std::memcpy(local_ptr, i_data_ptr, i_data_size);
 
     //--- iv. flush 
-    /*
+    ///*
     VkMappedMemoryRange mem_ranges = {};
     mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     mem_ranges.pNext = nullptr;

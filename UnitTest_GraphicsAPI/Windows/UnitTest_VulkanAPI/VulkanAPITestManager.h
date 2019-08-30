@@ -14,7 +14,7 @@ public:
 public: //Memory Related.
     VkResult AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkBuffer i_VK_buffer, VkDeviceMemory &io_VK_memory);
     VkResult AllocateMemoryAndBindToImage(VkImage i_VK_img, VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkDeviceMemory &io_VK_memory);
-    void*  MapDeviceMemoryTest(VkDeviceMemory i_VK_memory, const VkDeviceSize &i_size);
+    void* MapDeviceMemoryTest(VkDeviceMemory i_VK_memory, const VkDeviceSize &i_size);
     void UnmapDeviceMemoryTest(VkDeviceMemory i_VK_memory);
     void ReleaseMemory(VkDeviceMemory i_VK_memory);
 public: //Buffer Related.
