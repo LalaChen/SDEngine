@@ -624,7 +624,7 @@ void VulkanManager::InitializePresentRenderPass()
     VkRenderPassCreateInfo pass_c_info = {};
     pass_c_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     pass_c_info.pNext = nullptr;
-    pass_c_info.flags = 0; //Not implement in Vulkan, it say 'reversed for future use.'
+    pass_c_info.flags = 0; //Not implement in Vulkan, it say 'reversed for future use.
     pass_c_info.attachmentCount = 1;
     pass_c_info.pAttachments = &clr_attachment_desc;
     pass_c_info.subpassCount = 1;

@@ -23,6 +23,12 @@
     <ClInclude Include="Sample1_DrawTriangle.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="Sample.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Sample2_DrawScene.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -35,6 +41,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="Sample1_DrawTriangle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sample.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sample2_DrawScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

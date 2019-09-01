@@ -70,6 +70,7 @@ VulkanManager::VulkanManager()
 , m_VK_physical_device(VK_NULL_HANDLE)
 , m_VK_picked_queue_family_id(-1)
 , m_VK_device(VK_NULL_HANDLE)
+// queue
 , m_VK_present_queue(VK_NULL_HANDLE)
 // swap chain
 , m_VK_swap_chain(VK_NULL_HANDLE)
@@ -81,6 +82,8 @@ VulkanManager::VulkanManager()
 , m_VK_main_cmd_pool(VK_NULL_HANDLE)
 , m_VK_main_cmd_buffer(VK_NULL_HANDLE)
 , m_VK_main_cmd_buf_fence(VK_NULL_HANDLE)
+// configuration
+, m_queue_size(3)
 {
     SDLOG("New VulkanManager object.");
 }
@@ -227,7 +230,7 @@ void VulkanManager::Resize(Size_ui32 i_w, Size_ui32 i_h)
 
 void VulkanManager::RenderBegin()
 {
-    vkDeviceWaitIdle(m_VK_device);
+    
 }
 
 void VulkanManager::RenderToScreen()

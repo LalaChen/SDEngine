@@ -1,5 +1,4 @@
 //#define USE_HOST_BUFFER
-
 #include "SDEngine.h"
 #include "VulkanAPITestManager.h"
 #include "Sample1_DrawTriangle.h"
@@ -9,7 +8,7 @@ using namespace::SDE::Basic;
 using namespace::SDE::Graphics;
 
 Sample1_DrawTriangle::Sample1_DrawTriangle(VulkanAPITestManager *i_mgr)
-: m_mgr(i_mgr)
+: Sample("DrawTriangle", i_mgr)
 , m_VK_ver_buffer(VK_NULL_HANDLE)
 , m_VK_ver_buf_memory(VK_NULL_HANDLE)
 , m_VK_ver_color_buffer(VK_NULL_HANDLE)
@@ -34,6 +33,11 @@ Sample1_DrawTriangle::Sample1_DrawTriangle(VulkanAPITestManager *i_mgr)
 , m_VK_descriptor_set0(VK_NULL_HANDLE)
 , m_VK_descriptor_pool(VK_NULL_HANDLE)
 , m_VK_main_graphics_pipeline(VK_NULL_HANDLE)
+//
+, m_VK_render_pass(VK_NULL_HANDLE)
+//for camera
+, m_VK_color_buffer(VK_NULL_HANDLE)
+, m_VK_depth_buffer(VK_NULL_HANDLE)
 {
 }
 
@@ -43,6 +47,9 @@ Sample1_DrawTriangle::~Sample1_DrawTriangle()
 
 void Sample1_DrawTriangle::Initialize()
 {
+    CreateCommandBufferAndPool();
+    CreateRenderPassAndFramebuffer();
+    //
     CreateBuffers();
     CreateTexture();
     CreateUniformBuffer();
@@ -53,6 +60,20 @@ void Sample1_DrawTriangle::Render()
 {
     if (m_mgr != nullptr) {
         VkResult result = VK_SUCCESS;
+        //1. begin command buffer.
+        /*
+        VkCommandBufferBeginInfo cmd_buf_c_info = {};
+        cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        cmd_buf_c_info.pNext = nullptr;
+        cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+        cmd_buf_c_info.pInheritanceInfo = nullptr;
+
+        result = m_mgr->BeginCommandBuffer(cmd_buf_c_info, m_VK_cmd_buffer);
+        if (result == VK_SUCCESS) {
+            SDLOGW("We can't begin command buffer(%d)!!!", result);
+            return;
+        }
+        */
         Resolution res = m_mgr->GetScreenResolution();
         //------ Viewport
         VkViewport viewport = {};
@@ -118,7 +139,14 @@ void Sample1_DrawTriangle::Render()
 
         //Draw
         m_mgr->DrawByIndice(6, 1, 0, 0, 0);
-        
+
+        /*
+        result = m_mgr->EndCommandBuffer(m_VK_cmd_buffer);
+        if (result == VK_SUCCESS) {
+            SDLOGW("We can't end command buffer(%d)!!!", result);
+            return;
+        }
+        */
     }
 }
 
@@ -126,45 +154,55 @@ void Sample1_DrawTriangle::Destroy()
 {
     if (m_mgr != nullptr) {
         m_mgr->ReleaseMemory(m_VK_ver_buf_memory);
-        m_mgr->DestroyBuffer(m_VK_ver_buffer);
         m_VK_ver_buf_memory = VK_NULL_HANDLE;
+        m_mgr->DestroyBuffer(m_VK_ver_buffer);
         m_VK_ver_buffer = VK_NULL_HANDLE;
 
         m_mgr->ReleaseMemory(m_VK_ver_color_buf_memory);
-        m_mgr->DestroyBuffer(m_VK_ver_color_buffer);
         m_VK_ver_color_buf_memory = VK_NULL_HANDLE;
+        m_mgr->DestroyBuffer(m_VK_ver_color_buffer);
         m_VK_ver_color_buffer = VK_NULL_HANDLE;
 
         m_mgr->ReleaseMemory(m_VK_ver_tex_buf_memory);
-        m_mgr->DestroyBuffer(m_VK_ver_tex_buffer);
         m_VK_ver_tex_buf_memory = VK_NULL_HANDLE;
+        m_mgr->DestroyBuffer(m_VK_ver_tex_buffer);
         m_VK_ver_tex_buffer = VK_NULL_HANDLE;
 
         m_mgr->ReleaseMemory(m_VK_ibuf_memory);
-        m_mgr->DestroyBuffer(m_VK_indices_buffer);
         m_VK_ibuf_memory = VK_NULL_HANDLE;
+        m_mgr->DestroyBuffer(m_VK_indices_buffer);
         m_VK_indices_buffer = VK_NULL_HANDLE;
         //
         m_mgr->ReleaseMemory(m_VK_main_texture_memory);
-        m_mgr->DestroyImage(m_VK_main_texture);
-        m_mgr->DestroySampler(m_VK_main_texture_sampler);
         m_VK_main_texture_memory = VK_NULL_HANDLE;
+        m_mgr->DestroyImage(m_VK_main_texture);
         m_VK_main_texture = VK_NULL_HANDLE;
+        m_mgr->DestroySampler(m_VK_main_texture_sampler);
         m_VK_main_texture_sampler = VK_NULL_HANDLE;
         //
         m_mgr->ReleaseMemory(m_VK_basic_uniform_buffer_memory);
-        m_mgr->DestroyBuffer(m_VK_basic_uniform_buffer);
         m_VK_basic_uniform_buffer_memory = VK_NULL_HANDLE;
+        m_mgr->DestroyBuffer(m_VK_basic_uniform_buffer);
         m_VK_basic_uniform_buffer = VK_NULL_HANDLE;
         //
         m_mgr->DestroyDesciptorSetLayout(m_VK_main_shader_set0_layout);
         m_VK_main_shader_set0_layout = VK_NULL_HANDLE;
 
         m_mgr->DestroyDescriptorPool(m_VK_descriptor_pool);
+        m_VK_descriptor_pool = VK_NULL_HANDLE;
         m_mgr->DestroyGraphicsPipeline(m_VK_main_graphics_pipeline);
+        m_VK_main_graphics_pipeline = VK_NULL_HANDLE;
         m_mgr->DestroyPipelineLayout(m_VK_pipeline_layout);
+        m_VK_pipeline_layout = VK_NULL_HANDLE;
         m_mgr->DestroyShaderModule(m_frag_module);
+        m_frag_module = VK_NULL_HANDLE;
         m_mgr->DestroyShaderModule(m_vert_module);
+        m_vert_module = VK_NULL_HANDLE;
+        //
+        m_mgr->FreeCommandBuffers(m_VK_cmd_pool, &m_VK_cmd_buffer, 1);
+        m_VK_cmd_buffer = VK_NULL_HANDLE;
+        m_mgr->DestroyCommandPool(m_VK_cmd_pool);
+        m_VK_cmd_pool = VK_NULL_HANDLE;
     }
 }
 
@@ -431,6 +469,7 @@ void Sample1_DrawTriangle::CreateTexture()
         SDLOGW("Image isn't opened.");
     }
 }
+
 
 void Sample1_DrawTriangle::CreateUniformBuffer()
 {
@@ -860,4 +899,118 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
         SDLOGE("create pipeline failure!!!");
         return;
     }
+}
+
+void Sample1_DrawTriangle::CreateCommandBufferAndPool()
+{
+    VkResult result = VK_SUCCESS;
+    VkCommandPoolCreateInfo cmd_pool_c_info = {};
+    cmd_pool_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    cmd_pool_c_info.pNext = nullptr;
+    cmd_pool_c_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; //VkCommandPoolCreateFlags
+
+    result = m_mgr->BeginCommandPool(cmd_pool_c_info, m_VK_cmd_pool);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create sample1 cmd pool failure!!!");;
+        return;
+    }
+
+    VkCommandBufferAllocateInfo cmd_buf_a_info = {};
+    cmd_buf_a_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    cmd_buf_a_info.pNext = nullptr;
+    cmd_buf_a_info.commandPool = m_VK_cmd_pool;
+    cmd_buf_a_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; //VkCommandBufferLevel
+    cmd_buf_a_info.commandBufferCount = 1;
+
+    result = m_mgr->AllocateCommandBuffers(cmd_buf_a_info, &m_VK_cmd_buffer);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Allocate sample1 cmd buffer failure!!!");
+        return;
+    }
+}
+
+void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
+{
+    SDLOG("--- Vulkan initialize sample 1 render pass.");
+    //1. Render Pass.
+    //1.1 write attachment descriptions for color and depth attachment.
+    //--- Color attachment description.
+    VkAttachmentDescription attachment_descs[2] = { {},{} }; //0 :color, 1: depth
+    attachment_descs[0].flags = 0;
+    attachment_descs[0].format = VK_FORMAT_B8G8R8A8_UNORM;
+    attachment_descs[0].samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
+    attachment_descs[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //Clear before using. If we set VK_ATTACHMENT_LOAD_OP_DONT_CARE, we can't clear via clearcolor.
+    attachment_descs[0].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
+    attachment_descs[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;//
+    attachment_descs[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;//
+    attachment_descs[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachment_descs[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    //--- Depth attachment description.
+    attachment_descs[1].flags = 0;
+    attachment_descs[1].format = VK_FORMAT_D24_UNORM_S8_UINT;
+    attachment_descs[1].samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
+    attachment_descs[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachment_descs[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
+    attachment_descs[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;//
+    attachment_descs[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;//
+    attachment_descs[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachment_descs[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    //1.2 write attachment references.
+    //--- Bind the output to color attachment. //0 :color, 1: depth
+    VkAttachmentReference attachment_refs[2] = { {},{} };
+    attachment_refs[0].attachment = 0; //ID of attachment in RenderPass.
+    attachment_refs[0].layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    //--- Bind the output to depth attachment.
+    attachment_refs[1].attachment = 1; //ID of attachment in RenderPass.
+    attachment_refs[1].layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    //1.3 create subpass for render pass.
+    VkSubpassDescription subpass = {};
+    subpass.flags = 0;
+    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpass.inputAttachmentCount = 0;
+    subpass.pInputAttachments = nullptr;
+    subpass.colorAttachmentCount = 1;
+    subpass.pColorAttachments = &attachment_refs[0];
+    subpass.pResolveAttachments = nullptr; //for multisample.
+    subpass.pDepthStencilAttachment = &attachment_refs[1];
+    subpass.preserveAttachmentCount = 0;
+    subpass.pPreserveAttachments = nullptr;
+    //1.4 Create subpass dependecy for present pass.
+    std::vector<VkSubpassDependency> sp_dependencies;
+    sp_dependencies.resize(2);
+    //--- Begin dep.
+    sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+    sp_dependencies[0].dstSubpass = 0;
+    sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+    //--- End dep.
+    sp_dependencies[1].srcSubpass = 0;
+    sp_dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+    sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+    //1.5. Write created information for present pass.
+    VkRenderPassCreateInfo pass_c_info = {};
+    pass_c_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    pass_c_info.pNext = nullptr;
+    pass_c_info.flags = 0; //Not implement in Vulkan, it say 'reversed for future use.
+    pass_c_info.attachmentCount = 2;
+    pass_c_info.pAttachments = attachment_descs;
+    pass_c_info.subpassCount = 1;
+    pass_c_info.pSubpasses = &subpass;
+    pass_c_info.dependencyCount = static_cast<uint32_t>(sp_dependencies.size());
+    pass_c_info.pDependencies = sp_dependencies.data();
+    //1.6 create render pass.
+    VkResult result = m_mgr->CreateRenderPass(pass_c_info, m_VK_render_pass);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Sample1 render pass create failure.");
+        return;
+    }
+    //2. create color and depth buffer.
+    //3. Create Frame Buffer.
 }

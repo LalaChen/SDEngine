@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Sample1_DrawTriangle.h"
+#include "Sample2_DrawScene.h"
 #include "VulkanManager.h"
 
 class VulkanAPITestManager : public SDE::Graphics::VulkanManager
@@ -51,6 +52,16 @@ public: //Shader Related.
 
     VkResult CreateImageView(const VkImageViewCreateInfo &i_iv_info, VkImageView &io_VK_image_view);
     void DestroyImageView(VkImageView i_VK_image_view);
+public:
+    VkResult CreateRenderPass(const VkRenderPassCreateInfo &i_rp_c_info, VkRenderPass &io_rp);
+    void DestroyRenderPass(VkRenderPass i_render_pass);
+public:
+    VkResult BeginCommandPool(const VkCommandPoolCreateInfo &i_cmd_p_c_info, VkCommandPool &io_cmd_pool);
+    VkResult AllocateCommandBuffers(const VkCommandBufferAllocateInfo &i_cmd_buf_a_info, VkCommandBuffer *io_cmd_buffers);
+    VkResult BeginCommandBuffer(const VkCommandBufferBeginInfo &i_cmd_buf_b_info, const VkCommandBuffer &i_cmd_buffer);
+    VkResult EndCommandBuffer(const VkCommandBuffer &i_cmd_buffer);
+    void FreeCommandBuffers(VkCommandPool i_target_cmd_pool, VkCommandBuffer *i_cmd_buffers, uint32_t i_buffer_size);
+    void DestroyCommandPool(VkCommandPool i_cmd_pool);
 public: //Set Dynamic State Function.
     void SetViewportsDynamically(const std::vector<VkViewport> &i_viewports);
     void SetMainViewportDynamically(const VkViewport &i_viewport);
@@ -64,5 +75,6 @@ public:
     void RenderToScreen() override;
     void RenderDebug();
 protected:
-    Sample1_DrawTriangle m_draw_triangle;
+    uint32_t m_cur_sample_idx;
+    std::vector<SampleStrongReferenceObject> m_samples;
 };

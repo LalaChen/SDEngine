@@ -1,40 +1,26 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "Sample.h"
 
-#include "SDEngineCommonType.h"
-#include "SDEngineCommonFunction.h"
-#include "SDEngine.h"
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample1_DrawTriangle);
 
-using SDE::Math::Matrix4X4f;
-
-class VulkanAPITestManager;
-
-class BasicUniformBuffer
-{
-public:
-    Matrix4X4f m_clip;
-    Matrix4X4f m_proj;
-    Matrix4X4f m_view;
-    Matrix4X4f m_worid;
-};
-
-class Sample1_DrawTriangle
+class Sample1_DrawTriangle : public Sample
 {
 public:
     explicit Sample1_DrawTriangle(VulkanAPITestManager *i_mgr);
     virtual ~Sample1_DrawTriangle();
 public:
-    void Initialize();
-    void Render();
-    void Destroy();
+    void Initialize() override;
+    void Render() override;
+    void Destroy() override;
+protected:
+    void CreateRenderPassAndFramebuffer() override;
+    void CreateCommandBufferAndPool() override;
 private:
     void CreateBuffers();
     void CreateTexture();
     void CreateUniformBuffer();
     void CreateShaderPrograms();
-protected:
-    VulkanAPITestManager *m_mgr;
 protected:
 //Vertex Device Local memory buffer.
 //(Memory type VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT can't use map and unmap)
@@ -65,6 +51,13 @@ protected:
     VkDescriptorSet m_VK_descriptor_set0;
     VkDescriptorPool m_VK_descriptor_pool;
     VkPipeline m_VK_main_graphics_pipeline;
+protected:
+//render pass.
+    VkRenderPass m_VK_render_pass;
+protected:
+//for camera
+    VkImage m_VK_color_buffer;
+    VkImage m_VK_depth_buffer;
 protected:
     BasicUniformBuffer m_uniform_buffer_data;
 };

@@ -216,6 +216,9 @@ protected:
     VkCommandPool m_VK_main_cmd_pool; //main render thread use.
     VkCommandBuffer m_VK_main_cmd_buffer;
     VkFence m_VK_main_cmd_buf_fence;
+protected:
+ //--------------- Configuration ------------------
+    uint32_t m_queue_size; //use to allocate queues for multi-threads.
 };
 
 //---------------------------- end of namespace Graphics ----------------------------

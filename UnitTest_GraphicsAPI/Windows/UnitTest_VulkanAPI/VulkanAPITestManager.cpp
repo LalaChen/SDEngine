@@ -7,8 +7,10 @@ using namespace::SDE::Graphics;
 
 VulkanAPITestManager::VulkanAPITestManager()
 : VulkanManager()
-, m_draw_triangle(this)
+, m_cur_sample_idx(0)
 {
+    m_samples.push_back(new Sample1_DrawTriangle(this));
+    m_samples.push_back(new Sample2_DrawScene(this));
 }
 
 VulkanAPITestManager::~VulkanAPITestManager()
@@ -18,12 +20,18 @@ VulkanAPITestManager::~VulkanAPITestManager()
 void VulkanAPITestManager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
     VulkanManager::InitializeGraphicsSystem(i_arg);
-    m_draw_triangle.Initialize();
+    std::vector<SampleStrongReferenceObject>::iterator iter;
+    for (iter = m_samples.begin(); iter != m_samples.end(); ++iter) {
+        (*iter).GetRef().Initialize();
+    }
 }
 
 void VulkanAPITestManager::ReleaseGraphicsSystem()
 {
-    m_draw_triangle.Destroy();
+    std::vector<SampleStrongReferenceObject>::iterator iter;
+    for (iter = m_samples.begin(); iter != m_samples.end(); ++iter) {
+        (*iter).GetRef().Destroy();
+    }
     VulkanManager::ReleaseGraphicsSystem();
 }
 
@@ -133,7 +141,9 @@ void VulkanAPITestManager::RenderToScreen()
 void VulkanAPITestManager::RenderDebug()
 {
     //Test 1. Draw Trangle.
-    m_draw_triangle.Render();
+    if (m_cur_sample_idx < m_samples.size()) {
+        m_samples[m_cur_sample_idx].GetRef().Render();
+    }
 }
 
 //------------- API ------------
@@ -838,6 +848,57 @@ void VulkanAPITestManager::DestroyImageView(VkImageView i_VK_image_view)
         vkDestroyImageView(m_VK_device, i_VK_image_view, nullptr);
     }
 }
+
+//----------- Render Pass
+VkResult VulkanAPITestManager::CreateRenderPass(const VkRenderPassCreateInfo &i_rp_c_info, VkRenderPass &io_rp)
+{
+    return vkCreateRenderPass(m_VK_device, &i_rp_c_info, nullptr, &io_rp);
+}
+
+void VulkanAPITestManager::DestroyRenderPass(VkRenderPass i_render_pass)
+{
+    vkDestroyRenderPass(m_VK_device, i_render_pass, nullptr);
+}
+
+//----------- Command Buffer and pool.
+VkResult VulkanAPITestManager::BeginCommandPool(const VkCommandPoolCreateInfo &i_cmd_p_c_info, VkCommandPool &io_cmd_pool)
+{
+    VkCommandPoolCreateInfo cmd_pool_c_info = i_cmd_p_c_info;
+    cmd_pool_c_info.queueFamilyIndex = m_VK_picked_queue_family_id;
+    return vkCreateCommandPool(m_VK_device, &cmd_pool_c_info, nullptr, &io_cmd_pool);
+}
+
+VkResult VulkanAPITestManager::AllocateCommandBuffers(const VkCommandBufferAllocateInfo &i_cmd_buf_a_info, VkCommandBuffer *io_cmd_buffers)
+{
+    if (io_cmd_buffers != nullptr) {
+        VkCommandBufferAllocateInfo cmd_buf_a_info = i_cmd_buf_a_info;
+        return vkAllocateCommandBuffers(m_VK_device, &cmd_buf_a_info, io_cmd_buffers);
+    }
+    else {
+        return VK_ERROR_INVALID_EXTERNAL_HANDLE;
+    }
+}
+
+VkResult VulkanAPITestManager::BeginCommandBuffer(const VkCommandBufferBeginInfo &i_cmd_buf_b_info, const VkCommandBuffer &i_cmd_buffer)
+{
+    return vkBeginCommandBuffer(i_cmd_buffer, &i_cmd_buf_b_info);
+}
+
+VkResult VulkanAPITestManager::EndCommandBuffer(const VkCommandBuffer &i_cmd_buffer)
+{
+    return vkEndCommandBuffer(i_cmd_buffer);
+}
+
+void VulkanAPITestManager::FreeCommandBuffers(VkCommandPool i_target_cmd_pool, VkCommandBuffer *i_cmd_buffers, uint32_t i_buffer_size)
+{
+    vkFreeCommandBuffers(m_VK_device, i_target_cmd_pool, i_buffer_size, i_cmd_buffers);
+}
+
+void VulkanAPITestManager::DestroyCommandPool(VkCommandPool i_cmd_pool)
+{
+    vkDestroyCommandPool(m_VK_device, i_cmd_pool, nullptr);
+}
+
 //----------- Set Dynamic State
 void VulkanAPITestManager::SetViewportsDynamically(const std::vector<VkViewport> &i_viewports)
 {
