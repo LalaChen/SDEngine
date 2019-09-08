@@ -13,6 +13,7 @@ public:
     void Initialize() override;
     void Render() override;
     void Destroy() override;
+    VkImage GetColorBuffer() override { return m_VK_color_buffer; }
 protected:
     void CreateRenderPassAndFramebuffer() override;
     void CreateCommandBufferAndPool() override;
@@ -57,7 +58,16 @@ protected:
 protected:
 //for camera
     VkImage m_VK_color_buffer;
+    VkDeviceMemory m_VK_color_buffer_memory;
+    VkImageView m_VK_color_buffer_image_view;
     VkImage m_VK_depth_buffer;
+    VkDeviceMemory m_VK_depth_buffer_memory;
+    VkImageView m_VK_depth_buffer_image_view;
+    VkFramebuffer m_VK_frame_buffer;
+protected:
+//prepare for work thread or camera.
+    VkCommandPool m_VK_cmd_pool;
+    VkCommandBuffer m_VK_cmd_buffer;
 protected:
     BasicUniformBuffer m_uniform_buffer_data;
 };

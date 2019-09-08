@@ -13,6 +13,8 @@ public:
     void Initialize() override;
     void Render() override;
     void Destroy() override;
+public:
+    VkImage GetColorBuffer() override { return VK_NULL_HANDLE; }
 protected:
     void CreateRenderPassAndFramebuffer() override;
     void CreateCommandBufferAndPool() override;

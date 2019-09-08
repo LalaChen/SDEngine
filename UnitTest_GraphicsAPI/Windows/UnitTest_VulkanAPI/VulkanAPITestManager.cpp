@@ -37,6 +37,9 @@ void VulkanAPITestManager::ReleaseGraphicsSystem()
 
 void VulkanAPITestManager::RenderToScreen()
 {
+    //Render debug.
+    RenderDebug();
+
     //Get swapchain image.
     uint32_t image_index;
 
@@ -77,8 +80,6 @@ void VulkanAPITestManager::RenderToScreen()
 
     vkCmdBeginRenderPass(m_VK_main_cmd_buffer, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
 
-    //Render debug.
-    RenderDebug();
 
     //End RenderPass.
     vkCmdEndRenderPass(m_VK_main_cmd_buffer);
@@ -89,12 +90,13 @@ void VulkanAPITestManager::RenderToScreen()
         return;
     }
     //Push command buffer to queue.
+    VkSemaphore wait_semaphores[2] = { m_VK_render_scene_semaphore, m_VK_acq_img_semaphore };
     VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
     VkSubmitInfo submit_info = {};
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submit_info.pNext = nullptr;
     submit_info.waitSemaphoreCount = 1;
-    submit_info.pWaitSemaphores = &m_VK_acq_img_semaphore; //wait acq image.
+    submit_info.pWaitSemaphores = &m_VK_acq_img_semaphore; //wait acq image and render scene.
     submit_info.pWaitDstStageMask = &submit_wait_flag;
     submit_info.signalSemaphoreCount = 1;
     submit_info.pSignalSemaphores = &m_VK_present_semaphore; //set present semaphore.
@@ -753,13 +755,9 @@ void VulkanAPITestManager::DestroyPipelineLayout(VkPipelineLayout i_VK_pipeline_
     }
 }
 
-VkResult VulkanAPITestManager::CreateMainRenderPassGraphicsPipeline(const VkGraphicsPipelineCreateInfo &i_c_info, VkPipelineCache i_VK_pipeline_cache, uint32_t i_subpass_id, VkPipeline &io_VK_pipeline)
+VkResult VulkanAPITestManager::CreateGraphicsPipeline(const VkGraphicsPipelineCreateInfo &i_c_info, VkPipelineCache i_VK_pipeline_cache, VkPipeline &io_VK_pipeline)
 {
-    VkGraphicsPipelineCreateInfo c_info = i_c_info;
-    c_info.renderPass = m_VK_present_render_pass;
-    c_info.subpass = i_subpass_id;
-
-    VkResult result = vkCreateGraphicsPipelines(m_VK_device, i_VK_pipeline_cache, 1, &c_info, nullptr, &io_VK_pipeline);
+    VkResult result = vkCreateGraphicsPipelines(m_VK_device, i_VK_pipeline_cache, 1, &i_c_info, nullptr, &io_VK_pipeline);
     if (result != VK_SUCCESS) {
         SDLOGW("failed to create pipeline!");
     }
@@ -855,36 +853,65 @@ VkResult VulkanAPITestManager::CreateRenderPass(const VkRenderPassCreateInfo &i_
     return vkCreateRenderPass(m_VK_device, &i_rp_c_info, nullptr, &io_rp);
 }
 
+void VulkanAPITestManager::BeginRenderPass(const VkRenderPassBeginInfo &i_rp_b_info, const VkCommandBuffer &i_cmd_buffer)
+{
+    vkCmdBeginRenderPass(i_cmd_buffer, &i_rp_b_info, VK_SUBPASS_CONTENTS_INLINE);
+}
+
+void VulkanAPITestManager::EndRenderPass(const VkCommandBuffer &i_cmd_buffer)
+{
+    vkCmdEndRenderPass(i_cmd_buffer);
+}
+
 void VulkanAPITestManager::DestroyRenderPass(VkRenderPass i_render_pass)
 {
     vkDestroyRenderPass(m_VK_device, i_render_pass, nullptr);
 }
 
+VkResult VulkanAPITestManager::CreateVkFramebuffer(const VkFramebufferCreateInfo &i_fb_c_info, VkFramebuffer &io_fb)
+{
+    return vkCreateFramebuffer(m_VK_device, &i_fb_c_info, nullptr, &io_fb);
+}
+
+void VulkanAPITestManager::DestroyFramebuffer(VkFramebuffer i_framebuffer)
+{
+    vkDestroyFramebuffer(m_VK_device, i_framebuffer, nullptr);
+}
+
 //----------- Command Buffer and pool.
-VkResult VulkanAPITestManager::BeginCommandPool(const VkCommandPoolCreateInfo &i_cmd_p_c_info, VkCommandPool &io_cmd_pool)
+VkResult VulkanAPITestManager::CreateCommandPool(const VkCommandPoolCreateInfo &i_cmd_p_c_info, VkCommandPool &io_cmd_pool)
 {
     VkCommandPoolCreateInfo cmd_pool_c_info = i_cmd_p_c_info;
     cmd_pool_c_info.queueFamilyIndex = m_VK_picked_queue_family_id;
     return vkCreateCommandPool(m_VK_device, &cmd_pool_c_info, nullptr, &io_cmd_pool);
 }
 
-VkResult VulkanAPITestManager::AllocateCommandBuffers(const VkCommandBufferAllocateInfo &i_cmd_buf_a_info, VkCommandBuffer *io_cmd_buffers)
+VkResult VulkanAPITestManager::ResetCommandPool(VkCommandPool i_cmd_pool, VkCommandPoolResetFlagBits i_flag)
 {
-    if (io_cmd_buffers != nullptr) {
-        VkCommandBufferAllocateInfo cmd_buf_a_info = i_cmd_buf_a_info;
-        return vkAllocateCommandBuffers(m_VK_device, &cmd_buf_a_info, io_cmd_buffers);
+    if (i_flag == VK_COMMAND_POOL_RESET_FLAG_BITS_MAX_ENUM) {
+        return vkResetCommandPool(m_VK_device, i_cmd_pool, 0);
     }
     else {
-        return VK_ERROR_INVALID_EXTERNAL_HANDLE;
+        return vkResetCommandPool(m_VK_device, i_cmd_pool, i_flag);
     }
 }
 
-VkResult VulkanAPITestManager::BeginCommandBuffer(const VkCommandBufferBeginInfo &i_cmd_buf_b_info, const VkCommandBuffer &i_cmd_buffer)
+void VulkanAPITestManager::DestroyCommandPool(VkCommandPool i_cmd_pool)
+{
+    vkDestroyCommandPool(m_VK_device, i_cmd_pool, nullptr);
+}
+
+VkResult VulkanAPITestManager::AllocateCommandBuffer(const VkCommandBufferAllocateInfo &i_cmd_buf_a_info, VkCommandBuffer &io_cmd_buffer)
+{
+    return vkAllocateCommandBuffers(m_VK_device, &i_cmd_buf_a_info, &io_cmd_buffer);
+}
+
+VkResult VulkanAPITestManager::BeginCommandBuffer(const VkCommandBufferBeginInfo &i_cmd_buf_b_info, VkCommandBuffer i_cmd_buffer)
 {
     return vkBeginCommandBuffer(i_cmd_buffer, &i_cmd_buf_b_info);
 }
 
-VkResult VulkanAPITestManager::EndCommandBuffer(const VkCommandBuffer &i_cmd_buffer)
+VkResult VulkanAPITestManager::EndCommandBuffer(VkCommandBuffer i_cmd_buffer)
 {
     return vkEndCommandBuffer(i_cmd_buffer);
 }
@@ -894,52 +921,86 @@ void VulkanAPITestManager::FreeCommandBuffers(VkCommandPool i_target_cmd_pool, V
     vkFreeCommandBuffers(m_VK_device, i_target_cmd_pool, i_buffer_size, i_cmd_buffers);
 }
 
-void VulkanAPITestManager::DestroyCommandPool(VkCommandPool i_cmd_pool)
-{
-    vkDestroyCommandPool(m_VK_device, i_cmd_pool, nullptr);
-}
-
 //----------- Set Dynamic State
-void VulkanAPITestManager::SetViewportsDynamically(const std::vector<VkViewport> &i_viewports)
+void VulkanAPITestManager::SetViewportsDynamically(VkCommandBuffer i_cmd_buffer, const std::vector<VkViewport> &i_viewports)
 {
-    vkCmdSetViewport(m_VK_main_cmd_buffer, 0, static_cast<uint32_t>(i_viewports.size()), i_viewports.data());
+    vkCmdSetViewport(i_cmd_buffer, 0, static_cast<uint32_t>(i_viewports.size()), i_viewports.data());
 }
 
-void VulkanAPITestManager::SetMainViewportDynamically(const VkViewport &i_viewport)
+void VulkanAPITestManager::SetMainViewportDynamically(VkCommandBuffer i_cmd_buffer, const VkViewport &i_viewport)
 {
-    vkCmdSetViewport(m_VK_main_cmd_buffer, 0, 1, &i_viewport);
+    vkCmdSetViewport(i_cmd_buffer, 0, 1, &i_viewport);
 }
 
 //----------- Draw function.
-void VulkanAPITestManager::BindVertexBuffer(VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, uint32_t i_binding_id)
+void VulkanAPITestManager::BindVertexBuffer(VkCommandBuffer i_cmd_buffer, VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, uint32_t i_binding_id)
 {
     if (i_VK_buffer != VK_NULL_HANDLE) {
-        vkCmdBindVertexBuffers(m_VK_main_cmd_buffer, i_binding_id, 1, &i_VK_buffer, &i_VK_offset);
+        vkCmdBindVertexBuffers(i_cmd_buffer, i_binding_id, 1, &i_VK_buffer, &i_VK_offset);
     }
 }
 
-void VulkanAPITestManager::BindVertexBuffers(const std::vector<VkBuffer> &i_va_buffers, const std::vector<VkDeviceSize> &i_va_offset, uint32_t i_first_bind_id)
+void VulkanAPITestManager::BindVertexBuffers(VkCommandBuffer i_cmd_buffer, const std::vector<VkBuffer> &i_va_buffers, const std::vector<VkDeviceSize> &i_va_offset, uint32_t i_first_bind_id)
 {
     if (i_va_buffers.size() != 0) {
-        vkCmdBindVertexBuffers(m_VK_main_cmd_buffer, i_first_bind_id, static_cast<uint32_t>(i_va_buffers.size()), i_va_buffers.data(), i_va_offset.data());
+        vkCmdBindVertexBuffers(i_cmd_buffer, i_first_bind_id, static_cast<uint32_t>(i_va_buffers.size()), i_va_buffers.data(), i_va_offset.data());
     }
 }
 
-void VulkanAPITestManager::BindIndiceBuffer(VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, VkIndexType i_index_type)
+void VulkanAPITestManager::BindIndiceBuffer(VkCommandBuffer i_cmd_buffer, VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, VkIndexType i_index_type)
 {
     if (i_VK_buffer != VK_NULL_HANDLE) {
-        vkCmdBindIndexBuffer(m_VK_main_cmd_buffer, i_VK_buffer, i_VK_offset, i_index_type);
+        vkCmdBindIndexBuffer(i_cmd_buffer, i_VK_buffer, i_VK_offset, i_index_type);
     }
 }
 
-void VulkanAPITestManager::BindGraphicsPipeline(VkPipeline i_VK_graphics_pipeline)
+void VulkanAPITestManager::BindGraphicsPipeline(VkCommandBuffer i_cmd_buffer, VkPipeline i_VK_graphics_pipeline)
 {
     if (i_VK_graphics_pipeline != VK_NULL_HANDLE) {
-        vkCmdBindPipeline(m_VK_main_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, i_VK_graphics_pipeline);
+        vkCmdBindPipeline(i_cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, i_VK_graphics_pipeline);
     }
 }
 
-void VulkanAPITestManager::DrawByIndice(uint32_t i_indice_size, uint32_t i_instance_count, uint32_t i_first_index, int32_t i_vertex_offset, uint32_t i_first_instance)
+void VulkanAPITestManager::DrawByIndice(VkCommandBuffer i_cmd_buffer, uint32_t i_indice_size, uint32_t i_instance_count, uint32_t i_first_index, int32_t i_vertex_offset, uint32_t i_first_instance)
 {
-    vkCmdDrawIndexed(m_VK_main_cmd_buffer, i_indice_size, i_instance_count, i_first_index, i_vertex_offset, i_first_instance);
+    vkCmdDrawIndexed(i_cmd_buffer, i_indice_size, i_instance_count, i_first_index, i_vertex_offset, i_first_instance);
+}
+
+//---------- Queue ----------
+VkResult VulkanAPITestManager::SubmitCommandBufferToMainQueue(VkCommandBuffer i_cmd_buffer)
+{
+    VkResult result;
+    VkSubmitInfo submit_info = {};
+    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submit_info.pNext = nullptr;
+    submit_info.waitSemaphoreCount = 0;
+    submit_info.pWaitSemaphores = nullptr; //wait acq image.
+    submit_info.pWaitDstStageMask = nullptr;
+    submit_info.signalSemaphoreCount = 0;
+    submit_info.pSignalSemaphores = nullptr; //set render scene semaphore.
+    submit_info.commandBufferCount = 1;
+    submit_info.pCommandBuffers = &i_cmd_buffer;
+
+    result = vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence);
+   
+    if (result != VK_SUCCESS) {
+        SDLOGW("Submit command buffer failure(%d)!!!", result);
+    }
+
+    do {
+        result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
+    } while (result == VK_TIMEOUT);
+    if (result != VK_SUCCESS) {
+        SDLOGW("Wait sync failure(%d)!!!", result);
+        return result;
+    }
+
+    //Reset main command buffer sync.
+    result = vkResetFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence);
+    if (result != VK_SUCCESS) {
+        SDLOGW("reset command buffer fence failure(%d)!!!", result);
+        return result;
+    }
+
+    return VK_SUCCESS;
 }

@@ -38,7 +38,7 @@ public: //Shader Related.
     VkResult CreatePipelineLayout(const VkPipelineLayoutCreateInfo &i_pipeline_layout_c_info, VkPipelineLayout &io_VK_pipeline_layout);
     void DestroyPipelineLayout(VkPipelineLayout i_VK_pipeline_layout);
  
-    VkResult CreateMainRenderPassGraphicsPipeline(const VkGraphicsPipelineCreateInfo &i_c_info, VkPipelineCache i_VK_pipeline_cache, uint32_t i_subpass_id, VkPipeline &io_VK_pipeline);
+    VkResult CreateGraphicsPipeline(const VkGraphicsPipelineCreateInfo &i_c_info, VkPipelineCache i_VK_pipeline_cache, VkPipeline &io_VK_pipeline);
     void DestroyGraphicsPipeline(VkPipeline i_VK_pipeline);
 
     VkResult CreateDescriptorPool(const std::vector<VkDescriptorPoolSize> &i_descriptor_pool_sizes, uint32_t i_max_set_num, bool i_free_individual_sets, VkDescriptorPool &io_descriptor_pool);
@@ -54,23 +54,32 @@ public: //Shader Related.
     void DestroyImageView(VkImageView i_VK_image_view);
 public:
     VkResult CreateRenderPass(const VkRenderPassCreateInfo &i_rp_c_info, VkRenderPass &io_rp);
+    void BeginRenderPass(const VkRenderPassBeginInfo &i_rp_b_info, const VkCommandBuffer &i_cmd_buffer);
+    void EndRenderPass(const VkCommandBuffer &i_cmd_buffer);
     void DestroyRenderPass(VkRenderPass i_render_pass);
 public:
-    VkResult BeginCommandPool(const VkCommandPoolCreateInfo &i_cmd_p_c_info, VkCommandPool &io_cmd_pool);
-    VkResult AllocateCommandBuffers(const VkCommandBufferAllocateInfo &i_cmd_buf_a_info, VkCommandBuffer *io_cmd_buffers);
-    VkResult BeginCommandBuffer(const VkCommandBufferBeginInfo &i_cmd_buf_b_info, const VkCommandBuffer &i_cmd_buffer);
-    VkResult EndCommandBuffer(const VkCommandBuffer &i_cmd_buffer);
-    void FreeCommandBuffers(VkCommandPool i_target_cmd_pool, VkCommandBuffer *i_cmd_buffers, uint32_t i_buffer_size);
+    VkResult CreateVkFramebuffer(const VkFramebufferCreateInfo &i_fb_c_info, VkFramebuffer &io_fb);
+    void DestroyFramebuffer(VkFramebuffer i_framebuffer);
+public:
+    VkResult CreateCommandPool(const VkCommandPoolCreateInfo &i_cmd_p_c_info, VkCommandPool &io_cmd_pool);
+    VkResult ResetCommandPool(VkCommandPool i_cmd_pool, VkCommandPoolResetFlagBits i_flag);
     void DestroyCommandPool(VkCommandPool i_cmd_pool);
+
+    VkResult AllocateCommandBuffer(const VkCommandBufferAllocateInfo &i_cmd_buf_a_info, VkCommandBuffer &io_cmd_buffer);
+    VkResult BeginCommandBuffer(const VkCommandBufferBeginInfo &i_cmd_buf_b_info, VkCommandBuffer i_cmd_buffer);
+    VkResult EndCommandBuffer(VkCommandBuffer i_cmd_buffer);
+    void FreeCommandBuffers(VkCommandPool i_target_cmd_pool, VkCommandBuffer *i_cmd_buffers, uint32_t i_buffer_size);
 public: //Set Dynamic State Function.
-    void SetViewportsDynamically(const std::vector<VkViewport> &i_viewports);
-    void SetMainViewportDynamically(const VkViewport &i_viewport);
+    void SetViewportsDynamically(VkCommandBuffer i_cmd_buffer, const std::vector<VkViewport> &i_viewports);
+    void SetMainViewportDynamically(VkCommandBuffer i_cmd_buffer, const VkViewport &i_viewport);
 public: //Draw function.
-    void BindVertexBuffer(VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, uint32_t i_binding_id);
-    void BindVertexBuffers(const std::vector<VkBuffer> &i_va_buffers, const std::vector<VkDeviceSize> &i_va_offset, uint32_t i_first_bind_id);
-    void BindIndiceBuffer(VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, VkIndexType i_index_type);
-    void BindGraphicsPipeline(VkPipeline i_VK_graphics_pipeline);
-    void DrawByIndice(uint32_t i_indice_size, uint32_t i_instance_count, uint32_t i_first_index, int32_t i_vertex_offset, uint32_t i_first_instance);
+    void BindVertexBuffer(VkCommandBuffer i_cmd_buffer, VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, uint32_t i_binding_id);
+    void BindVertexBuffers(VkCommandBuffer i_cmd_buffer, const std::vector<VkBuffer> &i_va_buffers, const std::vector<VkDeviceSize> &i_va_offset, uint32_t i_first_bind_id);
+    void BindIndiceBuffer(VkCommandBuffer i_cmd_buffer, VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, VkIndexType i_index_type);
+    void BindGraphicsPipeline(VkCommandBuffer i_cmd_buffer, VkPipeline i_VK_graphics_pipeline);
+    void DrawByIndice(VkCommandBuffer i_cmd_buffer, uint32_t i_indice_size, uint32_t i_instance_count, uint32_t i_first_index, int32_t i_vertex_offset, uint32_t i_first_instance);
+public:
+    VkResult SubmitCommandBufferToMainQueue(VkCommandBuffer i_cmd_buffer);
 public:
     void RenderToScreen() override;
     void RenderDebug();

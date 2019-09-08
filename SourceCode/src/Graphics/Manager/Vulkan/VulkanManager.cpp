@@ -36,6 +36,7 @@ namespace Graphics
 const uint32_t VulkanManager::MaxImgAcqirationTime = 2000000000; //2s
 const uint32_t VulkanManager::MaxFenceWaitTime = 17000000; //17ms
 const VkClearValue VulkanManager::ClearColor = { 0.2f, 0.5f, 0.8f, 1.0f };
+const VkClearValue VulkanManager::ClearDepth = { 1.0f };
 
 const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
 {
@@ -76,6 +77,7 @@ VulkanManager::VulkanManager()
 , m_VK_swap_chain(VK_NULL_HANDLE)
 , m_VK_present_render_pass(VK_NULL_HANDLE)
 , m_VK_acq_img_semaphore(VK_NULL_HANDLE)
+, m_VK_render_scene_semaphore(VK_NULL_HANDLE)
 , m_VK_present_semaphore(VK_NULL_HANDLE)
 , m_VK_final_present_mode(VK_PRESENT_MODE_RANGE_SIZE_KHR)
 // main command pool
@@ -156,6 +158,11 @@ void VulkanManager::ReleaseGraphicsSystem()
         m_VK_acq_img_semaphore = VK_NULL_HANDLE;
     }
 
+    if (m_VK_render_scene_semaphore != VK_NULL_HANDLE) {
+        vkDestroySemaphore(m_VK_device, m_VK_render_scene_semaphore, nullptr);
+        m_VK_render_scene_semaphore = VK_NULL_HANDLE;
+    }
+
     if (m_VK_present_semaphore != VK_NULL_HANDLE) {
         vkDestroySemaphore(m_VK_device, m_VK_present_semaphore, nullptr);
         m_VK_present_semaphore = VK_NULL_HANDLE;
@@ -230,7 +237,7 @@ void VulkanManager::Resize(Size_ui32 i_w, Size_ui32 i_h)
 
 void VulkanManager::RenderBegin()
 {
-    
+
 }
 
 void VulkanManager::RenderToScreen()
@@ -285,12 +292,13 @@ void VulkanManager::RenderToScreen()
         return;
     }
     //Push command buffer to queue.
+    VkSemaphore wait_semaphores[2] = { m_VK_acq_img_semaphore, m_VK_render_scene_semaphore };
     VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
     VkSubmitInfo submit_info = {};
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submit_info.pNext = nullptr;
-    submit_info.waitSemaphoreCount = 1;
-    submit_info.pWaitSemaphores = &m_VK_acq_img_semaphore; //wait acq image.
+    submit_info.waitSemaphoreCount = 2;
+    submit_info.pWaitSemaphores = wait_semaphores; //wait acq image.
     submit_info.pWaitDstStageMask = &submit_wait_flag;
     submit_info.signalSemaphoreCount = 1;
     submit_info.pSignalSemaphores = &m_VK_present_semaphore; //set present semaphore.
@@ -330,7 +338,7 @@ void VulkanManager::RenderToScreen()
 void VulkanManager::RenderEnd()
 {
     //Reset command buffers in pool.
-    if (vkResetCommandPool(m_VK_device, m_VK_main_cmd_pool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT) != VK_SUCCESS) {
+    if (vkResetCommandPool(m_VK_device, m_VK_main_cmd_pool, 0) != VK_SUCCESS) {
         SDLOGW("reset command buffer in main pool failure!!!");
     }
 }

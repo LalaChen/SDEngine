@@ -52,6 +52,7 @@ protected:
     static const uint32_t MaxImgAcqirationTime; //nanosecond.
     static const uint32_t MaxFenceWaitTime;
     static const VkClearValue ClearColor;
+    static const VkClearValue ClearDepth;
 protected:
     static std::vector<const char*> DesiredValidLayers;
     static std::vector<const char*> NecessaryExtensions;
@@ -209,6 +210,7 @@ protected:
     VkRenderPass m_VK_present_render_pass;
     VkSemaphore m_VK_acq_img_semaphore; //GPU to GPU lock
     VkSemaphore m_VK_present_semaphore; //GPU to GPU lock
+    VkSemaphore m_VK_render_scene_semaphore;
     std::vector<VkImage> m_VK_sc_images;
     std::vector<VkImageView> m_VK_sc_image_views;
     std::vector<VkFramebuffer> m_VK_sc_image_fbs;

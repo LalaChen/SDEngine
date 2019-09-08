@@ -1,4 +1,7 @@
 //#define USE_HOST_BUFFER
+#include <chrono>
+#include <thread>
+
 #include "SDEngine.h"
 #include "VulkanAPITestManager.h"
 #include "Sample1_DrawTriangle.h"
@@ -37,7 +40,13 @@ Sample1_DrawTriangle::Sample1_DrawTriangle(VulkanAPITestManager *i_mgr)
 , m_VK_render_pass(VK_NULL_HANDLE)
 //for camera
 , m_VK_color_buffer(VK_NULL_HANDLE)
+, m_VK_color_buffer_memory(VK_NULL_HANDLE)
 , m_VK_depth_buffer(VK_NULL_HANDLE)
+, m_VK_depth_buffer_memory(VK_NULL_HANDLE)
+//for camera
+, m_VK_cmd_pool(VK_NULL_HANDLE)
+, m_VK_cmd_buffer(VK_NULL_HANDLE)
+, m_VK_frame_buffer(VK_NULL_HANDLE)
 {
 }
 
@@ -61,7 +70,6 @@ void Sample1_DrawTriangle::Render()
     if (m_mgr != nullptr) {
         VkResult result = VK_SUCCESS;
         //1. begin command buffer.
-        /*
         VkCommandBufferBeginInfo cmd_buf_c_info = {};
         cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         cmd_buf_c_info.pNext = nullptr;
@@ -69,11 +77,38 @@ void Sample1_DrawTriangle::Render()
         cmd_buf_c_info.pInheritanceInfo = nullptr;
 
         result = m_mgr->BeginCommandBuffer(cmd_buf_c_info, m_VK_cmd_buffer);
-        if (result == VK_SUCCESS) {
+        if (result != VK_SUCCESS) {
             SDLOGW("We can't begin command buffer(%d)!!!", result);
             return;
         }
-        */
+        //2. begin render pass.
+        SDE::Graphics::Resolution screen_size = m_mgr->GetScreenResolution();
+
+        VkRect2D render_area = {};
+        render_area.offset = { 0, 0 };
+        render_area.extent = { screen_size.GetWidth(), screen_size.GetHeight() };
+
+        VkClearValue clear_color = { 0.0f, 0.0f, 0.0f, 1.0f };
+        VkClearValue clear_depth = { 1.0f };
+
+        VkClearValue clear_values[2] = {
+            clear_color,
+            clear_depth
+        };
+        //2.1 write render pass begin info.
+        VkRenderPassBeginInfo rp_begin_info = {};
+        rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        rp_begin_info.pNext = nullptr;
+        rp_begin_info.renderPass = m_VK_render_pass;
+        rp_begin_info.framebuffer = m_VK_frame_buffer;
+        rp_begin_info.renderArea = render_area;
+        rp_begin_info.clearValueCount = 2;
+        rp_begin_info.pClearValues = clear_values;
+        //2.2 Begin render pass.
+        m_mgr->BeginRenderPass(rp_begin_info, m_VK_cmd_buffer);
+
+        //3. Start draw scene.
+        //3.1 Set viewport.
         Resolution res = m_mgr->GetScreenResolution();
         //------ Viewport
         VkViewport viewport = {};
@@ -83,7 +118,8 @@ void Sample1_DrawTriangle::Render()
         viewport.height = static_cast<float>(res.GetHeight());
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
-        m_mgr->SetMainViewportDynamically(viewport);
+        m_mgr->SetMainViewportDynamically(m_VK_cmd_buffer, viewport);
+        //3.2 update uniform buffer.
         //Update uniform buffer.
         //--- clip space.
         float clip_mat[16] = {
@@ -118,35 +154,49 @@ void Sample1_DrawTriangle::Render()
         }
 #endif
 
+        //3.3 bind uniform variable.(Set uniform variable)
         //Open graphics pipeline.
-        m_mgr->BindGraphicsPipeline(m_VK_main_graphics_pipeline);
-
+        m_mgr->BindGraphicsPipeline(m_VK_cmd_buffer, m_VK_main_graphics_pipeline);
         //Bind descriptor sets
         std::vector<VkDescriptorSet> descs = {m_VK_descriptor_set0};
         std::vector<uint32_t> dynamic_offs = {};
         m_mgr->BindDescriptorSets(m_VK_pipeline_layout, VK_PIPELINE_BIND_POINT_GRAPHICS, 0, descs, dynamic_offs);
-        
+        //3.4 bind vertex attributes.
         //Bind Vertex Buffer.
-        m_mgr->BindVertexBuffer(m_VK_ver_buffer, 0, 0); //vertex
-        m_mgr->BindVertexBuffer(m_VK_ver_color_buffer, 0, 1); //color
-        m_mgr->BindVertexBuffer(m_VK_ver_tex_buffer, 0, 2); //tex
+        m_mgr->BindVertexBuffer(m_VK_cmd_buffer, m_VK_ver_buffer, 0, 0); //vertex
+        m_mgr->BindVertexBuffer(m_VK_cmd_buffer, m_VK_ver_color_buffer, 0, 1); //color
+        m_mgr->BindVertexBuffer(m_VK_cmd_buffer, m_VK_ver_tex_buffer, 0, 2); //tex
         
         //std::vector<VkBuffer> va_buffers = {m_VK_ver_buffer, m_VK_ver_color_buffer};
         //std::vector<VkDeviceSize> va_buffer_offsets = {0, 0};
         //m_mgr->BindVertexBuffers(va_buffers, va_buffer_offsets, 0);
-       
-        m_mgr->BindIndiceBuffer(m_VK_indices_buffer, 0, VK_INDEX_TYPE_UINT16); //Bind indices.
 
-        //Draw
-        m_mgr->DrawByIndice(6, 1, 0, 0, 0);
+        m_mgr->BindIndiceBuffer(m_VK_cmd_buffer, m_VK_indices_buffer, 0, VK_INDEX_TYPE_UINT16); //Bind indices.
 
-        /*
+        //3.5 draw vertex attributes.
+        m_mgr->DrawByIndice(m_VK_cmd_buffer, 6, 1, 0, 0, 0);
+
+        //3.6 close render pass.
+        m_mgr->EndRenderPass(m_VK_cmd_buffer);
+
+        //4. Submit command buffer to queue.
+        //4.1 close recording command.
         result = m_mgr->EndCommandBuffer(m_VK_cmd_buffer);
-        if (result == VK_SUCCESS) {
+        if (result != VK_SUCCESS) {
             SDLOGW("We can't end command buffer(%d)!!!", result);
+            //return;
+        }
+
+        result = m_mgr->SubmitCommandBufferToMainQueue(m_VK_cmd_buffer);
+        if (result != VK_SUCCESS) {
+            SDLOGE("Submit sample1 cmd buffer failure(%d)!!!", result);
+        }
+
+        result = m_mgr->ResetCommandPool(m_VK_cmd_pool, VK_COMMAND_POOL_RESET_FLAG_BITS_MAX_ENUM);
+        if (result != VK_SUCCESS) {
+            SDLOGE("Reset sample1 cmd pool failure(%d)!!!", result);
             return;
         }
-        */
     }
 }
 
@@ -198,6 +248,26 @@ void Sample1_DrawTriangle::Destroy()
         m_frag_module = VK_NULL_HANDLE;
         m_mgr->DestroyShaderModule(m_vert_module);
         m_vert_module = VK_NULL_HANDLE;
+        //
+        m_mgr->DestroyRenderPass(m_VK_render_pass);
+        m_VK_render_pass = VK_NULL_HANDLE;
+        //for camera
+        m_mgr->DestroyFramebuffer(m_VK_frame_buffer);
+        m_VK_frame_buffer = VK_NULL_HANDLE;
+
+        m_mgr->DestroyImage(m_VK_color_buffer);
+        m_VK_color_buffer = VK_NULL_HANDLE;
+        m_mgr->ReleaseMemory(m_VK_color_buffer_memory);
+        m_VK_color_buffer_memory = VK_NULL_HANDLE;
+        m_mgr->DestroyImageView(m_VK_color_buffer_image_view);
+        m_VK_color_buffer_image_view = VK_NULL_HANDLE;
+
+        m_mgr->DestroyImage(m_VK_depth_buffer);
+        m_VK_depth_buffer = VK_NULL_HANDLE;
+        m_mgr->ReleaseMemory(m_VK_depth_buffer_memory);
+        m_VK_depth_buffer_memory = VK_NULL_HANDLE;
+        m_mgr->DestroyImageView(m_VK_depth_buffer_image_view);
+        m_VK_depth_buffer_image_view = VK_NULL_HANDLE;
         //
         m_mgr->FreeCommandBuffers(m_VK_cmd_pool, &m_VK_cmd_buffer, 1);
         m_VK_cmd_buffer = VK_NULL_HANDLE;
@@ -470,7 +540,6 @@ void Sample1_DrawTriangle::CreateTexture()
     }
 }
 
-
 void Sample1_DrawTriangle::CreateUniformBuffer()
 {
     SDLOG("Create Uniform Buffer!!!");
@@ -689,7 +758,6 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     mvp_descriptor_set_info.pTexelBufferView = nullptr;
     mvp_descriptor_set_info.dstArrayElement = 0;
 
-
     //------ VkDescriptorSetLayoutBinding(MainTexture)
     VkDescriptorImageInfo main_texture_i_info = {};
     main_texture_i_info.sampler = m_VK_main_texture_sampler;
@@ -893,8 +961,10 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     graphics_pipeline_c_info.layout = m_VK_pipeline_layout;
     graphics_pipeline_c_info.basePipelineHandle = VK_NULL_HANDLE;
     graphics_pipeline_c_info.basePipelineIndex = -1;
+    graphics_pipeline_c_info.renderPass = m_VK_render_pass;
+    graphics_pipeline_c_info.subpass = 0;
 
-    result = m_mgr->CreateMainRenderPassGraphicsPipeline(graphics_pipeline_c_info, nullptr, 0, m_VK_main_graphics_pipeline);
+    result = m_mgr->CreateGraphicsPipeline(graphics_pipeline_c_info, nullptr, m_VK_main_graphics_pipeline);
     if (result != VK_SUCCESS) {
         SDLOGE("create pipeline failure!!!");
         return;
@@ -909,7 +979,7 @@ void Sample1_DrawTriangle::CreateCommandBufferAndPool()
     cmd_pool_c_info.pNext = nullptr;
     cmd_pool_c_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; //VkCommandPoolCreateFlags
 
-    result = m_mgr->BeginCommandPool(cmd_pool_c_info, m_VK_cmd_pool);
+    result = m_mgr->CreateCommandPool(cmd_pool_c_info, m_VK_cmd_pool);
     if (result != VK_SUCCESS) {
         SDLOGE("Create sample1 cmd pool failure!!!");;
         return;
@@ -922,11 +992,19 @@ void Sample1_DrawTriangle::CreateCommandBufferAndPool()
     cmd_buf_a_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; //VkCommandBufferLevel
     cmd_buf_a_info.commandBufferCount = 1;
 
-    result = m_mgr->AllocateCommandBuffers(cmd_buf_a_info, &m_VK_cmd_buffer);
+    result = m_mgr->AllocateCommandBuffer(cmd_buf_a_info, m_VK_cmd_buffer);
     if (result != VK_SUCCESS) {
         SDLOGE("Allocate sample1 cmd buffer failure!!!");
         return;
     }
+
+    /*
+    result = m_mgr->ResetCommandPool(m_VK_cmd_pool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Reset sample1 cmd pool failure!!!");
+        return;
+    }
+    //*/
 }
 
 void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
@@ -1012,5 +1090,130 @@ void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
         return;
     }
     //2. create color and depth buffer.
+    SDE::Graphics::Resolution screen_size = m_mgr->GetScreenResolution();
+    //--- color buffer
+    VkImageCreateInfo cb_c_info = {};
+    cb_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    cb_c_info.pNext = nullptr;
+    cb_c_info.flags = 0; //We need to set flag when we want to use sparse texture data or sth.
+    cb_c_info.imageType = VK_IMAGE_TYPE_2D;
+    cb_c_info.mipLevels = 1;// mipmap levels. We don't want to create mip map in here.
+    cb_c_info.arrayLayers = 1; //Use it when data is 2d texture array.
+    cb_c_info.tiling = VK_IMAGE_TILING_OPTIMAL; //Set texture tiling mode. If the image is linked data in system memory, we need to use VK_IMAGE_TILING_LINEAR.
+    cb_c_info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    cb_c_info.usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT; //We will copy data to this image(trasnfer dst) and use it in shader(sampled).
+    cb_c_info.samples = VK_SAMPLE_COUNT_1_BIT;
+    cb_c_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    cb_c_info.queueFamilyIndexCount = 0;
+    cb_c_info.pQueueFamilyIndices = nullptr;
+    cb_c_info.extent.width = screen_size.GetWidth();
+    cb_c_info.extent.height = screen_size.GetHeight();
+    cb_c_info.extent.depth = 1;
+    cb_c_info.format = VK_FORMAT_R8G8B8A8_UNORM;
+
+    result = m_mgr->CreateImage(cb_c_info, m_VK_color_buffer);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Sample1 color buffer create failure.");
+        return;
+    }
+
+    result = m_mgr->AllocateMemoryAndBindToImage(m_VK_color_buffer, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0, m_VK_color_buffer_memory);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Sample1 color buffer memory allocate failure.");
+        return;
+    }
+
+    //--- depth buffer
+    VkImageCreateInfo db_c_info = {};
+    db_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    db_c_info.pNext = nullptr;
+    db_c_info.flags = 0; //We need to set flag when we want to use sparse texture data or sth.
+    db_c_info.imageType = VK_IMAGE_TYPE_2D;
+    db_c_info.mipLevels = 1;// mipmap levels. We don't want to create mip map in here.
+    db_c_info.arrayLayers = 1; //Use it when data is 2d texture array.
+    db_c_info.tiling = VK_IMAGE_TILING_OPTIMAL; //Set texture tiling mode. If the image is linked data in system memory, we need to use VK_IMAGE_TILING_LINEAR.
+    db_c_info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    db_c_info.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT; //We will copy data to this image(trasnfer dst) and use it in shader(sampled).
+    db_c_info.samples = VK_SAMPLE_COUNT_1_BIT;
+    db_c_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    db_c_info.queueFamilyIndexCount = 0;
+    db_c_info.pQueueFamilyIndices = nullptr;
+    db_c_info.extent.width = screen_size.GetWidth();
+    db_c_info.extent.height = screen_size.GetHeight();
+    db_c_info.extent.depth = 1;
+    db_c_info.format = VK_FORMAT_D24_UNORM_S8_UINT;
+
+    result = m_mgr->CreateImage(db_c_info, m_VK_depth_buffer);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Sample1 depth buffer create failure.");
+        return;
+    }
+
+    result = m_mgr->AllocateMemoryAndBindToImage(m_VK_depth_buffer, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0, m_VK_depth_buffer_memory);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Sample1 depth buffer memory allocate failure.");
+        return;
+    }
     //3. Create Frame Buffer.
+    VkImageViewCreateInfo img_view_cb_info = {};
+    img_view_cb_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    img_view_cb_info.pNext = nullptr;
+    img_view_cb_info.flags = 0;
+    img_view_cb_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    img_view_cb_info.image = m_VK_color_buffer;
+    img_view_cb_info.format = VK_FORMAT_R8G8B8A8_UNORM;
+    img_view_cb_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_cb_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_cb_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_cb_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_cb_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    img_view_cb_info.subresourceRange.baseMipLevel = 0;
+    img_view_cb_info.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+    img_view_cb_info.subresourceRange.baseArrayLayer = 0;
+    img_view_cb_info.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+    result = m_mgr->CreateImageView(img_view_cb_info, m_VK_color_buffer_image_view);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Sample1 depth buffer memory allocate failure.");
+        return;
+    }
+
+    VkImageViewCreateInfo img_view_db_info = {};
+    img_view_db_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    img_view_db_info.pNext = nullptr;
+    img_view_db_info.flags = 0;
+    img_view_db_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    img_view_db_info.image = m_VK_depth_buffer;
+    img_view_db_info.format = VK_FORMAT_D24_UNORM_S8_UINT;
+    img_view_db_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_db_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_db_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_db_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    img_view_db_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    img_view_db_info.subresourceRange.baseMipLevel = 0;
+    img_view_db_info.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+    img_view_db_info.subresourceRange.baseArrayLayer = 0;
+    img_view_db_info.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+    result = m_mgr->CreateImageView(img_view_db_info, m_VK_depth_buffer_image_view);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Sample1 depth buffer memory allocate failure.");
+        return;
+    }
+
+    VkImageView ivs[2] = {m_VK_color_buffer_image_view, m_VK_depth_buffer_image_view };
+
+    VkFramebufferCreateInfo fbo_c_info;
+    fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    fbo_c_info.pNext = nullptr;
+    fbo_c_info.flags = 0; //Reserved for future use
+    fbo_c_info.renderPass = m_VK_render_pass;
+    fbo_c_info.attachmentCount = 2;
+    fbo_c_info.pAttachments = ivs;
+    fbo_c_info.width = screen_size.GetWidth();
+    fbo_c_info.height = screen_size.GetHeight();
+    fbo_c_info.layers = 1;
+    result = m_mgr->CreateVkFramebuffer(fbo_c_info, m_VK_frame_buffer);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Sample1 depth buffer memory allocate failure.");
+        return;
+    }
 }

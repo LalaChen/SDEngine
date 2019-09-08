@@ -32,13 +32,11 @@ public:
     virtual void Initialize() = 0;
     virtual void Render() = 0;
     virtual void Destroy() = 0;
+public:
+    virtual VkImage GetColorBuffer() = 0;
 protected:
     virtual void CreateCommandBufferAndPool() = 0;
     virtual void CreateRenderPassAndFramebuffer() = 0;
 protected:
     VulkanAPITestManager *m_mgr;
-protected: //prepare for camera.
-    VkCommandPool m_VK_cmd_pool;
-    VkCommandBuffer m_VK_cmd_buffer;
-    VkFramebuffer m_VK_frame_buffer;
 };

@@ -482,7 +482,7 @@ void VulkanManager::InitializeSwapChain()
     sw_c_info.imageColorSpace = m_VK_desired_sur_fmt.colorSpace;
     sw_c_info.imageExtent = {m_screen_size.GetWidth(), m_screen_size.GetHeight()};
     sw_c_info.imageArrayLayers = 1;
-    sw_c_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    sw_c_info.imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     sw_c_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
     sw_c_info.queueFamilyIndexCount = 1;
     sw_c_info.pQueueFamilyIndices = &present_queue_fam_id;
@@ -517,6 +517,15 @@ void VulkanManager::InitializeSwapChain()
 
     if (vkCreateSemaphore(m_VK_device, &acq_sem_c_info, nullptr, &m_VK_acq_img_semaphore) != VK_SUCCESS) {
         throw std::runtime_error("failed to create acq img semaphore!");
+    }
+
+    VkSemaphoreCreateInfo render_scene_c_info = {};
+    render_scene_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    render_scene_c_info.pNext = nullptr;
+    render_scene_c_info.flags = 0;
+
+    if (vkCreateSemaphore(m_VK_device, &render_scene_c_info, nullptr, &m_VK_render_scene_semaphore) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create render scene semaphore!");
     }
 
     VkSemaphoreCreateInfo present_sem_c_info = {};
