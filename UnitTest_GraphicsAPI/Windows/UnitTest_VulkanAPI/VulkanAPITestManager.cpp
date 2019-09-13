@@ -65,6 +65,7 @@ void VulkanAPITestManager::RenderToScreen()
     }
 
     //Begin RenderPass.
+    /*
     VkRect2D render_area = {};
     render_area.offset = { 0, 0 };
     render_area.extent = { m_screen_size.GetWidth(), m_screen_size.GetHeight() };
@@ -79,10 +80,62 @@ void VulkanAPITestManager::RenderToScreen()
     rp_begin_info.pClearValues = &ClearColor;
 
     vkCmdBeginRenderPass(m_VK_main_cmd_buffer, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
+    */
+    ///*
+    VkImageBlit blit_param = {};
+    blit_param.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    blit_param.srcSubresource.baseArrayLayer = 0;
+    blit_param.srcSubresource.mipLevel = 0;
+    blit_param.srcSubresource.layerCount = 1;
+    blit_param.srcOffsets[0].x = 0;
+    blit_param.srcOffsets[0].y = 0;
+    blit_param.srcOffsets[0].z = 0;
+    blit_param.srcOffsets[1].x = m_screen_size.GetWidth();
+    blit_param.srcOffsets[1].y = m_screen_size.GetHeight();
+    blit_param.srcOffsets[1].z = 0;
+    blit_param.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    blit_param.dstSubresource.baseArrayLayer = 0;
+    blit_param.dstSubresource.mipLevel = 0;
+    blit_param.dstSubresource.layerCount = 1;
+    blit_param.dstOffsets[0].x = 0;
+    blit_param.dstOffsets[0].y = 0;
+    blit_param.dstOffsets[0].z = 0;
+    blit_param.dstOffsets[1].x = m_screen_size.GetWidth();
+    blit_param.dstOffsets[1].y = m_screen_size.GetHeight();
+    blit_param.dstOffsets[1].z = 0;
+
+    vkCmdBlitImage(m_VK_main_cmd_buffer,
+        m_samples[m_cur_sample_idx].GetRef().GetColorBuffer(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+        m_VK_sc_images[image_index], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit_param,
+        VK_FILTER_NEAREST);
+    //*/
+    /*
+    VkImageCopy copy_param = {};
+    copy_param.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    copy_param.srcSubresource.baseArrayLayer = 0;
+    copy_param.srcSubresource.mipLevel = 0;
+    copy_param.srcSubresource.layerCount = 1;
+    copy_param.srcOffset.x = 0;
+    copy_param.srcOffset.y = 0;
+    copy_param.srcOffset.z = 0;
+    copy_param.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    copy_param.dstSubresource.baseArrayLayer = 0;
+    copy_param.dstSubresource.mipLevel = 0;
+    copy_param.dstSubresource.layerCount = 1;
+    copy_param.dstOffset.x = 0;
+    copy_param.dstOffset.y = 0;
+    copy_param.dstOffset.z = 0;
+    copy_param.extent.width = m_screen_size.GetWidth();
+    copy_param.extent.height = m_screen_size.GetHeight();
+    copy_param.extent.depth = 1;
 
 
+    vkCmdCopyImage(m_VK_main_cmd_buffer,
+        m_samples[m_cur_sample_idx].GetRef().GetColorBuffer(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+        m_VK_sc_images[image_index], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copy_param);
+    //*/
     //End RenderPass.
-    vkCmdEndRenderPass(m_VK_main_cmd_buffer);
+    //vkCmdEndRenderPass(m_VK_main_cmd_buffer);
 
     //End command buffer
     if (vkEndCommandBuffer(m_VK_main_cmd_buffer) != VK_SUCCESS) {
@@ -109,9 +162,11 @@ void VulkanAPITestManager::RenderToScreen()
         return;
     }
 
-    result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
+    do {
+        result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
+    } while (result == VK_TIMEOUT);
     if (result != VK_SUCCESS) {
-        SDLOGW("Wait sync failure!!!");
+        SDLOGW("Wait sync failure(%d)!!!", result);
         return;
     }
 
@@ -309,7 +364,7 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
     std::memcpy(local_ptr, i_data_ptr, i_data_size);
 
     //--- iv. flush 
-    ///*
+    /*
     VkMappedMemoryRange mem_ranges = {};
     mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     mem_ranges.pNext = nullptr;
@@ -409,9 +464,11 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceBufferData(VkBuffer i_VK_buffer
         return result;
     }
 
-    result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_FALSE, MaxFenceWaitTime);
+    do {
+        result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
+    } while (result == VK_TIMEOUT);
     if (result != VK_SUCCESS) {
-        SDLOGW("Wait copy sync failure!!!");
+        SDLOGW("Wait sync failure(%d)!!!", result);
         return result;
     }
 
@@ -630,9 +687,11 @@ VkResult VulkanAPITestManager::RefreshLocalDeviceImage(VkImage i_VK_img, const v
             return result;
         }
 
-        result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_FALSE, MaxFenceWaitTime);
+        do {
+            result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
+        } while (result == VK_TIMEOUT);
         if (result != VK_SUCCESS) {
-            SDLOGW("Wait copy sync failure!!!");
+            SDLOGW("Wait sync failure(%d)!!!", result);
             return result;
         }
 
@@ -810,9 +869,9 @@ VkResult VulkanAPITestManager::AllocateDescriptorSet(const VkDescriptorSetAlloca
     return result;
 }
 
-void VulkanAPITestManager::BindDescriptorSets(VkPipelineLayout i_VK_pipeline_layout, VkPipelineBindPoint i_VK_pipeline_type, uint32_t i_first_set_id, const std::vector<VkDescriptorSet> &i_VK_desc_sets, const std::vector<uint32_t> &i_dynamic_offsets)
+void VulkanAPITestManager::BindDescriptorSets(VkCommandBuffer i_VK_cmd_buffer, VkPipelineLayout i_VK_pipeline_layout, VkPipelineBindPoint i_VK_pipeline_type, uint32_t i_first_set_id, const std::vector<VkDescriptorSet> &i_VK_desc_sets, const std::vector<uint32_t> &i_dynamic_offsets)
 {
-    vkCmdBindDescriptorSets(m_VK_main_cmd_buffer, i_VK_pipeline_type,
+    vkCmdBindDescriptorSets(i_VK_cmd_buffer, i_VK_pipeline_type,
         i_VK_pipeline_layout, i_first_set_id,
         static_cast<uint32_t>(i_VK_desc_sets.size()), i_VK_desc_sets.data(),
         static_cast<uint32_t>(i_dynamic_offsets.size()), i_dynamic_offsets.data());
@@ -886,13 +945,13 @@ VkResult VulkanAPITestManager::CreateCommandPool(const VkCommandPoolCreateInfo &
     return vkCreateCommandPool(m_VK_device, &cmd_pool_c_info, nullptr, &io_cmd_pool);
 }
 
-VkResult VulkanAPITestManager::ResetCommandPool(VkCommandPool i_cmd_pool, VkCommandPoolResetFlagBits i_flag)
+VkResult VulkanAPITestManager::ResetCommandPool(VkCommandPool i_cmd_pool, bool i_clear_resource)
 {
-    if (i_flag == VK_COMMAND_POOL_RESET_FLAG_BITS_MAX_ENUM) {
+    if (i_clear_resource == false) {
         return vkResetCommandPool(m_VK_device, i_cmd_pool, 0);
     }
     else {
-        return vkResetCommandPool(m_VK_device, i_cmd_pool, i_flag);
+        return vkResetCommandPool(m_VK_device, i_cmd_pool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT);
     }
 }
 
@@ -914,6 +973,16 @@ VkResult VulkanAPITestManager::BeginCommandBuffer(const VkCommandBufferBeginInfo
 VkResult VulkanAPITestManager::EndCommandBuffer(VkCommandBuffer i_cmd_buffer)
 {
     return vkEndCommandBuffer(i_cmd_buffer);
+}
+
+VkResult VulkanAPITestManager::ResetCommandBuffer(VkCommandBuffer i_cmd_buffer, bool i_reset_resource)
+{
+    if (i_reset_resource == false) {
+        return vkResetCommandBuffer(i_cmd_buffer, 0);
+    }
+    else {
+        return vkResetCommandBuffer(i_cmd_buffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
+    }
 }
 
 void VulkanAPITestManager::FreeCommandBuffers(VkCommandPool i_target_cmd_pool, VkCommandBuffer *i_cmd_buffers, uint32_t i_buffer_size)

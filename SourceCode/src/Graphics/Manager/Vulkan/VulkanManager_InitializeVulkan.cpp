@@ -496,7 +496,7 @@ void VulkanManager::InitializeSwapChain()
         throw std::runtime_error("failed to create swap chain!");
     }
 
-    if ( vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, nullptr) != VK_SUCCESS){
+    if ( vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, nullptr) != VK_SUCCESS) {
         throw std::runtime_error("failed to get image number of swap chain!");
     }
 

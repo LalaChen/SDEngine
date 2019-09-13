@@ -26,14 +26,14 @@ Sample1_DrawTriangle::Sample1_DrawTriangle(VulkanAPITestManager *i_mgr)
 , m_VK_main_texture_image_view(VK_NULL_HANDLE)
 , m_VK_main_texture_sampler(VK_NULL_HANDLE)
 //
-, m_VK_basic_uniform_buffer(VK_NULL_HANDLE)
-, m_VK_basic_uniform_buffer_memory(VK_NULL_HANDLE)
+, m_VK_basic_uniform_buffers{ VK_NULL_HANDLE, VK_NULL_HANDLE }
+, m_VK_basic_uniform_buffer_memories{ VK_NULL_HANDLE, VK_NULL_HANDLE }
 //
 , m_VK_pipeline_layout(VK_NULL_HANDLE)
 , m_vert_module(VK_NULL_HANDLE)
 , m_frag_module(VK_NULL_HANDLE)
 , m_VK_main_shader_set0_layout(VK_NULL_HANDLE)
-, m_VK_descriptor_set0(VK_NULL_HANDLE)
+, m_VK_descriptor_set0_uniforms{ VK_NULL_HANDLE, VK_NULL_HANDLE }
 , m_VK_descriptor_pool(VK_NULL_HANDLE)
 , m_VK_main_graphics_pipeline(VK_NULL_HANDLE)
 //
@@ -69,7 +69,48 @@ void Sample1_DrawTriangle::Render()
 {
     if (m_mgr != nullptr) {
         VkResult result = VK_SUCCESS;
-        //1. begin command buffer.
+        SDE::Graphics::Resolution screen_size = m_mgr->GetScreenResolution();
+        float asratio = static_cast<float>(screen_size.GetHeight()) / static_cast<float>(screen_size.GetWidth());
+        static float angle = 0.0f;
+        static float addAngle = 0.1f;
+        angle += addAngle;
+        //1. update uniform buffer.
+        //(Object 0)
+        //--- clip space.
+        float clip_mat[16] = {
+            1.0f,  0.0f, 0.0f, 0.0f,
+            0.0f, -1.0f, 0.0f, 0.0f,
+            0.0f,  0.0f, 1.0f, 0.0f,
+            0.0f,  0.0f, 0.0f, 1.0f };
+        m_uniform_buffer_datas[0].m_clip = Matrix4X4f(clip_mat);
+        //--- projection space.
+        m_uniform_buffer_datas[0].m_proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
+        //m_uniform_buffer_datas[0].m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
+
+        //--- view space.
+        m_uniform_buffer_datas[0].m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
+
+        //--- world space. 
+
+        m_uniform_buffer_datas[0].m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
+        result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffers[0], m_VK_basic_uniform_buffer_memories[0], &m_uniform_buffer_datas[0], sizeof(BasicUniformBuffer));
+
+        //(Object 1)
+        //--- clip space.
+        m_uniform_buffer_datas[1].m_clip = Matrix4X4f(clip_mat);
+        //--- projection space.
+        m_uniform_buffer_datas[1].m_proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
+        //m_uniform_buffer_datas[1].m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
+
+        //--- view space.
+        m_uniform_buffer_datas[1].m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
+
+        //--- world space.
+        m_uniform_buffer_datas[1].m_worid.translate(Vector3f(-0.2f, -0.2f, 0.1f, 1.0f));
+        //m_uniform_buffer_datas[1].m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
+        result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffers[1], m_VK_basic_uniform_buffer_memories[1], &m_uniform_buffer_datas[1], sizeof(BasicUniformBuffer));
+
+        //2. begin command buffer.
         VkCommandBufferBeginInfo cmd_buf_c_info = {};
         cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         cmd_buf_c_info.pNext = nullptr;
@@ -82,14 +123,12 @@ void Sample1_DrawTriangle::Render()
             return;
         }
         //2. begin render pass.
-        SDE::Graphics::Resolution screen_size = m_mgr->GetScreenResolution();
-
         VkRect2D render_area = {};
         render_area.offset = { 0, 0 };
         render_area.extent = { screen_size.GetWidth(), screen_size.GetHeight() };
 
-        VkClearValue clear_color = { 0.0f, 0.0f, 0.0f, 1.0f };
-        VkClearValue clear_depth = { 1.0f };
+        VkClearValue clear_color; clear_color.color = { 0.15f, 0.15f, 0.15f, 1.0f };
+        VkClearValue clear_depth; clear_depth.depthStencil = { 1.0f, 0 };
 
         VkClearValue clear_values[2] = {
             clear_color,
@@ -109,72 +148,38 @@ void Sample1_DrawTriangle::Render()
 
         //3. Start draw scene.
         //3.1 Set viewport.
-        Resolution res = m_mgr->GetScreenResolution();
         //------ Viewport
         VkViewport viewport = {};
         viewport.x = 0;
         viewport.y = 0;
-        viewport.width = static_cast<float>(res.GetWidth());
-        viewport.height = static_cast<float>(res.GetHeight());
+        viewport.width = static_cast<float>(screen_size.GetWidth());
+        viewport.height = static_cast<float>(screen_size.GetHeight());
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
         m_mgr->SetMainViewportDynamically(m_VK_cmd_buffer, viewport);
-        //3.2 update uniform buffer.
-        //Update uniform buffer.
-        //--- clip space.
-        float clip_mat[16] = {
-            1.0f,  0.0f, 0.0f, 0.0f,
-            0.0f, -1.0f, 0.0f, 0.0f,
-            0.0f,  0.0f, 0.5f, 0.0f,
-            0.0f,  0.0f, 0.5f, 1.0f };
-        m_uniform_buffer_data.m_clip = Matrix4X4f(clip_mat);
-        //--- projection space.
-        float asratio = viewport.height / viewport.width;
-        m_uniform_buffer_data.m_proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
-        //m_uniform_buffer_data.m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
+        for (uint32_t obj_id = 0; obj_id < 2; ++obj_id) {
+            //3.2 bind uniform variable.(Set uniform variable)
+            //Open graphics pipeline.
+            m_mgr->BindGraphicsPipeline(m_VK_cmd_buffer, m_VK_main_graphics_pipeline);
+            //Bind descriptor sets
+            std::vector<VkDescriptorSet> descs = { m_VK_descriptor_set0_uniforms[obj_id] };
+            std::vector<uint32_t> dynamic_offs = {};
+            m_mgr->BindDescriptorSets(m_VK_cmd_buffer, m_VK_pipeline_layout, VK_PIPELINE_BIND_POINT_GRAPHICS, 0, descs, dynamic_offs);
+            //3.4 bind vertex attributes.
+            //Bind Vertex Buffer.
+            m_mgr->BindVertexBuffer(m_VK_cmd_buffer, m_VK_ver_buffer, 0, 0); //vertex
+            m_mgr->BindVertexBuffer(m_VK_cmd_buffer, m_VK_ver_color_buffer, 0, 1); //color
+            m_mgr->BindVertexBuffer(m_VK_cmd_buffer, m_VK_ver_tex_buffer, 0, 2); //tex
 
-        //--- view space.
-        m_uniform_buffer_data.m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
+            //std::vector<VkBuffer> va_buffers = {m_VK_ver_buffer, m_VK_ver_color_buffer};
+            //std::vector<VkDeviceSize> va_buffer_offsets = {0, 0};
+            //m_mgr->BindVertexBuffers(va_buffers, va_buffer_offsets, 0);
 
-        //--- world space. 
-        static float angle = 0.0f;
-        static float addAngle = 0.1f;
-        angle += addAngle;
-        m_uniform_buffer_data.m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
-        result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffer, m_VK_basic_uniform_buffer_memory, &m_uniform_buffer_data, sizeof(BasicUniformBuffer));
-        if (result != VK_SUCCESS) {
-            SDLOGE("Refresg Host Buffer Data failure!!!");
+            m_mgr->BindIndiceBuffer(m_VK_cmd_buffer, m_VK_indices_buffer, 0, VK_INDEX_TYPE_UINT16); //Bind indices.
+
+            //3.5 draw vertex attributes.
+            m_mgr->DrawByIndice(m_VK_cmd_buffer, 6, 1, 0, 0, 0);
         }
-
-#ifdef USE_HOST_BUFFER
-        float *vb_mem_ptr = reinterpret_cast<float*>(m_mgr->MapDeviceMemoryTest(m_VK_ver_buf_memory, sizeof(vec3) * 4));
-        if (vb_mem_ptr != nullptr) {
-            vb_mem_ptr[0] += 0.0001f;
-            m_mgr->UnmapDeviceMemoryTest(m_VK_ver_buf_memory);
-        }
-#endif
-
-        //3.3 bind uniform variable.(Set uniform variable)
-        //Open graphics pipeline.
-        m_mgr->BindGraphicsPipeline(m_VK_cmd_buffer, m_VK_main_graphics_pipeline);
-        //Bind descriptor sets
-        std::vector<VkDescriptorSet> descs = {m_VK_descriptor_set0};
-        std::vector<uint32_t> dynamic_offs = {};
-        m_mgr->BindDescriptorSets(m_VK_pipeline_layout, VK_PIPELINE_BIND_POINT_GRAPHICS, 0, descs, dynamic_offs);
-        //3.4 bind vertex attributes.
-        //Bind Vertex Buffer.
-        m_mgr->BindVertexBuffer(m_VK_cmd_buffer, m_VK_ver_buffer, 0, 0); //vertex
-        m_mgr->BindVertexBuffer(m_VK_cmd_buffer, m_VK_ver_color_buffer, 0, 1); //color
-        m_mgr->BindVertexBuffer(m_VK_cmd_buffer, m_VK_ver_tex_buffer, 0, 2); //tex
-        
-        //std::vector<VkBuffer> va_buffers = {m_VK_ver_buffer, m_VK_ver_color_buffer};
-        //std::vector<VkDeviceSize> va_buffer_offsets = {0, 0};
-        //m_mgr->BindVertexBuffers(va_buffers, va_buffer_offsets, 0);
-
-        m_mgr->BindIndiceBuffer(m_VK_cmd_buffer, m_VK_indices_buffer, 0, VK_INDEX_TYPE_UINT16); //Bind indices.
-
-        //3.5 draw vertex attributes.
-        m_mgr->DrawByIndice(m_VK_cmd_buffer, 6, 1, 0, 0, 0);
 
         //3.6 close render pass.
         m_mgr->EndRenderPass(m_VK_cmd_buffer);
@@ -184,7 +189,6 @@ void Sample1_DrawTriangle::Render()
         result = m_mgr->EndCommandBuffer(m_VK_cmd_buffer);
         if (result != VK_SUCCESS) {
             SDLOGW("We can't end command buffer(%d)!!!", result);
-            //return;
         }
 
         result = m_mgr->SubmitCommandBufferToMainQueue(m_VK_cmd_buffer);
@@ -192,7 +196,7 @@ void Sample1_DrawTriangle::Render()
             SDLOGE("Submit sample1 cmd buffer failure(%d)!!!", result);
         }
 
-        result = m_mgr->ResetCommandPool(m_VK_cmd_pool, VK_COMMAND_POOL_RESET_FLAG_BITS_MAX_ENUM);
+        result = m_mgr->ResetCommandBuffer(m_VK_cmd_buffer, false);
         if (result != VK_SUCCESS) {
             SDLOGE("Reset sample1 cmd pool failure(%d)!!!", result);
             return;
@@ -230,10 +234,12 @@ void Sample1_DrawTriangle::Destroy()
         m_mgr->DestroySampler(m_VK_main_texture_sampler);
         m_VK_main_texture_sampler = VK_NULL_HANDLE;
         //
-        m_mgr->ReleaseMemory(m_VK_basic_uniform_buffer_memory);
-        m_VK_basic_uniform_buffer_memory = VK_NULL_HANDLE;
-        m_mgr->DestroyBuffer(m_VK_basic_uniform_buffer);
-        m_VK_basic_uniform_buffer = VK_NULL_HANDLE;
+        for (uint32_t i = 0; i < 2;++i) {
+            m_mgr->ReleaseMemory(m_VK_basic_uniform_buffer_memories[i]);
+            m_VK_basic_uniform_buffer_memories[i] = VK_NULL_HANDLE;
+            m_mgr->DestroyBuffer(m_VK_basic_uniform_buffers[i]);
+            m_VK_basic_uniform_buffers[i] = VK_NULL_HANDLE;
+        }
         //
         m_mgr->DestroyDesciptorSetLayout(m_VK_main_shader_set0_layout);
         m_VK_main_shader_set0_layout = VK_NULL_HANDLE;
@@ -545,13 +551,16 @@ void Sample1_DrawTriangle::CreateUniformBuffer()
     SDLOG("Create Uniform Buffer!!!");
     VkResult result = VK_SUCCESS;
     //Create basic uniform buffer
-    result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, sizeof(BasicUniformBuffer), m_VK_basic_uniform_buffer);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Create uniform buffer failure!!!");
-    }
-    result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_basic_uniform_buffer, m_VK_basic_uniform_buffer_memory);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Allocate uniform buffer failure!!!");
+    for (uint32_t i = 0; i < 2; ++i) {
+        result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, sizeof(BasicUniformBuffer), m_VK_basic_uniform_buffers[i]);
+        if (result != VK_SUCCESS) {
+            SDLOGE("Create uniform buffer[i] failure!!!", i);
+        }
+
+        result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_basic_uniform_buffers[i], m_VK_basic_uniform_buffer_memories[i]);
+        if (result != VK_SUCCESS) {
+            SDLOGE("Allocate uniform buffer[i] failure!!!", i);
+        }
     }
 }
 
@@ -662,9 +671,9 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     img_view_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
     img_view_c_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     img_view_c_info.subresourceRange.baseMipLevel = 0;
-    img_view_c_info.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+    img_view_c_info.subresourceRange.levelCount = 1;
     img_view_c_info.subresourceRange.baseArrayLayer = 0;
-    img_view_c_info.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+    img_view_c_info.subresourceRange.layerCount = 1;
 
     result = m_mgr->CreateImageView(img_view_c_info, m_VK_main_texture_image_view);
     if (result != VK_SUCCESS) {
@@ -720,69 +729,78 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     image_type.descriptorCount = 1;
     types.push_back(image_type);
 
-    result = m_mgr->CreateDescriptorPool(types, 1, false, m_VK_descriptor_pool);
+    result = m_mgr->CreateDescriptorPool(types, 2, false, m_VK_descriptor_pool);
     if (result != VK_SUCCESS) {
         SDLOGE("Create descriptror pool failure!!!");
         return;
     }
 
     //--- v. Allocate descriptor set. (space for uniform data)
+    //Object 0.
     VkDescriptorSetAllocateInfo desc_set_a_info = {};
     desc_set_a_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     desc_set_a_info.pNext = nullptr;
     desc_set_a_info.descriptorPool = m_VK_descriptor_pool;
     desc_set_a_info.descriptorSetCount = 1;
     desc_set_a_info.pSetLayouts = &m_VK_main_shader_set0_layout;
-    result = m_mgr->AllocateDescriptorSet(desc_set_a_info, m_VK_descriptor_set0);
+    result = m_mgr->AllocateDescriptorSet(desc_set_a_info, m_VK_descriptor_set0_uniforms[0]);
     if (result != VK_SUCCESS) {
-        SDLOGE("Allocate descriptror set failure!!!");
+        SDLOGE("Allocate descriptror set uniforms 0 failure!!!");
+        return;
+    }
+    //Object 1.
+    result = m_mgr->AllocateDescriptorSet(desc_set_a_info, m_VK_descriptor_set0_uniforms[1]);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Allocate descriptror set uniforms 1 failure!!!");
         return;
     }
 
     //--- vi. Update descriptor set.(call it before binding and call it once. don't need to call it every frame.)
     //------ VkDescriptorBufferInfo(BasicUnifromBuffer)
-    VkDescriptorBufferInfo basic_uniform_b_info = {};
-    basic_uniform_b_info.buffer = m_VK_basic_uniform_buffer;
-    basic_uniform_b_info.offset = 0;
-    basic_uniform_b_info.range = sizeof(BasicUniformBuffer);
+    //Object 0.
+    for (uint32_t i = 0; i < 2; ++i) {
+        VkDescriptorBufferInfo basic_uniform_b_info = {};
+        basic_uniform_b_info.buffer = m_VK_basic_uniform_buffers[i];
+        basic_uniform_b_info.offset = 0;
+        basic_uniform_b_info.range = sizeof(BasicUniformBuffer);
 
-    VkWriteDescriptorSet mvp_descriptor_set_info = {};
-    mvp_descriptor_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    mvp_descriptor_set_info.pNext = nullptr;
-    mvp_descriptor_set_info.dstSet = m_VK_descriptor_set0;
-    mvp_descriptor_set_info.dstBinding = 0; //binding 0, set 0
-    mvp_descriptor_set_info.descriptorCount = 1;
-    mvp_descriptor_set_info.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    mvp_descriptor_set_info.pBufferInfo = &basic_uniform_b_info;
-    mvp_descriptor_set_info.pImageInfo = nullptr;
-    mvp_descriptor_set_info.pTexelBufferView = nullptr;
-    mvp_descriptor_set_info.dstArrayElement = 0;
+        VkWriteDescriptorSet mvp_descriptor_set_info = {};
+        mvp_descriptor_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        mvp_descriptor_set_info.pNext = nullptr;
+        mvp_descriptor_set_info.dstSet = m_VK_descriptor_set0_uniforms[i];
+        mvp_descriptor_set_info.dstBinding = 0; //binding 0, set 0
+        mvp_descriptor_set_info.descriptorCount = 1;
+        mvp_descriptor_set_info.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        mvp_descriptor_set_info.pBufferInfo = &basic_uniform_b_info;
+        mvp_descriptor_set_info.pImageInfo = nullptr;
+        mvp_descriptor_set_info.pTexelBufferView = nullptr;
+        mvp_descriptor_set_info.dstArrayElement = 0;
 
-    //------ VkDescriptorSetLayoutBinding(MainTexture)
-    VkDescriptorImageInfo main_texture_i_info = {};
-    main_texture_i_info.sampler = m_VK_main_texture_sampler;
-    main_texture_i_info.imageView = m_VK_main_texture_image_view;
-    main_texture_i_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        //------ VkDescriptorSetLayoutBinding(MainTexture)
+        VkDescriptorImageInfo main_texture_i_info = {};
+        main_texture_i_info.sampler = m_VK_main_texture_sampler;
+        main_texture_i_info.imageView = m_VK_main_texture_image_view;
+        main_texture_i_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
-    VkWriteDescriptorSet main_descriptor_set_info = {};
-    main_descriptor_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    main_descriptor_set_info.pNext = nullptr;
-    main_descriptor_set_info.dstSet = m_VK_descriptor_set0;
-    main_descriptor_set_info.dstBinding = 1; //binding 1, set 0
-    main_descriptor_set_info.descriptorCount = 1;
-    main_descriptor_set_info.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    main_descriptor_set_info.pBufferInfo = nullptr;
-    main_descriptor_set_info.pImageInfo = &main_texture_i_info;
-    main_descriptor_set_info.pTexelBufferView = nullptr;
-    main_descriptor_set_info.dstArrayElement = 0;
+        VkWriteDescriptorSet main_descriptor_set_info = {};
+        main_descriptor_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        main_descriptor_set_info.pNext = nullptr;
+        main_descriptor_set_info.dstSet = m_VK_descriptor_set0_uniforms[i];
+        main_descriptor_set_info.dstBinding = 1; //binding 1, set 0
+        main_descriptor_set_info.descriptorCount = 1;
+        main_descriptor_set_info.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        main_descriptor_set_info.pBufferInfo = nullptr;
+        main_descriptor_set_info.pImageInfo = &main_texture_i_info;
+        main_descriptor_set_info.pTexelBufferView = nullptr;
+        main_descriptor_set_info.dstArrayElement = 0;
 
-    std::vector<VkWriteDescriptorSet> descriptor_set_infos = {
-        mvp_descriptor_set_info,
-        main_descriptor_set_info
-    };
+        std::vector<VkWriteDescriptorSet> descriptor_set_infos = {
+            mvp_descriptor_set_info,
+            main_descriptor_set_info
+        };
 
-    m_mgr->UpdateDescriptorSet(descriptor_set_infos);
-
+        m_mgr->UpdateDescriptorSet(descriptor_set_infos);
+    }
     //3. build shader.
     //--- i. read shader file.
     FileData vert_shader, frag_shader;
@@ -884,7 +902,7 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     depth_stencil_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     depth_stencil_c_info.pNext = nullptr;
     depth_stencil_c_info.flags = 0;
-    depth_stencil_c_info.depthTestEnable = VK_FALSE; //glEnable(GL_DEPTH_TEST);
+    depth_stencil_c_info.depthTestEnable = VK_TRUE; //glEnable(GL_DEPTH_TEST);
     depth_stencil_c_info.depthWriteEnable = VK_TRUE; //glDepthMask(GL_TRUE);
     depth_stencil_c_info.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL; //glDepthFunc(GL_LEQ)
     depth_stencil_c_info.minDepthBounds = 0.0f;
@@ -997,14 +1015,6 @@ void Sample1_DrawTriangle::CreateCommandBufferAndPool()
         SDLOGE("Allocate sample1 cmd buffer failure!!!");
         return;
     }
-
-    /*
-    result = m_mgr->ResetCommandPool(m_VK_cmd_pool, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Reset sample1 cmd pool failure!!!");
-        return;
-    }
-    //*/
 }
 
 void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
@@ -1015,20 +1025,20 @@ void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
     //--- Color attachment description.
     VkAttachmentDescription attachment_descs[2] = { {},{} }; //0 :color, 1: depth
     attachment_descs[0].flags = 0;
-    attachment_descs[0].format = VK_FORMAT_B8G8R8A8_UNORM;
+    attachment_descs[0].format = VK_FORMAT_R8G8B8A8_UNORM;
     attachment_descs[0].samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
     attachment_descs[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //Clear before using. If we set VK_ATTACHMENT_LOAD_OP_DONT_CARE, we can't clear via clearcolor.
-    attachment_descs[0].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
+    attachment_descs[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
     attachment_descs[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;//
     attachment_descs[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;//
     attachment_descs[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    attachment_descs[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    attachment_descs[0].finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     //--- Depth attachment description.
     attachment_descs[1].flags = 0;
-    attachment_descs[1].format = VK_FORMAT_D24_UNORM_S8_UINT;
+    attachment_descs[1].format = VK_FORMAT_D32_SFLOAT_S8_UINT;
     attachment_descs[1].samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
     attachment_descs[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    attachment_descs[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
+    attachment_descs[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
     attachment_descs[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;//
     attachment_descs[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;//
     attachment_descs[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -1168,12 +1178,12 @@ void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
     img_view_cb_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
     img_view_cb_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     img_view_cb_info.subresourceRange.baseMipLevel = 0;
-    img_view_cb_info.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+    img_view_cb_info.subresourceRange.levelCount = 1;
     img_view_cb_info.subresourceRange.baseArrayLayer = 0;
-    img_view_cb_info.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+    img_view_cb_info.subresourceRange.layerCount = 1;
     result = m_mgr->CreateImageView(img_view_cb_info, m_VK_color_buffer_image_view);
     if (result != VK_SUCCESS) {
-        SDLOGE("Sample1 depth buffer memory allocate failure.");
+        SDLOGE("Sample1 color buffer image view failure.");
         return;
     }
 
@@ -1188,20 +1198,20 @@ void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
     img_view_db_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
     img_view_db_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
     img_view_db_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-    img_view_db_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    img_view_db_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
     img_view_db_info.subresourceRange.baseMipLevel = 0;
-    img_view_db_info.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+    img_view_db_info.subresourceRange.levelCount = 1;
     img_view_db_info.subresourceRange.baseArrayLayer = 0;
-    img_view_db_info.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+    img_view_db_info.subresourceRange.layerCount = 1;
     result = m_mgr->CreateImageView(img_view_db_info, m_VK_depth_buffer_image_view);
     if (result != VK_SUCCESS) {
-        SDLOGE("Sample1 depth buffer memory allocate failure.");
+        SDLOGE("Sample1 depth buffer image view failure.");
         return;
     }
 
-    VkImageView ivs[2] = {m_VK_color_buffer_image_view, m_VK_depth_buffer_image_view };
+    VkImageView ivs[2] = {m_VK_color_buffer_image_view, m_VK_depth_buffer_image_view};
 
-    VkFramebufferCreateInfo fbo_c_info;
+    VkFramebufferCreateInfo fbo_c_info = {};
     fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     fbo_c_info.pNext = nullptr;
     fbo_c_info.flags = 0; //Reserved for future use
@@ -1213,7 +1223,7 @@ void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
     fbo_c_info.layers = 1;
     result = m_mgr->CreateVkFramebuffer(fbo_c_info, m_VK_frame_buffer);
     if (result != VK_SUCCESS) {
-        SDLOGE("Sample1 depth buffer memory allocate failure.");
+        SDLOGE("Sample1 depth buffer image view failure.");
         return;
     }
 }

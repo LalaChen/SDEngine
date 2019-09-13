@@ -76,7 +76,7 @@ void VulkanManager::PrintSystemInformation()
             IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
             );
     }
-
+    SDLOG("Descriptor Information:");
 }
 
 //-------------------------- end of namespace Graphics ----------------------------

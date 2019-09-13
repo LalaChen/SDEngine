@@ -35,8 +35,8 @@ protected:
     VkDeviceMemory m_VK_ibuf_memory;
 protected:
 //Vertex Host memory buffer.
-    VkBuffer m_VK_basic_uniform_buffer;
-    VkDeviceMemory m_VK_basic_uniform_buffer_memory;
+    VkBuffer m_VK_basic_uniform_buffers[2];
+    VkDeviceMemory m_VK_basic_uniform_buffer_memories[2];
 protected:
 //Texture
     VkImage m_VK_main_texture;
@@ -49,7 +49,7 @@ protected:
     VkShaderModule m_vert_module;
     VkShaderModule m_frag_module;
     VkDescriptorSetLayout m_VK_main_shader_set0_layout;
-    VkDescriptorSet m_VK_descriptor_set0;
+    VkDescriptorSet m_VK_descriptor_set0_uniforms[2];
     VkDescriptorPool m_VK_descriptor_pool;
     VkPipeline m_VK_main_graphics_pipeline;
 protected:
@@ -69,5 +69,5 @@ protected:
     VkCommandPool m_VK_cmd_pool;
     VkCommandBuffer m_VK_cmd_buffer;
 protected:
-    BasicUniformBuffer m_uniform_buffer_data;
+    BasicUniformBuffer m_uniform_buffer_datas[2];
 };

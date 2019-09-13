@@ -12,6 +12,9 @@ public:
 public:
     void InitializeGraphicsSystem(const EventArg &i_arg) override;
     void ReleaseGraphicsSystem() override;
+public:
+    VkRenderPass GetMainRenderPass() { return m_VK_present_render_pass; }
+    VkCommandBuffer GetMainCommandBuffer() { return m_VK_main_cmd_buffer; }
 public: //Memory Related.
     VkResult AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkBuffer i_VK_buffer, VkDeviceMemory &io_VK_memory);
     VkResult AllocateMemoryAndBindToImage(VkImage i_VK_img, VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkDeviceMemory &io_VK_memory);
@@ -44,7 +47,7 @@ public: //Shader Related.
     VkResult CreateDescriptorPool(const std::vector<VkDescriptorPoolSize> &i_descriptor_pool_sizes, uint32_t i_max_set_num, bool i_free_individual_sets, VkDescriptorPool &io_descriptor_pool);
     void DestroyDescriptorPool(VkDescriptorPool i_VK_descriptor_pool);
     VkResult AllocateDescriptorSet(const VkDescriptorSetAllocateInfo &i_a_info, VkDescriptorSet &io_descriptor_set);
-    void BindDescriptorSets(VkPipelineLayout i_VK_pipeline_layout, VkPipelineBindPoint i_VK_pipeline_type, uint32_t i_first_set_id, const std::vector<VkDescriptorSet> &i_VK_desc_sets, const std::vector<uint32_t> &i_dynamic_offsets);
+    void BindDescriptorSets(VkCommandBuffer i_VK_cmd_buffer, VkPipelineLayout i_VK_pipeline_layout, VkPipelineBindPoint i_VK_pipeline_type, uint32_t i_first_set_id, const std::vector<VkDescriptorSet> &i_VK_desc_sets, const std::vector<uint32_t> &i_dynamic_offsets);
     void UpdateDescriptorSet(const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos);
 
     VkResult CreateSampler(const VkSamplerCreateInfo &i_c_info, VkSampler &io_VK_sampler);
@@ -62,16 +65,19 @@ public:
     void DestroyFramebuffer(VkFramebuffer i_framebuffer);
 public:
     VkResult CreateCommandPool(const VkCommandPoolCreateInfo &i_cmd_p_c_info, VkCommandPool &io_cmd_pool);
-    VkResult ResetCommandPool(VkCommandPool i_cmd_pool, VkCommandPoolResetFlagBits i_flag);
+    VkResult ResetCommandPool(VkCommandPool i_cmd_pool, bool i_clear_resource);
     void DestroyCommandPool(VkCommandPool i_cmd_pool);
 
     VkResult AllocateCommandBuffer(const VkCommandBufferAllocateInfo &i_cmd_buf_a_info, VkCommandBuffer &io_cmd_buffer);
     VkResult BeginCommandBuffer(const VkCommandBufferBeginInfo &i_cmd_buf_b_info, VkCommandBuffer i_cmd_buffer);
     VkResult EndCommandBuffer(VkCommandBuffer i_cmd_buffer);
+    VkResult ResetCommandBuffer(VkCommandBuffer i_cmd_buffer, bool i_reset_resource);
     void FreeCommandBuffers(VkCommandPool i_target_cmd_pool, VkCommandBuffer *i_cmd_buffers, uint32_t i_buffer_size);
 public: //Set Dynamic State Function.
     void SetViewportsDynamically(VkCommandBuffer i_cmd_buffer, const std::vector<VkViewport> &i_viewports);
     void SetMainViewportDynamically(VkCommandBuffer i_cmd_buffer, const VkViewport &i_viewport);
+    void SetScissorDynamically(VkCommandBuffer i_cmd_buffer, const std::vector<VkRect2D> &i_rect);
+    void SetMainScissorDynamically(VkCommandBuffer i_cmd_buffer, const VkRect2D &i_rect);
 public: //Draw function.
     void BindVertexBuffer(VkCommandBuffer i_cmd_buffer, VkBuffer i_VK_buffer, VkDeviceSize i_VK_offset, uint32_t i_binding_id);
     void BindVertexBuffers(VkCommandBuffer i_cmd_buffer, const std::vector<VkBuffer> &i_va_buffers, const std::vector<VkDeviceSize> &i_va_offset, uint32_t i_first_bind_id);

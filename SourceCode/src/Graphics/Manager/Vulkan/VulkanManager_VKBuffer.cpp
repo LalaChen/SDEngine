@@ -172,9 +172,11 @@ VkResult VulkanManager::CopyVkBuffer(
         return result;
     }
 
-    result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_FALSE, MaxFenceWaitTime);
+    do {
+        result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
+    } while (result == VK_TIMEOUT);
     if (result != VK_SUCCESS) {
-        SDLOGW("Wait copy sync failure!!!");
+        SDLOGW("Wait sync failure(%d)!!!", result);
         return result;
     }
 
