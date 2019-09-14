@@ -35,6 +35,8 @@ SOFTWARE.
 
 #include <glm/glm.hpp>
 
+#include "SDEngineMacro.h"
+
 //-------------------------- start of namespace SDE ---------------------------
 namespace SDE
 {
@@ -46,10 +48,10 @@ class Matrix4X4f;
 class Quaternion;
 
 /*! \class Vector3f
-    Class Vector3f is used to represent position or vector in 3D space. The different between the two \n
-    is the w component. If this one is represented position, w should be equal to 1.0. Otherwise, the \n
-    value is 0.0. We also provide a series of operator for convenience. Please note that the all operator \n
-    don't consider w component. We will keep the w equal to 1.0(position) or 0.0(vector).
+ *  Class Vector3f is used to represent position or vector in 3D space. The different between the two
+ *  is the w component. If this one is represented position, w should be equal to 1.0. Otherwise, the
+ *  value is 0.0. We also provide a series of operator for convenience. Please note that the all operator
+ *  don't consider w component. We will keep the w equal to 1.0(position) or 0.0(vector).
  */
 class SDENGINE_CLASS Vector3f
 {

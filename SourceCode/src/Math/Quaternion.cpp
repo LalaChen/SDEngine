@@ -85,6 +85,11 @@ Quaternion::Quaternion(float i_x_angle, float i_y_angle, float i_z_angle)
             i_z_angle * ONE_DEGREE_OF_PI));
 }
 
+Quaternion::Quaternion(float i_x, float i_y, float i_z, float i_w)
+: m_quat(i_w, i_x, i_y, i_z)
+{
+}
+
 Quaternion::Quaternion(const glm::quat &i_src)
 : m_quat(i_src)
 {

@@ -39,6 +39,7 @@ SOFTWARE.
 #include "Matrix4X4f.h"
 #include "Vector3f.h"
 #include "Quaternion.h"
+#include "Transform.h"
 //-------- Basic --------
 #include "Basic/Object/NullRefException.h"
 #include "Basic/Object/Object.h"

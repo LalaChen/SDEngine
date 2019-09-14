@@ -22,14 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/*! \file      MathConstant.h
- *  \brief     declare all math constant.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/04/21
- *  \copyright MIT License.
- */
-
-#include "SDEngineMacro.h"
+#include "Transform.h"
 
 //-------------------------- start of namespace SDE ---------------------------
 namespace SDE
@@ -37,43 +30,52 @@ namespace SDE
 //-------------------------- start of namespace Math --------------------------
 namespace Math
 {
+//--------------------- static part -----------------------------------
+Transform Transform::DecomposeMatrixToTransform(const Matrix4X4f &i_src)
+{
+	Transform result;
+    Matrix4X4f::decompose(i_src, result.m_scale, result.m_rotation, result.m_skew, result.m_position, result.m_perspective);
+	return result;
+}
 
-/*! \var const float PI;
- *  \brief PI
- */
-const float PI = 3.1415926f;
+Transform::Transform()
+: m_position(0.0f, 0.0f, 0.0f, 1.0f)
+, m_rotation(0.0f, 0.0f, 0.0f, 1.0f)
+, m_scale(1.0f, 1.0f, 1.0f, 0.0f)
+{
+}
 
-/*! \var const float TWO_PI;
- *  \brief 2PI.
- */
-const float TWO_PI = 6.2831852f;
+Transform::Transform(const Matrix4X4f &i_trans)
+{
+    Matrix4X4f::decompose(i_trans, m_scale, m_rotation, m_skew, m_position, m_perspective);
+}
 
-/*! \var const float ONE_OVER_PI;
- *  \brief 1 / PI.
- */
-const float ONE_OVER_PI = 0.3183099f;
+Transform::~Transform()
+{
+}
 
-/*! \var const float TWO_OVER_PI;
- *  \brief 1 / (2 * PI).
- */
-const float TWO_OVER_PI = 0.1591549f;
+Matrix4X4f Transform::MakeAffineTransformMatrix() const
+{
+    Matrix4X4f result;
+    result.translate(m_position);
+    result.rotate(m_rotation);
+    result.scale(m_scale);
+    return result;
+}
 
-/*! \var const float ONE_DEGREE_OF_PI;
- *  \brief PI / 180.0f. For degree converting.
- */
-const float ONE_DEGREE_OF_PI = 0.0174533f; //PI / 180.0f
-
-/*! \var const float FLOATING_ERROR;
- *  \brief floating error.
- */
-const float FLOATING_ERROR = 0.000001f;
-
-/*! \var const float FULL_DEGREE;
- *  \brief 1 circle = 360.0.
- */
-const float FULL_DEGREE = 360.0f;
+Transform& Transform::operator=(const Transform &i_src)
+{
+    if (&i_src == this) {
+        m_position = i_src.m_position;
+        m_rotation = i_src.m_rotation;
+        m_scale = i_src.m_scale;
+        m_skew = i_src.m_skew;
+        m_perspective = i_src.m_perspective;
+    }
+    return *this;
+}
 
 //--------------------------- end of namespace Math ----------------------------
 }
-//---------------------------- end of namespace SDE ----------------------------
+//--------------------------- end of namespace SDE -----------------------------
 }

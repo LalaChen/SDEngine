@@ -46,7 +46,7 @@ class Matrix4X4f;
 class Vector3f;
 
 /*! \class Quaternion
-    Class Quaternion is used to represent rotation in 3D space.
+ *  Class Quaternion is used to represent rotation in 3D space.
  */
 class SDENGINE_CLASS Quaternion
 {
@@ -106,6 +106,15 @@ public:
      *  \brief Euler constructor.
      */
     Quaternion(float i_x_angle, float i_y_angle, float i_z_angle);
+
+    /*! \fn Quaternion(float i_x, float i_y, float i_z, float i_w);
+     *  \param [in] i_x x component.
+     *  \param [in] i_y y component.
+     *  \param [in] i_z z component.
+     *  \param [in] i_w w component.
+     *  \brief constructor.
+     */
+    Quaternion(float i_x, float i_y, float i_z, float i_w);
 
     /*! \fn Quaternion(const glm::quat &i_quat);
      *  \param [in] i_quat target quat.

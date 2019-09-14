@@ -36,6 +36,8 @@ SOFTWARE.
 #include <glm/glm.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
+#include "SDEngineMacro.h"
+
 //---------------------------- start of namespace SDE ----------------------------
 namespace SDE
 {
@@ -47,9 +49,9 @@ class Quaternion;
 class Vector3f;
 
 /*! \class Matrix4X4f
-    Class Matrix4X4f is used to represent the transformation of objects in 3D space. Please note that \n
-    the Matrix4X4f is column-major. (glm::mat4)
-*/
+ *  Class Matrix4X4f is used to represent the transformation of objects in 3D space. Please note that
+ *  the Matrix4X4f is column-major. (glm::mat4)
+ */
 class SDENGINE_CLASS Matrix4X4f
 {
 public:
