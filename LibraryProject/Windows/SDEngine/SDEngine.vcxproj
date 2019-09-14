@@ -57,6 +57,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKBuffer.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKDeviceMemory.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKImage.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Mesh\MeshData.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Color4f.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Vec.cpp" />
@@ -65,6 +66,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\VertexBuffer\VertexBuffer.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Math\Matrix4X4f.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Math\Quaternion.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Math\Transform.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Math\Vector3f.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>
@@ -112,6 +114,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4Manager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Mesh\MeshData.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Texture\Texture.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Vec\Color4f.h" />
@@ -122,6 +125,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Math\MathConstant.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Math\Matrix4X4f.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Math\Quaternion.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Math\Transform.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Math\Vector3f.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngine.h" />
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h" />

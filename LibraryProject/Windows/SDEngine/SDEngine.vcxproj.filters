@@ -156,6 +156,12 @@
     <Filter Include="src\Graphics\Texture">
       <UniqueIdentifier>{f7387136-bdee-4b18-90bb-1081974740ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Graphics\Mesh">
+      <UniqueIdentifier>{94ab3ce0-e677-4b70-ab34-78d5b8a19a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\Mesh">
+      <UniqueIdentifier>{0073714d-82c2-41db-8bee-f2603a1ba9ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -301,6 +307,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\TextureType_Vulkan.cpp">
       <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Mesh\MeshData.cpp">
+      <Filter>src\Graphics\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Math\Transform.cpp">
+      <Filter>src\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -480,6 +492,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\TextureType_Vulkan.h">
       <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Mesh\MeshData.h">
+      <Filter>include\Graphics\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Math\Transform.h">
+      <Filter>include\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

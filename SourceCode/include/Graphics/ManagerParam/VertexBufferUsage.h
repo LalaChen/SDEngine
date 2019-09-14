@@ -51,7 +51,8 @@ enum VertexBufferUsageEnum
     VertexBufferUsage_TANGENT_BUFFER, /*!< Use for storing tangents.*/
     VertexBufferUsage_BINORMAL_BUFFER , /*!< Use for storing binormals.*/
     VertexBufferUsage_ELEMENT_BUFFER, /*!< Use for storing elements.*/
-    VertexBufferUsage_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+    VertexBufferUsage_MAX_DEFINE_VALUE, /*!< Bound of enum.*/
+    VertexBufferUsage_BUFFER_GROUP = VertexBufferUsage_BINORMAL_BUFFER + 1
 };
 
 //-------------------------- end of namespace Graphics ----------------------------

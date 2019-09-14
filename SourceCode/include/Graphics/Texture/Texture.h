@@ -82,32 +82,32 @@ public:
 
     void SetTextureWrapMode(const TextureWrapModeEnum &i_s_mode, const TextureWrapModeEnum &i_t_mode, const TextureWrapModeEnum &i_r_mode);
 public:
-    Size_ui32 GetTextureImageWidth() const;
-    Size_ui32 GetTextureImageHeight() const;
-    Size_ui32 GetTextureImageLength() const;
-    ImageSize GetTextureImageSize() const;
+    Size_ui32 GetWidth() const;
+    Size_ui32 GetHeight() const;
+    Size_ui32 GetLength() const;
+    ImageSize GetDataSize() const;
 protected:
     TextureIdentity m_tex_identity;
 
     SamplerIdentity m_sampler_idnetity;
 };
 
-inline Size_ui32 Texture::GetTextureImageWidth() const
+inline Size_ui32 Texture::GetWidth() const
 {
     return m_tex_identity.m_image_size.m_width;
 }
 
-inline Size_ui32 Texture::GetTextureImageHeight() const
+inline Size_ui32 Texture::GetHeight() const
 {
     return m_tex_identity.m_image_size.m_height;
 }
 
-inline Size_ui32 Texture::GetTextureImageLength() const
+inline Size_ui32 Texture::GetLength() const
 {
     return m_tex_identity.m_image_size.m_length;
 }
 
-inline ImageSize Texture::GetTextureImageSize() const
+inline ImageSize Texture::GetDataSize() const
 {
     return m_tex_identity.m_image_size;
 }
