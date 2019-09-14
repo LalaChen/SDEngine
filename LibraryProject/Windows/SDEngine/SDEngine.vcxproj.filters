@@ -314,6 +314,9 @@
     <ClCompile Include="..\..\..\SourceCode\src\Math\Transform.cpp">
       <Filter>src\Math</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Mesh\AssimpModelLoader.cpp">
+      <Filter>src\Graphics\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h">
@@ -498,6 +501,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Math\Transform.h">
       <Filter>include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Mesh\AssimpModelLoader.h">
+      <Filter>include\Graphics\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

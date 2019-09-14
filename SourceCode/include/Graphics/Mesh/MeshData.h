@@ -86,6 +86,11 @@ public:
      *  \brief mesh name.
      */
     ObjectName m_mesh_name;
+
+    /*! \var int32_t m_material_id;
+     *  \brief Material ID. Default is -1.(No material)
+     */
+    int32_t m_material_id;
 };
 
 //-------------------------- end of namespace Graphics -------------------------

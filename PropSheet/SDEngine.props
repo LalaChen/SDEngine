@@ -22,6 +22,7 @@ xcopy /y "$(SDEngineRootDir)ThirdParty\GLFW\bin\$(Platform)\$(Configuration)\glf
 xcopy /y "$(SDEngineRootDir)ThirdParty\Vulkan\bin\vulkan-1.dll" "$(OutDir)"
 xcopy /y "$(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\DevIL.dll" "$(OutDir)"
 xcopy /y "$(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\ILU.dll" "$(OutDir)"
+xcopy /y "$(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\assimp.dll" "$(OutDir)"
 xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

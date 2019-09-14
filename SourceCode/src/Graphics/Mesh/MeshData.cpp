@@ -9,6 +9,7 @@ namespace Graphics
 
 ModelMeshData::ModelMeshData(const ObjectName &i_mesh_name)
 : m_mesh_name(i_mesh_name)
+, m_material_id(-1)
 {
 }
 

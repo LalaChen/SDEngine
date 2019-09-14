@@ -57,6 +57,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKBuffer.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKDeviceMemory.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKImage.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Mesh\AssimpModelLoader.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Mesh\MeshData.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Color4f.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4Manager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Mesh\AssimpModelLoader.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Mesh\MeshData.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Texture\Texture.h" />
@@ -178,6 +180,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_DevIL.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -185,6 +188,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_DevIL.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -192,6 +196,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_DevIL.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -199,6 +204,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_DevIL.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
