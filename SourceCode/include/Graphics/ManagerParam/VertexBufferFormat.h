@@ -32,12 +32,9 @@ SOFTWARE.
 
 #pragma once
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+#include "SDEngineMacro.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum VertexBufferFormatEnum
  *  VertexBufferFormatTypeEnum is enum for defining format type about vertex buffer.
@@ -98,7 +95,4 @@ enum VertexBufferFormatEnum
     VertexBufferFormat_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

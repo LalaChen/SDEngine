@@ -40,12 +40,7 @@ SOFTWARE.
 
 #include "NullRefException.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class WeakReferenceObject
  *  In our system, WeakReferenceObject is a template class for making weak reference object of \n
@@ -206,7 +201,4 @@ public:
     }
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

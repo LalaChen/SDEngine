@@ -26,12 +26,7 @@ SOFTWARE.
 #include "LogManager.h"
 #include "EventObject.h"
 
-//---------------------------- start of namespace SDE -----------------------------
-namespace SDE
-{
-//--------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 EventObject::EventObject(const ObjectName &i_object_name)
 : Object(i_object_name)
@@ -107,7 +102,4 @@ bool EventObject::NotifyEvent(const std::string &i_event_name,const EventArg &i_
     return false;
 }
 
-//--------------------------- end of namespace Basic ---------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

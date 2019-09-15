@@ -35,12 +35,7 @@ SOFTWARE.
 #include "Object.h"
 #include "EventArg.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class FunctionSlotBase \n
  *  In our event system, we will use the slot function after something finished. \n
@@ -275,7 +270,4 @@ public:
     WeakReferenceObject<Type> m_wref;
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

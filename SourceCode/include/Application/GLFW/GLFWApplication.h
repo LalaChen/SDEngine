@@ -37,12 +37,8 @@ SOFTWARE.
 
 using SDE::Basic::Application;
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace App ----------------------------
-namespace App
-{
+________________SD_START_APP_NAMESPACE_______________
+
 /*! \class GLFWApplication
  *  This class is used to create GLFW window. We use GLFWApplication::LaunchGLFWApplication to launch GLFW.
  */
@@ -119,7 +115,4 @@ protected:
     GLFWmonitor *m_monitor;
 };
 
-}
-//---------------------------- end of namespace App ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
+_________________SD_END_APP_NAMESPACE________________

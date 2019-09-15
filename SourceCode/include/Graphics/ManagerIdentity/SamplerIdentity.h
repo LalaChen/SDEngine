@@ -36,12 +36,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "ManagerParam.h"
 
-//---------------------------- start of namespace SDE ---------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Graphics ------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class SamplerIdentity
  *  Keep all sampling parameters (mag and min filter, texture wrap mode and etc ...)in this struct.
@@ -95,7 +90,4 @@ public://Sampler Part.
     TextureWrapModeEnum m_texture_wrap_mode_r;
 };
 
-//-------------------------- end of namespace Graphics --------------------------
-}
-//---------------------------- end of namespace SDE -----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

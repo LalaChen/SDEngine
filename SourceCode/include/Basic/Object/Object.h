@@ -38,12 +38,7 @@ SOFTWARE.
 #include "StrongReferenceObject.h"
 #include "WeakReferenceObject.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Object);
 
@@ -101,7 +96,4 @@ protected:
     SD_DECLARE_ATTRIBUTE_VAR_GET(ObjectName, m_object_name, ObjectName);
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

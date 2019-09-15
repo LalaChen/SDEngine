@@ -25,12 +25,7 @@ SOFTWARE.
 #include "LogManager.h"
 #include "VulkanManager.h"
 
-//--------------------------- start of namespace SDE ------------------------------
-namespace SDE
-{
-//------------------------- start of namespace Graphics ---------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 //----------- Vertex Buffer Function ------------
 VkResult VulkanManager::CreateVkBuffer(
@@ -204,7 +199,4 @@ void VulkanManager::DestroyVkBuffer(VkBuffer &io_buffer_handle)
     io_buffer_handle = VK_NULL_HANDLE;
 }
 
-//-------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE -------------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

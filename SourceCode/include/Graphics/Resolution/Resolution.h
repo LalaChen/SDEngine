@@ -38,12 +38,7 @@ SOFTWARE.
 
 using SDE::Graphics::Size_ui32;
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class Resolution
  *  Class Resolution is used to record the size of framebuffer or screen. We also calcuate \n
@@ -183,7 +178,4 @@ inline Resolution& Resolution::operator =(const Resolution &i_src)
     return *this;
 }
 
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

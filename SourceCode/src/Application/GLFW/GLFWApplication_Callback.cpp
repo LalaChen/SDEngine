@@ -1,12 +1,7 @@
 #include "LogManager.h"
 #include "GLFWApplication.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace App ----------------------------
-namespace App
-{
+________________SD_START_APP_NAMESPACE_______________
 
 //----- Keyboard ------
 void GLFWApplication::KeyEventCallback(GLFWwindow* i_window, int i_key, int i_scancode, int i_action, int i_mod_keys)
@@ -89,7 +84,4 @@ void GLFWApplication::ScrollCallback(GLFWwindow *i_window, double i_x, double i_
 
 }
 
-}
-//---------------------------- end of namespace App ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
+_________________SD_END_APP_NAMESPACE________________

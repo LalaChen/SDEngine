@@ -1,11 +1,6 @@
 #include "SamplerIdentity.h"
 
-//---------------------------- start of namespace SDE ---------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Graphics ------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SamplerIdentity::SamplerIdentity()
 : m_sampler(SD_NULL_HANDLE)
@@ -21,7 +16,4 @@ SamplerIdentity::~SamplerIdentity()
 {
 }
 
-//-------------------------- end of namespace Graphics --------------------------
-}
-//---------------------------- end of namespace SDE -----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

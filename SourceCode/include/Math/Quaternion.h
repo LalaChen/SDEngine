@@ -35,12 +35,7 @@ SOFTWARE.
 
 #include <glm/gtx/quaternion.hpp>
 
-//-------------------------- start of namespace SDE ---------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Math --------------------------
-namespace Math
-{
+_______________SD_START_MATH_NAMESPACE_______________
 
 class Matrix4X4f;
 class Vector3f;
@@ -195,7 +190,4 @@ public:
     glm::quat m_quat;
 };
 
-//--------------------------- end of namespace Math ----------------------------
-}
-//--------------------------- end of namespace SDE -----------------------------
-}
+________________SD_END_MATH_NAMESPACE________________

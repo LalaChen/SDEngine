@@ -32,12 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-//---------------------------- start of namespace SDE ------------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Graphics ---------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum VertexBufferUsageKindEnum
  *  The vertex buffer usage kind.
@@ -55,7 +50,4 @@ enum VertexBufferUsageEnum
     VertexBufferUsage_BUFFER_GROUP = VertexBufferUsage_BINORMAL_BUFFER + 1
 };
 
-//-------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE -------------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

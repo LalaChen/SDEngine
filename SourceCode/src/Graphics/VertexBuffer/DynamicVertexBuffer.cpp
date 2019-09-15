@@ -27,12 +27,7 @@ SOFTWARE.
 #include "GraphicsManager.h"
 #include "DynamicVertexBuffer.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 DynamicVertexBuffer::DynamicVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format)
 : VertexBuffer(i_object_name, i_va_location, i_format, VertexBufferMemoryType_DYNAMIC)
@@ -86,7 +81,4 @@ void DynamicVertexBuffer::UnmapBufferMemory()
     GraphicsManager::GetRef().UnmapBuffer(m_identity);
 }
 
-//-------------------------- end of namespace Graphics ----------------------------
-}
-//----------------------------- end of namespace SDE ------------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

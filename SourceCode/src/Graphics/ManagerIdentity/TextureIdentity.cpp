@@ -25,12 +25,7 @@ SOFTWARE.
 
 #include "TextureIdentity.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Graphics -------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 TextureIdentity::TextureIdentity()
 : m_image_handle(SD_NULL_HANDLE)
@@ -47,7 +42,4 @@ TextureIdentity::~TextureIdentity()
 {
 }
 
-//-------------------------- end of namespace Graphics --------------------------
-}
-//---------------------------- end of namespace SDE -----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

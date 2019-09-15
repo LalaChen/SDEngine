@@ -34,12 +34,7 @@ SOFTWARE.
 
 #include "Timer.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class WindowsTimer \n
  *  Timer in Windows OS.
@@ -65,7 +60,4 @@ public:
     void GetCurrentTimeByOS(double &io_time) override;
 };
 
-//--------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

@@ -26,12 +26,7 @@ SOFTWARE.
 #include "GraphicsManager.h"
 #include "VertexBuffer.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 //------------------- class VertexBuffer -----------------
 VertexBuffer::VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format, VertexBufferMemoryTypeEnum i_memory_type)
@@ -59,7 +54,4 @@ Size_ui64 VertexBuffer::GetDeviceSize() const
     return m_identity.m_memory_size;
 }
 
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

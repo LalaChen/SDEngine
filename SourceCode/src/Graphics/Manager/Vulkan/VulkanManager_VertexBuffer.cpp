@@ -25,12 +25,7 @@ SOFTWARE.
 #include "LogManager.h"
 #include "VulkanManager.h"
 
-//---------------------------- start of namespace SDE -----------------------------
-namespace SDE
-{
-//------------------------- start of namespace Graphics ---------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 //----------- Vertex Buffer Function ------------
 void VulkanManager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type)
@@ -154,7 +149,4 @@ void VulkanManager::UnmapBuffer(const VertexBufferIdentity &i_identity)
     UnmapVkDeviceMemory(vk_memory_handle);
 }
 
-//-------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE -------------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

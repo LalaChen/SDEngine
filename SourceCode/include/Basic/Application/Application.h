@@ -43,12 +43,7 @@ using SDE::Graphics::Resolution;
 using SDE::Graphics::GraphicsLibraryEnum;
 using SDE::Graphics::Size_ui32;
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class Application
  *  In our system, Application is used to manager application lifecycle. We also record \n
@@ -160,7 +155,4 @@ inline void Application::SetWindowResolution(Size_ui32 i_width, Size_ui32 i_heig
     m_win_res.SetResolution(i_width, i_height);
 }
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

@@ -39,12 +39,7 @@ SOFTWARE.
 
 #include "FileData.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class FileSystemManager
  *  In our system, FileSystemManager offer a series interface for file operating. We will \n
@@ -230,7 +225,4 @@ protected:
     SD_DECLARE_ATTRIBUTE_CONSTREF_GET(RelativePaths, m_relative_paths, RelativePaths);
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

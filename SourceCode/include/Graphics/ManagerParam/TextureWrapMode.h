@@ -32,16 +32,13 @@ SOFTWARE.
 
 #pragma once
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Graphics -------------------------
-namespace Graphics
-{
+#include "SDEngineMacro.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum TextureWrapModeEnum
-    *  TextureWrapModeEnum is enum for defining wrap type.
-    */
+ *  TextureWrapModeEnum is enum for defining wrap type.
+ */
 enum TextureWrapModeEnum
 {
     TextureWrapMode_REPEAT = 0, /*!< If the texture coordinate is large then 1.0, we will subtract floor integer from texture coordinate.*/
@@ -51,7 +48,4 @@ enum TextureWrapModeEnum
     TextureWrapMode_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 
-//-------------------------- end of namespace Graphics -------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

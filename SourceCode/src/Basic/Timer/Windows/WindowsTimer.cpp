@@ -28,12 +28,7 @@ SOFTWARE.
 #include "LogManager.h"
 #include "WindowsTimer.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 WindowsTimer::WindowsTimer()
 {
@@ -52,8 +47,4 @@ void WindowsTimer::GetCurrentTimeByOS(double &io_time)
     io_time = static_cast<double>(time.QuadPart) / static_cast<double>(freq.QuadPart);
 }
 
-
-//--------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

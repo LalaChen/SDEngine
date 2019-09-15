@@ -36,12 +36,7 @@ SOFTWARE.
 
 #include "GraphicsManager.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class VulkanManager
  *  In our system, VulkanManager is a integration for Vulkan graphics API.
@@ -223,7 +218,4 @@ protected:
     uint32_t m_queue_size; //use to allocate queues for multi-threads.
 };
 
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

@@ -32,18 +32,13 @@ SOFTWARE.
 
 #pragma once
 
+#include <exception>
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
-
-#include <exception>
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class NullReferenceException
  *  In our system, class NullReferenceException throw when we try to GetRef of null strong \n
@@ -58,7 +53,4 @@ public:
     virtual const char* what() const throw() { return "NullReferenceException"; }
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

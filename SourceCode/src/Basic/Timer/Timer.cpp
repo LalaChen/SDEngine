@@ -28,12 +28,7 @@ SOFTWARE.
 #include "LogManager.h"
 #include "Timer.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 SD_SINGLETON_DECLARATION_IMPL(Timer);
 
@@ -70,8 +65,4 @@ void Timer::End()
     GetCurrentTimeByOS(m_end_time);
 }
 
-
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

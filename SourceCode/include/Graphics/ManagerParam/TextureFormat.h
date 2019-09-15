@@ -32,12 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Graphics -------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum TextureFormatEnum
  *  TextureFormatEnum is enum for defining format type about texture format.
@@ -105,7 +100,4 @@ enum TextureFormatEnum
     TextureFormat_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 
-//-------------------------- end of namespace Graphics -------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

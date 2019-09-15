@@ -25,12 +25,7 @@ SOFTWARE.
 
 #include "FunctionSlot.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//--------------------------- start of namespace Basic ---------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 //class GlobalFunctionSlot
 
@@ -74,7 +69,4 @@ bool GlobalFunctionSlot::IsEqualTo(const Object &i_src) const
     }
 }
 
-//--------------------------- end of namespace Basic ---------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

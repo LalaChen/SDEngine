@@ -40,12 +40,7 @@ SOFTWARE.
 
 #include "NullRefException.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class StrongReferenceObject
  *  In our system, StrongReferenceObject is a template class for making strong reference object of \n
@@ -208,7 +203,4 @@ public:
     }
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

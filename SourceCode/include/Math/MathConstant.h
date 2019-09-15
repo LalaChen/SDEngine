@@ -31,12 +31,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 
-//-------------------------- start of namespace SDE ---------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Math --------------------------
-namespace Math
-{
+_______________SD_START_MATH_NAMESPACE_______________
 
 /*! \var const float PI;
  *  \brief PI
@@ -73,7 +68,4 @@ const float FLOATING_ERROR = 0.000001f;
  */
 const float FULL_DEGREE = 360.0f;
 
-//--------------------------- end of namespace Math ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

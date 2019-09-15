@@ -32,14 +32,10 @@ SOFTWARE.
 
 #pragma once
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+#include "SDEngineMacro.h"
 
-//------------------------- enum VertexBufferMemoryTypeEnum----------------------
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
 /*! \enum VertexBufferMemoryTypeEnum
  *  The memory type of this buffer.
  *  The dynamic memory means the content in this buffer will be modified in future using.
@@ -53,7 +49,4 @@ enum VertexBufferMemoryTypeEnum
 };
 
 
-//-------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE -------------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

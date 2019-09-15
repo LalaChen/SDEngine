@@ -31,12 +31,8 @@ SOFTWARE.
 
 using namespace SDE::Basic;
 
-//--------------------------- start of namespace SDE ---------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Math --------------------------
-namespace Math
-{
+_______________SD_START_MATH_NAMESPACE_______________
+
 //static
 const Vector3f Vector3f::PositiveX(1.0f, 0.0f, 0.0f, 0.0f);
 const Vector3f Vector3f::PositiveY(0.0f, 1.0f, 0.0f, 0.0f);
@@ -207,7 +203,4 @@ const float* Vector3f::GetDataAddr() const
     return (const float*)glm::value_ptr(m_vec);
 }
 
-//--------------------------- end of namespace Math ----------------------------
-}
-//--------------------------- end of namespace SDE ----------------------------
-}
+________________SD_END_MATH_NAMESPACE________________

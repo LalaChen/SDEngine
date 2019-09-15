@@ -35,12 +35,7 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 
-//--------------------------- start of namespace SDE ---------------------------
-namespace SDE
-{
-//------------------------- start of namespace Graphics ------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class GraphicsManager
  *  In our graphics system, class AssimpModelLoader is used to load model file and convert the one to
@@ -63,7 +58,4 @@ public:
     ~AssimpModelLoader();
 };
 
-//-------------------------- end of namespace Graphics -------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

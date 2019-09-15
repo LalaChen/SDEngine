@@ -36,12 +36,7 @@ SOFTWARE.
 #include "Quaternion.h"
 #include "Vector3f.h"
 
-//-------------------------- start of namespace SDE ---------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Math --------------------------
-namespace Math
-{
+_______________SD_START_MATH_NAMESPACE_______________
 
 /*! \class Transform
  *  In our engine, transform is used to record and describe the geometric
@@ -124,7 +119,4 @@ public:
     Vector3f m_perspective;
 };
 
-//--------------------------- end of namespace Math ----------------------------
-}
-//--------------------------- end of namespace SDE -----------------------------
-}
+________________SD_END_MATH_NAMESPACE________________

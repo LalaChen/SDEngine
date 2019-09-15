@@ -27,12 +27,7 @@ SOFTWARE.
 
 #include "VertexBufferFormat_Vulkan.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkFormat VertexBufferFormat_Vulkan::VertexBufferFormatTypes[VertexBufferFormat_MAX_DEFINE_VALUE] = {
 //------ unsigned byte.
@@ -97,7 +92,4 @@ VkFormat VertexBufferFormat_Vulkan::Convert(const VertexBufferFormatEnum &i_src)
     }
 }
 
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

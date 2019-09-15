@@ -31,12 +31,7 @@ SOFTWARE.
 
 #include "WindowsLogManager.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 WindowsLogManager::WindowsLogManager()
 {
@@ -85,7 +80,4 @@ void WindowsLogManager::LogToOutput(LogType i_type)
     }
 }
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

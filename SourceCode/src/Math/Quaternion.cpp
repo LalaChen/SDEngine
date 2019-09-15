@@ -32,12 +32,8 @@ SOFTWARE.
 
 using namespace SDE::Basic;
 
-//-------------------------- start of namespace SDE ---------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Math --------------------------
-namespace Math
-{
+_______________SD_START_MATH_NAMESPACE_______________
+
 //static
 float Quaternion::Angle(const Quaternion &i_a, const Quaternion &i_b)
 {
@@ -165,7 +161,4 @@ const float* Quaternion::GetDataAddr() const
     return glm::value_ptr(m_quat);
 }
 
-//--------------------------- end of namespace Math ----------------------------
-}
-//--------------------------- end of namespace SDE -----------------------------
-}
+________________SD_END_MATH_NAMESPACE________________

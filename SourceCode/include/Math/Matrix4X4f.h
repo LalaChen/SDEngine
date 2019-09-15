@@ -38,12 +38,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Math ----------------------------
-namespace Math
-{
+_______________SD_START_MATH_NAMESPACE_______________
 
 class Quaternion;
 class Vector3f;
@@ -57,11 +52,11 @@ class SDENGINE_CLASS Matrix4X4f
 public:
     /*! \fn static bool decompose(const Matrix4X4f &i_mat, Vector3f &io_scale, Quaternion &io_rot, Vector3f &io_skew, Vector3f &io_translation);
      *  \param [in] i_mat target matrix.
-     *  \paran [inout] io_scale the scale factor decomposed from matrix.
-     *  \paran [inout] io_rot the rotation decomposed from matrix.
-     *  \paran [inout] io_skew the sharing decomposed from matrix.
-     *  \paran [inout] io_translation the io_translation decomposed from matrix.
-     *  \paran [inout] io_prespective the io_prespective decomposed from matrix.
+     *  \param [inout] io_scale the scale factor decomposed from matrix.
+     *  \param [inout] io_rot the rotation decomposed from matrix.
+     *  \param [inout] io_skew the sharing decomposed from matrix.
+     *  \param [inout] io_translation the io_translation decomposed from matrix.
+     *  \param [inout] io_prespective the io_prespective decomposed from matrix.
      *  \brief decompose matrix to transformation.
      */
     static bool decompose(const Matrix4X4f &i_mat, Vector3f &io_scale, Quaternion &io_rot, Vector3f &io_skew, Vector3f &io_translation, Vector3f &io_prespective);
@@ -200,7 +195,4 @@ public:
     glm::mat4 m_matrix;
 };
 
-//--------------------------- end of namespace Math ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+________________SD_END_MATH_NAMESPACE________________

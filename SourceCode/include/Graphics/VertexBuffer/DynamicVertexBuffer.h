@@ -34,12 +34,7 @@ SOFTWARE.
 
 #include "VertexBuffer.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class DynamicVertexBuffer
  *  In our graphic system, DynamicVertexBuffer objects are used to keep vertex datas.
@@ -81,7 +76,4 @@ public:
     void UnmapBufferMemory();
 };
 
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

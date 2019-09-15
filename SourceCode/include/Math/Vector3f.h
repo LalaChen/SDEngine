@@ -37,12 +37,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 
-//-------------------------- start of namespace SDE ---------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Math --------------------------
-namespace Math
-{
+_______________SD_START_MATH_NAMESPACE_______________
 
 class Matrix4X4f;
 class Quaternion;
@@ -238,7 +233,5 @@ public:
      */
     glm::vec4 m_vec;
 };
-//--------------------------- end of namespace Math ----------------------------
-}
-//--------------------------- end of namespace SDE -----------------------------
-}
+
+________________SD_END_MATH_NAMESPACE________________

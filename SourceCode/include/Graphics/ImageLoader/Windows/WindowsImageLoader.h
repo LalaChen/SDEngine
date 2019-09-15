@@ -32,12 +32,7 @@ SOFTWARE.
 
 #include "ImageLoader.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Graphics -------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class WindowsImageLoader
  *  In our system, WindowsImageLoader is used at windows OS and based on DevIL. 
@@ -67,7 +62,4 @@ public:
     BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const override;
 };
 
-//-------------------------- end of namespace Graphics -------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

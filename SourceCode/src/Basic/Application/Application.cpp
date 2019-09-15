@@ -28,12 +28,7 @@ SOFTWARE.
 
 using SDE::Graphics::GraphicsManager;
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 SD_SINGLETON_DECLARATION_IMPL(Application);
 
@@ -73,7 +68,4 @@ void Application::Resize(Size_ui32 i_w, Size_ui32 i_h)
     GraphicsManager::GetRef().Resize(i_w, i_h);
 }
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

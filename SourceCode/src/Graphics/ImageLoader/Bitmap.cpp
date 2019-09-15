@@ -36,12 +36,7 @@ SOFTWARE.
 
 using SDE::Basic::LogManager;
 
-//----------------------------- start of namespace SDE --------------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 Bitmap::Bitmap(const ObjectName &i_object_name)
 : Object(i_object_name)
@@ -141,7 +136,4 @@ bool Bitmap::SetBitmap(const BitmapConfig &i_conf, Size_ui32 i_width, Size_ui32 
 	}
 }
 
-//-------------------------- end of namespace Graphics -------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

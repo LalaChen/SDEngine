@@ -33,12 +33,7 @@ SOFTWARE.
 
 #include "GraphicsManager.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class OpenGL4Manager
  *  In our system, OpenGL4Manager is a implementation for opengl4 graphics API.
@@ -92,7 +87,4 @@ protected:
     void RenderEnd() override;
 };
 
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

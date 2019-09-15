@@ -36,12 +36,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class Timer \n
  *  In our system, Timer is used to record some infos about time. We will record the program\n
@@ -117,7 +112,4 @@ protected:
     SD_DECLARE_ATTRIBUTE_VAR_GET(double, m_delta_time, ProgramDeltaTime);
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

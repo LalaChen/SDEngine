@@ -30,12 +30,9 @@ SOFTWARE.
  */
 #include <string>
 
-//---------------------------- start of namespace SDEngine ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+#include "SDEngineMacro.h"
+
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \typedef int CodePageID
  * \brief CodePageID is the type for ID about text code. For example, CodePageID 936 is GBK2312, 950 is Big5, ...etc.
@@ -71,12 +68,10 @@ typedef UByte* UBytePtr;
  *  \brief name of object.
  */
 typedef std::string ObjectName;
-}
-//---------------------------- end of namespace Basic ---------------------------
 
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_______________SD_END_BASIC_NAMESPACE________________
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \typedef void* VoidPtr;
  *  \brief Void handle.
@@ -170,7 +165,4 @@ typedef uint32_t RenderOrder;
  */
 typedef uint32_t RenderOrderOffset;
 
-}
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDEngine ----------------------------
+______________SD_END_GRAPHICS_NAMESPACE______________

@@ -32,12 +32,8 @@ SOFTWARE.
 
 using namespace SDE::Basic;
 
-//--------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//--------------------------- start of namespace Math ----------------------------
-namespace Math
-{
+_______________SD_START_MATH_NAMESPACE_______________
+
 //static
 bool Matrix4X4f::decompose(const Matrix4X4f &i_mat, Vector3f &io_scale, Quaternion &io_rot, Vector3f &io_skew, Vector3f &io_translation, Vector3f &io_prespective)
 {
@@ -178,7 +174,4 @@ const float* Matrix4X4f::GetDataAddr() const
     return (const float*)glm::value_ptr(m_matrix);
 }
 
-//--------------------------- end of namespace Math ----------------------------
-}
-//--------------------------- end of namespace SDE ----------------------------
-}
+________________SD_END_MATH_NAMESPACE________________

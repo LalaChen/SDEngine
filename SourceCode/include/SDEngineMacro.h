@@ -72,6 +72,47 @@ typedef wchar_t SDStrChar;
 typedef char SDStrChar;
 #endif
 
+//Namespace
+#define ______________SD_START_BASIC_NAMESPACE_______________ \
+namespace SDE \
+{ \
+namespace Basic \
+{
+
+#define _______________SD_END_BASIC_NAMESPACE________________ \
+} \
+}
+
+#define _____________SD_START_GRAPHICS_NAMESPACE_____________ \
+namespace SDE \
+{ \
+namespace Graphics \
+{
+
+#define ______________SD_END_GRAPHICS_NAMESPACE______________ \
+} \
+}
+
+#define _______________SD_START_MATH_NAMESPACE_______________ \
+namespace SDE \
+{ \
+namespace Math \
+{
+
+#define ________________SD_END_MATH_NAMESPACE________________ \
+} \
+}
+
+#define ________________SD_START_APP_NAMESPACE_______________ \
+namespace SDE \
+{ \
+namespace App \
+{
+
+#define _________________SD_END_APP_NAMESPACE________________ \
+} \
+}
+
 //Strong And Weak Reference.
 #define SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Type) \
     class Type; \
@@ -217,16 +258,19 @@ typedef char SDStrChar;
 /*! \def ENUM_TO_UINT( var )
  *  \brief convert enum to unsigned int.
  */
-#define ENUM_TO_UINT( var ) static_cast<unsigned int>(var)
+#define SD_SD_ENUM_TO_UINT( var ) static_cast<unsigned int>(var)
 
 /*! \def ENUM_TO_INT( var )
  *  \brief convert enum to int.
  */
-#define ENUM_TO_INT( var )  static_cast<int>(var)
+#define SD_ENUM_TO_INT( var )  static_cast<int>(var)
 
-/* \def  IS_FEATURE( var, feature_bit )
+/* \def SD_IS_FEATURE( var, feature_bit )
  * \brief chcek var has the feature or not.
  */
-#define IS_FEATURE( var, feature_bit ) ((var & feature_bit) == feature_bit)
+#define SD_IS_FEATURE( var, feature_bit ) ((var & feature_bit) == feature_bit)
 
+ /* \def SD_NULL_HANDLE
+  * \brief null handle.
+  */
 #define SD_NULL_HANDLE 0

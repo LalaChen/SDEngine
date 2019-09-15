@@ -40,12 +40,7 @@ SOFTWARE.
     if(channel < 0.0f) channel = 0.0f; \
     else if(channel > 1.0f) channel = 1.0f;
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class Color4B
  *  In our system, Color4B is use to record r,g,b,a with unsigned char format.
@@ -262,7 +257,4 @@ public:
 	float a;
 };
 
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

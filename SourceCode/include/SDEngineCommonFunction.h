@@ -42,12 +42,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "SDEngineMacro.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \fn SDENGINE_API std::string StringFormat(const char *i_fmt_str, ...);
  *  \param [in] i_fmt_str; The format string.
@@ -159,7 +154,4 @@ SDENGINE_API time_t ConvertTMToTimeT(const tm &i_monent);
  */
 SDENGINE_API std::string ReplaceIllegalCharOfFile(const std::string &i_str, const char i_replace_symbol = ' ');
 
-}
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
+_______________SD_END_BASIC_NAMESPACE________________

@@ -6,12 +6,7 @@ using namespace SDE;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace App ----------------------------
-namespace App
-{
+________________SD_START_APP_NAMESPACE_______________
 
 GLFWApplication::GLFWApplication(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv)
 : Application(i_win_title, i_win_res, i_full_window, i_adopt_library, i_argc, i_argv)
@@ -265,7 +260,4 @@ void GLFWApplication::RunMainLoop()
     Application::GetRef().TerminateApplication();
 }
 
-}
-//---------------------------- end of namespace App ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
+_________________SD_END_APP_NAMESPACE________________

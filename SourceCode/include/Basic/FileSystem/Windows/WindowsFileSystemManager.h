@@ -34,12 +34,7 @@ SOFTWARE.
 
 #include "FileSystemManager.h"
 
- //---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class WindowsFileSystemManager
     FileSystemManager in Windows OS.
@@ -173,7 +168,4 @@ public:
     FilePathString GetExeFilePath() override;
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

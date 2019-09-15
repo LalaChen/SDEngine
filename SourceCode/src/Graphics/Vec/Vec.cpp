@@ -29,14 +29,8 @@ SOFTWARE.
 #include "SDEngineCommonFunction.h"
 #include "Vec.h"
 
-using namespace std;
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
 //---------------------------------- vec3 static ------------------------------------
 const vec3 vec3::Zero(0.0f,0.0f,0.0f);
 
@@ -225,7 +219,4 @@ std::string vec2::ToString() const
     return SDE::Basic::StringFormat("(%lf,%lf)", x, y);
 }
 
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

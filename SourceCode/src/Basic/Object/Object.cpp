@@ -25,12 +25,7 @@ SOFTWARE.
 
 #include "Object.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 Object::Object(const ObjectName &i_object_name)
 : m_object_name(i_object_name)
@@ -50,7 +45,5 @@ std::string Object::ToString() const
 {
     return StringFormat("Name(%s)[%x]", m_object_name.c_str(), this);
 }
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+
+_______________SD_END_BASIC_NAMESPACE________________

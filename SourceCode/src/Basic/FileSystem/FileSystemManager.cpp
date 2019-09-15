@@ -24,12 +24,8 @@ SOFTWARE.
 */
 
 #include "FileSystemManager.h"
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+
+______________SD_START_BASIC_NAMESPACE_______________
 
 SD_SINGLETON_DECLARATION_IMPL(FileSystemManager);
 
@@ -95,7 +91,4 @@ FilePathString FileSystemManager::AdjustFilePath(const FilePathString &i_path) c
 
 }
 
-//--------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

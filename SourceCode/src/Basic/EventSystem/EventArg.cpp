@@ -25,15 +25,6 @@ SOFTWARE.
 
 #include "EventArg.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//--------------------------- start of namespace Basic ---------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
-
-//--------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE -----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

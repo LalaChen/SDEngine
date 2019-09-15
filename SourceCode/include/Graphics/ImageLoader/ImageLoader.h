@@ -37,12 +37,7 @@
 using SDE::Basic::FilePathString;
 using SDE::Basic::FileSystemManager;
 
-//---------------------------- start of namespace SDE ------------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Graphics ---------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class ImageLoader
  *  In our system, ImageLoader offer a series interface for file operating. We will \n
@@ -75,7 +70,4 @@ public:
 	virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
 };
 
-//-------------------------- end of namespace Graphics ---------------------------
-}
-//---------------------------- end of namespace SDE ------------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

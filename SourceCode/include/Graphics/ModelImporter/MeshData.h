@@ -43,12 +43,7 @@ SOFTWARE.
 using SDE::Basic::ObjectName;
 using SDE::Math::Transform;
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//-------------------------- start of namespace Graphics -------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class ModelMeshData
  *  In our graphic system, ModelMeshData is used to keep parsed data.
@@ -93,7 +88,4 @@ public:
     int32_t m_material_id;
 };
 
-//-------------------------- end of namespace Graphics -------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

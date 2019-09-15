@@ -27,12 +27,7 @@ SOFTWARE.
 #include "EventArg.h"
 #include "Event.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 Event::Event(const ObjectName &i_object_name)
 : Object(i_object_name)
@@ -135,7 +130,4 @@ bool Event::NotifyEvent(const EventArg &i_arg)
 }
 
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

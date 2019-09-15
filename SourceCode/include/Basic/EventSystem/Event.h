@@ -40,12 +40,8 @@ SOFTWARE.
 #include "EventArg.h"
 #include "Object.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
+
 /*! \class Event
  *  In our event system, we allow user register and use events in the component inheritance EventObject. \n
  *  User can NOTIFY event where he wanted. Via notifying event, some slot functions registered into event \n
@@ -108,7 +104,4 @@ private:
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Event);
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

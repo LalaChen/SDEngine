@@ -32,12 +32,7 @@ SOFTWARE.
 
 #include "SDEngineCommonFunction.h"
 
-//---------------------------- start of namespace SDEngine ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 std::string StringFormat(const char *i_fmt_str, ...)
 {
@@ -240,7 +235,4 @@ std::string ReplaceIllegalCharOfFile(const std::string &i_str, const char i_repl
     return result;
 }
 
-}
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDEngine ----------------------------
+_______________SD_END_BASIC_NAMESPACE________________

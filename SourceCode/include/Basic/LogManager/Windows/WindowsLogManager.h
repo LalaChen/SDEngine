@@ -34,12 +34,7 @@ SOFTWARE.
 
 #include "LogManager.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class WindowsLogManager
  *  LogManager on Windows OS.
@@ -82,7 +77,4 @@ protected:
     void LogToOutput(LogType i_type) override;
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

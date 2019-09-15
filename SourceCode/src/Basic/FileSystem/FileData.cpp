@@ -25,12 +25,8 @@ SOFTWARE.
 
 #include "FileData.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
+
 //---------------- File Data -------------------
 FileData::FileData()
 {
@@ -93,7 +89,5 @@ std::wstring FileData::GetDataWString() const
 {
     return StringToWString(GetDataString());
 }
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+
+_______________SD_END_BASIC_NAMESPACE________________

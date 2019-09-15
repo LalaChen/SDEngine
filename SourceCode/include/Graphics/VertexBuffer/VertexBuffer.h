@@ -41,12 +41,7 @@ using SDE::Basic::UByte;
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
 
-//------------------------------ start of namespace SDE -------------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(VertexBuffer);
 
@@ -113,7 +108,4 @@ protected:
     SD_DECLARE_ATTRIBUTE_VAR_GET(VertexBufferFormatEnum, m_format, Format);
 };
 
-//-------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE -------------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

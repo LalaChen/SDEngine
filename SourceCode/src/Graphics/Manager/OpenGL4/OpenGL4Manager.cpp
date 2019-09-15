@@ -27,12 +27,7 @@ SOFTWARE.
 #include "LogManager.h"
 #include "OpenGL4Manager.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Graphics ----------------------------
-namespace Graphics
-{
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
 OpenGL4Manager::OpenGL4Manager()
 : GraphicsManager()
@@ -81,7 +76,4 @@ void OpenGL4Manager::RenderEnd()
 {
 }
 
-//---------------------------- end of namespace Graphics ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+______________SD_END_GRAPHICS_NAMESPACE______________

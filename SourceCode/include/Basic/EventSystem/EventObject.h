@@ -35,12 +35,7 @@ SOFTWARE.
 #include "Event.h"
 #include "Object.h"
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(EventObject);
 
@@ -108,7 +103,4 @@ protected:
     EventContainer m_event_container;
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________

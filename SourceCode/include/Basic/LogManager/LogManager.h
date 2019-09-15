@@ -43,12 +43,7 @@ SOFTWARE.
 
 #define SD_MAX_WORD_PER_LINE 65536
 
-//---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class LogManager
     Class LogManager is used to print log. It's singleton class.
@@ -113,10 +108,7 @@ protected:
     std::string m_prefix;
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________
 
 
 //Log Define

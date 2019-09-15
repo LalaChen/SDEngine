@@ -34,12 +34,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 
- //---------------------------- start of namespace SDE ----------------------------
-namespace SDE
-{
-//---------------------------- start of namespace Basic ----------------------------
-namespace Basic
-{
+______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class EventArg
  *  In our event system, we allow user delievrying parameters by inheriting Class EventArg. \n
@@ -64,7 +59,4 @@ public:
     }
 };
 
-//---------------------------- end of namespace Basic ----------------------------
-}
-//---------------------------- end of namespace SDE ----------------------------
-}
+_______________SD_END_BASIC_NAMESPACE________________
