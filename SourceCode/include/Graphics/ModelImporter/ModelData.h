@@ -23,10 +23,10 @@ SOFTWARE.
 
 */
 
-/*! \file      MeshData.h
- *  \brief     Introduce of class MeshData.
+/*! \file      ModelData.h
+ *  \brief     Introduce of class ModelData.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/09/14
+ *  \date      2019/09/15
  *  \copyright MIT License.
  */
 
@@ -35,58 +35,58 @@ SOFTWARE.
 #include <vector>
 
 #include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "VertexBufferUsage.h"
-#include "Transform.h"
-#include "Color4f.h"
-#include "Vec.h"
+#include "Bitmap.h"
+#include "Matrix4X4f.h"
+#include "MaterialData.h"
+#include "MeshData.h"
 
-using SDE::Basic::ObjectName;
-using SDE::Graphics::Color4f;
-using SDE::Math::Transform;
+using SDE::Math::Matrix4X4f;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class MeshData
- *  In our graphic system, MeshData is used to keep parsed data.
- */
-class SDENGINE_CLASS MeshData
+class SDENGINE_CLASS NodeData
 {
 public:
-    /*! \fn explicit MeshData();
-     *  \brief Default constructor about MeshData.
-     */
-    explicit MeshData();
-
-    /*! \fn ~MeshData();
-     *  \brief MeshData destructor.
-     */
-    ~MeshData();
+    NodeData() {}
+    ~NodeData() {}
 public:
-    /*! \var std::vector<vec3> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
-     *  \brief vertex attributes.
+    /*! \var std::vector<NodeData> m_child_nodes;
+     *  \brief a vector record all child of this node.
      */
-    std::vector<vec3> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
+    std::vector<NodeData> m_child_nodes;
 
-    /*! \var std::vector<Color4f> m_vertex_colors;
-     *  \brief vertex colors.
+    /*! \var Matrix4X4f m_local_trans;
+     *  \brief local transformation.
      */
-    std::vector<Color4f> m_vertex_colors;
+    Matrix4X4f m_local_trans;
+    
+    /*! \var Matrix4X4f m_world_trans;
+     *  \brief world transformation.
+     */
+    Matrix4X4f m_world_trans;
 
-    /*! \var std::vector<uint32_t> m_face_indices;
-     *  \brief vertex indices.
+    /*! \var  std::vector<uint32_t> m_mesh_idices;
+     *  \brief a vector record all meshes of this node.
      */
-    std::vector<uint32_t> m_face_indices;
+    std::vector<uint32_t> m_mesh_idices;
 
-    /*! \var ObjectName m_mesh_name;
-     *  \brief mesh name.
+    /*! \var ObjectName m_name;
+     *  \brief Name of this node.
      */
-    ObjectName m_mesh_name;
+    ObjectName m_name;
+};
 
-    /*! \var int32_t m_material_ID;
-     *  \brief Material ID. Default is -1.(No material)
-     */
-    int32_t m_material_ID;
+class SDENGINE_CLASS ModelData
+{
+public:
+    explicit ModelData(const ObjectName &m_model_name);
+    ~ModelData();
+public:
+    std::vector<MeshData> m_mesh_datas;
+    std::vector<MaterialData> m_materials;
+    std::map<FilePathString, BitmapStrongReferenceObject> m_textures;
+    NodeData m_root_node;
+    ObjectName m_model_name;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

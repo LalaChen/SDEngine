@@ -34,13 +34,24 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "ModelData.h"
+#include "FileData.h"
+#include "Matrix4X4f.h"
+
+using SDE::Basic::FilePathString;
+using SDE::Basic::FileData;
+using SDE::Math::Matrix4X4f;
+
+namespace Assimp {
+    class Importer;
+}
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class GraphicsManager
- *  In our graphics system, class AssimpModelLoader is used to load model file and convert the one to
- *  model asset(ModelAsset). AssimpLoader is based on lib assimp. The loader will convert assimp 
- *  structure to Node structure.
+/*! \class AssimpModelLoader
+ *  In our engine, class AssimpModelLoader is used to load model file and convert the file to
+ *  class ModelData. Class ModelData is used to keeping parsed data. For all vertex attributes,
+ *  we store those data to vector<vec3>. For each texture, we will keep it own bitmap.
  */
 class SDENGINE_CLASS AssimpModelLoader
 {
@@ -56,6 +67,18 @@ public:
      *  \brief Destructor about AssimpModelLoader.
      */
     ~AssimpModelLoader();
+public:
+    /*! \fn bool ImportScene(const FilePathString &i_model_fn, ModelData &io_model);
+     *  \param [in] i_model_fn Model filepath.
+     *  \param [inout] io_model The parsed data.
+     *  \brief This function is used to import model file to our model. Please note
+     *         that we should put all texture files with model file together.
+     */
+    bool ImportScene(const FilePathString &i_model_fn, ModelData &io_model);
+protected:
+    void ParseMaterials(const aiScene *i_scene, ModelData &io_model);
+    void ParseMeshes(const aiScene *i_scene, ModelData &io_model);
+    void ParseNodes(const aiScene *i_scene, const Matrix4X4f &i_p_trans, aiNode *i_node, NodeData &io_node);
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -2,13 +2,12 @@
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-ModelMeshData::ModelMeshData(const ObjectName &i_mesh_name)
-: m_mesh_name(i_mesh_name)
-, m_material_id(-1)
+MeshData::MeshData()
+: m_material_ID(-1)
 {
 }
 
-ModelMeshData::~ModelMeshData()
+MeshData::~MeshData()
 {
 }
 

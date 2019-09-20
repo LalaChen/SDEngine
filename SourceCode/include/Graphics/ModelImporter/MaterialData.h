@@ -23,70 +23,61 @@ SOFTWARE.
 
 */
 
-/*! \file      MeshData.h
- *  \brief     Introduce of class MeshData.
+/*! \file      MaterialData.h
+ *  \brief     Introduce of class MaterialData.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/09/14
+ *  \date      2019/09/15
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include <vector>
+#include <map>
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "VertexBufferUsage.h"
-#include "Transform.h"
+#include "FileData.h"
 #include "Color4f.h"
-#include "Vec.h"
 
 using SDE::Basic::ObjectName;
-using SDE::Graphics::Color4f;
-using SDE::Math::Transform;
+using SDE::Basic::FilePathString;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class MeshData
- *  In our graphic system, MeshData is used to keep parsed data.
- */
-class SDENGINE_CLASS MeshData
+enum MaterialTextureTypeEnum
+{
+    MaterialTextureType_Diffuse = 0,
+    MaterialTextureType_Specular,
+    MaterialTextureType_Ambient,
+    MaterialTextureType_Emissive,
+    MaterialTextureType_Height,
+    MaterialTextureType_Normals,
+    MaterialTextureType_Shiness,
+    MaterialTextureType_Opacity,
+    MaterialTextureType_Displacement,
+    MaterialTextureType_LightMap,
+    MaterialTextureType_Reflection,
+    MaterialTextureType_MAX_DEFINE_VALUE
+};
+
+typedef std::map<MaterialTextureTypeEnum, FilePathString> TextureMap;
+
+class MaterialData
 {
 public:
-    /*! \fn explicit MeshData();
-     *  \brief Default constructor about MeshData.
-     */
-    explicit MeshData();
-
-    /*! \fn ~MeshData();
-     *  \brief MeshData destructor.
-     */
-    ~MeshData();
+    static const uint32_t AI_TEXTURE_ID[MaterialTextureType_MAX_DEFINE_VALUE];
 public:
-    /*! \var std::vector<vec3> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
-     *  \brief vertex attributes.
-     */
-    std::vector<vec3> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
-
-    /*! \var std::vector<Color4f> m_vertex_colors;
-     *  \brief vertex colors.
-     */
-    std::vector<Color4f> m_vertex_colors;
-
-    /*! \var std::vector<uint32_t> m_face_indices;
-     *  \brief vertex indices.
-     */
-    std::vector<uint32_t> m_face_indices;
-
-    /*! \var ObjectName m_mesh_name;
-     *  \brief mesh name.
-     */
-    ObjectName m_mesh_name;
-
-    /*! \var int32_t m_material_ID;
-     *  \brief Material ID. Default is -1.(No material)
-     */
-    int32_t m_material_ID;
+    explicit MaterialData();
+    ~MaterialData();
+public:
+    FilePathString m_textures_fns[MaterialTextureType_MAX_DEFINE_VALUE];
+    TextureMap m_texture_map;
+    Color4f m_ambient;
+    Color4f m_diffuse;
+    Color4f m_specular;
+    Color4f m_emission;
+    float m_shineness; //shineness_strength
+    ObjectName m_material_name;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
