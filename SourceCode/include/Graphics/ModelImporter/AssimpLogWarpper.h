@@ -23,37 +23,35 @@ SOFTWARE.
 
 */
 
-#include "AssimpModelLoader.h"
-#include "GraphicsManager.h"
+/*! \file      AssimpModelLoader.h
+ *  \brief     Introduce of class AssimpModelLoader.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2018/09/20
+ *  \copyright MIT Public License.
+ */
 
-using SDE::Graphics::AssimpModelLoader;
+#pragma once
+
+#include <assimp/DefaultLogger.hpp>
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "LogManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
-
-GraphicsManager::GraphicsManager()
+class SDENGINE_CLASS AssimpLogWarpper : public Assimp::Logger
 {
-    // Register instance.
-    SD_SINGLETON_DECLARATION_REGISTER;
-    // Assimp Model Loader.
-    new AssimpModelLoader();
-}
-
-GraphicsManager::~GraphicsManager()
-{
-}
-
-void GraphicsManager::Render()
-{
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
-
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
-}
-
+public:
+    explicit AssimpLogWarpper(Assimp::Logger::LogSeverity severity = LogSeverity::VERBOSE);
+    ~AssimpLogWarpper();
+public:
+    bool attachStream(Assimp::LogStream *i_stream, unsigned int i_severity = Debugging | Err | Warn | Info) override;
+    bool detatchStream(Assimp::LogStream *i_stream, unsigned int i_severity = Debugging | Err | Warn | Info) override;
+protected:
+    void OnDebug(const char *i_message) override;
+    void OnInfo(const char *i_message) override;
+    void OnWarn(const char *i_message) override;
+    void OnError(const char *i_message) override;
+};
 ______________SD_END_GRAPHICS_NAMESPACE______________

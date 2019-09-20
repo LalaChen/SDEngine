@@ -52,12 +52,17 @@ Matrix4X4f ConvertAiMatrixToMatrix4X4f(const aiMatrix4x4 &i_ai_mat)
 SD_SINGLETON_DECLARATION_IMPL(AssimpModelLoader);
 
 AssimpModelLoader::AssimpModelLoader()
+: m_logger(nullptr)
 {
     SD_SINGLETON_DECLARATION_REGISTER;
+    m_logger = new AssimpLogWarpper();
+    Assimp::DefaultLogger::set(m_logger);
+    Assimp::DefaultLogger::get()->info("Register Default Logger.");
 }
 
 AssimpModelLoader::~AssimpModelLoader()
 {
+    Assimp::DefaultLogger::kill();
 }
 
 bool AssimpModelLoader::ImportScene(const FilePathString &i_model_fn, ModelData &io_model)

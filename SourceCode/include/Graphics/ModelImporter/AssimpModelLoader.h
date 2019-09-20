@@ -27,13 +27,16 @@ SOFTWARE.
  *  \brief     Introduce of class AssimpModelLoader.
  *  \author    Kuan-Chih, Chen
  *  \date      2018/09/14
- *  \copyright FreeBSD Public License.
+ *  \copyright MIT Public License.
  */
 
 #pragma once
 
+#include <assimp/scene.h>
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "AssimpLogWarpper.h"
 #include "ModelData.h"
 #include "FileData.h"
 #include "Matrix4X4f.h"
@@ -41,10 +44,6 @@ SOFTWARE.
 using SDE::Basic::FilePathString;
 using SDE::Basic::FileData;
 using SDE::Math::Matrix4X4f;
-
-namespace Assimp {
-    class Importer;
-}
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -79,6 +78,8 @@ protected:
     void ParseMaterials(const aiScene *i_scene, ModelData &io_model);
     void ParseMeshes(const aiScene *i_scene, ModelData &io_model);
     void ParseNodes(const aiScene *i_scene, const Matrix4X4f &i_p_trans, aiNode *i_node, NodeData &io_node);
+protected:
+    AssimpLogWarpper *m_logger;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

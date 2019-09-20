@@ -323,6 +323,9 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ModelImporter\MaterialData.cpp">
       <Filter>src\Graphics\ModelImporter</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ModelImporter\AssimpLogWarpper.cpp">
+      <Filter>src\Graphics\ModelImporter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h">
@@ -515,6 +518,9 @@
       <Filter>include\Graphics\ModelImporter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ModelImporter\MaterialData.h">
+      <Filter>include\Graphics\ModelImporter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ModelImporter\AssimpLogWarpper.h">
       <Filter>include\Graphics\ModelImporter</Filter>
     </ClInclude>
   </ItemGroup>
