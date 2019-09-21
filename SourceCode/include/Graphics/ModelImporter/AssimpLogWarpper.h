@@ -32,6 +32,7 @@ SOFTWARE.
 
 #pragma once
 
+#include <assimp/Logger.hpp>
 #include <assimp/DefaultLogger.hpp>
 
 #include "SDEngineMacro.h"

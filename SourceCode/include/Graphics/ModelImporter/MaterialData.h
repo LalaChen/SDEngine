@@ -62,7 +62,7 @@ enum MaterialTextureTypeEnum
 
 typedef std::map<MaterialTextureTypeEnum, FilePathString> TextureMap;
 
-class MaterialData
+class SDENGINE_CLASS MaterialData
 {
 public:
     static const uint32_t AI_TEXTURE_ID[MaterialTextureType_MAX_DEFINE_VALUE];

@@ -4,6 +4,7 @@
 
 #include "LogManager.h"
 #include "FileSystemManager.h"
+#include "AssimpLogWarpper.h"
 #include "AssimpModelLoader.h"
 
 #define MATERIAL_COLOR(assimp_mat, assimp_matkey, SDEcolor) \

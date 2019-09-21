@@ -989,6 +989,7 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     }
 }
 
+//--------------------------------------- private  --------------------------------------
 void Sample1_DrawTriangle::CreateCommandBufferAndPool()
 {
     VkResult result = VK_SUCCESS;

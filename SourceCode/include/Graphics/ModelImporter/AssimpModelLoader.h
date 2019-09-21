@@ -32,11 +32,10 @@ SOFTWARE.
 
 #pragma once
 
-#include <assimp/scene.h>
+//#include <assimp/scene.h>
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "AssimpLogWarpper.h"
 #include "ModelData.h"
 #include "FileData.h"
 #include "Matrix4X4f.h"
@@ -44,6 +43,13 @@ SOFTWARE.
 using SDE::Basic::FilePathString;
 using SDE::Basic::FileData;
 using SDE::Math::Matrix4X4f;
+
+namespace Assimp {
+    struct aiScene;
+    struct aiNode;
+}
+
+class AssimpLogWarpper;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -75,9 +81,9 @@ public:
      */
     bool ImportScene(const FilePathString &i_model_fn, ModelData &io_model);
 protected:
-    void ParseMaterials(const aiScene *i_scene, ModelData &io_model);
-    void ParseMeshes(const aiScene *i_scene, ModelData &io_model);
-    void ParseNodes(const aiScene *i_scene, const Matrix4X4f &i_p_trans, aiNode *i_node, NodeData &io_node);
+    void ParseMaterials(const struct aiScene *i_scene, ModelData &io_model);
+    void ParseMeshes(const struct aiScene *i_scene, ModelData &io_model);
+    void ParseNodes(const struct aiScene *i_scene, const Matrix4X4f &i_p_trans, struct aiNode *i_node, NodeData &io_node);
 protected:
     AssimpLogWarpper *m_logger;
 };

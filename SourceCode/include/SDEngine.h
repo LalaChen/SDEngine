@@ -60,3 +60,7 @@ SOFTWARE.
 #include "Graphics/Manager/GraphicsManager.h"
 #include "Graphics/ImageLoader/Bitmap.h"
 #include "Graphics/ImageLoader/ImageLoader.h"
+#include "Graphics/ModelImporter/MaterialData.h"
+#include "Graphics/ModelImporter/ModelData.h"
+#include "Graphics/ModelImporter/MeshData.h"
+#include "Graphics/ModelImporter/AssimpModelLoader.h"
