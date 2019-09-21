@@ -3,6 +3,7 @@
 #include <assimp/scene.h>
 
 #include "LogManager.h"
+#include "ImageLoader.h"
 #include "FileSystemManager.h"
 #include "AssimpLogWarpper.h"
 #include "AssimpModelLoader.h"
@@ -10,7 +11,7 @@
 #define MATERIAL_COLOR(assimp_mat, assimp_matkey, SDEcolor) \
 { \
     aiColor4D color; \
-    if (aiGetMaterialColor(assimp_mat, AI_MATKEY_COLOR_AMBIENT, &color) == AI_SUCCESS) {\
+    if (aiGetMaterialColor(assimp_mat, assimp_matkey, &color) == AI_SUCCESS) {\
         SDEcolor.r = color.r; SDEcolor.g = color.g; SDEcolor.b = color.b; SDEcolor.a = color.a; \
     } \
 }
@@ -73,9 +74,11 @@ bool AssimpModelLoader::ImportModel(const FilePathString &i_model_fn, ModelData 
     if (FileSystemManager::GetRef().OpenFile(i_model_fn, fd) == true) {
         const aiScene *scene = importer.ReadFileFromMemory(&fd.m_file_content[0], fd.m_file_content.size(), aiProcessPreset_TargetRealtime_Quality | aiProcess_FlipUVs);
         if (scene != nullptr) {
-            ParseMaterials(scene, io_model);
+            FilePathString model_dir, model_fn;
+            SDE::Basic::SpliteTargetFileToPathAndName(i_model_fn, model_dir, model_fn);
+            ParseMaterialsAndTheirTextures(scene, model_dir, io_model);
             ParseMeshes(scene, io_model);
-            ParseNodes(scene, nullptr, scene->mRootNode ,io_model.m_root_node);
+            ParseNodes(scene, Matrix4X4f(), scene->mRootNode ,io_model.m_root_node);
         }
     }
     else {
@@ -84,7 +87,7 @@ bool AssimpModelLoader::ImportModel(const FilePathString &i_model_fn, ModelData 
     return true;
 }
 
-void AssimpModelLoader::ParseMaterials(const aiScene *i_scene, ModelData &io_model)
+void AssimpModelLoader::ParseMaterialsAndTheirTextures(const aiScene *i_scene, const FilePathString &i_model_dir, ModelData &io_model)
 {
     if (i_scene->mMaterials != nullptr) {
         io_model.m_materials.resize(i_scene->mNumMaterials);
@@ -96,6 +99,28 @@ void AssimpModelLoader::ParseMaterials(const aiScene *i_scene, ModelData &io_mod
             MATERIAL_FLOAT(i_scene->mMaterials[matID],      AI_MATKEY_SHININESS, io_model.m_materials[matID].m_shineness);
             for (uint32_t texID = MaterialTextureType_Diffuse; texID < MaterialTextureType_MAX_DEFINE_VALUE; ++texID) {
                 MATERIAL_TEX_NAME(i_scene->mMaterials[matID], texID, io_model.m_materials[matID].m_textures_fns[texID]);
+            }
+        }
+
+        for (MaterialData &m : io_model.m_materials) {
+            for (uint32_t tex_c_ID = 0; tex_c_ID < MaterialTextureType_MAX_DEFINE_VALUE; ++tex_c_ID) {
+                FilePathString &tex_fn = m.m_textures_fns[tex_c_ID];
+                if (m.m_textures_fns[tex_c_ID].empty() == false) {
+                    FilePathString tex_full_fn = i_model_dir + std::string("\\") + tex_fn;
+                    TextureMap::iterator tex_iter = io_model.m_textures.find(tex_fn);
+                    if (tex_iter == io_model.m_textures.end()) {
+                        BitmapStrongReferenceObject tex_bitmap_sref = ImageLoader::GetRef().LoadBitmap(tex_full_fn);
+                        if (tex_bitmap_sref.IsNull() == false) {
+                            io_model.m_textures[tex_fn] = tex_bitmap_sref;
+                        }
+                        else {
+                            SDLOGE("texture [%s] isn't exist!!!", tex_full_fn.c_str());
+                        }
+                    }
+                    else {
+                        SDLOGD("texture [%s] is exist!!!", tex_full_fn.c_str());
+                    }
+                }
             }
         }
     }

@@ -81,7 +81,7 @@ public:
      */
     bool ImportModel(const FilePathString &i_model_fn, ModelData &io_model);
 protected:
-    void ParseMaterials(const struct aiScene *i_scene, ModelData &io_model);
+    void ParseMaterialsAndTheirTextures(const struct aiScene *i_scene, const FilePathString &i_model_dir, ModelData &io_model);
     void ParseMeshes(const struct aiScene *i_scene, ModelData &io_model);
     void ParseNodes(const struct aiScene *i_scene, const Matrix4X4f &i_p_trans, struct aiNode *i_node, NodeData &io_node);
 protected:
