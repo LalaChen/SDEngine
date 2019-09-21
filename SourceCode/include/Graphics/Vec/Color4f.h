@@ -230,11 +230,18 @@ public:
      *  \brief Convert the color to Color4B.
      */
 	Color4B ToColor4B() const;
+
+    /* \fn std::string ToString() const;
+     * \brief return string.
+     */
+    std::string ToString() const;
+
 private:
     /*! \fn void Clamp01();
      *  \brief Clamp all components to [0,1].
      */
 	void Clamp01();
+
 public:
     /*! \var float r;
      *  \brief red component.

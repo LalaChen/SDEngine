@@ -29,14 +29,29 @@ SOFTWARE.
  *  \date      2019/07/20
  *  \copyright MIT License.
  */
+#include <sstream>
 #include <cstring>
 
+#include "SDEngineCommonFunction.h"
 #include "LogManager.h"
 #include "Bitmap.h"
 
 using SDE::Basic::LogManager;
+using SDE::Basic::StringFormat;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
+
+std::string BitmapConfig::BitmapConfigNames[BitmapConfig_MAX_DEFINE_VALUE] = {
+    "Android_GrayLevel",
+    "Android_RGB",
+    "Android_RGBA",
+    "DevIL",
+    "Android_A8",
+    "Android_RGBA_4444",
+    "Android_RGB_565",
+    "Android_RGBA_F16",
+    "Android_HARDWARE"
+};
 
 Bitmap::Bitmap(const ObjectName &i_object_name)
 : Object(i_object_name)
@@ -113,7 +128,13 @@ void Bitmap::ClearBitmap()
 	}
 }
 //--- Public
-
+std::string Bitmap::ToString() const
+{
+    std::stringstream ss;
+    ss << StringFormat("Bitmap[%s]:W(%u)H(%u)Bsize(%u)C(%u)", m_object_name.c_str(),
+        m_width, m_height, m_buffer_size, m_num_of_c);
+    return ss.str();
+}
 
 bool Bitmap::SetBitmap(const BitmapConfig &i_conf, Size_ui32 i_width, Size_ui32 i_height, const ImageBufferAddr i_data, ImageBufferSize i_size, int i_n_of_c, const BitmapPixelValueType &i_v_type)
 {

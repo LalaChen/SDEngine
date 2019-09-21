@@ -44,6 +44,8 @@ using SDE::Math::Matrix4X4f;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+typedef std::map<FilePathString, BitmapStrongReferenceObject> TextureMap;
+
 class SDENGINE_CLASS NodeData
 {
 public:
@@ -79,12 +81,14 @@ public:
 class SDENGINE_CLASS ModelData
 {
 public:
-    explicit ModelData(const ObjectName &m_model_name);
+    explicit ModelData();
     ~ModelData();
+public:
+    std::string ToString() const;
 public:
     std::vector<MeshData> m_mesh_datas;
     std::vector<MaterialData> m_materials;
-    std::map<FilePathString, BitmapStrongReferenceObject> m_textures;
+    TextureMap m_textures;
     NodeData m_root_node;
     ObjectName m_model_name;
 };

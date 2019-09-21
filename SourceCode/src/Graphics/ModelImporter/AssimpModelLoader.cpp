@@ -37,6 +37,14 @@
     } \
 }
 
+#define MATERIAL_NAME(assimp_mat, SDE_mat_name) \
+{ \
+    aiString ai_mat_name; \
+    if (aiGetMaterialString(assimp_mat, AI_MATKEY_NAME, &ai_mat_name) == AI_SUCCESS) { \
+        SDE_mat_name = ai_mat_name.C_Str(); \
+    } \
+}
+
 using SDE::Basic::FileSystemManager;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -72,7 +80,7 @@ bool AssimpModelLoader::ImportModel(const FilePathString &i_model_fn, ModelData 
     Assimp::Importer importer;
     FileData fd;
     if (FileSystemManager::GetRef().OpenFile(i_model_fn, fd) == true) {
-        const aiScene *scene = importer.ReadFileFromMemory(&fd.m_file_content[0], fd.m_file_content.size(), aiProcessPreset_TargetRealtime_Quality | aiProcess_FlipUVs);
+        const aiScene *scene = importer.ReadFileFromMemory(&fd.m_file_content[0], fd.m_file_content.size(), aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs);
         if (scene != nullptr) {
             FilePathString model_dir, model_fn;
             SDE::Basic::SpliteTargetFileToPathAndName(i_model_fn, model_dir, model_fn);
@@ -80,6 +88,8 @@ bool AssimpModelLoader::ImportModel(const FilePathString &i_model_fn, ModelData 
             ParseMeshes(scene, io_model);
             ParseNodes(scene, Matrix4X4f(), scene->mRootNode ,io_model.m_root_node);
         }
+        std::string model_str = io_model.ToString();
+        SDLOGD("%s", model_str.c_str());
     }
     else {
         SDLOGW("File[%s] can't be open!!!", i_model_fn);
@@ -92,6 +102,7 @@ void AssimpModelLoader::ParseMaterialsAndTheirTextures(const aiScene *i_scene, c
     if (i_scene->mMaterials != nullptr) {
         io_model.m_materials.resize(i_scene->mNumMaterials);
         for (uint32_t matID = 0; matID < i_scene->mNumMaterials; ++matID) {
+            MATERIAL_NAME(i_scene->mMaterials[matID], io_model.m_materials[matID].m_name);
             MATERIAL_COLOR(i_scene->mMaterials[matID],  AI_MATKEY_COLOR_AMBIENT,   io_model.m_materials[matID].m_ambient);
             MATERIAL_COLOR(i_scene->mMaterials[matID],  AI_MATKEY_COLOR_DIFFUSE,   io_model.m_materials[matID].m_diffuse);
             MATERIAL_COLOR(i_scene->mMaterials[matID], AI_MATKEY_COLOR_SPECULAR,  io_model.m_materials[matID].m_specular);
@@ -103,9 +114,9 @@ void AssimpModelLoader::ParseMaterialsAndTheirTextures(const aiScene *i_scene, c
         }
 
         for (MaterialData &m : io_model.m_materials) {
-            for (uint32_t tex_c_ID = 0; tex_c_ID < MaterialTextureType_MAX_DEFINE_VALUE; ++tex_c_ID) {
-                FilePathString &tex_fn = m.m_textures_fns[tex_c_ID];
-                if (m.m_textures_fns[tex_c_ID].empty() == false) {
+            for (uint32_t tex_cID = 0; tex_cID < MaterialTextureType_MAX_DEFINE_VALUE; ++tex_cID) {
+                FilePathString &tex_fn = m.m_textures_fns[tex_cID];
+                if (m.m_textures_fns[tex_cID].empty() == false) {
                     FilePathString tex_full_fn = i_model_dir + std::string("\\") + tex_fn;
                     TextureMap::iterator tex_iter = io_model.m_textures.find(tex_fn);
                     if (tex_iter == io_model.m_textures.end()) {
@@ -135,15 +146,15 @@ void AssimpModelLoader::ParseMeshes(const aiScene *i_scene, ModelData &io_model)
             aiMesh *cur_ai_mesh = i_scene->mMeshes[meshID];
             MeshData &cur_mesh = io_model.m_mesh_datas[meshID];
 
-            cur_mesh.m_mesh_name = cur_ai_mesh->mName.C_Str();
+            cur_mesh.m_name = cur_ai_mesh->mName.C_Str();
 
             if (cur_ai_mesh->mVertices == nullptr) {
-                SDLOGW("Mesh[%d(%s)] don't have vertices!!!", meshID, cur_mesh.m_mesh_name.c_str());
+                SDLOGW("Mesh[%d(%s)] don't have vertices!!!", meshID, cur_mesh.m_name.c_str());
                 continue;
             }
 
             if (cur_ai_mesh->mFaces == nullptr) {
-                SDLOGW("Mesh[%d] don't have face!!!", meshID, cur_mesh.m_mesh_name.c_str());
+                SDLOGW("Mesh[%d] don't have face!!!", meshID, cur_mesh.m_name.c_str());
                 continue;
             }
 

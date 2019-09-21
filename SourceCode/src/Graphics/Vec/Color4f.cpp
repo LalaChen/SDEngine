@@ -22,7 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "SDEngineCommonFunction.h"
 #include "Color4f.h"
+
+using SDE::Basic::StringFormat;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -188,6 +191,11 @@ Color4B Color4f::ToColor4B() const
         (unsigned char)(g * 255.0f),
         (unsigned char)(b * 255.0f),
         (unsigned char)(a * 255.0f));
+}
+
+std::string Color4f::ToString() const
+{
+    return StringFormat("(%lf, %lf, %lf, %lf)", r, g, b, a);
 }
 
 void Color4f::Clamp01()

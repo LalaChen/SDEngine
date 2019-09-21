@@ -46,23 +46,26 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 enum BitmapConfigEnum
 {
-//-------- Common ----------
-    BitmapConfig_GRAYLEVEL = 0,
-    BitmapConfig_RGB_888 = 1,
-    BitmapConfig_RGBA_8888 = 2,
-//---------- IL ------------
-    BitmapConfig_DevIL = 3,
-//----- Android Bitmap -----
-	BitmapConfig_ALPHA_8 = 4,
-	BitmapConfig_RGBA_4444 = 5,
-	BitmapConfig_RGB_565 = 6,
-	BitmapConfig_RGBA_F16 = 7,
-	BitmapConfig_HARDWARE = 8,
-	BitmapConfig_UNKNOWN
+    //-------- Common ----------
+    BitmapConfig_GRAYLEVEL,
+    BitmapConfig_RGB_888,
+    BitmapConfig_RGBA_8888,
+    //---------- IL ------------
+    BitmapConfig_DevIL,
+    //----- Android Bitmap -----
+    BitmapConfig_ALPHA_8,
+    BitmapConfig_RGBA_4444,
+    BitmapConfig_RGB_565,
+    BitmapConfig_RGBA_F16,
+    BitmapConfig_HARDWARE,
+    BitmapConfig_MAX_DEFINE_VALUE,
+	BitmapConfig_UNKNOWN = -1
 };
 
 class SDENGINE_CLASS BitmapConfig
 {
+public:
+    static std::string BitmapConfigNames[BitmapConfig_MAX_DEFINE_VALUE];
 public:
 	BitmapConfig() : m_enum(BitmapConfig_UNKNOWN){}
 	BitmapConfig(const BitmapConfigEnum i_b) : m_enum(i_b){}
@@ -127,6 +130,8 @@ public:
                    const BitmapPixelValueType  &i_v_type = BitmapPixelDataType_MAX_DEFINE_VALUE);
 	const ImageBufferAddr GetBitmap() const;
 	bool  InNull() const;
+public:
+    std::string ToString() const override;
 protected:
 	void DecideNumberOfChannel(int i_n_of_c);
 	void ClearBitmap();

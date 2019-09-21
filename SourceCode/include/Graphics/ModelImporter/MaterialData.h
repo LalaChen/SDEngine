@@ -60,8 +60,6 @@ enum MaterialTextureTypeEnum
     MaterialTextureType_MAX_DEFINE_VALUE
 };
 
-typedef std::map<MaterialTextureTypeEnum, FilePathString> TextureMap;
-
 class SDENGINE_CLASS MaterialData
 {
 public:
@@ -70,14 +68,15 @@ public:
     explicit MaterialData();
     ~MaterialData();
 public:
+    std::string ToString(uint32_t i_level = 0) const;
+public:
     FilePathString m_textures_fns[MaterialTextureType_MAX_DEFINE_VALUE];
-    TextureMap m_texture_map;
     Color4f m_ambient;
     Color4f m_diffuse;
     Color4f m_specular;
     Color4f m_emission;
     float m_shineness; //shineness_strength
-    ObjectName m_material_name;
+    ObjectName m_name;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

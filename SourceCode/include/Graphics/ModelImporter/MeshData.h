@@ -63,6 +63,8 @@ public:
      */
     ~MeshData();
 public:
+    std::string ToString(uint32_t i_level = 0) const;
+public:
     /*! \var std::vector<vec3> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
      *  \brief vertex attributes.
      */
@@ -78,10 +80,10 @@ public:
      */
     std::vector<uint32_t> m_face_indices;
 
-    /*! \var ObjectName m_mesh_name;
+    /*! \var ObjectName m_name;
      *  \brief mesh name.
      */
-    ObjectName m_mesh_name;
+    ObjectName m_name;
 
     /*! \var int32_t m_material_ID;
      *  \brief Material ID. Default is -1.(No material)

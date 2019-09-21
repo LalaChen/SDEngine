@@ -39,13 +39,13 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  */
 enum VertexBufferUsageEnum
 {
-    VertexBufferUsage_VERTEX_BUFFER = 0, /*!< Use for storing vertice.*/
-    VertexBufferUsage_NORMAL_BUFFER, /*!< Use for storing normals.*/
-    VertexBufferUsage_TEX_COORD_BUFFER, /*!< Use for storing texture coordinates.*/
-    VertexBufferUsage_COLOR_BUFFER, /*!< Use for storing colors.*/
-    VertexBufferUsage_TANGENT_BUFFER, /*!< Use for storing tangents.*/
-    VertexBufferUsage_BINORMAL_BUFFER , /*!< Use for storing binormals.*/
-    VertexBufferUsage_ELEMENT_BUFFER, /*!< Use for storing elements.*/
+    VertexBufferUsage_VERTEX_BUFFER = 0, /*!< Use for storing vertice.(vec3)*/
+    VertexBufferUsage_NORMAL_BUFFER, /*!< Use for storing normals.(vec3)*/
+    VertexBufferUsage_TEX_COORD_BUFFER, /*!< Use for storing texture coordinates.(vec3)*/
+    VertexBufferUsage_TANGENT_BUFFER, /*!< Use for storing tangents.(vec3)*/
+    VertexBufferUsage_BINORMAL_BUFFER , /*!< Use for storing binormals.(vec3)*/
+    VertexBufferUsage_COLOR_BUFFER, /*!< Use for storing colors.(Color4f)*/
+    VertexBufferUsage_ELEMENT_BUFFER, /*!< Use for storing elements.(uint32_t)*/
     VertexBufferUsage_MAX_DEFINE_VALUE, /*!< Bound of enum.*/
     VertexBufferUsage_BUFFER_GROUP = VertexBufferUsage_BINORMAL_BUFFER + 1
 };
