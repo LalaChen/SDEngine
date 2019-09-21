@@ -1,6 +1,9 @@
 #pragma once
 
+#include "SDEngine.h"
 #include "Sample.h"
+
+using SDE::Graphics::ModelData;
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample2_DrawScene);
 
@@ -72,4 +75,6 @@ protected:
     VkCommandBuffer m_VK_cmd_buffer;
 protected:
     BasicUniformBuffer m_uniform_buffer_datas[2];
+protected:
+    ModelData m_model;
 };
