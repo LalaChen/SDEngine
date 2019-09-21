@@ -66,7 +66,7 @@ AssimpModelLoader::~AssimpModelLoader()
     Assimp::DefaultLogger::kill();
 }
 
-bool AssimpModelLoader::ImportScene(const FilePathString &i_model_fn, ModelData &io_model)
+bool AssimpModelLoader::ImportModel(const FilePathString &i_model_fn, ModelData &io_model)
 {
     Assimp::Importer importer;
     FileData fd;
@@ -77,6 +77,9 @@ bool AssimpModelLoader::ImportScene(const FilePathString &i_model_fn, ModelData 
             ParseMeshes(scene, io_model);
             ParseNodes(scene, nullptr, scene->mRootNode ,io_model.m_root_node);
         }
+    }
+    else {
+        SDLOGW("File[%s] can't be open!!!", i_model_fn);
     }
     return true;
 }

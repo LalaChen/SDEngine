@@ -73,13 +73,13 @@ public:
      */
     ~AssimpModelLoader();
 public:
-    /*! \fn bool ImportScene(const FilePathString &i_model_fn, ModelData &io_model);
+    /*! \fn bool ImportModel(const FilePathString &i_model_fn, ModelData &io_model);
      *  \param [in] i_model_fn Model filepath.
      *  \param [inout] io_model The parsed data.
      *  \brief This function is used to import model file to our model. Please note
      *         that we should put all texture files with model file together.
      */
-    bool ImportScene(const FilePathString &i_model_fn, ModelData &io_model);
+    bool ImportModel(const FilePathString &i_model_fn, ModelData &io_model);
 protected:
     void ParseMaterials(const struct aiScene *i_scene, ModelData &io_model);
     void ParseMeshes(const struct aiScene *i_scene, ModelData &io_model);

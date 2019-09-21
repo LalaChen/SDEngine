@@ -79,6 +79,7 @@ void Sample2_DrawScene::Destroy()
 void Sample2_DrawScene::ImportAssimpModel()
 {
     SDLOG("Import AssimpModel!!!");
+
 }
 
 void Sample2_DrawScene::CreateBuffers()
