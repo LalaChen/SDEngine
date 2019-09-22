@@ -179,9 +179,16 @@ public: //operator
 
 public:
     /*! \fn std::string ToString() const;
-     *  \brief Return vector by format (%lf,%lf,%lf).
+     *  \brief Return matrix.
      */
     std::string ToString() const;
+
+    /*! \fn std::string ToFormatString(const std::string &i_mat_name, const std::string &i_prefix) const;
+     *  \param [in] i_mat_name Name about matrix.
+     *  \param [in] i_prefix Line about matrix.
+     *  \brief Return matrix.
+     */
+    std::string ToFormatString(const std::string &i_mat_name, const std::string &i_prefix) const;
 
     /*! \fn const float* GetDataAddr() const;
      *  \brief return raw pointer.

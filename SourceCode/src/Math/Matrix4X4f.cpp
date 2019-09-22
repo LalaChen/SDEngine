@@ -163,9 +163,20 @@ std::string Matrix4X4f::ToString() const
 {
     std::string result =
         StringFormat("\n m = | %.3lf %.3lf %.3lf %.3lf |", m_matrix[0][0], m_matrix[0][1], m_matrix[0][2], m_matrix[0][3]) +
-        StringFormat("\n m = | %.3lf %.3lf %.3lf %.3lf |", m_matrix[1][0], m_matrix[1][1], m_matrix[1][2], m_matrix[1][3]) +
-        StringFormat("\n m = | %.3lf %.3lf %.3lf %.3lf |", m_matrix[2][0], m_matrix[2][1], m_matrix[2][2], m_matrix[2][3]) +
-        StringFormat("\n m = | %.3lf %.3lf %.3lf %.3lf |", m_matrix[3][0], m_matrix[3][1], m_matrix[3][2], m_matrix[3][3]);
+        StringFormat("\n     | %.3lf %.3lf %.3lf %.3lf |", m_matrix[1][0], m_matrix[1][1], m_matrix[1][2], m_matrix[1][3]) +
+        StringFormat("\n     | %.3lf %.3lf %.3lf %.3lf |", m_matrix[2][0], m_matrix[2][1], m_matrix[2][2], m_matrix[2][3]) +
+        StringFormat("\n     | %.3lf %.3lf %.3lf %.3lf |", m_matrix[3][0], m_matrix[3][1], m_matrix[3][2], m_matrix[3][3]);
+    return result;
+}
+
+std::string Matrix4X4f::ToFormatString(const std::string &i_mat_name, const std::string &i_prefix) const
+{
+    std::string result =
+        StringFormat("%s%s",i_prefix.c_str(), i_mat_name.c_str()) +
+        StringFormat("\n%s| %.3lf %.3lf %.3lf %.3lf |",i_prefix.c_str(), m_matrix[0][0], m_matrix[0][1], m_matrix[0][2], m_matrix[0][3]) +
+        StringFormat("\n%s| %.3lf %.3lf %.3lf %.3lf |",i_prefix.c_str(), m_matrix[1][0], m_matrix[1][1], m_matrix[1][2], m_matrix[1][3]) +
+        StringFormat("\n%s| %.3lf %.3lf %.3lf %.3lf |",i_prefix.c_str(), m_matrix[2][0], m_matrix[2][1], m_matrix[2][2], m_matrix[2][3]) +
+        StringFormat("\n%s| %.3lf %.3lf %.3lf %.3lf |",i_prefix.c_str(), m_matrix[3][0], m_matrix[3][1], m_matrix[3][2], m_matrix[3][3]) + "\n";
     return result;
 }
 

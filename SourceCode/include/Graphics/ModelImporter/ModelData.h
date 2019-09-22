@@ -52,6 +52,8 @@ public:
     NodeData() {}
     ~NodeData() {}
 public:
+    std::string ToString(uint32_t i_level) const;
+public:
     /*! \var std::vector<NodeData> m_child_nodes;
      *  \brief a vector record all child of this node.
      */
