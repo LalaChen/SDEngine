@@ -2,7 +2,6 @@
 #include <chrono>
 #include <thread>
 
-#include "SDEngine.h"
 #include "VulkanAPITestManager.h"
 #include "AssimpModelLoader.h"
 #include "Sample2_DrawScene.h"
@@ -13,30 +12,9 @@ using namespace::SDE::Graphics;
 
 Sample2_DrawScene::Sample2_DrawScene(VulkanAPITestManager *i_mgr)
 : Sample("DrawScene", i_mgr)
-, m_VK_ver_buffer(VK_NULL_HANDLE)
-, m_VK_ver_buf_memory(VK_NULL_HANDLE)
-, m_VK_ver_color_buffer(VK_NULL_HANDLE)
-, m_VK_ver_color_buf_memory(VK_NULL_HANDLE)
-, m_VK_ver_tex_buffer(VK_NULL_HANDLE)
-, m_VK_ver_tex_buf_memory(VK_NULL_HANDLE)
-, m_VK_indices_buffer(VK_NULL_HANDLE)
-, m_VK_ibuf_memory(VK_NULL_HANDLE)
-//
-, m_VK_main_texture(VK_NULL_HANDLE)
-, m_VK_main_texture_memory(VK_NULL_HANDLE)
-, m_VK_main_texture_image_view(VK_NULL_HANDLE)
-, m_VK_main_texture_sampler(VK_NULL_HANDLE)
 //
 , m_VK_basic_uniform_buffers{ VK_NULL_HANDLE, VK_NULL_HANDLE }
 , m_VK_basic_uniform_buffer_memories{ VK_NULL_HANDLE, VK_NULL_HANDLE }
-//
-, m_VK_pipeline_layout(VK_NULL_HANDLE)
-, m_vert_module(VK_NULL_HANDLE)
-, m_frag_module(VK_NULL_HANDLE)
-, m_VK_main_shader_set0_layout(VK_NULL_HANDLE)
-, m_VK_descriptor_set0_uniforms{ VK_NULL_HANDLE, VK_NULL_HANDLE }
-, m_VK_descriptor_pool(VK_NULL_HANDLE)
-, m_VK_main_graphics_pipeline(VK_NULL_HANDLE)
 //
 , m_VK_render_pass(VK_NULL_HANDLE)
 //for camera
