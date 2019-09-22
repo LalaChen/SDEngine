@@ -162,6 +162,12 @@
     <Filter Include="include\Graphics\ModelImporter">
       <UniqueIdentifier>{a323f9a5-21f6-4904-b077-0f0239c4ddc7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\Mesh">
+      <UniqueIdentifier>{08707579-b5f2-40c9-9f4e-0329dd550995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\Mesh">
+      <UniqueIdentifier>{461eea52-e6d7-4533-a11d-44af01d66a50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -325,6 +331,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ModelImporter\AssimpLogWarpper.cpp">
       <Filter>src\Graphics\ModelImporter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Mesh\Mesh.cpp">
+      <Filter>src\Graphics\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -522,6 +531,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ModelImporter\AssimpLogWarpper.h">
       <Filter>include\Graphics\ModelImporter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Mesh\Mesh.h">
+      <Filter>include\Graphics\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

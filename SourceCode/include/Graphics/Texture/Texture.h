@@ -47,7 +47,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Texture);
 
 /*! \class Texture
  *  In our graphic system, texture can be used for many case. For an example, 2D Texture is usually used to post on an object in game world. In another case,
- *  1D texture can be used to store a look-up table. Finallt, 3D texture can be used to handle 3D medical image for volume rendering.
+ *  1D texture can be used to store a look-up table. Finally, 3D texture can be used to handle 3D medical image for volume rendering.
  *  We usually input diverse dimension datas into graphics card for using in shader program via texture. Therefore, the another important parameter group 
  *  is sampler. Sampler is used to tell graphics card how to get data. We need to set mag and min filter, wrap mode about texture coordinate,
  *  getting nearest texel or linear interpolated texels, ...etc.
@@ -57,10 +57,9 @@ class SDENGINE_API Texture : public Object
 public:
     /*! \fn explicit Texture(const ObjectName &i_object_name);
      *  \param [in] i_object_name Name of this texture.
-     *  \param [in] i_register_mgr Flag for telling us is this texture registered to GraphicsManager or not.
      *  \brief Default constructor about texture.
      */
-    explicit Texture(const ObjectName &i_object_name, bool i_register_mgr);
+    explicit Texture(const ObjectName &i_object_name);
 
     /*! \fn virtual ~Texture();
      *  \brief Destructor of texture.

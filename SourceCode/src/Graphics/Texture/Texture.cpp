@@ -30,7 +30,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 //--- Member Function.
-Texture::Texture(const ObjectName &i_object_name, bool i_register_mgr)
+Texture::Texture(const ObjectName &i_object_name)
 : Object(i_object_name)
 {
 }
