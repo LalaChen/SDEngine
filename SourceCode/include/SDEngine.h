@@ -64,3 +64,6 @@ SOFTWARE.
 #include "Graphics/ModelImporter/ModelData.h"
 #include "Graphics/ModelImporter/MeshData.h"
 #include "Graphics/ModelImporter/AssimpModelLoader.h"
+#include "Graphics/Texture/Texture.h"
+#include "Graphics/VertexBuffer/DynamicVertexBuffer.h"
+#include "Graphics/VertexBuffer/StaticVertexBuffer.h"
