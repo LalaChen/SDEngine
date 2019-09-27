@@ -89,7 +89,7 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
         return;
     }
 
-    result = AllocatVkDeviceMemoryForVkBuffer(staging_memory, staging_memory_size, staging_buffer_handle, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0u);
+    result = AllocatVkDeviceMemoryForVkBuffer(staging_memory, staging_memory_size, staging_buffer_handle, 0u, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
     if (result != VK_SUCCESS) {
         SDLOGW("Allocate staging memory failure.");
         return;
