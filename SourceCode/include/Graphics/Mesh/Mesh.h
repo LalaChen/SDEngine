@@ -52,8 +52,25 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Mesh);
 class SDENGINE_CLASS Mesh : public Object
 {
 public:
+    /*! \fn explicit Mesh(const ObjectName &i_object_name);
+     *  \param i_object_name Name of this object.
+     *  \brief Constructor of Mesh
+     */
     explicit Mesh(const ObjectName &i_object_name);
+
+    /*! \fn ~Mesh();
+     *  \brief Destructor of Mesh.
+     */
     virtual ~Mesh();
+public:
+    /*! \fn void RegisterVertexBuffer(const VertexBufferUsageEnum &i_usage, const VertexBufferStrongReferenceObject &i_va);
+     *  \param [in] i_usage Register buffer to channels.
+     *  \param [in] i_va_sref Register target buffer. Please note that we will keep strong reference.
+     *  \brief Register vertex buffer reference object to target channel. Please note that we will keep strong reference in
+     *         mesh. If we want to update data, we need get weak reference at fitst.
+     */
+    void RegisterVertexBuffer(const VertexBufferUsageEnum &i_usage, const VertexBufferStrongReferenceObject &i_va_sref);
+    void BindVertexBuffers();
 protected:
     VertexBufferStrongReferenceObject m_vertex_attribs[VertexBufferUsage_MAX_DEFINE_VALUE];
 };

@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "GraphicsManager.h"
 #include "Mesh.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -34,6 +35,23 @@ Mesh::Mesh(const ObjectName &i_object_name)
 
 Mesh::~Mesh()
 {
+}
+
+void Mesh::RegisterVertexBuffer(const VertexBufferUsageEnum &i_usage, const VertexBufferStrongReferenceObject &i_va_sref)
+{
+    if (m_vertex_attribs[i_usage].IsNull() == false) {
+        m_vertex_attribs[i_usage] = nullptr;
+    }
+    m_vertex_attribs[i_usage] = i_va_sref;
+}
+
+void Mesh::BindVertexBuffers()
+{
+    for (uint32_t idx = 0; idx < VertexBufferUsage_BUFFER_GROUP; ++idx) {
+        if (m_vertex_attribs[static_cast<uint32_t>(idx)].IsNull() == false) {
+            //GraphicsManager::GetRef().
+        }
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

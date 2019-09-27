@@ -29,7 +29,6 @@ std::string MeshData::ToString(uint32_t i_level) const
             ss << tabs << tabs << StringFormat("VA[%d](%llu)\n", i, m_vertex_attribs[i].size());
         }
     }
-    ss << tabs << tabs << StringFormat("Color(%llu)\n", m_vertex_colors.size());
     ss << tabs << tabs << StringFormat("Face(%llu)\n", m_face_indices.size() / 3);
     return ss.str();
 }

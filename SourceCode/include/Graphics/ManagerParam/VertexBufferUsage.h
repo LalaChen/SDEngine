@@ -32,6 +32,10 @@ SOFTWARE.
 
 #pragma once
 
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum VertexBufferUsageKindEnum
@@ -47,7 +51,9 @@ enum VertexBufferUsageEnum
     VertexBufferUsage_COLOR_BUFFER, /*!< Use for storing colors.(Color4f)*/
     VertexBufferUsage_ELEMENT_BUFFER, /*!< Use for storing elements.(uint32_t)*/
     VertexBufferUsage_MAX_DEFINE_VALUE, /*!< Bound of enum.*/
-    VertexBufferUsage_BUFFER_GROUP = VertexBufferUsage_BINORMAL_BUFFER + 1
+    VertexBufferUsage_BUFFER_GROUP = VertexBufferUsage_COLOR_BUFFER + 1
 };
+
+extern SDENGINE_API const std::string VertexBufferUsageEnumNames[VertexBufferUsage_MAX_DEFINE_VALUE];
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

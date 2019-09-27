@@ -190,42 +190,48 @@ void AssimpModelLoader::ParseMeshes(const aiScene *i_scene, ModelData &io_model)
             }
 
             for (uint32_t vID = 0; vID < cur_ai_mesh->mNumVertices; ++vID) {
-                cur_mesh.m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].push_back(
-                    vec3(cur_ai_mesh->mVertices[vID].x, cur_ai_mesh->mVertices[vID].y, cur_ai_mesh->mVertices[vID].z));
+                cur_mesh.m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].push_back(cur_ai_mesh->mVertices[vID].x);
+                cur_mesh.m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].push_back(cur_ai_mesh->mVertices[vID].y);
+                cur_mesh.m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].push_back(cur_ai_mesh->mVertices[vID].z);
             }
 
             if (cur_ai_mesh->mBitangents != nullptr) {
                 for (uint32_t vID = 0; vID < cur_ai_mesh->mNumVertices; ++vID) {
-                    cur_mesh.m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].push_back(
-                        vec3(cur_ai_mesh->mBitangents[vID].x, cur_ai_mesh->mBitangents[vID].y, cur_ai_mesh->mBitangents[vID].z));
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].push_back(cur_ai_mesh->mBitangents[vID].x);
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].push_back(cur_ai_mesh->mBitangents[vID].y);
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].push_back(cur_ai_mesh->mBitangents[vID].z);
                 }
             }
 
             if (cur_ai_mesh->mTangents != nullptr) {
                 for (uint32_t vID = 0; vID < cur_ai_mesh->mNumVertices; ++vID) {
-                    cur_mesh.m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].push_back(
-                        vec3(cur_ai_mesh->mTangents[vID].x, cur_ai_mesh->mTangents[vID].y, cur_ai_mesh->mTangents[vID].z));
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].push_back(cur_ai_mesh->mTangents[vID].x);
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].push_back(cur_ai_mesh->mTangents[vID].y);
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].push_back(cur_ai_mesh->mTangents[vID].z);
                 }
             }
 
             if (cur_ai_mesh->mTextureCoords[0] != nullptr) {
                 for (uint32_t vID = 0; vID < cur_ai_mesh->mNumVertices; ++vID) {
-                    cur_mesh.m_vertex_attribs[VertexBufferUsage_TEX_COORD_BUFFER].push_back(
-                        vec3(cur_ai_mesh->mTextureCoords[0][vID].x, cur_ai_mesh->mTextureCoords[0][vID].y, cur_ai_mesh->mTextureCoords[0][vID].z));
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_TEX_COORD_BUFFER].push_back(cur_ai_mesh->mTextureCoords[0][vID].x);
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_TEX_COORD_BUFFER].push_back(cur_ai_mesh->mTextureCoords[0][vID].y);
                 }
             }
 
             if (cur_ai_mesh->mNormals != nullptr) {
                 for (uint32_t vID = 0; vID < cur_ai_mesh->mNumVertices; ++vID) {
-                    cur_mesh.m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].push_back(
-                        vec3(cur_ai_mesh->mNormals[vID].x, cur_ai_mesh->mNormals[vID].y, cur_ai_mesh->mNormals[vID].z));
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].push_back(cur_ai_mesh->mNormals[vID].x);
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].push_back(cur_ai_mesh->mNormals[vID].y);
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].push_back(cur_ai_mesh->mNormals[vID].z);
                 }
             }
 
             if (cur_ai_mesh->mColors[0] != nullptr) {
                 for (uint32_t vID = 0; vID < cur_ai_mesh->mNumVertices; ++vID) {
-                    cur_mesh.m_vertex_colors.push_back(
-                        Color4f(cur_ai_mesh->mColors[0][vID].r, cur_ai_mesh->mColors[0][vID].g, cur_ai_mesh->mColors[0][vID].b, cur_ai_mesh->mColors[0][vID].a));
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].push_back(cur_ai_mesh->mColors[0][vID].r);
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].push_back(cur_ai_mesh->mColors[0][vID].g);
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].push_back(cur_ai_mesh->mColors[0][vID].b);
+                    cur_mesh.m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].push_back(cur_ai_mesh->mColors[0][vID].a);
                 }
             }
         }

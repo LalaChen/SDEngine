@@ -65,15 +65,10 @@ public:
 public:
     std::string ToString(uint32_t i_level = 0) const;
 public:
-    /*! \var std::vector<vec3> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
+    /*! \var std::vector<float> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
      *  \brief vertex attributes.
      */
-    std::vector<vec3> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
-
-    /*! \var std::vector<Color4f> m_vertex_colors;
-     *  \brief vertex colors.
-     */
-    std::vector<Color4f> m_vertex_colors;
+    std::vector<float> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
 
     /*! \var std::vector<uint32_t> m_face_indices;
      *  \brief vertex indices.
