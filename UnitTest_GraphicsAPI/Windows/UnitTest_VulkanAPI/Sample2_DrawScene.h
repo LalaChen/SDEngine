@@ -8,7 +8,14 @@
 #include "Sample.h"
 
 using SDE::Graphics::ModelData;
+
 using SDE::Graphics::Texture;
+using SDE::Graphics::TextureStrongReferenceObject;
+using SDE::Graphics::TextureWeakReferenceObject;
+
+using SDE::Graphics::Mesh;
+using SDE::Graphics::MeshStrongReferenceObject;
+using SDE::Graphics::MeshWeakReferenceObject;
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample2_DrawScene);
 
@@ -27,9 +34,8 @@ protected:
     void CreateRenderPassAndFramebuffer() override;
     void CreateCommandBufferAndPool() override;
 private:
-    void CreateBuffers();
-    void CreateTexture();
-    void ImportAssimpModel();
+    void CreateModel();
+    void ImportAssimpModel(ModelData &io_model);
     void CreateUniformBuffer();
     void CreateShaderPrograms();
 protected:
@@ -60,7 +66,8 @@ protected:
     VkCommandPool m_VK_cmd_pool;
     VkCommandBuffer m_VK_cmd_buffer;
 protected:
-    BasicUniformBuffer m_uniform_buffer_datas[2];
+    std::vector<MeshStrongReferenceObject> m_meshes;
+    std::vector<TextureStrongReferenceObject> m_textures;
 protected:
-    ModelData m_model;
+    BasicUniformBuffer m_uniform_buffer_datas[2];
 };

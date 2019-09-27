@@ -38,10 +38,7 @@ void Sample2_DrawScene::Initialize()
     CreateCommandBufferAndPool();
     CreateRenderPassAndFramebuffer();
     //
-    ImportAssimpModel();
-    //
-    CreateBuffers();
-    CreateTexture();
+    CreateModel();
     CreateUniformBuffer();
     CreateShaderPrograms();
 }
@@ -52,23 +49,104 @@ void Sample2_DrawScene::Render()
 
 void Sample2_DrawScene::Destroy()
 {
+    m_meshes.clear();
 }
 
-void Sample2_DrawScene::ImportAssimpModel()
+void Sample2_DrawScene::ImportAssimpModel(ModelData &io_model)
 {
-    SDLOG("Import AssimpModel!!!");
-    AssimpModelLoader::GetRef().ImportModel("resources\\models\\Building02\\Building02_m.FBX", m_model);
-    //AssimpModelLoader::GetRef().ImportModel("resources\\models\\Build11_fbx\\Build11_fbx.FBX", m_model);
+    SDLOG("---Import AssimpModel!!!");
+    AssimpModelLoader::GetRef().ImportModel("resources\\models\\Building02\\Building02_m.FBX", io_model);
+    //AssimpModelLoader::GetRef().ImportModel("resources\\models\\Build11_fbx\\Build11_fbx.FBX", io_model);
 }
 
-void Sample2_DrawScene::CreateBuffers()
+void Sample2_DrawScene::CreateModel()
 {
-    SDLOG("Create Buffer!!!");
-}
-
-void Sample2_DrawScene::CreateTexture()
-{
-    SDLOG("Create Texture!!!");
+    SDLOG("Create Meshes!!!");
+    ModelData model;
+    ImportAssimpModel(model);
+    //
+    for (uint32_t meshID = 0; meshID < model.m_mesh_datas.size(); ++meshID) {
+        MeshStrongReferenceObject mesh_sref = new Mesh(model.m_mesh_datas[meshID].m_name);
+        VertexAttribLocation vaID;
+        //--- Vertex Buffer
+        if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].size() > 0) {
+            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_VERTEX_BUFFER);
+            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+                StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
+                vaID, VertexBufferFormat_X32Y32Z32_SFLOAT);
+            va_sref.GetRef().RefreshBufferData(
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].data(),
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].size());
+            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+        }
+        //--- Normal Buffer
+        if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].size() > 0) {
+            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_NORMAL_BUFFER);
+            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+                StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
+                vaID, VertexBufferFormat_X32Y32Z32_SFLOAT);
+            va_sref.GetRef().RefreshBufferData(
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].data(),
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].size());
+            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_NORMAL_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+        }
+        //--- Tangent Buffer
+        if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].size() > 0) {
+            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_TANGENT_BUFFER);
+            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+                StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
+                vaID, VertexBufferFormat_X32Y32_SFLOAT);
+            va_sref.GetRef().RefreshBufferData(
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].data(),
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].size());
+            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_TANGENT_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+        }
+        //--- Binormal Buffer
+        if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].size() > 0) {
+            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_BINORMAL_BUFFER);
+            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+                StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
+                vaID, VertexBufferFormat_X32Y32Z32_SFLOAT);
+            va_sref.GetRef().RefreshBufferData(
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].data(),
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].size());
+            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_BINORMAL_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+        }
+        //--- Tex Coord Buffer
+        if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TEX_COORD_BUFFER].size() > 0) {
+            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_TEX_COORD_BUFFER);
+            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+                StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
+                vaID, VertexBufferFormat_X32Y32_SFLOAT);
+            va_sref.GetRef().RefreshBufferData(
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TEX_COORD_BUFFER].data(),
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TEX_COORD_BUFFER].size());
+            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_TEX_COORD_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+        }
+        //--- Color Buffer
+        if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].size() > 0) {
+            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_COLOR_BUFFER);
+            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+                StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
+                vaID, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
+            va_sref.GetRef().RefreshBufferData(
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].data(),
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].size());
+            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_COLOR_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+        }
+        //--- Indice Buffer
+        if (model.m_mesh_datas[meshID].m_face_indices.size() > 0) {
+            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_ELEMENT_BUFFER);
+            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+                StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
+                vaID, VertexBufferFormat_X16_UINT);
+            va_sref.GetRef().RefreshBufferData(
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_ELEMENT_BUFFER].data(),
+                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_ELEMENT_BUFFER].size());
+            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_ELEMENT_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+        }
+        m_meshes.push_back(mesh_sref);
+    }
 }
 
 void Sample2_DrawScene::CreateUniformBuffer()
