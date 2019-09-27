@@ -168,6 +168,12 @@
     <Filter Include="src\Graphics\Mesh">
       <UniqueIdentifier>{461eea52-e6d7-4533-a11d-44af01d66a50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Graphics\Material">
+      <UniqueIdentifier>{ada6a0cd-ef00-4fb8-bfe7-8f52de54c107}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\Material">
+      <UniqueIdentifier>{4fe64516-b2aa-4060-8d42-26a04abfaaad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -334,6 +340,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Mesh\Mesh.cpp">
       <Filter>src\Graphics\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\BasicTextures.cpp">
+      <Filter>src\Graphics\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\VertexBufferUsage.cpp">
+      <Filter>src\Graphics\ManagerParam</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -534,6 +546,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Mesh\Mesh.h">
       <Filter>include\Graphics\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\BasicTextures.h">
+      <Filter>include\Graphics\Material</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

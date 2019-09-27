@@ -38,6 +38,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\SamplerIdentity.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\TextureIdentity.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\VertexBufferIdentity.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\VertexBufferUsage.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\TextureFilterType_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\TextureFormat_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\TextureMipmapMode_Vulkan.cpp" />
@@ -57,6 +58,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKBuffer.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKDeviceMemory.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKImage.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\BasicTextures.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ModelImporter\AssimpLogWarpper.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ModelImporter\AssimpModelLoader.cpp" />
@@ -119,6 +121,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4Manager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\BasicTextures.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ModelImporter\AssimpLogWarpper.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ModelImporter\AssimpModelLoader.h" />
