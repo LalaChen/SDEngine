@@ -64,7 +64,7 @@ void Sample2_DrawScene::CreateModel()
     SDLOG("Create Meshes!!!");
     ModelData model;
     ImportAssimpModel(model);
-    //
+    //1. Load meshes.
     for (uint32_t meshID = 0; meshID < model.m_mesh_datas.size(); ++meshID) {
         MeshStrongReferenceObject mesh_sref = new Mesh(model.m_mesh_datas[meshID].m_name);
         VertexAttribLocation vaID;
@@ -147,6 +147,17 @@ void Sample2_DrawScene::CreateModel()
         }
         m_meshes.push_back(mesh_sref);
     }
+    //2. Load texture.
+    for (TextureMap::const_iterator tex_iter = model.m_textures.begin();
+        tex_iter != model.m_textures.end();
+        tex_iter++) {
+        TextureResourceMap::iterator res_iter = m_textures.find((*tex_iter).first);
+        if (res_iter == m_textures.end()) {
+            TextureStrongReferenceObject tex_sref = new Texture(StringFormat("%s_%s", model.m_model_name.c_str(), (*tex_iter).first.c_str()));
+            tex_sref.GetRef().InitializeDataFromBitmap((*tex_iter).second);
+        }
+    }
+    //3. 
 }
 
 void Sample2_DrawScene::CreateUniformBuffer()
@@ -170,6 +181,68 @@ void Sample2_DrawScene::CreateUniformBuffer()
 void Sample2_DrawScene::CreateShaderPrograms()
 {
     SDLOG("Create Shader Programs!!!");
+    VkResult result = VK_SUCCESS;
+    //1. bind vertex attribute array.
+   //(such like glVertexAttribBinding and glVertexAttribFormat.)
+   //--- i. bind pointer.
+   //------ one buffer one binding. (glVertexAttribFormat)
+    VkVertexInputBindingDescription vert_input_binding_des_infos[3] = {
+        {}, {}, {}
+    };
+    vert_input_binding_des_infos[0].binding = 0;
+    vert_input_binding_des_infos[0].stride = sizeof(vec3);
+    vert_input_binding_des_infos[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+    vert_input_binding_des_infos[1].binding = 1;
+    vert_input_binding_des_infos[1].stride = sizeof(vec3);
+    vert_input_binding_des_infos[1].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+    vert_input_binding_des_infos[2].binding = 2;
+    vert_input_binding_des_infos[2].stride = sizeof(vec2);
+    vert_input_binding_des_infos[2].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+    //--- ii. link bind pointer. (glVertexAttribBinding)m_VK_main_shader_set_layouts
+    VkVertexInputAttributeDescription vert_input_attrib_des_infos[3] = {
+        {},{},{}
+    };
+    //------ bind vertice attribute.
+    vert_input_attrib_des_infos[0].binding = 0; //input buffer binding. (VkPhysicalDeviceLimits::maxVertexInputBindings)
+    vert_input_attrib_des_infos[0].location = 0; //shader location. (VkPhysicalDeviceLimits::maxVertexInputAttributes)
+    vert_input_attrib_des_infos[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+    vert_input_attrib_des_infos[0].offset = 0;
+    //------ bind normal attribute.
+    vert_input_attrib_des_infos[1].binding = 1; //input buffer binding. (VkPhysicalDeviceLimits::maxVertexInputBindings)
+    vert_input_attrib_des_infos[1].location = 1; //shader location. (VkPhysicalDeviceLimits::maxVertexInputAttributes)
+    vert_input_attrib_des_infos[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+    vert_input_attrib_des_infos[1].offset = 0;
+    //------ bind texture attribute.
+    vert_input_attrib_des_infos[2].binding = 2; //input buffer binding. (VkPhysicalDeviceLimits::maxVertexInputBindings)
+    vert_input_attrib_des_infos[2].location = 2; //shader location. (VkPhysicalDeviceLimits::maxVertexInputAttributes)
+    vert_input_attrib_des_infos[2].format = VK_FORMAT_R32G32_SFLOAT;
+    vert_input_attrib_des_infos[2].offset = 0;
+
+    VkPipelineVertexInputStateCreateInfo v_input_state_c_info = {};
+    v_input_state_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    v_input_state_c_info.pNext = nullptr;
+    v_input_state_c_info.pVertexBindingDescriptions = vert_input_binding_des_infos;
+    v_input_state_c_info.vertexBindingDescriptionCount = 3;
+    v_input_state_c_info.pVertexAttributeDescriptions = vert_input_attrib_des_infos;
+    v_input_state_c_info.vertexAttributeDescriptionCount = 3;
+
+    //--- iii. create input assembly states.(GL_TRIANGLE, ...etc.)
+    VkPipelineInputAssemblyStateCreateInfo v_input_assembly_state_c_info = {};
+    v_input_assembly_state_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    v_input_assembly_state_c_info.pNext = nullptr;
+    v_input_assembly_state_c_info.flags = 0;
+    v_input_assembly_state_c_info.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST; //GL_TRIANGLE 
+    v_input_assembly_state_c_info.primitiveRestartEnable = VK_FALSE; //Use to restart idx (set 0XFFFFFFFF or 0XFFFF) and then to draw fan or strip.
+
+    //--- iv. create tessellation state create info.
+    VkPipelineTessellationStateCreateInfo tessellation_state_c_info = {};
+    tessellation_state_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
+    tessellation_state_c_info.pNext = nullptr;
+    tessellation_state_c_info.flags = 0;
+    tessellation_state_c_info.patchControlPoints = 3; //3 : triangle. 4 : quad.
 }
 
 //--------------------------------------- private --------------------------------------

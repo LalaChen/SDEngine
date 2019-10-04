@@ -22,6 +22,8 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample2_DrawScene);
 class Sample2_DrawScene : public Sample
 {
 public:
+    typedef std::map<FilePathString, TextureStrongReferenceObject> TextureResourceMap;
+public:
     explicit Sample2_DrawScene(VulkanAPITestManager *i_mgr);
     virtual ~Sample2_DrawScene();
 public:
@@ -49,6 +51,7 @@ protected:
     //Texture
 protected:
     //shader
+    VkPipeline m_VK_pipeline;
 protected:
     //render pass.
     VkRenderPass m_VK_render_pass;
@@ -67,7 +70,7 @@ protected:
     VkCommandBuffer m_VK_cmd_buffer;
 protected:
     std::vector<MeshStrongReferenceObject> m_meshes;
-    std::vector<TextureStrongReferenceObject> m_textures;
+    TextureResourceMap m_textures;
 protected:
     BasicUniformBuffer m_uniform_buffer_datas[2];
 };

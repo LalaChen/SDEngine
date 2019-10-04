@@ -21,6 +21,12 @@ public:
     Matrix4X4f m_worid;
 };
 
+class LightUniformBuffer
+{
+public:
+
+};
+
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample);
 
 class Sample : public Object

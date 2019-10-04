@@ -57,5 +57,11 @@
     <None Include="Shader\MainShader.frag">
       <Filter>shader</Filter>
     </None>
+    <None Include="Shader\PhongShader.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Shader\PhongShader.vert">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

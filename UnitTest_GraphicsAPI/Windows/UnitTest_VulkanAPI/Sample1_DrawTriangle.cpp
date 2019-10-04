@@ -601,7 +601,7 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     vert_input_attrib_des_infos[1].location = 1; //shader location. (VkPhysicalDeviceLimits::maxVertexInputAttributes)
     vert_input_attrib_des_infos[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
     vert_input_attrib_des_infos[1].offset = 0;
-    //------ bind color attribute.
+    //------ bind tex attribute.
     vert_input_attrib_des_infos[2].binding = 2; //input buffer binding. (VkPhysicalDeviceLimits::maxVertexInputBindings)
     vert_input_attrib_des_infos[2].location = 2; //shader location. (VkPhysicalDeviceLimits::maxVertexInputAttributes)
     vert_input_attrib_des_infos[2].format = VK_FORMAT_R32G32_SFLOAT;
