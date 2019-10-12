@@ -1,5 +1,5 @@
 #version 450
-#extension GL_ARB_separate_shader_objects : enable
+//#extension GL_ARB_separate_shader_objects : enable
 
 //Input attribute.
 //format : layout(location = X) in GenType VarName;
@@ -12,22 +12,26 @@ layout(location = 2) in vec2 texCoords;
 //Output varing.
 //format : layout(location = X) out GenType VarName;
 //X is corresponding with layout(location = X) in frag shader(or other stage).
-layout(location = 0) out vec4 fragColor;
-layout(location = 1) out vec2 fragTexCoord;
+layout(location = 0) out vec4 color;
+layout(location = 1) out vec2 texCoord;
 
-//Uniform Buffer --- basic.
-layout(set = 0, binding = 0) uniform BasicUniforms {
+//Uniform
+//layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
+//Uniform basic Buffer
+layout(binding = 0) uniform BasicUniforms {
     mat4 clip;
     mat4 proj;
 	mat4 view;
 	mat4 world;
+	mat4 normal;
+	vec4 viewEye;
 } basic;
 
 void main()
 {
      vec4 vertex = vec4(vertice.x, vertice.y, vertice.z, 1.0);
-     fragColor = colors;
-	 fragTexCoord = texCoords;
+     color = colors;
+	 texCoord = texCoords;
      gl_Position = basic.clip * basic.proj * basic.view * basic.world * vertex;
 	 //gl_Position = basic.proj * vertex;
 	 //gl_Position = vec4(vertice.x, vertice.y, vertice.z, 1.0);
