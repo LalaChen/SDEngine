@@ -32,8 +32,6 @@ SOFTWARE.
 
 #pragma once
 
-//#include <assimp/scene.h>
-
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "ModelData.h"

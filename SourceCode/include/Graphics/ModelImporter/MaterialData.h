@@ -44,38 +44,87 @@ using SDE::Basic::FilePathString;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+/*! \enum MaterialTextureTypeEnum
+ *  \brief Enumerate material texture type.
+ */
 enum MaterialTextureTypeEnum
 {
-    MaterialTextureType_Diffuse = 0,
-    MaterialTextureType_Specular,
-    MaterialTextureType_Ambient,
-    MaterialTextureType_Emissive,
-    MaterialTextureType_Height,
-    MaterialTextureType_Normals,
-    MaterialTextureType_Shiness,
-    MaterialTextureType_Opacity,
-    MaterialTextureType_Displacement,
-    MaterialTextureType_LightMap,
-    MaterialTextureType_Reflection,
+    MaterialTextureType_Diffuse = 0, /*!< Main texture of this model. */
+    MaterialTextureType_Specular, /*!< Specular texture of this model. */
+    MaterialTextureType_Ambient, /*!< Ambient texture of this model. */
+    MaterialTextureType_Emissive, /*!< Emissive texture of this model. */
+    MaterialTextureType_Height, /*!< Height map of this model. */
+    MaterialTextureType_Normals, /*!< Normal map of this model. */
+    MaterialTextureType_Shiness, /*!< Shiness map of this model. */
+    MaterialTextureType_Opacity, /*!< Opacity texture of this model. */
+    MaterialTextureType_Displacement, /*!< Displacement texture of this model. */
+    MaterialTextureType_LightMap, /*!< Light map of this model. */
+    MaterialTextureType_Reflection, /*!< Reflection map of this model. */
     MaterialTextureType_MAX_DEFINE_VALUE
 };
 
+/*! \class MaterialData
+ *  \brief Material data is used to keep material parameters of this model.
+ */
 class SDENGINE_CLASS MaterialData
 {
 public:
+    /*! \var static const uint32_t AI_TEXTURE_ID[MaterialTextureType_MAX_DEFINE_VALUE];
+     *  \brief List all assimp texture enumerate.
+     */
     static const uint32_t AI_TEXTURE_ID[MaterialTextureType_MAX_DEFINE_VALUE];
 public:
-    explicit MaterialData();
+    /*! \fn MaterialData();
+     *  \brief Ctor about MaterialData.
+     */
+    MaterialData();
+
+    /*! \fn ~MaterialData();
+     *  \brief Dtor about MaterialData.
+     */
     ~MaterialData();
 public:
+
+    /*! \fn std::string ToString(uint32_t i_level = 0) const;
+     *  \param [in] i_level Use to add prefix before show this data.
+     *  \brief Return string to describe this data.
+     */
     std::string ToString(uint32_t i_level = 0) const;
 public:
+    /* \var FilePathString m_textures_fns[MaterialTextureType_MAX_DEFINE_VALUE];
+     * \brief Variable for keep related filename of each basic texture.
+     *        Please note that all texture file should be located in folder with its model file.
+     */
     FilePathString m_textures_fns[MaterialTextureType_MAX_DEFINE_VALUE];
+
+    /* \var Color4f m_ambient;
+     * \brief Ambient color of this material.
+     */
     Color4f m_ambient;
+
+    /* \var Color4f m_diffuse;
+     * \brief Diffuse color of this material.
+     */
     Color4f m_diffuse;
+
+    /* \var Color4f m_specular;
+     * \brief Specular color of this material.
+     */
     Color4f m_specular;
+
+    /* \var Color4f m_emission;
+     * \brief Emission color of this material.
+     */
     Color4f m_emission;
-    float m_shineness; //shineness_strength
+
+    /* \var float m_shininess;
+     * \brief shininess of this material.
+     */
+    float m_shininess; //shineness_strength
+
+    /* \var ObjectName m_name;
+     * \brief name of this material.
+     */
     ObjectName m_name;
 };
 

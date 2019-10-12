@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      AssimpModelLoader.h
- *  \brief     Introduce of class AssimpModelLoader.
+/*! \file      AssimpLogWarpper.h
+ *  \brief     Introduce of class AssimpLogWarpper.
  *  \author    Kuan-Chih, Chen
  *  \date      2018/09/20
  *  \copyright MIT Public License.
@@ -41,18 +41,60 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+/*! \class AssimpLogWarpper
+ *    AssimpLogWarpper is used to hook the logger system of assimp for printing log in assimp.
+ */
 class SDENGINE_CLASS AssimpLogWarpper : public Assimp::Logger
 {
 public:
+    /*! \fn explicit AssimpLogWarpper(Assimp::Logger::LogSeverity severity = LogSeverity::VERBOSE);
+     *  \param severity parameter of Assimp.
+     *  \brief Ctor of AssimpLogWarpper.
+     */
     explicit AssimpLogWarpper(Assimp::Logger::LogSeverity severity = LogSeverity::VERBOSE);
+
+    /*! \fn ~AssimpLogWarpper();
+     *  \brief Dtor of AssimpLogWarpper.
+     */
     ~AssimpLogWarpper();
 public:
+    /*! \fn bool attachStream(Assimp::LogStream *i_stream, unsigned int i_severity = Debugging | Err | Warn | Info) override;
+     *  \param [in] i_stream Logger stream of assimp.
+     *  \param [in] i_severity severity of assimp.
+     *  \brief Attach stream in this logger.
+     */
     bool attachStream(Assimp::LogStream *i_stream, unsigned int i_severity = Debugging | Err | Warn | Info) override;
+
+    /*! \fn bool detatchStream(Assimp::LogStream *i_stream, unsigned int i_severity = Debugging | Err | Warn | Info) override;
+     *  \param [in] i_stream Logger stream of assimp.
+     *  \param [in] i_severity severity of assimp.
+     *  \brief Detach stream in this logger.
+     */
     bool detatchStream(Assimp::LogStream *i_stream, unsigned int i_severity = Debugging | Err | Warn | Info) override;
 protected:
+
+    /*! \fn void OnDebug(const char *i_message) override;
+     *  \param [in] i_message Message for logging.
+     *  \brief Print log for debugging.
+     */
     void OnDebug(const char *i_message) override;
+
+    /*! \fn void OnInfo(const char *i_message) override;
+     *  \param [in] i_message Message for logging.
+     *  \brief Print log for showing information.
+     */
     void OnInfo(const char *i_message) override;
+
+    /*! \fn void OnWarn(const char *i_message) override;
+     *  \param [in] i_message Message for logging.
+     *  \brief Print log for warning.
+     */
     void OnWarn(const char *i_message) override;
+
+    /*! \fn void OnError(const char *i_message) override;
+     *  \param [in] i_message Message for logging.
+     *  \brief Print log for showing error.
+     */
     void OnError(const char *i_message) override;
 };
 ______________SD_END_GRAPHICS_NAMESPACE______________

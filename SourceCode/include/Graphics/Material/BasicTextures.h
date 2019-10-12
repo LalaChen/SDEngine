@@ -30,6 +30,8 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#pragma once
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
@@ -40,6 +42,10 @@ using SDE::Basic::ObjectName;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+/*! \class BasicTextures
+ *    In our system, we use class BasicTextures to keep necessary texture weak references
+ * for setting uniform variable.
+ */
 class SDENGINE_CLASS BasicTextures
 {
 public:

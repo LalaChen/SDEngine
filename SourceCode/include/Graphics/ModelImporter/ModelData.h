@@ -46,12 +46,26 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 typedef std::map<FilePathString, BitmapStrongReferenceObject> TextureMap;
 
+/*! \class NodeData
+ *    In our system, we use class NodeData to store node hierarchy about this model.
+ */
 class SDENGINE_CLASS NodeData
 {
 public:
+    /*! \fn NodeData();
+     *  \brief Ctor about NodeData.
+     */
     NodeData() {}
+
+    /*! \fn ~NodeData();
+     *  \brief Dtor about NodeData.
+     */
     ~NodeData() {}
 public:
+    /*! \fn std::string ToString(uint32_t i_level = 0) const;
+     *  \param [in] i_level Use to add prefix before show this data.
+     *  \brief Return string to describe this data.
+     */
     std::string ToString(uint32_t i_level) const;
 public:
     /*! \var std::vector<NodeData> m_child_nodes;
@@ -80,19 +94,53 @@ public:
     ObjectName m_name;
 };
 
+/*! \class ModelData
+ *    In our system, we use class ModelData to store parsed data about model.
+ * Please note that we usually use it when we need to convert 3D model to 
+ * graphics data. So we shouldn't release them after converting.
+ */
 class SDENGINE_CLASS ModelData
 {
 public:
-    explicit ModelData();
+    /*! \fn ModelData();
+     *  \brief Ctor about ModelData.
+     */
+    ModelData();
+
+    /*! \fn ~ModelData();
+     *  \brief Dtor about ModelData.
+     */
     ~ModelData();
 public:
+    /*! \fn std::string ToString(uint32_t i_level = 0) const;
+     *  \param [in] i_level Use to add prefix before show this data.
+     *  \brief Return string to describe this data.
+     */
     std::string ToString() const;
 public:
+    /*! \var std::vector<MeshData> m_mesh_datas;
+     *  \brief m_mesh_datas is used to keep all meshes in this model.
+     */
     std::vector<MeshData> m_mesh_datas;
+    /*! \var std::vector<MaterialData> m_materials;
+     *  \brief m_materials is used to keep all materials in this model.
+     */
     std::vector<MaterialData> m_materials;
+
+    /*! \var std::vector<MaterialData> m_materials;
+     *  \brief m_textures is used to keep all texture bitmaps in this model.
+     */
     TextureMap m_textures;
+
+    /*! \var NodeData m_root_node;
+     *  \brief m_root_node is used to keep all nodes in this model.
+     */
     NodeData m_root_node;
-    ObjectName m_model_name;
+
+    /*! \var ObjectName m_name;
+     *  \brief name of this model.
+     */
+    ObjectName m_name;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

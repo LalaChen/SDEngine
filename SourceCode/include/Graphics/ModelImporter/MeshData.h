@@ -53,16 +53,20 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 class SDENGINE_CLASS MeshData
 {
 public:
-    /*! \fn explicit MeshData();
+    /*! \fn MeshData();
      *  \brief Default constructor about MeshData.
      */
-    explicit MeshData();
+    MeshData();
 
     /*! \fn ~MeshData();
      *  \brief MeshData destructor.
      */
     ~MeshData();
 public:
+    /*! \fn std::string ToString(uint32_t i_level = 0) const;
+     *  \param [in] i_level Use to add prefix before show this data.
+     *  \brief Return string to describe this data.
+     */
     std::string ToString(uint32_t i_level = 0) const;
 public:
     /*! \var std::vector<float> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
