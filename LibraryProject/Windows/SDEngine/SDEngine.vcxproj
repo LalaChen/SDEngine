@@ -58,7 +58,9 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKBuffer.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKDeviceMemory.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKImage.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\BasicParameter.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\BasicTextures.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\MaterialParameter.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ModelImporter\AssimpLogWarpper.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ModelImporter\AssimpModelLoader.cpp" />
@@ -121,7 +123,9 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4Manager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\BasicParameter.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\BasicTextures.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\MaterialParameter.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ModelImporter\AssimpLogWarpper.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ModelImporter\AssimpModelLoader.h" />

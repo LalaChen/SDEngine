@@ -347,6 +347,12 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\VertexBufferUsage.cpp">
       <Filter>src\Graphics\ManagerParam</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\BasicParameter.cpp">
+      <Filter>src\Graphics\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\MaterialParameter.cpp">
+      <Filter>src\Graphics\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h">
@@ -548,6 +554,12 @@
       <Filter>include\Graphics\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\BasicTextures.h">
+      <Filter>include\Graphics\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\MaterialParameter.h">
+      <Filter>include\Graphics\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\BasicParameter.h">
       <Filter>include\Graphics\Material</Filter>
     </ClInclude>
   </ItemGroup>
