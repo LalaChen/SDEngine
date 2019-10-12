@@ -55,8 +55,8 @@ void Sample2_DrawScene::Destroy()
 void Sample2_DrawScene::ImportAssimpModel(ModelData &io_model)
 {
     SDLOG("---Import AssimpModel!!!");
-    AssimpModelLoader::GetRef().ImportModel("resources\\models\\Building02\\Building02_m.FBX", io_model);
-    //AssimpModelLoader::GetRef().ImportModel("resources\\models\\Build11_fbx\\Build11_fbx.FBX", io_model);
+    //AssimpModelLoader::GetRef().ImportModel("resources\\models\\Building02\\Building02_m.FBX", io_model);
+    AssimpModelLoader::GetRef().ImportModel("resources\\models\\Build11_fbx\\Build11_fbx.FBX", io_model);
 }
 
 void Sample2_DrawScene::CreateModel()
@@ -153,7 +153,7 @@ void Sample2_DrawScene::CreateModel()
         tex_iter++) {
         TextureResourceMap::iterator res_iter = m_textures.find((*tex_iter).first);
         if (res_iter == m_textures.end()) {
-            TextureStrongReferenceObject tex_sref = new Texture(StringFormat("%s_%s", model.m_model_name.c_str(), (*tex_iter).first.c_str()));
+            TextureStrongReferenceObject tex_sref = new Texture(StringFormat("%s_%s", model.m_name.c_str(), (*tex_iter).first.c_str()));
             tex_sref.GetRef().InitializeDataFromBitmap((*tex_iter).second);
         }
     }

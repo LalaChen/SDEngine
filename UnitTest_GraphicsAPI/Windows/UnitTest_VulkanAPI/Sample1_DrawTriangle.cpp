@@ -89,9 +89,8 @@ void Sample1_DrawTriangle::Render()
 
         //--- view space.
         m_uniform_buffer_datas[0].m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
-
+        m_uniform_buffer_datas[0].m_view_eye = Vector3f(0.0f, 0.0f, 0.5f, 1.0f);
         //--- world space. 
-
         m_uniform_buffer_datas[0].m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffers[0], m_VK_basic_uniform_buffer_memories[0], &m_uniform_buffer_datas[0], sizeof(BasicUniformBuffer));
 
@@ -104,7 +103,7 @@ void Sample1_DrawTriangle::Render()
 
         //--- view space.
         m_uniform_buffer_datas[1].m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
-
+        m_uniform_buffer_datas[1].m_view_eye = Vector3f(0.0f, 0.0f, 0.5f, 1.0f);
         //--- world space.
         m_uniform_buffer_datas[1].m_worid.translate(Vector3f(-0.2f, -0.2f, 0.1f, 1.0f));
         //m_uniform_buffer_datas[1].m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));

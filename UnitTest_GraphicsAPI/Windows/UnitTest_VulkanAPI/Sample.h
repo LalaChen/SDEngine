@@ -7,8 +7,10 @@
 #include "SDEngine.h"
 
 using SDE::Math::Matrix4X4f;
+using SDE::Math::Vector3f;
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
+using SDE::Graphics::Color4f;
 
 class VulkanAPITestManager;
 
@@ -19,12 +21,28 @@ public:
     Matrix4X4f m_proj;
     Matrix4X4f m_view;
     Matrix4X4f m_worid;
+    Matrix4X4f m_normal;
+    Vector3f m_view_eye;
 };
 
 class LightUniformBuffer
 {
 public:
-
+    LightUniformBuffer();
+    ~LightUniformBuffer();
+public:
+    Color4f m_ambient;
+    Color4f m_diffuse;
+    Color4f m_specular;
+    Vector3f m_position;
+    Vector3f m_direction;
+    float m_spot_exp;
+    float m_spot_cos_cutoff;
+    float m_constant_attenuation;
+    float m_linear_attenuation;
+    float m_quadratic_attenuation;
+    float m_shininess;
+    int32_t m_kind;
 };
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample);
