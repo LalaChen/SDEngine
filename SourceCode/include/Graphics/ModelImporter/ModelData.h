@@ -127,7 +127,7 @@ public:
      */
     std::vector<MaterialData> m_materials;
 
-    /*! \var std::vector<MaterialData> m_materials;
+    /*! \var TextureMap m_textures;
      *  \brief m_textures is used to keep all texture bitmaps in this model.
      */
     TextureMap m_textures;

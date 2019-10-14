@@ -129,8 +129,7 @@ public:
     /*! \fn bool IsEqualTo(const StrongReferenceObject<Type> &i_src) const
      *  \param i_src target ref.
      *  \tparam Type target class type.
-     *  \brief Try to static cast this to based class type. Please note we should use this \n
-     *         template on class with IsEqualTo method(Inherit class Object).
+     *  \brief Return that this instance is equal to i_src or not.
      */
     bool IsEqualTo(const StrongReferenceObject<Type> &i_src) const
     {

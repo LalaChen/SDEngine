@@ -46,8 +46,8 @@ using SDE::Graphics::Color4f;
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class MaterialParameter
- *    In our system, MaterialParameter is used to record parameters about
- * phong shading.
+ *    In our system, MaterialParameter is used to record parameters of object
+ * about phong shading.
  */
 class SDENGINE_CLASS MaterialParameter
 {
