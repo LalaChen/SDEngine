@@ -54,7 +54,7 @@ layout(binding = 3) uniform sampler2D mainTexture;
 //------- light vertices basic function -------
 float calculateAttenation(in float dis)
 {
-	return min(light.constantAttenuation + light.linearAttenuation * dis + light.quadraticAttenuation * dis * dis, 1.0);
+	return min( 1.0 / (light.constantAttenuation + light.linearAttenuation * dis + light.quadraticAttenuation * dis * dis), 1.0);
 }
 
 // directional light.
