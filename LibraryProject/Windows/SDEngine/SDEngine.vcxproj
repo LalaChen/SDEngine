@@ -60,6 +60,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKImage.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\BasicParameter.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\BasicTextures.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\LightParameter.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\MaterialParameter.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ModelImporter\AssimpLogWarpper.cpp" />
@@ -125,6 +126,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\BasicParameter.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\BasicTextures.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\LightParameter.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\MaterialParameter.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ModelImporter\AssimpLogWarpper.h" />
