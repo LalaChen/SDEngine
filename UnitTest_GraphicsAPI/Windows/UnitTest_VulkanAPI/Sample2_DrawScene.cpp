@@ -183,9 +183,9 @@ void Sample2_DrawScene::CreateShaderPrograms()
     SDLOG("Create Shader Programs!!!");
     VkResult result = VK_SUCCESS;
     //1. bind vertex attribute array.
-   //(such like glVertexAttribBinding and glVertexAttribFormat.)
-   //--- i. bind pointer.
-   //------ one buffer one binding. (glVertexAttribFormat)
+    //(such like glVertexAttribBinding and glVertexAttribFormat.)
+    //--- i. bind pointer.
+    //------ one buffer one binding. (glVertexAttribFormat)
     VkVertexInputBindingDescription vert_input_binding_des_infos[3] = {
         {}, {}, {}
     };
@@ -243,6 +243,28 @@ void Sample2_DrawScene::CreateShaderPrograms()
     tessellation_state_c_info.pNext = nullptr;
     tessellation_state_c_info.flags = 0;
     tessellation_state_c_info.patchControlPoints = 3; //3 : triangle. 4 : quad.
+
+    //2. Create VkDescriptorSetLayout for main shader.
+    //--- i. Create sampler for main shader.
+    VkSamplerCreateInfo sampler_c_info = {};
+    sampler_c_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+    sampler_c_info.pNext = nullptr;
+    sampler_c_info.flags = 0; //
+    sampler_c_info.minFilter = VK_FILTER_LINEAR;
+    sampler_c_info.magFilter = VK_FILTER_LINEAR;
+    sampler_c_info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+    sampler_c_info.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    sampler_c_info.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    sampler_c_info.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    sampler_c_info.mipLodBias = 0.0f;
+    sampler_c_info.anisotropyEnable = VK_FALSE;
+    sampler_c_info.maxAnisotropy = 1.0f;
+    sampler_c_info.compareEnable = VK_FALSE; //Use depth compare operation.
+    sampler_c_info.compareOp = VK_COMPARE_OP_ALWAYS; //Use depth compare operation.
+    sampler_c_info.minLod = 0.0f;
+    sampler_c_info.maxLod = 1.0f;
+    sampler_c_info.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
+    sampler_c_info.unnormalizedCoordinates = VK_FALSE;
 }
 
 //--------------------------------------- private --------------------------------------

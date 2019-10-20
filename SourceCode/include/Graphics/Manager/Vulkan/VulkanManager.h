@@ -146,6 +146,45 @@ protected:
 
     void DestroyVkImage(VkImage &io_image_handle);
 protected:
+//----------- Vulkan sampler private Function -------------
+    /*! \fn VkResult CreateVkSampler( VkSampler &io_sampler, VkFilter i_mag_filter_type, VkFilter i_min_filter_type, VkSamplerMipmapMode i_mipmap_mode, VkSamplerAddressMode i_wrap_mode_s, VkSamplerAddressMode i_wrap_mode_t, VkSamplerAddressMode i_wrap_mode_r, float i_mip_lod_bias, VkBool32 i_enable_anisotropy, float i_max_anisotropy, VkBool32 i_enable_compare, VkCompareOp i_compare_op, float i_min_lod, float i_max_lod, VkBorderColor i_border_color, VkBool32 i_unnormalize_coord);
+     *  \param [in] io_sampler Created handle. It's used to keep created handle.
+     *  \param [in] i_mag_filter_type Mag filter type. Default type is nearset.
+     *  \param [in] i_min_filter_type Min filter type. Default type is nearest.
+     *  \param [in] i_mipmap_mode Mipmap type. Default is nearest.
+     *  \param [in] i_wrap_mode_s Texture coordinate wrap mode. Default is clamp tp edge.
+     *  \param [in] i_wrap_mode_t Texture coordinate wrap mode. Default is clamp tp edge.
+     *  \param [in] i_wrap_mode_r Texture coordinate wrap mode. Default is clamp tp edge.
+     *  \param [in] i_mip_lod_bias Mipmap bias. Default is 0.
+     *  \param [in] i_enable_anisotropy Default false.
+     *  \param [in] i_max_anisotropy Default 1.0f.
+     *  \param [in] i_enable_compare Default false.
+     *  \param [in] i_compare_op Default always.
+     *  \param [in] i_min_lod Default 0.0f.
+     *  \param [in] i_max_lod Default 1.0f.
+     *  \param [in] i_border_color Default float opaque black.
+     *  \param [in] i_unnormalize_coord Default false.(Normalize coord.)
+     *  \brief Initialize graphics API. (link dll, ...)
+     */
+    VkResult CreateVkSampler(
+        VkSampler &io_sampler,
+        VkFilter i_mag_filter_type = VK_FILTER_NEAREST,
+        VkFilter i_min_filter_type = VK_FILTER_NEAREST,
+        VkSamplerMipmapMode i_mipmap_mode = VK_SAMPLER_MIPMAP_MODE_NEAREST,
+        VkSamplerAddressMode i_wrap_mode_s = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+        VkSamplerAddressMode i_wrap_mode_t = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+        VkSamplerAddressMode i_wrap_mode_r = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+        float i_mip_lod_bias = 0.0f,
+        VkBool32 i_enable_anisotropy = VK_FALSE,
+        float i_max_anisotropy = 1.0f,
+        VkBool32 i_enable_compare = VK_FALSE,
+        VkCompareOp i_compare_op = VK_COMPARE_OP_ALWAYS,
+        float i_min_lod = 0.0f,
+        float i_max_lod = 1.0f,
+        VkBorderColor i_border_color = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK,
+        VkBool32 i_unnormalize_coord = VK_FALSE
+    );
+protected:
 //----------- Vulkan memory private Function ------------
     VkResult AllocatVkDeviceMemoryForVkBuffer(
         VkDeviceMemory &io_memory_handle, 
@@ -171,7 +210,6 @@ protected:
     void UnmapVkDeviceMemory(VkDeviceMemory i_memory_handle);
 
     void FreeVkDeviceMemory(VkDeviceMemory &io_memory_handle);
-
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;

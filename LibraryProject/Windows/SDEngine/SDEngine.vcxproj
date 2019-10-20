@@ -58,6 +58,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKBuffer.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKDeviceMemory.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKImage.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKSampler.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\BasicParameter.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\BasicTextures.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\LightParameter.cpp" />
@@ -105,7 +106,9 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\TextureIdentity.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\VertexBufferIdentity.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\BitmapPixelDataType.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\CompareOperator.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ManagerParam.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\SamplerBorderColorType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\TextureFilterType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\TextureFormat.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\TextureMipmapMode.h" />

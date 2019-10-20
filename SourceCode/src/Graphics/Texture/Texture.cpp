@@ -111,12 +111,6 @@ void Texture::InitializeDataFromBitmap(const BitmapWeakReferenceObject &i_bitmap
     }
 }
 
-//--- Texture Sampler Function
-void Texture::InitializeSampler()
-{
-
-}
-
 void Texture::SetTextureFilterType(const TextureFilterTypeEnum &i_mag_type, const TextureFilterTypeEnum &i_min_type)
 {
     m_sampler_idnetity.m_texture_mag_filter_type = i_mag_type;

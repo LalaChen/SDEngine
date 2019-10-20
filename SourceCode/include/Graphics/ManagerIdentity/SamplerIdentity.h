@@ -88,6 +88,22 @@ public://Sampler Part.
      *  \brief The texture wrap type about coordinate r(z) axis.
      */
     TextureWrapModeEnum m_texture_wrap_mode_r;
+
+    /*! \var SamplerBorderColorTypeEnum m_sampler_b_color_type;
+     *  \brief The sampler border color type.
+     */
+    SamplerBorderColorTypeEnum m_sampler_b_color_type;
+
+    /*! \var bool m_use_compare;
+     *  \brief To decide do we enable compare function.
+     *        (Usual use at comparing depth with SamplerShadow2D).
+     */
+    bool m_use_compare;
+
+    /*! \var CompareOperatorEnum m_compare_op;
+     *  \brief The compared enable.
+     */
+    CompareOperatorEnum m_compare_op;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

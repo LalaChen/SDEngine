@@ -68,8 +68,6 @@ public:
 public:
     void InitializeDataFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_levels = 1); //Input 2D texture.
 public:
-    void InitializeSampler();
-
     void SetTextureFilterType(const TextureFilterTypeEnum &i_mag_type, const TextureFilterTypeEnum &i_min_type);
 
     void SetTextureMipmapMode(const TextureMipmapModeEnum &i_mipmap_mode);

@@ -23,23 +23,31 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      CompareOperator.h
+ *  \brief     Introduce of enum CompareOperator.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/10/20
  *  \copyright MIT License.
  */
 
-#pragma once
+#include "SDEngineMacro.h"
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "TextureFilterType.h"
-#include "TextureMipmapMode.h"
-#include "TextureWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+/*! \enum CompareOperatorEnum
+ *  CompareOperatorEnum is enum for comparing operator.
+ */
+enum CompareOperatorEnum
+{
+    CompareOperator_NEVER = 0, /*!> Never pass compare.*/
+    CompareOperator_LESS, /*!> Pass if src < dst.*/
+    CompareOperator_EQUAL, /*!> Pass if src == dst.*/
+    CompareOperator_LESS_OR_EQUAL, /*!> Pass if src <= dst.*/
+    CompareOperator_GREATER, /*!> Pass if src > dst.*/
+    CompareOperator_NOT_EQUAL, /*!> Pass if src != dst.*/
+    CompareOperator_GREATER_OR_EQUAL, /*!> Pass if src >= dst.*/
+    CompareOperator_ALWAYS, /*!> Pass always.*/
+    CompareOperator_MAX_DEFINE_VALUE /*!> Maximum define value.*/
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

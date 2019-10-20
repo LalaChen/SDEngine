@@ -356,6 +356,9 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Material\LightParameter.cpp">
       <Filter>src\Graphics\Material</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKSampler.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h">
@@ -567,6 +570,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Material\LightParameter.h">
       <Filter>include\Graphics\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\SamplerBorderColorType.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\CompareOperator.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
