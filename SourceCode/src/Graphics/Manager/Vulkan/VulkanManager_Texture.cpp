@@ -24,36 +24,43 @@ SOFTWARE.
 
 #include "TextureType_Vulkan.h"
 #include "TextureFormat_Vulkan.h"
+#include "SamplerMipmapMode_Vulkan.h"
+#include "SamplerFilterType_Vulkan.h"
+#include "SamplerBorderColorType_Vulkan.h"
+#include "SamplerWrapMode_Vulkan.h"
+#include "CompareOp_Vulkan.h"
 #include "ManagerParam.h"
 #include "LogManager.h"
 #include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void VulkanManager::CreateTextureImage(TextureIdentity &io_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size)
+void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size)
 {
     VkResult result = VK_SUCCESS;
-    VkImage &image_handle = reinterpret_cast<VkImage&>(io_identity.m_image_handle);
-    VkDeviceMemory &memory_handle = reinterpret_cast<VkDeviceMemory&>(io_identity.m_memory_handle);
-    VkDeviceSize &allocated_size = reinterpret_cast<VkDeviceSize&>(io_identity.m_allocated_size);
-    VkImageType image_type = TextureType_Vulkan::Convert(io_identity.m_texture_type);
-    VkFormat image_format = TextureFormat_Vulkan::Convert(io_identity.m_texture_format);
+    VkImage &image_handle = reinterpret_cast<VkImage&>(io_tex_identity.m_image_handle);
+    VkDeviceMemory &memory_handle = reinterpret_cast<VkDeviceMemory&>(io_tex_identity.m_memory_handle);
+    VkDeviceSize &allocated_size = reinterpret_cast<VkDeviceSize&>(io_tex_identity.m_allocated_size);
+    VkImageType image_type = TextureType_Vulkan::Convert(io_tex_identity.m_texture_type);
+    VkFormat image_format = TextureFormat_Vulkan::Convert(io_tex_identity.m_texture_format);
     VkExtent3D image_size = { 
-        io_identity.m_image_size.m_width,
-        io_identity.m_image_size.m_height,
-        io_identity.m_image_size.m_length
+        io_tex_identity.m_image_size.m_width,
+        io_tex_identity.m_image_size.m_height,
+        io_tex_identity.m_image_size.m_length
     };
+
     //1. Create image.
     result = CreateVkImage(
         image_handle, VK_SHARING_MODE_EXCLUSIVE,
         image_type, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
-        io_identity.m_mipmap_levels, io_identity.m_array_layers, VK_IMAGE_TILING_OPTIMAL,
+        io_tex_identity.m_mipmap_levels, io_tex_identity.m_array_layers, VK_IMAGE_TILING_OPTIMAL,
         image_size, image_format);
 
     if (result != VK_SUCCESS) {
         SDLOGE("Create image failure(%x)!!!", result);
         return;
     }
+
     //2. Allocate device image for this image.
     result = AllocateVkDeviceMemortForVkImage(memory_handle, allocated_size, image_handle, 0, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
     
@@ -61,8 +68,35 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_identity, VoidPtr i_d
         SDLOGE("Allocated device local memory for this image failure(%x)!!!", result);
         return;
     }
+
     //3. Refresh texture image.
-    RefreshTextureImage(io_identity, i_data_ptr, ImageOffset(), io_identity.m_image_size, i_data_size);
+    RefreshTextureImage(io_tex_identity, i_data_ptr, ImageOffset(), io_tex_identity.m_image_size, i_data_size);
+
+    //4. Create sampler for this texture.
+    float max_lod = static_cast<float>(io_tex_identity.m_mipmap_levels);
+    VkSampler &sampler_handle = reinterpret_cast<VkSampler&>(io_sampler_identity.m_sampler);
+    result = CreateVkSampler(
+        sampler_handle,
+        SamplerFilterType_Vulkan::Convert(io_sampler_identity.m_min_filter_type),
+        SamplerFilterType_Vulkan::Convert(io_sampler_identity.m_mag_filter_type),
+        SamplerMipmapMode_Vulkan::Convert(io_sampler_identity.m_mipmap_mode),
+        SamplerWrapMode_Vulkan::Convert(io_sampler_identity.m_wrap_mode_s),
+        SamplerWrapMode_Vulkan::Convert(io_sampler_identity.m_wrap_mode_t),
+        SamplerWrapMode_Vulkan::Convert(io_sampler_identity.m_wrap_mode_r),
+        0.0f,//Mip Bias
+        io_sampler_identity.m_use_anisotropy,
+        io_sampler_identity.m_max_anisotropy,
+        io_sampler_identity.m_use_compare,
+        CompareOp_Vulkan::Convert(io_sampler_identity.m_compare_op),
+        0.0f, max_lod,
+        BorderColorType_Vulkan::Convert(io_sampler_identity.m_sampler_b_color_type),
+        VK_FALSE //need to normalize texture.
+    );
+
+    if (result != VK_SUCCESS) {
+        SDLOGE("Allocated sampler for this image failure(%x)!!!", result);
+        return;
+    }
 }
 
 void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size)
@@ -117,9 +151,7 @@ void VulkanManager::DeleteTextureImage(TextureIdentity &io_identity)
 {
     //destroy image handle.
     VkImage &image_handle = reinterpret_cast<VkImage&>(io_identity.m_image_handle);
-    DestroyVkImage(image_handle);
-    //destroy sampler handle.
-    
+    DestroyVkImage(image_handle);    
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

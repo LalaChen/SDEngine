@@ -20,23 +20,31 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-#include "LogManager.h"
-#include "OpenGL4Manager.h"
+#include "SamplerBorderColorType_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void OpenGL4Manager::CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size)
+VkBorderColor BorderColorType_Vulkan::BordColorTypes[SamplerBorderColorType_MAX_DEFINE_VALUE] =
 {
-}
+    VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,
+    VK_BORDER_COLOR_INT_TRANSPARENT_BLACK,
+    VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK,
+    VK_BORDER_COLOR_INT_OPAQUE_BLACK,
+    VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE,
+    VK_BORDER_COLOR_INT_OPAQUE_WHITE
+};
 
-void OpenGL4Manager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size)
+VkBorderColor BorderColorType_Vulkan::Convert(const SamplerBorderColorTypeEnum &i_src)
 {
-}
-
-void OpenGL4Manager::DeleteTextureImage(TextureIdentity &io_identity)
-{
+    if (i_src != SamplerBorderColorType_MAX_DEFINE_VALUE) {
+        return BordColorTypes[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_BORDER_COLOR_MAX_ENUM;
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

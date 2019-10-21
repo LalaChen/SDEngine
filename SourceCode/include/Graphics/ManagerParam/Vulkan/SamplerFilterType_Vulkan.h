@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      TextureFilterType_Vulkan.h
- *  \brief     Introduce of class TextureFilterType_Vulkan.
+/*! \file      SamplerFilterType_Vulkan.h
+ *  \brief     Introduce of class SamplerFilterType_Vulkan.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/08/04
  *  \copyright MIT License.
@@ -35,16 +35,16 @@ SOFTWARE.
 #include <vulkan/vulkan.h>
 
 #include "SDEngineCommonType.h"
-#include "TextureFilterType.h"
+#include "SamplerFilterType.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class TextureFilterType_Vulkan
+class SamplerFilterType_Vulkan
 {
 public:
-    static VkFilter Convert(const TextureFilterTypeEnum &i_src);
+    static VkFilter Convert(const SamplerFilterTypeEnum &i_src);
 public:
-    static VkFilter TextureFilterTypes[TextureFilterType_MAX_DEFINE_VALUE];
+    static VkFilter SamplerFilterTypes[SamplerFilterType_MAX_DEFINE_VALUE];
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

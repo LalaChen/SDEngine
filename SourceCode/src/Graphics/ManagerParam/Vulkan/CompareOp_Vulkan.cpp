@@ -22,29 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-
-/*! \file      TextureWrapMode_Vulkan.h
- *  \brief     Introduce of class TextureWrapMode_Vulkan.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/08/04
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include <vulkan/vulkan.h>
-
-#include "SDEngineCommonType.h"
-#include "TextureWrapMode.h"
+#include "CompareOp_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class TextureWrapMode_Vulkan
+VkCompareOp CompareOp_Vulkan::CompareOps[CompareOperator_MAX_DEFINE_VALUE] =
 {
-public:
-    static VkSamplerAddressMode Convert(const TextureWrapModeEnum &i_src);
-public:
-    static VkSamplerAddressMode TextureWrapModes[TextureWrapMode_MAX_DEFINE_VALUE];
+    VK_COMPARE_OP_NEVER,
+    VK_COMPARE_OP_LESS,
+    VK_COMPARE_OP_EQUAL,
+    VK_COMPARE_OP_LESS_OR_EQUAL,
+    VK_COMPARE_OP_GREATER,
+    VK_COMPARE_OP_NOT_EQUAL,
+    VK_COMPARE_OP_GREATER_OR_EQUAL,
+    VK_COMPARE_OP_ALWAYS
 };
+
+VkCompareOp CompareOp_Vulkan::Convert(const CompareOperatorEnum &i_src)
+{
+    if (i_src != CompareOperator_MAX_DEFINE_VALUE) {
+        return CompareOps[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_COMPARE_OP_MAX_ENUM;
+    }
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

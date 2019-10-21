@@ -23,27 +23,26 @@ SOFTWARE.
 
 */
 
-#include "TextureWrapMode_Vulkan.h"
+/*! \file      CompareOp_Vulkan.h
+ *  \brief     Introduce of class CompareOp_Vulkan.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/10/21
+ *  \copyright MIT License.
+ */
+
+#include <vulkan/vulkan.h>
+
+#include "SDEngineCommonType.h"
+#include "CompareOperator.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VkSamplerAddressMode TextureWrapMode_Vulkan::TextureWrapModes[TextureWrapMode_MAX_DEFINE_VALUE] =
+class CompareOp_Vulkan
 {
-    VK_SAMPLER_ADDRESS_MODE_REPEAT,
-    VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
-    VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-    VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
+public:
+    static VkCompareOp Convert(const CompareOperatorEnum &i_src);
+public:
+    static VkCompareOp CompareOps[CompareOperator_MAX_DEFINE_VALUE];
 };
-
-VkSamplerAddressMode TextureWrapMode_Vulkan::Convert(const TextureWrapModeEnum &i_src)
-{
-    if (i_src != TextureWrapMode_MAX_DEFINE_VALUE) {
-        return TextureWrapModes[static_cast<uint32_t>(i_src)];
-    }
-    else {
-        return VK_SAMPLER_ADDRESS_MODE_MAX_ENUM;
-    }
-}
-
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

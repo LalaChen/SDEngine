@@ -31,6 +31,8 @@ SOFTWARE.
  */
 #pragma once
 
+#include "SDEngineMacro.h"
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 enum BitmapPixelDataTypeEnum

@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      TextureFilterType_Vulkan.h
- *  \brief     Introduce of class TextureFilterType_Vulkan.
+/*! \file      SamplerMipmapMode.h
+ *  \brief     Introduce of enum SamplerMipmapModeEnum.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/08/04
  *  \copyright MIT License.
@@ -32,19 +32,18 @@ SOFTWARE.
 
 #pragma once
 
-#include <vulkan/vulkan.h>
-
-#include "SDEngineCommonType.h"
-#include "TextureMipmapMode.h"
+#include "SDEngineMacro.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class TextureMipmapMode_Vulkan
+/*! \enum SamplerMipmapModeEnum
+ *  SamplerFilterTypeEnum is enum for defining filter type.
+ */
+enum SamplerMipmapModeEnum
 {
-public:
-    static VkSamplerMipmapMode Convert(const TextureMipmapModeEnum &i_src);
-public:
-    static VkSamplerMipmapMode TextureMipmapModes[TextureMipmapMode_MAX_DEFINE_VALUE];
+    SamplerMipmapMode_NEAREST = 0, /*!< The texel value will be decide from the mipmaps whose level is round down.*/
+    SamplerMipmapMode_LINEAR = 1, /*!< The texel value will be decide from that will make bi-linear interpolation in nearest neighboring level mipmaps.*/
+    SamplerMipmapMode_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

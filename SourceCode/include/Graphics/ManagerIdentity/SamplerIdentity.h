@@ -59,35 +59,35 @@ public://Sampler Part.
      */
     CompHandle m_sampler;
 
-    /*! \var TextureFilterTypeEnum m_texture_mag_filter_type;
-     *  \brief The texture mag filter type. Default is nearest.
+    /*! \var SamplerFilterTypeEnum m_mag_filter_type;
+     *  \brief The mag filter type. Default is nearest.
      */
-    TextureFilterTypeEnum m_texture_mag_filter_type;
+    SamplerFilterTypeEnum m_mag_filter_type;
 
-    /*! \var TextureFilterTypeEnum m_texture_min_filter_type;
-     *  \brief The texture mag filter type.
+    /*! \var SamplerFilterTypeEnum m_min_filter_type;
+     *  \brief The min filter type. Default is nearest.
      */
-    TextureFilterTypeEnum m_texture_min_filter_type;
+    SamplerFilterTypeEnum m_min_filter_type;
 
-    /*! \var TextureMipmapModeEnum m_texture_mipmap_mode;
-     *  \brief The texture mipmap mode.
+    /*! \var SamplerMipmapModeEnum m_mipmap_mode;
+     *  \brief The sampler mipmap mode. Default is nearest.
      */
-    TextureMipmapModeEnum m_texture_mipmap_mode;
+    SamplerMipmapModeEnum m_mipmap_mode;
 
-    /*! \var TextureWrapModeEnum m_texture_wrap_mode_s;
+    /*! \var SamplerWrapModeEnum m_wrap_mode_s;
      *  \brief The texture wrap type about coordinate s axis.
      */
-    TextureWrapModeEnum m_texture_wrap_mode_s;
+    SamplerWrapModeEnum m_wrap_mode_s;
 
-    /*! \var TextureWrapModeEnum m_texture_wrap_mode_t;
+    /*! \var SamplerWrapModeEnum m_wrap_mode_t;
      *  \brief The texture wrap type about coordinate t axis.
      */
-    TextureWrapModeEnum m_texture_wrap_mode_t;
+    SamplerWrapModeEnum m_wrap_mode_t;
 
-    /*! \var TextureWrapModeEnum m_texture_wrap_mode_r;
+    /*! \var SamplerWrapModeEnum m_wrap_mode_r;
      *  \brief The texture wrap type about coordinate r(z) axis.
      */
-    TextureWrapModeEnum m_texture_wrap_mode_r;
+    SamplerWrapModeEnum m_wrap_mode_r;
 
     /*! \var SamplerBorderColorTypeEnum m_sampler_b_color_type;
      *  \brief The sampler border color type.
@@ -104,6 +104,16 @@ public://Sampler Part.
      *  \brief The compared enable.
      */
     CompareOperatorEnum m_compare_op;
+
+    /*! \var bool m_use_anisotropy;
+     *  \brief To enable use anisotropy when we calcuate level of detail.
+     */
+    bool m_use_anisotropy;
+
+    /*! \var float m_max_anisotropy;
+     *  \brief To define max anisotropy.
+     */
+    float m_max_anisotropy;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

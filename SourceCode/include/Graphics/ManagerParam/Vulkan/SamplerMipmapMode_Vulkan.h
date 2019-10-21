@@ -23,24 +23,28 @@ SOFTWARE.
 
 */
 
-#include "TextureMipmapMode_Vulkan.h"
+/*! \file      SamplerMipmapMode_Vulkan.h
+ *  \brief     Introduce of class SamplerMipmapMode_Vulkan.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/08/04
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include <vulkan/vulkan.h>
+
+#include "SDEngineCommonType.h"
+#include "SamplerMipmapMode.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VkSamplerMipmapMode TextureMipmapMode_Vulkan::TextureMipmapModes[TextureMipmapMode_MAX_DEFINE_VALUE] = 
+class SamplerMipmapMode_Vulkan
 {
-    VK_SAMPLER_MIPMAP_MODE_NEAREST,
-    VK_SAMPLER_MIPMAP_MODE_LINEAR
+public:
+    static VkSamplerMipmapMode Convert(const SamplerMipmapModeEnum &i_src);
+public:
+    static VkSamplerMipmapMode SamplerMipmapModes[SamplerMipmapMode_MAX_DEFINE_VALUE];
 };
-
-VkSamplerMipmapMode TextureMipmapMode_Vulkan::Convert(const TextureMipmapModeEnum &i_src)
-{
-    if (i_src != TextureMipmapMode_MAX_DEFINE_VALUE) {
-        return TextureMipmapModes[static_cast<uint32_t>(i_src)];
-    }
-    else {
-        return VK_SAMPLER_MIPMAP_MODE_MAX_ENUM;
-    }
-}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

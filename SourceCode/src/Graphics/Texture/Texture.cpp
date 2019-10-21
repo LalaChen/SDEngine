@@ -100,7 +100,7 @@ void Texture::InitializeDataFromBitmap(const BitmapWeakReferenceObject &i_bitmap
                 return;
             }
 
-            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, img_ptr, img_buf_size);
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity, img_ptr, img_buf_size);
         }
         else {
             SDLOGW("This tex[%s] is initialized. Please reinitalize tex after releasing old data.", m_object_name.c_str());
@@ -111,22 +111,47 @@ void Texture::InitializeDataFromBitmap(const BitmapWeakReferenceObject &i_bitmap
     }
 }
 
-void Texture::SetTextureFilterType(const TextureFilterTypeEnum &i_mag_type, const TextureFilterTypeEnum &i_min_type)
+void Texture::SetSamplerFilterType(const SamplerFilterTypeEnum &i_mag_type, const SamplerFilterTypeEnum &i_min_type)
 {
-    m_sampler_idnetity.m_texture_mag_filter_type = i_mag_type;
-    m_sampler_idnetity.m_texture_min_filter_type = i_min_type;
+    m_sampler_idnetity.m_mag_filter_type = i_mag_type;
+    m_sampler_idnetity.m_min_filter_type = i_min_type;
 }
 
-void Texture::SetTextureMipmapMode(const TextureMipmapModeEnum &i_mipmap_mode)
+void Texture::SetSamplerMipmapMode(const SamplerMipmapModeEnum &i_mipmap_mode)
 {
-    m_sampler_idnetity.m_texture_mipmap_mode = i_mipmap_mode;
+    m_sampler_idnetity.m_mipmap_mode = i_mipmap_mode;
 }
 
-void Texture::SetTextureWrapMode(const TextureWrapModeEnum &i_s_mode, const TextureWrapModeEnum &i_t_mode, const TextureWrapModeEnum &i_r_mode)
+void Texture::SetSamplerWrapMode(const SamplerWrapModeEnum &i_s_mode, const SamplerWrapModeEnum &i_t_mode, const SamplerWrapModeEnum &i_r_mode)
 {
-    m_sampler_idnetity.m_texture_wrap_mode_s = i_s_mode;
-    m_sampler_idnetity.m_texture_wrap_mode_t = i_t_mode;
-    m_sampler_idnetity.m_texture_wrap_mode_r = i_r_mode;
+    m_sampler_idnetity.m_wrap_mode_s = i_s_mode;
+    m_sampler_idnetity.m_wrap_mode_t = i_t_mode;
+    m_sampler_idnetity.m_wrap_mode_r = i_r_mode;
+}
+
+void Texture::SetSamplerBorderColorType(const SamplerBorderColorTypeEnum &i_color_type)
+{
+    m_sampler_idnetity.m_sampler_b_color_type = i_color_type;
+}
+
+void Texture::SetCompareFunction(bool i_signal)
+{
+    m_sampler_idnetity.m_use_compare = i_signal;
+}
+
+void Texture::SetCompareOp(const CompareOperatorEnum &i_op)
+{
+    m_sampler_idnetity.m_compare_op = i_op;
+}
+
+void Texture::SetAnisotropy(bool i_signal)
+{
+    m_sampler_idnetity.m_use_anisotropy = i_signal;
+}
+
+void Texture::SetMaxAnisotropy(float i_max_anisotropy)
+{
+    m_sampler_idnetity.m_max_anisotropy = i_max_anisotropy;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

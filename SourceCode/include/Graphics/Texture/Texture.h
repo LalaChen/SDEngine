@@ -68,11 +68,21 @@ public:
 public:
     void InitializeDataFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_levels = 1); //Input 2D texture.
 public:
-    void SetTextureFilterType(const TextureFilterTypeEnum &i_mag_type, const TextureFilterTypeEnum &i_min_type);
+    void SetSamplerFilterType(const SamplerFilterTypeEnum &i_mag_type, const SamplerFilterTypeEnum &i_min_type);
 
-    void SetTextureMipmapMode(const TextureMipmapModeEnum &i_mipmap_mode);
+    void SetSamplerMipmapMode(const SamplerMipmapModeEnum &i_mipmap_mode);
 
-    void SetTextureWrapMode(const TextureWrapModeEnum &i_s_mode, const TextureWrapModeEnum &i_t_mode, const TextureWrapModeEnum &i_r_mode);
+    void SetSamplerWrapMode(const SamplerWrapModeEnum &i_s_mode, const SamplerWrapModeEnum &i_t_mode, const SamplerWrapModeEnum &i_r_mode);
+
+    void SetSamplerBorderColorType(const SamplerBorderColorTypeEnum &i_color_type);
+
+    void SetCompareFunction(bool i_signal);
+
+    void SetCompareOp(const CompareOperatorEnum &i_op);
+
+    void SetAnisotropy(bool i_signal);
+
+    void SetMaxAnisotropy(float i_max_anisotropy);
 public:
     Size_ui32 GetWidth() const;
     Size_ui32 GetHeight() const;

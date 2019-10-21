@@ -23,24 +23,26 @@ SOFTWARE.
 
 */
 
-#include "TextureFilterType_Vulkan.h"
+/*! \file      SamplerBorderColorType_Vulkan.h
+ *  \brief     Introduce of class SamplerBorderColorType_Vulkan.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/10/21
+ *  \copyright MIT License.
+ */
+
+#include <vulkan/vulkan.h>
+
+#include "SDEngineCommonType.h"
+#include "SamplerBorderColorType.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VkFilter TextureFilterType_Vulkan::TextureFilterTypes[TextureFilterType_MAX_DEFINE_VALUE] = 
+class BorderColorType_Vulkan
 {
-    VK_FILTER_NEAREST,
-    VK_FILTER_LINEAR
+public:
+    static VkBorderColor Convert(const SamplerBorderColorTypeEnum &i_src);
+public:
+    static VkBorderColor BordColorTypes[SamplerBorderColorType_MAX_DEFINE_VALUE];
 };
-
-VkFilter TextureFilterType_Vulkan::Convert(const TextureFilterTypeEnum &i_src)
-{
-    if (i_src != TextureFilterType_MAX_DEFINE_VALUE) {
-        return TextureFilterTypes[static_cast<uint32_t>(i_src)];
-    }
-    else {
-        return VK_FILTER_MAX_ENUM;
-    }
-}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

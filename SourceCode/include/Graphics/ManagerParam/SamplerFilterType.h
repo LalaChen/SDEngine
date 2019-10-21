@@ -20,23 +20,30 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-#include "LogManager.h"
-#include "OpenGL4Manager.h"
+/*! \file      SamplerFilterType.h
+ *  \brief     Introduce of enum SamplerFilterTypeEnum.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/08/04
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include "SDEngineMacro.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void OpenGL4Manager::CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size)
+/*! \enum SamplerFilterTypeEnum
+ *  SamplerFilterTypeEnum is enum for defining filter type.
+ */
+enum SamplerFilterTypeEnum
 {
-}
-
-void OpenGL4Manager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size)
-{
-}
-
-void OpenGL4Manager::DeleteTextureImage(TextureIdentity &io_identity)
-{
-}
+    SamplerFilterType_NEAREST = 0, /*!< The texel value will be decide from the texel whose indices is round down.*/
+    SamplerFilterType_LINEAR = 1, /*!< The texel value will be decide from that will make bi-linear interpolation in nearest neighboring texels.*/
+    SamplerFilterType_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

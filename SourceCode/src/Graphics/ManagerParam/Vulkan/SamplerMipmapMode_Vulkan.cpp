@@ -20,23 +20,27 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-#include "LogManager.h"
-#include "OpenGL4Manager.h"
+#include "SamplerMipmapMode_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void OpenGL4Manager::CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size)
+VkSamplerMipmapMode SamplerMipmapMode_Vulkan::SamplerMipmapModes[SamplerMipmapMode_MAX_DEFINE_VALUE] = 
 {
-}
+    VK_SAMPLER_MIPMAP_MODE_NEAREST,
+    VK_SAMPLER_MIPMAP_MODE_LINEAR
+};
 
-void OpenGL4Manager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size)
+VkSamplerMipmapMode SamplerMipmapMode_Vulkan::Convert(const SamplerMipmapModeEnum &i_src)
 {
-}
-
-void OpenGL4Manager::DeleteTextureImage(TextureIdentity &io_identity)
-{
+    if (i_src != SamplerMipmapMode_MAX_DEFINE_VALUE) {
+        return SamplerMipmapModes[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_SAMPLER_MIPMAP_MODE_MAX_ENUM;
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

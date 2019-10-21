@@ -4,14 +4,17 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SamplerIdentity::SamplerIdentity()
 : m_sampler(SD_NULL_HANDLE)
-, m_texture_mag_filter_type(TextureFilterType_NEAREST)
-, m_texture_min_filter_type(TextureFilterType_NEAREST)
-, m_texture_wrap_mode_s(TextureWrapMode_CLAMP_TO_EDGE)
-, m_texture_wrap_mode_t(TextureWrapMode_CLAMP_TO_EDGE)
-, m_texture_wrap_mode_r(TextureWrapMode_CLAMP_TO_EDGE)
-, m_texture_mipmap_mode(TextureMipmapMode_NEAREST)
-, m_sampler_b_color_type(SamplerBodrderColorType_FLOAT_TRANSPARENT_BLACK)
+, m_mag_filter_type(SamplerFilterType_NEAREST)
+, m_min_filter_type(SamplerFilterType_NEAREST)
+, m_wrap_mode_s(SamplerWrapMode_CLAMP_TO_EDGE)
+, m_wrap_mode_t(SamplerWrapMode_CLAMP_TO_EDGE)
+, m_wrap_mode_r(SamplerWrapMode_CLAMP_TO_EDGE)
+, m_mipmap_mode(SamplerMipmapMode_NEAREST)
+, m_sampler_b_color_type(SamplerBorderColorType_FLOAT_TRANSPARENT_BLACK)
+, m_use_compare(false)
 , m_compare_op(CompareOperator_LESS)
+, m_use_anisotropy(false)
+, m_max_anisotropy(1.0f)
 {
 }
 

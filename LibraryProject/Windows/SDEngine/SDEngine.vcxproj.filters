@@ -287,15 +287,6 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\TextureFormat_Vulkan.cpp">
       <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\TextureFilterType_Vulkan.cpp">
-      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\TextureMipmapMode_Vulkan.cpp">
-      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\TextureWrapMode_Vulkan.cpp">
-      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\TextureIdentity.cpp">
       <Filter>src\Graphics\ManagerIdentity</Filter>
     </ClCompile>
@@ -358,6 +349,21 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKSampler.cpp">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\CompareOp_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\SamplerBorderColorType_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\SamplerMipmapMode_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\SamplerFilterType_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\SamplerWrapMode_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -505,26 +511,8 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\TextureFormat.h">
       <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\TextureFilterType.h">
-      <Filter>include\Graphics\ManagerParam</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\TextureType.h">
       <Filter>include\Graphics\ManagerParam</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\TextureMipmapMode.h">
-      <Filter>include\Graphics\ManagerParam</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\TextureWrapMode.h">
-      <Filter>include\Graphics\ManagerParam</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\TextureFilterType_Vulkan.h">
-      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\TextureMipmapMode_Vulkan.h">
-      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\TextureWrapMode_Vulkan.h">
-      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\TextureIdentity.h">
       <Filter>include\Graphics\ManagerIdentity</Filter>
@@ -575,6 +563,30 @@
       <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\CompareOperator.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\CompareOp_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\SamplerBorderColorType_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\SamplerMipmapMode.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\SamplerMipmapMode_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\SamplerFilterType.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\SamplerFilterType_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\SamplerWrapMode_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\SamplerWrapMode.h">
       <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
   </ItemGroup>

@@ -41,13 +41,13 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  */
 enum SamplerBorderColorTypeEnum
 {
-    SamplerBodrderColorType_FLOAT_TRANSPARENT_BLACK = 0, /*!> Border color (0.0, 0.0, 0.0, 0.0)*/
-    SamplerBodrderColorType_INT_TRANSPARENT_BLACK, /*!> Border color (0, 0, 0, 0)*/
-    SamplerBodrderColorType_FLOAT_OPAQUE_BLACK, /*!> Border color (0.0, 0.0, 0.0, 1.0)*/
-    SamplerBodrderColorType_INT_OPAQUE_BLACK, /*!> Border color (0, 0, 0, 1)*/
-    SamplerBodrderColorType_FLOAT_OPAQUE_WHITE, /*!> Border color (1.0, 1.0, 1.0, 1.0)*/
-    SamplerBodrderColorType_INT_OPAQUE_WHITE, /*!> Border color (1, 1, 1, 1)*/
-    SamplerBodrderColorType_MAX_DEFINE_VALUE /*!> Maximum define value.*/
+    SamplerBorderColorType_FLOAT_TRANSPARENT_BLACK = 0, /*!> Border color (0.0, 0.0, 0.0, 0.0)*/
+    SamplerBorderColorType_INT_TRANSPARENT_BLACK, /*!> Border color (0, 0, 0, 0)*/
+    SamplerBorderColorType_FLOAT_OPAQUE_BLACK, /*!> Border color (0.0, 0.0, 0.0, 1.0)*/
+    SamplerBorderColorType_INT_OPAQUE_BLACK, /*!> Border color (0, 0, 0, 1)*/
+    SamplerBorderColorType_FLOAT_OPAQUE_WHITE, /*!> Border color (1.0, 1.0, 1.0, 1.0)*/
+    SamplerBorderColorType_INT_OPAQUE_WHITE, /*!> Border color (1, 1, 1, 1)*/
+    SamplerBorderColorType_MAX_DEFINE_VALUE /*!> Maximum define value.*/
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

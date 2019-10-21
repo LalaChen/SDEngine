@@ -23,29 +23,24 @@ SOFTWARE.
 
 */
 
-/*! \file      TextureFormat.h
- *  \brief     Introduce of enum TextureFormat.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/08/04
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
+#include "SamplerFilterType_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \enum TextureWrapModeEnum
- *  TextureWrapModeEnum is enum for defining wrap type.
- */
-enum TextureWrapModeEnum
+VkFilter SamplerFilterType_Vulkan::SamplerFilterTypes[SamplerFilterType_MAX_DEFINE_VALUE] = 
 {
-    TextureWrapMode_REPEAT = 0, /*!< If the texture coordinate is large then 1.0, we will subtract floor integer from texture coordinate.*/
-    TextureWrapMode_MIRRORED_REPEAT, /*!< The texel value will be decide from that will make bi-linear interpolation in nearest neighboring level mipmaps.*/
-    TextureWrapMode_CLAMP_TO_EDGE,  /*!< The texel value will constrict in [0,1].*/
-    TextureWrapMode_CLAMP_TO_BORDER, /*!< The texel value will be the border color if texture coordinate isn't in [0,1].*/
-    TextureWrapMode_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+    VK_FILTER_NEAREST,
+    VK_FILTER_LINEAR
 };
+
+VkFilter SamplerFilterType_Vulkan::Convert(const SamplerFilterTypeEnum &i_src)
+{
+    if (i_src != SamplerFilterType_MAX_DEFINE_VALUE) {
+        return SamplerFilterTypes[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_FILTER_MAX_ENUM;
+    }
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

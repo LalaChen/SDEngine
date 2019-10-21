@@ -20,23 +20,31 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-#include "LogManager.h"
-#include "OpenGL4Manager.h"
+/*! \file      SamplerWrapMode_Vulkan.h
+ *  \brief     Introduce of class SamplerWrapMode_Vulkan.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/08/04
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include <vulkan/vulkan.h>
+
+#include "SDEngineCommonType.h"
+#include "SamplerWrapMode.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void OpenGL4Manager::CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size)
+class SamplerWrapMode_Vulkan
 {
-}
-
-void OpenGL4Manager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size)
-{
-}
-
-void OpenGL4Manager::DeleteTextureImage(TextureIdentity &io_identity)
-{
-}
+public:
+    static VkSamplerAddressMode Convert(const SamplerWrapModeEnum &i_src);
+public:
+    static VkSamplerAddressMode SamplerWrapModes[SamplerWrapMode_MAX_DEFINE_VALUE];
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -23,25 +23,27 @@ SOFTWARE.
 
 */
 
-/*! \file      TextureFormat.h
- *  \brief     Introduce of enum TextureFormat.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/08/04
- *  \copyright MIT License.
- */
-
-#pragma once
+#include "SamplerWrapMode_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \enum TextureMipmapModeEnum
- *  TextureFilterTypeEnum is enum for defining filter type.
- */
-enum TextureMipmapModeEnum
+VkSamplerAddressMode SamplerWrapMode_Vulkan::SamplerWrapModes[SamplerWrapMode_MAX_DEFINE_VALUE] =
 {
-    TextureMipmapMode_NEAREST = 0, /*!< The texel value will be decide from the mipmaps whose level is round down.*/
-    TextureMipmapMode_LINEAR = 1, /*!< The texel value will be decide from that will make bi-linear interpolation in nearest neighboring level mipmaps.*/
-    TextureMipmapMode_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+    VK_SAMPLER_ADDRESS_MODE_REPEAT,
+    VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
+    VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+    VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
 };
+
+VkSamplerAddressMode SamplerWrapMode_Vulkan::Convert(const SamplerWrapModeEnum &i_src)
+{
+    if (i_src != SamplerWrapMode_MAX_DEFINE_VALUE) {
+        return SamplerWrapModes[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_SAMPLER_ADDRESS_MODE_MAX_ENUM;
+    }
+}
+
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

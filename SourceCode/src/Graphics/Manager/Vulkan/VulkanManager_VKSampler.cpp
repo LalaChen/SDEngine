@@ -68,4 +68,13 @@ VkResult VulkanManager::CreateVkSampler(
     return vkCreateSampler(m_VK_device, &sampler_c_info, nullptr, &io_sampler);
 }
 
+void VulkanManager::FreeVkSampler(SamplerIdentity &io_identity)
+{
+    if (io_identity.m_sampler != SD_NULL_HANDLE) {
+        VkSampler &sampler_handle = reinterpret_cast<VkSampler&>(io_identity.m_sampler);
+        vkDestroySampler(m_VK_device, sampler_handle, nullptr);
+    }
+    io_identity = SamplerIdentity();
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________
