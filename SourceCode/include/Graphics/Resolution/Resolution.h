@@ -95,12 +95,15 @@ public:
      */
     void GetResolution(Size_ui32 &io_w, Size_ui32 &io_h) const;
 public:
-    /*! \var Resolution& operator=(const Resolution &i_src);
-     *  \param [in] i_src
-     *  \brief 
+    /*! \fn Resolution& operator=(const Resolution &i_src);
+     *  \param [in] i_src Assign target.
+     *  \brief Assign operator.
      */
     Resolution& operator=(const Resolution &i_src);
 private:
+    /*! \fn void CalculateRatioBetweenWidthAndHeight();
+     *  \brief Calculate aspect ratio of this resolution.
+     */
     void CalculateRatioBetweenWidthAndHeight();
 protected:
     /* \var Size_ui m_width;

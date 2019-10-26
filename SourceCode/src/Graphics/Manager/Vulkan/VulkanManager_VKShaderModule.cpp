@@ -22,33 +22,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "OpenGL4Manager.h"
+#include "LogManager.h"
+#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-//----------- Vertex Buffer Function ------------
-void OpenGL4Manager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type)
+VkResult VulkanManager::CreateVKShaderModule(
+    VkShaderModule &io_shader_module_handle,
+    VkShaderStageFlagBits i_stage,
+    const UByte *i_binary_ptr,
+    const Size_ui64 i_binary_size)
 {
+    VkResult result = VK_SUCCESS;
+
+    VkShaderModuleCreateInfo c_info = {};
+    c_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    c_info.pNext = nullptr;
+    c_info.flags = 0;
+    c_info.codeSize = i_binary_size;
+    c_info.pCode = reinterpret_cast<const uint32_t*>(i_binary_ptr);
+
+    result = vkCreateShaderModule(m_VK_device, &c_info, nullptr, &io_shader_module_handle);
+    if (result != VK_SUCCESS) {
+        SDLOGW("Failed to create shader module! Result = %x.");
+    }
+
+    return result;
 }
 
-void OpenGL4Manager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+void VulkanManager::DestroyVKShaderModule(VkShaderModule &io_shader_module_handle)
 {
-}
-
-void OpenGL4Manager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
-{
-}
-
-void OpenGL4Manager::DeleteVertexBuffer(VertexBufferIdentity &io_identity)
-{
-}
-
-void OpenGL4Manager::MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle)
-{
-}
-
-void OpenGL4Manager::UnmapBuffer(const VertexBufferIdentity &i_identity)
-{
+    if (io_shader_module_handle != VK_NULL_HANDLE) {
+        vkDestroyShaderModule(m_VK_device, io_shader_module_handle, nullptr);
+    }
+    io_shader_module_handle = VK_NULL_HANDLE;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

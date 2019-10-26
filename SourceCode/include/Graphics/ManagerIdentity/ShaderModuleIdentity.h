@@ -23,24 +23,51 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      ShaderModuleIdentity.h
+ *  \brief     Introduce of class ShaderModuleIdentity.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/10/26
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 #include "ShaderKind.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+/*! \class ShaderModuleIdentity
+ *  Class ShaderModuleIdentity is used to record some necessary information for shader.
+ */
+class SDENGINE_CLASS ShaderModuleIdentity
+{
+public:
+    /*! \fn explicit ShaderModuleIdentity();
+     *  \brief The constructor of ShaderModuleIdentity Class.
+     */
+    ShaderModuleIdentity();
+
+    /*! \fn ~ShaderModuleIdentity();
+     *  \brief The destructor of ShaderModuleIdentity Class.
+     */
+    ~ShaderModuleIdentity();
+public:
+    /*! \var CompHandle m_prog_handle;
+     *  \brief The shader handle. It is valid while the value is not equal 0.
+     */
+    CompHandle m_prog_handle;
+
+    /*! \var ShaderKindEnum m_shader_kind;
+     *  \brief kind of shader.
+     */
+    ShaderKindEnum m_shader_kind;
+
+    /*! \var std::string m_entry_name;
+     *  \brief The name of entry function of this shader.
+     */
+    std::string m_entry_name;
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

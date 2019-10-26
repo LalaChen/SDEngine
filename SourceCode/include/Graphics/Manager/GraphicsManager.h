@@ -102,6 +102,9 @@ public:
     virtual void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size) = 0;
     virtual void DeleteTextureImage(TextureIdentity &io_identity) = 0;
 public:
+    virtual void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) = 0;
+    virtual void DeleteShaderModule(ShaderModuleIdentity &io_identity) = 0;
+public:
 //------------- Resize Function -----------------
     virtual void Resize(Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:

@@ -23,24 +23,26 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      CompareOp_Vulkan.h
+ *  \brief     Introduce of class ShaderKind_Vulkan.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/10/26
  *  \copyright MIT License.
  */
 
-#pragma once
+#include <vulkan/vulkan.h>
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
+#include "SDEngineCommonType.h"
 #include "ShaderKind.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class ShaderKind_Vulkan
+{
+public:
+    static VkShaderStageFlagBits Convert(const ShaderKindEnum &i_src);
+public:
+    static VkShaderStageFlagBits ShaderKinds[ShaderKind_MAX_DEFINE_VALUE];
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

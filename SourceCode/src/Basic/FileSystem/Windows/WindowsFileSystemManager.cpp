@@ -59,12 +59,11 @@ bool WindowsFileSystemManager::OpenFile(const FilePathString &i_location, FileDa
     std::streamoff file_length = 0;
 
     //check absolute path.
-    if (IsAbsolutePath(i_location) == true)
-    {
+    if (IsAbsolutePath(i_location) == true) {
+
         dest_file.open(StringToWString(i_location, SD_CODE_PAGE), std::ios_base::binary);
 
-        if( dest_file.is_open() == true )
-        {
+        if (dest_file.is_open() == true) {
             //-- calculate file size
             dest_file.seekg(0,std::ios_base::end);
             file_length = dest_file.tellg();
@@ -80,14 +79,11 @@ bool WindowsFileSystemManager::OpenFile(const FilePathString &i_location, FileDa
             return true;
         }
     }
-    else
-    {
-        for(auto path : m_relative_paths)
-        {
+    else {
+        for (FilePathString &path : m_relative_paths) {
             file_path = m_work_dir_path + path + i_location;
             dest_file.open(StringToWString(file_path, SD_CODE_PAGE), std::ios_base::binary);
-            if( dest_file.is_open() == true )
-            {
+            if (dest_file.is_open() == true) {
                 //-- calculate file size
                 dest_file.seekg(0,std::ios_base::end);
                 file_length = dest_file.tellg();
@@ -110,8 +106,7 @@ bool WindowsFileSystemManager::OpenFile(const FilePathString &i_location, FileDa
 void WindowsFileSystemManager::SaveFile(const FilePathString &i_location, const FileData &i_file)
 {
     std::ofstream file(StringToWString(i_location, SD_CODE_PAGE), std::ios_base::binary);
-    if (file.is_open() == true)
-    {
+    if (file.is_open() == true) {
         file.write(i_file.GetDataCharAddr(), i_file.GetSize());
     }
     file.close();
@@ -122,12 +117,10 @@ FilePathString WindowsFileSystemManager::ReturnFilePossibleLocation(const FilePa
     std::ifstream result;
     FilePathString result_file_path = "";
     FilePathString file_path;
-    for (auto &path : m_relative_paths)
-    {
+    for (FilePathString &path : m_relative_paths) {
         file_path = m_work_dir_path + path + i_fn;
         result.open(file_path.c_str());
-        if (result.is_open() == true)
-        {
+        if (result.is_open() == true) {
             result_file_path = file_path;
             result.close();
             break;
@@ -140,13 +133,11 @@ FilePathString WindowsFileSystemManager::ReturnFilePossibleLocation(const FilePa
 FilePathString WindowsFileSystemManager::GetDirOfThisFile(const FilePathString &i_location)
 {
     size_t last_slash = i_location.find_last_of("\\");
-    if (last_slash != FilePathString::npos)
-    {
+    if (last_slash != FilePathString::npos) {
         return i_location.substr(0, last_slash);
     }
     last_slash = i_location.find_last_of("/");
-    if (last_slash != FilePathString::npos)
-    {
+    if (last_slash != FilePathString::npos) {
         return i_location.substr(0, last_slash);
     }
     return FilePathString();
@@ -159,20 +150,20 @@ FilePathString WindowsFileSystemManager::GetFirstFileNameInTargetDir(const FileP
     FilePathString  filename, dirname;
     FilePathString  search_dir_name;
     FilePathString  total_path;
-    if (i_dir[i_dir.size() - 1] != '\\')
+    if (i_dir[i_dir.size() - 1] != '\\') {
         search_dir_name = i_dir + "\\*";
-    else search_dir_name = i_dir + "*";
+    }
+    else {
+        search_dir_name = i_dir + "*";
+    }
 
     find_handle = FindFirstFile(SD_ADT_OS_STRCSTR(search_dir_name), &find_data);
 
-    if (find_handle != INVALID_HANDLE_VALUE)
-    {
-        do
-        {
+    if (find_handle != INVALID_HANDLE_VALUE) {
+        do {
             // read all (real) files in current folder
             // , delete '!' read other 2 default folder . and ..
-            if ((find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) //File
-            {
+            if ((find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) {//File
                 filename = SD_CVT_OS_CHARS_TOSTR(find_data.cFileName);
                 //ext file checking.
                 if (filename.find(i_ext_name) != filename.npos)
@@ -181,11 +172,9 @@ FilePathString WindowsFileSystemManager::GetFirstFileNameInTargetDir(const FileP
                     break;
                 }
             }
-            else //Dir
-            {
+            else {//Dir
                 dirname = SD_CVT_OS_CHARS_TOSTR(find_data.cFileName);
-                if (dirname.compare(".") != 0 && dirname.compare("..") != 0 && i_is_recursive == true)
-                {
+                if (dirname.compare(".") != 0 && dirname.compare("..") != 0 && i_is_recursive == true) {
                     dirname = i_dir + "\\" + dirname + "\\";
                     filename = GetFirstFileNameInTargetDir(dirname, i_ext_name,  i_is_recursive);
                 }
@@ -200,14 +189,11 @@ FilePathString WindowsFileSystemManager::GetFirstFileNameInTargetDir(const FileP
 
 bool WindowsFileSystemManager::IsExistedFileOrPath(const FilePathString &i_location)
 {
-    if (IsAbsolutePath(i_location) == true)
-    {
+    if (IsAbsolutePath(i_location) == true) {
         return static_cast<bool>(PathFileExists(SD_ADT_OS_STRCSTR(i_location)));
     }
-    else
-    {
-        for (auto path : m_relative_paths)
-        {
+    else {
+        for (FilePathString &path : m_relative_paths) {
             FilePathString file_path;
             file_path = m_work_dir_path + path + i_location;
             bool exist = static_cast<bool>(PathFileExists(SD_ADT_OS_STRCSTR(i_location)));
@@ -221,13 +207,11 @@ bool WindowsFileSystemManager::IsExistedFile(const FilePathString &i_location)
 {
     std::ifstream dest_file;
     dest_file.open(StringToWString(i_location, SD_CODE_PAGE), std::ios_base::binary);
-    if (dest_file.is_open() == false)
-    {
+    if (dest_file.is_open() == false) {
         dest_file.close();
         return false;
     }
-    else
-    {
+    else {
         dest_file.close();
         return true;
     }
@@ -259,8 +243,7 @@ int WindowsFileSystemManager::RenameFile(const FilePathString &i_src_fn, const F
 int WindowsFileSystemManager::CopyFileTo(const FilePathString &i_src_location, const FilePathString &i_dst_location)
 {
     //If file exist, we don't copy.
-    if (IsExistedFileOrPath(i_dst_location) == false)
-    {
+    if (IsExistedFileOrPath(i_dst_location) == false) {
         FilePathString temp_name = i_dst_location + ".temp";
         DeleteFile(SD_ADT_OS_STRCSTR(temp_name));
         CopyFile(SD_ADT_OS_STRCSTR(i_src_location), SD_ADT_OS_STRCSTR(temp_name), true);
@@ -300,23 +283,18 @@ void WindowsFileSystemManager::VisitDir(const FilePathString &i_dir, const Entry
 
     find_handle = FindFirstFile(SD_ADT_OS_STRCSTR(search_dir_name), &find_data);
 
-    if (find_handle != INVALID_HANDLE_VALUE)
-    {
-        do
-        {
+    if (find_handle != INVALID_HANDLE_VALUE) {
+        do {
             // read all (real) files in current folder
             // , delete '!' read other 2 default folder . and ..
-            if ((find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) //File
-            {
+            if ((find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) {//File
                 filename = SD_CVT_OS_CHARS_TOSTR(find_data.cFileName);
                 if (i_file_callback != nullptr)
                     i_file_callback(this_dir + "\\", filename, i_level);
             }
-            else //Dir
-            {
+            else {//Dir
                 dirname = SD_CVT_OS_CHARS_TOSTR(find_data.cFileName);
-                if (dirname.compare(".") != 0 && dirname.compare("..") != 0 && i_is_recursive == true)
-                {
+                if (dirname.compare(".") != 0 && dirname.compare("..") != 0 && i_is_recursive == true) {
                     dirname = this_dir + "\\" + dirname + "\\";
                     VisitDir(dirname, i_file_callback, i_dir_callback, i_is_recursive, (i_level+1));
 
@@ -345,8 +323,7 @@ void WindowsFileSystemManager::DeleteAllFilesInDir(const FilePathString &i_dir, 
 
     VisitDir(i_dir, file_callback, dir_callback, i_delete_sub);
 
-    if (i_delete_target_dir == true)
-    {
+    if (i_delete_target_dir == true) {
         DeleteDir(i_dir);
     }
 }

@@ -41,7 +41,7 @@ Texture::~Texture()
 }
 
 //--- Texture Data Function
-void Texture::InitializeDataFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_level)
+void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_level)
 {
     if (i_bitmap_wref.IsNull() == false) {
         if (m_tex_identity.m_image_handle == SD_NULL_HANDLE) {

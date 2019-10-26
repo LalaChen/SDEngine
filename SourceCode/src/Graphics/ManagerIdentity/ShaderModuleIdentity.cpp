@@ -23,24 +23,19 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "ShaderModuleIdentity.h"
 
-#pragma once
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
+ShaderModuleIdentity::ShaderModuleIdentity()
+: m_prog_handle(SD_NULL_HANDLE)
+, m_shader_kind(ShaderKind_MAX_DEFINE_VALUE)
+, m_entry_name("")
+{
+}
+
+ShaderModuleIdentity::~ShaderModuleIdentity()
+{
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

@@ -69,3 +69,4 @@ SOFTWARE.
 #include "Graphics/Material/BasicTextures.h"
 #include "Graphics/VertexBuffer/DynamicVertexBuffer.h"
 #include "Graphics/VertexBuffer/StaticVertexBuffer.h"
+#include "Graphics/RenderFlow/ShaderModule.h"

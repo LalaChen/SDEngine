@@ -22,25 +22,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include "ShaderKind_Vulkan.h"
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
-#pragma once
+VkShaderStageFlagBits ShaderKind_Vulkan::ShaderKinds[ShaderKind_MAX_DEFINE_VALUE] =
+{
+    VK_SHADER_STAGE_VERTEX_BIT,
+    VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
+    VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
+    VK_SHADER_STAGE_GEOMETRY_BIT,
+    VK_SHADER_STAGE_FRAGMENT_BIT,
+    VK_SHADER_STAGE_COMPUTE_BIT
+};
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
+VkShaderStageFlagBits ShaderKind_Vulkan::Convert(const ShaderKindEnum &i_src)
+{
+    if (i_src != ShaderKind_MAX_DEFINE_VALUE) {
+        return ShaderKinds[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
+    }
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

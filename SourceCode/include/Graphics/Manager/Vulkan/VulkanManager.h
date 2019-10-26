@@ -36,6 +36,8 @@ SOFTWARE.
 
 #include "GraphicsManager.h"
 
+using SDE::Basic::UBytePtr;
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class VulkanManager
@@ -95,6 +97,9 @@ public:
     void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size) override;
     void DeleteTextureImage(TextureIdentity &io_identity) override;
 public:
+    void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
+    void DeleteShaderModule(ShaderModuleIdentity &io_identity) override;
+public:
     void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
 //----------- Vulkan buffer private Function ------------
@@ -145,6 +150,7 @@ protected:
         VkDeviceSize i_data_size);
 
     void DestroyVkImage(VkImage &io_image_handle);
+
 protected:
 //----------- Vulkan sampler private Function -------------
     /*! \fn VkResult CreateVkSampler( VkSampler &io_sampler, VkFilter i_mag_filter_type, VkFilter i_min_filter_type, VkSamplerMipmapMode i_mipmap_mode, VkSamplerAddressMode i_wrap_mode_s, VkSamplerAddressMode i_wrap_mode_t, VkSamplerAddressMode i_wrap_mode_r, float i_mip_lod_bias, VkBool32 i_enable_anisotropy, float i_max_anisotropy, VkBool32 i_enable_compare, VkCompareOp i_compare_op, float i_min_lod, float i_max_lod, VkBorderColor i_border_color, VkBool32 i_unnormalize_coord);
@@ -212,6 +218,14 @@ protected:
     void UnmapVkDeviceMemory(VkDeviceMemory i_memory_handle);
 
     void FreeVkDeviceMemory(VkDeviceMemory &io_memory_handle);
+protected:
+    VkResult CreateVKShaderModule(
+        VkShaderModule &io_shader_module_handle,
+        VkShaderStageFlagBits i_stage,
+        const UByte *i_binary_ptr,
+        const Size_ui64 i_binary_size);
+
+    void DestroyVKShaderModule(VkShaderModule &io_shader_module_handle);
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;

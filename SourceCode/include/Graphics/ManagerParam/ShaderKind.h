@@ -23,24 +23,31 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      ShaderKind.h
+ *  \brief     Introduce of enum ShaderKind.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/10/26
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
+#include "SDEngineMacro.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+/*! \enum ShaderKindEnum
+ *  Enum ShaderKindEnum is used to list all kind of shader.
+ */
+enum ShaderKindEnum
+{
+    ShaderKind_VERTEX = 0, /*!< Vertex shader.*/
+    ShaderKind_TESS_CTRL, /*!< Tesselation controller shader.*/
+    ShaderKind_TESS_EVA, /*!< Tesselation evaluation shader.*/
+    ShdaerKind_GEOMETRY, /*!< Geometry shader.*/
+    ShaderKind_FRAGMENT, /*!< Fragment shader.*/
+    ShaderKind_COMPUTE, /*!< Compute shader.*/
+    ShaderKind_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________
