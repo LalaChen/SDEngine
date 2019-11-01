@@ -38,7 +38,7 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class FunctionSlotBase \n
- *  In our event system, we will use the slot function after something finished. \n
+ *  \brief In our event system, we will use the slot function after something finished. \n
  *  For a example, we needed to exexuted something after button clicked. So the kind \n
  *  of slot function class object will be used to handled those situation. \n
  *  We have some principle of using. we list those rule behind: \n

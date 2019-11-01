@@ -37,7 +37,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum VertexBufferFormatEnum
- *  VertexBufferFormatTypeEnum is enum for defining format type about vertex buffer.
+ *  \brief VertexBufferFormatTypeEnum is enum for defining format type about vertex buffer.
  */
 enum VertexBufferFormatEnum
 {

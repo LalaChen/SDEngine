@@ -35,7 +35,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class WindowsImageLoader
- *  In our system, WindowsImageLoader is used at windows OS and based on DevIL. 
+ *  \brief In our system, WindowsImageLoader is used at windows OS and based on DevIL. 
  */
 class SDENGINE_CLASS WindowsImageLoader : public ImageLoader
 {

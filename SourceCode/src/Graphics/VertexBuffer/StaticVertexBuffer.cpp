@@ -30,7 +30,7 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-StaticVertexBuffer::StaticVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format)
+StaticVertexBuffer::StaticVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format)
 : VertexBuffer(i_object_name, i_va_location, i_format, VertexBufferMemoryType_STATIC)
 {
 }

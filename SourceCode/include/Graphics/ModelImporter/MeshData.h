@@ -48,7 +48,7 @@ using SDE::Math::Transform;
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class MeshData
- *  In our graphic system, MeshData is used to keep parsed data.
+ *  \brief In our graphic system, MeshData is used to keep parsed data.
  */
 class SDENGINE_CLASS MeshData
 {

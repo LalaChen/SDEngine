@@ -32,26 +32,26 @@ SOFTWARE.
 
 #pragma once
 
+#include <string>
+
 #include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "SDEngineCommonFunction.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum VertexBufferUsageKindEnum
- *  The vertex buffer usage kind.
+ *  \brief The vertex buffer usage kind.
  */
 enum VertexBufferUsageEnum
 {
     VertexBufferUsage_VERTEX_BUFFER = 0, /*!< Use for storing vertice.(vec3)*/
     VertexBufferUsage_NORMAL_BUFFER, /*!< Use for storing normals.(vec3)*/
-    VertexBufferUsage_TEX_COORD_BUFFER, /*!< Use for storing texture coordinates.(vec3)*/
+    VertexBufferUsage_TEX_COORD_BUFFER, /*!< Use for storing texture coordinates.(vec2)*/
     VertexBufferUsage_TANGENT_BUFFER, /*!< Use for storing tangents.(vec3)*/
     VertexBufferUsage_BINORMAL_BUFFER , /*!< Use for storing binormals.(vec3)*/
     VertexBufferUsage_COLOR_BUFFER, /*!< Use for storing colors.(Color4f)*/
     VertexBufferUsage_ELEMENT_BUFFER, /*!< Use for storing elements.(uint32_t)*/
     VertexBufferUsage_MAX_DEFINE_VALUE, /*!< Bound of enum.*/
-    VertexBufferUsage_BUFFER_GROUP = VertexBufferUsage_COLOR_BUFFER + 1
+    VertexBufferUsage_BUFFER_GROUP = VertexBufferUsage_COLOR_BUFFER + 1 /*!< Bound of vertex array.*/
 };
 
 extern SDENGINE_API const std::string VertexBufferUsageEnumNames[VertexBufferUsage_MAX_DEFINE_VALUE];

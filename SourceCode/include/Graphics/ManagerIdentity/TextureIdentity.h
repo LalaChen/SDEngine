@@ -39,7 +39,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class ImageSize
- *  Record size of this image.
+ *  \brief Record size of this image.
  */
 class SDENGINE_CLASS ImageSize
 {

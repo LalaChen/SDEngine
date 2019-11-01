@@ -29,7 +29,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 //------------------- class VertexBuffer -----------------
-VertexBuffer::VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format, VertexBufferMemoryTypeEnum i_memory_type)
+VertexBuffer::VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format, VertexBufferMemoryTypeEnum i_memory_type)
 : Object(i_object_name)
 , m_location(i_va_location)
 , m_memory_type(i_memory_type)

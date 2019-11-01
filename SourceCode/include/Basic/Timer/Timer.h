@@ -39,7 +39,7 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class Timer \n
- *  In our system, Timer is used to record some infos about time. We will record the program\n
+ *  \brief In our system, Timer is used to record some infos about time. We will record the program\n
  *  starting time while this program starting. For each frame, we will cache the previous time and \n
  *  get current time by GetCurrentTimeByOS. Please note that we need to implement function \n
  *  GetCurrentTimeByOS for following OS platform. And then we calculate delta time by the current \n

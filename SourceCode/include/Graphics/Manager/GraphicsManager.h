@@ -55,7 +55,7 @@ enum GraphicsLibraryEnum {
 };
 
 /*! \class GraphicsManager
- *  In our system, GraphicsManager is a interface for all graphics API(opengl, gles, vulkan) and manage \n
+ *  \brief In our system, GraphicsManager is a interface for all graphics API(opengl, gles, vulkan) and manage \n
  *  graphics resource those need to be managed.
  */
 class SDENGINE_CLASS GraphicsManager

@@ -43,7 +43,7 @@ ______________SD_START_BASIC_NAMESPACE_______________
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Object);
 
 /*! \class Object
- *  In our system, class object is the root of all classes those instances will be kept
+ *  \brief In our system, class object is the root of all classes those instances will be kept
  *  in several places. What's more, we will define some common behavior for those object.
  */
 class SDENGINE_API Object : public std::enable_shared_from_this<Object>

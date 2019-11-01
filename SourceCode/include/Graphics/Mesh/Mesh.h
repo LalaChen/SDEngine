@@ -45,7 +45,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Mesh);
 
 /*! \class Mesh
- *  In our graphic system, Mesh is used to keep and operate all vertex attribute
+ *  \brief In our graphic system, Mesh is used to keep and operate all vertex attribute
  *  buffers in this class.
  */
 

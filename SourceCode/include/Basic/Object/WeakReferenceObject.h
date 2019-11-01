@@ -43,7 +43,7 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class WeakReferenceObject
- *  In our system, WeakReferenceObject is a template class for making weak reference object of \n
+ *  \brief In our system, WeakReferenceObject is a template class for making weak reference object of \n
  *  Type class. It means the reference shouldn't add use count. Actually, this class is extended \n
  *  class about std::weak_ptr.
  */

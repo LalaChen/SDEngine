@@ -39,7 +39,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class SamplerIdentity
- *  Keep all sampling parameters (mag and min filter, texture wrap mode and etc ...)in this struct.
+ *  \brief Keep all sampling parameters (mag and min filter, texture wrap mode and etc ...)in this struct.
  */
 class SDENGINE_CLASS SamplerIdentity
 {

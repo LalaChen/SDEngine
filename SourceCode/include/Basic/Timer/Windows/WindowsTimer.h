@@ -37,7 +37,7 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class WindowsTimer \n
- *  Timer in Windows OS.
+ *  \brief Timer in Windows OS.
  *  \sa Timer
  */
 class SDENGINE_CLASS WindowsTimer : public Timer

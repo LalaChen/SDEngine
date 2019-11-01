@@ -39,7 +39,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class VertexBufferIdentity
- *  Keep all graphics handle or ID in this struct.
+ *  \brief Keep all graphics handle or ID in this struct.
  */
 class SDENGINE_CLASS VertexBufferIdentity
 {

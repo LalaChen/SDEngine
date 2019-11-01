@@ -37,21 +37,21 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class EventArg
- *  In our event system, we allow user delievrying parameters by inheriting Class EventArg. \n
- *  It's used for unifying param of interface for all slot. User can check the real arg type \n
- *  while slot triggered. \n
+ *  \brief In our event system, we allow user delievrying parameters by inheriting Class EventArg.
+ *  It's used for unifying param of interface for all slot. User can check the real arg type while
+ *  slot triggered.
  */
 class SDENGINE_CLASS EventArg
 {
 public:
-    /*! \fn EventArg()
+    /*! \fn EventArg();
      *  \brief The constructor of EventArg Class.
      */
     EventArg()
     {
     }
 
-    /*! \fn virtual ~EventArg()
+    /*! \fn virtual ~EventArg();
      *  \brief The destructor of EventArg Class.
      */
     virtual ~EventArg()

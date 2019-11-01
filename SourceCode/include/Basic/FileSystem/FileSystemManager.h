@@ -42,7 +42,7 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class FileSystemManager
- *  In our system, FileSystemManager offer a series interface for file operating. We will \n
+ *  \brief In our system, FileSystemManager offer a series interface for file operating. We will \n
  *  implement the real logic according OS.
  */
 class SDENGINE_CLASS FileSystemManager

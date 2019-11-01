@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      SamplerBodrderColorType.h
- *  \brief     Introduce of enum SamplerBodrderColorType.
+/*! \file      SamplerBorderColorType.h
+ *  \brief     Introduce of enum SamplerBorderColorTypeEnum.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/10/20
  *  \copyright MIT License.
@@ -37,7 +37,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum SamplerBorderColorTypeEnum
- *  SamplerBorderColorTypeEnum is enum for defining border color type.
+ *  \brief SamplerBorderColorTypeEnum is enum for defining border color type.
  */
 enum SamplerBorderColorTypeEnum
 {

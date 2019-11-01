@@ -37,7 +37,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum CompareOperatorEnum
- *  CompareOperatorEnum is enum for comparing operator.
+ *  \brief CompareOperatorEnum is enum for comparing operator.
  */
 enum CompareOperatorEnum
 {

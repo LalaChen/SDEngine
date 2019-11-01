@@ -43,7 +43,7 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class StrongReferenceObject
- *  In our system, StrongReferenceObject is a template class for making strong reference object of \n
+ *  \brief In our system, StrongReferenceObject is a template class for making strong reference object of \n
  *  Type class. Actually, this class is extended class about std::shared_ptr.
  */
 template <class Type> class StrongReferenceObject : public std::shared_ptr<Type>

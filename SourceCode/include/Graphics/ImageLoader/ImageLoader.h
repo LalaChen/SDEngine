@@ -40,7 +40,7 @@ using SDE::Basic::FileSystemManager;
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class ImageLoader
- *  In our system, ImageLoader offer a series interface for file operating. We will \n
+ *  \brief In our system, ImageLoader offer a series interface for file operating. We will \n
  *  implement the real logic according OS.
  */
 class SDENGINE_CLASS ImageLoader

@@ -41,7 +41,7 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class NullReferenceException
- *  In our system, class NullReferenceException throw when we try to GetRef of null strong \n
+ *  \brief In our system, class NullReferenceException throw when we try to GetRef of null strong \n
  *  or weak reference object.\n
  */
 class NullReferenceException : public std::exception

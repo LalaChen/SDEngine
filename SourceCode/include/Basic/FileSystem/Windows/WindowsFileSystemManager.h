@@ -37,8 +37,8 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class WindowsFileSystemManager
-    FileSystemManager in Windows OS.
-*/
+ *  \brief FileSystemManager in Windows OS.
+ */
 class SDENGINE_CLASS WindowsFileSystemManager : public FileSystemManager
 {
 public:

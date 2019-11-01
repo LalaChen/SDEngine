@@ -47,7 +47,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 typedef std::map<FilePathString, BitmapStrongReferenceObject> TextureMap;
 
 /*! \class NodeData
- *    In our system, we use class NodeData to store node hierarchy about this model.
+ *  \brief In our system, we use class NodeData to store node hierarchy about this model.
  */
 class SDENGINE_CLASS NodeData
 {

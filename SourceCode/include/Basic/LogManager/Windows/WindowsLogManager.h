@@ -37,7 +37,7 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class WindowsLogManager
- *  LogManager on Windows OS.
+ *  \brief LogManager on Windows OS.
  */
 class SDENGINE_CLASS WindowsLogManager : public LogManager
 {

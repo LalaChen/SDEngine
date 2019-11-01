@@ -43,7 +43,7 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class Event
- *  In our event system, we allow user register and use events in the component inheritance EventObject. \n
+ *  \brief In our event system, we allow user register and use events in the component inheritance EventObject. \n
  *  User can NOTIFY event where he wanted. Via notifying event, some slot functions registered into event \n
  *  will triggered and then received some parameters we want to utility. \n\n
  *  

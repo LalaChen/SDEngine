@@ -44,13 +44,13 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DynamicVertexBuffer);
 class SDENGINE_API DynamicVertexBuffer : public VertexBuffer
 {
 public:
-    /*! \fn explicit DynamicVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format);
+    /*! \fn explicit DynamicVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format);
      *  \param [in] i_object_name Name of this buffer.
      *  \param [in] i_va_location Attribute location of this buffer.
      *  \param [in] i_value_type The value type of this buffer.
      *  \brief The constructor of DynamicVertexBuffer Class.
      */
-    explicit DynamicVertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format);
+    explicit DynamicVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format);
 
     /*! \fn ~DynamicVertexBuffer()
      *  \brief The destructor of DynamicVertexBuffer Class.

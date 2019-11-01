@@ -37,7 +37,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum TextureTypeEnum
- *  TextureTypeEnum is enum for defining texture type.
+ *  \brief TextureTypeEnum is enum for defining texture type.
  */
 enum TextureTypeEnum
 {

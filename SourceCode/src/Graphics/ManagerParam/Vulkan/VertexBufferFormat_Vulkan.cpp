@@ -23,8 +23,6 @@ SOFTWARE.
 
 */
 
-#include <vulkan/vulkan.h>
-
 #include "VertexBufferFormat_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________

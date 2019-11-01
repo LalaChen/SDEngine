@@ -37,17 +37,24 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum ShaderKindEnum
- *  Enum ShaderKindEnum is used to list all kind of shader.
+ *  \brief Enum ShaderKindEnum is used to list all kind of shader.
  */
 enum ShaderKindEnum
 {
-    ShaderKind_VERTEX = 0, /*!< Vertex shader.*/
-    ShaderKind_TESS_CTRL, /*!< Tesselation controller shader.*/
-    ShaderKind_TESS_EVA, /*!< Tesselation evaluation shader.*/
-    ShdaerKind_GEOMETRY, /*!< Geometry shader.*/
-    ShaderKind_FRAGMENT, /*!< Fragment shader.*/
-    ShaderKind_COMPUTE, /*!< Compute shader.*/
-    ShaderKind_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+    /*!< Vertex shader.*/
+    ShaderKind_VERTEX = 0,
+    /*!< Tesselation controller shader.*/
+    ShaderKind_TESS_CTRL,
+    /*!< Tesselation evaluation shader.*/
+    ShaderKind_TESS_EVA,
+    /*!< Geometry shader.*/
+    ShdaerKind_GEOMETRY,
+    /*!< Fragment shader.*/
+    ShaderKind_FRAGMENT,
+    /*!< Compute shader.*/
+    ShaderKind_COMPUTE,
+    /*!< Bound of enum.*/
+    ShaderKind_MAX_DEFINE_VALUE
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

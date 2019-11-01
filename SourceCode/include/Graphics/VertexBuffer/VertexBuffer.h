@@ -56,14 +56,14 @@ public:
 	 */
 	typedef std::vector<UByte> VertexDatas;
 public:
-	/*! \fn explicit VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format);
+	/*! \fn explicit VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format);
 	 *  \param [in] i_object_name Name of this buffer.
 	 *  \param [in] i_va_location Attribute location of this buffer.
 	 *  \param [in] i_value_type The value type of this buffer.
      *  \param [in] i_memory_type The memory type of this buffer memory.
 	 *  \brief The constructor of VertexBuffer Class.
 	 */
-	explicit VertexBuffer(const ObjectName &i_object_name, VertexAttribLocation i_va_location, VertexBufferFormatEnum i_format, VertexBufferMemoryTypeEnum i_memory_type);
+	explicit VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format, VertexBufferMemoryTypeEnum i_memory_type);
 
 	/*! \fn ~VertexBuffer()
 	 *  \brief The destructor of VertexBuffer Class.
@@ -92,10 +92,10 @@ protected:
 	 */
     VertexBufferIdentity m_identity;
 protected:
-	/*! \var VertexAttribLocation m_location;
+	/*! \var uint32_t m_location;
 	 *  \brief Record the input location of this buffer.
      */
-	SD_DECLARE_ATTRIBUTE_VAR_GET(VertexAttribLocation, m_location, AttribLocation);
+	SD_DECLARE_ATTRIBUTE_VAR_GET(uint32_t, m_location, AttribLocation);
 
     /*! \var VertexBufferKindEnum m_memory_type;
      *  \brief Keep memory type.

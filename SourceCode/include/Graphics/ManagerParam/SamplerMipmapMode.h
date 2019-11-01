@@ -37,7 +37,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum SamplerMipmapModeEnum
- *  SamplerFilterTypeEnum is enum for defining filter type.
+ *  \brief SamplerFilterTypeEnum is enum for defining filter type.
  */
 enum SamplerMipmapModeEnum
 {

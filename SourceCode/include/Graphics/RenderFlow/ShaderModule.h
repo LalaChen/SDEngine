@@ -23,7 +23,7 @@ SOFTWARE.
 
 */
 
-/*! \file      Shader.h
+/*! \file      ShaderModule.h
  *  \brief     Introduce of class ShaderModule.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/10/24

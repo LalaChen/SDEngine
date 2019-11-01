@@ -52,7 +52,7 @@ class AssimpLogWarpper;
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class AssimpModelLoader
- *  In our engine, class AssimpModelLoader is used to load model file and convert the file to
+ *  \brief In our engine, class AssimpModelLoader is used to load model file and convert the file to
  *  class ModelData. Class ModelData is used to keeping parsed data. For all vertex attributes,
  *  we store those data to vector<vec3>. For each texture, we will keep it own bitmap.
  */

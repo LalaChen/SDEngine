@@ -83,16 +83,6 @@ typedef void* VoidPtr;
  */
 typedef unsigned int APICode;
 
-/*! \typedef std::string UniformVarName;
- *  \brief Type of uniform variable name.
- */
-typedef std::string UniformVarName;
-
-/*! \typedef uint32_t VertexAttribLocation;
- *  \brief VA location.
- */
-typedef uint32_t VertexAttribLocation;
-
 /*! \typedef uint64_t CompHandle;
  *  \brief graphics component(Buffer, Texture, ...etc) handle. In opengl, it means object ID. In Vulkan, it means handle.
  */

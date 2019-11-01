@@ -32,7 +32,6 @@ SOFTWARE.
 
 #include <vulkan/vulkan.h>
 
-#include "SDEngineCommonType.h"
 #include "ShaderKind.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________

@@ -41,7 +41,7 @@ using SDE::Basic::UBytePtr;
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class VulkanManager
- *  In our system, VulkanManager is a integration for Vulkan graphics API.
+ *  \brief In our system, VulkanManager is a integration for Vulkan graphics API.
  */
 class SDENGINE_CLASS VulkanManager : public GraphicsManager
 {

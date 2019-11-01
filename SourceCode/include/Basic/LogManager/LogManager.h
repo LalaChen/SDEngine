@@ -46,8 +46,8 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class LogManager
-    Class LogManager is used to print log. It's singleton class.
-*/
+ *  \brief Class LogManager is used to print log. It's singleton class.
+ */
 class SDENGINE_CLASS LogManager
 {
 public:

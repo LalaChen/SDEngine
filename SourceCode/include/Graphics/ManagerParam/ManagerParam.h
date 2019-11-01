@@ -44,3 +44,8 @@ SOFTWARE.
 #include "SamplerBorderColorType.h"
 #include "CompareOperator.h"
 #include "ShaderKind.h"
+#include "VertexInputRate.h"
+#include "Primitive.h"
+#include "PolygonMode.h"
+#include "FrontFaceMode.h"
+#include "FaceCulling.h"

@@ -46,7 +46,7 @@ using SDE::Graphics::Size_ui32;
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class Application
- *  In our system, Application is used to manager application lifecycle. We also record \n
+ *  \brief In our system, Application is used to manager application lifecycle. We also record
  *  the resolution in this class.
  */
 class SDENGINE_CLASS Application
@@ -78,13 +78,13 @@ public:
     virtual ~Application();
 public:
     /*! \fn virtual void Initialize() = 0;
-     *  \brief Initialize this game app. Please call this function once at executable \n
+     *  \brief Initialize this game app. Please call this function once at executable
      *         starting. Please implement this function by derived class.
      */
     virtual void Initialize() = 0;
     
     /*! \fn virtual void InitializeGraphicsSystem() = 0;
-     *  \brief Initialize graphics system of this app. Please implement this function by \n
+     *  \brief Initialize graphics system of this app. Please implement this function by
      *         derived class.
      */
     virtual void InitializeGraphicsSystem() = 0;

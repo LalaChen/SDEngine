@@ -37,15 +37,15 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum TextureFormatEnum
- *  TextureFormatEnum is enum for defining format type about texture format.
+ *  \brief TextureFormatEnum is enum for defining format type about texture format.
  */
 enum TextureFormatEnum
 {
     //Byte
     //--- R
-    TextureFormat_R8_UNORM = 0, /*!< read value to [0,1]. data is byte. channel number is 1.*/ 
-    TextureFormat_R8_SNORM, /*!< read value to [-1,1]. data is byte. channel number is 1.*/ 
-    TextureFormat_R8_UINT, /*!< read value to [0,255]. data is byte. channel number is 1.*/ 
+    TextureFormat_R8_UNORM = 0,  /*!< read value to [0,1]. data is byte. channel number is 1.*/
+    TextureFormat_R8_SNORM, /*!< read value to [-1,1]. data is byte. channel number is 1.*/
+    TextureFormat_R8_UINT, /*!< read value to [0,255]. data is byte. channel number is 1.*/
     TextureFormat_R8_SINT, /*!< read value to [-128,127]. data is byte. channel number is 1.*/
     //--- RG
     TextureFormat_R8G8_UNORM, /*!< read value to [0,1]. data is byte. channel number is 2.*/
@@ -57,7 +57,7 @@ enum TextureFormatEnum
     TextureFormat_R8G8B8A8_SNORM, /*!< read value to [-1,1]. data is byte. channel number is 4.*/
     TextureFormat_R8G8B8A8_UINT, /*!< read value to [0,255]. data is byte. channel number is 4.*/
     TextureFormat_R8G8B8A8_SINT, /*!< read value to [-128,127]. data is byte. channel number is 4.*/
-    //Short
+    //--- Short
     //--- R
     TextureFormat_R16_UNORM, /*!< read value to [0,1]. data is short. channel number is 1.*/
     TextureFormat_R16_SNORM, /*!< read value to [-1,1]. data is short. channel number is 1.*/
@@ -93,7 +93,7 @@ enum TextureFormatEnum
     //Special
     //--- DEPTH and STENCIL
     TextureFormat_D16_UNORM, /*!< depth texture.*/
-    TextureFormat_D32_SFLOAT, /*!< depth texture.*/
+    TextureFormat_D32_SFLOAT, /*!< depth and stencil texture.*/
     TextureFormat_D24_UNORM_S8_UINT, /*!< depth and stencil texture.*/
     TextureFormat_D32_SFLOAT_S8_UINT, /*!< depth and stencil texture.*/
     //--- other

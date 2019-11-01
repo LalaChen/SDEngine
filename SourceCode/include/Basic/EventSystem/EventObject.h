@@ -40,7 +40,7 @@ ______________SD_START_BASIC_NAMESPACE_______________
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(EventObject);
 
 /*! \class EventObject
- *  In our event system, EventObject is used to keep Events. The EventObject offer a EventContainer for \n
+ *  \brief In our event system, EventObject is used to keep Events. The EventObject offer a EventContainer for \n
  *  storing events. Developer can design events for purpose and register the ones into EventContainer. \n
  *  And then we notify the event while we thought suitablely. Finally we register the corresponding callback \n
  *  functions to those event. When the target event be notified, those callbacks will be executed.\n

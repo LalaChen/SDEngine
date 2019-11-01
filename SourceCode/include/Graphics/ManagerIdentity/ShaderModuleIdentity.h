@@ -39,7 +39,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class ShaderModuleIdentity
- *  Class ShaderModuleIdentity is used to record some necessary information for shader.
+ *  \brief Class ShaderModuleIdentity is used to record some necessary information for shader.
  */
 class SDENGINE_CLASS ShaderModuleIdentity
 {

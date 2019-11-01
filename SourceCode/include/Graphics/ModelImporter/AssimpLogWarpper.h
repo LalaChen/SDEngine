@@ -42,7 +42,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class AssimpLogWarpper
- *    AssimpLogWarpper is used to hook the logger system of assimp for printing log in assimp.
+ *  \brief AssimpLogWarpper is used to hook the logger system of assimp for printing log in assimp.
  */
 class SDENGINE_CLASS AssimpLogWarpper : public Assimp::Logger
 {

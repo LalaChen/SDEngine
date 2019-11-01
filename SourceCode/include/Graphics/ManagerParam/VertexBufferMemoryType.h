@@ -37,7 +37,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum VertexBufferMemoryTypeEnum
- *  The memory type of this buffer.
+ *  \brief The memory type of this buffer.
  *  The dynamic memory means the content in this buffer will be modified in future using.
  *  The static memory means the content is immutable after initializing.
  */
