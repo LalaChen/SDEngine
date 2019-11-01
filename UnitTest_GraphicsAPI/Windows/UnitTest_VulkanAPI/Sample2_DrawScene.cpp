@@ -12,10 +12,6 @@ using namespace::SDE::Graphics;
 
 Sample2_DrawScene::Sample2_DrawScene(VulkanAPITestManager *i_mgr)
 : Sample("DrawScene", i_mgr)
-//
-, m_VK_basic_uniform_buffers{ VK_NULL_HANDLE, VK_NULL_HANDLE }
-, m_VK_basic_uniform_buffer_memories{ VK_NULL_HANDLE, VK_NULL_HANDLE }
-//
 , m_VK_render_pass(VK_NULL_HANDLE)
 //for camera
 , m_VK_color_buffer(VK_NULL_HANDLE)
@@ -39,8 +35,7 @@ void Sample2_DrawScene::Initialize()
     CreateRenderPassAndFramebuffer();
     //
     CreateModel();
-    CreateUniformBuffer();
-    CreateShaderPrograms();
+    CreateRenderFlow();
 }
 
 void Sample2_DrawScene::Render()
@@ -67,10 +62,10 @@ void Sample2_DrawScene::CreateModel()
     //1. Load meshes.
     for (uint32_t meshID = 0; meshID < model.m_mesh_datas.size(); ++meshID) {
         MeshStrongReferenceObject mesh_sref = new Mesh(model.m_mesh_datas[meshID].m_name);
-        VertexAttribLocation vaID;
+        uint32_t vaID;
         //--- Vertex Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].size() > 0) {
-            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_VERTEX_BUFFER);
+            vaID = static_cast<uint32_t>(VertexBufferUsage_VERTEX_BUFFER);
             StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32Z32_SFLOAT);
@@ -81,7 +76,7 @@ void Sample2_DrawScene::CreateModel()
         }
         //--- Normal Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].size() > 0) {
-            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_NORMAL_BUFFER);
+            vaID = static_cast<uint32_t>(VertexBufferUsage_NORMAL_BUFFER);
             StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32Z32_SFLOAT);
@@ -92,7 +87,7 @@ void Sample2_DrawScene::CreateModel()
         }
         //--- Tangent Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].size() > 0) {
-            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_TANGENT_BUFFER);
+            vaID = static_cast<uint32_t>(VertexBufferUsage_TANGENT_BUFFER);
             StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32_SFLOAT);
@@ -103,7 +98,7 @@ void Sample2_DrawScene::CreateModel()
         }
         //--- Binormal Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].size() > 0) {
-            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_BINORMAL_BUFFER);
+            vaID = static_cast<uint32_t>(VertexBufferUsage_BINORMAL_BUFFER);
             StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32Z32_SFLOAT);
@@ -114,7 +109,7 @@ void Sample2_DrawScene::CreateModel()
         }
         //--- Tex Coord Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TEX_COORD_BUFFER].size() > 0) {
-            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_TEX_COORD_BUFFER);
+            vaID = static_cast<uint32_t>(VertexBufferUsage_TEX_COORD_BUFFER);
             StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32_SFLOAT);
@@ -125,7 +120,7 @@ void Sample2_DrawScene::CreateModel()
         }
         //--- Color Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].size() > 0) {
-            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_COLOR_BUFFER);
+            vaID = static_cast<uint32_t>(VertexBufferUsage_COLOR_BUFFER);
             StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
@@ -136,10 +131,10 @@ void Sample2_DrawScene::CreateModel()
         }
         //--- Indice Buffer
         if (model.m_mesh_datas[meshID].m_face_indices.size() > 0) {
-            vaID = static_cast<VertexAttribLocation>(VertexBufferUsage_ELEMENT_BUFFER);
+            vaID = static_cast<uint32_t>(VertexBufferUsage_ELEMENT_BUFFER);
             StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
-                vaID, VertexBufferFormat_X16_UINT);
+                vaID, VertexBufferFormat_X32_UINT);
             va_sref.GetRef().RefreshBufferData(
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_ELEMENT_BUFFER].data(),
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_ELEMENT_BUFFER].size());
@@ -154,38 +149,19 @@ void Sample2_DrawScene::CreateModel()
         TextureResourceMap::iterator res_iter = m_textures.find((*tex_iter).first);
         if (res_iter == m_textures.end()) {
             TextureStrongReferenceObject tex_sref = new Texture(StringFormat("%s_%s", model.m_name.c_str(), (*tex_iter).first.c_str()));
-            tex_sref.GetRef().InitializeDataFromBitmap((*tex_iter).second);
-        }
-    }
-    //3. 
-}
-
-void Sample2_DrawScene::CreateUniformBuffer()
-{
-    SDLOG("Create Uniform Buffer!!!");
-    VkResult result = VK_SUCCESS;
-    //Create basic uniform buffer
-    for (uint32_t i = 0; i < 2; ++i) {
-        result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, sizeof(BasicUniformBuffer), m_VK_basic_uniform_buffers[i]);
-        if (result != VK_SUCCESS) {
-            SDLOGE("Create uniform buffer[i] failure!!!", i);
-        }
-
-        result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_basic_uniform_buffers[i], m_VK_basic_uniform_buffer_memories[i]);
-        if (result != VK_SUCCESS) {
-            SDLOGE("Allocate uniform buffer[i] failure!!!", i);
+            tex_sref.GetRef().InitializeFromBitmap((*tex_iter).second);
         }
     }
 }
 
-void Sample2_DrawScene::CreateShaderPrograms()
+void Sample2_DrawScene::CreateRenderFlow()
 {
-    SDLOG("Create Shader Programs!!!");
+    SDLOG("Create Render Flow!!!");
     VkResult result = VK_SUCCESS;
     //1. bind vertex attribute array.
     //(such like glVertexAttribBinding and glVertexAttribFormat.)
-    //--- i. bind pointer.
-    //------ one buffer one binding. (glVertexAttribFormat)
+    //1.1. bind pointer.
+    //one buffer one binding. (glVertexAttribFormat)
     VkVertexInputBindingDescription vert_input_binding_des_infos[3] = {
         {}, {}, {}
     };
@@ -201,7 +177,7 @@ void Sample2_DrawScene::CreateShaderPrograms()
     vert_input_binding_des_infos[2].stride = sizeof(vec2);
     vert_input_binding_des_infos[2].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-    //--- ii. link bind pointer. (glVertexAttribBinding)m_VK_main_shader_set_layouts
+    //1.2. link bind pointer. (glVertexAttribBinding)m_VK_main_shader_set_layouts
     VkVertexInputAttributeDescription vert_input_attrib_des_infos[3] = {
         {},{},{}
     };
@@ -229,7 +205,7 @@ void Sample2_DrawScene::CreateShaderPrograms()
     v_input_state_c_info.pVertexAttributeDescriptions = vert_input_attrib_des_infos;
     v_input_state_c_info.vertexAttributeDescriptionCount = 3;
 
-    //--- iii. create input assembly states.(GL_TRIANGLE, ...etc.)
+    //1.3. create input assembly states.(GL_TRIANGLE, ...etc.)
     VkPipelineInputAssemblyStateCreateInfo v_input_assembly_state_c_info = {};
     v_input_assembly_state_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     v_input_assembly_state_c_info.pNext = nullptr;
@@ -237,34 +213,20 @@ void Sample2_DrawScene::CreateShaderPrograms()
     v_input_assembly_state_c_info.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST; //GL_TRIANGLE 
     v_input_assembly_state_c_info.primitiveRestartEnable = VK_FALSE; //Use to restart idx (set 0XFFFFFFFF or 0XFFFF) and then to draw fan or strip.
 
-    //--- iv. create tessellation state create info.
+    //1.4. create tessellation state create info.
     VkPipelineTessellationStateCreateInfo tessellation_state_c_info = {};
     tessellation_state_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
     tessellation_state_c_info.pNext = nullptr;
     tessellation_state_c_info.flags = 0;
     tessellation_state_c_info.patchControlPoints = 3; //3 : triangle. 4 : quad.
 
-    //2. Create VkDescriptorSetLayout for main shader.
-    //--- i. Create sampler for main shader.
-    VkSamplerCreateInfo sampler_c_info = {};
-    sampler_c_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-    sampler_c_info.pNext = nullptr;
-    sampler_c_info.flags = 0; //
-    sampler_c_info.minFilter = VK_FILTER_LINEAR;
-    sampler_c_info.magFilter = VK_FILTER_LINEAR;
-    sampler_c_info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-    sampler_c_info.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-    sampler_c_info.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-    sampler_c_info.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-    sampler_c_info.mipLodBias = 0.0f;
-    sampler_c_info.anisotropyEnable = VK_FALSE;
-    sampler_c_info.maxAnisotropy = 1.0f;
-    sampler_c_info.compareEnable = VK_FALSE; //Use depth compare operation.
-    sampler_c_info.compareOp = VK_COMPARE_OP_ALWAYS; //Use depth compare operation.
-    sampler_c_info.minLod = 0.0f;
-    sampler_c_info.maxLod = 1.0f;
-    sampler_c_info.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
-    sampler_c_info.unnormalizedCoordinates = VK_FALSE;
+    //2. create shader module.
+    //2.1 create vert shader module.
+    ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("PhongShaderVert");
+    vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "shader/PhongShader.vert.spv", "main");
+    //2.2 create frag shader module.
+    ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("PhongShaderFrag");
+    frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "shader/PhongShader.frag.spv", "main");
 }
 
 //--------------------------------------- private --------------------------------------
@@ -314,7 +276,7 @@ void Sample2_DrawScene::CreateRenderPassAndFramebuffer()
     attachment_descs[0].finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     //--- Depth attachment description.
     attachment_descs[1].flags = 0;
-    attachment_descs[1].format = VK_FORMAT_D32_SFLOAT_S8_UINT;
+    attachment_descs[1].format = VK_FORMAT_D24_UNORM_S8_UINT;
     attachment_descs[1].samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
     attachment_descs[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     attachment_descs[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.

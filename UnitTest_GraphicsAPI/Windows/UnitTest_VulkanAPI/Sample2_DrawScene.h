@@ -38,20 +38,7 @@ protected:
 private:
     void CreateModel();
     void ImportAssimpModel(ModelData &io_model);
-    void CreateUniformBuffer();
-    void CreateShaderPrograms();
-protected:
-    //Vertex Device Local memory buffer.
-    //(Memory type VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT can't use map and unmap)
-protected:
-    //Vertex Host memory buffer.
-    VkBuffer m_VK_basic_uniform_buffers[2];
-    VkDeviceMemory m_VK_basic_uniform_buffer_memories[2];
-protected:
-    //Texture
-protected:
-    //shader
-    VkPipeline m_VK_pipeline;
+    void CreateRenderFlow();
 protected:
     //render pass.
     VkRenderPass m_VK_render_pass;
@@ -71,6 +58,4 @@ protected:
 protected:
     std::vector<MeshStrongReferenceObject> m_meshes;
     TextureResourceMap m_textures;
-protected:
-    BasicUniformBuffer m_uniform_buffer_datas[2];
 };
