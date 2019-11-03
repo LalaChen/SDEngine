@@ -23,33 +23,27 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "BlendOperator_Vulkan.h"
 
-#pragma once
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
+VkBlendOp BlendOperator_Vulkan::BlendOps[BlendOperator_MAX_DEFINE_VALUE] =
+{
+    VK_BLEND_OP_ADD,
+    VK_BLEND_OP_SUBTRACT,
+    VK_BLEND_OP_REVERSE_SUBTRACT,
+    VK_BLEND_OP_MIN,
+    VK_BLEND_OP_MAX
+};
+
+VkBlendOp BlendOperator_Vulkan::Convert(const BlendOperatorEnum &i_src)
+{
+    if (i_src != BlendOperator_MAX_DEFINE_VALUE) {
+        return BlendOps[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_BLEND_OP_MAX_ENUM;
+    }
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

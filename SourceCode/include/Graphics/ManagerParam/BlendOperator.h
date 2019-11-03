@@ -23,33 +23,30 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      BlendOperator.h
+ *  \brief     Introduce of enum BlendOperatorEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/11/02
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
+#include "SDEngineMacro.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+/*! \enum BlendOperatorEnum
+ *  \brief BlendOperatorEnum is used to decide how to blending.
+ */
+enum BlendOperatorEnum
+{
+    BlendOperator_ADD = 0, /*!< Cs * Fs + Cd * Fd.*/
+    BlendOperator_SUBSTRACT, /*!< Cs * Fs - Cd * Fd.*/
+    BlendOperator_REVERSE_SUBSTRACT, /*!< Cd * Fd - Cs * Fs.*/
+    BlendOperator_MIN, /*!< min(Cs * Fs, Cd * Fd).*/
+    BlendOperator_MAX, /*!< max(Cd * Fd, Cs * Fs).*/
+    BlendOperator_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

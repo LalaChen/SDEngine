@@ -40,6 +40,8 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\TextureIdentity.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\VertexBufferIdentity.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\VertexBufferUsage.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\BlendFactor_Vulkan.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\BlendOperator_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\FaceCulling_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\FrontFaceMode_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\PolygonMode_Vulkan.cpp" />
@@ -124,6 +126,8 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\TextureIdentity.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\VertexBufferIdentity.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\BitmapPixelDataType.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\BlendFactor.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\BlendOperator.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\CompareOperator.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\FaceCulling.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\FrontFaceMode.h" />
@@ -143,6 +147,8 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferMemoryType.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferUsage.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\VertexInputRate.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\BlendFactor_Vulkan.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\BlendOperator_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\FaceCulling_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\FrontFaceMode_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\PolygonMode_Vulkan.h" />

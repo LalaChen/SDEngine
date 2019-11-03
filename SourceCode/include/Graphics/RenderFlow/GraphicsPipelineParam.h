@@ -43,6 +43,9 @@ SOFTWARE.
 #include "FrontFaceMode.h"
 #include "FaceCulling.h"
 #include "SampleCount.h"
+#include "StencilOperator.h"
+#include "BlendFactor.h"
+#include "BlendOperator.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -150,7 +153,13 @@ public:
     StencilOpInfo();
     ~StencilOpInfo();
 public:
-
+    StencilOperatorEnum m_fail_op;
+    StencilOperatorEnum m_pass_op;
+    StencilOperatorEnum m_depth_fail_op;
+    CompareOperatorEnum m_compare;
+    uint32_t m_compare_mask;
+    uint32_t m_write_mask;
+    uint32_t m_reference;
 };
 
 class SDENGINE_CLASS DepthStencilInfo
@@ -169,6 +178,22 @@ public:
     StencilOpInfo m_back;
 };
 
+class SDENGINE_CLASS ColorBlendAttachmentInfo
+{
+public:
+    ColorBlendAttachmentInfo();
+    ~ColorBlendAttachmentInfo();
+public:
+    bool m_color_mask[4]; //R,G,B,A
+    bool m_enable_blend;
+    BlendFactorEnum m_src_color_factor;
+    BlendFactorEnum m_dst_color_factor;
+    BlendOperatorEnum m_color_op;
+    BlendFactorEnum m_src_alpha_factor;
+    BlendFactorEnum m_dst_alpha_factor;
+    BlendOperatorEnum m_alpha_op;
+};
+
 class SDENGINE_CLASS GraphicsPipelineParam
 {
 public:
@@ -179,6 +204,7 @@ public:
     ScissorRegion m_scissor_region;
     PrimitiveInfo m_primitive_info;
     RasterizationInfo m_rasterization_info;
+    DepthStencilInfo m_depth_stencil_info;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
