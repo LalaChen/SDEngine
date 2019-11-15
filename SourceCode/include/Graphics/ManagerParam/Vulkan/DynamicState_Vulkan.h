@@ -23,35 +23,26 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      DynamicState_Vulkan.h
+ *  \brief     Introduce of class DynamicState_Vulkan.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/11/04
  *  \copyright MIT License.
  */
 
-#pragma once
+#include <vulkan/vulkan.h>
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
+#include "SDEngineMacro.h"
 #include "DynamicState.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class DynamicState_Vulkan
+{
+public:
+    static VkDynamicState Convert(const DynamicStateEnum &i_src);
+public:
+    static VkDynamicState DynamicStates[DynamicState_MAX_DEFINE_VALUE];
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

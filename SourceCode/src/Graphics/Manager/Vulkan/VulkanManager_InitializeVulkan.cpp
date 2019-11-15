@@ -253,8 +253,6 @@ void VulkanManager::InitializePhysicalDevice()
         picked_dev_props.driverVersion,
         picked_dev_props.apiVersion,
         pickup_dev_score);
-    //
-    SDLOGD("Maximum Colot Attachment : %d.", picked_dev_props.limits.maxColorAttachments);
 }
 
 void VulkanManager::InitializeLogicDevice()

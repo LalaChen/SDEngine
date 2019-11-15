@@ -23,35 +23,37 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "LogicOperator_Vulkan.h"
 
-#pragma once
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
+VkLogicOp LogicOperator_Vulkan::LogicOps[LogicOperator_MAX_DEFINE_VALUE] =
+{
+    VK_LOGIC_OP_CLEAR,
+    VK_LOGIC_OP_AND,
+    VK_LOGIC_OP_AND_REVERSE,
+    VK_LOGIC_OP_COPY,
+    VK_LOGIC_OP_AND_INVERTED,
+    VK_LOGIC_OP_XOR,
+    VK_LOGIC_OP_OR,
+    VK_LOGIC_OP_NOR,
+    VK_LOGIC_OP_EQUIVALENT,
+    VK_LOGIC_OP_INVERT,
+    VK_LOGIC_OP_OR_REVERSE,
+    VK_LOGIC_OP_COPY_INVERTED,
+    VK_LOGIC_OP_OR_INVERTED,
+    VK_LOGIC_OP_NAND,
+    VK_LOGIC_OP_SET
+};
+
+VkLogicOp LogicOperator_Vulkan::Convert(const LogicOperatorEnum &i_src)
+{
+    if (i_src != LogicOperator_MAX_DEFINE_VALUE) {
+        return LogicOps[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_LOGIC_OP_MAX_ENUM;
+    }
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

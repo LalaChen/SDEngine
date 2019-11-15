@@ -24,7 +24,7 @@ SOFTWARE.
 */
 
 /*! \file      FrontFaceMode_Vulkan.h
- *  \brief     Introduce of class Primitive_Vulkan.
+ *  \brief     Introduce of class FaceCulling_Vulkan.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/10/27
  *  \copyright MIT License.

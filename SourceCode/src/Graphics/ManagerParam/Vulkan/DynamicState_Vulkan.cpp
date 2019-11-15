@@ -23,35 +23,30 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "DynamicState_Vulkan.h"
 
-#pragma once
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
+VkDynamicState DynamicState_Vulkan::DynamicStates[DynamicState_MAX_DEFINE_VALUE] = {
+    VK_DYNAMIC_STATE_VIEWPORT,
+    VK_DYNAMIC_STATE_SCISSOR,
+    VK_DYNAMIC_STATE_LINE_WIDTH,
+    VK_DYNAMIC_STATE_DEPTH_BIAS,
+    VK_DYNAMIC_STATE_BLEND_CONSTANTS,
+    VK_DYNAMIC_STATE_DEPTH_BOUNDS,
+    VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK,
+    VK_DYNAMIC_STATE_STENCIL_WRITE_MASK,
+    VK_DYNAMIC_STATE_STENCIL_REFERENCE
+};
+
+VkDynamicState DynamicState_Vulkan::Convert(const DynamicStateEnum &i_src)
+{
+    if (i_src != DynamicState_MAX_DEFINE_VALUE) {
+        return DynamicStates[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_DYNAMIC_STATE_MAX_ENUM;
+    }
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

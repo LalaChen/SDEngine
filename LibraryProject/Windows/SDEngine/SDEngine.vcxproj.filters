@@ -422,6 +422,12 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\BlendFactor_Vulkan.cpp">
       <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\LogicOperator_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\DynamicState_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h">
@@ -716,6 +722,18 @@
       <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\BlendOperator_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\LogicOperator.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\LogicOperator_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\DynamicState.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\DynamicState_Vulkan.h">
       <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

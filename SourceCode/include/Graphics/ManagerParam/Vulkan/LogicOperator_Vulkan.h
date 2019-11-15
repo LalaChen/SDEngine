@@ -23,35 +23,28 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      LogicOperator_Vulkan.h
+ *  \brief     Introduce of class LogicOperator_Vulkan.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/10/27
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
+#include <vulkan/vulkan.h>
+
+#include "SDEngineMacro.h"
 #include "LogicOperator.h"
-#include "DynamicState.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class LogicOperator_Vulkan
+{
+public:
+    static VkLogicOp Convert(const LogicOperatorEnum &i_src);
+public:
+    static VkLogicOp LogicOps[LogicOperator_MAX_DEFINE_VALUE];
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

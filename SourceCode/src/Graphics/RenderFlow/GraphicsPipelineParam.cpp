@@ -40,6 +40,7 @@ Viewport::Viewport()
 Viewport::~Viewport()
 {
 }
+
 //--- ScissorRegion
 ScissorRegion::ScissorRegion()
 : m_x(0.0f)
@@ -91,6 +92,66 @@ SampleShadingInfo::SampleShadingInfo()
 }
 
 SampleShadingInfo::~SampleShadingInfo()
+{
+}
+
+//--- StencilOpInfo
+StencilOpInfo::StencilOpInfo()
+: m_fail_op(StencilOperator_KEEP)
+, m_pass_op(StencilOperator_KEEP)
+, m_depth_fail_op(StencilOperator_KEEP)
+, m_compare(CompareOperator_ALWAYS)
+, m_compare_mask(0u)
+, m_write_mask(0u)
+, m_reference(0u)
+{
+}
+
+StencilOpInfo::~StencilOpInfo()
+{
+}
+
+//--- DepthStencilInfo
+DepthStencilInfo::DepthStencilInfo()
+: m_depth_test_enable(false)
+, m_depth_write_enable(true)
+, m_comp_op(CompareOperator_LESS_OR_EQUAL)
+, m_min_depth_bounds(-1.0f)
+, m_max_depth_bounds(1.0f)
+, m_stencil_test_enable(false)
+{
+}
+
+DepthStencilInfo::~DepthStencilInfo()
+{
+}
+
+//--- ColorBlendAttachmentInfo
+ColorBlendAttachmentInfo::ColorBlendAttachmentInfo()
+: m_color_mask{true, true, true, true}
+, m_blend_enable(false)
+, m_src_color_factor(BlendFactor_SRC_ALPHA)
+, m_dst_color_factor(BlendFactor_ONE_MINUS_SRC_ALPHA)
+, m_color_op(BlendOperator_ADD)
+, m_src_alpha_factor(BlendFactor_SRC_ALPHA)
+, m_dst_alpha_factor(BlendFactor_ONE_MINUS_SRC_ALPHA)
+, m_alpha_op(BlendOperator_ADD)
+{
+}
+
+ColorBlendAttachmentInfo::~ColorBlendAttachmentInfo()
+{
+}
+
+//--- ColorBlendState
+ColorBlendState::ColorBlendState()
+: m_logic_op_enable(false)
+, m_logic_op(LogicOperator_CLEAR)
+, m_blend_constants{0.0f, 0.0f, 0.0f, 0.0f}
+{
+}
+
+ColorBlendState::~ColorBlendState()
 {
 }
 

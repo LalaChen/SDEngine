@@ -71,7 +71,13 @@ void VulkanManager::PrintSystemInformation()
             SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
             );
     }
-    SDLOG("Descriptor Information:");
+
+    VkPhysicalDeviceProperties picked_dev_props;
+    vkGetPhysicalDeviceProperties(m_VK_physical_device, &picked_dev_props);
+    SDLOG("Limits:");
+    SDLOG("Maximum Color Attachment : %d.", picked_dev_props.limits.maxColorAttachments);
+    SDLOG("Maximum DescriptionSets in pipeline : %d.", picked_dev_props.limits.maxBoundDescriptorSets);
+    SDLOG("Maximum pushConstant size in pipeline : %d.", picked_dev_props.limits.maxPushConstantsSize);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

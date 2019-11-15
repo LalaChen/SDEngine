@@ -23,35 +23,41 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+
+/*! \file      LogicOperator.h
+ *  \brief     Introduce of enum LogicOperator.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/11/04
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
+#include "SDEngineMacro.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+/*! \enum LogicOperatorEnum
+ *  \brief Logic op is used to decide with bitwise operator we want to use.
+ */
+enum LogicOperatorEnum
+{
+    LogicOperator_CLEAR = 0, /*!< clear to 0.*/
+    LogicOperator_AND, /*!< S and D.*/
+    LogicOperator_AND_REVERSE, /*!< S and not D.*/
+    LogicOperator_COPY,  /*!< S.*/
+    LogicOperator_AND_INVERTED, /*!< not S and D.*/
+    LogicOperator_XOR, /*!< S xor D.*/
+    LogicOperator_OR, /*!< S or D.*/
+    LogicOperator_NOR, /*!< not (S or D).*/
+    LogicOperator_EQUIVALENT, /*!< not (S xor D). */
+    LogicOperator_INVERT, /*!< not D. */
+    LogicOperator_OR_REVERSE, /*!< s or not D. */
+    LogicOperator_COPY_INVERTED,  /*!< not S. */
+    LogicOperator_OR_INVERTED, /*!< not S or D. */
+    LogicOperator_NAND, /*!< ~(S and D)*/
+    LogicOperator_SET, /*!< clear to 1.*/
+    LogicOperator_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________
