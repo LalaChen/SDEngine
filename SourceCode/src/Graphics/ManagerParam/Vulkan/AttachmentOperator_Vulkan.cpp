@@ -23,31 +23,43 @@ SOFTWARE.
 
 */
 
-/*! \file      BitmapPixelDataType.h
- *  \brief     Introduce of enum BitmapPixelDataTypeEnum.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/22
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
+#include "AttachmentOperator_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-enum BitmapPixelDataTypeEnum
+VkAttachmentLoadOp AttachmentLoadOperator_Vulkan::AttachmentLoadOps[AttachmentLoadOperator_MAX_DEFINE_VALUE] =
 {
-    BitmapPixelDataType_UNSIGNED_BYTE = 0,
-    BitmapPixelDataType_BYTE = 1,
-    BitmapPixelDataType_UNSIGNED_SHORT = 2,
-    BitmapPixelDataType_SHORT = 3,
-    BitmapPixelDataType_UNSIGNED_INT = 4,
-    BitmapPixelDataType_INT = 5,
-    BitmapPixelDataType_FLOAT = 6,
-    BitmapPixelDataType_UNSIGNED_SHORT_5_6_5 = 7,
-    BitmapPixelDataType_UNSIGNED_SHORT_4_4_4_4 = 8,
-    BitmapPixelDataType_MAX_DEFINE_VALUE
+    VK_ATTACHMENT_LOAD_OP_LOAD,
+    VK_ATTACHMENT_LOAD_OP_CLEAR,
+    VK_ATTACHMENT_LOAD_OP_DONT_CARE
 };
+
+
+VkAttachmentLoadOp AttachmentLoadOperator_Vulkan::Convert(const AttachmentLoadOperatorEnum &i_src)
+{
+    if (i_src != AttachmentLoadOperator_MAX_DEFINE_VALUE) {
+        return AttachmentLoadOps[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_ATTACHMENT_LOAD_OP_MAX_ENUM;
+    }
+}
+
+VkAttachmentStoreOp AttachmentStoreOperator_Vulkan::AttachmentStoreOps[AttachmentStoreOperator_MAX_DEFINE_VALUE] =
+{
+    VK_ATTACHMENT_STORE_OP_STORE,
+    VK_ATTACHMENT_STORE_OP_DONT_CARE,
+};
+
+
+VkAttachmentStoreOp AttachmentStoreOperator_Vulkan::Convert(const AttachmentStoreOperatorEnum &i_src)
+{
+    if (i_src != AttachmentStoreOperator_MAX_DEFINE_VALUE) {
+        return AttachmentStoreOps[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_ATTACHMENT_STORE_OP_MAX_ENUM;
+    }
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

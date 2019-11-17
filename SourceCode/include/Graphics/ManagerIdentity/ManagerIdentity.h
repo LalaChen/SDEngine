@@ -34,3 +34,4 @@ SOFTWARE.
 #include "TextureIdentity.h"
 #include "SamplerIdentity.h"
 #include "ShaderModuleIdentity.h"
+#include "GraphicsPipelineIdentity.h"

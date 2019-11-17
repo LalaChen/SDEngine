@@ -27,18 +27,18 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VertexAttribBindingDesc::VertexAttribBindingDesc()
+VertexAttribBindingDescription::VertexAttribBindingDescription()
 : m_binding_ID(0)
 , m_stride(0)
 , m_input_rate(VertexInputRate_MAX_DEFINE_VALUE)
 {
 }
 
-VertexAttribBindingDesc::~VertexAttribBindingDesc()
+VertexAttribBindingDescription::~VertexAttribBindingDescription()
 {
 }
 
-VertexAttribLocationDesc::VertexAttribLocationDesc()
+VertexAttribLocationDescription::VertexAttribLocationDescription()
 : m_binding_ID(0)
 , m_location(0)
 , m_format(VertexBufferFormat_MAX_DEFINE_VALUE)
@@ -46,7 +46,7 @@ VertexAttribLocationDesc::VertexAttribLocationDesc()
 {
 }
 
-VertexAttribLocationDesc::~VertexAttribLocationDesc()
+VertexAttribLocationDescription::~VertexAttribLocationDescription()
 {
 }
 

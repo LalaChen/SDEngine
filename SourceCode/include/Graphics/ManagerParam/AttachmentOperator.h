@@ -23,10 +23,10 @@ SOFTWARE.
 
 */
 
-/*! \file      BitmapPixelDataType.h
- *  \brief     Introduce of enum BitmapPixelDataTypeEnum.
+/*! \file      AttachmentOperator.h
+ *  \brief     Introduce of enum AttachmentLoadOperatorEnum and AttachmentStoreOperatorEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/22
+ *  \date      2019/11/17
  *  \copyright MIT License.
  */
 
@@ -36,18 +36,22 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-enum BitmapPixelDataTypeEnum
+/*! \enum AttachmentLoadOperatorEnum
+ *  \brief AttachmentLoadOperatorEnum is used to decide what action gpu will execute before we use.
+ */
+enum AttachmentLoadOperatorEnum
 {
-    BitmapPixelDataType_UNSIGNED_BYTE = 0,
-    BitmapPixelDataType_BYTE = 1,
-    BitmapPixelDataType_UNSIGNED_SHORT = 2,
-    BitmapPixelDataType_SHORT = 3,
-    BitmapPixelDataType_UNSIGNED_INT = 4,
-    BitmapPixelDataType_INT = 5,
-    BitmapPixelDataType_FLOAT = 6,
-    BitmapPixelDataType_UNSIGNED_SHORT_5_6_5 = 7,
-    BitmapPixelDataType_UNSIGNED_SHORT_4_4_4_4 = 8,
-    BitmapPixelDataType_MAX_DEFINE_VALUE
+    AttachmentLoadOperator_LOAD = 0,
+    AttachmentLoadOperator_CLEAR,
+    AttachmentLoadOperator_DONT_CARE,
+    AttachmentLoadOperator_MAX_DEFINE_VALUE
+};
+
+enum AttachmentStoreOperatorEnum
+{
+    AttachmentStoreOperator_STORE = 0,
+    AttachmentStoreOperator_DONT_CARE,
+    AttachmentStoreOperator_MAX_DEFINE_VALUE
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

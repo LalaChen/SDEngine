@@ -23,31 +23,16 @@ SOFTWARE.
 
 */
 
-/*! \file      BitmapPixelDataType.h
- *  \brief     Introduce of enum BitmapPixelDataTypeEnum.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/22
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
+#include "AttachmentDescription.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-enum BitmapPixelDataTypeEnum
+AttachmentDescription::AttachmentDescription()
 {
-    BitmapPixelDataType_UNSIGNED_BYTE = 0,
-    BitmapPixelDataType_BYTE = 1,
-    BitmapPixelDataType_UNSIGNED_SHORT = 2,
-    BitmapPixelDataType_SHORT = 3,
-    BitmapPixelDataType_UNSIGNED_INT = 4,
-    BitmapPixelDataType_INT = 5,
-    BitmapPixelDataType_FLOAT = 6,
-    BitmapPixelDataType_UNSIGNED_SHORT_5_6_5 = 7,
-    BitmapPixelDataType_UNSIGNED_SHORT_4_4_4_4 = 8,
-    BitmapPixelDataType_MAX_DEFINE_VALUE
-};
+}
+
+AttachmentDescription::~AttachmentDescription()
+{
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

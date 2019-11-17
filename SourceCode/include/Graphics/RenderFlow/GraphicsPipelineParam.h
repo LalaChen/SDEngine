@@ -26,7 +26,7 @@ SOFTWARE.
 /*! \file      GraphicsPipelineParam.h
  *  \brief     Introduce of class GraphicsPipelineParam.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/10/27
+ *  \date      2019/11/16
  *  \copyright MIT License.
  */
 
@@ -398,12 +398,24 @@ public:
     bool m_blend_enable;
 
     /*! \var BlendFactorEnum m_src_color_factor;
-     *  \brief Specify blending state we need to blend.
+     *  \brief Specify blending factor for the color we want to blend to color buffer.
      */
     BlendFactorEnum m_src_color_factor;
+
+    /*! \var BlendFactorEnum m_dst_color_factor;
+     *  \brief Specify blending factor for the color at color buffer.
+     */
     BlendFactorEnum m_dst_color_factor;
     BlendOperatorEnum m_color_op;
+    
+    /*! \var BlendFactorEnum m_src_alpha_factor;
+     *  \brief Specify blending factor for the alpha we want to blend to color buffer.
+     */
     BlendFactorEnum m_src_alpha_factor;
+    
+    /*! \var BlendFactorEnum m_dst_alpha_factor;
+     *  \brief Specify blending factor for the alpha at color buffer.
+     */
     BlendFactorEnum m_dst_alpha_factor;
     BlendOperatorEnum m_alpha_op;
 };

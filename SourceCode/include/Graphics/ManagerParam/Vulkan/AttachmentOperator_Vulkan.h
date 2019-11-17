@@ -23,31 +23,38 @@ SOFTWARE.
 
 */
 
-/*! \file      BitmapPixelDataType.h
- *  \brief     Introduce of enum BitmapPixelDataTypeEnum.
+/*! \file      AttachmentOperator_Vulkan.h
+ *  \brief     Introduce of class AttachmentLoadOperator_Vulkan and AttachmentStoreOperator_Vulkan.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/22
+ *  \date      2019/11/17
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "SDEngineMacro.h"
+#include <vulkan/vulkan.h>
+
+#include "SDEngineCommonType.h"
+#include "AttachmentOperator.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-enum BitmapPixelDataTypeEnum
+class AttachmentLoadOperator_Vulkan
 {
-    BitmapPixelDataType_UNSIGNED_BYTE = 0,
-    BitmapPixelDataType_BYTE = 1,
-    BitmapPixelDataType_UNSIGNED_SHORT = 2,
-    BitmapPixelDataType_SHORT = 3,
-    BitmapPixelDataType_UNSIGNED_INT = 4,
-    BitmapPixelDataType_INT = 5,
-    BitmapPixelDataType_FLOAT = 6,
-    BitmapPixelDataType_UNSIGNED_SHORT_5_6_5 = 7,
-    BitmapPixelDataType_UNSIGNED_SHORT_4_4_4_4 = 8,
-    BitmapPixelDataType_MAX_DEFINE_VALUE
+public:
+    static VkAttachmentLoadOp Convert(const AttachmentLoadOperatorEnum &i_src);
+public:
+    static VkAttachmentLoadOp AttachmentLoadOps[AttachmentLoadOperator_MAX_DEFINE_VALUE];
 };
+
+class AttachmentStoreOperator_Vulkan
+{
+public:
+    static VkAttachmentStoreOp Convert(const AttachmentStoreOperatorEnum &i_src);
+public:
+    static VkAttachmentStoreOp AttachmentStoreOps[AttachmentStoreOperator_MAX_DEFINE_VALUE];
+};
+
+
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

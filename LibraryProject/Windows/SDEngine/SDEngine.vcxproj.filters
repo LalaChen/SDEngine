@@ -428,6 +428,21 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\DynamicState_Vulkan.cpp">
       <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\GraphicsPipeline.cpp">
+      <Filter>src\Graphics\RenderFlow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\GraphicsPipelineIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\RenderPass.cpp">
+      <Filter>src\Graphics\RenderFlow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\AttachmentDescription.cpp">
+      <Filter>src\Graphics\RenderFlow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\AttachmentOperator_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h">
@@ -734,6 +749,24 @@
       <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\DynamicState_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\GraphicsPipeline.h">
+      <Filter>include\Graphics\RenderFlow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\GraphicsPipelineIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\RenderPass.h">
+      <Filter>include\Graphics\RenderFlow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\AttachmentDescription.h">
+      <Filter>include\Graphics\RenderFlow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\AttachmentOperator.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\AttachmentOperator_Vulkan.h">
       <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

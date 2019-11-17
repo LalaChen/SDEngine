@@ -23,31 +23,43 @@ SOFTWARE.
 
 */
 
-/*! \file      BitmapPixelDataType.h
- *  \brief     Introduce of enum BitmapPixelDataTypeEnum.
+/*! \file      RenderPass.h
+ *  \brief     Introduce of class about render pass.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/22
+ *  \date      2019/11/16
  *  \copyright MIT License.
  */
 
 #pragma once
 
 #include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "Object.h"
+
+using SDE::Basic::ObjectName;
+using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-enum BitmapPixelDataTypeEnum
+/*! \class RenderPass
+ *  \brief In our graphic system, class RenderPass is used to describe rendering flow.
+ *         There are one or many subpasses in one render pass. And then we will specify 
+ */
+class SDENGINE_CLASS RenderPass : public Object
 {
-    BitmapPixelDataType_UNSIGNED_BYTE = 0,
-    BitmapPixelDataType_BYTE = 1,
-    BitmapPixelDataType_UNSIGNED_SHORT = 2,
-    BitmapPixelDataType_SHORT = 3,
-    BitmapPixelDataType_UNSIGNED_INT = 4,
-    BitmapPixelDataType_INT = 5,
-    BitmapPixelDataType_FLOAT = 6,
-    BitmapPixelDataType_UNSIGNED_SHORT_5_6_5 = 7,
-    BitmapPixelDataType_UNSIGNED_SHORT_4_4_4_4 = 8,
-    BitmapPixelDataType_MAX_DEFINE_VALUE
+public:
+    /*! \fn explicit RenderPass(const ObjectName &i_object_name);
+     *  \param i_object_name Name of this object.
+     *  \brief Constructor of RenderPass
+     */
+    explicit RenderPass(const ObjectName &i_object_name);
+
+    /*! \fn virtual ~RenderPass();
+     *  \brief Destructor of RenderPass.
+     */
+    virtual ~RenderPass();
+public:
+
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

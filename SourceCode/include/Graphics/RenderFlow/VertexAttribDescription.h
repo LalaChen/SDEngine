@@ -32,8 +32,6 @@ SOFTWARE.
 
 #pragma once
 
-#include <vector>
-
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "VertexBufferFormat.h"
@@ -41,23 +39,23 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class VertexAttribBindingDesc
- *  VertexAttribBindingDesc is used to describe the usage and format about buffer
+/*! \class VertexAttribBindingDescription
+ *  VertexAttribBindingDescription is used to describe the usage and format about buffer
  *  which bind in this channel. We will use this class to descibe for every channel
  *  in GraphicsPipeline.
  */
-class SDENGINE_CLASS VertexAttribBindingDesc
+class SDENGINE_CLASS VertexAttribBindingDescription
 {
 public:
-    /*! \fn VertexAttribBindingDesc();
-     *  \brief Constructor of VertexAttribBindingDesc.
+    /*! \fn VertexAttribBindingDescription();
+     *  \brief Constructor of VertexAttribBindingDescription.
      */
-    VertexAttribBindingDesc();
+    VertexAttribBindingDescription();
 
-    /*! \fn ~VertexAttribBindingDesc();
-     *  \brief Destructor of VertexAttribBindingDesc.
+    /*! \fn ~VertexAttribBindingDescription();
+     *  \brief Destructor of VertexAttribBindingDescription.
      */
-    ~VertexAttribBindingDesc();
+    ~VertexAttribBindingDescription();
 public:
     /*! \var uint32_t m_binding_ID;
      *  \brief Buffer binding channel ID.
@@ -76,23 +74,23 @@ public:
 };
 
 
-/*! \class VertexAttribLocationDesc
- *  VertexAttribLocationDesc is used to link buffer binding channel and attribute
- *  location. We will use this class to descibe the relationship between all
- *  binding and location of vertex shader in GraphicsPipeline.
+/*! \class VertexAttribLocationDescription
+ *  VertexAttribLocationDescription is used to link buffer binding channel and 
+ *  attribute location. We will use this class to descibe the relationship between
+ *  all binding and location of vertex shader in GraphicsPipeline.
  */
-class SDENGINE_CLASS VertexAttribLocationDesc
+class SDENGINE_CLASS VertexAttribLocationDescription
 {
 public:
-    /*! \fn VertexAttribLocationDesc();
-     *  \brief Constructor of VertexAttribLocationDesc.
+    /*! \fn VertexAttribLocationDescription();
+     *  \brief Constructor of VertexAttribLocationDescription.
      */
-    VertexAttribLocationDesc();
+    VertexAttribLocationDescription();
 
-    /*! \fn ~VertexAttribBindingDesc();
-     *  \brief Destructor of VertexAttribLocationDesc.
+    /*! \fn ~VertexAttribBindingDescription();
+     *  \brief Destructor of VertexAttribLocationDescription.
      */
-    ~VertexAttribLocationDesc();
+    ~VertexAttribLocationDescription();
 public:
     /*! \var uint32_t m_binding_ID;
      *  \brief Buffer binding channel ID.

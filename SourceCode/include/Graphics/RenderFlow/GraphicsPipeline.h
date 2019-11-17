@@ -23,31 +23,48 @@ SOFTWARE.
 
 */
 
-/*! \file      BitmapPixelDataType.h
- *  \brief     Introduce of enum BitmapPixelDataTypeEnum.
+/*! \file      GraphicsPipeline.h
+ *  \brief     Introduce of classes about shader program.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/22
+ *  \date      2019/11/16
  *  \copyright MIT License.
  */
 
 #pragma once
 
 #include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "GraphicsPipelineParam.h"
+#include "GraphicsPipelineIdentity.h"
+#include "Object.h"
+
+using SDE::Basic::ObjectName;
+using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-enum BitmapPixelDataTypeEnum
+/*! \class GraphicsPipeline
+ *  \brief In our graphic system, GraphicsPipeline is used to tell gpu how to draw a primitive to a fragment
+ *         in target attachment(s).
+ */
+class SDENGINE_CLASS GraphicsPipeline : public Object
 {
-    BitmapPixelDataType_UNSIGNED_BYTE = 0,
-    BitmapPixelDataType_BYTE = 1,
-    BitmapPixelDataType_UNSIGNED_SHORT = 2,
-    BitmapPixelDataType_SHORT = 3,
-    BitmapPixelDataType_UNSIGNED_INT = 4,
-    BitmapPixelDataType_INT = 5,
-    BitmapPixelDataType_FLOAT = 6,
-    BitmapPixelDataType_UNSIGNED_SHORT_5_6_5 = 7,
-    BitmapPixelDataType_UNSIGNED_SHORT_4_4_4_4 = 8,
-    BitmapPixelDataType_MAX_DEFINE_VALUE
+public:
+    /*! \fn explicit GraphicsPipeline(const ObjectName &i_object_name);
+     *  \param i_object_name Name of this object.
+     *  \brief Constructor of GraphicsPipeline
+     */
+    explicit GraphicsPipeline(const ObjectName &i_object_name);
+
+    /*! \fn virtual ~GraphicsPipeline();
+     *  \brief Destructor of GraphicsPipeline.
+     */
+    virtual ~GraphicsPipeline();
+protected:
+    /*! \var GraphicsPipelineIdentity m_identity;
+     *  \brief Record basic identity
+     */
+    GraphicsPipelineIdentity m_identity;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -46,9 +46,8 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Mesh);
 
 /*! \class Mesh
  *  \brief In our graphic system, Mesh is used to keep and operate all vertex attribute
- *  buffers in this class.
+ *         buffers in this class.
  */
-
 class SDENGINE_CLASS Mesh : public Object
 {
 public:
