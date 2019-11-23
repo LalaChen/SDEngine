@@ -160,6 +160,7 @@
     <ClInclude Include="Sample.h" />
     <ClInclude Include="Sample1_DrawTriangle.h" />
     <ClInclude Include="Sample2_DrawScene.h" />
+    <ClInclude Include="Sample3_MultiSubpass.h" />
     <ClInclude Include="VulkanAPITestManager.h" />
     <ClInclude Include="VulkanTestGLFWApplication.h" />
   </ItemGroup>
@@ -168,6 +169,7 @@
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="Sample1_DrawTriangle.cpp" />
     <ClCompile Include="Sample2_DrawScene.cpp" />
+    <ClCompile Include="Sample3_MultiSubpass.cpp" />
     <ClCompile Include="VulkanAPITestManager.cpp" />
     <ClCompile Include="VulkanTestGLFWApplication.cpp" />
   </ItemGroup>
@@ -176,6 +178,8 @@
     <None Include="Shader\MainShader.vert" />
     <None Include="Shader\PhongShader.frag" />
     <None Include="Shader\PhongShader.vert" />
+    <None Include="Shader\TexShader.frag" />
+    <None Include="Shader\TexShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

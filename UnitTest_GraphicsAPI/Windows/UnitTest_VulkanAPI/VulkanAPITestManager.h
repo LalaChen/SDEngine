@@ -2,6 +2,7 @@
 
 #include "Sample1_DrawTriangle.h"
 #include "Sample2_DrawScene.h"
+#include "Sample3_MultiSubpass.h"
 #include "VulkanManager.h"
 
 class VulkanAPITestManager : public SDE::Graphics::VulkanManager

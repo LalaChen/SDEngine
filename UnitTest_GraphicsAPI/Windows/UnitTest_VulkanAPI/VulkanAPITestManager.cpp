@@ -9,12 +9,20 @@ VulkanAPITestManager::VulkanAPITestManager()
 : VulkanManager()
 , m_cur_sample_idx(0)
 {
+    m_samples.push_back(new Sample3_MultiSubpass(this));
     m_samples.push_back(new Sample1_DrawTriangle(this));
     m_samples.push_back(new Sample2_DrawScene(this));
 }
 
 VulkanAPITestManager::~VulkanAPITestManager()
 {
+    for (SampleStrongReferenceObject &sample : m_samples) {
+        if (sample != nullptr) {
+            sample.reset();
+        }
+    }
+    m_samples.resize(0);
+    m_samples.shrink_to_fit();
 }
 
 void VulkanAPITestManager::InitializeGraphicsSystem(const EventArg &i_arg)

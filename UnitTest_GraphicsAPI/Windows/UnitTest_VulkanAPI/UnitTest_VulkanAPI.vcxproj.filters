@@ -29,6 +29,9 @@
     <ClInclude Include="Sample2_DrawScene.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="Sample3_MultiSubpass.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -49,6 +52,9 @@
     <ClCompile Include="Sample2_DrawScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="Sample3_MultiSubpass.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\MainShader.vert">
@@ -61,6 +67,12 @@
       <Filter>shader</Filter>
     </None>
     <None Include="Shader\PhongShader.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Shader\TexShader.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Shader\TexShader.frag">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

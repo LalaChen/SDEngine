@@ -50,8 +50,8 @@ void Sample2_DrawScene::Destroy()
 void Sample2_DrawScene::ImportAssimpModel(ModelData &io_model)
 {
     SDLOG("---Import AssimpModel!!!");
-    //AssimpModelLoader::GetRef().ImportModel("resources\\models\\Building02\\Building02_m.FBX", io_model);
-    AssimpModelLoader::GetRef().ImportModel("resources\\models\\Build11_fbx\\Build11_fbx.FBX", io_model);
+    AssimpModelLoader::GetRef().ImportModel("resources\\models\\Building02\\Building02_m.FBX", io_model);
+    //AssimpModelLoader::GetRef().ImportModel("resources\\models\\Build11_fbx\\Build11_fbx.FBX", io_model);
 }
 
 void Sample2_DrawScene::CreateModel()
