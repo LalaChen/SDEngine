@@ -23,28 +23,17 @@ SOFTWARE.
 
 */
 
-/*! \file      BlendOperator_Vulkan.h
- *  \brief     Introduce of class BlendOperator_Vulkan.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/11/03
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include <vulkan/vulkan.h>
-
-#include "SDEngineCommonType.h"
-#include "BlendOperator.h"
+#include "RenderPassIdentity.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class BlendOperator_Vulkan
+RenderPassIdentity::RenderPassIdentity()
+: m_rp_handle(SD_NULL_HANDLE)
 {
-public:
-    static VkBlendOp Convert(const BlendOperatorEnum &i_src);
-public:
-    static VkBlendOp BlendOps[BlendOperator_MAX_DEFINE_VALUE];
-};
+}
+
+RenderPassIdentity::~RenderPassIdentity()
+{
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

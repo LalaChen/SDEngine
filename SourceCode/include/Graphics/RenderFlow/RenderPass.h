@@ -34,6 +34,10 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "AttachmentDescription.h"
+#include "AttachmentReference.h"
+#include "RenderPassIdentity.h"
+
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
@@ -41,9 +45,12 @@ using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(RenderPass);
+
 /*! \class RenderPass
  *  \brief In our graphic system, class RenderPass is used to describe rendering flow.
- *         There are one or many subpasses in one render pass. And then we will specify 
+ *         There are one or many subpasses in one render pass. And then we will specify
+ *         The relation between subpasses.
  */
 class SDENGINE_CLASS RenderPass : public Object
 {
@@ -58,8 +65,11 @@ public:
      *  \brief Destructor of RenderPass.
      */
     virtual ~RenderPass();
-public:
-
+protected:
+    /*! \var RenderPassIdentity m_rp_identity;
+     *  \brief Identity about render pass.
+     */
+    RenderPassIdentity m_rp_identity;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

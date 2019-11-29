@@ -23,28 +23,33 @@ SOFTWARE.
 
 */
 
-/*! \file      BlendOperator_Vulkan.h
- *  \brief     Introduce of class BlendOperator_Vulkan.
+/*! \file      ImageLayout.h
+ *  \brief     Introduce of enum ImageLayoutEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/11/03
+ *  \date      2019/11/24
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include <vulkan/vulkan.h>
-
-#include "SDEngineCommonType.h"
-#include "BlendOperator.h"
+#include "SDEngineMacro.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class BlendOperator_Vulkan
+/*! \enum ImageLayoutEnum
+ *  \brief ImageLayoutEnum is used to represent image layout.(Vulkan Only)
+ */
+enum ImageLayoutEnum
 {
-public:
-    static VkBlendOp Convert(const BlendOperatorEnum &i_src);
-public:
-    static VkBlendOp BlendOps[BlendOperator_MAX_DEFINE_VALUE];
+    ImageLayout_UNDEFINED = 0, /*!<Undefined.*/
+    ImageLayout_GENERAL, /*!<General.*/
+    ImageLayout_COLOR_ATTACHMENT_OPTIMAL, /*!<Color Attachment.*/
+    ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, /*!<Depth Attachment.*/
+    ImageLayout_DEPTH_STENCIL_READ_ONLY_OPTIMAL, /*!<Depth and readonly Attachment.*/
+    ImageLayout_SHADER_READ_ONLY_OPTIMAL,/*!<shader read only.*/
+    ImageLayout_TRANSFER_SRC_OPTIMAL, /*!<Transfer src Attachment.*/
+    ImageLayout_TRANSFER_DST_OPTIMAL, /*!<Transfer dst Attachment.*/
+    ImageLayout_PREINITIALIZED, /*!<TPreinitialized.*/
+    ImageLayout_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
-
 ______________SD_END_GRAPHICS_NAMESPACE______________

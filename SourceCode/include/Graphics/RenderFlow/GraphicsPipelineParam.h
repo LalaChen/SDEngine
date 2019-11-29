@@ -406,6 +406,10 @@ public:
      *  \brief Specify blending factor for the color at color buffer.
      */
     BlendFactorEnum m_dst_color_factor;
+
+    /*! \var BlendOperatorEnum m_color_op;
+     *  \brief Specify blending operation for color.
+     */
     BlendOperatorEnum m_color_op;
     
     /*! \var BlendFactorEnum m_src_alpha_factor;
@@ -417,6 +421,10 @@ public:
      *  \brief Specify blending factor for the alpha at color buffer.
      */
     BlendFactorEnum m_dst_alpha_factor;
+
+    /*! \var BlendOperatorEnum m_alpha_op;
+     *  \brief Specify blending operation for alpha.
+     */
     BlendOperatorEnum m_alpha_op;
 };
 
@@ -426,23 +434,66 @@ public:
 class SDENGINE_CLASS ColorBlendState
 {
 public:
+    /*! \fn ColorBlendState();
+     *  \brief The constructor of ColorBlendState Class.
+     */
     ColorBlendState();
+
+    /*! \fn ~ColorBlendState();
+     *  \brief The destructor of ColorBlendState Class.
+     */
     ~ColorBlendState();
 public:
+    /*! \var bool m_logic_op_enable;
+     *  \brief Logic operation enable.
+     */
     bool m_logic_op_enable;
+
+    /*! \var LogicOperatorEnum m_logic_op;
+     *  \brief Logic operation.
+     */
     LogicOperatorEnum m_logic_op;
+
+    /*! \var std::vector<ColorBlendAttachmentInfo> m_blend_infos;
+     *  \brief Blend infos for each attachment in target attachement.
+     */
     std::vector<ColorBlendAttachmentInfo> m_blend_infos;
+
+    /*! \var float m_blend_constants[4];
+     *  \brief Blend constants color.
+     */
     float m_blend_constants[4];
 };
 
+/*! \class GraphicsPipelineParam
+ *  \brief Information to set pipeline.
+ */
 class SDENGINE_CLASS GraphicsPipelineParam
 {
 public:
+    /*! \fn GraphicsPipelineParam();
+     *  \brief The constructor of GraphicsPipelineParam Class.
+     */
     GraphicsPipelineParam();
+
+    /*! \fn ~GraphicsPipelineParam();
+     *  \brief The destructor of GraphicsPipelineParam Class.
+     */
     ~GraphicsPipelineParam();
 public:
+    /*! \var Viewport m_viewport;
+     *  \brief Viewport setting.
+     */
     Viewport m_viewport;
+
+    /*! \var ScissorRegion m_scissor_region;
+     *  \brief Scissor region.
+     */
     ScissorRegion m_scissor_region;
+
+    /*! \var PrimitiveInfo m_primitive_info;
+     *  \brief Primitive info.
+     */
     PrimitiveInfo m_primitive_info;
     RasterizationInfo m_rasterization_info;
     DepthStencilInfo m_depth_stencil_info;

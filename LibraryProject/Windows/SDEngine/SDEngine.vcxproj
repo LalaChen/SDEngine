@@ -36,6 +36,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ImageLoader\ImageLoader.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ImageLoader\Windows\WindowsImageLoader.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\GraphicsPipelineIdentity.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\RenderPassIdentity.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\SamplerIdentity.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\ShaderModuleIdentity.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\TextureIdentity.cpp" />
@@ -47,6 +48,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\DynamicState_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\FaceCulling_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\FrontFaceMode_Vulkan.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\ImageLayout_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\LogicOperator_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\PolygonMode_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\Primitive_Vulkan.cpp" />
@@ -90,10 +92,12 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ModelImporter\MeshData.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ModelImporter\ModelData.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\AttachmentDescription.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\AttachmentReference.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\GraphicsPipeline.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\GraphicsPipelineParam.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\RenderPass.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\ShaderModule.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\Subpass.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\RenderFlow\VertexAttribDescription.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\Vec\Color4f.cpp" />
@@ -129,6 +133,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ImageLoader\Windows\WindowsImageLoader.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\GraphicsPipelineIdentity.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\ManagerIdentity.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\RenderPassIdentity.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\SamplerIdentity.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\ShaderModuleIdentity.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\TextureIdentity.h" />
@@ -141,6 +146,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\DynamicState.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\FaceCulling.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\FrontFaceMode.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ImageLayout.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\LogicOperator.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ManagerParam.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PolygonMode.h" />
@@ -164,6 +170,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\DynamicState_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\FaceCulling_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\FrontFaceMode_Vulkan.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\ImageLayout_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\LogicOperator_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\PolygonMode_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\Primitive_Vulkan.h" />
@@ -194,10 +201,12 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ModelImporter\MeshData.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ModelImporter\ModelData.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\AttachmentDescription.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\AttachmentReference.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\GraphicsPipeline.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\GraphicsPipelineParam.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\RenderPass.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\ShaderModule.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\Subpass.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\VertexAttribDescription.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Texture\Texture.h" />

@@ -35,16 +35,16 @@ SOFTWARE.
 #include <vulkan/vulkan.h>
 
 #include "SDEngineCommonType.h"
-#include "BlendOperator.h"
+#include "ImageLayout.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class BlendOperator_Vulkan
+class ImageLayout_Vulkan
 {
 public:
-    static VkBlendOp Convert(const BlendOperatorEnum &i_src);
+    static VkImageLayout Convert(const ImageLayoutEnum &i_src);
 public:
-    static VkBlendOp BlendOps[BlendOperator_MAX_DEFINE_VALUE];
+    static VkImageLayout ImageLayouts[ImageLayout_MAX_DEFINE_VALUE];
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

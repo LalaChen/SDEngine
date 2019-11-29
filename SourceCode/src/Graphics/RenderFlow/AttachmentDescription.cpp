@@ -28,6 +28,14 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 AttachmentDescription::AttachmentDescription()
+: m_format(TextureFormat_R8G8B8A8_SNORM)
+, m_sample_counts(SampleCount_1)
+, m_load_op(AttachmentLoadOperator_CLEAR)
+, m_store_op(AttachmentStoreOperator_STORE)
+, m_stencil_load_op(AttachmentLoadOperator_CLEAR)
+, m_stencil_store_op(AttachmentStoreOperator_STORE)
+, m_initial_layout(ImageLayout_UNDEFINED)
+, m_final_layout(ImageLayout_UNDEFINED)
 {
 }
 

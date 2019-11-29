@@ -23,28 +23,30 @@ SOFTWARE.
 
 */
 
-/*! \file      BlendOperator_Vulkan.h
- *  \brief     Introduce of class BlendOperator_Vulkan.
+/*! \file      Subpass.h
+ *  \brief     Introduce of class Subpass.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/11/03
+ *  \date      2019/11/27
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include <vector>
 
+#include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "BlendOperator.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class BlendOperator_Vulkan
+class SDENGINE_CLASS Subpass
 {
 public:
-    static VkBlendOp Convert(const BlendOperatorEnum &i_src);
+    Subpass();
+    ~Subpass();
 public:
-    static VkBlendOp BlendOps[BlendOperator_MAX_DEFINE_VALUE];
+    ObjectName m_name;
+    std::vector<uint32_t> m_color_attachment_ids;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

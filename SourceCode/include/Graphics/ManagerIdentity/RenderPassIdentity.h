@@ -23,28 +23,54 @@ SOFTWARE.
 
 */
 
-/*! \file      BlendOperator_Vulkan.h
- *  \brief     Introduce of class BlendOperator_Vulkan.
+/*! \file      RenderPassIdentity.h
+ *  \brief     Introduce of class RenderPassIdentity.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/11/03
+ *  \date      2019/10/24
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include <vulkan/vulkan.h>
-
+#include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "BlendOperator.h"
+#include "AttachmentDescription.h"
+#include "AttachmentReference.h"
+#include "Subpass.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class BlendOperator_Vulkan
+/*! \class RenderPassIdentity
+ *  \brief In our system, class RenderPassIdentity is used to record information
+ *         about render pass.
+ */
+class SDENGINE_CLASS RenderPassIdentity
 {
 public:
-    static VkBlendOp Convert(const BlendOperatorEnum &i_src);
+    /*! \fn explicit RenderPassIdentity();
+     *  \brief Constructor of RenderPassIdentity
+     */
+    RenderPassIdentity();
+
+    /*! \fn ~RenderPassIdentity();
+     *  \brief Destructor of RenderPassIdentity
+     */
+    ~RenderPassIdentity();
 public:
-    static VkBlendOp BlendOps[BlendOperator_MAX_DEFINE_VALUE];
+    /*! \var CompHandle m_rp_handle;
+     *  \brief handle about render pass.
+     */
+    CompHandle m_rp_handle;
+
+    /*! \var AttachmentDescription m_attachment_descs;
+     *  \brief Description about each attachment.
+     */
+    AttachmentDescription m_attachment_descs;
+
+    /*! \var AttachmentReference m_attachment_refs;
+     *  \brief Reference about each attachment.
+     */
+    AttachmentReference m_attachment_refs;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

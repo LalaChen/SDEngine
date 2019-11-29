@@ -23,28 +23,45 @@ SOFTWARE.
 
 */
 
-/*! \file      BlendOperator_Vulkan.h
- *  \brief     Introduce of class BlendOperator_Vulkan.
+/*! \file      AttachmentReference.h
+ *  \brief     Introduce of class AttachmentReference.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/11/03
+ *  \date      2019/11/24
  *  \copyright MIT License.
  */
-
 #pragma once
 
-#include <vulkan/vulkan.h>
-
+#include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "BlendOperator.h"
+#include "ImageLayout.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class BlendOperator_Vulkan
+/*! \class AttachmentReference
+ *  \brief Class AttachmentReference is used to specify attachment type.
+ */
+class SDENGINE_CLASS AttachmentReference
 {
 public:
-    static VkBlendOp Convert(const BlendOperatorEnum &i_src);
-public:
-    static VkBlendOp BlendOps[BlendOperator_MAX_DEFINE_VALUE];
-};
+    /*! \fn AttachmentReference();
+     *  \brief Constructor of AttachmentReference.
+     */
+    AttachmentReference();
 
+    /*! \fn ~AttachmentReference();
+     *  \brief Destructor of AttachmentReference.
+     */
+    ~AttachmentReference();
+
+public:
+    /*! \var uint32_t m_attachment_ID;
+     *  \brief Specify this attachment refers to which attachment in this render pass.
+     */
+    uint32_t m_attachment_ID;
+
+    /*! \var ImageLayoutEnum m_layout;
+     *  \brief Specify the usage about this attachment.
+     */
+    ImageLayoutEnum m_layout;
+};
 ______________SD_END_GRAPHICS_NAMESPACE______________

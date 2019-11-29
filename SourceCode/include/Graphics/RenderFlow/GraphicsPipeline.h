@@ -34,6 +34,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "RenderPass.h"
 #include "GraphicsPipelineParam.h"
 #include "GraphicsPipelineIdentity.h"
 #include "Object.h"
@@ -42,6 +43,8 @@ using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
+
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GraphicsPipeline);
 
 /*! \class GraphicsPipeline
  *  \brief In our graphic system, GraphicsPipeline is used to tell gpu how to draw a primitive to a fragment
@@ -65,6 +68,16 @@ protected:
      *  \brief Record basic identity
      */
     GraphicsPipelineIdentity m_identity;
+
+    /*! \var uint32_t m_passID;
+     *  \brief Claim this pipeline is used at which render pass.
+     */
+    uint32_t m_passID;
+    
+    /*! \var RenderPassWeakReferenceObject m_target_rp_wref;
+     *  \brief The render pass we want to use this in pipeline.
+     */
+    RenderPassWeakReferenceObject m_target_rp_wref;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

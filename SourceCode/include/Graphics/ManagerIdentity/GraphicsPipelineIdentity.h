@@ -65,11 +65,6 @@ protected:
      *  \brief The pipeline layout handle. It is valid while the value is not equal 0.(Opengl doesn't need.)
      */
     CompHandle m_pipeline_layout_handle;
-
-    /*! \var uint32_t m_passID;
-     *  \brief Claim this pipeline is used at which render pass.
-     */
-    uint32_t m_passID;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

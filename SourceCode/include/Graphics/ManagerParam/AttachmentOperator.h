@@ -37,21 +37,26 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum AttachmentLoadOperatorEnum
- *  \brief AttachmentLoadOperatorEnum is used to decide what action gpu will execute before we use.
+ *  \brief AttachmentLoadOperatorEnum is used to decide what action gpu will 
+ *         execute when we load pixel from buffer.(Vulkan Only)
  */
 enum AttachmentLoadOperatorEnum
 {
-    AttachmentLoadOperator_LOAD = 0,
-    AttachmentLoadOperator_CLEAR,
-    AttachmentLoadOperator_DONT_CARE,
-    AttachmentLoadOperator_MAX_DEFINE_VALUE
+    AttachmentLoadOperator_LOAD = 0, /*!< Load value from buffer.*/
+    AttachmentLoadOperator_CLEAR, /*!< Clear value in buffer.*/
+    AttachmentLoadOperator_DONT_CARE, /*!< Don't care.*/
+    AttachmentLoadOperator_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 
+/*! \enum AttachmentStoreOperatorEnum
+ *  \brief AttachmentStoreOperatorEnum is used to decide what action gpu will
+ *         execute when we write pixel to buffer.(Vulkan Only)
+ */
 enum AttachmentStoreOperatorEnum
 {
-    AttachmentStoreOperator_STORE = 0,
-    AttachmentStoreOperator_DONT_CARE,
-    AttachmentStoreOperator_MAX_DEFINE_VALUE
+    AttachmentStoreOperator_STORE = 0, /*!< Store value to buffer.*/
+    AttachmentStoreOperator_DONT_CARE, /*!< Don't save value to buffer.*/
+    AttachmentStoreOperator_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
