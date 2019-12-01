@@ -151,7 +151,6 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\LogicOperator.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ManagerParam.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PipelineBindPoint.h" />
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PipelineStage.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PolygonMode.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Primitive.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\SampleCount.h" />

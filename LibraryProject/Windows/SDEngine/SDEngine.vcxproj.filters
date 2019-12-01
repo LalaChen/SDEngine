@@ -808,8 +808,5 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\PipelineBindPoint_Vulkan.h">
       <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PipelineStage.h">
-      <Filter>include\Graphics\ManagerParam</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
