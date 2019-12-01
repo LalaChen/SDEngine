@@ -1169,23 +1169,23 @@ void Sample3_MultiSubpass::CreateRenderPassAndFramebuffer()
     sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     sp_dependencies[0].dstSubpass = 0;
     sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
     sp_dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- 0 to 1
     sp_dependencies[1].srcSubpass = 0;
     sp_dependencies[1].dstSubpass = 1;
-    sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-    sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
+    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    sp_dependencies[1].srcAccessMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     sp_dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
     sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- End dep.
     sp_dependencies[2].srcSubpass = 1;
     sp_dependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
-    sp_dependencies[2].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    sp_dependencies[2].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    sp_dependencies[2].srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    sp_dependencies[2].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
     sp_dependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;

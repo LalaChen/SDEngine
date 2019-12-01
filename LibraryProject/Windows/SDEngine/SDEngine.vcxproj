@@ -50,6 +50,7 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\FrontFaceMode_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\ImageLayout_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\LogicOperator_Vulkan.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\PipelineBindPoint_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\PolygonMode_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\Primitive_Vulkan.cpp" />
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\SampleCount_Vulkan.cpp" />
@@ -149,6 +150,8 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ImageLayout.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\LogicOperator.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\ManagerParam.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PipelineBindPoint.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PipelineStage.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PolygonMode.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Primitive.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\SampleCount.h" />
@@ -172,6 +175,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\FrontFaceMode_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\ImageLayout_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\LogicOperator_Vulkan.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\PipelineBindPoint_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\PolygonMode_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\Primitive_Vulkan.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\SampleCount_Vulkan.h" />
@@ -207,6 +211,7 @@
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\RenderPass.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\ShaderModule.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\Subpass.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\SubpassDependency.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\VertexAttribDescription.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\Texture\Texture.h" />

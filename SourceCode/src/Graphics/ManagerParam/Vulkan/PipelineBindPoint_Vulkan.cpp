@@ -23,36 +23,24 @@ SOFTWARE.
 
 */
 
-/*! \file      AttachmentOperator_Vulkan.h
- *  \brief     Introduce of class AttachmentLoadOperator_Vulkan and AttachmentStoreOperator_Vulkan.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/11/17
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include <vulkan/vulkan.h>
-
-#include "SDEngineCommonType.h"
-#include "AttachmentOperator.h"
+#include "PipelineBindPoint_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class AttachmentLoadOperator_Vulkan
+VkPipelineBindPoint PipelineBindPoint_Vulkan::PipelineBindPoints[PipelineBindPoint_MAX_DEFINE_VALUE] =
 {
-public:
-    static VkAttachmentLoadOp Convert(const AttachmentLoadOperatorEnum &i_src);
-public:
-    static VkAttachmentLoadOp AttachmentLoadOps[AttachmentLoadOperator_MAX_DEFINE_VALUE];
+    VK_PIPELINE_BIND_POINT_GRAPHICS,
+    VK_PIPELINE_BIND_POINT_COMPUTE
 };
 
-class AttachmentStoreOperator_Vulkan
+VkPipelineBindPoint PipelineBindPoint_Vulkan::Convert(const PipelineBindPointEnum &i_src)
 {
-public:
-    static VkAttachmentStoreOp Convert(const AttachmentStoreOperatorEnum &i_src);
-public:
-    static VkAttachmentStoreOp AttachmentStoreOps[AttachmentStoreOperator_MAX_DEFINE_VALUE];
-};
+    if (i_src != PipelineBindPoint_MAX_DEFINE_VALUE) {
+        return PipelineBindPoints[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_PIPELINE_BIND_POINT_MAX_ENUM;
+    }
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

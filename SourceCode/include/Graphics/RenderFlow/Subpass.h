@@ -36,17 +36,68 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "PipelineBindPoint.h"
+#include "Object.h"
+
+using SDE::Basic::ObjectName;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+/*! \class Subpass
+ *  \brief In our system, class Subpass is used to specify attachments in this step.
+ */
 class SDENGINE_CLASS Subpass
 {
 public:
+    /*! \fn Subpass();
+     *  \brief Constructor of Subpass.
+     */
     Subpass();
+
+    /*! \fn ~Subpass();
+     *  \brief Destructor of Subpass.
+     */
     ~Subpass();
 public:
+    /*! \var ObjectName m_name;
+     *  \brief name of this subpass.
+     */
     ObjectName m_name;
-    std::vector<uint32_t> m_color_attachment_ids;
+
+    /*! \var PipelineBindPoint m_bind_point;
+     *  \brief Specify this subpass is in which kind of pipeline.
+     */
+    PipelineBindPointEnum m_bind_point;
+
+    /*! \var std::vector<int32_t> m_color_attachment_ids;
+     *  \brief Indices about color attachment in descriptions of renderpass that are
+     *         used in this subpass.
+     */
+    std::vector<int32_t> m_color_attachment_ids;
+
+    /*! \var std::vector<int32_t> m_input_attachment_ids;
+     *  \brief Indices about input attachment in descriptions of renderpass that are
+     *         used in this subpass.
+     */
+    std::vector<int32_t> m_input_attachment_ids;
+
+    /*! \var std::vector<int32_t> m_res_attachment_ids;
+     *  \brief Indices about resolve attachment in descriptions of renderpass that are
+     *         used in this subpass.
+     */
+    std::vector<int32_t> m_res_attachment_ids;
+
+    /*! \var std::vector<int32_t> m_res_attachment_ids;
+     *  \brief Indices about preserve attachment in descriptions of renderpass that are
+     *         used in this subpass.
+     */
+    std::vector<int32_t> m_pre_attachment_ids;
+
+    /*! \var int32_t m_depth_attachment_id;
+     *  \brief Index about depth attachment in descriptions of renderpass that is
+     *         used in this subpass.
+     */
+    int32_t m_depth_attachment_id;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

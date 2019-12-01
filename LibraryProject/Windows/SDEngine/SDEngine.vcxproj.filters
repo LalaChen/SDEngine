@@ -455,6 +455,9 @@
     <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerIdentity\RenderPassIdentity.cpp">
       <Filter>src\Graphics\ManagerIdentity</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\PipelineBindPoint_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\SDEngineCommonFunction.h">
@@ -795,6 +798,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerIdentity\RenderPassIdentity.h">
       <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\RenderFlow\SubpassDependency.h">
+      <Filter>include\Graphics\RenderFlow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PipelineBindPoint.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\PipelineBindPoint_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Graphics\ManagerParam\PipelineStage.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

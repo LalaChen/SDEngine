@@ -23,36 +23,31 @@ SOFTWARE.
 
 */
 
-/*! \file      AttachmentOperator_Vulkan.h
- *  \brief     Introduce of class AttachmentLoadOperator_Vulkan and AttachmentStoreOperator_Vulkan.
+/*! \file      SubpassDependency.h
+ *  \brief     Introduce of class SubpassDependency.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/11/17
+ *  \date      2019/12/01
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include <vector>
 
+#include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "AttachmentOperator.h"
+
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class AttachmentLoadOperator_Vulkan
+class SDENGINE_CLASS SubpassDependency
 {
 public:
-    static VkAttachmentLoadOp Convert(const AttachmentLoadOperatorEnum &i_src);
+    SubpassDependency();
+    ~SubpassDependency();
 public:
-    static VkAttachmentLoadOp AttachmentLoadOps[AttachmentLoadOperator_MAX_DEFINE_VALUE];
-};
-
-class AttachmentStoreOperator_Vulkan
-{
-public:
-    static VkAttachmentStoreOp Convert(const AttachmentStoreOperatorEnum &i_src);
-public:
-    static VkAttachmentStoreOp AttachmentStoreOps[AttachmentStoreOperator_MAX_DEFINE_VALUE];
+    uint32_t m_src_spID;
+    uint32_t m_dst_spID;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

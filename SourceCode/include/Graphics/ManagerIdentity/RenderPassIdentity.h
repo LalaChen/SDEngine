@@ -62,15 +62,20 @@ public:
      */
     CompHandle m_rp_handle;
 
-    /*! \var AttachmentDescription m_attachment_descs;
+    /*! \var std::vector<AttachmentDescription> m_attachment_descs;
      *  \brief Description about each attachment.
      */
-    AttachmentDescription m_attachment_descs;
+    std::vector<AttachmentDescription> m_attachment_descs;
 
-    /*! \var AttachmentReference m_attachment_refs;
-     *  \brief Reference about each attachment.
+    /*! \var std::vector<AttachmentReference> m_attachment_refs;
+     *  \brief Reference about attachments.
      */
-    AttachmentReference m_attachment_refs;
+    std::vector<AttachmentReference> m_attachment_refs;
+
+    /*! \var std::vector<Subpass> m_subpasses;
+     *  \brief Subpass information.
+     */
+    std::vector<Subpass> m_subpasses;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
