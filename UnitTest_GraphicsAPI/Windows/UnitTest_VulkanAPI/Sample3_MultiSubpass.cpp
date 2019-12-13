@@ -149,7 +149,9 @@ void Sample3_MultiSubpass::Render()
         VkClearValue clear_color; clear_color.color = { 0.15f, 0.15f, 0.15f, 1.0f };
         VkClearValue clear_depth; clear_depth.depthStencil = { 1.0f, 0 };
 
-        VkClearValue clear_values[2] = {
+        VkClearValue clear_values[4] = {//correspond with image view.
+            clear_color,
+            clear_depth,
             clear_color,
             clear_depth
         };
@@ -160,7 +162,7 @@ void Sample3_MultiSubpass::Render()
         rp_begin_info.renderPass = m_VK_render_pass;
         rp_begin_info.framebuffer = m_VK_frame_buffer;
         rp_begin_info.renderArea = render_area;
-        rp_begin_info.clearValueCount = 2;
+        rp_begin_info.clearValueCount = 4;
         rp_begin_info.pClearValues = clear_values;
         //2.2 Begin render pass.
         m_mgr->BeginRenderPass(rp_begin_info, m_VK_cmd_buffer);
@@ -1162,30 +1164,39 @@ void Sample3_MultiSubpass::CreateRenderPassAndFramebuffer()
     subpasses[1].pDepthStencilAttachment = &attachment_refs[3];
     subpasses[1].preserveAttachmentCount = 0;
     subpasses[1].pPreserveAttachments = nullptr;
-    //1.4 Create subpass dependecy for present pass.
+    //1.4 Create subpass dependecies for present pass.
+    //*** IMPORTANT ***
+    //subpasses are executed asynchronically. So we need dependencies to specify the pipeline barrier between two subpasses.
+    //srcStageMask means we try to write data into attachments. And all operations(one command may have many operations) need to be executed
+    //before this stage.
+    //dstAccessMask means we try to read data from attachments And all operations(one command may have many operations) will be executed
+    //after this stage.
     std::vector<VkSubpassDependency> sp_dependencies;
     sp_dependencies.resize(3);
     //--- Begin dep.
+    //
     sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     sp_dependencies[0].dstSubpass = 0;
-    sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
+    sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- 0 to 1
+    //This dependency is specifying that we need finish all operation in sp0 before bottom stage
+    //and execute all operations after top stage in sp1. (Block sp1 until finishing sp0, )
     sp_dependencies[1].srcSubpass = 0;
     sp_dependencies[1].dstSubpass = 1;
-    sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
-    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-    sp_dependencies[1].srcAccessMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;//All operators before this stage need be executed. 
+    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
     sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- End dep.
     sp_dependencies[2].srcSubpass = 1;
     sp_dependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
-    sp_dependencies[2].srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-    sp_dependencies[2].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    sp_dependencies[2].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    sp_dependencies[2].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;

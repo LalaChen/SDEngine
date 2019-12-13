@@ -26,7 +26,7 @@ SOFTWARE.
 /*! \file      RenderPassIdentity.h
  *  \brief     Introduce of class RenderPassIdentity.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/10/24
+ *  \date      2019/11/26
  *  \copyright MIT License.
  */
 
