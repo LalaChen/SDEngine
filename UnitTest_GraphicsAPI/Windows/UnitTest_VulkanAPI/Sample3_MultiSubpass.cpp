@@ -967,10 +967,12 @@ void Sample3_MultiSubpass::CreateShaderPrograms()
         depth_stencil_c_info.stencilTestEnable = VK_FALSE;
         depth_stencil_c_info.front = {};
         depth_stencil_c_info.back = {};
+
         //------ alpha blending.
         VkPipelineColorBlendAttachmentState color_blending_attachment_state = {};
         color_blending_attachment_state.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT; //glColorMask(all true);
-        color_blending_attachment_state.blendEnable = VK_FALSE; //glDisable(GL_BLEND);
+        if (i == 0) color_blending_attachment_state.blendEnable = VK_FALSE;
+        else color_blending_attachment_state.blendEnable = VK_TRUE; //glDisable(GL_BLEND);
         color_blending_attachment_state.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; //glSeperateBlendFunc for color
         color_blending_attachment_state.dstColorBlendFactor = VK_BLEND_FACTOR_ONE;
         color_blending_attachment_state.colorBlendOp = VK_BLEND_OP_ADD;
@@ -1134,7 +1136,7 @@ void Sample3_MultiSubpass::CreateRenderPassAndFramebuffer()
     attachment_refs[1].attachment = 1; //ID of attachment in RenderPass.
     attachment_refs[1].layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     //sp2
-    //--- Bind the output to color attachment. //3 :color, 4: depth
+    //--- Bind the output to color attachment. //2 :color, 3: depth
     attachment_refs[2].attachment = 2; //ID of attachment in RenderPass.
     attachment_refs[2].layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     //--- Bind the output to depth attachment.
@@ -1169,35 +1171,54 @@ void Sample3_MultiSubpass::CreateRenderPassAndFramebuffer()
     //subpasses are executed asynchronically. So we need dependencies to specify the pipeline barrier between two subpasses.
     //srcStageMask means we try to write data into attachments. And all operations(one command may have many operations) need to be executed
     //before this stage.
-    //dstAccessMask means we try to read data from attachments And all operations(one command may have many operations) will be executed
+    //dstStageMask means we try to read data from attachments And all operations(one command may have many operations) will be executed
     //after this stage.
     std::vector<VkSubpassDependency> sp_dependencies;
     sp_dependencies.resize(3);
     //--- Begin dep.
-    //
     sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-    sp_dependencies[0].dstSubpass = 0;
     sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    sp_dependencies[0].dstSubpass = 0;
+    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- 0 to 1
-    //This dependency is specifying that we need finish all operation in sp0 before bottom stage
-    //and execute all operations after top stage in sp1. (Block sp1 until finishing sp0, )
+    //*** IMPORTANT ***
+    //Write after write dependency for sp 0 and 1. To tell behavior about execute two draw commands that are distinct in
+    //first and second sub-passes simultaneously. For example of this sample, we will draw to colored lenna quads in first
+    //sub-pass and two normals lenna quads in second sub-pass. So we can list our drawing flow as follow :
+    //SP0.
+    //--- Command for colored lenna 0. C(0,0)
+    //--- Command for colored lenna 1. C(0,1)
+    //SP1.
+    //--- Command for normal lenna 0. C(1,0)
+    //--- Command for normal lenna 1. C(1,1)
+    //But commands will be executed asynchronously in different sub-passes. That is, we may see situation as follow :
+    //--- C(0,0) C(1,0) C(0,1) C(1,1). It's may cause wrong presentation.
+    //So we will use subpass dependency for avoiding this situation. There are two main mechanisms for subpass dependency.
+    //--- Memory barrier.
+    //To tell which stages we need to check memory access in pipeline when two commands are executed simultaneously.
+    //--- Pipeline barrier.
+    //To indicate non-critical sections in pipeline(src to dst) when two commands are executed simultaneously. In our case, 
+    //we consider an extreme case, C(1,0) is executed at C(0,0) is excuting. We need to make C(1,0) is executed after C(0,0)
+    //is finished. So we set source pipeline stage as bottom stage. It means GPU need to wait until stage in first command 
+    //comes to bottom stage, and then executed second command.
     sp_dependencies[1].srcSubpass = 0;
+    sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT; //All operators before this stage need be executed. 
+    sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     sp_dependencies[1].dstSubpass = 1;
-    sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;//All operators before this stage need be executed. 
     sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-    sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    sp_dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    sp_dependencies[1].dstAccessMask = 
+        VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | 
+        VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
     sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- End dep.
     sp_dependencies[2].srcSubpass = 1;
-    sp_dependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
     sp_dependencies[2].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-    sp_dependencies[2].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
+    sp_dependencies[2].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //1.5. Write created information for present pass.

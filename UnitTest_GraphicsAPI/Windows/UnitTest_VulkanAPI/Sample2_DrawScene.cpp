@@ -309,18 +309,18 @@ void Sample2_DrawScene::CreateRenderPassAndFramebuffer()
     sp_dependencies.resize(2);
     //--- Begin dep.
     sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-    sp_dependencies[0].dstSubpass = 0;
     sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     sp_dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    sp_dependencies[0].dstSubpass = 0;
+    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- End dep.
     sp_dependencies[1].srcSubpass = 0;
-    sp_dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
     sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //1.5. Write created information for present pass.
