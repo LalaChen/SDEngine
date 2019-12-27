@@ -222,6 +222,7 @@ void VulkanManager::InitializePhysicalDevice()
         std::list<const char*> check_ext_names(NecessaryExtensions.begin(), NecessaryExtensions.end());
 
         for (VkExtensionProperties &avaible_ext : avaible_exts) {
+            SDLOGD("Extension(%s)(%d)", avaible_ext.extensionName, avaible_ext.specVersion);
             for (std::list<const char*>::iterator c_iter = check_ext_names.begin(); c_iter != check_ext_names.end(); ) {
                 if (strcmp(avaible_ext.extensionName, (*c_iter)) == 0) {
                     c_iter = check_ext_names.erase(c_iter);
