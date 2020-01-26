@@ -104,9 +104,10 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
 
     //2. Copy temporary host visible buffer to target static buffer.
     CopyVkBuffer(
-        staging_buffer_handle, 0, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        vk_buffer_handle, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT,
-        i_data_size);
+        staging_buffer_handle, i_data_size,
+        vk_buffer_handle,
+        0, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
     //3. free temporary memory and buffer.
     FreeVkDeviceMemory(staging_memory);

@@ -69,7 +69,7 @@ VkResult VulkanManager::AllocatVkDeviceMemoryForVkBuffer(
     return result;
 }
 
-VkResult VulkanManager::AllocateVkDeviceMemortForVkImage(
+VkResult VulkanManager::AllocateVkDeviceMemoryForVkImage(
     VkDeviceMemory &io_memory_handle,
     VkDeviceSize &io_allocated_size,
     VkImage &i_image_handle,

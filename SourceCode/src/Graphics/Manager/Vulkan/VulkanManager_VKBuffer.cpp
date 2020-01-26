@@ -76,12 +76,12 @@ VkResult VulkanManager::RefreshDataToHostVisibleVKDeviceMemory(VkDeviceMemory i_
 
 VkResult VulkanManager::CopyVkBuffer(
     VkBuffer i_src_buffer_handle,
-    VkAccessFlags i_src_access_flags,
-    VkPipelineStageFlags i_src_pipe_stage_flags,
+    VkDeviceSize i_data_size,
     VkBuffer i_dst_buffer_handle,
+    VkAccessFlags i_src_access_flags,
     VkAccessFlags i_dst_access_flags,
-    VkPipelineStageFlags i_dst_pipe_stage_flags,
-    VkDeviceSize i_data_size)
+    VkPipelineStageFlags i_src_pipe_stage_flags,
+    VkPipelineStageFlags i_dst_pipe_stage_flags)
 {
     VkResult result = VK_SUCCESS;
     //1. begin command buffer.
@@ -97,23 +97,10 @@ VkResult VulkanManager::CopyVkBuffer(
         return result;
     }
     //--- i. set buffer memory barrier (block transfer).
-    VkBufferMemoryBarrier beg_mem_barrier = {};
-    beg_mem_barrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
-    beg_mem_barrier.pNext = nullptr;
-    beg_mem_barrier.srcAccessMask = i_src_access_flags; //The buffer doesn't have access state.
-    beg_mem_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    beg_mem_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    beg_mem_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    beg_mem_barrier.buffer = i_dst_buffer_handle;
-    beg_mem_barrier.offset = 0;
-    beg_mem_barrier.size = VK_WHOLE_SIZE;
-
-    vkCmdPipelineBarrier(m_VK_main_cmd_buffer, i_src_pipe_stage_flags, VK_PIPELINE_STAGE_TRANSFER_BIT,
-        0,
-        0, nullptr, //memory barrier
-        1, &beg_mem_barrier, //buffer memory barrier
-        0, nullptr //image memory barrier
-    );
+    SwitchBufferLayout(m_VK_main_cmd_buffer, 
+        i_dst_buffer_handle, 0, VK_WHOLE_SIZE,
+        i_src_pipe_stage_flags, 
+        VK_PIPELINE_STAGE_TRANSFER_BIT);
 
     //--- ii. copy buffer.
     VkBufferCopy buf_cpy_info = {};
@@ -123,23 +110,11 @@ VkResult VulkanManager::CopyVkBuffer(
     vkCmdCopyBuffer(m_VK_main_cmd_buffer, i_src_buffer_handle, i_dst_buffer_handle, 1, &buf_cpy_info);
 
     //--- iii. set buffer memory barrier (block transfer).
-    VkBufferMemoryBarrier end_mem_barrier = {};
-    end_mem_barrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
-    end_mem_barrier.pNext = nullptr;
-    end_mem_barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    end_mem_barrier.dstAccessMask = i_dst_access_flags;
-    end_mem_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    end_mem_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    end_mem_barrier.buffer = i_dst_buffer_handle;
-    end_mem_barrier.offset = 0;
-    end_mem_barrier.size = VK_WHOLE_SIZE;
+    SwitchBufferLayout(m_VK_main_cmd_buffer,
+        i_dst_buffer_handle, 0, VK_WHOLE_SIZE,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,
+        i_dst_pipe_stage_flags);
 
-    vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, i_dst_pipe_stage_flags,
-        0,
-        0, nullptr, //memory barrier
-        1, &end_mem_barrier, //buffer memory barrier
-        0, nullptr //image memory barrier
-    );
     //--- iv. end command buffer.
     result = vkEndCommandBuffer(m_VK_main_cmd_buffer);
     if (result != VK_SUCCESS) {

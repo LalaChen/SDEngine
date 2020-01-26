@@ -510,7 +510,6 @@ VkResult VulkanAPITestManager::RefreshHostDeviceBufferData(VkBuffer i_VK_buffer,
         memcpy(buffer_device_ptr, i_data_ptr, i_size);
     }
 
-    ///*
     VkMappedMemoryRange mem_ranges = {};
     mem_ranges.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
     mem_ranges.pNext = nullptr;
@@ -522,7 +521,6 @@ VkResult VulkanAPITestManager::RefreshHostDeviceBufferData(VkBuffer i_VK_buffer,
         SDLOGE("Map buffer flush failure!!!");
         return result;
     }
-    //*/
 
     vkUnmapMemory(m_VK_device, i_VK_buffer_mem);
     return result;

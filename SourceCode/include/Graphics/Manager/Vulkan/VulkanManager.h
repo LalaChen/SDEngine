@@ -107,16 +107,16 @@ protected:
         VkBuffer &io_buffer_handle, 
         VkDeviceSize i_size, 
         VkBufferUsageFlags i_buffer_usage,
-        VkSharingMode i_sharing_mode);
+        VkSharingMode i_sharing_mode = VK_SHARING_MODE_EXCLUSIVE);
 
     VkResult CopyVkBuffer(
         VkBuffer i_src_buffer_handle,
-        VkAccessFlags i_src_access_flags,
-        VkPipelineStageFlags i_src_pipe_stage_flags, 
-        VkBuffer i_dst_buffer_handle, 
-        VkAccessFlags i_dst_access_flags,
-        VkPipelineStageFlags i_dst_pipe_stage_flags,
-        VkDeviceSize i_data_size);
+        VkDeviceSize i_data_size,
+        VkBuffer i_dst_buffer_handle,
+        VkAccessFlags i_src_access_flags = 0,
+        VkAccessFlags i_dst_access_flags = 0,
+        VkPipelineStageFlags i_src_pipe_stage_flags = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+        VkPipelineStageFlags i_dst_pipe_stage_flags = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
     VkResult RefreshDataToHostVisibleVKDeviceMemory(
         VkDeviceMemory i_memory_handle,
@@ -125,29 +125,33 @@ protected:
         Size_ui64 i_data_size);
 
     void DestroyVkBuffer(VkBuffer &io_buffer_handle);
+
 protected:
 //----------- Vulkan image private Function -------------
     VkResult CreateVkImage(
         VkImage &io_image_handle,
-        VkSharingMode i_sharing_mode,
         VkImageType i_type,
-        VkImageUsageFlags i_usage_flags,
-        uint32_t i_mipmap_levels,
-        uint32_t i_array_layers,
-        VkImageTiling i_tiling_mode,
+        VkFormat i_image_format,
         VkExtent3D i_image_size,
-        VkFormat i_image_format);
+        VkImageUsageFlags i_usage_flags,
+        VkImageLayout i_image_layout = VK_IMAGE_LAYOUT_UNDEFINED,
+        uint32_t i_mipmap_levels = 1,
+        uint32_t i_array_layers = 1,
+        VkImageTiling i_tiling_mode = VK_IMAGE_TILING_OPTIMAL,
+        VkSharingMode i_sharing_mode = VK_SHARING_MODE_EXCLUSIVE);
 
     VkResult CopyVkBufferToVkImage(
         VkBuffer i_src_buffer_handle,
-        VkAccessFlags i_src_access_flags,
-        VkPipelineStageFlags i_src_pipe_stage_flags,
+        VkDeviceSize i_data_size,
         VkImage i_dst_image_handle,
-        VkAccessFlags i_dst_access_flags,
-        VkPipelineStageFlags i_dst_pipe_stage_flags,
         VkOffset3D i_image_offset,
         VkExtent3D i_image_size,
-        VkDeviceSize i_data_size);
+        VkAccessFlags i_src_access_flags = 0,
+        VkAccessFlags i_dst_access_flags = 0,
+        VkImageLayout i_dst_image_original_layout = VK_IMAGE_LAYOUT_UNDEFINED,
+        VkImageLayout i_dst_image_final_layout = VK_IMAGE_LAYOUT_UNDEFINED,
+        VkPipelineStageFlags i_src_pipe_stage_flags = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+        VkPipelineStageFlags i_dst_pipe_stage_flags = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
     void DestroyVkImage(VkImage &io_image_handle);
 
@@ -201,7 +205,7 @@ protected:
         VkDeviceSize i_mem_offset, 
         VkFlags i_memo_prop_flags);
 
-    VkResult AllocateVkDeviceMemortForVkImage(
+    VkResult AllocateVkDeviceMemoryForVkImage(
         VkDeviceMemory &io_memory_handle,
         VkDeviceSize &io_allocated_size,
         VkImage &i_image_handle,
@@ -226,6 +230,36 @@ protected:
         const Size_ui64 i_binary_size);
 
     void DestroyVKShaderModule(VkShaderModule &io_shader_module_handle);
+protected:
+//----------- Vulkan image layout changing Function ------------
+    void SwitchImageLayout(
+        VkCommandBuffer i_cmd_buffer,
+        VkImage i_image_handle,
+        uint32_t i_sub_src_range_aspect_mask,
+        uint32_t i_sub_src_range_base_mip_lv,
+        uint32_t i_sub_src_range_mip_lv_count,
+        uint32_t i_sub_src_range_base_layer_lv,
+        uint32_t i_sub_src_range_layer_lv_count,
+        VkImageLayout i_old_layout,
+        VkImageLayout i_new_layout,
+        VkPipelineStageFlags i_src_pipeline_stage,
+        VkPipelineStageFlags i_dst_pipeline_stage,
+        VkAccessFlags i_src_access_mask = 0,
+        VkAccessFlags i_dst_access_mask = 0,
+        uint32_t i_src_queue_family_id = VK_QUEUE_FAMILY_IGNORED,
+        uint32_t i_dst_queue_family_id = VK_QUEUE_FAMILY_IGNORED);
+
+    void SwitchBufferLayout(
+        VkCommandBuffer i_cmd_buffer,
+        VkBuffer i_buffer_handle,
+        VkDeviceSize i_offset,
+        VkDeviceSize i_size,
+        VkPipelineStageFlags i_src_pipeline_stage,
+        VkPipelineStageFlags i_dst_pipeline_stage,
+        VkAccessFlags i_src_access_mask = 0,
+        VkAccessFlags i_dst_access_mask = 0,
+        uint32_t i_src_queue_family_id = VK_QUEUE_FAMILY_IGNORED,
+        uint32_t i_dst_queue_family_id = VK_QUEUE_FAMILY_IGNORED);
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;

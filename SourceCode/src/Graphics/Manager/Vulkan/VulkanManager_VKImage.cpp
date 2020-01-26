@@ -29,14 +29,15 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVkImage(
     VkImage &io_image_handle,
-    VkSharingMode i_sharing_mode,
     VkImageType i_type,
+    VkFormat i_image_format,
+    VkExtent3D i_image_size,
     VkImageUsageFlags i_usage_flags,
+    VkImageLayout i_image_layout,
     uint32_t i_mipmap_levels,
     uint32_t i_array_layers,
     VkImageTiling i_tiling_mode,
-    VkExtent3D i_image_size,
-    VkFormat i_image_format)
+    VkSharingMode i_sharing_mode)
 {
     //1. Write image creating information.
     VkImageCreateInfo img_c_info = {};
@@ -47,7 +48,7 @@ VkResult VulkanManager::CreateVkImage(
     img_c_info.mipLevels = i_mipmap_levels;// mipmap levels. We don't want to create mip map in here.
     img_c_info.arrayLayers = i_array_layers; //Use it when data is 2d texture array.
     img_c_info.tiling = i_tiling_mode; //Set texture tiling mode. If the image is linked data in system memory, we need to use VK_IMAGE_TILING_LINEAR.
-    img_c_info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    img_c_info.initialLayout = i_image_layout;
     img_c_info.usage = i_usage_flags; //We will copy data to this image(trasnfer dst) and use it in shader(sampled).
     img_c_info.samples = VK_SAMPLE_COUNT_1_BIT;
     img_c_info.extent = i_image_size;
@@ -67,14 +68,16 @@ VkResult VulkanManager::CreateVkImage(
 
 VkResult VulkanManager::CopyVkBufferToVkImage(
     VkBuffer i_src_buffer_handle,
-    VkAccessFlags i_src_access_flags,
-    VkPipelineStageFlags i_src_pipe_stage_flags,
+    VkDeviceSize i_data_size,
     VkImage i_dst_image_handle,
-    VkAccessFlags i_dst_access_flags,
-    VkPipelineStageFlags i_dst_pipe_stage_flags,
     VkOffset3D i_image_offset,
     VkExtent3D i_image_size,
-    VkDeviceSize i_data_size)
+    VkAccessFlags i_src_access_flags,
+    VkAccessFlags i_dst_access_flags,
+    VkImageLayout i_dst_image_original_layout,
+    VkImageLayout i_dst_image_final_layout,
+    VkPipelineStageFlags i_src_pipe_stage_flags,
+    VkPipelineStageFlags i_dst_pipe_stage_flags)
 {
     VkResult result = VK_NOT_READY;
     //1. begin command buffer.
@@ -90,28 +93,11 @@ VkResult VulkanManager::CopyVkBufferToVkImage(
         return result;
     }
     //2. set buffer memory barrier (block when transfer).
-    VkImageMemoryBarrier beg_mem_barrier = {};
-    beg_mem_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    beg_mem_barrier.pNext = nullptr;
-    beg_mem_barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    beg_mem_barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    beg_mem_barrier.srcAccessMask = 0; //The buffer doesn't have access state.
-    beg_mem_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    beg_mem_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    beg_mem_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    beg_mem_barrier.image = i_dst_image_handle;
-    beg_mem_barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT; //Color texture.
-    beg_mem_barrier.subresourceRange.baseMipLevel = 0;
-    beg_mem_barrier.subresourceRange.levelCount = 1;
-    beg_mem_barrier.subresourceRange.baseArrayLayer = 0;
-    beg_mem_barrier.subresourceRange.layerCount = 1;
-
-    vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-        0,
-        0, nullptr, //memory barrier
-        0, nullptr, //buffer memory barrier
-        1, &beg_mem_barrier //image memory barrier
-    );
+    SwitchImageLayout(m_VK_main_cmd_buffer,
+        i_dst_image_handle,
+        VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1,
+        i_dst_image_original_layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        i_src_pipe_stage_flags, VK_PIPELINE_STAGE_TRANSFER_BIT);
 
     //3. copy buffer.
     VkBufferImageCopy buf_to_img_cpy_info = {};
@@ -128,28 +114,11 @@ VkResult VulkanManager::CopyVkBufferToVkImage(
     vkCmdCopyBufferToImage(m_VK_main_cmd_buffer, i_src_buffer_handle, i_dst_image_handle, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &buf_to_img_cpy_info);
 
     //4. set buffer memory barrier (block transfer).
-    VkImageMemoryBarrier end_mem_barrier = {};
-    end_mem_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    end_mem_barrier.pNext = nullptr;
-    end_mem_barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    end_mem_barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-    end_mem_barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    end_mem_barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-    end_mem_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    end_mem_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    end_mem_barrier.image = i_dst_image_handle;
-    end_mem_barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    end_mem_barrier.subresourceRange.baseMipLevel = 0;
-    end_mem_barrier.subresourceRange.levelCount = 1;
-    end_mem_barrier.subresourceRange.baseArrayLayer = 0;
-    end_mem_barrier.subresourceRange.layerCount = 1;
-
-    vkCmdPipelineBarrier(m_VK_main_cmd_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-        0,
-        0, nullptr, //memory barrier
-        0, nullptr, //buffer memory barrier
-        1, &end_mem_barrier //image memory barrier
-    );
+    SwitchImageLayout(m_VK_main_cmd_buffer,
+        i_dst_image_handle,
+        VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, i_dst_image_final_layout,
+        VK_PIPELINE_STAGE_TRANSFER_BIT, i_dst_pipe_stage_flags);
 
     //5. Submit command.
     VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
@@ -160,7 +129,7 @@ VkResult VulkanManager::CopyVkBufferToVkImage(
     submit_info.pWaitSemaphores = nullptr;
     submit_info.signalSemaphoreCount = 0;
     submit_info.pSignalSemaphores = nullptr;
-    submit_info.pWaitDstStageMask = &submit_wait_flag;
+    submit_info.pWaitDstStageMask = nullptr;
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
 

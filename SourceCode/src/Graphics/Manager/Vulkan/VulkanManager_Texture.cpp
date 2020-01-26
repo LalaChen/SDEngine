@@ -51,10 +51,13 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
 
     //1. Create image.
     result = CreateVkImage(
-        image_handle, VK_SHARING_MODE_EXCLUSIVE,
-        image_type, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
-        io_tex_identity.m_mipmap_levels, io_tex_identity.m_array_layers, VK_IMAGE_TILING_OPTIMAL,
-        image_size, image_format);
+        image_handle,
+        image_type, image_format, image_size,
+        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+        VK_IMAGE_LAYOUT_UNDEFINED,
+        io_tex_identity.m_mipmap_levels, io_tex_identity.m_array_layers,
+        VK_IMAGE_TILING_OPTIMAL,
+        VK_SHARING_MODE_EXCLUSIVE);
 
     if (result != VK_SUCCESS) {
         SDLOGE("Create image failure(%x)!!!", result);
@@ -62,7 +65,7 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
     }
 
     //2. Allocate device image for this image.
-    result = AllocateVkDeviceMemortForVkImage(memory_handle, allocated_size, image_handle, 0, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+    result = AllocateVkDeviceMemoryForVkImage(memory_handle, allocated_size, image_handle, 0, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
     
     if (result != VK_SUCCESS) {
         SDLOGE("Allocated device local memory for this image failure(%x)!!!", result);
@@ -137,9 +140,12 @@ void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidP
 
         //3. Copy host buffer to image.
         CopyVkBufferToVkImage(
-            staging_buffer_handle, 0, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-            image_handle, VK_ACCESS_SHADER_READ_BIT, VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
-            image_offset, image_size, i_data_size);
+            staging_buffer_handle, i_data_size,
+            image_handle, image_offset, image_size,
+            0, VK_ACCESS_SHADER_READ_BIT,
+            VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_VERTEX_SHADER_BIT
+        );
         //4. destroy host buffer.
         FreeVkDeviceMemory(staging_memory);
 
