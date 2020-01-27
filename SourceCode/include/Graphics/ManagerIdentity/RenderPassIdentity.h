@@ -35,8 +35,8 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "AttachmentDescription.h"
-#include "AttachmentReference.h"
-#include "Subpass.h"
+#include "SubpassDescription.h"
+#include "SubpassDependency.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -67,15 +67,15 @@ public:
      */
     std::vector<AttachmentDescription> m_attachment_descs;
 
-    /*! \var std::vector<AttachmentReference> m_attachment_refs;
-     *  \brief Reference about attachments.
-     */
-    std::vector<AttachmentReference> m_attachment_refs;
-
-    /*! \var std::vector<Subpass> m_subpasses;
+    /*! \var std::vector<SubpassDescription> m_subpasses_descs;
      *  \brief Subpass information.
      */
-    std::vector<Subpass> m_subpasses;
+    std::vector<SubpassDescription> m_subpasses_descs;
+
+    /*! \var std::vector<SubpassDependency> m_sp_dependencies;
+     *  \brief describing relation between two subpasses.
+     */
+    std::vector<SubpassDependency> m_sp_dependencies;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

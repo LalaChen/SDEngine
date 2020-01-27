@@ -23,37 +23,41 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      PipelineStage.h
+ *  \brief     Introduce of enum PipelineStageEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/01/26
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
-#include "MemoryAccessMask.h"
-#include "PipelineStage.h"
+#include "SDEngineMacro.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+enum PipelineStageEnum
+{
+    PipelineStage_TOP_OF_PIPE = 0,
+    PipelineStage_DRAW_INDIRECT,
+    PipelineStage_VERTEX_INPUT,
+    PipelineStage_VERTEX_SHADER,
+    PipelineStage_TESSELLATION_CONTROL_SHADER,
+    PipelineStage_TESSELLATION_EVALUATION_SHADER,
+    PipelineStage_GEOMETRY_SHADER,
+    PipelineStage_FRAGMENT_SHADER,
+    PipelineStage_EARLY_FRAGMENT_TESTS,
+    PipelineStage_LATE_FRAGMENT_TESTS,
+    PipelineStage_COLOR_ATTACHMENT_OUTPUT,
+    PipelineStage_COMPUTE_SHADER,
+    PipelineStage_TRANSFER,
+    PipelineStage_BOTTOM_OF_PIPE,
+    PipelineStage_HOST,
+    PipelineStage_ALL_GRAPHICS,
+    PipelineStage_ALL_COMMANDS,
+    PipelineStage_TRANSFORM_FEEDBACK,
+    PipelineStage_CONDITIONAL_RENDERING_BIT,
+    PipelineStage_MAX_DEFINE_VALUE
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

@@ -23,37 +23,29 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      MemoryAccessMask.h
+ *  \brief     Introduce of enum MemoryAccessMaskEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/01/26
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
+#include <vector>
+
+#include <vulkan/vulkan.h>
+
 #include "MemoryAccessMask.h"
-#include "PipelineStage.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class MemoryAccess_Vulkan
+{
+public:
+    static VkAccessFlags Convert(const std::vector<MemoryAccessMaskEnum> &i_src);
+public:
+    static VkAccessFlagBits MemoryAccessMasks[MemoryAccessMask_MAX_DEFINE_VALUE];
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

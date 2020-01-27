@@ -28,7 +28,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 AttachmentReference::AttachmentReference()
-: m_attachment_ID(0)
+: m_attachment_ID(SD_ERROR_ATTACHMENT_REF)
 , m_layout(ImageLayout_COLOR_ATTACHMENT_OPTIMAL)
 {
 }

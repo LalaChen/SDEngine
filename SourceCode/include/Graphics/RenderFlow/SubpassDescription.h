@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      Subpass.h
- *  \brief     Introduce of class Subpass.
+/*! \file      SubpassDescription.h
+ *  \brief     Introduce of class SubpassDescription.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/11/27
  *  \copyright MIT License.
@@ -37,27 +37,28 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "PipelineBindPoint.h"
+#include "AttachmentReference.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class Subpass
- *  \brief In our system, class Subpass is used to specify attachments in this step.
+/*! \class SubpassDescription
+ *  \brief In our system, class SubpassDescription is used to specify attachments in this step.
  */
-class SDENGINE_CLASS Subpass
+class SDENGINE_CLASS SubpassDescription
 {
 public:
-    /*! \fn Subpass();
-     *  \brief Constructor of Subpass.
+    /*! \fn SubpassDescription();
+     *  \brief Constructor of SubpassDescription.
      */
-    Subpass();
+    SubpassDescription();
 
-    /*! \fn ~Subpass();
+    /*! \fn ~SubpassDescription();
      *  \brief Destructor of Subpass.
      */
-    ~Subpass();
+    ~SubpassDescription();
 public:
     /*! \var ObjectName m_name;
      *  \brief name of this subpass.
@@ -69,35 +70,35 @@ public:
      */
     PipelineBindPointEnum m_bind_point;
 
-    /*! \var std::vector<int32_t> m_color_attachment_ids;
-     *  \brief Indices about color attachment in descriptions of renderpass that are
+    /*! \var std::vector<AttachmentReference> m_color_attachment_refs;
+     *  \brief Color attachment references of renderpass that are
      *         used in this subpass.
      */
-    std::vector<int32_t> m_color_attachment_ids;
+    std::vector<AttachmentReference> m_color_attachment_refs;
 
-    /*! \var std::vector<int32_t> m_input_attachment_ids;
-     *  \brief Indices about input attachment in descriptions of renderpass that are
+    /*! \var std::vector<AttachmentReference> m_input_attachment_refs;
+     *  \brief Input attachment references of renderpass that are
      *         used in this subpass.
      */
-    std::vector<int32_t> m_input_attachment_ids;
+    std::vector<AttachmentReference> m_input_attachment_refs;
 
-    /*! \var std::vector<int32_t> m_res_attachment_ids;
-     *  \brief Indices about resolve attachment in descriptions of renderpass that are
+    /*! \var std::vector<AttachmentReference> m_res_attachment_refs;
+     *  \brief Resolve attachment in descriptions of renderpass that are
      *         used in this subpass.
      */
-    std::vector<int32_t> m_res_attachment_ids;
+    std::vector<AttachmentReference> m_res_attachment_refs;
 
-    /*! \var std::vector<int32_t> m_res_attachment_ids;
+    /*! \var std::vector<AttachmentReference> m_pre_attachment_ref_ids;
      *  \brief Indices about preserve attachment in descriptions of renderpass that are
      *         used in this subpass.
      */
-    std::vector<int32_t> m_pre_attachment_ids;
+    std::vector<uint32_t> m_pre_attachment_ref_ids;
 
-    /*! \var int32_t m_depth_attachment_id;
+    /*! \var AttachmentReference m_depth_attachment_ref;
      *  \brief Index about depth attachment in descriptions of renderpass that is
      *         used in this subpass.
      */
-    int32_t m_depth_attachment_id;
+    AttachmentReference m_depth_attachment_ref;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

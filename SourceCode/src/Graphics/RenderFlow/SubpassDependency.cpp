@@ -23,17 +23,17 @@ SOFTWARE.
 
 */
 
-#include "Subpass.h"
+#include "SubpassDependency.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-Subpass::Subpass()
-: m_depth_attachment_id(-1)
-, m_bind_point(PipelineBindPoint_MAX_DEFINE_VALUE)
+SubpassDependency::SubpassDependency()
+: m_src_spID(SD_SUBPASS_EXTERNAL)
+, m_dst_spID(SD_SUBPASS_EXTERNAL)
 {
 }
 
-Subpass::~Subpass()
+SubpassDependency::~SubpassDependency()
 {
 }
 

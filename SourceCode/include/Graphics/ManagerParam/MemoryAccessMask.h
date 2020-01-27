@@ -23,37 +23,43 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      MemoryAccessMask.h
+ *  \brief     Introduce of enum MemoryAccessMaskEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/01/26
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
-#include "MemoryAccessMask.h"
-#include "PipelineStage.h"
+#include "SDEngineMacro.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+enum MemoryAccessMaskEnum
+{
+    MemoryAccessMask_INDIRECT_COMMAND = 0,
+    MemoryAccessMask_INDEX_READ,
+    MemoryAccessMask_VERTEX_ATTRIBUTE_READ,
+    MemoryAccessMask_UNIFORM_READ,
+    MemoryAccessMask_INPUT_ATTACHMENT_READ,
+    MemoryAccessMask_SHADER_READ,
+    MemoryAccessMask_SHADER_WRITE,
+    MemoryAccessMask_COLOR_ATTACHMENT_READ,
+    MemoryAccessMask_COLOR_ATTACHMENT_WRITE,
+    MemoryAccessMask_DEPTH_STENCIL_ATTACHMENT_READ,
+    MemoryAccessMask_DEPTH_STENCIL_ATTACHMENT_WRITE,
+    MemoryAccessMask_TRANSFER_READ,
+    MemoryAccessMask_TRANSFER_WRITE,
+    MemoryAccessMask_HOST_READ,
+    MemoryAccessMask_HOST_WRITE,
+    MemoryAccessMask_MEMORY_READ,
+    MemoryAccessMask_MEMORY_WRITE,
+    MemoryAccessMask_TRANSFORM_FEEDBACK_WRITE,
+    MemoryAccessMask_TRANSFORM_FEEDBACK_COUNTER_READ,
+    MemoryAccessMask_TRANSFORM_FEEDBACK_COUNTER_WRITE,
+    MemoryAccessMask_CONDITIONAL_RENDERING_READ_BIT,
+    MemoryAccessMask_MAX_DEFINE_VALUE
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________
