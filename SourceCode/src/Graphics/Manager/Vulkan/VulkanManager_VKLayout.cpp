@@ -28,7 +28,7 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void VulkanManager::SwitchVKImageLayout(
+void VulkanManager::SwitchImageLayout(
     VkCommandBuffer i_cmd_buffer,
     VkImage i_image_handle,
     uint32_t i_sub_src_range_aspect_mask,
@@ -69,7 +69,7 @@ void VulkanManager::SwitchVKImageLayout(
     );
 }
 
-void VulkanManager::SwitchVKBufferLayout(
+void VulkanManager::SwitchBufferLayout(
     VkCommandBuffer i_cmd_buffer,
     VkBuffer i_buffer_handle,
     VkDeviceSize i_offset,

@@ -105,9 +105,6 @@ public:
     virtual void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) = 0;
     virtual void DeleteShaderModule(ShaderModuleIdentity &io_identity) = 0;
 public:
-    virtual void CreateRenderPass(RenderPassIdentity &io_identity) = 0;
-    virtual void DestroyRenderPass(RenderPassIdentity &io_identity) = 0;
-public:
 //------------- Resize Function -----------------
     virtual void Resize(Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:

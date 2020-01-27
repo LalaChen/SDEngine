@@ -97,7 +97,7 @@ VkResult VulkanManager::CopyVkBuffer(
         return result;
     }
     //--- i. set buffer memory barrier (block transfer).
-    SwitchVKBufferLayout(m_VK_main_cmd_buffer, 
+    SwitchBufferLayout(m_VK_main_cmd_buffer, 
         i_dst_buffer_handle, 0, VK_WHOLE_SIZE,
         i_src_pipe_stage_flags, 
         VK_PIPELINE_STAGE_TRANSFER_BIT);
@@ -110,7 +110,7 @@ VkResult VulkanManager::CopyVkBuffer(
     vkCmdCopyBuffer(m_VK_main_cmd_buffer, i_src_buffer_handle, i_dst_buffer_handle, 1, &buf_cpy_info);
 
     //--- iii. set buffer memory barrier (block transfer).
-    SwitchVKBufferLayout(m_VK_main_cmd_buffer,
+    SwitchBufferLayout(m_VK_main_cmd_buffer,
         i_dst_buffer_handle, 0, VK_WHOLE_SIZE,
         VK_PIPELINE_STAGE_TRANSFER_BIT,
         i_dst_pipe_stage_flags);

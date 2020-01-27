@@ -65,10 +65,6 @@ public:
      *  \brief Destructor of RenderPass.
      */
     virtual ~RenderPass();
-public:
-    void AddRenderPassDescription(const std::vector<AttachmentDescription> &i_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps);
-public:
-    void Initialize();
 protected:
     /*! \var RenderPassIdentity m_rp_identity;
      *  \brief Identity about render pass.

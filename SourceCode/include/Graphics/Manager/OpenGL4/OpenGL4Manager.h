@@ -82,9 +82,6 @@ public:
     void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
     void DeleteShaderModule(ShaderModuleIdentity &io_identity) override;
 public:
-    void CreateRenderPass(RenderPassIdentity &io_identity) override;
-    void DestroyRenderPass(RenderPassIdentity &io_identity) override;
-public:
     void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
 //--------------- Render Flow Function ------------------

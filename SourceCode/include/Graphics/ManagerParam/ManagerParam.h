@@ -55,5 +55,3 @@ SOFTWARE.
 #include "BlendOperator.h"
 #include "LogicOperator.h"
 #include "DynamicState.h"
-#include "MemoryAccessMask.h"
-#include "PipelineStage.h"

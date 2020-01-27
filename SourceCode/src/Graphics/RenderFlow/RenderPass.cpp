@@ -23,7 +23,6 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
 #include "RenderPass.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -35,18 +34,6 @@ RenderPass::RenderPass(const ObjectName &i_object_name)
 
 RenderPass::~RenderPass()
 {
-}
-
-void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescription> &i_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps)
-{
-    m_rp_identity.m_attachment_descs = i_descs;
-    m_rp_identity.m_subpasses_descs = i_sp_descs;
-    m_rp_identity.m_sp_dependencies = i_sp_deps;
-}
-
-void RenderPass::Initialize()
-{
-    GraphicsManager::GetRef().CreateRenderPass(m_rp_identity);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

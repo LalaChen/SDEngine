@@ -258,7 +258,7 @@ namespace App \
 /*! \def ENUM_TO_UINT( var )
  *  \brief convert enum to unsigned int.
  */
-#define SD_ENUM_TO_UINT( var ) static_cast<unsigned int>(var)
+#define SD_SD_ENUM_TO_UINT( var ) static_cast<unsigned int>(var)
 
 /*! \def ENUM_TO_INT( var )
  *  \brief convert enum to int.
@@ -274,13 +274,3 @@ namespace App \
   * \brief null handle.
   */
 #define SD_NULL_HANDLE 0
-
-/* \def SD_SUBPASS_EXTERNAL
- * \brief external subpass id.
- */
-#define SD_SUBPASS_EXTERNAL ~0U
-
- /* \def SD_ERROR_ATTACHMENT_REF
-  * \brief initial value about attachment reference.
-  */
-#define SD_ERROR_ATTACHMENT_REF ~0U

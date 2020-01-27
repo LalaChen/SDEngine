@@ -93,7 +93,7 @@ VkResult VulkanManager::CopyVkBufferToVkImage(
         return result;
     }
     //2. set buffer memory barrier (block when transfer).
-    SwitchVKImageLayout(m_VK_main_cmd_buffer,
+    SwitchImageLayout(m_VK_main_cmd_buffer,
         i_dst_image_handle,
         VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1,
         i_dst_image_original_layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -114,7 +114,7 @@ VkResult VulkanManager::CopyVkBufferToVkImage(
     vkCmdCopyBufferToImage(m_VK_main_cmd_buffer, i_src_buffer_handle, i_dst_image_handle, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &buf_to_img_cpy_info);
 
     //4. set buffer memory barrier (block transfer).
-    SwitchVKImageLayout(m_VK_main_cmd_buffer,
+    SwitchImageLayout(m_VK_main_cmd_buffer,
         i_dst_image_handle,
         VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, i_dst_image_final_layout,

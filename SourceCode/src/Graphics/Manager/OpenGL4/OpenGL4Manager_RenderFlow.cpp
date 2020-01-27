@@ -34,12 +34,4 @@ void OpenGL4Manager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
 {
 }
 
-void OpenGL4Manager::CreateRenderPass(RenderPassIdentity &io_identity)
-{
-}
-
-void OpenGL4Manager::DestroyRenderPass(RenderPassIdentity &io_identity)
-{
-}
-
 ______________SD_END_GRAPHICS_NAMESPACE______________

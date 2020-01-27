@@ -100,9 +100,6 @@ public:
     void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
     void DeleteShaderModule(ShaderModuleIdentity &io_identity) override;
 public:
-    void CreateRenderPass(RenderPassIdentity &io_identity) override;
-    void DestroyRenderPass(RenderPassIdentity &io_identity) override;
-public:
     void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
 //----------- Vulkan buffer private Function ------------
@@ -235,7 +232,7 @@ protected:
     void DestroyVKShaderModule(VkShaderModule &io_shader_module_handle);
 protected:
 //----------- Vulkan image layout changing Function ------------
-    void SwitchVKImageLayout(
+    void SwitchImageLayout(
         VkCommandBuffer i_cmd_buffer,
         VkImage i_image_handle,
         uint32_t i_sub_src_range_aspect_mask,
@@ -252,7 +249,7 @@ protected:
         uint32_t i_src_queue_family_id = VK_QUEUE_FAMILY_IGNORED,
         uint32_t i_dst_queue_family_id = VK_QUEUE_FAMILY_IGNORED);
 
-    void SwitchVKBufferLayout(
+    void SwitchBufferLayout(
         VkCommandBuffer i_cmd_buffer,
         VkBuffer i_buffer_handle,
         VkDeviceSize i_offset,
@@ -263,15 +260,6 @@ protected:
         VkAccessFlags i_dst_access_mask = 0,
         uint32_t i_src_queue_family_id = VK_QUEUE_FAMILY_IGNORED,
         uint32_t i_dst_queue_family_id = VK_QUEUE_FAMILY_IGNORED);
-protected:
-//----------- Vulkan render pass Function ------------
-    VkResult CreateVKRenderPass(
-        VkRenderPass &io_rp_handle,
-        const std::vector<VkAttachmentDescription> &i_vk_att_descs,
-        const std::vector<VkSubpassDescription> &i_vk_sps,
-        const std::vector<VkSubpassDependency> &i_vk_sp_dependencies);
-
-    void DestroyVKRenderPass(VkRenderPass &io_rp_handle);
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;
