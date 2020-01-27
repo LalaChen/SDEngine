@@ -35,3 +35,4 @@ SOFTWARE.
 #include "SamplerIdentity.h"
 #include "ShaderModuleIdentity.h"
 #include "GraphicsPipelineIdentity.h"
+#include "RenderPassIdentity.h"

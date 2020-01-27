@@ -20,40 +20,28 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "DependencyScope_Vulkan.h"
 
-#pragma once
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
-#include "MemoryAccessMask.h"
-#include "PipelineStage.h"
+VkDependencyFlagBits DependencyScope_Vulkan::Dependencies[DependencyScope_MAX_DEFINE_VALUE] =
+{
+    VK_DEPENDENCY_BY_REGION_BIT,
+    VK_DEPENDENCY_DEVICE_GROUP_BIT,
+    VK_DEPENDENCY_VIEW_LOCAL_BIT
+};
+
+VkDependencyFlags DependencyScope_Vulkan::Convert(const std::vector<DependencyScopeEnum> &i_src)
+{
+    VkDependencyFlags result = 0;
+    for (DependencyScopeEnum scope : i_src) {
+        if (SD_ENUM_TO_UINT(scope) < DependencyScope_MAX_DEFINE_VALUE) {
+            result |= Dependencies[SD_ENUM_TO_UINT(scope)];
+        }
+    }
+    return result;
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

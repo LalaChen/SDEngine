@@ -22,24 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "OpenGL4Manager.h"
+#include "LogManager.h"
+#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void OpenGL4Manager::CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content)
+VkResult VulkanManager::CreateVKRenderPass(
+    VkRenderPass &io_rp_handle,
+    const std::vector<VkAttachmentDescription> &i_vk_att_descs,
+    const std::vector<VkSubpassDescription> &i_vk_sps,
+    const std::vector<VkSubpassDependency> &i_vk_sp_dependencies)
 {
+    VkRenderPassCreateInfo rp_c_info = {};
+    rp_c_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    rp_c_info.flags = 0;
+    rp_c_info.pNext = nullptr;
+    rp_c_info.attachmentCount = static_cast<uint32_t>(i_vk_att_descs.size());
+    rp_c_info.pAttachments = i_vk_att_descs.data();
+    rp_c_info.dependencyCount = static_cast<uint32_t>(i_vk_sp_dependencies.size());
+    rp_c_info.pDependencies = i_vk_sp_dependencies.data();
+    rp_c_info.subpassCount = static_cast<uint32_t>(i_vk_sps.size());
+    rp_c_info.pSubpasses = i_vk_sps.data();
+   
+    return vkCreateRenderPass(m_VK_device, &rp_c_info, nullptr, &io_rp_handle);
 }
 
-void OpenGL4Manager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
+void VulkanManager::DestroyVKRenderPass(VkRenderPass &io_rp_handle)
 {
+    vkDestroyRenderPass(m_VK_device, io_rp_handle, nullptr);
+    io_rp_handle = SD_NULL_HANDLE;
 }
 
-void OpenGL4Manager::CreateRenderPass(RenderPassIdentity &io_identity)
-{
-}
-
-void OpenGL4Manager::DestroyRenderPass(RenderPassIdentity &io_identity)
-{
-}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

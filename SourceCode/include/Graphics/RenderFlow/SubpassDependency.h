@@ -36,7 +36,9 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-
+#include "PipelineStage.h"
+#include "MemoryAccessMask.h"
+#include "DependencyScope.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -46,8 +48,13 @@ public:
     SubpassDependency();
     ~SubpassDependency();
 public:
+    std::vector<DependencyScopeEnum> m_dependencies;
     uint32_t m_src_spID;
+    std::vector<MemoryAccessMaskEnum> m_src_mem_masks;
+    std::vector<PipelineStageEnum> m_src_pipeline_stages;
     uint32_t m_dst_spID;
+    std::vector<MemoryAccessMaskEnum> m_dst_mem_masks;
+    std::vector<PipelineStageEnum> m_dst_pipeline_stages;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

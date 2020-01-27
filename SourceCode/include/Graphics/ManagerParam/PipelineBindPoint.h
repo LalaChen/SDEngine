@@ -23,7 +23,7 @@ SOFTWARE.
 
 */
 
-/*! \file      PipelineBindPointEnum.h
+/*! \file      PipelineBindPoint.h
  *  \brief     Introduce of enum PipelineBindPointEnum.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/12/01
