@@ -45,8 +45,8 @@ class SDENGINE_CLASS VulkanCreationArg : public EventArg
 {
 public:
     VulkanCreationArg()
-    : m_instance{nullptr}
-    , m_surface(nullptr)
+    : m_instance{VK_NULL_HANDLE}
+    , m_surface(VK_NULL_HANDLE)
     {
     }
 

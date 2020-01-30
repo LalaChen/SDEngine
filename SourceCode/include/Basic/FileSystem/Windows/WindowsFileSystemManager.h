@@ -32,6 +32,8 @@ SOFTWARE.
 
 #pragma once
 
+#if defined(_WIN32) || defined(_WIN64) 
+
 #include "FileSystemManager.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
@@ -169,3 +171,5 @@ public:
 };
 
 _______________SD_END_BASIC_NAMESPACE________________
+
+#endif

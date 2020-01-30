@@ -20,9 +20,7 @@ VkPipelineStageFlagBits PipelineStage_Vulkan::PipelineStages[PipelineStage_MAX_D
     VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
     VK_PIPELINE_STAGE_HOST_BIT,
     VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,
-    VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-    VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT,
-    VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT
+    VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
 };
 
 VkPipelineStageFlags PipelineStage_Vulkan::Convert(const std::vector<PipelineStageEnum> &i_src)

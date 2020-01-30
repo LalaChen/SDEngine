@@ -23,6 +23,8 @@ SOFTWARE.
 
 */
 
+#if defined(_WIN32) || defined(_WIN64)
+
 #include <windows.h>
 #include <chrono>
 #include "LogManager.h"
@@ -48,3 +50,5 @@ void WindowsTimer::GetCurrentTimeByOS(double &io_time)
 }
 
 _______________SD_END_BASIC_NAMESPACE________________
+
+#endif

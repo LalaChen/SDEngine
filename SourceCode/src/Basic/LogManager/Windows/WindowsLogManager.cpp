@@ -23,6 +23,8 @@ SOFTWARE.
 
 */
 
+//------- OS Platform Only -------
+#if defined(_WIN32) || defined(_WIN64) 
 
 #include <windows.h>
 #include <cstdio>
@@ -81,3 +83,5 @@ void WindowsLogManager::LogToOutput(LogType i_type)
 }
 
 _______________SD_END_BASIC_NAMESPACE________________
+
+#endif

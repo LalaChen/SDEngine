@@ -12,7 +12,11 @@
 .vs/
 *.idb
 vc*.pdb
+*.o
+*.a
 Doc/SDEngine/
 LibraryProject/Windows/Build/
 UnitTest/Windows/Build/
+LibraryProject/Android/Build/
+UnitTest/Android/Build/
 Bin/

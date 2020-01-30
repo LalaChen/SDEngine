@@ -31,7 +31,7 @@ SOFTWARE.
  */
 
 //------- OS Platform Only -------
-#ifdef _WIN_PLATFORM_
+#if defined(_WIN32) || defined(_WIN64) 
 #include "Basic/LogManager/Windows/WindowsLogManager.h"
 #include "Basic/Timer/Windows/WindowsTimer.h"
 #include "Basic/FileSystem/Windows/WindowsFileSystemManager.h"
@@ -39,6 +39,7 @@ SOFTWARE.
 #include "Graphics/Manager/OpenGL4/OpenGL4Manager.h"
 #include "Graphics/Manager/Vulkan/VulkanManager.h"
 #include "Graphics/Manager/Vulkan/VulkanCreationArg.h"
-#elif _ANDROID_PLATFORM_
-
+#elif defined(__ANDROID__)
+#include "Graphics/Manager/Vulkan/VulkanManager.h"
+#include "Graphics/Manager/Vulkan/VulkanCreationArg.h"
 #endif

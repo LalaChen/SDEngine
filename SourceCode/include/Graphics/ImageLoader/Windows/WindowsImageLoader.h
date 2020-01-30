@@ -30,6 +30,11 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+ //------- OS Platform Only -------
+#if defined(_WIN32) || defined(_WIN64) 
+
+#pragma once
+
 #include "ImageLoader.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -63,3 +68,5 @@ public:
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
+
+#endif

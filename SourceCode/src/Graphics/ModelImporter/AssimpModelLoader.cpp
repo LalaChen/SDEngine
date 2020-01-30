@@ -117,7 +117,7 @@ bool AssimpModelLoader::ImportModel(const FilePathString &i_model_fn, ModelData 
         SDLOGD("%s", model_str.c_str());
     }
     else {
-        SDLOGW("File[%s] can't be open!!!", i_model_fn);
+        SDLOGW("File[%s] can't be open!!!", i_model_fn.c_str());
     }
     return true;
 }

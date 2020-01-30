@@ -55,8 +55,6 @@ enum PipelineStageEnum
     PipelineStage_HOST,
     PipelineStage_ALL_GRAPHICS,
     PipelineStage_ALL_COMMANDS,
-    PipelineStage_TRANSFORM_FEEDBACK,
-    PipelineStage_CONDITIONAL_RENDERING_BIT,
     PipelineStage_MAX_DEFINE_VALUE
 };
 

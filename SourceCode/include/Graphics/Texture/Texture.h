@@ -52,7 +52,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Texture);
  *  is sampler. Sampler is used to tell graphics card how to get data. We need to set mag and min filter, wrap mode about texture coordinate,
  *  getting nearest texel or linear interpolated texels, ...etc.
  */
-class SDENGINE_API Texture : public Object
+class SDENGINE_CLASS Texture : public Object
 {
 public:
     /*! \fn explicit Texture(const ObjectName &i_object_name);

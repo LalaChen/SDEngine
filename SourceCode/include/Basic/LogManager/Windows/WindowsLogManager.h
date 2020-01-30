@@ -32,6 +32,8 @@ SOFTWARE.
 
 #pragma once
 
+#if defined(_WIN32) || defined(_WIN64) 
+
 #include "LogManager.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
@@ -78,3 +80,5 @@ protected:
 };
 
 _______________SD_END_BASIC_NAMESPACE________________
+
+#endif

@@ -31,6 +31,8 @@ SOFTWARE.
  */
 #pragma once
 
+#if defined(_WIN32) || defined(_WIN64)
+
 #include "GraphicsManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -94,3 +96,5 @@ protected:
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
+
+#endif

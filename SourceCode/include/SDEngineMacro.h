@@ -31,22 +31,45 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 #pragma once
-#pragma warning( disable : 4251 ) //For dllexport warning of STL
+
+#if defined(_WIN32) || defined(_WIN64)
+    #pragma warning( disable : 4251 ) //For dllexport warning of STL
+#endif
 
 //DLL Import/Export
-#ifdef SDENGINE_EXPORTS
-#define SDENGINE_API __declspec(dllexport)
+#if defined(SDENGINE_EXPORTS)
+    #if defined(_WIN32) || defined(_WIN64)
+        #define SDENGINE_API __declspec(dllexport)
+    #else
+        #define SDENGINE_API
+    #endif
 #else
-#define SDENGINE_API __declspec(dllimport)
+    #if defined(_WIN32) || defined(_WIN64)
+        #define SDENGINE_API __declspec(dllimport)
+    #else
+        #define SDENGINE_API
+    #endif
 #endif
 
 #ifdef SDENGINE_EXPORTS
-#define SDENGINE_CLASS __declspec(dllexport)
+    #if defined(_WIN32) || defined(_WIN64)
+        #define SDENGINE_CLASS __declspec(dllexport)
+    #else
+        #define SDENGINE_CLASS
+    #endif
 #else
-#define SDENGINE_CLASS __declspec(dllimport)
+    #if defined(_WIN32) || defined(_WIN64)
+        #define SDENGINE_CLASS __declspec(dllimport)
+    #else
+        #define SDENGINE_CLASS
+    #endif
 #endif
 
-#define SDENGINE_STDCALL_API __stdcall
+#if defined(_WIN32) || defined(_WIN64)
+    #define SDENGINE_STDCALL_API __stdcall
+#else
+    #define SDENGINE_STDCALL_API
+#endif
 
 //Code Page
 #define SD_DEFAULT_CODE_PAGE 936

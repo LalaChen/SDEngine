@@ -46,7 +46,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Object);
  *  \brief In our system, class object is the root of all classes those instances will be kept
  *  in several places. What's more, we will define some common behavior for those object.
  */
-class SDENGINE_API Object : public std::enable_shared_from_this<Object>
+class SDENGINE_CLASS Object : public std::enable_shared_from_this<Object>
 {
 public:
     /*! \fn explicit Object(const ObjectName &i_object_name);

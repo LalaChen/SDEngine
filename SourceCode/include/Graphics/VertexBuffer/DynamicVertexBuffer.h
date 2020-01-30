@@ -41,7 +41,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  */
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DynamicVertexBuffer);
 
-class SDENGINE_API DynamicVertexBuffer : public VertexBuffer
+class SDENGINE_CLASS DynamicVertexBuffer : public VertexBuffer
 {
 public:
     /*! \fn explicit DynamicVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format);

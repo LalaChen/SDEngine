@@ -23,6 +23,8 @@ SOFTWARE.
 
 */
 
+#if defined(_WIN32) || defined(_WIN64) 
+
 #include <locale>
 #include <windows.h>
 #include <direct.h>
@@ -337,3 +339,5 @@ FilePathString WindowsFileSystemManager::GetExeFilePath()
 }
 
 _______________SD_END_BASIC_NAMESPACE________________
+
+#endif

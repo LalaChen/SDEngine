@@ -41,7 +41,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  */
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(StaticVertexBuffer);
 
-class SDENGINE_API StaticVertexBuffer : public VertexBuffer
+class SDENGINE_CLASS StaticVertexBuffer : public VertexBuffer
 {
 public:
     /*! \fn explicit StaticVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format);

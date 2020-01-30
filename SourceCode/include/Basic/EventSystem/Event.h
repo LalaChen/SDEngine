@@ -49,7 +49,7 @@ ______________SD_START_BASIC_NAMESPACE_______________
  *  
  *  \sa More introduction about event and slot system at \ref EventSlotSystem
  */
-class SDENGINE_API Event : public Object
+class SDENGINE_CLASS Event : public Object
 {
 public:
     /*! \var typedef std::list< FunctionSlotBaseReferenceObject > SlotFunctionContainer

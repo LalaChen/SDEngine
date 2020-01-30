@@ -105,7 +105,7 @@ public:
  */
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Bitmap);
 
-class SDENGINE_API Bitmap : public Object
+class SDENGINE_CLASS Bitmap : public Object
 {
 public:
 	Bitmap(const ObjectName &i_object_name);

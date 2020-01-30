@@ -23,11 +23,15 @@ SOFTWARE.
 
 */
 
+#include <vector>
 #include <locale>
 #include <cstdlib>
 #include <cstring>
-#ifdef _WIN_PLATFORM_
-#include <windows.h>
+#if defined(_WIN32) || defined(_WIN64) 
+    #include <windows.h>
+#else
+    #include <ctime>
+    #include <string.h>
 #endif
 
 #include "SDEngineCommonFunction.h"
@@ -41,16 +45,20 @@ std::string StringFormat(const char *i_fmt_str, ...)
     va_list ap;
     while (1) {
         buffer.resize(n); /* Wrap the plain char array into the unique_ptr */
-        strcpy_s(&buffer[0], n, i_fmt_str);
+#if defined(_WIN32) || defined(_WIN64) 
+        strcpy_s(buffer.data(), n, i_fmt_str);
+#else
+        strcpy(buffer.data(), i_fmt_str);
+#endif
         va_start(ap, i_fmt_str);
-        final_n = vsnprintf(&buffer[0], n, i_fmt_str, ap);
+        final_n = vsnprintf(buffer.data(), n, i_fmt_str, ap);
         va_end(ap);
         if (final_n < 0 || final_n >= n)
             n += abs(final_n - n + 1);
         else
             break;
     }
-    return std::string(&buffer[0]);
+    return std::string(buffer.data());
 }
 
 std::wstring WStringFormat(const char *i_fmt_str, ...)
@@ -60,16 +68,20 @@ std::wstring WStringFormat(const char *i_fmt_str, ...)
     va_list ap;
     while (1) {
         buffer.resize(n); /* Wrap the plain char array into the unique_ptr */
-        strcpy_s(&buffer[0], n, i_fmt_str);
+#if defined(_WIN32) || defined(_WIN64) 
+        strcpy_s(buffer.data(), n, i_fmt_str);
+#else
+        strcpy(buffer.data(), i_fmt_str);
+#endif
         va_start(ap, i_fmt_str);
-        final_n = vsnprintf(&buffer[0], n, i_fmt_str, ap);
+        final_n = vsnprintf(buffer.data(), n, i_fmt_str, ap);
         va_end(ap);
         if (final_n < 0 || final_n >= n)
             n += abs(final_n - n + 1);
         else
             break;
     }
-    return StringToWString(std::string(&buffer[0]));
+    return StringToWString(std::string(buffer.data()));
 }
 
 void StringSplit(const std::string &i_s, char i_delim, std::vector<std::string> &io_elems)
@@ -147,7 +159,7 @@ std::wstring StringToWString(const std::string& i_str, CodePageID i_code_page_id
     size_t result_size = i_str.length() + 1;
     result.resize(result_size);
     result[result_size] = L'\0';
-#ifdef _WIN_PLATFORM_
+#if defined(_WIN32) || defined(_WIN64) 
     MultiByteToWideChar(i_code_page_id, 0, i_str.c_str(), -1, &result[0], static_cast<int>(result_size));
 #else
 #endif
@@ -160,10 +172,14 @@ std::string WStringToString(const std::wstring& i_wstr, CodePageID i_code_page_i
     std::string result;
     size_t result_size = i_wstr.size() * 2 + 1;
     result.resize(result_size);
-#ifdef _WIN_PLATFORM_
+#if defined(_WIN32) || defined(_WIN64) 
     int real_length = WideCharToMultiByte(i_code_page_id, 0, i_wstr.c_str(), -1, &result[0], static_cast<int>(result_size), NULL, NULL);
-    if(real_length < 0) real_length = 0;
-    else real_length = static_cast<int>(strlen(result.c_str()));
+    if (real_length < 0) {
+        real_length = 0;
+    }
+    else {
+        real_length = static_cast<int>(strlen(result.c_str()));
+    }
     result.resize(real_length);
 #else
 #endif
@@ -172,20 +188,34 @@ std::string WStringToString(const std::wstring& i_wstr, CodePageID i_code_page_i
 
 std::string GetLocalTimeByFormat(time_t i_time, const std::string &i_format)
 {
-    if (i_time == -1) i_time = 0;
-    char time_str[256];
+    if (i_time == -1) {
+        i_time = 0;
+    }
+
+    char time_str[256] = {'\0'};
     tm tf;
+#if defined(_WIN32) || defined(_WIN64) 
     localtime_s(&tf, &i_time);
+#else
+    localtime_r(&i_time, &tf);
+#endif
     strftime(time_str, 256, i_format.c_str(), &tf);
     return std::string(time_str);
 }
 
 std::string GetLocalTimeYMDHMS(time_t i_time)
 {
-    if (i_time == -1) i_time = 0;
-    char time_str[256];
+    if (i_time == -1) {
+        i_time = 0;
+    }
+
+    char time_str[256] = {'\0'};
     tm tf;
+#if defined(_WIN32) || defined(_WIN64) 
     localtime_s(&tf, &i_time);
+#else
+    localtime_r(&i_time, &tf);
+#endif
     strftime(time_str, 256, "%Y-%m-%d %H:%M:%S", &tf);
     return std::string(time_str);
 }
@@ -193,9 +223,13 @@ std::string GetLocalTimeYMDHMS(time_t i_time)
 std::string GetLocalTimeYMDHMSForFile(time_t i_time)
 {
     if (i_time == -1) i_time = 0;
-    char time_str[256];
+    char time_str[256] = {'\0'};
     tm tf;
+#if defined(_WIN32) || defined(_WIN64) 
     localtime_s(&tf, &i_time);
+#else
+    localtime_r(&i_time, &tf);
+#endif
     strftime(time_str, 256, "%Y-%m-%d-%H-%M-%S", &tf);
     return std::string(time_str);
 }
@@ -227,10 +261,10 @@ time_t ConvertTMToTimeT(const tm &i_monent)
 std::string ReplaceIllegalCharOfFile(const std::string &i_str, const char i_replace_symbol)
 {
     std::string result = i_str;
-    for (int idx = 0; idx < result.size(); idx++)
-    {
-        if (result[idx] == '\\' || result[idx] == '/' || result[idx] == ':' || result[idx] == '!' || result[idx] == '*' || result[idx] == '?' || result[idx] == '<' || result[idx] == '>' || result[idx] == '|')
+    for (int idx = 0; idx < result.size(); idx++) {
+        if (result[idx] == '\\' || result[idx] == '/' || result[idx] == ':' || result[idx] == '!' || result[idx] == '*' || result[idx] == '?' || result[idx] == '<' || result[idx] == '>' || result[idx] == '|') {
             result[idx] = i_replace_symbol;
+        }
     }
     return result;
 }

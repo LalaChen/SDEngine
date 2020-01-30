@@ -82,7 +82,6 @@ bool Event::RegisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &i_
 bool Event::UnregisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
-    bool is_slot_existed = false;
     SlotFunctionContainer::iterator slot_iterator;
     //If this slot is null, we return false.
     if (i_function_slot_ref_obj.IsNull() == true)
@@ -105,9 +104,7 @@ bool Event::UnregisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &
                 slot_iterator++;
             }
         }
-
         return false;
-
     }
 }
 

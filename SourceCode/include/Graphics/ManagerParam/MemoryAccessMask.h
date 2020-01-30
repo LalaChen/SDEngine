@@ -55,10 +55,6 @@ enum MemoryAccessMaskEnum
     MemoryAccessMask_HOST_WRITE,
     MemoryAccessMask_MEMORY_READ,
     MemoryAccessMask_MEMORY_WRITE,
-    MemoryAccessMask_TRANSFORM_FEEDBACK_WRITE,
-    MemoryAccessMask_TRANSFORM_FEEDBACK_COUNTER_READ,
-    MemoryAccessMask_TRANSFORM_FEEDBACK_COUNTER_WRITE,
-    MemoryAccessMask_CONDITIONAL_RENDERING_READ_BIT,
     MemoryAccessMask_MAX_DEFINE_VALUE
 };
 

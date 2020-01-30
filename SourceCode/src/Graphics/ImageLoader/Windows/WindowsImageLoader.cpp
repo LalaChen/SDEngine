@@ -30,6 +30,8 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#if defined(_WIN32) || defined(_WIN64) 
+
 #include <IL/il.h>
 #include <IL/ilu.h>
 
@@ -170,3 +172,5 @@ BitmapStrongReferenceObject WindowsImageLoader::LoadBitmap(const FilePathString 
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
+
+#endif

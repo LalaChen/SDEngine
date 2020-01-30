@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28306.52
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{CBFA495C-9FB0-4FD0-B48C-A6533BC886D4}"
 EndProject
@@ -74,9 +74,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest_MathTest", "UnitTe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{E2FC5B21-5F73-450D-BF49-AF3241D7CED7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDEngine", "LibraryProject\Android\SDEngine.vcxproj", "{AD998961-99D3-430B-AF01-B11DED5D6E9F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDEngine", "LibraryProject\SDEngine\SDEngine.vcxitems", "{5B2A5908-1A6B-4A51-BF36-3C9513BF58C5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDEngine", "LibraryProject\Android\SDEngine\SDEngine.vcxproj", "{AD998961-99D3-430B-AF01-B11DED5D6E9F}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		LibraryProject\SDEngine\SDEngine.vcxitems*{5b2a5908-1a6b-4a51-bf36-3c9513bf58c5}*SharedItemsImports = 9
+		LibraryProject\SDEngine\SDEngine.vcxitems*{91519087-b1b1-4962-a0a3-4c1e8cff40ce}*SharedItemsImports = 4
+		LibraryProject\SDEngine\SDEngine.vcxitems*{ad998961-99d3-430b-af01-b11ded5d6e9f}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
 		Debug|ARM64 = Debug|ARM64
@@ -225,17 +232,13 @@ Global
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Debug|ARM64.ActiveCfg = Debug|ARM64
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Debug|ARM64.Build.0 = Debug|ARM64
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Debug|x64.ActiveCfg = Debug|x64
-		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Debug|x64.Build.0 = Debug|x64
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Debug|x86.ActiveCfg = Debug|x86
-		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Debug|x86.Build.0 = Debug|x86
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Release|ARM.ActiveCfg = Release|ARM
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Release|ARM.Build.0 = Release|ARM
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Release|ARM64.ActiveCfg = Release|ARM64
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Release|ARM64.Build.0 = Release|ARM64
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Release|x64.ActiveCfg = Release|x64
-		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Release|x64.Build.0 = Release|x64
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Release|x86.ActiveCfg = Release|x86
-		{AD998961-99D3-430B-AF01-B11DED5D6E9F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -256,6 +259,7 @@ Global
 		{98ED0BEB-A954-4EE4-AA56-B3645574F3FD} = {35CA8864-0D53-4C5C-8D58-A40126A60F86}
 		{48CCB863-0241-415B-94E2-C3406E7A670C} = {F0640846-8B42-4026-B513-88B00E0747A6}
 		{E2FC5B21-5F73-450D-BF49-AF3241D7CED7} = {CBFA495C-9FB0-4FD0-B48C-A6533BC886D4}
+		{5B2A5908-1A6B-4A51-BF36-3C9513BF58C5} = {CBFA495C-9FB0-4FD0-B48C-A6533BC886D4}
 		{AD998961-99D3-430B-AF01-B11DED5D6E9F} = {E2FC5B21-5F73-450D-BF49-AF3241D7CED7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

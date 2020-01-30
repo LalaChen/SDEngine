@@ -32,8 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include <vulkan/vulkan.h>
-
+#include "VulkanWrapper.h"
 #include "GraphicsManager.h"
 
 using SDE::Basic::UBytePtr;

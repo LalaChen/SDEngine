@@ -118,7 +118,6 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
 void VulkanManager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
 {
     VkResult result;
-    const VkBuffer &vk_buffer_handle = reinterpret_cast<const VkBuffer&>(i_identity.m_buffer_handle);
     const VkDeviceMemory &vk_memory_handle = reinterpret_cast<const VkDeviceMemory&>(i_identity.m_memory_handle);
     result = RefreshDataToHostVisibleVKDeviceMemory(vk_memory_handle, i_identity.m_memory_size, i_data_ptr, i_data_size);
     if (result != VK_SUCCESS) {
@@ -139,7 +138,6 @@ void VulkanManager::DeleteVertexBuffer(VertexBufferIdentity &io_identity)
 
 void VulkanManager::MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle)
 {
-    const VkBuffer &vk_buffer_handle = reinterpret_cast<const VkBuffer&>(i_identity.m_buffer_handle);
     const VkDeviceMemory &vk_memory_handle = reinterpret_cast<const VkDeviceMemory&>(i_identity.m_memory_handle);
     MapVkDeviceMemory(vk_memory_handle, i_identity.m_memory_size, io_buffer_handle);
 }

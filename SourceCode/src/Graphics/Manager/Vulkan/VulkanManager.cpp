@@ -83,6 +83,9 @@ VulkanManager::VulkanManager()
 , m_queue_size(3)
 {
     SDLOG("New VulkanManager object.");
+    if (InitVulkanFunction() == false) {
+        SDLOGE("Initialize vulkan function ptrs failure.");
+    }
 }
 
 VulkanManager::~VulkanManager()
@@ -93,6 +96,7 @@ VulkanManager::~VulkanManager()
 void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
     SDLOG("Initialize VulkanManager.");
+    
     if (typeid(i_arg).hash_code() == typeid(VulkanCreationArg).hash_code()) {
         VulkanCreationArg vk_c_arg = dynamic_cast<const VulkanCreationArg&>(i_arg);
 
@@ -242,7 +246,7 @@ void VulkanManager::RenderToScreen()
 
     VkResult result = vkAcquireNextImageKHR(
         m_VK_device, m_VK_swap_chain, MaxImgAcqirationTime, 
-        m_VK_acq_img_semaphore, nullptr, &image_index);
+        m_VK_acq_img_semaphore, VK_NULL_HANDLE, &image_index);
 
     if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
         SDLOGW("We can't get nxt swapchain image.");
