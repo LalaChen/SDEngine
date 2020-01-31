@@ -63,32 +63,32 @@
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
-    <Import Project="..\..\..\PropSheet\SDThirdParty_DevIL.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
-    <Import Project="..\..\..\PropSheet\SDThirdParty_DevIL.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
-    <Import Project="..\..\..\PropSheet\SDThirdParty_DevIL.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
-    <Import Project="..\..\..\PropSheet\SDThirdParty_DevIL.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -133,8 +133,8 @@ mkdir $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)\
 xcopy /y $(SDEngineRootDir)ThirdParty\GLEW\bin\$(Configuration)\$(Platform)\glew32.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\GLFW\bin\$(Platform)\$(Configuration)\glfw3.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Vulkan\bin\vulkan-1.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
-xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\DevIL.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
-xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\ILU.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+rem  xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\DevIL.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+rem xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\ILU.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\assimp.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
@@ -162,8 +162,8 @@ mkdir $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)\
 xcopy /y $(SDEngineRootDir)ThirdParty\GLEW\bin\$(Configuration)\$(Platform)\glew32.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\GLFW\bin\$(Platform)\$(Configuration)\glfw3.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Vulkan\bin\vulkan-1.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
-xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\DevIL.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
-xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\ILU.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+rem  xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\DevIL.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+rem xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\ILU.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\assimp.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
@@ -194,8 +194,8 @@ mkdir $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)\
 xcopy /y $(SDEngineRootDir)ThirdParty\GLEW\bin\$(Configuration)\$(Platform)\glew32.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\GLFW\bin\$(Platform)\$(Configuration)\glfw3.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Vulkan\bin\vulkan-1.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
-xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\DevIL.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
-xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\ILU.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+rem  xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\DevIL.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+rem xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\ILU.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\assimp.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
@@ -226,8 +226,8 @@ mkdir $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)\
 xcopy /y $(SDEngineRootDir)ThirdParty\GLEW\bin\$(Configuration)\$(Platform)\glew32.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\GLFW\bin\$(Platform)\$(Configuration)\glfw3.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Vulkan\bin\vulkan-1.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
-xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\DevIL.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
-xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\ILU.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+rem  xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\DevIL.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+rem xcopy /y $(SDEngineRootDir)ThirdParty\DevIL\lib\$(Platform)\unicode\ILU.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\assimp.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>

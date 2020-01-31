@@ -35,7 +35,6 @@ SOFTWARE.
 #include "Basic/LogManager/Windows/WindowsLogManager.h"
 #include "Basic/Timer/Windows/WindowsTimer.h"
 #include "Basic/FileSystem/Windows/WindowsFileSystemManager.h"
-#include "Graphics/ImageLoader/Windows/WindowsImageLoader.h"
 #include "Graphics/Manager/OpenGL4/OpenGL4Manager.h"
 #include "Graphics/Manager/Vulkan/VulkanManager.h"
 #include "Graphics/Manager/Vulkan/VulkanCreationArg.h"

@@ -70,9 +70,6 @@
     <Filter Include="include\Graphics\ImageLoader">
       <UniqueIdentifier>{2c28e87e-d5f0-4ae9-a4fa-4a8cf1500a5d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Graphics\ImageLoader\Windows">
-      <UniqueIdentifier>{76ba78aa-09fc-4c5d-b85a-881c0168c0c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\Graphics\Texture">
       <UniqueIdentifier>{912f96e0-80a9-437b-ab99-3220b3fb8b3c}</UniqueIdentifier>
     </Filter>
@@ -159,9 +156,6 @@
     </Filter>
     <Filter Include="src\Graphics\ImageLoader">
       <UniqueIdentifier>{0c888e34-0a43-401f-8452-180b120674ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Graphics\ImageLoader\Windows">
-      <UniqueIdentifier>{64b2ede9-8706-46ee-91f2-cacf65616cdf}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Graphics\Texture">
       <UniqueIdentifier>{e9a9d0b7-77bb-4b44-a777-0152405b658c}</UniqueIdentifier>
@@ -467,9 +461,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ImageLoader\ImageLoader.h">
       <Filter>include\Graphics\ImageLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ImageLoader\Windows\WindowsImageLoader.h">
-      <Filter>include\Graphics\ImageLoader\Windows</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Texture\Texture.h">
       <Filter>include\Graphics\Texture</Filter>
@@ -784,9 +775,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ImageLoader\ImageLoader.cpp">
       <Filter>src\Graphics\ImageLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ImageLoader\Windows\WindowsImageLoader.cpp">
-      <Filter>src\Graphics\ImageLoader\Windows</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Texture\Texture.cpp">
       <Filter>src\Graphics\Texture</Filter>

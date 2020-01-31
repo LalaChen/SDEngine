@@ -109,7 +109,7 @@ void Bitmap::DecideNumberOfChannel(int i_n_of_c)
 		m_num_of_c = 1;
 		m_v_type = BitmapPixelDataType_UNSIGNED_BYTE;
 	}
-	else if (m_config == BitmapConfig_DevIL || m_config == BitmapConfig_HARDWARE) {
+	else if (m_config == BitmapConfig_DevIL || m_config == BitmapConfig_STB || m_config == BitmapConfig_HARDWARE) {
 		m_num_of_c   = i_n_of_c;
 		//v_type setted on outside.
 	}
@@ -147,7 +147,7 @@ bool Bitmap::SetBitmap(const BitmapConfig &i_conf, Size_ui32 i_width, Size_ui32 
 		m_height      = i_height;
 		m_buffer_size = i_size;
 		DecideNumberOfChannel(i_n_of_c);
-		m_bitmap = new unsigned char[m_buffer_size];
+		m_bitmap = new UByte[m_buffer_size];
 		std::memcpy(m_bitmap, i_data, m_buffer_size);
 		return true;
 	}

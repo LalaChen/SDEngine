@@ -52,6 +52,7 @@ enum BitmapConfigEnum
     BitmapConfig_RGBA_8888,
     //---------- IL ------------
     BitmapConfig_DevIL,
+    BitmapConfig_STB,
     //----- Android Bitmap -----
     BitmapConfig_ALPHA_8,
     BitmapConfig_RGBA_4444,

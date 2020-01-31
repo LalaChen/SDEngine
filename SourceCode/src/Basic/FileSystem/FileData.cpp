@@ -68,12 +68,12 @@ size_t FileData::GetSize() const
 
 const BytePtr FileData::GetDataCharAddr() const
 {
-    return (const BytePtr)(&m_file_content[0]);
+    return (const BytePtr)(m_file_content.data());
 }
 
 const UBytePtr FileData::GetDataUCharAddr() const
 {
-    return (const UBytePtr)(&m_file_content[0]);
+    return (const UBytePtr)(m_file_content.data());
 }
 
 std::string FileData::GetDataString() const

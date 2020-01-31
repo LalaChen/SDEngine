@@ -31,8 +31,8 @@ void VulkanTestGLFWApplication::Initialize()
     Timer::GetRef().Start();
     SDLOG("APP Starting at %lf.", Timer::GetRef().GetProgramStartTime());
     //new ImageWindowsLoader
-    new WindowsImageLoader();
-    WindowsImageLoader::GetRef().Initialize();
+    new ImageLoader();
+    ImageLoader::GetRef().Initialize();
     //new graphics engine.
     if (m_adopt_library == GraphicsLibrary_OpenGL4) {
         new OpenGL4Manager();

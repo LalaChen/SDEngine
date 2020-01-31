@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <StbRoot>$(SDEngineRootDir)ThirdParty\stb_image\</StbRoot>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_PropertySheetDisplayName>SDThridParty_StbImage</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(StbRoot)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="StbRoot">
+      <Value>$(StbRoot)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

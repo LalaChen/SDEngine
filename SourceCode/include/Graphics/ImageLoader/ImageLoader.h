@@ -34,6 +34,7 @@
 #include "FileSystemManager.h"
 #include "Bitmap.h"
 
+using SDE::Basic::UBytePtr;
 using SDE::Basic::FilePathString;
 using SDE::Basic::FileSystemManager;
 
@@ -58,16 +59,22 @@ public:
 public:
     SD_SINGLETON_DECLARATION(ImageLoader);
 public:
-    /*! \fn virtual void Initialize() = 0;
+    /*! \fn virtual void Initialize();
      *  \brief Initialize image loader.
      */
-    virtual void Initialize() = 0;
+    virtual void Initialize();
 public:
     /*! \fn virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
      *  \param [in] i_fp File path of image data.
      *  \brief Load data.
      */
-	virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
+	virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const;
+
+    /*! \fn virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
+     *  \param [in] i_fp File path of image data.
+     *  \brief Load data.
+     */
+    virtual BitmapStrongReferenceObject LoadBitmap(const ObjectName &i_name, const UBytePtr i_file_buffer, size_t i_file_size) const;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
