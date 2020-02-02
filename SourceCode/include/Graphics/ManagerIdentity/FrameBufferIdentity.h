@@ -23,19 +23,35 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
+/*! \file      FrameBufferIdentity.h
+ *  \brief     Introduce of classes about handle of frame buffer.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/01/31
  *  \copyright MIT License.
  */
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
+#pragma once
+
+#include <vector>
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 #include "ImageViewIdentity.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class SDENGINE_CLASS FrameBufferIdentity
+{
+public:
+    FrameBufferIdentity();
+    ~FrameBufferIdentity();
+public:
+    CompHandle m_fb_handle;
+    CompHandle m_rp_handle;
+    Size_ui32 m_width;
+    Size_ui32 m_height;
+    Size_ui32 m_layer;
+    std::vector<ImageViewIdentity> m_iv_identities;
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

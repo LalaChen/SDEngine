@@ -106,6 +106,7 @@ void GLFWApplication::InitializeGraphicsSystem()
     if (m_adopt_library == GraphicsLibrary_OpenGL4) {
         glfwMakeContextCurrent(m_window);
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
+        GraphicsManager::GetRef().Initialize();
         glfwSwapInterval(1);
     }
     else if (m_adopt_library == GraphicsLibrary_Vulkan) {
@@ -189,12 +190,14 @@ void GLFWApplication::InitializeGraphicsSystem()
         arg.m_instance = instance;
         arg.m_surface = surface;
         GraphicsManager::GetRef().InitializeGraphicsSystem(arg);
+        GraphicsManager::GetRef().Initialize();
 
     }
     else 
     {
         glfwMakeContextCurrent(m_window);
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
+        GraphicsManager::GetRef().Initialize();
         glfwSwapInterval(1);
     }
 }
@@ -202,6 +205,7 @@ void GLFWApplication::InitializeGraphicsSystem()
 void GLFWApplication::ReleaseGraphicsSystem()
 {
     SDLOG("Release Graphics System of Application.");
+    GraphicsManager::GetRef().Release();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
     //destroy Graphics Manager.
     GraphicsManager::Destroy();

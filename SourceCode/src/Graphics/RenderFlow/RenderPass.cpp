@@ -37,9 +37,9 @@ RenderPass::~RenderPass()
 {
 }
 
-void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescription> &i_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps)
+void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescription> & i_att_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps)
 {
-    m_rp_identity.m_attachment_descs = i_descs;
+    m_rp_identity.m_attachment_descs = i_att_descs;
     m_rp_identity.m_subpasses_descs = i_sp_descs;
     m_rp_identity.m_sp_dependencies = i_sp_deps;
 }
@@ -47,6 +47,16 @@ void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescriptio
 void RenderPass::Initialize()
 {
     GraphicsManager::GetRef().CreateRenderPass(m_rp_identity);
+}
+
+std::vector<ImageViewIdentity> RenderPass::CreateImageViewDescriptions() const
+{
+    std::vector<ImageViewIdentity> infos;
+    infos.resize(m_rp_identity.m_attachment_descs.size());
+    for (uint32_t id = 0; id < infos.size(); ++id) {
+        infos[id].m_format = m_rp_identity.m_attachment_descs[id].m_format;
+    }
+    return infos;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

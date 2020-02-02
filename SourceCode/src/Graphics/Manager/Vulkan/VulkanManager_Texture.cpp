@@ -29,13 +29,17 @@ SOFTWARE.
 #include "SamplerBorderColorType_Vulkan.h"
 #include "SamplerWrapMode_Vulkan.h"
 #include "CompareOp_Vulkan.h"
+#include "ImageLayout_Vulkan.h"
+#include "ImageUsage_Vulkan.h"
+#include "ImageTiling_Vulkan.h"
+#include "SampleCount_Vulkan.h"
 #include "ManagerParam.h"
 #include "LogManager.h"
 #include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size)
+void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity)
 {
     VkResult result = VK_SUCCESS;
     VkImage &image_handle = reinterpret_cast<VkImage&>(io_tex_identity.m_image_handle);
@@ -43,6 +47,11 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
     VkDeviceSize &allocated_size = reinterpret_cast<VkDeviceSize&>(io_tex_identity.m_allocated_size);
     VkImageType image_type = TextureType_Vulkan::Convert(io_tex_identity.m_texture_type);
     VkFormat image_format = TextureFormat_Vulkan::Convert(io_tex_identity.m_texture_format);
+    VkImageLayout init_layout = ImageLayout_Vulkan::Convert(io_tex_identity.m_init_layout);
+    VkImageUsageFlags init_usages = ImageUsage_Vulkan::Convert(io_tex_identity.m_image_usages);
+    VkImageTiling image_tiling = ImageTiling_Vulkan::Convert(io_tex_identity.m_tiling);
+    VkSampleCountFlagBits sample_count = SampleCount_Vulkan::Convert(io_tex_identity.m_sample_count);
+
     VkExtent3D image_size = { 
         io_tex_identity.m_image_size.m_width,
         io_tex_identity.m_image_size.m_height,
@@ -53,10 +62,11 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
     result = CreateVkImage(
         image_handle,
         image_type, image_format, image_size,
-        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
-        VK_IMAGE_LAYOUT_UNDEFINED,
+        init_usages,
+        sample_count,
+        init_layout,
         io_tex_identity.m_mipmap_levels, io_tex_identity.m_array_layers,
-        VK_IMAGE_TILING_OPTIMAL,
+        image_tiling,
         VK_SHARING_MODE_EXCLUSIVE);
 
     if (result != VK_SUCCESS) {
@@ -72,12 +82,9 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
         return;
     }
 
-    //3. Refresh texture image.
-    RefreshTextureImage(io_tex_identity, i_data_ptr, ImageOffset(), io_tex_identity.m_image_size, i_data_size);
-
-    //4. Create sampler for this texture.
+    //3. Create sampler for this texture.
     float max_lod = static_cast<float>(io_tex_identity.m_mipmap_levels);
-    VkSampler &sampler_handle = reinterpret_cast<VkSampler&>(io_sampler_identity.m_sampler);
+    VkSampler &sampler_handle = reinterpret_cast<VkSampler&>(io_sampler_identity.m_sampler_handle);
     result = CreateVkSampler(
         sampler_handle,
         SamplerFilterType_Vulkan::Convert(io_sampler_identity.m_min_filter_type),
@@ -102,7 +109,7 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
     }
 }
 
-void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size)
+void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum& i_dst_layout)
 {
     if (i_identity.m_image_handle != VK_NULL_HANDLE && 
         i_data_size <= i_identity.m_allocated_size && 
@@ -139,12 +146,17 @@ void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidP
         }
 
         //3. Copy host buffer to image.
+        VkImageLayout init_layout = ImageLayout_Vulkan::Convert(i_identity.m_init_layout);
+        VkImageLayout dst_layout = init_layout;
+        if (i_dst_layout != ImageLayout_MAX_DEFINE_VALUE) {
+            dst_layout = ImageLayout_Vulkan::Convert(i_dst_layout);
+        }
         CopyVkBufferToVkImage(
             staging_buffer_handle, i_data_size,
             image_handle, image_offset, image_size,
-            0, VK_ACCESS_SHADER_READ_BIT,
-            VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_VERTEX_SHADER_BIT
+            0, 0,
+            init_layout, dst_layout,
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
         );
         //4. destroy host buffer.
         FreeVkDeviceMemory(staging_memory);

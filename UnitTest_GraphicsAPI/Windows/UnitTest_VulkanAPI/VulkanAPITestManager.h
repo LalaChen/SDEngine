@@ -14,6 +14,9 @@ public:
     void InitializeGraphicsSystem(const EventArg &i_arg) override;
     void ReleaseGraphicsSystem() override;
 public:
+    void Initialize() override;
+    void Release() override;
+public:
     VkRenderPass GetMainRenderPass() { return m_VK_present_render_pass; }
     VkCommandBuffer GetMainCommandBuffer() { return m_VK_main_cmd_buffer; }
 public: //Memory Related.

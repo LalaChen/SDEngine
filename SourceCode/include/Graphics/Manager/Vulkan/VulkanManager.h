@@ -92,8 +92,8 @@ public:
     void MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) override;
     void UnmapBuffer(const VertexBufferIdentity &i_identity) override;
 public:
-    void CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size) override;
-    void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size) override;
+    void CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;
+    void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) override;
     void DeleteTextureImage(TextureIdentity &io_identity) override;
 public:
     void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
@@ -101,6 +101,11 @@ public:
 public:
     void CreateRenderPass(RenderPassIdentity &io_identity) override;
     void DestroyRenderPass(RenderPassIdentity &io_identity) override;
+public:
+    void CreateFrameBuffer(FrameBufferIdentity &io_identity, std::vector<TextureWeakReferenceObject> i_buf_wrefs) override;
+    void CreateFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
+    void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
+    void DestroyFrameBuffer(FrameBufferIdentity &io_identity) override;
 public:
     void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
@@ -136,6 +141,7 @@ protected:
         VkFormat i_image_format,
         VkExtent3D i_image_size,
         VkImageUsageFlags i_usage_flags,
+        VkSampleCountFlagBits i_sample_count = VK_SAMPLE_COUNT_1_BIT,
         VkImageLayout i_image_layout = VK_IMAGE_LAYOUT_UNDEFINED,
         uint32_t i_mipmap_levels = 1,
         uint32_t i_array_layers = 1,
@@ -179,7 +185,7 @@ protected:
      *  \brief Initialize graphics API. (link dll, ...)
      */
     VkResult CreateVkSampler(
-        VkSampler &io_sampler,
+        VkSampler &io_sampler_handle,
         VkFilter i_mag_filter_type = VK_FILTER_NEAREST,
         VkFilter i_min_filter_type = VK_FILTER_NEAREST,
         VkSamplerMipmapMode i_mipmap_mode = VK_SAMPLER_MIPMAP_MODE_NEAREST,
@@ -263,7 +269,7 @@ protected:
         uint32_t i_src_queue_family_id = VK_QUEUE_FAMILY_IGNORED,
         uint32_t i_dst_queue_family_id = VK_QUEUE_FAMILY_IGNORED);
 protected:
-//----------- Vulkan render pass Function ------------
+//----------- Vulkan RenderPass Function ------------
     VkResult CreateVKRenderPass(
         VkRenderPass &io_rp_handle,
         const std::vector<VkAttachmentDescription> &i_vk_att_descs,
@@ -271,6 +277,27 @@ protected:
         const std::vector<VkSubpassDependency> &i_vk_sp_dependencies);
 
     void DestroyVKRenderPass(VkRenderPass &io_rp_handle);
+public:
+//----------- Vulkan FrameBuffer Function ------------
+    VkResult CreateVKFrameBuffer(
+        VkFramebuffer &io_fb_handle,
+        const VkRenderPass i_rp_handle,
+        const std::vector<VkImageView> &i_iv_handles,
+        Size_ui32 i_width,
+        Size_ui32 i_height,
+        Size_ui32 i_layers = 1);
+
+    VkResult CreateVkImageView(
+        VkImageView& io_iv_handle,
+        const VkImage i_img_handle,
+        VkImageViewType i_view_type,
+        VkFormat i_img_format,
+        VkComponentMapping i_comp_swizzle,
+        VkImageSubresourceRange i_sub_src_range);
+
+    void DestroyVkImageView(VkImageView &io_iv_handle);
+
+    void DestroyVkFrameBuffer(VkFramebuffer &io_fb_handle);
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;

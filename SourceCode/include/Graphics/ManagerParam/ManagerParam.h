@@ -57,3 +57,7 @@ SOFTWARE.
 #include "DynamicState.h"
 #include "MemoryAccessMask.h"
 #include "PipelineStage.h"
+#include "ImageUsage.h"
+#include "ImageLayout.h"
+#include "ImageAspect.h"
+#include "ImageTiling.h"

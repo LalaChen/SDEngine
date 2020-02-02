@@ -54,7 +54,7 @@ class SDENGINE_CLASS GraphicsPipeline : public Object
 {
 public:
     /*! \fn explicit GraphicsPipeline(const ObjectName &i_object_name);
-     *  \param i_object_name Name of this object.
+     *  \param [in] i_object_name Name of this object.
      *  \brief Constructor of GraphicsPipeline
      */
     explicit GraphicsPipeline(const ObjectName &i_object_name);

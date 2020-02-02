@@ -1031,8 +1031,8 @@ void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
     attachment_descs[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
     attachment_descs[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;//
     attachment_descs[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;//
-    attachment_descs[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    attachment_descs[0].finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    attachment_descs[0].initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    attachment_descs[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     //--- Depth attachment description.
     attachment_descs[1].flags = 0;
     attachment_descs[1].format = VK_FORMAT_D32_SFLOAT_S8_UINT;
@@ -1041,7 +1041,7 @@ void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
     attachment_descs[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
     attachment_descs[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;//
     attachment_descs[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;//
-    attachment_descs[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachment_descs[1].initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     attachment_descs[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     //1.2 write attachment references.
     //--- Bind the output to color attachment. //0 :color, 1: depth

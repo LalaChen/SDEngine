@@ -28,7 +28,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SamplerIdentity::SamplerIdentity()
-: m_sampler(SD_NULL_HANDLE)
+: m_sampler_handle(SD_NULL_HANDLE)
 , m_mag_filter_type(SamplerFilterType_NEAREST)
 , m_min_filter_type(SamplerFilterType_NEAREST)
 , m_wrap_mode_s(SamplerWrapMode_CLAMP_TO_EDGE)

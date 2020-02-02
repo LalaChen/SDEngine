@@ -54,10 +54,10 @@ public:
      */
     ~SamplerIdentity();
 public://Sampler Part.
-    /*! \var CompHandle m_sampler;
+    /*! \var CompHandle m_sampler_handle;
      *  \brief Tell us how to sample this texture.
      */
-    CompHandle m_sampler;
+    CompHandle m_sampler_handle;
 
     /*! \var SamplerFilterTypeEnum m_mag_filter_type;
      *  \brief The mag filter type. Default is nearest.

@@ -23,19 +23,34 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
+/*! \file      FrameBufferGroupIdentity.h
+ *  \brief     Introduce of classes about handle of frame buffer group.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/02/01
  *  \copyright MIT License.
  */
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
+#pragma once
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+
+#include "Texture.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class SDENGINE_CLASS FrameBufferGroupIdentity
+{
+public:
+    FrameBufferGroupIdentity();
+    ~FrameBufferGroupIdentity();
+public:
+    CompHandle m_fbg_handle;
+    std::vector<TextureWeakReferenceObject> m_input_buf_wrefs;
+    std::vector<TextureWeakReferenceObject> m_color_buf_wrefs;
+    std::vector<TextureWeakReferenceObject> m_ref_buf_wrefs;
+    std::vector<uint32_t> m_pre_buf_ids;
+    TextureWeakReferenceObject m_depth_buf_wref;
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

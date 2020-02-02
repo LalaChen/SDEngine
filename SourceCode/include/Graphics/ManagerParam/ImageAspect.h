@@ -23,19 +23,31 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
+/*! \file      ImageAspect.h
+ *  \brief     Introduce of enum ImageAspectEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/01/31
  *  \copyright MIT License.
  */
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
+#pragma once
+
+#include "SDEngineMacro.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+/*! \enum ImageAspectEnum
+ *  \brief ImageAspectEnum is used to represent image aspect.(Vulkan Only)
+ */
+enum ImageAspectEnum
+{
+    ImageAspect_ASPECT_COLOR = 0, /*!<Aspect color.*/
+    ImageAspect_ASPECT_DEPTH, /*!<Aspect depth.*/
+    ImageAspect_ASPECT_STENCIL, /*!<Aspec Stencil.*/
+    ImageAspect_ASPECT_METADATA, /*!<Aspec Depth Metadata.*/
+    ImageAspect_ASPECT_PLANE_0, /*!<Aspec Plane 0.*/
+    ImageAspect_ASPECT_PLANE_1,/*!<Aspec Plane 1.*/
+    ImageAspect_ASPECT_PLANE_2, /*!<Aspec Plane 2.*/
+    ImageAspect_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
+______________SD_END_GRAPHICS_NAMESPACE______________

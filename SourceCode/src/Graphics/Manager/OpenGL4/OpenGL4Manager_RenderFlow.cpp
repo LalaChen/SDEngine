@@ -44,6 +44,26 @@ void OpenGL4Manager::DestroyRenderPass(RenderPassIdentity &io_identity)
 {
 }
 
+void OpenGL4Manager::CreateFrameBuffer(FrameBufferIdentity& io_identity, std::vector<TextureWeakReferenceObject> i_buf_wrefs)
+{
+
+}
+
+void OpenGL4Manager::CreateFrameBufferGroup(FrameBufferGroupIdentity& io_identity)
+{
+    //For each group, generate FBO and bind color and depth buffer to texture.
+}
+
+void OpenGL4Manager::DestroyFrameBufferGroup(FrameBufferGroupIdentity& io_identity)
+{
+
+}
+
+void OpenGL4Manager::DestroyFrameBuffer(FrameBufferIdentity& io_identity)
+{
+
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________
 
 #endif

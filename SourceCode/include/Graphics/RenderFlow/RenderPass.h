@@ -36,8 +36,10 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "AttachmentDescription.h"
 #include "AttachmentReference.h"
+#include "ImageViewIdentity.h"
 #include "RenderPassIdentity.h"
 
+#include "FrameBuffer.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
@@ -56,7 +58,7 @@ class SDENGINE_CLASS RenderPass : public Object
 {
 public:
     /*! \fn explicit RenderPass(const ObjectName &i_object_name);
-     *  \param i_object_name Name of this object.
+     *  \param [in] i_object_name Name of this object.
      *  \brief Constructor of RenderPass
      */
     explicit RenderPass(const ObjectName &i_object_name);
@@ -66,9 +68,33 @@ public:
      */
     virtual ~RenderPass();
 public:
-    void AddRenderPassDescription(const std::vector<AttachmentDescription> &i_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps);
+    /*! \fn void AddRenderPassDescription(const std::vector<AttachmentDescription> &i_att_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps);
+     *  \param [in] i_att_descs Descriptions about attachments.
+     *  \param [in] i_sp_descs Descriptions about subpasses.
+     *  \param [in] i_sp_deps Descriptions about dependencies.
+     *  \brief Add descriptions of render pass.
+     */
+    void AddRenderPassDescription(const std::vector<AttachmentDescription> &i_att_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps);
 public:
+    /*! \fn void Initialize();
+     *  \brief initialize.
+     */
     void Initialize();
+public:
+    /*! \fn const CompHandle GetHandle() const;
+     *  \brief return render pass handle for create frame buffer.
+     */
+    const CompHandle GetHandle() const;
+
+    /*! \fn std::vector<ImageViewIdentity> CreateImageViewDescriptions();
+     *  \brief return ImageView description corresponding this render pass. We only assign format to description.
+     */
+    std::vector<ImageViewIdentity> CreateImageViewDescriptions() const;
+
+    /*! \fn const std::vector<SubpassDescription>& GetSubpassDescriptions() const;
+     *  \brief return subpass description.
+     */
+    const std::vector<SubpassDescription>& GetSubpassDescriptions() const;
 protected:
     /*! \var RenderPassIdentity m_rp_identity;
      *  \brief Identity about render pass.
@@ -76,4 +102,13 @@ protected:
     RenderPassIdentity m_rp_identity;
 };
 
+inline const CompHandle RenderPass::GetHandle() const
+{
+    return m_rp_identity.m_rp_handle;
+}
+
+inline const std::vector<SubpassDescription>& RenderPass::GetSubpassDescriptions() const
+{
+    return m_rp_identity.m_subpasses_descs;
+}
 ______________SD_END_GRAPHICS_NAMESPACE______________

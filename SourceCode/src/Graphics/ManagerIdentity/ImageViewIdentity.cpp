@@ -23,19 +23,23 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
-
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
 #include "ImageViewIdentity.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+ImageViewIdentity::ImageViewIdentity()
+: m_iv_handle(SD_NULL_HANDLE)
+, m_format(TextureFormat_MAX_DEFINE_VALUE)
+, m_aspect(ImageAspect_MAX_DEFINE_VALUE)
+, m_base_mip_level(0)
+, m_level_count(1)
+, m_base_array_level(0)
+, m_layer_count(1)
+{
+}
+
+ImageViewIdentity::~ImageViewIdentity()
+{
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

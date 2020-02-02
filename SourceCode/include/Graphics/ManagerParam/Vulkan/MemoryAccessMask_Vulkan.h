@@ -43,7 +43,8 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 class MemoryAccess_Vulkan
 {
 public:
-    static VkAccessFlags Convert(const std::vector<MemoryAccessMaskEnum> &i_src);
+    static VkAccessFlags Convert(const std::vector<MemoryAccessMaskEnum> &i_srcs);
+    static VkAccessFlags Convert(MemoryAccessMaskEnum i_src);
 public:
     static VkAccessFlagBits MemoryAccessMasks[MemoryAccessMask_MAX_DEFINE_VALUE];
 };

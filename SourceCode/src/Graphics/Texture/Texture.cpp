@@ -52,12 +52,24 @@ void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wre
             Size_ui32 img_buf_size = static_cast<Size_ui32>(i_bitmap_wref.GetRef().GetBufferSize());
             BitmapPixelValueType bitmap_p_type = i_bitmap_wref.GetRef().GetPixelValueType();
             const VoidPtr img_ptr = reinterpret_cast<const VoidPtr>(i_bitmap_wref.GetRef().GetBitmap());
+
             //2. write down texture data.
             m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;
             m_tex_identity.m_mipmap_levels = i_mipmap_level;
             m_tex_identity.m_image_size.m_width = img_w;
             m_tex_identity.m_image_size.m_height = img_h;
             m_tex_identity.m_image_size.m_length = 1;
+            m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_SAMPLED);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_STORAGE);
+            if (img_n_of_c == 3 || img_n_of_c == 4) {
+                m_tex_identity.m_aspect = ImageAspect_ASPECT_COLOR;
+            }
+            else {
+                m_tex_identity.m_aspect = ImageAspect_ASPECT_DEPTH;
+            }
+            m_tex_identity.m_init_layout = ImageLayout_SHADER_READ_ONLY_OPTIMAL;
 
             if (img_n_of_c == 1) {
                 if (bitmap_p_type.m_enum == BitmapPixelDataType_UNSIGNED_BYTE) {
@@ -100,7 +112,16 @@ void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wre
                 return;
             }
 
-            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity, img_ptr, img_buf_size);
+            //3. Create image.
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
+
+            //4. Refresh texture image.
+            if (m_tex_identity.m_image_handle != SD_NULL_HANDLE) {
+                GraphicsManager::GetRef().RefreshTextureImage(m_tex_identity, img_ptr, ImageOffset(), m_tex_identity.m_image_size, img_buf_size, ImageLayout_SHADER_READ_ONLY_OPTIMAL);
+            }
+            else {
+                SDLOGW("This tex[%s] cannot create handle.", m_object_name.c_str());
+            }
         }
         else {
             SDLOGW("This tex[%s] is initialized. Please reinitalize tex after releasing old data.", m_object_name.c_str());
@@ -109,6 +130,48 @@ void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wre
     else {
         SDLOGW("Bitmap is null!!!");
     }
+}
+
+void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, const ImageLayoutEnum &i_layout, Size_ui32 i_mipmap_levels)
+{
+    if (m_tex_identity.m_image_handle == SD_NULL_HANDLE) {
+        m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;
+        m_tex_identity.m_texture_format = i_format;
+        m_tex_identity.m_mipmap_levels = i_mipmap_levels;
+        m_tex_identity.m_image_size.m_width = i_width;
+        m_tex_identity.m_image_size.m_height = i_height;
+        m_tex_identity.m_image_size.m_length = 1;
+        if (i_layout == ImageLayout_COLOR_ATTACHMENT_OPTIMAL) {
+            m_tex_identity.m_init_layout = i_layout;
+            m_tex_identity.m_aspect = ImageAspect_ASPECT_COLOR;
+            m_tex_identity.m_image_usages.push_back(ImageUsage_COLOR_ATTACHMENT);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
+        }
+        else if (i_layout == ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+            m_tex_identity.m_init_layout = i_layout;
+            m_tex_identity.m_aspect = ImageAspect_ASPECT_DEPTH;
+            m_tex_identity.m_image_usages.push_back(ImageUsage_DEPTH_ATTACHMENT);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
+        }
+        else {
+            m_tex_identity = TextureIdentity();
+            SDLOGW("We cannot initialize texture[%s] whose layout isn't color attachment or depth attachment.", m_object_name.c_str());
+        }
+    }
+}
+
+void Texture::SetTextureMemoryTilingMode(const ImageTilingEnum &i_tiling_mode)
+{
+    m_tex_identity.m_tiling = i_tiling_mode;
+}
+
+void Texture::SetTextureSampleCount(const SampleCountEnum &i_sample_count)
+{
+    m_tex_identity.m_sample_count = i_sample_count;
 }
 
 void Texture::SetSamplerFilterType(const SamplerFilterTypeEnum &i_mag_type, const SamplerFilterTypeEnum &i_min_type)

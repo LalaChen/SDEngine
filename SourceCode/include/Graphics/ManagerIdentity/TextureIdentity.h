@@ -32,6 +32,8 @@ SOFTWARE.
 
 #pragma once
 
+#include <vector>
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "ManagerParam.h"
@@ -136,6 +138,31 @@ public://Raw Data Part.
      *  \brief The texture format.
      */
     TextureFormatEnum m_texture_format;
+
+    /*! \var ImageUsageEnum m_image_usage;
+     *  \brief The image usage.
+     */
+    std::vector<ImageUsageEnum> m_image_usages;
+
+    /*! \var ImageLayout m_init_layout;
+     *  \brief The initial layout.
+     */
+    ImageLayoutEnum m_init_layout;
+
+    /*! \var ImageAspectEnum m_aspect;
+     *  \brief The image usage.
+     */
+    ImageAspectEnum m_aspect;
+
+    /*! \var ImageTiling m_tiling;
+     *  \brief The image usage.
+     */
+    ImageTilingEnum m_tiling;
+
+    /*! \var SampleCountEnum m_sample_count;
+     *  \brief The sample count.
+     */
+    SampleCountEnum m_sample_count;
 
     /*! \var Size_ui64 m_allocated_size;
      *  \brief The size of memory handle.

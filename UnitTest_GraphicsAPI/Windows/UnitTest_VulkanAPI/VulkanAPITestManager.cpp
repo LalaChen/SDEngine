@@ -28,18 +28,28 @@ VulkanAPITestManager::~VulkanAPITestManager()
 void VulkanAPITestManager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
     VulkanManager::InitializeGraphicsSystem(i_arg);
+}
+
+void VulkanAPITestManager::Initialize()
+{
+    GraphicsManager::Initialize();
     std::vector<SampleStrongReferenceObject>::iterator iter;
     for (iter = m_samples.begin(); iter != m_samples.end(); ++iter) {
         (*iter).GetRef().Initialize();
     }
 }
 
-void VulkanAPITestManager::ReleaseGraphicsSystem()
+void VulkanAPITestManager::Release()
 {
     std::vector<SampleStrongReferenceObject>::iterator iter;
     for (iter = m_samples.begin(); iter != m_samples.end(); ++iter) {
         (*iter).GetRef().Destroy();
     }
+    GraphicsManager::Release();
+}
+
+void VulkanAPITestManager::ReleaseGraphicsSystem()
+{
     VulkanManager::ReleaseGraphicsSystem();
 }
 

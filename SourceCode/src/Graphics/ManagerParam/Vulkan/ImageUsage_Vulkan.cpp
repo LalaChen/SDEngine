@@ -23,19 +23,40 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "ImageUsage_Vulkan.h"
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+VkImageUsageFlagBits ImageUsage_Vulkan::ImageUsages[ImageUsage_MAX_DEFINE_VALUE] =
+{
+    VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+    VK_IMAGE_USAGE_TRANSFER_DST_BIT,
+    VK_IMAGE_USAGE_SAMPLED_BIT,
+    VK_IMAGE_USAGE_STORAGE_BIT,
+    VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+    VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+    VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT,
+    VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
+};
+
+VkImageUsageFlags ImageUsage_Vulkan::Convert(const std::vector<ImageUsageEnum> &i_srcs)
+{
+    VkImageUsageFlags result = 0;
+    for (ImageUsageEnum iu : i_srcs) {
+        if (iu != ImageUsage_MAX_DEFINE_VALUE) {
+            result |= ImageUsages[SD_ENUM_TO_UINT(iu)];
+        }
+    }
+    return result;
+}
+
+VkImageUsageFlags ImageUsage_Vulkan::Convert(ImageUsageEnum i_src)
+{
+    VkImageUsageFlags result = 0;
+    if (i_src != ImageUsage_MAX_DEFINE_VALUE) {
+        result |= ImageUsages[SD_ENUM_TO_UINT(i_src)];
+    }
+    return result;
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

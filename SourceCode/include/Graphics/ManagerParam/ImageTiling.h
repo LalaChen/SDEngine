@@ -23,19 +23,25 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
+/*! \file      ImageTiling.h
+ *  \brief     Introduce of enum ImageTilingEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/01/31
  *  \copyright MIT License.
  */
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
+#pragma once
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+enum ImageTilingEnum
+{
+    ImageTiling_OPTIMAL = 0,
+    ImageTiling_LINEAR,
+    ImageTiling_MAX_DEFINE_VALUE
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

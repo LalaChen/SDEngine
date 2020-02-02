@@ -23,19 +23,24 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "ImageTiling_Vulkan.h"
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+VkImageTiling ImageTiling_Vulkan::ImageTilings[ImageTiling_MAX_DEFINE_VALUE] =
+{
+    VK_IMAGE_TILING_OPTIMAL,
+    VK_IMAGE_TILING_LINEAR
+};
+
+VkImageTiling ImageTiling_Vulkan::Convert(const ImageTilingEnum &i_src)
+{
+    if (i_src != ImageTiling_MAX_DEFINE_VALUE) {
+        return ImageTilings[SD_ENUM_TO_UINT(i_src)];
+    }
+    else {
+        return VK_IMAGE_TILING_MAX_ENUM;
+    }
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

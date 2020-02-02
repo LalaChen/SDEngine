@@ -1206,17 +1206,15 @@ void Sample3_MultiSubpass::CreateRenderPassAndFramebuffer()
     //comes to bottom stage, and then executed second command.
     sp_dependencies[1].srcSubpass = 0;
     sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT; //All operators before this stage need be executed. 
-    sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[1].srcAccessMask = MemoryAccessMask_MEMORY_WRITE;
     sp_dependencies[1].dstSubpass = 1;
     sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-    sp_dependencies[1].dstAccessMask = 
-        VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | 
-        VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+    sp_dependencies[1].dstAccessMask = MemoryAccessMask_MEMORY_READ;
     sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- End dep.
     sp_dependencies[2].srcSubpass = 1;
     sp_dependencies[2].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-    sp_dependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[2].srcAccessMask = MemoryAccessMask_MEMORY_WRITE;
     sp_dependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
     sp_dependencies[2].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;

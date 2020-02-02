@@ -23,19 +23,31 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
+/*! \file      ImageUsage_Vulkan.h
+ *  \brief     Introduce of class ImageUsage_Vulkan.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/01/31
  *  \copyright MIT License.
  */
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
+#pragma once
+
+#include <vector>
+
+#include <vulkan/vulkan.h>
+
+#include "SDEngineCommonType.h"
+#include "ImageUsage.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class ImageUsage_Vulkan
+{
+public:
+    static VkImageUsageFlags Convert(const std::vector<ImageUsageEnum> &i_srcs);
+    static VkImageUsageFlags Convert(ImageUsageEnum i_src);
+public:
+    static VkImageUsageFlagBits ImageUsages[ImageUsage_MAX_DEFINE_VALUE];
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

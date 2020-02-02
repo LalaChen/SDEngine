@@ -23,19 +23,39 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "ImageAspect_Vulkan.h"
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+VkImageAspectFlagBits ImageAspect_Vulkan::ImageAspects[ImageAspect_MAX_DEFINE_VALUE] =
+{
+    VK_IMAGE_ASPECT_COLOR_BIT,
+    VK_IMAGE_ASPECT_DEPTH_BIT,
+    VK_IMAGE_ASPECT_STENCIL_BIT,
+    VK_IMAGE_ASPECT_METADATA_BIT,
+    VK_IMAGE_ASPECT_PLANE_0_BIT,
+    VK_IMAGE_ASPECT_PLANE_1_BIT,
+    VK_IMAGE_ASPECT_PLANE_2_BIT
+};
+
+VkImageAspectFlags ImageAspect_Vulkan::Convert(const std::vector<ImageAspectEnum> &i_srcs)
+{
+    VkImageAspectFlags result = 0;
+    for (ImageAspectEnum ia : i_srcs) {
+        if (ia != ImageAspect_MAX_DEFINE_VALUE) {
+            result |= ImageAspects[SD_ENUM_TO_UINT(ia)];
+        }
+    }
+    return result;
+}
+
+VkImageAspectFlags ImageAspect_Vulkan::Convert(const ImageAspectEnum &i_src)
+{
+    VkImageAspectFlags result = 0;
+    if (i_src != ImageAspect_MAX_DEFINE_VALUE) {
+        result |= ImageAspects[SD_ENUM_TO_UINT(i_src)];
+    }
+    return result;
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

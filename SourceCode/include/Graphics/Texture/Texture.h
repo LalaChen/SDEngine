@@ -66,7 +66,34 @@ public:
      */
     virtual ~Texture();
 public:
+    /*! \fn void InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_levels = 1);
+     *  \param [in] i_bitmap_wref Target bitmap.
+     *  \param [in] i_mipmap_levels Mipmap level.
+     *  \brief This function is used to create texture that is used to input to shader.
+     */
     void InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_levels = 1); //Input 2D texture.
+    
+    /*! \fn void Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, const ImageLayoutEnum &i_layout, Size_ui32 i_mipmap_levels = 1);
+     *  \param [in] i_width Width of buffer.
+     *  \param [in] i_height Height of buffer.
+     *  \param [in] i_format Format about this buffer.
+     *  \param [in] i_layout Set target for this buffer.
+     *  \brief This function is used to create texture that is used to input to shader. If i_layout is color attachment,
+     *         we will create color attachment and set its aspect as color. Else if i_layout is depth attachment, we will create
+     *         depth attachment and set its aspect as depth. Please note that this function only can used for creating color 
+     *         or depth buffer.
+     */
+    void Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, const ImageLayoutEnum &i_layout, Size_ui32 i_mipmap_levels = 1);
+public:
+    /*! \fn void SetTextureMemoryTilingMode(const ImageTilingEnum &i_tiling_mode);
+     *  \param [in] i_tiling_mode Target tiling mode.
+     *  \brief This function is specify the way about creating memory this texture.
+     *         If tiling mode is linear, the row length is equal to nofc * width and we can allocate host memory for creating it.
+     *         Otherwise(mode is optimal), the row length isn't equal to nofc * width and we only can allocate device for creating it. 
+     */
+    void SetTextureMemoryTilingMode(const ImageTilingEnum &i_tiling_mode);
+
+    void SetTextureSampleCount(const SampleCountEnum &i_sample_count);
 public:
     void SetSamplerFilterType(const SamplerFilterTypeEnum &i_mag_type, const SamplerFilterTypeEnum &i_min_type);
 
@@ -84,15 +111,48 @@ public:
 
     void SetMaxAnisotropy(float i_max_anisotropy);
 public:
+    const CompHandle GetHandle() const;
+
+    const CompHandle GetSamplerHandle() const;
+
+    TextureTypeEnum GetTextureType() const;
+
+    TextureFormatEnum GetTextureFormat() const;
+
     Size_ui32 GetWidth() const;
+
     Size_ui32 GetHeight() const;
+    
     Size_ui32 GetLength() const;
+    
     ImageSize GetDataSize() const;
+
+    Size_ui32 GetLayerCount() const;
 protected:
     TextureIdentity m_tex_identity;
 
     SamplerIdentity m_sampler_idnetity;
 };
+
+inline const CompHandle Texture::GetHandle() const
+{
+    return m_tex_identity.m_image_handle;
+}
+
+inline const CompHandle Texture::GetSamplerHandle() const
+{
+    return m_sampler_idnetity.m_sampler_handle;
+}
+
+inline TextureTypeEnum Texture::GetTextureType() const
+{
+    return m_tex_identity.m_texture_type;
+}
+
+inline TextureFormatEnum Texture::GetTextureFormat() const
+{
+    return m_tex_identity.m_texture_format;
+}
 
 inline Size_ui32 Texture::GetWidth() const
 {
@@ -112,6 +172,11 @@ inline Size_ui32 Texture::GetLength() const
 inline ImageSize Texture::GetDataSize() const
 {
     return m_tex_identity.m_image_size;
+}
+
+inline Size_ui32 Texture::GetLayerCount() const
+{
+    return m_tex_identity.m_array_layers;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

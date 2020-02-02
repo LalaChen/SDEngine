@@ -32,7 +32,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\Windows\WindowsTimer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ImageLoader\Bitmap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ImageLoader\ImageLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\FrameBufferGroupIdentity.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\FrameBufferIdentity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\GraphicsPipelineIdentity.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\ImageViewIdentity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\ManagerIdentity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\RenderPassIdentity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\SamplerIdentity.h" />
@@ -48,7 +51,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\DynamicState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\FaceCulling.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\FrontFaceMode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\ImageAspect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\ImageLayout.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\ImageTiling.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\ImageUsage.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\LogicOperator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\ManagerParam.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\MemoryAccessMask.h" />
@@ -77,7 +83,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\DynamicState_Vulkan.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\FaceCulling_Vulkan.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\FrontFaceMode_Vulkan.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\ImageAspect_Vulkan.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\ImageLayout_Vulkan.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\ImageTiling_Vulkan.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\ImageUsage_Vulkan.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\LogicOperator_Vulkan.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\MemoryAccessMask_Vulkan.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\PipelineBindPoint_Vulkan.h" />
@@ -112,8 +121,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ModelImporter\ModelData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\AttachmentDescription.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\AttachmentReference.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\FrameBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\GraphicsPipeline.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\GraphicsPipelineParam.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\RenderFlow.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\RenderPass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\ShaderModule.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\SubpassDependency.h" />
@@ -153,7 +164,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\Windows\WindowsTimer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ImageLoader\Bitmap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ImageLoader\ImageLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\FrameBufferGroupIdentity.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\FrameBufferIdentity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\GraphicsPipelineIdentity.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\ImageViewIdentity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\RenderPassIdentity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\SamplerIdentity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\ShaderModuleIdentity.cpp" />
@@ -168,7 +182,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\DynamicState_Vulkan.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\FaceCulling_Vulkan.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\FrontFaceMode_Vulkan.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\ImageAspect_Vulkan.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\ImageLayout_Vulkan.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\ImageTiling_Vulkan.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\ImageUsage_Vulkan.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\LogicOperator_Vulkan.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\MemoryAccessMask_Vulkan.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\PipelineBindPoint_Vulkan.cpp" />
@@ -187,6 +204,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\VertexBufferFormat_Vulkan.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\VertexInputRate_Vulkan.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager_RenderPass.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager_PrintInformation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager_RenderFlow.cpp" />
@@ -200,6 +218,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VertexBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKDeviceMemory.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKFrameBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKImage.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKLayout.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKRenderPass.cpp" />
@@ -218,8 +237,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ModelImporter\ModelData.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\AttachmentDescription.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\AttachmentReference.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\FrameBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\GraphicsPipeline.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\GraphicsPipelineParam.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\RenderFlow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\RenderPass.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\ShaderModule.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\SubpassDependency.cpp" />

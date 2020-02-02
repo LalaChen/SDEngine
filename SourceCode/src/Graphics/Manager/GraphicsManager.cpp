@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "LogManager.h"
 #include "AssimpModelLoader.h"
 #include "GraphicsManager.h"
 
@@ -42,6 +43,18 @@ GraphicsManager::GraphicsManager()
 
 GraphicsManager::~GraphicsManager()
 {
+}
+
+void GraphicsManager::Initialize()
+{
+    SDLOG("Initialize.");
+    InitializeDefaultRenderPasses();
+}
+
+void GraphicsManager::Release()
+{
+    SDLOG("Release.");
+    ReleaseRenderPasses();
 }
 
 void GraphicsManager::Render()

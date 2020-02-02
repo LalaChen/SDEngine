@@ -543,6 +543,39 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanWrapper.h">
       <Filter>include\Graphics\Manager\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\RenderFlow.h">
+      <Filter>include\Graphics\RenderFlow</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\FrameBuffer.h">
+      <Filter>include\Graphics\RenderFlow</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\FrameBufferIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\ImageUsage.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\ImageUsage_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\ImageAspect.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\ImageAspect_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\ImageTiling.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\ImageTiling_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\FrameBufferGroupIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\ImageViewIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -838,6 +871,36 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanWrapper.cpp">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\RenderFlow.cpp">
+      <Filter>src\Graphics\RenderFlow</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\FrameBuffer.cpp">
+      <Filter>src\Graphics\RenderFlow</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\ImageUsage_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\ImageAspect_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\ImageTiling_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\FrameBufferIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\FrameBufferGroupIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKFrameBuffer.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\ImageViewIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager_RenderPass.cpp">
+      <Filter>src\Graphics\Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

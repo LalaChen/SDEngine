@@ -60,7 +60,7 @@ public:
 
     /*! \fn StrongReferenceObject<Type>(const StrongReferenceObject<Type> &i_src);
      *  \tparam Type class Type.
-     *  \param i_src Target reference.
+     *  \param [in] i_src Target reference.
      *  \brief The copy constructor of StrongReferenceObject Class.
      */
     StrongReferenceObject<Type>(const StrongReferenceObject<Type> &i_src)
@@ -70,7 +70,7 @@ public:
 
     /*! \fn StrongReferenceObject<Type>(const std::shared_ptr<Type> &i_src);
      *  \tparam Type class Type.
-     *  \param i_src Target std::shared_ptr.
+     *  \param [in] i_src Target std::shared_ptr.
      *  \brief The copy constructor of StrongReferenceObject Class.
      */
     StrongReferenceObject<Type>(const std::shared_ptr<Type> &i_src)
@@ -80,7 +80,7 @@ public:
 
     /*! \fn StrongReferenceObject<Type>(Type *i_ptr);
      *  \tparam Type class Type.
-     *  \param i_ptr Target object.
+     *  \param [in] i_ptr Target object.
      *  \brief The copy constructor of StrongReferenceObject Class.
      */
     StrongReferenceObject<Type>(Type *i_ptr)
@@ -127,8 +127,8 @@ public:
     }
 public:
     /*! \fn bool IsEqualTo(const StrongReferenceObject<Type> &i_src) const
-     *  \param i_src target ref.
      *  \tparam Type target class type.
+     *  \param [in] i_src target ref.
      *  \brief Return that this instance is equal to i_src or not.
      */
     bool IsEqualTo(const StrongReferenceObject<Type> &i_src) const

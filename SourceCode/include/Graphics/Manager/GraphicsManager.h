@@ -39,6 +39,7 @@ SOFTWARE.
 #include "SDEngineCommonFunction.h"
 #include "ManagerParam.h"
 #include "ManagerIdentity.h"
+#include "RenderPass.h"
 #include "ImageLoader.h"
 #include "Resolution.h"
 #include "EventArg.h"
@@ -84,6 +85,16 @@ public:
      *  \brief Release graphics system.
      */
     virtual void ReleaseGraphicsSystem() = 0;
+
+    /*! \fn virtual void Initialize();
+     *  \brief Initialize common necessary components.
+     */
+    virtual void Initialize();
+
+    /*! \fn void Release();
+     *  \brief Release common necessary components.
+     */
+    virtual void Release();
 public:
     /*! \fn virtual void PrintSystemInformation() = 0;
      *  \brief Print system information.
@@ -98,8 +109,8 @@ public:
     virtual void MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) = 0;
     virtual void UnmapBuffer(const VertexBufferIdentity &i_identity) = 0;
 public:
-    virtual void CreateTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size) = 0;
-    virtual void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size) = 0;
+    virtual void CreateTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity) = 0;
+    virtual void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) = 0;
     virtual void DeleteTextureImage(TextureIdentity &io_identity) = 0;
 public:
     virtual void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) = 0;
@@ -108,11 +119,23 @@ public:
     virtual void CreateRenderPass(RenderPassIdentity &io_identity) = 0;
     virtual void DestroyRenderPass(RenderPassIdentity &io_identity) = 0;
 public:
+    virtual void CreateFrameBuffer(FrameBufferIdentity& io_identity, std::vector<TextureWeakReferenceObject> i_buf_wrefs) = 0;
+    virtual void CreateFrameBufferGroup(FrameBufferGroupIdentity& io_identity)  = 0;
+    virtual void DestroyFrameBufferGroup(FrameBufferGroupIdentity& io_identity) = 0;
+    virtual void DestroyFrameBuffer(FrameBufferIdentity& io_identity) = 0;
+public:
 //------------- Resize Function -----------------
     virtual void Resize(Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:
 //------------- Render Function -----------------
     void Render();
+public:
+//-------- Managing  RenderPass Function --------
+    void InitializeDefaultRenderPasses();
+    void RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp_sref);
+    void UnregisterRenderPass(const ObjectName &i_target_rp_name);
+    void ReleaseRenderPasses();
+    RenderPassWeakReferenceObject GetRenderPass(const ObjectName& i_target_rp_name) const;
 protected:
 //------------ Render Flow Function -------------
     virtual void RenderBegin() = 0;
@@ -120,6 +143,8 @@ protected:
     virtual void RenderEnd() = 0;
 protected:
     SD_DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_screen_size, ScreenResolution);
+protected:
+    std::list<RenderPassStrongReferenceObject> m_rp_list;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -61,7 +61,7 @@ public:
 
     /*! \fn WeakReferenceObject<Type>(const std::shared_ptr<Type> &i_src);
      *  \tparam Type class Type.
-     *  \param i_src Target std::shared_ptr.
+     *  \param [in] i_src Target std::shared_ptr.
      *  \brief The copy constructor of WeakReferenceObject Class.
      */
     WeakReferenceObject<Type>(const std::shared_ptr<Type> &i_src)
@@ -71,7 +71,7 @@ public:
 
     /*! \fn WeakReferenceObject<Type>(const std::weak_ptr<Type> &i_src)
      *  \tparam Type class Type.
-     *  \param i_src Target std::weak_ptr.
+     *  \param [in] i_src Target std::weak_ptr.
      *  \brief The copy constructor of WeakReferenceObject Class.
      */
     WeakReferenceObject<Type>(const WeakReferenceObject<Type> &i_src)
@@ -81,7 +81,7 @@ public:
 
     /*! \fn WeakReferenceObject<Type>(const std::weak_ptr<Type> &i_src)
      *  \tparam Type class Type.
-     *  \param i_src Target WeakReferenceObject.
+     *  \param [in] i_src Target WeakReferenceObject.
      *  \brief The copy constructor of WeakReferenceObject Class.
      */
     WeakReferenceObject<Type>(const std::weak_ptr<Type> &i_src)
@@ -127,9 +127,9 @@ public:
     }
 public:
     /*! \fn bool IsEqualTo(const WeakReferenceObject<Type> &i_src) const
-     *  \param i_src target weak ref.
      *  \tparam Type target class type.
-     *  \brief Try to static cast this to based class type. Please note we should use this \n
+     *  \param [in] i_src target weak ref.
+     *  \brief Try to static cast this to based class type. Please note we should use this 
      *         template on class with IsEqualTo method(Inherit class Object).
      */
     bool IsEqualTo(const WeakReferenceObject<Type> &i_src) const

@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      BlendOperator_Vulkan.h
- *  \brief     Introduce of class BlendOperator_Vulkan.
+/*! \file      ImageLayout_Vulkan.h
+ *  \brief     Introduce of class ImageLayout_Vulkan.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/11/03
  *  \copyright MIT License.

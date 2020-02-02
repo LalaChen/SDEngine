@@ -77,8 +77,8 @@ public:
     void MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) override;
     void UnmapBuffer(const VertexBufferIdentity &i_identity) override;
 public:
-    void CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity, VoidPtr i_data_ptr, Size_ui64 i_data_size) override;
-    void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size) override;
+    void CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;
+    void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum& i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) override;
     void DeleteTextureImage(TextureIdentity &io_identity) override;
 public:
     void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
@@ -86,6 +86,11 @@ public:
 public:
     void CreateRenderPass(RenderPassIdentity &io_identity) override;
     void DestroyRenderPass(RenderPassIdentity &io_identity) override;
+public:
+    void CreateFrameBuffer(FrameBufferIdentity& io_identity, std::vector<TextureWeakReferenceObject> i_buf_wrefs) override;
+    void CreateFrameBufferGroup(FrameBufferGroupIdentity& io_identity) override;
+    void DestroyFrameBufferGroup(FrameBufferGroupIdentity& io_identity) override;
+    void DestroyFrameBuffer(FrameBufferIdentity& io_identity) override;
 public:
     void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
 protected:

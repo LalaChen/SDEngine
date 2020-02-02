@@ -49,7 +49,7 @@ enum ImageLayoutEnum
     ImageLayout_SHADER_READ_ONLY_OPTIMAL,/*!<shader read only.*/
     ImageLayout_TRANSFER_SRC_OPTIMAL, /*!<Transfer src Attachment.*/
     ImageLayout_TRANSFER_DST_OPTIMAL, /*!<Transfer dst Attachment.*/
-    ImageLayout_PREINITIALIZED, /*!<TPreinitialized.*/
+    ImageLayout_PREINITIALIZED, /*!<Preinitialized.*/
     ImageLayout_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 ______________SD_END_GRAPHICS_NAMESPACE______________

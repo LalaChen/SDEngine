@@ -48,13 +48,22 @@ VkAccessFlagBits MemoryAccess_Vulkan::MemoryAccessMasks[MemoryAccessMask_MAX_DEF
     VK_ACCESS_MEMORY_WRITE_BIT
 };
 
-VkAccessFlags MemoryAccess_Vulkan::Convert(const std::vector<MemoryAccessMaskEnum> &i_src)
+VkAccessFlags MemoryAccess_Vulkan::Convert(const std::vector<MemoryAccessMaskEnum> &i_srcs)
 {
     VkAccessFlags result = 0;
-    for (MemoryAccessMaskEnum access_mask : i_src) {
+    for (MemoryAccessMaskEnum access_mask : i_srcs) {
         if (SD_ENUM_TO_INT(access_mask) < MemoryAccessMask_MAX_DEFINE_VALUE) {
             result |= MemoryAccessMasks[SD_ENUM_TO_INT(access_mask)];
         }
+    }
+    return result;
+}
+
+VkAccessFlags MemoryAccess_Vulkan::Convert(MemoryAccessMaskEnum i_src)
+{
+    VkAccessFlags result = 0;
+    if (SD_ENUM_TO_INT(i_src) < MemoryAccessMask_MAX_DEFINE_VALUE) {
+        result |= MemoryAccessMasks[SD_ENUM_TO_INT(i_src)];
     }
     return result;
 }

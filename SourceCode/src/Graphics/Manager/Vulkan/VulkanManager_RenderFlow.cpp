@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include "LogManager.h"
 #include "VulkanManager.h"
+#include "ImageAspect_Vulkan.h"
 #include "TextureFormat_Vulkan.h"
 #include "SampleCount_Vulkan.h"
 #include "AttachmentOperator_Vulkan.h"
@@ -50,6 +51,7 @@ void VulkanManager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
     DestroyVKShaderModule(shader_module);
 }
 
+//-------- RenderPass --------
 void VulkanManager::CreateRenderPass(RenderPassIdentity &io_identity)
 {
     VkResult result = VK_SUCCESS;
@@ -58,10 +60,10 @@ void VulkanManager::CreateRenderPass(RenderPassIdentity &io_identity)
     std::vector<VkSubpassDescription> vk_subpass_descs;
     std::vector<VkSubpassDependency> vk_subpass_dependecies;
 
-    std::vector < std::vector<VkAttachmentReference> > vk_sps_color_att_refs;
-    std::vector < std::vector<VkAttachmentReference> > vk_sps_res_att_refs;
-    std::vector < std::vector<VkAttachmentReference> > vk_sps_input_att_refs;
-    std::vector<VkAttachmentReference> vk_sps_depth_refs;
+    std::vector< std::vector<VkAttachmentReference> > vk_sps_color_att_refs;
+    std::vector< std::vector<VkAttachmentReference> > vk_sps_res_att_refs;
+    std::vector< std::vector<VkAttachmentReference> > vk_sps_input_att_refs;
+    std::vector< std::vector<VkAttachmentReference> > vk_sps_depth_refs;
     //---- attachment description.
     for (AttachmentDescription &d : io_identity.m_attachment_descs) {
         VkAttachmentDescription vk_att_desc = {};
@@ -140,10 +142,12 @@ void VulkanManager::CreateRenderPass(RenderPassIdentity &io_identity)
 
         if (sp.m_depth_attachment_ref.m_attachment_ID != SD_ERROR_ATTACHMENT_REF) {
             VkAttachmentReference dep_att_ref = {};
+            std::vector<VkAttachmentReference> vk_sp_depth_att_refs;
             dep_att_ref.attachment = sp.m_depth_attachment_ref.m_attachment_ID;
             dep_att_ref.layout = ImageLayout_Vulkan::Convert(sp.m_depth_attachment_ref.m_layout);
-            vk_sps_depth_refs.push_back(dep_att_ref);
-            vk_sp_desc.pDepthStencilAttachment = &(vk_sps_depth_refs.back());
+            vk_sp_depth_att_refs.push_back(dep_att_ref);
+            vk_sps_depth_refs.push_back(vk_sp_depth_att_refs);
+            vk_sp_desc.pDepthStencilAttachment = vk_sps_depth_refs.back().data();
         }
         else {
             vk_sp_desc.pDepthStencilAttachment = nullptr;
@@ -175,6 +179,102 @@ void VulkanManager::DestroyRenderPass(RenderPassIdentity &io_identity)
 {
     VkRenderPass &rp_handle = reinterpret_cast<VkRenderPass&>(io_identity.m_rp_handle);
     DestroyVKRenderPass(rp_handle);
+}
+
+//-------- FrameBuffer --------
+void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, std::vector<TextureWeakReferenceObject> i_buf_wrefs)
+{
+    VkResult result = VK_SUCCESS;
+    //1. create all image view of this framebuffer
+    std::vector<VkImageView> ivs;
+    for (uint32_t iv_ID = 0; iv_ID < io_identity.m_iv_identities.size(); ++iv_ID) {
+        ImageViewIdentity& iv_identity = io_identity.m_iv_identities[iv_ID];
+        VkImageView &iv_handle = reinterpret_cast<VkImageView&>(iv_identity.m_iv_handle);
+        const VkImage img_handle = reinterpret_cast<const VkImage>(i_buf_wrefs[iv_ID].GetConstRef().GetHandle());
+        
+        TextureTypeEnum tex_type = i_buf_wrefs[iv_ID].GetConstRef().GetTextureType();
+        VkImageViewType vk_iv_type = VK_IMAGE_VIEW_TYPE_MAX_ENUM;
+        if (tex_type == TextureType_TEXTURE_1D) {
+            if (iv_identity.m_layer_count == 1) {
+                vk_iv_type = VK_IMAGE_VIEW_TYPE_1D;
+            }
+            else {
+                vk_iv_type = VK_IMAGE_VIEW_TYPE_1D_ARRAY;
+            }
+        }
+        else if (tex_type == TextureType_TEXTURE_2D) {
+            if (iv_identity.m_layer_count == 1) {
+                vk_iv_type = VK_IMAGE_VIEW_TYPE_2D;
+            }
+            else {
+                vk_iv_type = VK_IMAGE_VIEW_TYPE_2D_ARRAY;
+            }
+        }
+        else if (tex_type == TextureType_TEXTURE_CUBE_MAP) {
+            if (iv_identity.m_layer_count == 1) {
+                vk_iv_type = VK_IMAGE_VIEW_TYPE_CUBE;
+            }
+            else {
+                vk_iv_type = VK_IMAGE_VIEW_TYPE_CUBE_ARRAY;
+            }
+        }
+        else {
+            SDLOGE("We can't create image view for tex[%s](%d)", i_buf_wrefs[iv_ID].GetConstRef().GetObjectName().c_str(), tex_type);
+            return;
+        }
+
+        VkFormat vk_format = TextureFormat_Vulkan::Convert(iv_identity.m_format);
+        VkImageSubresourceRange img_sub_range = {};
+        img_sub_range.aspectMask = ImageAspect_Vulkan::Convert(iv_identity.m_aspect);
+        img_sub_range.baseMipLevel = iv_identity.m_base_mip_level;
+        img_sub_range.levelCount = iv_identity.m_level_count;
+        img_sub_range.baseArrayLayer = iv_identity.m_base_array_level;
+        img_sub_range.layerCount = iv_identity.m_layer_count;
+
+        VkComponentMapping comp_mapping = {};
+        comp_mapping.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        comp_mapping.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        comp_mapping.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        comp_mapping.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        
+        result = CreateVkImageView(iv_handle, img_handle, vk_iv_type, vk_format, comp_mapping, img_sub_range);
+        if (result != VK_SUCCESS) {
+            SDLOGE("Create image view for texture[%s] failure(%d).", i_buf_wrefs[iv_ID].GetConstRef().GetObjectName().c_str(), result);
+            return;
+        }
+        else {
+            ivs.push_back(iv_handle);
+        }
+    }
+    //2. create framebuffer.
+    VkFramebuffer &fb_handle = reinterpret_cast<VkFramebuffer&>(io_identity.m_fb_handle);
+    VkRenderPass &rp_handle = reinterpret_cast<VkRenderPass&>(io_identity.m_rp_handle);
+    result = CreateVKFrameBuffer(fb_handle, rp_handle, ivs, io_identity.m_width, io_identity.m_height, io_identity.m_layer);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create Framebuffer failure(%d)!!!.",  result);
+    }
+}
+
+void VulkanManager::CreateFrameBufferGroup(FrameBufferGroupIdentity &io_identity)
+{
+    //Don't do anything.
+}
+
+void VulkanManager::DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity)
+{
+    //Don't do anything.
+}
+
+void VulkanManager::DestroyFrameBuffer(FrameBufferIdentity &io_identity)
+{
+    for (ImageViewIdentity &iv_identity : io_identity.m_iv_identities) {
+        VkImageView &iv_handle = reinterpret_cast<VkImageView&>(iv_identity.m_iv_handle);
+        DestroyVkImageView(iv_handle);
+        iv_identity = ImageViewIdentity();
+    }
+    VkFramebuffer &fb_handle = reinterpret_cast<VkFramebuffer&>(io_identity.m_fb_handle);
+    DestroyVkFrameBuffer(fb_handle);
+    io_identity = FrameBufferIdentity();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

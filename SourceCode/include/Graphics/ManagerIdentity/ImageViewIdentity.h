@@ -23,19 +23,39 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
+/*! \file      ImageViewDescription.h
+ *  \brief     Introduce of class about ImageViewDescription.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/11/16
  *  \copyright MIT License.
  */
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
+#pragma once
+
+#include <vector>
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "ImageUsage.h"
+#include "ImageLayout.h"
+#include "ImageAspect.h"
+#include "TextureFormat.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class SDENGINE_CLASS ImageViewIdentity
+{
+public:
+    ImageViewIdentity();
+    ~ImageViewIdentity();
+public:
+    CompHandle m_iv_handle;
+    TextureFormatEnum m_format;
+    ImageAspectEnum m_aspect;
+    uint32_t m_base_mip_level;
+    uint32_t m_level_count;
+    uint32_t m_base_array_level;
+    uint32_t m_layer_count;
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

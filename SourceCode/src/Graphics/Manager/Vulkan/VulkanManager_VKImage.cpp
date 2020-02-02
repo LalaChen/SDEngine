@@ -33,6 +33,7 @@ VkResult VulkanManager::CreateVkImage(
     VkFormat i_image_format,
     VkExtent3D i_image_size,
     VkImageUsageFlags i_usage_flags,
+    VkSampleCountFlagBits i_sample_count,
     VkImageLayout i_image_layout,
     uint32_t i_mipmap_levels,
     uint32_t i_array_layers,
@@ -50,7 +51,7 @@ VkResult VulkanManager::CreateVkImage(
     img_c_info.tiling = i_tiling_mode; //Set texture tiling mode. If the image is linked data in system memory, we need to use VK_IMAGE_TILING_LINEAR.
     img_c_info.initialLayout = i_image_layout;
     img_c_info.usage = i_usage_flags; //We will copy data to this image(trasnfer dst) and use it in shader(sampled).
-    img_c_info.samples = VK_SAMPLE_COUNT_1_BIT;
+    img_c_info.samples = i_sample_count;
     img_c_info.extent = i_image_size;
     img_c_info.format = i_image_format;
     img_c_info.sharingMode = i_sharing_mode;

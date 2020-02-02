@@ -133,6 +133,7 @@ void WindowsApplication::InitializeGraphicsSystem()
 
         //
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
+        GraphicsManager::GetRef().Initialize();
 
     } else if (m_adopt_library == GraphicsLibrary_Vulkan) {
         new VulkanManager();
@@ -227,6 +228,7 @@ void WindowsApplication::InitializeGraphicsSystem()
         arg.m_instance = instance;
         arg.m_surface = surface;
         GraphicsManager::GetRef().InitializeGraphicsSystem(arg);
+        GraphicsManager::GetRef().Initialize();
 
     } else {
         SDLOGE("Error engine type!!!");
@@ -237,6 +239,7 @@ void WindowsApplication::InitializeGraphicsSystem()
 void WindowsApplication::ReleaseGraphicsSystem()
 {
     SDLOG("Release Graphics System of Application.");
+    GraphicsManager::GetRef().Release();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
     //destroy Graphics Manager.
     GraphicsManager::Destroy();
