@@ -47,6 +47,36 @@ VkResult VulkanManager::CreateVKRenderPass(
     return vkCreateRenderPass(m_VK_device, &rp_c_info, nullptr, &io_rp_handle);
 }
 
+void VulkanManager::BeginVkRenderPass(
+    VkCommandBuffer i_cmd_buffer,
+    VkRenderPass i_rp_handle,
+    VkFramebuffer i_fb_handle,
+    const VkRect2D &i_render_area,
+    const std::vector<VkClearValue> &i_clear_values,
+    VkSubpassContents i_sp_content)
+{
+    VkRenderPassBeginInfo rp_begin_info = {};
+    rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    rp_begin_info.pNext = nullptr;
+    rp_begin_info.renderPass = i_rp_handle;
+    rp_begin_info.framebuffer = i_fb_handle;
+    rp_begin_info.renderArea = i_render_area;
+    rp_begin_info.clearValueCount = static_cast<uint32_t>(i_clear_values.size());
+    rp_begin_info.pClearValues = i_clear_values.data();
+
+    vkCmdBeginRenderPass(i_cmd_buffer, &rp_begin_info, i_sp_content);
+}
+
+void VulkanManager::GotoNextStepInVKRenderPass(VkCommandBuffer i_cmd_buffer, VkSubpassContents i_sp_content)
+{
+    vkCmdNextSubpass(i_cmd_buffer, i_sp_content);
+}
+
+void VulkanManager::EndVkRenderPass(VkCommandBuffer i_cmd_buffer)
+{
+    vkCmdEndRenderPass(i_cmd_buffer);
+}
+
 void VulkanManager::DestroyVKRenderPass(VkRenderPass &io_rp_handle)
 {
     vkDestroyRenderPass(m_VK_device, io_rp_handle, nullptr);

@@ -181,8 +181,52 @@ void VulkanManager::DestroyRenderPass(RenderPassIdentity &io_identity)
     DestroyVKRenderPass(rp_handle);
 }
 
+void VulkanManager::BeginRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferIdentity &i_fb_identity, const ImageOffset &i_start_pos, const ImageSize &i_render_size, const std::vector<ClearValue> &i_clear_values)
+{
+    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(i_cmd_buffer_handle);
+    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(i_fb_identity.m_rp_handle);
+    VkFramebuffer fb_handle = reinterpret_cast<VkFramebuffer>(i_fb_identity.m_fb_handle);
+    VkRect2D render_area = {};
+    Size_ui32 final_w = i_render_size.m_width, final_h = i_render_size.m_height;
+
+    if (final_w + i_start_pos.m_x > i_fb_identity.m_size.m_width) {
+        final_w = i_fb_identity.m_size.m_width - i_start_pos.m_x;
+    }
+    if (final_h + i_start_pos.m_y > i_fb_identity.m_size.m_height) {
+        final_h = i_fb_identity.m_size.m_height - i_start_pos.m_y;
+    }
+
+    render_area.offset.x = i_start_pos.m_x;
+    render_area.offset.y = i_start_pos.m_y;
+    render_area.extent.width = final_w;
+    render_area.extent.height = final_h;
+
+    std::vector<VkClearValue> clear_values;
+    clear_values.resize(i_clear_values.size());
+    for (uint32_t i = 0; i < clear_values.size(); ++i) {
+        const UBytePtr dst_ptr = reinterpret_cast<const UBytePtr>(&clear_values[i]);
+        const UBytePtr src_ptr = (const UBytePtr)(&i_clear_values[i]);
+        size_t dst_size = sizeof(VkClearValue);
+        std::memcpy(dst_ptr, src_ptr, dst_size);
+    }
+
+    BeginVkRenderPass(cmd_handle, rp_handle, fb_handle, render_area, clear_values);
+}
+
+void VulkanManager::GoToNextStepOfRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferGroupIdentity &i_target_fbg_identity)
+{
+    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(i_cmd_buffer_handle);
+    GotoNextStepInVKRenderPass(cmd_handle);
+}
+
+void VulkanManager::EndRenderPass(const CompHandle i_cmd_buffer_handle)
+{
+    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(i_cmd_buffer_handle);
+    EndVkRenderPass(cmd_handle);
+}
+
 //-------- FrameBuffer --------
-void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, std::vector<TextureWeakReferenceObject> i_buf_wrefs)
+void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs)
 {
     VkResult result = VK_SUCCESS;
     //1. create all image view of this framebuffer
@@ -249,7 +293,7 @@ void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, std::vec
     //2. create framebuffer.
     VkFramebuffer &fb_handle = reinterpret_cast<VkFramebuffer&>(io_identity.m_fb_handle);
     VkRenderPass &rp_handle = reinterpret_cast<VkRenderPass&>(io_identity.m_rp_handle);
-    result = CreateVKFrameBuffer(fb_handle, rp_handle, ivs, io_identity.m_width, io_identity.m_height, io_identity.m_layer);
+    result = CreateVKFrameBuffer(fb_handle, rp_handle, ivs, io_identity.m_size.m_width, io_identity.m_size.m_height, io_identity.m_size.m_length);
     if (result != VK_SUCCESS) {
         SDLOGE("Create Framebuffer failure(%d)!!!.",  result);
     }

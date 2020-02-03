@@ -40,26 +40,37 @@ void OpenGL4Manager::CreateRenderPass(RenderPassIdentity &io_identity)
 {
 }
 
+void OpenGL4Manager::BeginRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferIdentity &i_fb_identity, const ImageOffset &i_start_pos, const ImageSize &i_render_size, const std::vector<ClearValue> &i_clear_values)
+{
+}
+
+void OpenGL4Manager::GoToNextStepOfRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferGroupIdentity &i_target_fbg_identity)
+{
+}
+
+void OpenGL4Manager::EndRenderPass(const CompHandle i_cmd_buffer_handle)
+{
+}
+
 void OpenGL4Manager::DestroyRenderPass(RenderPassIdentity &io_identity)
 {
 }
 
-void OpenGL4Manager::CreateFrameBuffer(FrameBufferIdentity& io_identity, std::vector<TextureWeakReferenceObject> i_buf_wrefs)
+void OpenGL4Manager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs)
 {
-
 }
 
-void OpenGL4Manager::CreateFrameBufferGroup(FrameBufferGroupIdentity& io_identity)
+void OpenGL4Manager::CreateFrameBufferGroup(FrameBufferGroupIdentity &io_identity)
 {
     //For each group, generate FBO and bind color and depth buffer to texture.
 }
 
-void OpenGL4Manager::DestroyFrameBufferGroup(FrameBufferGroupIdentity& io_identity)
+void OpenGL4Manager::DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity)
 {
 
 }
 
-void OpenGL4Manager::DestroyFrameBuffer(FrameBufferIdentity& io_identity)
+void OpenGL4Manager::DestroyFrameBuffer(FrameBufferIdentity &io_identity)
 {
 
 }

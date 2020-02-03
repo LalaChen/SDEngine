@@ -117,12 +117,15 @@ public:
     virtual void DeleteShaderModule(ShaderModuleIdentity &io_identity) = 0;
 public:
     virtual void CreateRenderPass(RenderPassIdentity &io_identity) = 0;
+    virtual void BeginRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferIdentity &i_fb_identity, const ImageOffset &i_start_pos, const ImageSize &i_render_size, const std::vector<ClearValue> &i_clear_values) = 0;
+    virtual void GoToNextStepOfRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferGroupIdentity &i_target_fbg_identity) = 0;
+    virtual void EndRenderPass(const CompHandle i_cmd_buffer_handle) = 0;
     virtual void DestroyRenderPass(RenderPassIdentity &io_identity) = 0;
 public:
-    virtual void CreateFrameBuffer(FrameBufferIdentity& io_identity, std::vector<TextureWeakReferenceObject> i_buf_wrefs) = 0;
-    virtual void CreateFrameBufferGroup(FrameBufferGroupIdentity& io_identity)  = 0;
-    virtual void DestroyFrameBufferGroup(FrameBufferGroupIdentity& io_identity) = 0;
-    virtual void DestroyFrameBuffer(FrameBufferIdentity& io_identity) = 0;
+    virtual void CreateFrameBuffer(FrameBufferIdentity &io_identity, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs) = 0;
+    virtual void CreateFrameBufferGroup(FrameBufferGroupIdentity &io_identity)  = 0;
+    virtual void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) = 0;
+    virtual void DestroyFrameBuffer(FrameBufferIdentity &io_identity) = 0;
 public:
 //------------- Resize Function -----------------
     virtual void Resize(Size_ui32 i_w, Size_ui32 i_h) = 0;
@@ -130,12 +133,12 @@ public:
 //------------- Render Function -----------------
     void Render();
 public:
-//-------- Managing  RenderPass Function --------
+//-------- Managing RenderPass Function ---------
     void InitializeDefaultRenderPasses();
     void RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp_sref);
     void UnregisterRenderPass(const ObjectName &i_target_rp_name);
     void ReleaseRenderPasses();
-    RenderPassWeakReferenceObject GetRenderPass(const ObjectName& i_target_rp_name) const;
+    RenderPassWeakReferenceObject GetRenderPass(const ObjectName &i_target_rp_name) const;
 protected:
 //------------ Render Flow Function -------------
     virtual void RenderBegin() = 0;

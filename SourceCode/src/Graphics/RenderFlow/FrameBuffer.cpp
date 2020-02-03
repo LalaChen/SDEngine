@@ -29,9 +29,10 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-FrameBuffer::FrameBuffer(const ObjectName& i_object_name)
+FrameBuffer::FrameBuffer(const ObjectName &i_object_name, const ImageSize &i_size)
 : Object(i_object_name)
 {
+    m_fb_identity.m_size = i_size;
 }
 
 FrameBuffer::~FrameBuffer()
@@ -42,7 +43,7 @@ FrameBuffer::~FrameBuffer()
     GraphicsManager::GetRef().DestroyFrameBuffer(m_fb_identity);
 }
 
-void FrameBuffer::Initialize(const std::vector<SubpassDescription> &i_sp_descs)
+void FrameBuffer::Initialize(const std::vector<SubpassDescription> &i_sp_descs, const std::vector<AttachmentDescription> &i_att_descs)
 {
     //1. resize fbg groups for following subpasses.
     m_fbg_identities.resize(i_sp_descs.size());
@@ -51,18 +52,30 @@ void FrameBuffer::Initialize(const std::vector<SubpassDescription> &i_sp_descs)
         //2.1 color attachment.
         if (i_sp_descs[spID].m_color_attachment_refs.size() > 0) {
             m_fbg_identities[spID].m_color_buf_wrefs.resize(i_sp_descs[spID].m_color_attachment_refs.size());
+            m_fbg_identities[spID].m_clear_color_flags.resize(i_sp_descs[spID].m_color_attachment_refs.size());
+            m_fbg_identities[spID].m_clear_colors.resize(i_sp_descs[spID].m_color_attachment_refs.size());
+
             for (uint32_t attrID = 0; attrID < i_sp_descs[spID].m_color_attachment_refs.size(); ++attrID) {
-                uint32_t fbID = i_sp_descs[spID].m_color_attachment_refs[attrID].m_attachment_ID;
-                if (fbID < m_buf_wrefs.size()) {
-                    if (m_buf_wrefs[fbID].IsNull() == false) {
-                        m_fbg_identities[spID].m_color_buf_wrefs[attrID] = m_buf_wrefs[fbID];
+                uint32_t bufID = i_sp_descs[spID].m_color_attachment_refs[attrID].m_attachment_ID;
+                if (bufID < m_buf_wrefs.size()) {
+                    //2.1.1 record clear flag and values.
+                    m_fbg_identities[spID].m_clear_colors[attrID] = m_fb_identity.m_clear_values[bufID].ToColor4f();
+                    if (i_att_descs[bufID].m_load_op == AttachmentLoadOperator_CLEAR) {
+                        m_fbg_identities[spID].m_clear_color_flags[attrID] = true;
                     }
                     else {
-                        SDLOGE("Color BufferID[%d] of FrameBuffer[%s] is null.", fbID, m_object_name.c_str());
+                        m_fbg_identities[spID].m_clear_color_flags[attrID] = false;
+                    }
+                    //2.1.2 record target buffer.
+                    if (m_buf_wrefs[bufID].IsNull() == false) {
+                        m_fbg_identities[spID].m_color_buf_wrefs[attrID] = m_buf_wrefs[bufID];
+                    }
+                    else {
+                        SDLOGE("Color BufferID[%d] of FrameBuffer[%s] is null.", bufID, m_object_name.c_str());
                     }
                 }
                 else {
-                    SDLOGE("Color Attachment[%d] of FrameBuffer[%s] is out of range.", fbID, m_object_name.c_str());
+                    SDLOGE("Color Attachment[%d] of FrameBuffer[%s] is out of range.", bufID, m_object_name.c_str());
                 }
             }
         }
@@ -71,17 +84,17 @@ void FrameBuffer::Initialize(const std::vector<SubpassDescription> &i_sp_descs)
         if (i_sp_descs[spID].m_input_attachment_refs.size() > 0) {
             m_fbg_identities[spID].m_input_buf_wrefs.resize(i_sp_descs[spID].m_input_attachment_refs.size());
             for (uint32_t attrID = 0; attrID < i_sp_descs[spID].m_input_attachment_refs.size(); ++attrID) {
-                uint32_t fbID = i_sp_descs[spID].m_input_attachment_refs[attrID].m_attachment_ID;
-                if (fbID < m_buf_wrefs.size()) {
-                    if (m_buf_wrefs[fbID].IsNull() == false) {
-                        m_fbg_identities[spID].m_input_buf_wrefs[attrID] = m_buf_wrefs[fbID];
+                uint32_t bufID = i_sp_descs[spID].m_input_attachment_refs[attrID].m_attachment_ID;
+                if (bufID < m_buf_wrefs.size()) {
+                    if (m_buf_wrefs[bufID].IsNull() == false) {
+                        m_fbg_identities[spID].m_input_buf_wrefs[attrID] = m_buf_wrefs[bufID];
                     }
                     else {
-                        SDLOGE("Input BufferID[%d] of FrameBuffer[%s] is null.", fbID, m_object_name.c_str());
+                        SDLOGE("Input BufferID[%d] of FrameBuffer[%s] is null.", bufID, m_object_name.c_str());
                     }
                 }
                 else {
-                    SDLOGE("Input Attachment[%d] of FrameBuffer[%s] is out of range.", fbID, m_object_name.c_str());
+                    SDLOGE("Input Attachment[%d] of FrameBuffer[%s] is out of range.", bufID, m_object_name.c_str());
                 }
             }
         }
@@ -90,17 +103,17 @@ void FrameBuffer::Initialize(const std::vector<SubpassDescription> &i_sp_descs)
         if (i_sp_descs[spID].m_res_attachment_refs.size() > 0) {
             m_fbg_identities[spID].m_ref_buf_wrefs.resize(i_sp_descs[spID].m_res_attachment_refs.size());
             for (uint32_t attrID = 0; attrID < i_sp_descs[spID].m_res_attachment_refs.size(); ++attrID) {
-                uint32_t fbID = i_sp_descs[spID].m_res_attachment_refs[attrID].m_attachment_ID;
-                if (fbID < m_buf_wrefs.size()) {
-                    if (m_buf_wrefs[fbID].IsNull() == false) {
-                        m_fbg_identities[spID].m_ref_buf_wrefs[attrID] = m_buf_wrefs[fbID];
+                uint32_t bufID = i_sp_descs[spID].m_res_attachment_refs[attrID].m_attachment_ID;
+                if (bufID < m_buf_wrefs.size()) {
+                    if (m_buf_wrefs[bufID].IsNull() == false) {
+                        m_fbg_identities[spID].m_ref_buf_wrefs[attrID] = m_buf_wrefs[bufID];
                     }
                     else {
-                        SDLOGE("Res BufferID[%d] of FrameBuffer[%s] is null.", fbID, m_object_name.c_str());
+                        SDLOGE("Res BufferID[%d] of FrameBuffer[%s] is null.", bufID, m_object_name.c_str());
                     }
                 }
                 else {
-                    SDLOGE("Res Attachment[%d] of FrameBuffer[%s] is out of range.", fbID, m_object_name.c_str());
+                    SDLOGE("Res Attachment[%d] of FrameBuffer[%s] is out of range.", bufID, m_object_name.c_str());
                 }
             }
         }
@@ -114,6 +127,16 @@ void FrameBuffer::Initialize(const std::vector<SubpassDescription> &i_sp_descs)
         uint32_t depth_fbID = i_sp_descs[spID].m_depth_attachment_ref.m_attachment_ID;
         if (depth_fbID != SD_ERROR_ATTACHMENT_REF) {
             if (depth_fbID < m_buf_wrefs.size()) {
+                //2.5.1 record clear flag and values.
+                m_fbg_identities[spID].m_clear_depth   = m_fb_identity.m_clear_values[depth_fbID].ToDepth();
+                m_fbg_identities[spID].m_clear_stencil = m_fb_identity.m_clear_values[depth_fbID].ToStencil();
+                if (i_att_descs[depth_fbID].m_stencil_load_op == AttachmentLoadOperator_CLEAR) {
+                    m_fbg_identities[spID].m_clear_depth_or_stencil_flag = true;
+                }
+                else {
+                    m_fbg_identities[spID].m_clear_depth_or_stencil_flag = false;
+                }
+                //2.5.2 record depth buffer.
                 if (m_buf_wrefs[depth_fbID].IsNull() == false) {
                     m_fbg_identities[spID].m_depth_buf_wref = m_buf_wrefs[depth_fbID];
                 }
@@ -124,7 +147,7 @@ void FrameBuffer::Initialize(const std::vector<SubpassDescription> &i_sp_descs)
             else {
                 SDLOGE("Depth Attachment[%d] of FrameBuffer[%s] is out of range.", i_sp_descs[spID].m_depth_attachment_ref.m_attachment_ID, m_object_name.c_str());
             }
-        }
+        } 
     }
     //3. Call manager to allocate FrameBuffer comp handle.
     GraphicsManager::GetRef().CreateFrameBuffer(m_fb_identity, m_buf_wrefs);
@@ -138,16 +161,18 @@ void FrameBuffer::AddRenderPassInfos(const std::vector<ImageViewIdentity> &i_iv_
 {
     m_fb_identity.m_rp_handle = i_rp_handle;
     m_fb_identity.m_iv_identities = i_iv_descs;
+    m_fb_identity.m_clear_values.resize(m_fb_identity.m_iv_identities.size());
     m_buf_wrefs.resize(m_fb_identity.m_iv_identities.size());
 }
 
-void FrameBuffer::RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx)
+void FrameBuffer::RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue& i_clear_value)
 {
     if (i_idx < m_buf_wrefs.size()) {
         if (i_tex_wref.IsNull() == false) {
             TextureFormatEnum tex_format = i_tex_wref.GetConstRef().GetTextureFormat();
             if (tex_format == m_fb_identity.m_iv_identities[i_idx].m_format) {
                 m_buf_wrefs[i_idx] = i_tex_wref;
+                m_fb_identity.m_clear_values[i_idx] = i_clear_value;
             }
             else {
                 SDLOGE("Register wrong type[%d] tex[%s] to this FB[%s]. CorrectType is [%d]", tex_format,

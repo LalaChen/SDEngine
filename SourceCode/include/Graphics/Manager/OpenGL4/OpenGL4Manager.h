@@ -85,12 +85,15 @@ public:
     void DeleteShaderModule(ShaderModuleIdentity &io_identity) override;
 public:
     void CreateRenderPass(RenderPassIdentity &io_identity) override;
+    void BeginRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferIdentity &i_fb_identity, const ImageOffset &i_start_pos, const ImageSize &i_render_size, const std::vector<ClearValue> &i_clear_values) override;
+    void GoToNextStepOfRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferGroupIdentity &i_target_fbg_identity) override;
+    void EndRenderPass(const CompHandle i_cmd_buffer_handle) override;
     void DestroyRenderPass(RenderPassIdentity &io_identity) override;
 public:
-    void CreateFrameBuffer(FrameBufferIdentity& io_identity, std::vector<TextureWeakReferenceObject> i_buf_wrefs) override;
-    void CreateFrameBufferGroup(FrameBufferGroupIdentity& io_identity) override;
-    void DestroyFrameBufferGroup(FrameBufferGroupIdentity& io_identity) override;
-    void DestroyFrameBuffer(FrameBufferIdentity& io_identity) override;
+    void CreateFrameBuffer(FrameBufferIdentity &io_identity, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs) override;
+    void CreateFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
+    void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
+    void DestroyFrameBuffer(FrameBufferIdentity &io_identity) override;
 public:
     void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
 protected:

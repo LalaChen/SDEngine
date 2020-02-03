@@ -32,6 +32,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "ClearValue.h"
 #include "ImageViewIdentity.h"
 #include "FrameBufferGroupIdentity.h"
 #include "FrameBufferIdentity.h"
@@ -52,22 +53,24 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(FrameBuffer);
 class SDENGINE_CLASS FrameBuffer : public Object
 {
 public:
-    /*! \fn explicit FrameBuffer(const ObjectName &i_object_name);
-     *  \param i_object_name Name of this object.
+    /*! \fn explicit FrameBuffer(const ObjectName &i_object_name, const ImageSize &i_size);
+     *  \param [in] i_object_name Name of this framebuffer.
+     *  \param [in] i_size Size of framebuffer. z is used to store layer.
      *  \brief Constructor of FrameBuffer
      */
-    explicit FrameBuffer(const ObjectName &i_object_name);
+    explicit FrameBuffer(const ObjectName &i_object_name, const ImageSize &i_size);
 
     /*! \fn virtual ~FrameBuffer();
-     *  \brief Constructor of FrameBuffer
+     *  \brief Destructor of FrameBuffer
      */
     virtual ~FrameBuffer();
 public:
-    /*! \fn void Initialize(const std::vector<SubpassDescription>& i_sp_descs);
+    /*! \fn void Initialize(const std::vector<SubpassDescription>& i_sp_descs, const std::vector<AttachmentDescription> &i_att_descs);
      *  \param [in] i_sp_descs tell us subpass description. 
-     *  \brief Initialize framebuffer. Please call this function after calling AddImageViewDescriptions and RegisterBuffer.
+     *  \param [in] i_att_descs tell us attachment description.
+     *  \brief Initialize framebuffer. Please call this function after calling AddRenderPassInfos and RegisterBuffer.
      */
-    void Initialize(const std::vector<SubpassDescription> &i_sp_descs);
+    void Initialize(const std::vector<SubpassDescription> &i_sp_descs, const std::vector<AttachmentDescription> &i_att_descs);
 public:
     /*! \fn void AddRenderPassInfos(const std::vector<ImageViewIdentity> &i_iv_descs, const CompHandle i_rp_handle);
      *  \param [in] i_iv_descs descriptions about all buffer links in this FrameBuffer. Real handle will be initialized 
@@ -76,11 +79,12 @@ public:
      */
     void AddRenderPassInfos(const std::vector<ImageViewIdentity> &i_iv_descs, const CompHandle i_rp_handle);
 
-    /* \fn void RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx);
+    /* \fn void RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value);
      * \param [in] i_tex_wref Texture we want to register its to image view.
      * \param [in] i_idx we want to register buffer for which image view.
+     * \param [in] i_clear_value Clear value.
      */
-    void RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx);
+    void RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value);
 protected:
 
     /* \var FrameBufferIdentity m_fb_identity;

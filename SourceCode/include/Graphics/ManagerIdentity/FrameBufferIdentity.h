@@ -36,22 +36,52 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "ClearValue.h"
+#include "ImageParam.h"
 #include "ImageViewIdentity.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+/*! \class FrameBufferIdentity
+ *  \brief In our graphic system, class FrameBufferIdentity is used to keep framebuffer.
+ */
 class SDENGINE_CLASS FrameBufferIdentity
 {
 public:
+    /*! \fn FrameBufferIdentity();
+     *  \brief constructor.
+     */
     FrameBufferIdentity();
+
+    /*! \fn ~FrameBufferIdentity();
+     *  \brief destructor.
+     */
     ~FrameBufferIdentity();
 public:
+    /*! \var CompHandle m_fb_handle;
+     *  \brief Framebuffer handle.
+     */
     CompHandle m_fb_handle;
+
+    /*! \var CompHandle m_rp_handle;
+     *  \brief Render pass handle. Don't destroy it.
+     */
     CompHandle m_rp_handle;
-    Size_ui32 m_width;
-    Size_ui32 m_height;
-    Size_ui32 m_layer;
+
+    /*! \var ImageSize m_size;
+     *  \brief Size of this framebuffer. Attribute m_length is used to layer.
+     */
+    ImageSize m_size;
+
+    /*! \var std::vector<ImageViewIdentity> m_iv_identities;
+     *  \brief Image view identities of this framebuffer.
+     */
     std::vector<ImageViewIdentity> m_iv_identities;
+
+    /*! \var std::vector<ClearValue> m_clear_values;
+     *  \brief Clear values about each attachment.
+     */
+    std::vector<ClearValue> m_clear_values;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

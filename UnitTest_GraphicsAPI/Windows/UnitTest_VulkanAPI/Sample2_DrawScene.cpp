@@ -271,15 +271,19 @@ void Sample2_DrawScene::CreateRenderPassAndFramebuffer()
         res_size.GetWidth(), res_size.GetHeight(), TextureFormat_D32_SFLOAT_S8_UINT,
         ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
+    ClearValue clear_color = {0.15f, 0.15f, 0.15f, 1.0f};
+    ClearValue clear_dands;
+    clear_dands.depth_stencil.depth = 1.0f; clear_dands.depth_stencil.stencil = 1;
+
     RenderPassWeakReferenceObject rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPath");
-    m_render_flow_sref = new RenderFlow("ForwardPathFlow");
+    m_render_flow_sref = new RenderFlow("ForwardPathFlow", ImageOffset(0,0,0), ImageSize(res_size.GetWidth(), res_size.GetHeight(), 1));//1 is means layer 1.
     m_render_flow_sref.GetRef().RegisterRenderPass(rp_wref);
     m_render_flow_sref.GetRef().AllocateFrameBuffer();
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buffer_sref, 0);
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer_sref, 1);
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buffer_sref, 2);
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer_sref, 3);
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buffer_sref, 4);
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer_sref, 5);
+    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buffer_sref, 0, clear_color);
+    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer_sref, 1, clear_dands);
+    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buffer_sref, 2, clear_color);
+    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer_sref, 3, clear_dands);
+    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buffer_sref, 4, clear_color);
+    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer_sref, 5, clear_dands);
     m_render_flow_sref.GetRef().Initialize();
 }

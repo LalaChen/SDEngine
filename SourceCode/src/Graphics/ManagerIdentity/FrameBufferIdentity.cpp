@@ -30,9 +30,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 FrameBufferIdentity::FrameBufferIdentity()
 : m_fb_handle(SD_NULL_HANDLE)
 , m_rp_handle(SD_NULL_HANDLE)
-, m_width(2)
-, m_height(2)
-, m_layer(1)
+, m_size(2, 2, 1)
 {
 }
 

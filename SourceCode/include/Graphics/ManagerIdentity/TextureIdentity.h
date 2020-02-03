@@ -36,72 +36,10 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "ImageParam.h"
 #include "ManagerParam.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
-
-/*! \class ImageSize
- *  \brief Record size of this image.
- */
-class SDENGINE_CLASS ImageSize
-{
-public:
-    /*! \fn ImageSize();
-     *  \brief The constructor of ImageSize Class.
-     */
-    ImageSize() :m_width(0u) ,m_height(0u) ,m_length(0u) {}
-
-    /*! \fn ~ImageSize();
-     *  \brief The destructor of ImageSize Class.
-     */
-    ~ImageSize() {}
-public:
-    /*! \var Size_ui32 m_width;
-     *  \brief The width of texture.
-     */
-    Size_ui32 m_width;
-
-    /*! \var Size_ui32 m_height;
-     *  \brief The height of texture.
-     */
-    Size_ui32 m_height;
-
-    /*! \var Size_ui32 m_length;
-     *  \brief The length of texture.
-     */
-    Size_ui32 m_length;
-};
-
-/*! \class ImageOffset
- *  Record starting position in an image.
- */
-class SDENGINE_CLASS ImageOffset
-{
-public:
-    /*! \fn ImageOffset();
-     *  \brief The constructor of ImageOffset Class.
-     */
-    ImageOffset() :m_x(0u), m_y(0u), m_z(0u) {}
-    /*! \fn ~ImageOffset();
-     *  \brief The destructor of ImageOffset Class.
-     */
-    ~ImageOffset() {}
-public:
-    /*! \var int32_t m_x;
-     *  \brief The start index at width of texture.
-     */
-    int32_t m_x;
-
-    /*! \var int32_t m_y;
-     *  \brief The start index at height of texture.
-     */
-    int32_t m_y;
-
-    /*! \var int32_t m_z;
-     *  \brief The start index at length of texture.
-     */
-    int32_t m_z;
-};
 
 /*! \class TextureIdentity
  *  Keep all graphics handle or ID in this struct.

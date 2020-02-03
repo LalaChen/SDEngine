@@ -34,14 +34,27 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "Color4f.h"
 #include "RenderPass.h"
-
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class SDENGINE_CLASS RenderFlowBeginInfo
+{
+public:
+    RenderFlowBeginInfo();
+    ~RenderFlowBeginInfo();
+public:
+    CompHandle m_rp_handle;
+    CompHandle m_fb_handle;
+    ImageOffset m_pos;
+    ImageSize m_size;
+    std::vector<ClearValue> m_cvs;
+};
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(RenderFlow);
 
@@ -52,11 +65,13 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(RenderFlow);
 class SDENGINE_CLASS RenderFlow : public Object
 {
 public:
-    /*! \fn explicit RenderFlow(const ObjectName &i_object_name);
+    /*! \fn explicit RenderFlow(const ObjectName &i_object_name, const Resolution &i_resolution);
      *  \param [in] i_object_name Name of this object.
+     *  \param [in] i_render_pos start position of render area.
+     *  \param [in] i_render_size size of render area.
      *  \brief Constructor of RenderFlow
      */
-    explicit RenderFlow(const ObjectName &i_object_name);
+    explicit RenderFlow(const ObjectName &i_object_name, const ImageOffset &i_render_pos, const ImageSize &i_render_size);
 
     /*! \fn virtual ~RenderFlow();
      *  \brief Destructor of RenderFlow.
@@ -82,10 +97,26 @@ public:
     /* \fn void RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx);
      * \param [in] i_tex_wref Texture we want to register its to image view.
      * \param [in] i_idx we want to register buffer for which image view.
+     * \param [in] i_clear_value Clear value.
      * \brief Register buffer to frame buffer. Please register color or depth buffer one by one with the order following 
      *        attachment description in render pass after AllocateFrameBuffer.
      */
-    void RegisterBufferToFrameBuffer(const TextureWeakReferenceObject& i_tex_wref, uint32_t i_idx);
+    void RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value);
+public:
+    /* \fn void BeginRenderFlow();
+     * \brief Start this render follow. We will start first step.
+     */
+    void BeginRenderFlow();
+
+    /* \fn void BeginRenderFlow();
+     * \brief Go to next step of this render follow.
+     */
+    void GoToNextStep();
+
+    /* \fn void EndRenderFlow();
+     * \brief End this render follow.
+     */
+    void EndRenderFlow();
 protected:
     /*! \var RenderPassWeakReferenceObject m_rp_wref;
      *  \brief Target render pass.
@@ -96,6 +127,16 @@ protected:
      *  \brief Target frame buffer.
      */
     FrameBufferStrongReferenceObject m_fb_sref;
+
+    /*! \var ImageOffset m_position;
+     *  \brief Tell the start position of render area.
+     */
+    ImageOffset m_position;
+
+    /*! \var ImageSize m_size;
+     *  \brief Tell the size of render area.
+     */
+    ImageSize m_size;
 };
 
 

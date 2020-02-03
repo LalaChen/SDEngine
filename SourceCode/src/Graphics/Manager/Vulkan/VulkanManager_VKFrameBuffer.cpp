@@ -28,9 +28,9 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVKFrameBuffer(
-    VkFramebuffer& io_fb_handle,
+    VkFramebuffer &io_fb_handle,
     const VkRenderPass i_rp_handle,
-    const std::vector<VkImageView>& i_iv_handles,
+    const std::vector<VkImageView> &i_iv_handles,
     Size_ui32 i_width,
     Size_ui32 i_height,
     Size_ui32 i_layers)
@@ -62,9 +62,9 @@ VkResult VulkanManager::CreateVkImageView(
     iv_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     iv_c_info.pNext = nullptr;
     iv_c_info.flags = 0;
-    iv_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    iv_c_info.viewType = i_view_type;
     iv_c_info.image = i_img_handle;
-    iv_c_info.format = VK_FORMAT_R8G8B8A8_UNORM;
+    iv_c_info.format = i_img_format;
     iv_c_info.components = i_comp_swizzle;
     iv_c_info.subresourceRange = i_sub_src_range;
     return vkCreateImageView(m_VK_device, &iv_c_info, nullptr, &io_iv_handle);

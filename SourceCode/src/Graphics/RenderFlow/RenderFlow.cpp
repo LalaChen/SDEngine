@@ -29,8 +29,10 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-RenderFlow::RenderFlow(const ObjectName &i_object_name)
+RenderFlow::RenderFlow(const ObjectName &i_object_name, const ImageOffset &i_render_pos, const ImageSize &i_render_size)
 : Object(i_object_name)
+, m_position(i_render_pos)
+, m_size(i_render_size)
 {
 }
 
@@ -46,7 +48,7 @@ void RenderFlow::RegisterRenderPass(const RenderPassWeakReferenceObject &i_rp_wr
 void RenderFlow::AllocateFrameBuffer()
 {
     if (m_rp_wref.IsNull() == false) {
-        m_fb_sref = new FrameBuffer(m_object_name + "_FrameBuffer");
+        m_fb_sref = new FrameBuffer(m_object_name + "_FrameBuffer", m_size);
         //1. Create ImageView Desciption from Attachment Desciption.
         m_fb_sref.GetRef().AddRenderPassInfos(m_rp_wref.GetRef().CreateImageViewDescriptions(), m_rp_wref.GetRef().GetHandle());
     }
@@ -55,10 +57,10 @@ void RenderFlow::AllocateFrameBuffer()
     }
 }
 
-void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject& i_tex_wref, uint32_t i_idx)
+void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject& i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value)
 {
     if (m_fb_sref.IsNull() == false) {
-        m_fb_sref.GetRef().RegisterBuffer(i_tex_wref, i_idx);
+        m_fb_sref.GetRef().RegisterBuffer(i_tex_wref, i_idx, i_clear_value);
     }
     else {
         SDLOGE("No target frame buffe in RenderFlow(%s).", m_object_name.c_str());
@@ -68,12 +70,27 @@ void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject& i
 void RenderFlow::Initialize()
 {
     if (m_fb_sref.IsNull() == false && m_rp_wref.IsNull() == false) {
-        m_fb_sref.GetRef().Initialize(m_rp_wref.GetRef().GetSubpassDescriptions());
+        m_fb_sref.GetRef().Initialize(m_rp_wref.GetRef().GetSubpassDescriptions(), m_rp_wref.GetRef().GetAttachmentDescriptions());
     }
     else {
-        SDLOGE("One or both of render pass or frame buffer are null. RP(%d). FB(%d)."
-            ,m_rp_wref.IsNull(), m_fb_sref.IsNull());
+        SDLOGE("One or both of render pass or frame buffer are null. RP null(%d). FB null(%d)."
+            , !m_rp_wref.IsNull() ,!m_fb_sref.IsNull());
     }
+}
+
+void RenderFlow::BeginRenderFlow()
+{
+
+}
+
+void RenderFlow::GoToNextStep()
+{
+
+}
+
+void RenderFlow::EndRenderFlow()
+{
+
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

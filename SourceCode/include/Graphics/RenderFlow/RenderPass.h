@@ -95,6 +95,15 @@ public:
      *  \brief return subpass description.
      */
     const std::vector<SubpassDescription>& GetSubpassDescriptions() const;
+
+    /*! \fn const std::vector<AttachmentDescription>& GetAttachmentDescriptions() const;
+     *  \brief return attachment description.
+     */
+    const std::vector<AttachmentDescription>& GetAttachmentDescriptions() const;
+
+    /*! \fn const RenderPassIdentity &GetRenderPassIdentity() const;
+     *
+     */
 protected:
     /*! \var RenderPassIdentity m_rp_identity;
      *  \brief Identity about render pass.
@@ -110,5 +119,10 @@ inline const CompHandle RenderPass::GetHandle() const
 inline const std::vector<SubpassDescription>& RenderPass::GetSubpassDescriptions() const
 {
     return m_rp_identity.m_subpasses_descs;
+}
+
+inline const std::vector<AttachmentDescription>& RenderPass::GetAttachmentDescriptions() const
+{
+    return m_rp_identity.m_attachment_descs;
 }
 ______________SD_END_GRAPHICS_NAMESPACE______________

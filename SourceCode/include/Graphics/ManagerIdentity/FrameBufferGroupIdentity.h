@@ -34,7 +34,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-
+#include "Color4f.h"
 #include "Texture.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -45,12 +45,61 @@ public:
     FrameBufferGroupIdentity();
     ~FrameBufferGroupIdentity();
 public:
+    /* \var CompHandle m_fbg_handle;
+     * \brief FrameBufferGroup handle. In Vulkan, it always is NULL. In openGL(GLES),
+     *        it's framebufferobject id.
+     */
     CompHandle m_fbg_handle;
+
+    /* \var std::vector<TextureWeakReferenceObject> m_input_buf_wrefs;
+     * \brief Keep buffer weak references for input in this group.
+     */
     std::vector<TextureWeakReferenceObject> m_input_buf_wrefs;
+
+    /* \var std::vector<TextureWeakReferenceObject> m_color_buf_wrefs;
+     * \brief Keep color buffer weak references in this group.
+     */
     std::vector<TextureWeakReferenceObject> m_color_buf_wrefs;
+
+    /* \var std::vector<bool> m_clear_color_flags;
+     * \brief Record clear flag for each color buffer in this group.
+     */
+    std::vector<bool> m_clear_color_flags;
+
+    /* \var std::vector<Color4f> m_clear_colors;
+     * \brief Record clear color for each color buffer.
+     */
+    std::vector<Color4f> m_clear_colors;
+
+    /* \var std::vector<TextureWeakReferenceObject> m_ref_buf_wrefs;
+     * \brief Record resolution buffer in this group.
+     */
     std::vector<TextureWeakReferenceObject> m_ref_buf_wrefs;
+
+    /* \var std::vector<uint32_t> m_pre_buf_ids;
+     * \brief Record preserve buffer id in this group.
+     */
     std::vector<uint32_t> m_pre_buf_ids;
+
+    /* \var std::vector<TextureWeakReferenceObject> m_depth_buf_wref;
+     * \brief Record depth buffer id in this group.
+     */
     TextureWeakReferenceObject m_depth_buf_wref;
+
+    /* \var bool m_clear_depth_or_stencil_flag;
+     * \brief Record clear flag of this depth buffer.
+     */
+    bool m_clear_depth_or_stencil_flag;
+
+    /* \var float m_clear_depth;
+     * \brief Record clear depth value of this depth buffer. Default is 1.0f.
+     */
+    float m_clear_depth;
+    
+    /* \var uint32_t m_clear_stencil;
+     * \brief Record clear stencil value. Default is 1.
+     */
+    uint32_t m_clear_stencil;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
