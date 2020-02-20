@@ -23,38 +23,56 @@ SOFTWARE.
 
 */
 
-/*! \file      ImageViewDescription.h
- *  \brief     Introduce of class about ImageViewIdentity.
+/*! \file      CommandBuffer.h
+ *  \brief     Introduce of class CommandBuffer.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/11/16
+ *  \date      2020/02/04
  *  \copyright MIT License.
  */
 
 #pragma once
 
 #include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "CommandBufferIdentity.h"
+#include "WeakReferenceObject.h"
+#include "Object.h"
 
-#include "ImageUsage.h"
-#include "ImageLayout.h"
-#include "ImageAspect.h"
-#include "TextureFormat.h"
+using SDE::Basic::ObjectName;
+using SDE::Basic::Object;
+
+using SDE::Basic::WeakReferenceObject;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS ImageViewIdentity
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandBuffer);
+
+class SDENGINE_CLASS CommandBuffer : public Object
 {
 public:
-    ImageViewIdentity();
-    ~ImageViewIdentity();
+    /*! \fn explicit CommandBuffer(const ObjectName &i_object_name, WeakReferenceObject<Object> &i_cmd_pool, const CommandPoolWeakReferenceObject &i_cmd_pool);
+     *  \param [in] i_object_name Name of this object.
+     *  \param [in] i_cmd_pool Pool that create this buffer.
+     *  \param [in] i_level Level of this command buffer.
+     *  \brief Constructor of CommandBuffer
+     */
+    explicit CommandBuffer(const ObjectName &i_object_name, const WeakReferenceObject<Object> &i_cmd_pool, const CommandBufferLevelEnum &i_level);
+
+    /*! \fn virtual ~CommandBuffer();
+     *  \brief Destructor of CommandBuffer.
+     */
+    virtual ~CommandBuffer();
 public:
-    CompHandle m_iv_handle;
-    TextureFormatEnum m_format;
-    ImageAspectEnum m_aspect;
-    uint32_t m_base_mip_level;
-    uint32_t m_level_count;
-    uint32_t m_base_array_level;
-    uint32_t m_layer_count;
+    
+    void Begin();
+    
+    void End();
+
+    void Recycle();
+protected:
+
+    CommandBufferIdentity m_identity;
+
+    WeakReferenceObject<Object> m_origin_pool;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

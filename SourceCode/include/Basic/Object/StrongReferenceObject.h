@@ -145,6 +145,13 @@ public:
             return false;
         }
     }
+
+    bool operator==(const std::weak_ptr<Type> &i_src) const
+    {
+        Type* this_ptr = this->get();
+        Type* src_ptr = i_src.lock().get();
+        return (this_ptr == src_ptr);
+    }
 public:
     /*! \fn Type& GetRef() const;
      *  \brief return reference of this.

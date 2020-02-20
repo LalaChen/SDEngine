@@ -23,21 +23,24 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "CommandBufferLevel_Vulkan.h"
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
-#include "CommandBufferIdentity.h"
-#include "CommandPoolIdentity.h"
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+VkCommandBufferLevel CommandBufferLevel_Vulkan::CmdBufferLevels[CommandBufferLevel_MAX_DEFINE_VALUE] =
+{
+    VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+    VK_COMMAND_BUFFER_LEVEL_SECONDARY
+};
+
+VkCommandBufferLevel CommandBufferLevel_Vulkan::Convert(const CommandBufferLevelEnum & i_src)
+{
+    if (SD_ENUM_TO_UINT(i_src) < CommandBufferLevel_MAX_DEFINE_VALUE) {
+        return CmdBufferLevels[SD_ENUM_TO_UINT(i_src)];
+    }
+    else {
+        return VK_COMMAND_BUFFER_LEVEL_MAX_ENUM;
+    }
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

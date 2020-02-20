@@ -81,6 +81,13 @@ public:
      */
     void PrintSystemInformation() override;
 public:
+    void CreateCommandPool(CommandPoolIdentity &io_identity);
+    void DestroyCommandPool(CommandPoolIdentity &io_identity);
+    void AllocateCommandBuffer(CommandBufferIdentity &io_identity);
+    void BeginCommandBuffer(CommandBufferIdentity &io_identity);
+    void EndCommandBuffer(CommandBufferIdentity &io_identity);
+    void FreeCommandBuffer(CommandBufferIdentity &io_identity);
+public:
 //----------- Vertex Buffer Interface Function ------------
     /*
      * We will set i_data_size to VertexBufferIdentity::m_buffer_size and assign allocated memory size to m_memory_size
@@ -111,6 +118,17 @@ public:
     void DestroyFrameBuffer(FrameBufferIdentity &io_identity) override;
 public:
     void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
+protected:
+//------- Vulkan command buffer private Function --------
+    VkResult CreateVkCommandPool(
+        VkCommandPool &io_pool_handle,
+        VkCommandPoolCreateFlags i_flag = VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT);
+
+    VkResult AllocateVkCommandBuffer(
+        VkCommandBuffer &io_cmd_handle,
+        VkCommandPool i_pool_handle,
+        VkCommandBufferLevel i_level = VK_COMMAND_BUFFER_LEVEL_MAX_ENUM);
+
 protected:
 //----------- Vulkan buffer private Function ------------
     VkResult CreateVkBuffer(

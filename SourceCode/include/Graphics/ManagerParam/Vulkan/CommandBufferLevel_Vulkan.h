@@ -23,21 +23,27 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
+/*! \file      CommandBufferLevel_Vulkan.h
+ *  \brief     Introduce of class CommandBufferLevel_Vulkan.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/02/04
  *  \copyright MIT License.
  */
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
-#include "CommandBufferIdentity.h"
-#include "CommandPoolIdentity.h"
+#pragma once
+
+#include <vulkan/vulkan.h>
+
+#include "CommandBufferLevel.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class CommandBufferLevel_Vulkan
+{
+public:
+    static VkCommandBufferLevel Convert(const CommandBufferLevelEnum &i_src);
+public:
+    static VkCommandBufferLevel CmdBufferLevels[CommandBufferLevel_MAX_DEFINE_VALUE];
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

@@ -34,6 +34,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+
 #include "Color4f.h"
 #include "RenderPass.h"
 #include "Object.h"
@@ -42,19 +43,6 @@ using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
-
-class SDENGINE_CLASS RenderFlowBeginInfo
-{
-public:
-    RenderFlowBeginInfo();
-    ~RenderFlowBeginInfo();
-public:
-    CompHandle m_rp_handle;
-    CompHandle m_fb_handle;
-    ImageOffset m_pos;
-    ImageSize m_size;
-    std::vector<ClearValue> m_cvs;
-};
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(RenderFlow);
 

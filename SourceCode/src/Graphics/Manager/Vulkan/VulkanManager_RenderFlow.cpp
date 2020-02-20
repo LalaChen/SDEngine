@@ -234,7 +234,7 @@ void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const st
     for (uint32_t iv_ID = 0; iv_ID < io_identity.m_iv_identities.size(); ++iv_ID) {
         ImageViewIdentity& iv_identity = io_identity.m_iv_identities[iv_ID];
         VkImageView &iv_handle = reinterpret_cast<VkImageView&>(iv_identity.m_iv_handle);
-        const VkImage img_handle = reinterpret_cast<const VkImage>(i_buf_wrefs[iv_ID].GetConstRef().GetHandle());
+        const VkImage img_handle = reinterpret_cast<VkImage>(i_buf_wrefs[iv_ID].GetConstRef().GetHandle());
         
         TextureTypeEnum tex_type = i_buf_wrefs[iv_ID].GetConstRef().GetTextureType();
         VkImageViewType vk_iv_type = VK_IMAGE_VIEW_TYPE_MAX_ENUM;

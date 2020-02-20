@@ -23,21 +23,30 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
+/*! \file      CommandBufferIdentity.h
+ *  \brief     Introduce of class about CommandBufferIdentity.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/02/05
  *  \copyright MIT License.
  */
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
-#include "CommandBufferIdentity.h"
-#include "CommandPoolIdentity.h"
+#pragma once
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+
+#include "CommandBufferLevel.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class SDENGINE_CLASS CommandBufferIdentity
+{
+public:
+    CommandBufferIdentity();
+    ~CommandBufferIdentity();
+public:
+    CompHandle m_cmd_buffer_handle;
+    CommandBufferLevelEnum m_cmd_buffer_level;
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

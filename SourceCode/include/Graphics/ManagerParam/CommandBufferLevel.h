@@ -23,21 +23,27 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
+/*! \file      CommandBufferLevel.h
+ *  \brief     Introduce of enum CommandBufferLevelEnum.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/02/04
  *  \copyright MIT License.
  */
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
-#include "CommandBufferIdentity.h"
-#include "CommandPoolIdentity.h"
+#pragma once
+
+#include "SDEngineMacro.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+/*! \enum CommandBufferLevelEnum
+ *  \brief CommandBufferLevelEnum is used to describe command buffer level.(Vulkan Only)
+ */
+enum CommandBufferLevelEnum
+{
+    CommandBufferLevel_PRIMARY = 0, /*!< Load primary.*/
+    CommandBufferLevel_SECONDARY, /*!< Load secondary.*/
+    CommandBufferLevel_MAX_DEFINE_VALUE /*!< Load max define value.*/
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

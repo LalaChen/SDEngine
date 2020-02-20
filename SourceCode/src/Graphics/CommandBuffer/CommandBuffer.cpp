@@ -23,21 +23,39 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "GraphicsManager.h"
+#include "CommandPool.h"
+#include "CommandBuffer.h"
 
-#include "VertexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
-#include "CommandBufferIdentity.h"
-#include "CommandPoolIdentity.h"
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+CommandBuffer::CommandBuffer(const ObjectName &i_object_name, const WeakReferenceObject<Object> &i_cmd_pool, const CommandBufferLevelEnum &i_level)
+: Object(i_object_name)
+, m_origin_pool(i_cmd_pool)
+{
+    m_identity.m_cmd_buffer_level = i_level;
+    m_identity.m_cmd_buffer_handle = i_cmd_pool.DynamicCastTo<CommandPool>().GetConstRef().GetHandle();
+    //Create command buffer by manager.
+
+}
+
+CommandBuffer::~CommandBuffer()
+{
+}
+
+void CommandBuffer::Begin()
+{
+}
+
+void CommandBuffer::End()
+{
+}
+
+void CommandBuffer::Recycle()
+{
+    CommandBufferStrongReferenceObject del_this = this;
+    m_origin_pool.DynamicCastTo<CommandPool>().GetRef().RecycleCommandBuffer(del_this.StaticCastToWeakPtr<CommandBuffer>());
+    //should call ctor of command buffer at end.
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________
