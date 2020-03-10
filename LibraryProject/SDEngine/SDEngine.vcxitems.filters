@@ -181,6 +181,12 @@
     <Filter Include="src\Graphics\CommandBuffer">
       <UniqueIdentifier>{fa252dd8-e967-49e9-825a-fadabbbbf4f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\KeyMap">
+      <UniqueIdentifier>{9e9d2914-db3a-4bfc-9199-72657727e106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\KeyMap">
+      <UniqueIdentifier>{177a4e94-1604-45ad-bb11-97d9b4be6b70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -606,6 +612,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Texture\ImageParam.h">
       <Filter>include\Graphics\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Application\KeyEventArg.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\KeyMap\KeyEventArg.h">
+      <Filter>include\Graphics\KeyMap</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\KeyMap\KeyMapManager.h">
+      <Filter>include\Graphics\KeyMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -952,6 +965,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKCommand.cpp">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\KeyMap\KeyMapManager.cpp">
+      <Filter>src\Basic\KeyMap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

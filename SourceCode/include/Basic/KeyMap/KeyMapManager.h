@@ -23,40 +23,41 @@ SOFTWARE.
 
 */
 
-/*! \file      EventArg.h
- *  \brief     Introduce of class EventArg
- *  \author    Kuan-Chih, Chen
- *  \date      2019/02/07
- *  \copyright MIT License.
- */
-
 #pragma once
 
 #include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
+#include "EventObject.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-/*! \class EventArg
- *  \brief In our event system, we allow user delivering parameters by inheriting Class EventArg.
- *  It's used for unifying param of interface for all slot. User can check the real arg type while
- *  slot triggered.
- */
-class SDENGINE_CLASS EventArg
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(KeyMapManager);
+
+class SDENGINE_CLASS KeyMapManager : public EventObject
 {
 public:
-    /*! \fn EventArg();
-     *  \brief The constructor of EventArg Class.
-     */
-    EventArg()
-    {
-    }
+    KeyMapManager(const ObjectName &i_object_name);
 
-    /*! \fn virtual ~EventArg();
-     *  \brief The destructor of EventArg Class.
+    virtual ~KeyMapManager();
+public:
+    /*! \fn virtual void SetKeyboardStatus(uint32_t i_key_id, bool i_is_pressed);
+     *  \param [in] i_key_id KeyID.
+     *  \param [in] i_is_pressed Pressed.
+     *  \brief Set key status.
      */
-    virtual ~EventArg()
-    {
-    }
+    virtual void SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed);
+protected:
+    /*! \var bool m_key_maps[256];
+     *  \brief Cache press state of each key.
+     */
+    bool m_key_maps[256];
+
+    /*! \var EventWeakReferenceObject m_key_event_wref;
+     *  \brief weak reference of key event.
+     */
+    EventWeakReferenceObject m_key_event_wref;
 };
 
 _______________SD_END_BASIC_NAMESPACE________________

@@ -23,40 +23,42 @@ SOFTWARE.
 
 */
 
-/*! \file      EventArg.h
- *  \brief     Introduce of class EventArg
+/*! \file      Application.h
+ *  \brief     Introduce of class Application
  *  \author    Kuan-Chih, Chen
- *  \date      2019/02/07
+ *  \date      2019/03/08
  *  \copyright MIT License.
  */
 
 #pragma once
 
 #include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
+#include "EventArg.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-/*! \class EventArg
- *  \brief In our event system, we allow user delivering parameters by inheriting Class EventArg.
- *  It's used for unifying param of interface for all slot. User can check the real arg type while
- *  slot triggered.
+/*! \class KeyEventArg
+ *  \brief Event of key.
  */
-class SDENGINE_CLASS EventArg
+class SDENGINE_CLASS KeyEventArg : public EventArg
 {
 public:
-    /*! \fn EventArg();
-     *  \brief The constructor of EventArg Class.
-     */
-    EventArg()
+    KeyEventArg()
+    : m_key_id(-1)
+    , m_key_state(0)
     {
     }
 
-    /*! \fn virtual ~EventArg();
-     *  \brief The destructor of EventArg Class.
-     */
-    virtual ~EventArg()
+    virtual ~KeyEventArg()
     {
     }
+public:
+    int32_t m_key_id;
+    int32_t m_key_state; //0 : KeyUp. 1 : KeyDown
 };
+
 
 _______________SD_END_BASIC_NAMESPACE________________

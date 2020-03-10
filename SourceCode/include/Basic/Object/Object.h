@@ -88,6 +88,15 @@ public:
     {
         return std::dynamic_pointer_cast<T>(shared_from_this());
     }
+
+    /*! \fn template<class T> std::weak_ptr<T> GetThisWeakPtrByType();
+     *  \brief Return this weak_ptr by type T.
+     */
+    template<class T> std::weak_ptr<T> GetThisWeakPtrByType()
+    {
+        std::weak_ptr<T> this_wref(std::dynamic_pointer_cast<T>(shared_from_this()));
+        return this_wref;
+    }
 protected:
 
     /*! \var ObjectName m_object_name;

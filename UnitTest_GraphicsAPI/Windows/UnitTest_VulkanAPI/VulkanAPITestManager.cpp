@@ -82,24 +82,6 @@ void VulkanAPITestManager::RenderToScreen()
         return;
     }
 
-    //Begin RenderPass.
-    /*
-    VkRect2D render_area = {};
-    render_area.offset = { 0, 0 };
-    render_area.extent = { m_screen_size.GetWidth(), m_screen_size.GetHeight() };
-
-    VkRenderPassBeginInfo rp_begin_info = {};
-    rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    rp_begin_info.pNext = nullptr;
-    rp_begin_info.renderPass = m_VK_present_render_pass;
-    rp_begin_info.framebuffer = m_VK_sc_image_fbs[image_index];
-    rp_begin_info.renderArea = render_area;
-    rp_begin_info.clearValueCount = 1;
-    rp_begin_info.pClearValues = &ClearColor;
-
-    vkCmdBeginRenderPass(m_VK_main_cmd_buffer, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
-    */
-    ///*
     VkImageBlit blit_param = {};
     blit_param.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit_param.srcSubresource.baseArrayLayer = 0;
@@ -122,38 +104,12 @@ void VulkanAPITestManager::RenderToScreen()
     blit_param.dstOffsets[1].y = m_screen_size.GetHeight();
     blit_param.dstOffsets[1].z = 0;
 
-    vkCmdBlitImage(m_VK_main_cmd_buffer,
-        m_samples[m_cur_sample_idx].GetRef().GetColorBuffer(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-        m_VK_sc_images[image_index], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit_param,
-        VK_FILTER_NEAREST);
-    //*/
-    /*
-    VkImageCopy copy_param = {};
-    copy_param.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    copy_param.srcSubresource.baseArrayLayer = 0;
-    copy_param.srcSubresource.mipLevel = 0;
-    copy_param.srcSubresource.layerCount = 1;
-    copy_param.srcOffset.x = 0;
-    copy_param.srcOffset.y = 0;
-    copy_param.srcOffset.z = 0;
-    copy_param.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    copy_param.dstSubresource.baseArrayLayer = 0;
-    copy_param.dstSubresource.mipLevel = 0;
-    copy_param.dstSubresource.layerCount = 1;
-    copy_param.dstOffset.x = 0;
-    copy_param.dstOffset.y = 0;
-    copy_param.dstOffset.z = 0;
-    copy_param.extent.width = m_screen_size.GetWidth();
-    copy_param.extent.height = m_screen_size.GetHeight();
-    copy_param.extent.depth = 1;
-
-
-    vkCmdCopyImage(m_VK_main_cmd_buffer,
-        m_samples[m_cur_sample_idx].GetRef().GetColorBuffer(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-        m_VK_sc_images[image_index], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copy_param);
-    //*/
-    //End RenderPass.
-    //vkCmdEndRenderPass(m_VK_main_cmd_buffer);
+    if (m_samples[m_cur_sample_idx].GetRef().GetColorBuffer() != VK_NULL_HANDLE) {
+        vkCmdBlitImage(m_VK_main_cmd_buffer,
+            m_samples[m_cur_sample_idx].GetRef().GetColorBuffer(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+            m_VK_sc_images[image_index], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit_param,
+            VK_FILTER_NEAREST);
+    }
 
     //End command buffer
     if (vkEndCommandBuffer(m_VK_main_cmd_buffer) != VK_SUCCESS) {
@@ -218,6 +174,13 @@ void VulkanAPITestManager::RenderDebug()
     //Test 1. Draw Trangle.
     if (m_cur_sample_idx < m_samples.size()) {
         m_samples[m_cur_sample_idx].GetRef().Render();
+    }
+}
+
+void VulkanAPITestManager::SetCurrentSampleIndex(uint32_t i_sample_idx)
+{
+    if (i_sample_idx < m_samples.size()) {
+        m_cur_sample_idx = i_sample_idx;
     }
 }
 

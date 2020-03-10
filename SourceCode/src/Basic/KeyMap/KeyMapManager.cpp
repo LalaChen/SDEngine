@@ -23,40 +23,42 @@ SOFTWARE.
 
 */
 
-/*! \file      EventArg.h
- *  \brief     Introduce of class EventArg
- *  \author    Kuan-Chih, Chen
- *  \date      2019/02/07
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
+#include "KeyEventArg.h"
+#include "KeyMapManager.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-/*! \class EventArg
- *  \brief In our event system, we allow user delivering parameters by inheriting Class EventArg.
- *  It's used for unifying param of interface for all slot. User can check the real arg type while
- *  slot triggered.
- */
-class SDENGINE_CLASS EventArg
+KeyMapManager::KeyMapManager(const ObjectName &i_object_name)
+: EventObject(i_object_name)
+, m_key_maps{false}
 {
-public:
-    /*! \fn EventArg();
-     *  \brief The constructor of EventArg Class.
-     */
-    EventArg()
-    {
-    }
+    EventStrongReferenceObject key_event = new Event("KeyEvent");
+    m_key_event_wref = key_event.StaticCastToWeakPtr<Event>();
+    RegisterEvent(key_event);
+}
 
-    /*! \fn virtual ~EventArg();
-     *  \brief The destructor of EventArg Class.
-     */
-    virtual ~EventArg()
-    {
+KeyMapManager::~KeyMapManager()
+{
+}
+
+void KeyMapManager::SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed)
+{
+    if (i_key_id >= 0 && i_key_id < 256) {
+        KeyEventArg event_arg;
+        event_arg.m_key_id = i_key_id;
+        m_key_maps[i_key_id] = i_is_pressed;
+
+        if (i_is_pressed == true) {
+            event_arg.m_key_state = 1;
+        }
+        else {
+            event_arg.m_key_state = 0;
+        }
+
+        m_key_event_wref.GetRef().NotifyEvent(event_arg);
     }
-};
+}
+
+
 
 _______________SD_END_BASIC_NAMESPACE________________

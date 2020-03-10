@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "LogManager.h"
 #include "GraphicsManager.h"
 #include "Application.h"
 
@@ -40,6 +41,8 @@ Application::Application(const std::string &i_win_title, const Resolution &i_win
 {
     //Register instance.
     SD_SINGLETON_DECLARATION_REGISTER;
+    //Initialize events of application.
+    m_key_map_manager = new KeyMapManager(i_win_title + "_KeyMapManager");
 }
 
 Application::~Application()
@@ -66,6 +69,39 @@ void Application::Pause()
 void Application::Resize(Size_ui32 i_w, Size_ui32 i_h)
 {
     GraphicsManager::GetRef().Resize(i_w, i_h);
+}
+
+
+void Application::SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed)
+{
+    if (m_key_map_manager.IsNull() == false) {
+        m_key_map_manager.GetRef().SetKeyboardStatus(i_key_id, i_is_pressed);
+    }
+    else {
+        SDLOGE("No key map manager.");
+    }
+}
+
+bool Application::RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj)
+{
+    if (m_key_map_manager.IsNull() == false) {
+        return m_key_map_manager.GetRef().RegisterSlotFunctionIntoEvent("KeyEvent", i_function_slot_ref_obj);
+    }
+    else {
+        SDLOGE("No key map manager.");
+        return false;
+    }
+}
+
+bool Application::UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj)
+{
+    if (m_key_map_manager.IsNull() == false) {
+        return m_key_map_manager.GetRef().UnregisterSlotFunctionFromEvent("KeyEvent", i_function_slot_ref_obj);
+    }
+    else {
+        SDLOGE("No key map manager.");
+        return false;
+    }
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

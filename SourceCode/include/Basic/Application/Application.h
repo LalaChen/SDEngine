@@ -37,7 +37,10 @@ SOFTWARE.
 #include "SDEngineCommonFunction.h"
 
 #include "GraphicsManager.h"
+#include "KeyMapManager.h"
 #include "Resolution.h"
+#include "KeyEventArg.h"
+#include "Event.h"
 
 using SDE::Graphics::Resolution;
 using SDE::Graphics::GraphicsLibraryEnum;
@@ -122,16 +125,38 @@ public:
     virtual void Resize(Size_ui32 i_w, Size_ui32 i_h);
 public:
     /*! \fn void SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height);
-        \param [in] i_width Width of app.
-        \param [in] i_height Height of app.
-        \brief Set resolution of this app.
-    */
+     *  \param [in] i_width Width of app.
+     *  \param [in] i_height Height of app.
+     *  \brief Set resolution of this app.
+     */
     void SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height);
+
+public:
+    /*! \fn bool RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseReferenceObject &i_function_slot_ref_obj)
+     *  \param [in] i_function_slot_ref_obj The slot we want to register into this event.
+     *  \brief Adding slot into key event. If we register successful, we will return true.
+     *         Otherwise, we will return false for slot existed.
+     */
+    bool RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj);
+    
+    /*! \fn bool UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseReferenceObject &i_function_slot_ref_obj)
+     *  \param [in] i_function_slot_ref_obj The slot we want to register into this event.
+     *  \brief Deleting slot in key event. If we delete successful, we will return true.
+     *         Otherwise, we will return false that slot doesn't exist.
+     */
+    bool UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj);
+
+    /*! \fn void SetKeyboardStatus(uint32_t i_key_id, bool i_is_pressed);
+     *  \param [in] i_key_id KeyID.
+     *  \param [in] i_is_pressed Pressed.
+     *  \brief Set key status.
+     */
+    void SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed);
 
 protected:
     /*! \var Resolution m_win_res; [VarGet Attribute]
-        \brief resolution of this app.
-    */
+     *  \brief resolution of this app.
+     */
     SD_DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_win_res, WindowResolution);
     
     /*! \var WindowSize m_full_window; [VarGet Attribute]
@@ -140,14 +165,19 @@ protected:
     SD_DECLARE_ATTRIBUTE_VAR_GET(FullWindowOption, m_full_window, FullScreenSignal);
     
     /*! \var std::string m_win_title;
-        \brief is full screen or not. [VarGet Attribute]
-    */
+     *  \brief is full screen or not. [VarGet Attribute]
+     */
     SD_DECLARE_ATTRIBUTE_VAR_GET(std::string, m_win_title, WinTitle);
 
     /*! \var GraphicsLibraryEnum m_adopt_library;
-        \brief Adopt library. [VarGet Attribute]
-    */
+     *  \brief Adopt library. [VarGet Attribute]
+     */
     SD_DECLARE_ATTRIBUTE_VAR_GET(GraphicsLibraryEnum, m_adopt_library, AdoptLibrary);
+
+    /*! \var KeyMapManagerStrongReferenceObject m_key_map_manager;
+     *  \brief A event object for monitior key event.
+     */
+    KeyMapManagerStrongReferenceObject m_key_map_manager;
 };
 
 inline void Application::SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height)

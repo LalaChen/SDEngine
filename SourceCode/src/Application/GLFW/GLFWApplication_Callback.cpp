@@ -9,6 +9,15 @@ void GLFWApplication::KeyEventCallback(GLFWwindow* i_window, int i_key, int i_sc
     if (i_key == GLFW_KEY_ESCAPE && i_action == GLFW_PRESS) {
         glfwSetWindowShouldClose(i_window, GLFW_TRUE);
     }
+    else if (i_key >= 0 && i_key < GLFW_KEY_ESCAPE) {
+        uint32_t key_id = static_cast<uint32_t>(i_key);
+        if (i_action == GLFW_PRESS) {
+            Application::GetRef().SetKeyboardStatus(key_id, true);
+        }
+        else if (i_action == GLFW_RELEASE){
+            Application::GetRef().SetKeyboardStatus(key_id, false);
+        }
+    }
 }
 
 //----- error return ------
@@ -31,7 +40,7 @@ void GLFWApplication::CursorEnterCallback(GLFWwindow *i_window, int entered)
 void GLFWApplication::CursorPositionCallback(GLFWwindow *i_window, double i_x, double i_y)
 {
     //Motion
-    //SDLOGD(" Mouse Motion (%lf,%lf)", i_x, i_y);
+    //SDLOGD("Mouse Motion (%lf,%lf)", i_x, i_y);
 }
 
 //----- JoyStick ------

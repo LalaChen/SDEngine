@@ -93,6 +93,8 @@ public:
 public:
     void RenderToScreen() override;
     void RenderDebug();
+public:
+    void SetCurrentSampleIndex(uint32_t i_sample_idx);
 protected:
     uint32_t m_cur_sample_idx;
     std::vector<SampleStrongReferenceObject> m_samples;

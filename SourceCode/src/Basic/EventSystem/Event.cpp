@@ -44,34 +44,28 @@ bool Event::RegisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &i_
     bool is_slot_existed = false;
     SlotFunctionContainer::iterator slot_iter;
     //If this slot is null, we return false.
-    if(i_function_slot_ref_obj.IsNull() == true)
-    {
+    if (i_function_slot_ref_obj.IsNull() == true) {
         SDLOGW("Register null reference.");
         return false;
     }
-    else
-    {
+    else {
         //We check the i_function_slot_ref_obj is existed in slot container. If it's existed, we return true.
         //Otherwise, we add it to container and return true.
         for(slot_iter = m_function_slot_container.begin() ;
-            slot_iter != m_function_slot_container.end()   ;
-            slot_iter++)
-        {
+            slot_iter != m_function_slot_container.end() ;
+            slot_iter++) {
             if ((*slot_iter).IsNull() == false) {
-                if ((*slot_iter).IsEqualTo(i_function_slot_ref_obj) == true)
-                {
+                if ((*slot_iter).IsEqualTo(i_function_slot_ref_obj) == true) {
                     is_slot_existed = true;
                 }
             }
         }
 
-        if(is_slot_existed == false)
-        {
+        if (is_slot_existed == false) {
             m_function_slot_container.push_back(i_function_slot_ref_obj);
             return true;
         }
-        else
-        {
+        else {
             //warrning : slot is existed.
             SDLOGW("Slot %s is existed!!! Please check.", i_function_slot_ref_obj.GetRef().ToString().c_str());
             return true;
@@ -84,23 +78,18 @@ bool Event::UnregisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &
     std::lock_guard<std::mutex> lock(m_mutex);
     SlotFunctionContainer::iterator slot_iterator;
     //If this slot is null, we return false.
-    if (i_function_slot_ref_obj.IsNull() == true)
-    {
+    if (i_function_slot_ref_obj.IsNull() == true) {
         return false;
     }
-    else
-    {
+    else {
         //We check the i_function_slot_ref_obj is existed in slot container. If it's existed, we erase it and return true.
         //Otherwise, we will return false.
-        for (slot_iterator = m_function_slot_container.begin(); slot_iterator != m_function_slot_container.end();)
-        {
-            if ((*slot_iterator).IsEqualTo(i_function_slot_ref_obj) == true)
-            {
+        for (slot_iterator = m_function_slot_container.begin(); slot_iterator != m_function_slot_container.end();) {
+            if ((*slot_iterator).IsEqualTo(i_function_slot_ref_obj) == true) {
                 slot_iterator = m_function_slot_container.erase(slot_iterator);
                 return true;
             }
-            else
-            {
+            else {
                 slot_iterator++;
             }
         }
@@ -115,10 +104,8 @@ bool Event::NotifyEvent(const EventArg &i_arg)
     SlotFunctionContainer::iterator slot_iter;
     bool notify_return = true;
 
-    for(slot_iter = m_function_slot_container.begin() ; slot_iter != m_function_slot_container.end() ;)
-    {
+    for (slot_iter = m_function_slot_container.begin() ; slot_iter != m_function_slot_container.end() ;) {
         notify_return = (*slot_iter).GetRef().NotifyFunction(i_arg);
-
         if (notify_return == false) slot_iter = m_function_slot_container.erase(slot_iter);
         else slot_iter++;
     }

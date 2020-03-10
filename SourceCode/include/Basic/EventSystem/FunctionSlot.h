@@ -38,21 +38,21 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class FunctionSlotBase \n
- *  \brief In our event system, we will use the slot function after something finished. \n
- *  For a example, we needed to exexuted something after button clicked. So the kind \n
- *  of slot function class object will be used to handled those situation. \n
- *  We have some principle of using. we list those rule behind: \n
+ *  \brief In our event system, we will use the slot function after something finished.
+ *  For a example, we needed to exexuted something after button clicked. So the kind
+ *  of slot function class object will be used to handled those situation.
+ *  We have some principle of using. we list those rule behind:
  *  <ul>
- *  <li>1. The format of all event callback function is bool FunctionName(cosnt EventArg &i_src) \n
- *         or bool ClassName::FunctionName(cosnt EventArg &i_src). So the EventArg only can declare \n
+ *  <li>1. The format of all event callback function is bool FunctionName(cosnt EventArg &i_src)
+ *         or bool ClassName::FunctionName(cosnt EventArg &i_src). So the EventArg only can declare
  *         with variable type. \n
- *  <li>2. One function slot is only existed in one event. We don't allow programmer \n
+ *  <li>2. One function slot is only existed in one event. We don't allow programmer
  *         set one slot in two event object. So function slot only can declare with variable type.
  *  </ul>
- *  Class FunctionSlotBase is the based class of all function slot class. It's interface class. \n
- *  \n
+ *  Class FunctionSlotBase is the based class of all function slot class. It's interface class.
+ *
  *  Example : (<A HREF=".\_demo_platform_2_unit_test-_event_slot_system_2main_8cpp-example.html">DemoPlatform/UnitTest-EventSlotSystem/main.cpp</a>)\n
- *  \n
+ *
  *  \sa More introduction about event and slot system at \ref EventSlotSystem
  */
 
@@ -78,14 +78,12 @@ public:
 //-------------- Behavior of slot ----------------
     /*! \fn bool NotifyFunction(const EventArg &i_src_arg)
      *  \param [in] i_src_arg The event arg we want to send out.
-     *  \brief This is the behavior of all slots. We will deliver params \n
-     *         by arg to target slot function.
+     *  \brief This is the behavior of all slots. We will deliver params by arg to target slot function.
      */
     virtual bool NotifyFunction(const EventArg &i_src_arg) = 0;
 
     /*! \fn bool IsInvalid()
-     *  \brief This is the behavior of all slots. Return the result about \n
-     *         that this slot is invalid or not.
+     *  \brief This is the behavior of all slots. Return the result about that this slot is invalid or not.
      */
     virtual bool IsInvalid() const = 0;
 private:
@@ -94,19 +92,18 @@ private:
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(FunctionSlotBase);
 
 /*! \class GlobalFunctionSlot
- *  This class is the derived class of all function slot class. \n
- *  Global function slot is used to record function NOT IN CLASS. \n
- *  \n
- *  Example : (<A HREF=".\_demo_platform_2_unit_test-_event_slot_system_2main_8cpp-example.html">DemoPlatform/UnitTest-EventSlotSystem/main.cpp</a>)\n
- *  \n
+ *  This class is the derived class of all function slot class.
+ *  Global function slot is used to record function NOT IN CLASS.
+ *
+ *  Example : (<A HREF=".\_demo_platform_2_unit_test-_event_slot_system_2main_8cpp-example.html">DemoPlatform/UnitTest-EventSlotSystem/main.cpp</a>)
+ *
  *  \sa    More introduction about event and slot system at \ref EventSlotSystem
  */
 class GlobalFunctionSlot : public FunctionSlotBase
 {
 public:
     /*! \var typedef bool(*GlobalSlotFunction)(const EventArg &i_src_arg)
-     *  \brief GlobalSlotFunction is the type for stored function pointer of slot. \n
-     *         We type-define it for using conveniently. \n
+     *  \brief GlobalSlotFunction is the type for stored function pointer of slot. We type-define it for using conveniently.
      */
     typedef bool(*GlobalSlotFunction)(const EventArg &i_src_arg); 
 public:
@@ -157,12 +154,12 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GlobalFunctionSlot);
 inline bool GlobalFunctionSlot::IsInvalid() const{ return (m_fp == nullptr); }
 
 /*! \class MemberFunctionSlot
- *  MemberFunctionSlot is a template class for making member function slot. \n
+ *  MemberFunctionSlot is a template class for making member function slot.
  *  We register a reference and its function into this slot.
- *  \n
- *  <B>Example :</B> (<A HREF=".\_demo_platform_2_unit_test-_event_slot_system_2main_8cpp-example.html">DemoPlatform/UnitTest-EventSlotSystem/main.cpp</a>)\n
- *  \n
- *  \sa    More introduction about event and slot system at \ref EventSlotSystem.\n
+ *  
+ *  <B>Example :</B> (<A HREF=".\_demo_platform_2_unit_test-_event_slot_system_2main_8cpp-example.html">DemoPlatform/UnitTest-EventSlotSystem/main.cpp</a>)
+ *  
+ *  \sa More introduction about event and slot system at \ref EventSlotSystem.
  *  
  *  \tparam Type Target Type.
  */
@@ -171,8 +168,7 @@ class MemberFunctionSlot : public FunctionSlotBase
 {
 public:
     /*! \var typedef bool(*MemberSlotFunction)(const EventArg &i_src_arg)
-     *  \brief MemberFunctionSlot is the type for stored function pointer and its ref of slot. \n
-     *         We type-define it for using conveniently. \n
+     *  \brief MemberFunctionSlot is the type for stored function pointer and its ref of slot. We type-define it for using conveniently.
      */
     typedef bool(Type::*MemberSlotFunction)(const EventArg& i_src_arg);
 public:
@@ -218,8 +214,7 @@ public:
     }
     
     /*! \fn bool IsInvalid() override;
-     *  \brief Return the result about that this slot is invalid or not. \n
-     *         Condition of invalid member slot is one of m_fp or m_sref is nullptr.
+     *  \brief Return the result about that this slot is invalid or not. Condition of invalid member slot is one of m_fp or m_sref is nullptr.
      */
     bool IsInvalid() const override
     {
@@ -235,13 +230,11 @@ public:
     {
         const MemberFunctionSlot<Type> *src_ptr = dynamic_cast<const MemberFunctionSlot<Type>* >(&i_src);
         //Compare owner and function pointer of two current slot .
-        if (src_ptr != nullptr)
-        {
+        if (src_ptr != nullptr) {
             //----- both same.
             return (m_fp == src_ptr->m_fp && m_wref.GetPtr() == src_ptr->m_wref.GetPtr());
         }
-        else
-        {
+        else {
             //error : Is different type.
             return false;
         }

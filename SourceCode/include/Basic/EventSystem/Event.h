@@ -43,9 +43,9 @@ SOFTWARE.
 ______________SD_START_BASIC_NAMESPACE_______________
 
 /*! \class Event
- *  \brief In our event system, we allow user register and use events in the component inheritance EventObject. \n
- *  User can NOTIFY event where he wanted. Via notifying event, some slot functions registered into event \n
- *  will triggered and then received some parameters we want to utility. \n\n
+ *  \brief In our event system, we allow user register and use events in the component inheritance EventObject.
+ *  User can NOTIFY event where he wanted. Via notifying event, some slot functions registered into event
+ *  will triggered and then received some parameters we want to utility.
  *  
  *  \sa More introduction about event and slot system at \ref EventSlotSystem
  */
@@ -53,8 +53,7 @@ class SDENGINE_CLASS Event : public Object
 {
 public:
     /*! \var typedef std::list< FunctionSlotBaseReferenceObject > SlotFunctionContainer
-     *  \brief SlotFunctionContainer is the type for stored all slot reference object. \n
-     *         We type-define it for using conveniently. \n
+     *  \brief SlotFunctionContainer is the type for stored all slot reference object. We type-define it for using conveniently.
      */
     typedef std::list< FunctionSlotBaseStrongReferenceObject > SlotFunctionContainer;
 public: 
@@ -71,23 +70,21 @@ public:
 public:
     /*! \fn bool RegisterSlotFunction(const FunctionSlotBaseReferenceObject &i_function_slot_ref_obj)
      *  \param [in] i_function_slot_ref_obj The slot we want to register into this event.
-     *  \brief Adding slot into this event. \n
-     *         If we register successful, we will return true. \n
+     *  \brief Adding slot into this event. If we register successful, we will return true.
      *         Otherwise, we will return false for slot existed.
      */
     bool RegisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj);
     
     /*! \fn bool UnregisterSlotFunction(const FunctionSlotBaseReferenceObject &i_function_slot_ref_obj)
      *  \param [in] i_function_slot_ref_obj The slot we want to register into this event.
-     *  \brief Deleting slot in this event. \n
-     *         If we delete successful, we will return true. \n
+     *  \brief Deleting slot in this event. If we delete successful, we will return true.
      *         Otherwise, we will return false that slot doesn't exist.
      */
     bool UnregisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj);
     
     /*! \fn bool NotifyEvent(const EventArg& i_arg)
      *  \param [in] i_arg The event arg we want to delivery to slots registered into this event.
-     *  \brief Delivery params to all slots and remove slots returning false.\n
+     *  \brief Delivery params to all slots and remove slots returning false.
      */
     bool NotifyEvent(const EventArg& i_arg);
 private:

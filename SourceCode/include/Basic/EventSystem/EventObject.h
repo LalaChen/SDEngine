@@ -40,11 +40,11 @@ ______________SD_START_BASIC_NAMESPACE_______________
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(EventObject);
 
 /*! \class EventObject
- *  \brief In our event system, EventObject is used to keep Events. The EventObject offer a EventContainer for \n
- *  storing events. Developer can design events for purpose and register the ones into EventContainer. \n
- *  And then we notify the event while we thought suitablely. Finally we register the corresponding callback \n
- *  functions to those event. When the target event be notified, those callbacks will be executed.\n
- *  Note : this is simular with slot-signal design in QT. \n\n
+ *  \brief In our event system, EventObject is used to keep Events. The EventObject offer a EventContainer for
+ *  storing events. Developer can design events for purpose and register the ones into EventContainer.
+ *  And then we notify the event while we thought suitablely. Finally we register the corresponding callback
+ *  functions to those event. When the target event be notified, those callbacks will be executed.
+ *  Note : this is simular with slot-signal design in QT.
  *
  *  \sa More introduction about event and slot system at \ref EventSlotSystem
  */
@@ -53,8 +53,7 @@ class SDENGINE_CLASS EventObject : public Object
 {
 public:
     /*! \var typedef std::list<EventStrongReferenceObject> EventContainer
-     *  \brief EventContainer is the type for stored all event reference object. \n
-     *         We type-define it for using conveniently. \n
+     *  \brief EventContainer is the type for stored all event reference object. We type-define it for using conveniently.
      */
     typedef std::vector< EventStrongReferenceObject > EventContainer;
 public:
@@ -71,9 +70,9 @@ public:
 public:
     /*! \fn bool RegisterEvent(const EventStrongReferenceObject &i_src_event);
      *  \param [in] i_src_event The event we want to add into.
-     *  \brief Adding target event into this event object. \n
-     *         It means the target event will be notified at somewhere of this object. \n
-     *         If we register successful, we will return true. \n
+     *  \brief Adding target event into this event object.
+     *         It means the target event will be notified at somewhere of this object.
+     *         If we register successful, we will return true.
      *         Otherwise, we will return false for event existed.
      */
     bool RegisterEvent(const EventStrongReferenceObject &i_src_event);
@@ -82,17 +81,26 @@ public:
      *  \param [in] i_event_name The event we want to add slot into.
      *         [in] i_src_event_slot_func The target slot we want to trigger while the event notified.
      *  \brief Adding target slot into target event of this event object.
-     *         If we register successful, we will return true. \n
+     *         If we register successful, we will return true.
      *         Otherwise, we will return false for slot existed.
      */
     bool RegisterSlotFunctionIntoEvent(const std::string &i_event_name, const FunctionSlotBaseStrongReferenceObject &i_src_event_slot_func);
+
+    /*! \fn bool UnregisterSlotFunctionFromEvent(const std::string &i_event_name, const FunctionSlotBaseStrongReferenceObject &i_src_event_slot_func);
+     *  \param [in] i_event_name The event we want to add slot into.
+     *         [in] i_src_event_slot_func The target slot we want to remove.
+     *  \brief Remove target slot from target event of this event object.
+     *         If we register successful, we will return true.
+     *         Otherwise, we will return false for slot existed.
+     */
+    bool UnregisterSlotFunctionFromEvent(const std::string &i_event_name, const FunctionSlotBaseStrongReferenceObject &i_src_event_slot_func);
     
     /*! \fn bool NotifyEvent(const std::string &i_event_name, const EventArg &i_arg);
      *  \param [in] i_event_name The event we want to notified.
      *         [in] i_arg The parameters we want to deliver to all slots in the target event.
-     *  \brief To notify the event named by the i_event_name. \n
-     *         We need to notified event at suitable place in our custom component. \n
-     *         If we notify successfully, we will return true. \n
+     *  \brief To notify the event named by the i_event_name.
+     *         We need to notified event at suitable place in our custom component.
+     *         If we notify successfully, we will return true.
      *         Otherwise, we will return false for that event isn't existed.
      */
     bool NotifyEvent(const std::string &i_event_name, const EventArg &i_arg);
