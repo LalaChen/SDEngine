@@ -19,4 +19,6 @@ LibraryProject/Windows/Build/
 UnitTest/Windows/Build/
 LibraryProject/Android/Build/
 UnitTest/Android/Build/
+UnitTest_GraphicsAPI/Windows/Build/
+UnitTest_GraphicsAPI/Android/Build/
 Bin/
