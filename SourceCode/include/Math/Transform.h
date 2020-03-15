@@ -93,20 +93,20 @@ public:
      */
     Transform& operator=(const Transform &i_src);
 public:
-    /*! \var Vector3f m_scale;
-     *  \brief variable recording scale.
+    /*! \var Vector3f m_position;
+     *  \brief variable recording position.
      */
-    Vector3f m_scale;
+    Vector3f m_position;
 
     /*! \var Quaternion m_rotation;
      *  \brief variable recording rotation.
      */
     Quaternion m_rotation;
 
-    /*! \var Vector3f m_position;
-     *  \brief variable recording position.
+    /*! \var Vector3f m_scale;
+     *  \brief variable recording scale.
      */
-    Vector3f m_position;
+    Vector3f m_scale;
 
     /*! \var Vector3f m_skew;
      *  \brief variable recording skew.

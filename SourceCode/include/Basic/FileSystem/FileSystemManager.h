@@ -188,12 +188,12 @@ public:
      *  \brief return the location of this executable file.
      */
     virtual FilePathString GetExeFilePath() = 0;
-public:
-    /*! \fn bool IsAbsolutePath(const FilePathString &i_location);
+
+    /*! \fn virtual bool IsAbsolutePath(const FilePathString &i_location) = 0;
      *  \param [in] i_location location.
      *  \brief Return ture if the i_location is absolute path.
      */
-    bool IsAbsolutePath(const FilePathString &i_location);
+    virtual bool IsAbsolutePath(const FilePathString &i_location) = 0;
 public:
     /*! \fn void AddRelativePath(const FilePathString &i_path);
      *  \param [in] i_path target directory.

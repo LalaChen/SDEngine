@@ -345,14 +345,14 @@ protected:
     void InitializeSCImageViewsAndFBs();
     void InitializeCommandPoolAndBuffers();
 protected:
-    VkQueueFlags m_VK_desired_queue_abilities;
-    VkSurfaceFormatKHR m_VK_desired_sur_fmt;
-    std::vector<VkPresentModeKHR> m_VK_desired_pre_mode_list;
-protected:
     VkInstance m_VK_instance;
     VkSurfaceKHR m_VK_surface;
 protected:
     VkDebugReportCallbackEXT m_VK_debug_report_cbk;
+protected:
+    VkQueueFlags m_VK_desired_queue_abilities;
+    VkSurfaceFormatKHR m_VK_desired_sur_fmt;
+    std::vector<VkPresentModeKHR> m_VK_desired_pre_mode_list;
 protected:
     VkPhysicalDevice m_VK_physical_device;
     VkDevice m_VK_device;

@@ -168,6 +168,12 @@ public:
      *  \brief return the location of this executable file.
      */
     FilePathString GetExeFilePath() override;
+
+    /*! \fn bool IsAbsolutePath(const FilePathString &i_location) override;
+     *  \param [in] i_location location.
+     *  \brief Return ture if the i_location is absolute path.
+     */
+    bool IsAbsolutePath(const FilePathString& i_location) override;
 };
 
 _______________SD_END_BASIC_NAMESPACE________________

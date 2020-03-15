@@ -61,19 +61,6 @@ bool FileSystemManager::IsExistedRelativePath(const FilePathString &i_path) cons
     return false;
 }
 
-bool FileSystemManager::IsAbsolutePath(const FilePathString &i_filename)
-{
-    //check absolute path.
-    if (i_filename.find(":\\") != FilePathString::npos || // :\ 
-        i_filename.find(":/") != FilePathString::npos || // :/
-        i_filename.find(":\\\\") != FilePathString::npos) {// :\\ 
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
 //------ Private work function
 FilePathString FileSystemManager::AdjustFilePath(const FilePathString &i_path) const
 {

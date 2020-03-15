@@ -154,6 +154,11 @@ public:
     void SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed);
 
 protected:
+    /*! \var std::string m_win_title;
+     *  \brief is full screen or not. [VarGet Attribute]
+     */
+    SD_DECLARE_ATTRIBUTE_VAR_GET(std::string, m_win_title, WinTitle);
+
     /*! \var Resolution m_win_res; [VarGet Attribute]
      *  \brief resolution of this app.
      */
@@ -163,11 +168,6 @@ protected:
         \brief is full screen or not.
     */
     SD_DECLARE_ATTRIBUTE_VAR_GET(FullWindowOption, m_full_window, FullScreenSignal);
-    
-    /*! \var std::string m_win_title;
-     *  \brief is full screen or not. [VarGet Attribute]
-     */
-    SD_DECLARE_ATTRIBUTE_VAR_GET(std::string, m_win_title, WinTitle);
 
     /*! \var GraphicsLibraryEnum m_adopt_library;
      *  \brief Adopt library. [VarGet Attribute]

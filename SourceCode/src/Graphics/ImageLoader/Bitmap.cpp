@@ -55,21 +55,21 @@ std::string BitmapConfig::BitmapConfigNames[BitmapConfig_MAX_DEFINE_VALUE] = {
 
 Bitmap::Bitmap(const ObjectName &i_object_name)
 : Object(i_object_name)
-, m_bitmap(nullptr)
+, m_v_type(BitmapPixelDataType_MAX_DEFINE_VALUE)
 , m_width(0)
 , m_height(0)
 , m_num_of_c(0)
-, m_v_type(BitmapPixelDataType_MAX_DEFINE_VALUE)
+, m_bitmap(nullptr)
 {
 }
 
 Bitmap::Bitmap(const ObjectName &i_object_name, const BitmapConfig &i_conf, Size_ui32 i_width, Size_ui32 i_height, const ImageBufferAddr i_data, ImageBufferSize i_size, int i_n_of_c, const BitmapPixelValueType &i_v_type)
 : Object(i_object_name)
-, m_bitmap(nullptr)
+, m_v_type(BitmapPixelDataType_MAX_DEFINE_VALUE)
 , m_width(0)
 , m_height(0)
 , m_num_of_c(0)
-, m_v_type(BitmapPixelDataType_MAX_DEFINE_VALUE)
+, m_bitmap(nullptr)
 {
 	SetBitmap(i_conf, i_width, i_height, i_data, i_size, i_n_of_c, i_v_type);
 }

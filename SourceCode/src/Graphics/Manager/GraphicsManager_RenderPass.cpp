@@ -186,9 +186,8 @@ void GraphicsManager::RegisterRenderPass(const RenderPassStrongReferenceObject &
     }
 }
 
-void GraphicsManager::UnregisterRenderPass(const ObjectName& i_target_rp_name)
+void GraphicsManager::UnregisterRenderPass(const ObjectName &i_target_rp_name)
 {
-    bool is_exist = false;
     for (std::list<RenderPassStrongReferenceObject>::iterator rp_sref_iter = m_rp_list.begin(); rp_sref_iter != m_rp_list.end(); ) {
         if ((*rp_sref_iter).GetRef().GetObjectName().compare(i_target_rp_name) == 0) {
             rp_sref_iter = m_rp_list.erase(rp_sref_iter);

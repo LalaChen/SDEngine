@@ -122,7 +122,6 @@ VkResult VulkanManager::CopyVkBufferToVkImage(
         VK_PIPELINE_STAGE_TRANSFER_BIT, i_dst_pipe_stage_flags);
 
     //5. Submit command.
-    VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
     VkSubmitInfo submit_info = {};
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submit_info.pNext = nullptr;

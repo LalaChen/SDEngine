@@ -30,8 +30,8 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 const uint32_t VulkanManager::MaxImgAcqirationTime = 2000000000; //2s
 const uint32_t VulkanManager::MaxFenceWaitTime = 17000000; //17ms
-const VkClearValue VulkanManager::ClearColor = { 0.2f, 0.5f, 0.8f, 1.0f };
-const VkClearValue VulkanManager::ClearDepth = { 1.0f };
+const VkClearValue VulkanManager::ClearColor = { {0.2f, 0.5f, 0.8f, 1.0f} };
+const VkClearValue VulkanManager::ClearDepth = { {1.0f} };
 
 const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
 {
@@ -64,17 +64,16 @@ VulkanManager::VulkanManager()
 , m_VK_desired_pre_mode_list{ VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR }
 // device(phy and logical)
 , m_VK_physical_device(VK_NULL_HANDLE)
-, m_VK_picked_queue_family_id(-1)
 , m_VK_device(VK_NULL_HANDLE)
-// queue
+, m_VK_picked_queue_family_id(-1)
 , m_VK_present_queue(VK_NULL_HANDLE)
 // swap chain
+, m_VK_final_present_mode(VK_PRESENT_MODE_RANGE_SIZE_KHR)
 , m_VK_swap_chain(VK_NULL_HANDLE)
 , m_VK_present_render_pass(VK_NULL_HANDLE)
 , m_VK_acq_img_semaphore(VK_NULL_HANDLE)
-, m_VK_render_scene_semaphore(VK_NULL_HANDLE)
 , m_VK_present_semaphore(VK_NULL_HANDLE)
-, m_VK_final_present_mode(VK_PRESENT_MODE_RANGE_SIZE_KHR)
+, m_VK_render_scene_semaphore(VK_NULL_HANDLE)
 // main command pool
 , m_VK_main_cmd_pool(VK_NULL_HANDLE)
 , m_VK_main_cmd_buffer(VK_NULL_HANDLE)
@@ -85,6 +84,9 @@ VulkanManager::VulkanManager()
     SDLOG("New VulkanManager object.");
     if (InitVulkanFunction() == false) {
         SDLOGE("Initialize vulkan function ptrs failure.");
+    }
+    else {
+        SDLOG("Load vulkan library func successfully.");
     }
 }
 

@@ -34,7 +34,7 @@ BitmapStrongReferenceObject ImageLoader::LoadBitmap(const FilePathString& i_fp) 
 BitmapStrongReferenceObject ImageLoader::LoadBitmap(const ObjectName& i_name, const UBytePtr i_file_buffer, size_t i_file_size) const
 {
     int width, height, n_of_c;
-    stbi_uc *image_ptr = stbi_load_from_memory(i_file_buffer, i_file_size, &width, &height, &n_of_c, 4);
+    stbi_uc *image_ptr = stbi_load_from_memory(i_file_buffer, static_cast<int>(i_file_size), &width, &height, &n_of_c, 4);
     size_t image_size = static_cast<uint32_t>(width) * static_cast<uint32_t>(height) * 4;
     BitmapStrongReferenceObject bitmap = new Bitmap(i_name, BitmapConfig_STB, width, height, image_ptr, image_size, 4, BitmapPixelDataType_UNSIGNED_BYTE);
     stbi_image_free(image_ptr);

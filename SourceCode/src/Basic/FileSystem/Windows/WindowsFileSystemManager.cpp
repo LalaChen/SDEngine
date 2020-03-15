@@ -330,6 +330,20 @@ void WindowsFileSystemManager::DeleteAllFilesInDir(const FilePathString &i_dir, 
     }
 }
 
+bool WindowsFileSystemManager::IsAbsolutePath(const FilePathString &i_filename)
+{
+    //check absolute path.
+    // :\ :/ :\\ exist in filepath.
+    if (i_filename.find(":\\") != FilePathString::npos || 
+        i_filename.find(":/") != FilePathString::npos ||
+        i_filename.find(":\\\\") != FilePathString::npos) { 
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 FilePathString WindowsFileSystemManager::GetExeFilePath()
 {
     SDStrChar buffer[MAX_PATH];
