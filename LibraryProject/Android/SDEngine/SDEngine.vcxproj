@@ -193,10 +193,11 @@
       <ExceptionHandling>Enabled</ExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-Wundefined-inline -Wmissing-braces  -Wunused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
+      <CppLanguageStandard>c++1z</CppLanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\x86_64-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android;</LibraryDependencies>
+      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -214,10 +215,12 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <ExceptionHandling>Enabled</ExceptionHandling>
       <AdditionalOptions>-Wundefined-inline -Wmissing-braces  -Wunused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CppLanguageStandard>c++1z</CppLanguageStandard>
+      <PreprocessorDefinitions>SDENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android;</LibraryDependencies>
+      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -235,10 +238,12 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <ExceptionHandling>Enabled</ExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-Wundefined-inline -Wmissing-braces  -Wunused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
+      <CppLanguageStandard>c++1z</CppLanguageStandard>
+      <PreprocessorDefinitions>SDENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android;</LibraryDependencies>
+      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -256,10 +261,12 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <ExceptionHandling>Enabled</ExceptionHandling>
       <AdditionalOptions>-Wundefined-inline -Wmissing-braces  -Wunused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CppLanguageStandard>c++1z</CppLanguageStandard>
+      <PreprocessorDefinitions>SDENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android;</LibraryDependencies>
+      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -278,10 +285,11 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-Wundefined-inline -Wmissing-braces  -Wunused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>SDENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CppLanguageStandard>c++1z</CppLanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android;</LibraryDependencies>
+      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -299,10 +307,12 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <ExceptionHandling>Enabled</ExceptionHandling>
       <AdditionalOptions>-Wundefined-inline -Wmissing-braces  -Wunused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CppLanguageStandard>c++1z</CppLanguageStandard>
+      <PreprocessorDefinitions>SDENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android;</LibraryDependencies>
+      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -320,10 +330,12 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <ExceptionHandling>Enabled</ExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-Wundefined-inline -Wmissing-braces  -Wunused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
+      <CppLanguageStandard>c++1z</CppLanguageStandard>
+      <PreprocessorDefinitions>SDENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android;</LibraryDependencies>
+      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -341,10 +353,12 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <ExceptionHandling>Enabled</ExceptionHandling>
       <AdditionalOptions>-Wundefined-inline -Wmissing-braces  -Wunused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CppLanguageStandard>c++1z</CppLanguageStandard>
+      <PreprocessorDefinitions>SDENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName)\$(PlatformShortName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android;</LibraryDependencies>
+      <LibraryDependencies>assimp;m;c++_shared;c++abi;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\

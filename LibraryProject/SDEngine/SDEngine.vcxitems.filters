@@ -612,7 +612,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Texture\ImageParam.h">
       <Filter>include\Graphics\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Application\KeyEventArg.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\KeyMap\KeyEventArg.h">
       <Filter>include\Graphics\KeyMap</Filter>
     </ClInclude>

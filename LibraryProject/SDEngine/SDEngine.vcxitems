@@ -15,7 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Application\Application.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Application\KeyEventArg.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\EventSystem\Event.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\EventSystem\EventArg.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\EventSystem\EventObject.h" />
