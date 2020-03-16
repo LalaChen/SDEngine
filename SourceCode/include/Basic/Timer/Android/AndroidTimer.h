@@ -32,31 +32,36 @@ SOFTWARE.
 
 #pragma once
 
+#if defined(__ANDROID__)
+
 #include "Timer.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-/*! \class WindowsTimer
- *  \brief Timer in Windows OS.
+
+/*! \class AndroidTimer
+ *  \brief Timer in Android OS.
  */
-class SDENGINE_CLASS WindowsTimer : public Timer
+class AndroidTimer : public Timer
 {
 public:
-    /*! \fn explicit WindowsTimer();
-     *  \brief The constructor of WindowsTimer Class.
+    /*! \fn explicit AndroidTimer();
+     *  \brief The constructor of AndroidTimer Class.
      */
-    explicit WindowsTimer();
+	AndroidTimer();
 
-    /*! \fn virtual ~WindowsTimer();
-     *  \brief The destructor of WindowsTimer Class.
+    /*! \fn virtual ~AndroidTimer();
+     *  \brief The destructor of AndroidTimer Class.
      */
-    virtual ~WindowsTimer();
+	~AndroidTimer();
 public:
     /*! \fn void GetCurrentTimeByOS(double &io_time) override;
      *  \param [inout] io_time double time variable.(unit : second)
-     *  \brief Get current time by QueryPerformanceFrequency and QueryPerformanceCounter functions.
+     *  \brief Get current time by gettimeofday functions.
      */
-    void GetCurrentTimeByOS(double &io_time) override;
+	void GetCurrentTimeByOS(double &io_time) override;
 };
 
 _______________SD_END_BASIC_NAMESPACE________________
+
+#endif

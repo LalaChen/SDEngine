@@ -187,6 +187,18 @@
     <Filter Include="src\Basic\KeyMap">
       <UniqueIdentifier>{177a4e94-1604-45ad-bb11-97d9b4be6b70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Basic\LogManager\Android">
+      <UniqueIdentifier>{ea59ffa8-c50e-4bc0-8429-465db87b3ca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\LogManager\Android">
+      <UniqueIdentifier>{4fdac99e-6b1b-4499-a228-e8b59cfe38b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Basic\Timer\Android">
+      <UniqueIdentifier>{33d00c10-6971-432b-af8d-6a4718fc6225}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\Timer\Andeoid">
+      <UniqueIdentifier>{c8275979-65d9-4769-ba2f-cc7785218681}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -618,6 +630,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\KeyMap\KeyMapManager.h">
       <Filter>include\Graphics\KeyMap</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\LogManager\Android\AndroidLogManager.h">
+      <Filter>include\Basic\LogManager\Android</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\Android\AndroidTimer.h">
+      <Filter>include\Basic\Timer\Android</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -967,6 +985,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\KeyMap\KeyMapManager.cpp">
       <Filter>src\Basic\KeyMap</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\LogManager\Android\AndroidLogManager.cpp">
+      <Filter>src\Basic\LogManager\Android</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\Android\AndroidTimer.cpp">
+      <Filter>src\Basic\Timer\Andeoid</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

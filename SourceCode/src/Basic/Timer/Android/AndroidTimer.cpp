@@ -23,40 +23,31 @@ SOFTWARE.
 
 */
 
-/*! \file      WindowsTimer.h
- *  \brief     Introduce of class WindowsTimer
- *  \author    Kuan-Chih, Chen
- *  \date      2019/02/04
- *  \copyright MIT License.
- */
+#if defined(__ANDROID__)
 
-#pragma once
-
-#include "Timer.h"
+#include <ctime>
+#include "LogManager.h"
+#include "AndroidTimer.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-/*! \class WindowsTimer
- *  \brief Timer in Windows OS.
- */
-class SDENGINE_CLASS WindowsTimer : public Timer
+AndroidTimer::AndroidTimer()
 {
-public:
-    /*! \fn explicit WindowsTimer();
-     *  \brief The constructor of WindowsTimer Class.
-     */
-    explicit WindowsTimer();
+}
 
-    /*! \fn virtual ~WindowsTimer();
-     *  \brief The destructor of WindowsTimer Class.
-     */
-    virtual ~WindowsTimer();
-public:
-    /*! \fn void GetCurrentTimeByOS(double &io_time) override;
-     *  \param [inout] io_time double time variable.(unit : second)
-     *  \brief Get current time by QueryPerformanceFrequency and QueryPerformanceCounter functions.
-     */
-    void GetCurrentTimeByOS(double &io_time) override;
-};
+AndroidTimer::~AndroidTimer()
+{
+}
+
+void AndroidTimer::GetCurrentTimeByOS(double &io_time)
+{
+	//Use another function
+	timeval current_time_val;
+	gettimeofday(&current_time_val, nullptr);
+	io_time = (double)current_time_val.tv_sec + (double)current_time_val.tv_usec / 1000000.0f;
+}
+
 
 _______________SD_END_BASIC_NAMESPACE________________
+
+#endif
