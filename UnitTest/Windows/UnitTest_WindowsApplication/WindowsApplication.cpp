@@ -135,7 +135,8 @@ void WindowsApplication::InitializeGraphicsSystem()
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
         GraphicsManager::GetRef().Initialize();
 
-    } else if (m_adopt_library == GraphicsLibrary_Vulkan) {
+    }
+    else if (m_adopt_library == GraphicsLibrary_Vulkan) {
         new VulkanManager();
 
         VkInstance instance = VK_NULL_HANDLE;

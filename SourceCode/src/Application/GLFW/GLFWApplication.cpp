@@ -75,9 +75,9 @@ GLFWApplication::~GLFWApplication()
 
 void GLFWApplication::Initialize()
 {
-    SDLOG("Initialize Application.");
     //new LogManager.
     new WindowsLogManager();
+    SDLOG("Initialize Application.");
     //new WindowsFileSystemManager.
     new WindowsFileSystemManager();
     FileSystemManager::GetRef().Initialize();
