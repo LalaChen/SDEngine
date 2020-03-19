@@ -19,6 +19,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\EventSystem\EventArg.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\EventSystem\EventObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\EventSystem\FunctionSlot.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\Android\AndroidAssetResourceManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\AssetResourceManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\FileData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\FileSystemManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\Windows\WindowsFileSystemManager.h" />
@@ -166,6 +168,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\EventSystem\EventArg.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\EventSystem\EventObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\EventSystem\FunctionSlot.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\Android\AndroidAssetResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\AssetResourceManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\FileData.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\FileSystemManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\Windows\WindowsFileSystemManager.cpp" />

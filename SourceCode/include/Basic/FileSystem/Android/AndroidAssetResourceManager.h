@@ -1,5 +1,4 @@
-#pragma once
-/* ==============  SD Engine License ==============
+/*==============  SD Engine License ==============
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -21,27 +20,38 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-/*! \file      SDEnginePlatform.h
- *  \brief     platform include header.
+/*! \file      AndroidAssetResourceManger.h
+ *  \brief     The introduction of AndroidAssetResourceManger.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/02/21
+ *  \date      2020/03/17
  *  \copyright MIT License.
  */
 
-//------- OS Platform Only -------
-#if defined(_WIN32) || defined(_WIN64) 
-#include "Basic/LogManager/Windows/WindowsLogManager.h"
-#include "Basic/Timer/Windows/WindowsTimer.h"
-#include "Basic/FileSystem/Windows/WindowsFileSystemManager.h"
-#include "Graphics/Manager/OpenGL4/OpenGL4Manager.h"
-#include "Graphics/Manager/Vulkan/VulkanManager.h"
-#include "Graphics/Manager/Vulkan/VulkanCreationArg.h"
-#elif defined(__ANDROID__)
-#include "Basic/LogManager/Android/AndroidLogManager.h"
-#include "Basic/Timer/Android/AndroidTimer.h"
-#include "Basic/FileSystem/Android/AndroidAssetResourceManager.h"
-#include "Graphics/Manager/Vulkan/VulkanManager.h"
-#include "Graphics/Manager/Vulkan/VulkanCreationArg.h"
+#if defined(__ANDROID__)
+
+#pragma once
+
+#include "AssetResourceManager.h"
+
+struct AAssetManager;
+
+______________SD_START_BASIC_NAMESPACE_______________
+
+class SDENGINE_CLASS AndroidAssetResourceManger : public AssetResourceManager
+{
+public:
+	explicit AndroidAssetResourceManger(AAssetManager* i_mgr);
+	virtual ~AndroidAssetResourceManger();
+public:
+	void Initialize() override;
+	bool LoadAsset(const FilePathString &i_asset_fn, FileData &io_file) override;
+private:
+	AAssetManager *m_mgr;
+};
+
+_______________SD_END_BASIC_NAMESPACE________________
+
 #endif

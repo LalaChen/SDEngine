@@ -199,6 +199,9 @@
     <Filter Include="src\Basic\Timer\Andeoid">
       <UniqueIdentifier>{c8275979-65d9-4769-ba2f-cc7785218681}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Basic\FileSystem\Android">
+      <UniqueIdentifier>{f1c72272-6478-4726-9b61-7287465ef0e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -636,6 +639,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\Android\AndroidTimer.h">
       <Filter>include\Basic\Timer\Android</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\AssetResourceManager.h">
+      <Filter>include\Basic\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\Android\AndroidAssetResourceManager.h">
+      <Filter>include\Basic\FileSystem\Android</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -991,6 +1000,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\Android\AndroidTimer.cpp">
       <Filter>src\Basic\Timer\Andeoid</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\Android\AndroidAssetResourceManager.cpp">
+      <Filter>src\Basic\FileSystem\Android</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\AssetResourceManager.cpp">
+      <Filter>src\Basic\FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
