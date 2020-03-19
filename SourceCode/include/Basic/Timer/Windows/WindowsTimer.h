@@ -30,6 +30,8 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#if defined(_WIN32) || defined(_WIN64)
+
 #pragma once
 
 #include "Timer.h"
@@ -60,3 +62,5 @@ public:
 };
 
 _______________SD_END_BASIC_NAMESPACE________________
+
+#endif

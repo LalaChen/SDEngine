@@ -38,11 +38,11 @@ SOFTWARE.
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-/*! \class Timer \n
- *  \brief In our system, Timer is used to record some infos about time. We will record the program\n
- *  starting time while this program starting. For each frame, we will cache the previous time and \n
- *  get current time by GetCurrentTimeByOS. Please note that we need to implement function \n
- *  GetCurrentTimeByOS for following OS platform. And then we calculate delta time by the current \n
+/*! \class Timer
+ *  \brief In our system, Timer is used to record some infos about time. We will record the program
+ *  starting time while this program starting. For each frame, we will cache the previous time and
+ *  get current time by GetCurrentTimeByOS. Please note that we need to implement function
+ *  GetCurrentTimeByOS for following OS platform. And then we calculate delta time by the current
  *  and prevoius times.
  */
 class SDENGINE_CLASS Timer
@@ -59,23 +59,23 @@ public:
      *  \brief The destructor of Timer Class.
      */
     virtual ~Timer();
-public:
 
+public:
     /*! \fn void Start();
-     *  \brief Start the timer. This function is used while application lanuching. We will get \n
-     *         current time by OS and save it as program start time. And then we initialize previous \n
+     *  \brief Start the timer. This function is used while application lanuching. We will get
+     *         current time by OS and save it as program start time. And then we initialize previous
      *         and current time by start time.
      */
     void Start();
 
     /*! \fn void Update();
-     *  \brief Update the timer. This function is used while application updating. We will record current \n
+     *  \brief Update the timer. This function is used while application updating. We will record current
      *         time as previous time and then get current time by OS as currnet time.
      */
     void Update();
 
     /*! \fn void End();
-     *  \brief End the timer. This function is used while application is destroyed. We will record current time \n
+     *  \brief End the timer. This function is used while application is destroyed. We will record current time
      *         as end time.
      */
     void End();
@@ -85,6 +85,7 @@ public:
      *  \brief Get current time by OS function.
      */
     virtual void GetCurrentTimeByOS(double &io_time) = 0;
+
 protected:
     /*! \var double m_start_time;
      *  \brief Program start time. [VarGet Attribute]

@@ -30,9 +30,9 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
-#pragma once
+#if defined(_WIN32) || defined(_WIN64)
 
-#if defined(_WIN32) || defined(_WIN64) 
+#pragma once
 
 #include "LogManager.h"
 

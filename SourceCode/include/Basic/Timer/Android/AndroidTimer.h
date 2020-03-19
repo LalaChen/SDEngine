@@ -30,9 +30,9 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
-#pragma once
-
 #if defined(__ANDROID__)
+
+#pragma once
 
 #include "Timer.h"
 
