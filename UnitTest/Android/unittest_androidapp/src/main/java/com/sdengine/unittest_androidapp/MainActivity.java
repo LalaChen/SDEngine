@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback {
+public class MainActivity extends AppCompatActivity {
 
     public final String TAG = "SDE_AndroidActivity";
 
@@ -17,20 +19,9 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         System.loadLibrary("sdengine_native");
     }
 
-    public native void InitializeNative(AssetManager assetMgr, Surface surface, int format, int w, int h);
-
-    //------------------------ Interface about surfaceHolder.callback
-    public void surfaceCreated(SurfaceHolder holder) {
-        Log.i(TAG,"surfaceCreated");
-    }
-
-    public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        Log.i(TAG,"surfaceChanged ");
-    }
-
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.i(TAG,"surfaceDestroyed ");
-    }
+    public static native void InitializeApplication(AssetManager assetMgr);
+    public static native void ChangeSurface(Surface surface, int format, int width, int height);
+    public static native void Pause();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +30,39 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         setContentView(R.layout.activity_main);
 
         SurfaceView sv = (SurfaceView)findViewById(R.id.surfaceView);
-        sv.getHolder().addCallback(this);
+
+        //-------------- set on surface callback
+        sv.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                Log.i(TAG,"surfaceCreated");
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                Log.i(TAG,"surfaceChanged ");
+                ChangeSurface(holder.getSurface(), format, width, height);
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                Log.i(TAG,"surfaceDestroyed ");
+            }
+        });
+
+        //-------------- set on touch linter
+        sv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.i(TAG, "Touch event !!! Event action is " + (event.getAction() & MotionEvent.ACTION_MASK) + " touch count = " + event.getPointerCount());
+                for (int touchID = 0; touchID < event.getPointerCount(); touchID++) {
+                    Log.i(TAG, "T(" + event.getPointerId(touchID) + ")(" + event.getX(touchID) + "," + event.getY(touchID) + ")");
+                }
+                return true;
+            }
+        });
+
+        InitializeApplication(getAssets());
     }
 
     @Override
@@ -58,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     protected void onPause() {
         Log.i(TAG,"onPause ");
         super.onPause();
+        Pause();
     }
 
     @Override

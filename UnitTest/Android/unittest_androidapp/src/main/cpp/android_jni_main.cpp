@@ -8,34 +8,64 @@
 #include <SDEngineCommonFunction.h>
 #include <SDEngine.h>
 
-#include "AndroidApplication.h"
+#include "TestAndroidApplication.h"
 #include "android_log.h"
 
-using SDE::App::AndroidApplication;
-
-AndroidApplication *g_app = nullptr;
+TestAndroidApplication *g_app = nullptr;
 
 extern "C" JNIEXPORT
-void JNICALL Java_com_sdengine_unittest_androidapp_InitializeNative(
+void JNICALL Java_com_sdengine_unittest_1androidapp_MainActivity_InitializeApplication(
         JNIEnv *env,
         jobject obj,
-        jobject asset_mgr,
-        jobject surface,
-        jint format,
-        jint w,
-        jint h)
+        jobject j_asset_mgr)
 {
-    //1. get ANativeWindow.
-    ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
-    if (window != nullptr) {
-        LOGE("We can't find the window from surface(%p).", surface);
-        return;
-    }
-
-    //2. new Android Application.
-    g_app = new AndroidApplication("test",
+    AAssetManager *asset_mgr = AAssetManager_fromJava(env, j_asset_mgr);
+    //1. new Android Application.
+    g_app = new TestAndroidApplication("test",
+            asset_mgr,
             SDE::Graphics::GraphicsLibrary_Vulkan,
             0, nullptr);
 
     g_app->Initialize();
+}
+
+extern "C" JNIEXPORT
+void JNICALL Java_com_sdengine_unittest_1androidapp_MainActivity_ChangeSurface(
+        JNIEnv *env,
+        jobject obj,
+        jobject surface,
+        jint format,
+        jint width,
+        jint height)
+{
+    ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
+    if (window == nullptr) {
+        LOGE("We can't find the window from surface(%p).", surface);
+        return;
+    }
+    LOGI("NativeWindow(%p) from surface(%p)with(%d,%d,(%d))", window, surface, width, height, format);
+    if (g_app != nullptr) {
+        if (g_app->GetCurrentState() == AndroidApplication::AppState_CREATE || g_app->GetCurrentState() == AndroidApplication::AppState_INITIALIZE) {
+            g_app->InitializeNativeWindow(window);
+            g_app->RunMainLoop();
+        }
+        else {
+            if (g_app->GetCurrentState() == AndroidApplication::AppState_PAUSE) {
+                g_app->RefreshNativeWindow(window, width, height);
+            }
+            else {
+                LOGI("Wrong AppState(%d)", g_app->GetCurrentState());
+            }
+        }
+    }
+}
+
+extern "C" JNIEXPORT
+void JNICALL Java_com_sdengine_unittest_1androidapp_MainActivity_Pause(
+        JNIEnv *env,
+        jobject obj)
+{
+    if (g_app != nullptr) {
+        g_app->Pause();
+    }
 }

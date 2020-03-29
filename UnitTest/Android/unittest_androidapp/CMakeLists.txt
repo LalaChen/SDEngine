@@ -82,7 +82,6 @@ set_target_properties( assimp PROPERTIES IMPORTED_LOCATION
         ${CMAKE_CURRENT_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/${ANDROID_ABI}/libassimp.so )
 
 # Engine library
-
 add_library( # Sets the name of the library.
         SDEngine
         # Sets the library as a shared library.
@@ -92,6 +91,16 @@ add_library( # Sets the name of the library.
 
 set_target_properties( SDEngine PROPERTIES IMPORTED_LOCATION
         ${CMAKE_CURRENT_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/${ANDROID_ABI}/libSDEngine.so )
+
+add_library( # Sets the name of the library.
+        SDEngine_AndroidApplication
+        # Sets the library as a shared library.
+        SHARED
+        # Provides a relative path to your source file(s).
+        IMPORTED )
+
+set_target_properties( SDEngine_AndroidApplication PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/${ANDROID_ABI}/libSDEngine_AndroidApplication.so )
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -110,8 +119,8 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-        src/main/cpp/android_jni_main.cpp
-        src/main/cpp/AndroidApplication.cpp
+             src/main/cpp/android_jni_main.cpp
+             src/main/cpp/TestAndroidApplication.cpp
         )
 
 # Specifies libraries CMake should link to your target library. You
@@ -125,7 +134,8 @@ target_link_libraries( # Specifies the target library.
                        # included in the NDK.
                        assimp
                        SDEngine
+                       SDEngine_AndroidApplication
                        -llog
                        -landroid
                        -lEGL
-                       -lGLESv2)
+                       -lGLESv3)
