@@ -1,7 +1,6 @@
-#define VK_USE_PLATFORM_WIN32_KHR
-
 #include "SDEngine.h"
 #include "SDEnginePlatform.h"
+#include "VulkanWrapper.h"
 #include "WindowsApplication.h"
 
 using namespace SDE;
@@ -287,7 +286,7 @@ void WindowsApplication::RunMainLoop()
                 break;
             case USER_MESSAGE_RESIZE:
                 //Resize w : wParam, y : lParam
-                Resize(message.wParam, message.lParam);
+                Resize(SD_NULL_HANDLE, message.wParam, message.lParam);
                 break;
             case USER_MESSAGE_QUIT:
                 loop = false;

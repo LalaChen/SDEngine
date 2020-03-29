@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "VulkanWrapper.h"
 #include "LogManager.h"
 #include "VulkanManager.h"
 

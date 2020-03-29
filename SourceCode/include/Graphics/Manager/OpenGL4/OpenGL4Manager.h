@@ -95,7 +95,7 @@ public:
     void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
     void DestroyFrameBuffer(FrameBufferIdentity &io_identity) override;
 public:
-    void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
+    void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;

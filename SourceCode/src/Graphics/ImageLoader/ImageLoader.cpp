@@ -24,14 +24,14 @@ void ImageLoader::Initialize()
 {
 }
 
-BitmapStrongReferenceObject ImageLoader::LoadBitmap(const FilePathString& i_fp) const
+BitmapStrongReferenceObject ImageLoader::ReadBitmap(const FilePathString& i_fp) const
 {
     FileData file_data;
     FileSystemManager::GetRef().OpenFile(i_fp, file_data);
-    return LoadBitmap(i_fp, file_data.GetDataUCharAddr(), file_data.GetSize());
+    return ReadBitmap(i_fp, file_data.GetDataUCharAddr(), file_data.GetSize());
 }
 
-BitmapStrongReferenceObject ImageLoader::LoadBitmap(const ObjectName& i_name, const UBytePtr i_file_buffer, size_t i_file_size) const
+BitmapStrongReferenceObject ImageLoader::ReadBitmap(const ObjectName& i_name, const UBytePtr i_file_buffer, size_t i_file_size) const
 {
     int width, height, n_of_c;
     stbi_uc *image_ptr = stbi_load_from_memory(i_file_buffer, static_cast<int>(i_file_size), &width, &height, &n_of_c, 4);

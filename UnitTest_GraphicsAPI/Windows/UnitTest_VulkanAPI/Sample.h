@@ -56,6 +56,7 @@ public:
     virtual void Initialize() = 0;
     virtual void Render() = 0;
     virtual void Destroy() = 0;
+    //virtual void Resize(Size_ui32 i_width, Size_ui32 i_height) = 0;
 public:
     virtual VkImage GetColorBuffer() = 0;
 protected:

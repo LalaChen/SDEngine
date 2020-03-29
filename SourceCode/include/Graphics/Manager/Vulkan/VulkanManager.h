@@ -32,7 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "VulkanWrapper.h"
+#include <vulkan/vulkan.h>
 #include "GraphicsManager.h"
 
 using SDE::Basic::UBytePtr;
@@ -117,7 +117,7 @@ public:
     void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
     void DestroyFrameBuffer(FrameBufferIdentity &io_identity) override;
 public:
-    void Resize(Size_ui32 i_w, Size_ui32 i_h) override;
+    void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
 //------- Vulkan command buffer private Function --------
     VkResult CreateVkCommandPool(
@@ -330,7 +330,9 @@ public:
 
     void DestroyVkImageView(VkImageView &io_iv_handle);
 
-    void DestroyVkFrameBuffer(VkFramebuffer &io_fb_handle);
+    void DestroyVkFrameBuffer(VkFramebuffer& io_fb_handle);
+public:
+    bool IsContainerNecessaryQueueFlags(VkQueueFlags i_flags);
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;
@@ -350,8 +352,10 @@ protected:
 protected:
     VkDebugReportCallbackEXT m_VK_debug_report_cbk;
 protected:
+    std::vector<VkQueueFlagBits> m_VK_desired_queue_ability_lists;
     VkQueueFlags m_VK_desired_queue_abilities;
-    VkSurfaceFormatKHR m_VK_desired_sur_fmt;
+    std::vector<VkSurfaceFormatKHR> m_VK_desired_sur_fmts;
+    VkSurfaceFormatKHR m_VK_final_sur_fmt;
     std::vector<VkPresentModeKHR> m_VK_desired_pre_mode_list;
 protected:
     VkPhysicalDevice m_VK_physical_device;
@@ -364,7 +368,6 @@ protected:
     VkRenderPass m_VK_present_render_pass;
     VkSemaphore m_VK_acq_img_semaphore; //GPU to GPU lock
     VkSemaphore m_VK_present_semaphore; //GPU to GPU lock
-    VkSemaphore m_VK_render_scene_semaphore;
     std::vector<VkImage> m_VK_sc_images;
     std::vector<VkImageView> m_VK_sc_image_views;
     std::vector<VkFramebuffer> m_VK_sc_image_fbs;

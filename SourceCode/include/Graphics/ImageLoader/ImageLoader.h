@@ -64,17 +64,17 @@ public:
      */
     virtual void Initialize();
 public:
-    /*! \fn virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
+    /*! \fn virtual BitmapStrongReferenceObject ReadBitmap(const FilePathString &i_fp) const = 0;
      *  \param [in] i_fp File path of image data.
      *  \brief Load data.
      */
-	virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const;
+	virtual BitmapStrongReferenceObject ReadBitmap(const FilePathString &i_fp) const;
 
-    /*! \fn virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
+    /*! \fn virtual BitmapStrongReferenceObject ReadBitmap(const FilePathString &i_fp) const = 0;
      *  \param [in] i_fp File path of image data.
      *  \brief Load data.
      */
-    virtual BitmapStrongReferenceObject LoadBitmap(const ObjectName &i_name, const UBytePtr i_file_buffer, size_t i_file_size) const;
+    virtual BitmapStrongReferenceObject ReadBitmap(const ObjectName &i_name, const UBytePtr i_file_buffer, size_t i_file_size) const;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

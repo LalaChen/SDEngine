@@ -42,6 +42,7 @@ SOFTWARE.
 #include "KeyEventArg.h"
 #include "Event.h"
 
+using SDE::Graphics::CompHandle;
 using SDE::Graphics::Resolution;
 using SDE::Graphics::GraphicsLibraryEnum;
 using SDE::Graphics::Size_ui32;
@@ -117,12 +118,13 @@ public:
      */
     virtual void Resume();
 
-    /*! \fn virtual void Resize(Size_ui32 i_w, Size_ui32 i_h);
+    /*! \fn virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h);
+     *  \param [in] i_new_surface new surface of window.(if necessary)
      *  \param [in] i_w Width.
      *  \param [in] i_h Height.
      *  \brief Resume app. Please call this function when app re-focus.
      */
-    virtual void Resize(Size_ui32 i_w, Size_ui32 i_h);
+    virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h);
 public:
     /*! \fn void SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height);
      *  \param [in] i_width Width of app.
@@ -159,13 +161,13 @@ protected:
      */
     SD_DECLARE_ATTRIBUTE_VAR_GET(std::string, m_win_title, WinTitle);
 
-    /*! \var Resolution m_win_res; [VarGet Attribute]
-     *  \brief resolution of this app.
+    /*! \var Resolution m_win_res;
+     *  \brief resolution of this app. [VarGet Attribute]
      */
     SD_DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_win_res, WindowResolution);
     
-    /*! \var WindowSize m_full_window; [VarGet Attribute]
-        \brief is full screen or not.
+    /*! \var WindowSize m_full_window;
+        \brief is full screen or not. [VarGet Attribute]
     */
     SD_DECLARE_ATTRIBUTE_VAR_GET(FullWindowOption, m_full_window, FullScreenSignal);
 
@@ -178,6 +180,11 @@ protected:
      *  \brief A event object for monitior key event.
      */
     KeyMapManagerStrongReferenceObject m_key_map_manager;
+
+    /*! \var CompHandle m_graphics_app_instance;
+     *  \brief grahics app instance. It's VkInstance if we adopt Vulkan graphics library.
+     */
+    CompHandle m_graphics_app_instance;
 };
 
 inline void Application::SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height)

@@ -32,22 +32,6 @@ SOFTWARE.
 #pragma once
 
 #define VK_NO_PROTOTYPES
-
-#if defined(_WIN32) || defined(_WIN64)
-    //#define VK_USE_PLATFORM_WIN32_KHR
-    //#include <vulkan/vulkan_win32.h>
-#elif defined(__linux__) 
-    //#define VK_USE_PLATFORM_XLIB_KHR
-    //#include <vulkan/vulkan_xlib.h>
-    //#include <vulkan/vulkan_xlib_xrandr.h>
-#elif defined(__ANDROID__)
-    //#define VK_USE_PLATFORM_ANDROID_KHR
-    //#include <vulkan/vulkan_android.h>
-#endif
-
-#if USE_DEBUG_EXTENTIONS
-    #include <vulkan/vk_sdk_platform.h>
-#endif
 #include <vulkan/vulkan.h>
 
 #include "SDEngineMacro.h"

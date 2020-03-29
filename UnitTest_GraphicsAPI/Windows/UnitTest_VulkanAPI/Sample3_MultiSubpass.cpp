@@ -3,6 +3,7 @@
 #include <thread>
 
 #include "SDEngine.h"
+#include "VulkanWrapper.h"
 #include "VulkanAPITestManager.h"
 #include "Sample3_MultiSubpass.h"
 
@@ -531,7 +532,7 @@ void Sample3_MultiSubpass::CreateTexture()
     SDLOG("Create Texture!!!");
     VkResult result = VK_SUCCESS;
     //1. load data and get w and h.
-    BitmapStrongReferenceObject bitmap_ref = ImageLoader::GetRef().LoadBitmap("Texture/Lenna.png");
+    BitmapStrongReferenceObject bitmap_ref = ImageLoader::GetRef().ReadBitmap("Texture/Lenna.png");
     //2. create info.
     if (bitmap_ref.IsNull() == false) {
         Size_ui32 img_w = bitmap_ref.GetRef().GetWidth();

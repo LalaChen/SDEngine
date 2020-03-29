@@ -128,7 +128,7 @@ public:
     virtual void DestroyFrameBuffer(FrameBufferIdentity &io_identity) = 0;
 public:
 //------------- Resize Function -----------------
-    virtual void Resize(Size_ui32 i_w, Size_ui32 i_h) = 0;
+    virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:
 //------------- Render Function -----------------
     void Render();

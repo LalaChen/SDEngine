@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "VulkanCreationArg.h"
+#include "VulkanWrapper.h"
 #include "LogManager.h"
 #include "VulkanManager.h"
 
@@ -59,8 +60,10 @@ VulkanManager::VulkanManager()
 // debug cbk
 , m_VK_debug_report_cbk(VK_NULL_HANDLE)
 // desired device properities
-, m_VK_desired_queue_abilities(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT | VK_QUEUE_SPARSE_BINDING_BIT)
-, m_VK_desired_sur_fmt{ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR }
+, m_VK_desired_queue_ability_lists{VK_QUEUE_GRAPHICS_BIT, VK_QUEUE_COMPUTE_BIT}
+, m_VK_desired_queue_abilities(0)
+, m_VK_desired_sur_fmts{ {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_R8G8B8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} }
+, m_VK_final_sur_fmt{VK_FORMAT_UNDEFINED, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR }
 , m_VK_desired_pre_mode_list{ VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR }
 // device(phy and logical)
 , m_VK_physical_device(VK_NULL_HANDLE)
@@ -73,7 +76,6 @@ VulkanManager::VulkanManager()
 , m_VK_present_render_pass(VK_NULL_HANDLE)
 , m_VK_acq_img_semaphore(VK_NULL_HANDLE)
 , m_VK_present_semaphore(VK_NULL_HANDLE)
-, m_VK_render_scene_semaphore(VK_NULL_HANDLE)
 // main command pool
 , m_VK_main_cmd_pool(VK_NULL_HANDLE)
 , m_VK_main_cmd_buffer(VK_NULL_HANDLE)
@@ -87,6 +89,10 @@ VulkanManager::VulkanManager()
     }
     else {
         SDLOG("Load vulkan library func successfully.");
+    }
+    //
+    for (VkQueueFlagBits& flag : m_VK_desired_queue_ability_lists) {
+        m_VK_desired_queue_abilities |= flag;
     }
 }
 
@@ -110,10 +116,10 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializeDebugMessage();
             InitializePhysicalDevice();
             InitializeLogicDevice();
-            InitializeSwapChain();
-            //graphics
-            InitializeCommandPoolAndBuffers();
             InitializePresentRenderPass();
+            InitializeCommandPoolAndBuffers();
+            //graphics
+            InitializeSwapChain();
             InitializeSCImageViewsAndFBs();
             //
             PrintSystemInformation();
@@ -157,11 +163,6 @@ void VulkanManager::ReleaseGraphicsSystem()
     if (m_VK_acq_img_semaphore != VK_NULL_HANDLE) {
         vkDestroySemaphore(m_VK_device, m_VK_acq_img_semaphore, nullptr);
         m_VK_acq_img_semaphore = VK_NULL_HANDLE;
-    }
-
-    if (m_VK_render_scene_semaphore != VK_NULL_HANDLE) {
-        vkDestroySemaphore(m_VK_device, m_VK_render_scene_semaphore, nullptr);
-        m_VK_render_scene_semaphore = VK_NULL_HANDLE;
     }
 
     if (m_VK_present_semaphore != VK_NULL_HANDLE) {
@@ -209,7 +210,7 @@ void VulkanManager::ReleaseGraphicsSystem()
 }
 
 //----------------------- Render Flow -----------------------
-void VulkanManager::Resize(Size_ui32 i_w, Size_ui32 i_h)
+void VulkanManager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
 {
     for (VkFramebuffer &fbo : m_VK_sc_image_fbs) {
         if (fbo != VK_NULL_HANDLE) {
@@ -230,6 +231,11 @@ void VulkanManager::Resize(Size_ui32 i_w, Size_ui32 i_h)
     if (m_VK_swap_chain != VK_NULL_HANDLE) {
         vkDestroySwapchainKHR(m_VK_device, m_VK_swap_chain, nullptr);
         m_VK_swap_chain = VK_NULL_HANDLE;
+    }
+    VkSurfaceKHR new_VK_surface = reinterpret_cast<VkSurfaceKHR>(i_new_surface);
+    if (m_VK_surface != new_VK_surface && new_VK_surface != SD_NULL_HANDLE) {
+        vkDestroySurfaceKHR(m_VK_instance, m_VK_surface, nullptr);
+        m_VK_surface = new_VK_surface;
     }
 
     InitializeSwapChain();
@@ -254,7 +260,6 @@ void VulkanManager::RenderToScreen()
         SDLOGW("We can't get nxt swapchain image.");
         return;
     }
-
     //Begin command buffer
     VkCommandBufferBeginInfo cmd_buf_c_info = {};
     cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -292,22 +297,23 @@ void VulkanManager::RenderToScreen()
         SDLOGW("We can't end command buffer(%x)!!!", m_VK_main_cmd_buffer);
         return;
     }
+
     //Push command buffer to queue.
-    VkSemaphore wait_semaphores[2] = { m_VK_acq_img_semaphore, m_VK_render_scene_semaphore };
-    VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+    VkSemaphore wait_semaphores[1] = { m_VK_acq_img_semaphore };
+    VkPipelineStageFlags submit_wait_flags[1] = { VK_PIPELINE_STAGE_ALL_COMMANDS_BIT };
     VkSubmitInfo submit_info = {};
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submit_info.pNext = nullptr;
-    submit_info.waitSemaphoreCount = 2;
+    submit_info.waitSemaphoreCount = 1;
     submit_info.pWaitSemaphores = wait_semaphores; //wait acq image.
-    submit_info.pWaitDstStageMask = &submit_wait_flag;
+    submit_info.pWaitDstStageMask = submit_wait_flags;
     submit_info.signalSemaphoreCount = 1;
     submit_info.pSignalSemaphores = &m_VK_present_semaphore; //set present semaphore.
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
 
     if (vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
-        SDLOGW("Submit command buffer failure!!!");
+        SDLOGW("Submit command buffer to PresentQueue(%p) failure!!!", m_VK_present_queue);
     }
    
     do {

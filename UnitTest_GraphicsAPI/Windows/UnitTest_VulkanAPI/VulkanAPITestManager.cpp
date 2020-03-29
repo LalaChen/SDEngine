@@ -1,5 +1,6 @@
 #include "SDEngine.h"
 #include "SDEnginePlatform.h"
+#include "VulkanWrapper.h"
 #include "VulkanAPITestManager.h"
 
 using namespace::SDE::Basic;
@@ -63,7 +64,7 @@ void VulkanAPITestManager::RenderToScreen()
 
     VkResult result = vkAcquireNextImageKHR(
         m_VK_device, m_VK_swap_chain, MaxImgAcqirationTime,
-        m_VK_acq_img_semaphore, nullptr, &image_index);
+        m_VK_acq_img_semaphore, VK_NULL_HANDLE, &image_index);
 
     if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
         SDLOGW("We can't get nxt swapchain image.");
@@ -117,14 +118,14 @@ void VulkanAPITestManager::RenderToScreen()
         return;
     }
     //Push command buffer to queue.
-    VkSemaphore wait_semaphores[2] = { m_VK_render_scene_semaphore, m_VK_acq_img_semaphore };
-    VkPipelineStageFlags submit_wait_flag = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+    VkSemaphore wait_semaphores[1] = { m_VK_acq_img_semaphore };
+    VkPipelineStageFlags submit_wait_flags[1] = { VK_PIPELINE_STAGE_ALL_COMMANDS_BIT };
     VkSubmitInfo submit_info = {};
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submit_info.pNext = nullptr;
     submit_info.waitSemaphoreCount = 1;
-    submit_info.pWaitSemaphores = &m_VK_acq_img_semaphore; //wait acq image and render scene.
-    submit_info.pWaitDstStageMask = &submit_wait_flag;
+    submit_info.pWaitSemaphores = wait_semaphores; //wait acq image and render scene.
+    submit_info.pWaitDstStageMask = submit_wait_flags;
     submit_info.signalSemaphoreCount = 1;
     submit_info.pSignalSemaphores = &m_VK_present_semaphore; //set present semaphore.
     submit_info.commandBufferCount = 1;

@@ -1,5 +1,6 @@
 #include "SDEngine.h"
 #include "SDEnginePlatform.h"
+#include "VulkanWrapper.h"
 #include "GLFWApplication.h"
 
 using namespace SDE;
@@ -185,6 +186,8 @@ void GLFWApplication::InitializeGraphicsSystem()
         }
 
         SDLOG("Vulkan instance creation end!!!");
+
+        m_graphics_app_instance = reinterpret_cast<CompHandle>(instance);
 
         VulkanCreationArg arg;
         arg.m_instance = instance;

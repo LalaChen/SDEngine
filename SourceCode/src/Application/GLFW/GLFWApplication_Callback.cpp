@@ -74,7 +74,7 @@ void GLFWApplication::WindowPosCallback(GLFWwindow *i_window, int i_x, int i_y)
 void GLFWApplication::WindowSizeCallback(GLFWwindow *i_window, int i_w, int i_h)
 {
     SDLOG("Window size change to (%d, %d)", i_w, i_h);
-    Application::GetRef().Resize(i_w, i_h);
+    Application::GetRef().Resize(SD_NULL_HANDLE, i_w, i_h);
 }
 
 void GLFWApplication::WindowFocusCallback(GLFWwindow *i_window, int i_focused)

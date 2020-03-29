@@ -22,12 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#define NOMINMAX //For avoid max and min redefinition in Windows.h
+
 #include <list>
 #include <algorithm>
 
-#include <vulkan/vulkan.h>
-
 #include "VulkanCreationArg.h"
+#include "VulkanWrapper.h"
 #include "LogManager.h"
 #include "VulkanManager.h"
 
@@ -298,7 +300,7 @@ void VulkanManager::InitializeLogicDevice()
 
     for (uint32_t fam_id = 0; fam_id < queue_families.size(); fam_id++) {
         //pick up queue family with best ability.
-        if (queue_families[fam_id].queueFlags == m_VK_desired_queue_abilities &&
+        if (IsContainerNecessaryQueueFlags(queue_families[fam_id].queueFlags) == true &&
             queue_families[fam_id].queueCount > 0) {
             //check this family can be used to present on screen.
             VkBool32 present_support = VK_FALSE;
@@ -362,174 +364,12 @@ void VulkanManager::InitializeLogicDevice()
     if (m_VK_picked_queue_family_id >= 0) {
         vkGetDeviceQueue(m_VK_device, static_cast<uint32_t>(m_VK_picked_queue_family_id), 0, &m_VK_present_queue);
     }
-}
 
-void VulkanManager::InitializeSwapChain()
-{
-    SDLOG("--- Vulkan initialize swap chains.(Create swap chain)");
-    VkSurfaceCapabilitiesKHR sur_caps;
-    SDLOGD("------- Get surface capability : ");
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_VK_physical_device, m_VK_surface, &sur_caps);
-    SDLOGD("ImageCount Min:%d Max:%d", sur_caps.minImageCount, sur_caps.maxImageCount);
-    SDLOGD("ImageExtents Min:(%d,%d) Cur:(%d,%d) Max:(%d,%d)", 
-        sur_caps.minImageExtent.width, sur_caps.minImageExtent.height,
-        sur_caps.currentExtent.width, sur_caps.currentExtent.height, 
-        sur_caps.maxImageExtent.width, sur_caps.maxImageExtent.height);
-    SDLOGD("maxImageArrayLayers:%d", sur_caps.maxImageArrayLayers);
-    SDLOGD("supportedTransforms:%d", sur_caps.supportedTransforms);
-    SDLOGD("currentTransform:%x (VkSurfaceTransformFlagBitsKHR)", sur_caps.currentTransform);
-    SDLOGD("supportedCompositeAlpha:%d", sur_caps.supportedCompositeAlpha);
-    SDLOGD("supportedUsageFlags:%d", sur_caps.supportedUsageFlags);
-
-    bool has_desired_sur_fmt = false;
-    std::vector<VkSurfaceFormatKHR> sur_formats;
-    uint32_t sur_format_count;
-    vkGetPhysicalDeviceSurfaceFormatsKHR(m_VK_physical_device, m_VK_surface, &sur_format_count, nullptr);
-
-    if (sur_format_count != 0) {
-        sur_formats.resize(sur_format_count);
-        vkGetPhysicalDeviceSurfaceFormatsKHR(m_VK_physical_device, m_VK_surface, &sur_format_count, sur_formats.data());
-    }
-
-    if (sur_format_count > 1) {
-        for (VkSurfaceFormatKHR &fmt : sur_formats) {
-            SDLOGD("Supported SurfaceFormat:(Format)%d, (colorSpace)%d", fmt.format, fmt.colorSpace);
-        }
-
-        for (VkSurfaceFormatKHR &fmt : sur_formats) {
-            if (fmt.colorSpace == m_VK_desired_sur_fmt.colorSpace &&
-                fmt.format == m_VK_desired_sur_fmt.format) {
-                has_desired_sur_fmt = true;
-                break;
-            }
-        }
-    }
-    else if (sur_format_count == 1) {
-        if (sur_formats[0].format == VK_FORMAT_UNDEFINED) {
-            has_desired_sur_fmt = true;
-        }
-    }
-
-    if (has_desired_sur_fmt == false) {
-        throw std::runtime_error("Desire surface format isn't exist.");
-    }
-    
-    SDLOGD("Desired SurfaceFormat:(VK_FORMAT_B8G8R8A8_UNORM)%d, (VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)%d", VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR);
-
-    std::vector<VkPresentModeKHR> supported_p_modes;
-    uint32_t supported_p_mode_count;
-    vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &supported_p_mode_count, nullptr);
-
-    if (supported_p_mode_count != 0) {
-        supported_p_modes.resize(supported_p_mode_count);
-        vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &supported_p_mode_count, supported_p_modes.data());
+    if (m_VK_present_queue == SD_NULL_HANDLE) {
+        throw std::runtime_error("fauled to get device queue");
     }
     else {
-        throw std::runtime_error("No present mode supported!");
-    }
-
-    for (const VkPresentModeKHR &p_mode : supported_p_modes) {
-        SDLOGD("Supported present mode : %d", p_mode);
-    }
-
-    for (int mode_id = 0; mode_id < VK_PRESENT_MODE_RANGE_SIZE_KHR; mode_id++) {
-        for (const VkPresentModeKHR &p_mode : supported_p_modes) {
-            if (m_VK_desired_pre_mode_list[mode_id] == p_mode) {
-                m_VK_final_present_mode = m_VK_desired_pre_mode_list[mode_id];
-                break;
-            }
-        }
-        if (m_VK_final_present_mode != VK_PRESENT_MODE_RANGE_SIZE_KHR) {
-            break;
-        }
-    }
-
-    if (m_VK_final_present_mode == VK_PRESENT_MODE_RANGE_SIZE_KHR) {
-        throw std::runtime_error("No desired present mode supported!");
-    }
-    else {
-        SDLOGD("final present mode : %d", m_VK_final_present_mode);
-    }
-
-    if (sur_caps.currentExtent.width != 0 && sur_caps.currentExtent.height != 0) {
-        m_screen_size.SetResolution(sur_caps.currentExtent.width, sur_caps.currentExtent.height);
-    }
-    else {
-        m_screen_size.SetResolution(
-            std::max(sur_caps.minImageExtent.width, std::min(sur_caps.maxImageExtent.width, sur_caps.minImageExtent.width)),
-            std::max(sur_caps.minImageExtent.height, std::min(sur_caps.maxImageExtent.height, sur_caps.minImageExtent.height)));
-    }
-
-    uint32_t image_count = sur_caps.minImageCount + 1;
-    if (image_count > sur_caps.maxImageCount) {
-        image_count = sur_caps.maxImageCount;
-    }
-
-    uint32_t present_queue_fam_id = static_cast<uint32_t>(m_VK_picked_queue_family_id);
-
-    VkSwapchainCreateInfoKHR sw_c_info = {};
-    sw_c_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    sw_c_info.pNext = nullptr;
-    sw_c_info.flags = 0;
-    sw_c_info.surface = m_VK_surface;
-    sw_c_info.minImageCount = image_count;
-    sw_c_info.imageFormat = m_VK_desired_sur_fmt.format;
-    sw_c_info.imageColorSpace = m_VK_desired_sur_fmt.colorSpace;
-    sw_c_info.imageExtent = {m_screen_size.GetWidth(), m_screen_size.GetHeight()};
-    sw_c_info.imageArrayLayers = 1;
-    sw_c_info.imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-    sw_c_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    sw_c_info.queueFamilyIndexCount = 1;
-    sw_c_info.pQueueFamilyIndices = &present_queue_fam_id;
-    sw_c_info.preTransform = sur_caps.currentTransform;
-    sw_c_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-    sw_c_info.presentMode = m_VK_final_present_mode;
-    sw_c_info.clipped = VK_TRUE;
-    sw_c_info.oldSwapchain = VK_NULL_HANDLE;
-
-    if (vkCreateSwapchainKHR(m_VK_device, &sw_c_info, nullptr, &m_VK_swap_chain) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create swap chain!");
-    }
-
-    if ( vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, nullptr) != VK_SUCCESS) {
-        throw std::runtime_error("failed to get image number of swap chain!");
-    }
-
-    if (image_count > 0) {
-        m_VK_sc_images.resize(image_count);
-        if (vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, m_VK_sc_images.data()) == VK_SUCCESS) {
-            SDLOG("SwapChainImages number : %u, ViewPort(%u,%u)", image_count, m_screen_size.GetWidth(), m_screen_size.GetHeight());
-        }
-        else {
-            throw std::runtime_error("failed to get image handle of swap chain!");
-        }
-    }
-
-    VkSemaphoreCreateInfo acq_sem_c_info = {};
-    acq_sem_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-    acq_sem_c_info.pNext = nullptr;
-    acq_sem_c_info.flags = 0;
-
-    if (vkCreateSemaphore(m_VK_device, &acq_sem_c_info, nullptr, &m_VK_acq_img_semaphore) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create acq img semaphore!");
-    }
-
-    VkSemaphoreCreateInfo render_scene_c_info = {};
-    render_scene_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-    render_scene_c_info.pNext = nullptr;
-    render_scene_c_info.flags = 0;
-
-    if (vkCreateSemaphore(m_VK_device, &render_scene_c_info, nullptr, &m_VK_render_scene_semaphore) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create render scene semaphore!");
-    }
-
-    VkSemaphoreCreateInfo present_sem_c_info = {};
-    present_sem_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-    present_sem_c_info.pNext = nullptr;
-    present_sem_c_info.flags = 0;
-
-    if (vkCreateSemaphore(m_VK_device, &present_sem_c_info, nullptr, &m_VK_present_semaphore) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create present semaphore!");
+        SDLOG("Get present queue(%p).", m_VK_present_queue);
     }
 }
 
@@ -574,7 +414,7 @@ void VulkanManager::InitializePresentRenderPass()
     //--- Attachment about color buffer for subpass 0, it's used to store rendering result to image getted from swapchain.
     VkAttachmentDescription clr_attachment_desc = {};
     clr_attachment_desc.flags = 0; //Write the other purpose about this attachment. We don't have other usage about this flag.
-    clr_attachment_desc.format = m_VK_desired_sur_fmt.format;
+    clr_attachment_desc.format = m_VK_final_sur_fmt.format;
     clr_attachment_desc.samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
     clr_attachment_desc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //Clear before using. If we set VK_ATTACHMENT_LOAD_OP_DONT_CARE, we can't clear via clearcolor.
     clr_attachment_desc.storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
@@ -641,6 +481,173 @@ void VulkanManager::InitializePresentRenderPass()
     }
 }
 
+//------- surface related -----------
+void VulkanManager::InitializeSwapChain()
+{
+    SDLOG("--- Vulkan initialize swap chains.(Create swap chain)");
+    VkSurfaceCapabilitiesKHR sur_caps;
+    SDLOGD("------- Get surface capability : ");
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_VK_physical_device, m_VK_surface, &sur_caps);
+    SDLOGD("ImageCount Min:%d Max:%d", sur_caps.minImageCount, sur_caps.maxImageCount);
+    SDLOGD("ImageExtents Min:(%d,%d) Cur:(%d,%d) Max:(%d,%d)",
+        sur_caps.minImageExtent.width, sur_caps.minImageExtent.height,
+        sur_caps.currentExtent.width, sur_caps.currentExtent.height,
+        sur_caps.maxImageExtent.width, sur_caps.maxImageExtent.height);
+    SDLOGD("maxImageArrayLayers:%d", sur_caps.maxImageArrayLayers);
+    SDLOGD("supportedTransforms:%d", sur_caps.supportedTransforms);
+    SDLOGD("currentTransform:%x (VkSurfaceTransformFlagBitsKHR)", sur_caps.currentTransform);
+    SDLOGD("supportedCompositeAlpha:%d", sur_caps.supportedCompositeAlpha);
+    SDLOGD("supportedUsageFlags:%d", sur_caps.supportedUsageFlags);
+
+    bool has_desired_sur_fmt = false;
+    std::vector<VkSurfaceFormatKHR> sur_formats;
+    uint32_t sur_format_count;
+    vkGetPhysicalDeviceSurfaceFormatsKHR(m_VK_physical_device, m_VK_surface, &sur_format_count, nullptr);
+
+    if (sur_format_count != 0) {
+        sur_formats.resize(sur_format_count);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(m_VK_physical_device, m_VK_surface, &sur_format_count, sur_formats.data());
+    }
+
+    if (sur_format_count > 1) {
+        for (VkSurfaceFormatKHR& fmt : sur_formats) {
+            SDLOGD("Supported SurfaceFormat:(Format)%d, (colorSpace)%d", fmt.format, fmt.colorSpace);
+        }
+
+        for (VkSurfaceFormatKHR& desired_fmt : m_VK_desired_sur_fmts) {
+            for (VkSurfaceFormatKHR& fmt : sur_formats) {
+                if (fmt.colorSpace == desired_fmt.colorSpace &&
+                    fmt.format == desired_fmt.format) {
+                    m_VK_final_sur_fmt = fmt;
+                    has_desired_sur_fmt = true;
+                    break;
+                }
+            }
+            if (has_desired_sur_fmt == true) {
+                break;
+            }
+        }
+    }
+    else if (sur_format_count == 1) {
+        if (sur_formats[0].format == VK_FORMAT_UNDEFINED) {
+            has_desired_sur_fmt = true;
+        }
+    }
+
+    if (has_desired_sur_fmt == false) {
+        throw std::runtime_error("Desire surface format isn't exist.");
+    }
+
+    SDLOGD("Desired SurfaceFormat:(%d, %d)", m_VK_final_sur_fmt.format, m_VK_final_sur_fmt.colorSpace);
+
+    std::vector<VkPresentModeKHR> supported_p_modes;
+    uint32_t supported_p_mode_count;
+    vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &supported_p_mode_count, nullptr);
+
+    if (supported_p_mode_count != 0) {
+        supported_p_modes.resize(supported_p_mode_count);
+        vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &supported_p_mode_count, supported_p_modes.data());
+    }
+    else {
+        throw std::runtime_error("No present mode supported!");
+    }
+
+    for (const VkPresentModeKHR &p_mode : supported_p_modes) {
+        SDLOGD("Supported present mode : %d", p_mode);
+    }
+
+    for (int mode_id = 0; mode_id < VK_PRESENT_MODE_RANGE_SIZE_KHR; mode_id++) {
+        for (const VkPresentModeKHR &p_mode : supported_p_modes) {
+            if (m_VK_desired_pre_mode_list[mode_id] == p_mode) {
+                m_VK_final_present_mode = m_VK_desired_pre_mode_list[mode_id];
+                break;
+            }
+        }
+        if (m_VK_final_present_mode != VK_PRESENT_MODE_RANGE_SIZE_KHR) {
+            break;
+        }
+    }
+
+    if (m_VK_final_present_mode == VK_PRESENT_MODE_RANGE_SIZE_KHR) {
+        throw std::runtime_error("No desired present mode supported!");
+    }
+    else {
+        SDLOGD("final present mode : %d", m_VK_final_present_mode);
+    }
+
+    if (sur_caps.currentExtent.width != 0 && sur_caps.currentExtent.height != 0) {
+        m_screen_size.SetResolution(sur_caps.currentExtent.width, sur_caps.currentExtent.height);
+    }
+    else {
+        m_screen_size.SetResolution(
+            std::max(sur_caps.minImageExtent.width, std::min(sur_caps.maxImageExtent.width, sur_caps.minImageExtent.width)),
+            std::max(sur_caps.minImageExtent.height, std::min(sur_caps.maxImageExtent.height, sur_caps.minImageExtent.height)));
+    }
+
+    uint32_t image_count = sur_caps.minImageCount + 1;
+    if (image_count > sur_caps.maxImageCount) {
+        image_count = sur_caps.maxImageCount;
+    }
+
+    uint32_t present_queue_fam_id = static_cast<uint32_t>(m_VK_picked_queue_family_id);
+
+    VkSwapchainCreateInfoKHR sw_c_info = {};
+    sw_c_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    sw_c_info.pNext = nullptr;
+    sw_c_info.flags = 0;
+    sw_c_info.surface = m_VK_surface;
+    sw_c_info.minImageCount = image_count;
+    sw_c_info.imageFormat = m_VK_final_sur_fmt.format;
+    sw_c_info.imageColorSpace = m_VK_final_sur_fmt.colorSpace;
+    sw_c_info.imageExtent = { m_screen_size.GetWidth(), m_screen_size.GetHeight() };
+    sw_c_info.imageArrayLayers = 1;
+    sw_c_info.imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    sw_c_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    sw_c_info.queueFamilyIndexCount = 1;
+    sw_c_info.pQueueFamilyIndices = &present_queue_fam_id;
+    sw_c_info.preTransform = sur_caps.currentTransform;
+    sw_c_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    sw_c_info.presentMode = m_VK_final_present_mode;
+    sw_c_info.clipped = VK_TRUE;
+    sw_c_info.oldSwapchain = VK_NULL_HANDLE;
+
+    if (vkCreateSwapchainKHR(m_VK_device, &sw_c_info, nullptr, &m_VK_swap_chain) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create swap chain!");
+    }
+
+    if (vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, nullptr) != VK_SUCCESS) {
+        throw std::runtime_error("failed to get image number of swap chain!");
+    }
+
+    if (image_count > 0) {
+        m_VK_sc_images.resize(image_count);
+        if (vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, m_VK_sc_images.data()) == VK_SUCCESS) {
+            SDLOG("SwapChainImages number : %u, ViewPort(%u,%u)", image_count, m_screen_size.GetWidth(), m_screen_size.GetHeight());
+        }
+        else {
+            throw std::runtime_error("failed to get image handle of swap chain!");
+        }
+    }
+
+    VkSemaphoreCreateInfo acq_sem_c_info = {};
+    acq_sem_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    acq_sem_c_info.pNext = nullptr;
+    acq_sem_c_info.flags = 0;
+
+    if (vkCreateSemaphore(m_VK_device, &acq_sem_c_info, nullptr, &m_VK_acq_img_semaphore) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create acq img semaphore!");
+    }
+
+    VkSemaphoreCreateInfo present_sem_c_info = {};
+    present_sem_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    present_sem_c_info.pNext = nullptr;
+    present_sem_c_info.flags = 0;
+
+    if (vkCreateSemaphore(m_VK_device, &present_sem_c_info, nullptr, &m_VK_present_semaphore) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create present semaphore!");
+    }
+}
+
 void VulkanManager::InitializeSCImageViewsAndFBs()
 {
     SDLOG("--- Vulkan initialize image views.");
@@ -654,7 +661,7 @@ void VulkanManager::InitializeSCImageViewsAndFBs()
         iv_c_info.flags = 0;
         iv_c_info.image = m_VK_sc_images[imgv_id];
         iv_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        iv_c_info.format = m_VK_desired_sur_fmt.format;
+        iv_c_info.format = m_VK_final_sur_fmt.format;
         iv_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_R(r is r channel).
         iv_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable g in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_G(g is g channel).
         iv_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable b in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_B(b is b channel).
@@ -685,6 +692,20 @@ void VulkanManager::InitializeSCImageViewsAndFBs()
             throw std::runtime_error(SDE::Basic::StringFormat("failed to create FBO[%d]!", imgv_id).c_str());
         }
     }
+}
+
+bool VulkanManager::IsContainerNecessaryQueueFlags(VkQueueFlags i_flags)
+{
+    bool inconsistent = false;
+    
+    for (VkQueueFlags flag : m_VK_desired_queue_ability_lists) {
+        if ((i_flags & flag) != flag) {
+            inconsistent = true;
+            break;
+        }
+    }
+
+    return (inconsistent == false);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

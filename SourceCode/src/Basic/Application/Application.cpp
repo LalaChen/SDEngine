@@ -38,6 +38,7 @@ Application::Application(const std::string &i_win_title, const Resolution &i_win
 , m_win_res(i_win_res)
 , m_full_window(i_full_window)
 , m_adopt_library(i_adopt_library)
+, m_graphics_app_instance(SD_NULL_HANDLE)
 {
     //Register instance.
     SD_SINGLETON_DECLARATION_REGISTER;
@@ -66,11 +67,10 @@ void Application::Pause()
 
 }
 
-void Application::Resize(Size_ui32 i_w, Size_ui32 i_h)
+void Application::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
 {
-    GraphicsManager::GetRef().Resize(i_w, i_h);
+    GraphicsManager::GetRef().Resize(i_new_surface, i_w, i_h);
 }
-
 
 void Application::SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed)
 {
