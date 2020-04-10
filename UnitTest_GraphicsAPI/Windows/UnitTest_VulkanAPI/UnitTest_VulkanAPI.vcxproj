@@ -109,6 +109,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Common\$(ProjectName)\Code\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -155,6 +156,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Common\$(ProjectName)\Code\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -165,29 +167,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Sample.h" />
-    <ClInclude Include="Sample1_DrawTriangle.h" />
-    <ClInclude Include="Sample2_DrawScene.h" />
-    <ClInclude Include="Sample3_MultiSubpass.h" />
-    <ClInclude Include="VulkanAPITestManager.h" />
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample.h" />
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample1_DrawTriangle.h" />
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample2_DrawScene.h" />
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample3_MultiSubpass.h" />
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager.h" />
     <ClInclude Include="VulkanTestGLFWApplication.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample1_DrawTriangle.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample2_DrawScene.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample3_MultiSubpass.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager_ScreenRenderer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="Sample1_DrawTriangle.cpp" />
-    <ClCompile Include="Sample2_DrawScene.cpp" />
-    <ClCompile Include="Sample3_MultiSubpass.cpp" />
-    <ClCompile Include="VulkanAPITestManager.cpp" />
     <ClCompile Include="VulkanTestGLFWApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\MainShader.frag" />
-    <None Include="Shader\MainShader.vert" />
-    <None Include="Shader\PhongShader.frag" />
-    <None Include="Shader\PhongShader.vert" />
-    <None Include="Shader\TexShader.frag" />
-    <None Include="Shader\TexShader.vert" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\MainShader.frag" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\MainShader.vert" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\PhongShader.frag" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\PhongShader.vert" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\ScreenShader.frag" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\ScreenShader.vert" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\TexShader.frag" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\TexShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

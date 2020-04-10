@@ -14,22 +14,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VulkanAPITestManager.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="VulkanTestGLFWApplication.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="Sample1_DrawTriangle.h">
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="Sample.h">
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample1_DrawTriangle.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="Sample2_DrawScene.h">
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample2_DrawScene.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="Sample3_MultiSubpass.h">
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample3_MultiSubpass.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -37,42 +37,51 @@
     <ClCompile Include="main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanAPITestManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="VulkanTestGLFWApplication.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Sample1_DrawTriangle.cpp">
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Sample.cpp">
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample1_DrawTriangle.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Sample2_DrawScene.cpp">
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample2_DrawScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Sample3_MultiSubpass.cpp">
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample3_MultiSubpass.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager_ScreenRenderer.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\MainShader.vert">
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\PhongShader.vert">
       <Filter>shader</Filter>
     </None>
-    <None Include="Shader\MainShader.frag">
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\TexShader.frag">
       <Filter>shader</Filter>
     </None>
-    <None Include="Shader\PhongShader.frag">
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\TexShader.vert">
       <Filter>shader</Filter>
     </None>
-    <None Include="Shader\PhongShader.vert">
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\MainShader.frag">
       <Filter>shader</Filter>
     </None>
-    <None Include="Shader\TexShader.vert">
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\MainShader.vert">
       <Filter>shader</Filter>
     </None>
-    <None Include="Shader\TexShader.frag">
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\PhongShader.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\ScreenShader.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\ScreenShader.vert">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

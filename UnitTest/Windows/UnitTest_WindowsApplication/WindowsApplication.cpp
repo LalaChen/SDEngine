@@ -113,6 +113,8 @@ void WindowsApplication::Initialize()
     //new WindowsFileSystemManager.
     new WindowsFileSystemManager();
     FileSystemManager::GetRef().Initialize();
+    //new FileResourceRequester.
+    new FileResourceRequester();
     //new Timer.
     new WindowsTimer();
     Timer::GetRef().Start();
@@ -254,6 +256,8 @@ void WindowsApplication::TerminateApplication()
     Timer::Destroy();
     //destroy File Manager
     FileSystemManager::Destroy();
+    //destroy FileResourceRequester
+    FileResourceRequester::Destroy();
     //destroy LogManager
     LogManager::Destroy();
 }

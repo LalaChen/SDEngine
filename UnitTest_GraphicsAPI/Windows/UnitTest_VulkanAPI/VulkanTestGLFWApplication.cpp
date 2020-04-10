@@ -85,6 +85,8 @@ void VulkanTestGLFWApplication::Initialize()
     //new WindowsFileSystemManager.
     new WindowsFileSystemManager();
     FileSystemManager::GetRef().Initialize();
+    //new FileResourceRequester
+    new FileResourceRequester();
     //new Timer.
     new WindowsTimer();
     Timer::GetRef().Start();
