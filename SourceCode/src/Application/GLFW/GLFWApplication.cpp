@@ -82,6 +82,8 @@ void GLFWApplication::Initialize()
     //new WindowsFileSystemManager.
     new WindowsFileSystemManager();
     FileSystemManager::GetRef().Initialize();
+    //new FileResourceRequester
+    new FileResourceRequester();
     //new Timer.
     new WindowsTimer();
     Timer::GetRef().Start();
@@ -225,6 +227,8 @@ void GLFWApplication::TerminateApplication()
     FileSystemManager::Destroy();
     //destroy LogManager
     LogManager::Destroy();
+    //destroy FileResourceRequester
+    FileResourceRequester::Destroy();
 }
 
 void GLFWApplication::RunMainLoop()

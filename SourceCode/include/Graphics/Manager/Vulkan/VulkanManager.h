@@ -32,7 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "VulkanWrapper.h"
 #include "GraphicsManager.h"
 
 using SDE::Basic::UBytePtr;
@@ -254,7 +254,6 @@ protected:
 protected:
     VkResult CreateVKShaderModule(
         VkShaderModule &io_shader_module_handle,
-        VkShaderStageFlagBits i_stage,
         const UByte *i_binary_ptr,
         const Size_ui64 i_binary_size);
 
@@ -365,12 +364,13 @@ protected:
 protected:
     VkPresentModeKHR m_VK_final_present_mode;
     VkSwapchainKHR m_VK_swap_chain;
-    VkRenderPass m_VK_present_render_pass;
     VkSemaphore m_VK_acq_img_semaphore; //GPU to GPU lock
     VkSemaphore m_VK_present_semaphore; //GPU to GPU lock
     std::vector<VkImage> m_VK_sc_images;
     std::vector<VkImageView> m_VK_sc_image_views;
     std::vector<VkFramebuffer> m_VK_sc_image_fbs;
+protected:
+    VkRenderPass m_VK_present_render_pass;
 protected:
     VkCommandPool m_VK_main_cmd_pool; //main render thread use.
     VkCommandBuffer m_VK_main_cmd_buffer;

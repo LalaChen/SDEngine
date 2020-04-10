@@ -41,8 +41,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 void VulkanManager::CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content)
 {
     VkShaderModule &shader_module = reinterpret_cast<VkShaderModule&>(io_identity.m_prog_handle);
-    VkShaderStageFlagBits shader_stage = ShaderKind_Vulkan::Convert(io_identity.m_shader_kind);
-    CreateVKShaderModule(shader_module, shader_stage, i_content.data(), i_content.size());
+    CreateVKShaderModule(shader_module, i_content.data(), i_content.size());
 }
 
 void VulkanManager::DeleteShaderModule(ShaderModuleIdentity &io_identity)

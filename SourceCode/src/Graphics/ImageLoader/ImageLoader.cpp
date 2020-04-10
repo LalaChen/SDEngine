@@ -1,10 +1,12 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <stb/stb_image.h>
+
+#include "FileResourceRequester.h"
 #include "ImageLoader.h"
 
 using SDE::Basic::FileData;
-using SDE::Basic::FileSystemManager;
+using SDE::Basic::FileResourceRequester;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -24,14 +26,14 @@ void ImageLoader::Initialize()
 {
 }
 
-BitmapStrongReferenceObject ImageLoader::ReadBitmap(const FilePathString& i_fp) const
+BitmapStrongReferenceObject ImageLoader::ReadBitmap(const FilePathString &i_fp) const
 {
     FileData file_data;
-    FileSystemManager::GetRef().OpenFile(i_fp, file_data);
+    FileResourceRequester::GetRef().AskFile(i_fp, file_data);
     return ReadBitmap(i_fp, file_data.GetDataUCharAddr(), file_data.GetSize());
 }
 
-BitmapStrongReferenceObject ImageLoader::ReadBitmap(const ObjectName& i_name, const UBytePtr i_file_buffer, size_t i_file_size) const
+BitmapStrongReferenceObject ImageLoader::ReadBitmap(const ObjectName &i_name, const UBytePtr i_file_buffer, size_t i_file_size) const
 {
     int width, height, n_of_c;
     stbi_uc *image_ptr = stbi_load_from_memory(i_file_buffer, static_cast<int>(i_file_size), &width, &height, &n_of_c, 4);

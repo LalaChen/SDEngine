@@ -251,11 +251,11 @@ void VulkanManager::InitializePhysicalDevice()
 
     VkPhysicalDeviceProperties picked_dev_props;
     vkGetPhysicalDeviceProperties(m_VK_physical_device, &picked_dev_props);
-    SDLOG("Final choose dev : %s(%d:%d:%d) driver version : %d apiversion : %d, score : %d", 
+    SDLOG("Final choose dev : %s(%d:%d:%d) driver version(%d, %d, %d) apiversion(%d, %d, %d), score : %d", 
         picked_dev_props.deviceName,
         picked_dev_props.vendorID, picked_dev_props.deviceID, picked_dev_props.deviceType,
-        picked_dev_props.driverVersion,
-        picked_dev_props.apiVersion,
+        VK_VERSION_MAJOR(picked_dev_props.apiVersion), VK_VERSION_MINOR(picked_dev_props.apiVersion), VK_VERSION_PATCH(picked_dev_props.apiVersion),
+        VK_VERSION_MAJOR(picked_dev_props.driverVersion), VK_VERSION_MINOR(picked_dev_props.driverVersion), VK_VERSION_PATCH(picked_dev_props.driverVersion),
         pickup_dev_score);
 }
 
@@ -420,17 +420,20 @@ void VulkanManager::InitializePresentRenderPass()
     clr_attachment_desc.storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
     clr_attachment_desc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     clr_attachment_desc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    clr_attachment_desc.initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    clr_attachment_desc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     clr_attachment_desc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    VkAttachmentDescription attachment_descs[1] = {
+        clr_attachment_desc,
+    };
+
     //--- Bind the output to color attachment.
-    VkAttachmentReference attachment_ref = {};
-    attachment_ref.attachment = 0; //ID of attachment in RenderPass.
-    attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    VkAttachmentReference clr_attachment_ref = {};
+    clr_attachment_ref.attachment = 0; //ID of attachment in RenderPass.
+    clr_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     //2. Specify all subpass in this render pass.
     //--- i. Subpass 0 for present rendering result.
-    //--- Collect necessary attachments
-    VkAttachmentReference clr_attachment_ref = attachment_ref;
     //--- Create present subpass.
     VkSubpassDescription present_sp_desc = {};
     present_sp_desc.flags = 0;
@@ -449,18 +452,18 @@ void VulkanManager::InitializePresentRenderPass()
     sp_dependencies.resize(2);
     //--- Begin dep.
     sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-    sp_dependencies[0].dstSubpass = 0;
-    sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
     sp_dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-    sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[0].dstSubpass = 0;
+    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- End dep.
     sp_dependencies[1].srcSubpass = 0;
-    sp_dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
     sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-    sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
     sp_dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
     sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
@@ -470,7 +473,7 @@ void VulkanManager::InitializePresentRenderPass()
     pass_c_info.pNext = nullptr;
     pass_c_info.flags = 0; //Not implement in Vulkan, it say 'reversed for future use.
     pass_c_info.attachmentCount = 1;
-    pass_c_info.pAttachments = &clr_attachment_desc;
+    pass_c_info.pAttachments = attachment_descs;
     pass_c_info.subpassCount = 1;
     pass_c_info.pSubpasses = &present_sp_desc;
     pass_c_info.dependencyCount = static_cast<uint32_t>(sp_dependencies.size());
@@ -510,12 +513,12 @@ void VulkanManager::InitializeSwapChain()
     }
 
     if (sur_format_count > 1) {
-        for (VkSurfaceFormatKHR& fmt : sur_formats) {
+        for (VkSurfaceFormatKHR &fmt : sur_formats) {
             SDLOGD("Supported SurfaceFormat:(Format)%d, (colorSpace)%d", fmt.format, fmt.colorSpace);
         }
 
-        for (VkSurfaceFormatKHR& desired_fmt : m_VK_desired_sur_fmts) {
-            for (VkSurfaceFormatKHR& fmt : sur_formats) {
+        for (VkSurfaceFormatKHR &desired_fmt : m_VK_desired_sur_fmts) {
+            for (VkSurfaceFormatKHR &fmt : sur_formats) {
                 if (fmt.colorSpace == desired_fmt.colorSpace &&
                     fmt.format == desired_fmt.format) {
                     m_VK_final_sur_fmt = fmt;
@@ -605,7 +608,7 @@ void VulkanManager::InitializeSwapChain()
     sw_c_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
     sw_c_info.queueFamilyIndexCount = 1;
     sw_c_info.pQueueFamilyIndices = &present_queue_fam_id;
-    sw_c_info.preTransform = sur_caps.currentTransform;
+    sw_c_info.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR; //Use this for android.(If use currentTransform as presentTransform, we will see double rotation)
     sw_c_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
     sw_c_info.presentMode = m_VK_final_present_mode;
     sw_c_info.clipped = VK_TRUE;
@@ -650,7 +653,9 @@ void VulkanManager::InitializeSwapChain()
 
 void VulkanManager::InitializeSCImageViewsAndFBs()
 {
+    VkResult result = VK_SUCCESS;
     SDLOG("--- Vulkan initialize image views.");
+    //
     m_VK_sc_image_views.resize(m_VK_sc_images.size());
     m_VK_sc_image_fbs.resize(m_VK_sc_images.size());
     for (uint32_t imgv_id = 0; imgv_id < m_VK_sc_image_views.size(); imgv_id++) {
@@ -677,13 +682,17 @@ void VulkanManager::InitializeSCImageViewsAndFBs()
         }
 
         //create fbo for sc img[id].
-        VkFramebufferCreateInfo fbo_c_info;
+        VkImageView attachments[1] = {
+            m_VK_sc_image_views[imgv_id]
+        };
+
+        VkFramebufferCreateInfo fbo_c_info = {};
         fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         fbo_c_info.pNext = nullptr;
         fbo_c_info.flags = 0; //Reserved for future use
         fbo_c_info.renderPass = m_VK_present_render_pass;
         fbo_c_info.attachmentCount = 1;
-        fbo_c_info.pAttachments = &m_VK_sc_image_views[imgv_id];
+        fbo_c_info.pAttachments = attachments;
         fbo_c_info.width = m_screen_size.GetWidth();
         fbo_c_info.height = m_screen_size.GetHeight();
         fbo_c_info.layers = 1;

@@ -112,6 +112,7 @@ protected:
     std::thread m_render_thread;
     std::mutex m_pause_mtx;
     std::condition_variable m_pause_cv;
+    bool m_resize_signal;
 };
 
 _________________SD_END_APP_NAMESPACE________________

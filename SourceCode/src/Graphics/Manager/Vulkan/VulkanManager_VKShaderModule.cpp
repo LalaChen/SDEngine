@@ -30,7 +30,6 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVKShaderModule(
     VkShaderModule &io_shader_module_handle,
-    VkShaderStageFlagBits i_stage,
     const UByte *i_binary_ptr,
     const Size_ui64 i_binary_size)
 {
@@ -45,7 +44,7 @@ VkResult VulkanManager::CreateVKShaderModule(
 
     result = vkCreateShaderModule(m_VK_device, &c_info, nullptr, &io_shader_module_handle);
     if (result != VK_SUCCESS) {
-        SDLOGW("Failed to create shader module! Result = %x.");
+        SDLOGW("Failed to create shader module! Result = %x.", result);
     }
 
     return result;

@@ -53,6 +53,8 @@ SOFTWARE.
 #include "Basic/LogManager/LogManager.h"
 #include "Basic/Timer/Timer.h"
 #include "Basic/FileSystem/FileSystemManager.h"
+#include "Basic/FileSystem/AssetResourceManager.h"
+#include "Basic/FileSystem/FileResourceRequester.h"
 //-------- Graphics --------
 #include "Graphics/Vec/Vec.h"
 #include "Graphics/Vec/Color4f.h"

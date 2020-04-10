@@ -29,7 +29,7 @@ SOFTWARE.
 
 #include "LogManager.h"
 #include "ImageLoader.h"
-#include "FileSystemManager.h"
+#include "FileResourceRequester.h"
 #include "AssimpLogWarpper.h"
 #include "AssimpModelLoader.h"
 
@@ -70,7 +70,7 @@ SOFTWARE.
     } \
 }
 
-using SDE::Basic::FileSystemManager;
+using SDE::Basic::FileResourceRequester;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -104,7 +104,7 @@ bool AssimpModelLoader::ImportModel(const FilePathString &i_model_fn, ModelData 
 {
     Assimp::Importer importer;
     FileData fd;
-    if (FileSystemManager::GetRef().OpenFile(i_model_fn, fd) == true) {
+    if (FileResourceRequester::GetRef().AskFile(i_model_fn, fd) == true) {
         const aiScene *scene = importer.ReadFileFromMemory(&fd.m_file_content[0], fd.m_file_content.size(), aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs);
         if (scene != nullptr) {
             FilePathString model_dir, model_fn;

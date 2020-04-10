@@ -57,8 +57,8 @@ void VulkanManager::PrintSystemInformation()
         vkGetPhysicalDeviceFormatProperties(m_VK_physical_device, format, &format_prop);
         SDLOG("Format[%d](%d)(%s) :"
               " features(%08x)(StorageImage:%d),"
-              " linearTile(%08x)(Sampler:%d)(ColorAttachment:%d)(DepthAttachment:%d),"
-              " optinalTile(%08x)(Sampler:%d)(ColorAttachment:%d)(DepthAttachment:%d)",
+              " linearTile(%08x)(Sampler:%d)(CA:%d)(DA:%d)(BlitSRC:%d)(BlitDST:%d),"
+              " optinalTile(%08x)(Sampler:%d)(CA:%d)(DA:%d)(BlitSRC:%d)(BlitDST:%d)",
             format_ID, format, TextureFormat_Vulkan::GetTextureFormatName(format_enum),
             format_prop.bufferFeatures,
             SD_IS_FEATURE(format_prop.bufferFeatures, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT),
@@ -66,19 +66,35 @@ void VulkanManager::PrintSystemInformation()
             SD_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT),
             SD_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT),
             SD_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
+            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_BLIT_SRC_BIT),
+            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_BLIT_DST_BIT),
             format_prop.optimalTilingFeatures,
             SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT),
             SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT),
-            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
+            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_BLIT_SRC_BIT),
+            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_BLIT_DST_BIT)
             );
     }
 
     VkPhysicalDeviceProperties picked_dev_props;
     vkGetPhysicalDeviceProperties(m_VK_physical_device, &picked_dev_props);
     SDLOG("Limits:");
-    SDLOG("Maximum Color Attachment : %d.", picked_dev_props.limits.maxColorAttachments);
-    SDLOG("Maximum DescriptionSets in pipeline : %d.", picked_dev_props.limits.maxBoundDescriptorSets);
-    SDLOG("Maximum pushConstant size in pipeline : %d.", picked_dev_props.limits.maxPushConstantsSize);
+    SDLOG("maxColorAttachments : %d.", picked_dev_props.limits.maxColorAttachments);
+    SDLOG("maxBoundDescriptorSets : %d.", picked_dev_props.limits.maxBoundDescriptorSets);
+    SDLOG("maxDescriptorSetSamplers : %d.", picked_dev_props.limits.maxDescriptorSetSamplers);
+    SDLOG("maxDescriptorSetUniformBuffers : %d.", picked_dev_props.limits.maxDescriptorSetUniformBuffers);
+    SDLOG("maxDescriptorSetUniformBuffersDynamic : %d.", picked_dev_props.limits.maxDescriptorSetUniformBuffersDynamic);
+    SDLOG("maxDescriptorSetStorageBuffers : %d.", picked_dev_props.limits.maxDescriptorSetStorageBuffers);
+    SDLOG("maxDescriptorSetStorageBuffersDynamic : %d.", picked_dev_props.limits.maxDescriptorSetStorageBuffersDynamic);
+    SDLOG("maxDescriptorSetSampledImages : %d.", picked_dev_props.limits.maxDescriptorSetSampledImages);
+    SDLOG("maxDescriptorSetStorageImages : %d.", picked_dev_props.limits.maxDescriptorSetStorageImages);
+    SDLOG("maxDescriptorSetInputAttachments : %d.", picked_dev_props.limits.maxDescriptorSetInputAttachments);
+    SDLOG("maxPushConstantsSize : %d.", picked_dev_props.limits.maxPushConstantsSize);
+    SDLOG("maxVertexInputAttributes : %d.", picked_dev_props.limits.maxVertexInputAttributes);
+    SDLOG("maxVertexInputBindings : %d.", picked_dev_props.limits.maxVertexInputBindings);
+    SDLOG("maxVertexInputAttributeOffset : %d.", picked_dev_props.limits.maxVertexInputAttributeOffset);
+    SDLOG("maxVertexInputBindingStride : %d.", picked_dev_props.limits.maxVertexInputBindingStride);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

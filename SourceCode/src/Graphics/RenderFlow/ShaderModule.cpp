@@ -24,12 +24,12 @@ SOFTWARE.
 */
 
 #include "LogManager.h"
-#include "FileSystemManager.h"
+#include "FileResourceRequester.h"
 #include "GraphicsManager.h"
 #include "ShaderModule.h"
 
 using SDE::Basic::FileData;
-using SDE::Basic::FileSystemManager;
+using SDE::Basic::FileResourceRequester;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -48,7 +48,7 @@ ShaderModule::~ShaderModule()
 bool ShaderModule::LoadBinaryShader(ShaderKindEnum i_kind, const FilePathString &i_binary_fp, const char *i_entry_name)
 {
     FileData fd;
-    FileSystemManager::GetRef().OpenFile(i_binary_fp, fd);
+    FileResourceRequester::GetRef().AskFile(i_binary_fp, fd);
     if (fd.IsEmpty() == false) {
         return (LoadBinaryShader(i_kind, fd.m_file_content, i_entry_name) == 1);
     }

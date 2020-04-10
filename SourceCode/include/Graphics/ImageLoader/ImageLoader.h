@@ -31,12 +31,10 @@
 
 #pragma once
 
-#include "FileSystemManager.h"
 #include "Bitmap.h"
 
 using SDE::Basic::UBytePtr;
 using SDE::Basic::FilePathString;
-using SDE::Basic::FileSystemManager;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

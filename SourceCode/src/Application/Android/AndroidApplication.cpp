@@ -13,6 +13,7 @@ AndroidApplication::AndroidApplication(const std::string &i_win_title, AAssetMan
 , m_current_state(AppState_CREATE)
 , m_window(nullptr)
 , m_asset_mgr(i_asset_mgr)
+, m_resize_signal(false)
 {
 }
 
@@ -181,6 +182,7 @@ void AndroidApplication::RefreshNativeWindow(ANativeWindow *i_window, int i_widt
             throw std::runtime_error("failed to create surface!");
         }
 
+        m_win_res.SetResolution(i_width, i_height);
         GraphicsManager::GetRef().Resize(reinterpret_cast<CompHandle>(new_surface), i_width, i_height);
         m_current_state = AppState_RUN;
         m_pause_cv.notify_all();
@@ -199,6 +201,10 @@ void AndroidApplication::RunMainLoop()
         m_current_state = AppState_RUN;
         while (m_current_state == AppState_RUN || m_current_state == AppState_PAUSE) {
             if (m_current_state == AppState_RUN) {
+                if (m_resize_signal == true) {
+                    GraphicsManager::GetRef().Resize(SD_NULL_HANDLE, m_win_res.GetWidth(), m_win_res.GetHeight());
+                    m_resize_signal = false;
+                }
                 Update();
             }
             else {

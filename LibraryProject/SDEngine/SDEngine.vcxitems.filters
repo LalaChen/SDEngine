@@ -645,6 +645,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\Android\AndroidAssetResourceManager.h">
       <Filter>include\Basic\FileSystem\Android</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\FileResourceRequester.h">
+      <Filter>include\Basic\FileSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1005,6 +1008,9 @@
       <Filter>src\Basic\FileSystem\Android</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\AssetResourceManager.cpp">
+      <Filter>src\Basic\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\FileResourceRequester.cpp">
       <Filter>src\Basic\FileSystem</Filter>
     </ClCompile>
   </ItemGroup>

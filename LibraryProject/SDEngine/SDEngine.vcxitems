@@ -23,6 +23,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\AssetResourceManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\FileData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\FileSystemManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\FileResourceRequester.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\Windows\WindowsFileSystemManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\KeyMap\KeyEventArg.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\KeyMap\KeyMapManager.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\Android\AndroidAssetResourceManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\AssetResourceManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\FileData.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\FileResourceRequester.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\FileSystemManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\Windows\WindowsFileSystemManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\KeyMap\KeyMapManager.cpp" />

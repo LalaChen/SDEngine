@@ -32,7 +32,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 const uint32_t VulkanManager::MaxImgAcqirationTime = 2000000000; //2s
 const uint32_t VulkanManager::MaxFenceWaitTime = 17000000; //17ms
 const VkClearValue VulkanManager::ClearColor = { {0.2f, 0.5f, 0.8f, 1.0f} };
-const VkClearValue VulkanManager::ClearDepth = { {1.0f} };
+const VkClearValue VulkanManager::ClearDepth = { {1.0f, 0} };
 
 const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
 {
@@ -73,9 +73,10 @@ VulkanManager::VulkanManager()
 // swap chain
 , m_VK_final_present_mode(VK_PRESENT_MODE_RANGE_SIZE_KHR)
 , m_VK_swap_chain(VK_NULL_HANDLE)
-, m_VK_present_render_pass(VK_NULL_HANDLE)
 , m_VK_acq_img_semaphore(VK_NULL_HANDLE)
 , m_VK_present_semaphore(VK_NULL_HANDLE)
+// render screen RP.
+, m_VK_present_render_pass(VK_NULL_HANDLE)
 // main command pool
 , m_VK_main_cmd_pool(VK_NULL_HANDLE)
 , m_VK_main_cmd_buffer(VK_NULL_HANDLE)
@@ -116,10 +117,10 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializeDebugMessage();
             InitializePhysicalDevice();
             InitializeLogicDevice();
-            InitializePresentRenderPass();
             InitializeCommandPoolAndBuffers();
             //graphics
             InitializeSwapChain();
+            InitializePresentRenderPass();
             InitializeSCImageViewsAndFBs();
             //
             PrintSystemInformation();
@@ -232,6 +233,7 @@ void VulkanManager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_
         vkDestroySwapchainKHR(m_VK_device, m_VK_swap_chain, nullptr);
         m_VK_swap_chain = VK_NULL_HANDLE;
     }
+
     VkSurfaceKHR new_VK_surface = reinterpret_cast<VkSurfaceKHR>(i_new_surface);
     if (m_VK_surface != new_VK_surface && new_VK_surface != SD_NULL_HANDLE) {
         vkDestroySurfaceKHR(m_VK_instance, m_VK_surface, nullptr);
