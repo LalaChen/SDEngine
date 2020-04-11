@@ -653,7 +653,6 @@ void VulkanManager::InitializeSwapChain()
 
 void VulkanManager::InitializeSCImageViewsAndFBs()
 {
-    VkResult result = VK_SUCCESS;
     SDLOG("--- Vulkan initialize image views.");
     //
     m_VK_sc_image_views.resize(m_VK_sc_images.size());
