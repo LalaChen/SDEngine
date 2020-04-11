@@ -10,6 +10,7 @@ using SDE::Math::Vector3f;
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
 using SDE::Graphics::Color4f;
+using SDE::Graphics::Resolution;
 
 class VulkanAPITestManager;
 
@@ -64,4 +65,5 @@ protected:
     virtual void CreateRenderPassAndFramebuffer() = 0;
 protected:
     VulkanAPITestManager *m_mgr;
+    Resolution m_current_res;
 };

@@ -58,6 +58,8 @@ Sample1_DrawTriangle::~Sample1_DrawTriangle()
 
 void Sample1_DrawTriangle::Initialize()
 {
+    m_current_res = m_mgr->GetScreenResolution();
+    //
     CreateCommandBufferAndPool();
     CreateRenderPassAndFramebuffer();
     //
@@ -73,27 +75,32 @@ void Sample1_DrawTriangle::Render()
         VkResult result = VK_SUCCESS;
         //Need to fix it by resize framebuffer when resize screen.
         //It cause crash when draw bigger resolution in old smaller resolution.
-        SDE::Graphics::Resolution screen_size = m_mgr->GetScreenResolution();
-        float asratio = static_cast<float>(screen_size.GetHeight()) / static_cast<float>(screen_size.GetWidth());
+        float asratio = static_cast<float>(m_current_res.GetHeight()) / static_cast<float>(m_current_res.GetWidth());
         static float angle = 0.0f;
         static float addAngle = 0.1f;
         angle += addAngle;
-        //1. update uniform buffer.
-        //(Object 0)
-        //--- clip space.
         float clip_mat[16] = {
             1.0f,  0.0f, 0.0f, 0.0f,
             0.0f, -1.0f, 0.0f, 0.0f,
             0.0f,  0.0f, 1.0f, 0.0f,
             0.0f,  0.0f, 0.0f, 1.0f };
+
+        Matrix4X4f proj;
+        proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
+        //proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
+
+        Matrix4X4f view;
+        Vector3f view_eye(0.0f, 0.0f, 0.5f, 1.0f);
+        view.lookAt(view_eye, Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
+        //1. update uniform buffer.
+        //(Object 0)
+        //--- clip space.
         m_uniform_buffer_datas[0].m_clip = Matrix4X4f(clip_mat);
         //--- projection space.
-        m_uniform_buffer_datas[0].m_proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
-        //m_uniform_buffer_datas[0].m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
-
+        m_uniform_buffer_datas[0].m_proj = proj;
         //--- view space.
-        m_uniform_buffer_datas[0].m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
-        m_uniform_buffer_datas[0].m_view_eye = Vector3f(0.0f, 0.0f, 0.5f, 1.0f);
+        m_uniform_buffer_datas[0].m_view = view;
+        m_uniform_buffer_datas[0].m_view_eye = view_eye;
         //--- world space. 
         m_uniform_buffer_datas[0].m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
         m_uniform_buffer_datas[0].m_worid.translate(Vector3f(-0.0f, -0.0f, -0.5f, 1.0f));
@@ -103,12 +110,10 @@ void Sample1_DrawTriangle::Render()
         //--- clip space.
         m_uniform_buffer_datas[1].m_clip = Matrix4X4f(clip_mat);
         //--- projection space.
-        m_uniform_buffer_datas[1].m_proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
-        //m_uniform_buffer_datas[1].m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
-
+        m_uniform_buffer_datas[1].m_proj = proj;
         //--- view space.
-        m_uniform_buffer_datas[1].m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
-        m_uniform_buffer_datas[1].m_view_eye = Vector3f(0.0f, 0.0f, 0.5f, 1.0f);
+        m_uniform_buffer_datas[1].m_view = view;
+        m_uniform_buffer_datas[1].m_view_eye = view_eye;
         //--- world space.
         m_uniform_buffer_datas[1].m_worid.translate(Vector3f(-0.2f, -0.2f, -0.4f, 1.0f));
         //m_uniform_buffer_datas[1].m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
@@ -129,7 +134,7 @@ void Sample1_DrawTriangle::Render()
         //2. begin render pass.
         VkRect2D render_area = {};
         render_area.offset = { 0, 0 };
-        render_area.extent = { screen_size.GetWidth(), screen_size.GetHeight() };
+        render_area.extent = { m_current_res.GetWidth(), m_current_res.GetHeight() };
 
         VkClearValue clear_color; clear_color.color = { 0.0f, 0.15f, 0.15f, 1.0f };
         VkClearValue clear_depth; clear_depth.depthStencil = { 1.0f, 0 };
@@ -157,8 +162,8 @@ void Sample1_DrawTriangle::Render()
         VkViewport viewport = {};
         viewport.x = 0;
         viewport.y = 0;
-        viewport.width = static_cast<float>(screen_size.GetWidth());
-        viewport.height = static_cast<float>(screen_size.GetHeight());
+        viewport.width = static_cast<float>(m_current_res.GetWidth());
+        viewport.height = static_cast<float>(m_current_res.GetHeight());
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
         m_mgr->SetMainViewportDynamically(m_VK_cmd_buffer, viewport);
@@ -212,6 +217,7 @@ void Sample1_DrawTriangle::Render()
 void Sample1_DrawTriangle::Resize(Size_ui32 i_width, Size_ui32 i_height)
 {
     SDLOG("Resize(%u,%u)", i_width, i_height);
+    m_current_res.SetResolution(i_width, i_height);
     VkResult result;
     //1. clear old devices.
     m_mgr->DestroyFramebuffer(m_VK_frame_buffer);
@@ -231,7 +237,6 @@ void Sample1_DrawTriangle::Resize(Size_ui32 i_width, Size_ui32 i_height)
     m_mgr->DestroyImageView(m_VK_depth_buffer_image_view);
     m_VK_depth_buffer_image_view = VK_NULL_HANDLE;
     //2. create color and depth buffer.
-    SDE::Graphics::Resolution screen_size = m_mgr->GetScreenResolution();
     //--- color buffer
     VkImageCreateInfo cb_c_info = {};
     cb_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -247,8 +252,8 @@ void Sample1_DrawTriangle::Resize(Size_ui32 i_width, Size_ui32 i_height)
     cb_c_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     cb_c_info.queueFamilyIndexCount = 0;
     cb_c_info.pQueueFamilyIndices = nullptr;
-    cb_c_info.extent.width = screen_size.GetWidth();
-    cb_c_info.extent.height = screen_size.GetHeight();
+    cb_c_info.extent.width = m_current_res.GetWidth();
+    cb_c_info.extent.height = m_current_res.GetHeight();
     cb_c_info.extent.depth = 1;
     cb_c_info.format = VK_FORMAT_R8G8B8A8_UNORM;
 
@@ -279,8 +284,8 @@ void Sample1_DrawTriangle::Resize(Size_ui32 i_width, Size_ui32 i_height)
     db_c_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     db_c_info.queueFamilyIndexCount = 0;
     db_c_info.pQueueFamilyIndices = nullptr;
-    db_c_info.extent.width = screen_size.GetWidth();
-    db_c_info.extent.height = screen_size.GetHeight();
+    db_c_info.extent.width = m_current_res.GetWidth();
+    db_c_info.extent.height = m_current_res.GetHeight();
     db_c_info.extent.depth = 1;
     db_c_info.format = VK_FORMAT_D24_UNORM_S8_UINT;
 
@@ -349,8 +354,8 @@ void Sample1_DrawTriangle::Resize(Size_ui32 i_width, Size_ui32 i_height)
     fbo_c_info.renderPass = m_VK_render_pass;
     fbo_c_info.attachmentCount = 2;
     fbo_c_info.pAttachments = ivs;
-    fbo_c_info.width = screen_size.GetWidth();
-    fbo_c_info.height = screen_size.GetHeight();
+    fbo_c_info.width = m_current_res.GetWidth();
+    fbo_c_info.height = m_current_res.GetHeight();
     fbo_c_info.layers = 1;
     result = m_mgr->CreateVkFramebuffer(fbo_c_info, m_VK_frame_buffer);
     if (result != VK_SUCCESS) {

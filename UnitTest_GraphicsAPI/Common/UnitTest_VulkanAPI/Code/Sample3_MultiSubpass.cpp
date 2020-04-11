@@ -57,6 +57,8 @@ Sample3_MultiSubpass::~Sample3_MultiSubpass()
 
 void Sample3_MultiSubpass::Initialize()
 {
+    m_current_res = m_mgr->GetScreenResolution();
+    //
     CreateCommandBufferAndPool();
     CreateRenderPassAndFramebuffer();
     //
@@ -70,26 +72,33 @@ void Sample3_MultiSubpass::Render()
 {
     if (m_mgr != nullptr) {
         VkResult result = VK_SUCCESS;
-        SDE::Graphics::Resolution screen_size = m_mgr->GetScreenResolution();
-        float asratio = static_cast<float>(screen_size.GetHeight()) / static_cast<float>(screen_size.GetWidth());
+        float asratio = static_cast<float>(m_current_res.GetHeight()) / static_cast<float>(m_current_res.GetWidth());
         static float angle = 0.0f;
         static float addAngle = 0.1f;
         angle += addAngle;
-        //1. update uniform buffer.
-        //(Object 0)
-        //--- clip space.
+
         float clip_mat[16] = {
             1.0f,  0.0f, 0.0f, 0.0f,
             0.0f, -1.0f, 0.0f, 0.0f,
             0.0f,  0.0f, 1.0f, 0.0f,
             0.0f,  0.0f, 0.0f, 1.0f };
+
+        Matrix4X4f proj;
+        proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
+        //proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
+
+        Matrix4X4f view;
+        Vector3f view_eye(0.0f, 0.0f, 0.5f, 1.0f);
+        view.lookAt(view_eye, Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
+        //1. update uniform buffer.
+        //(Object 0)
+        //--- clip space.
         m_uniform_buffer_datas[0].m_clip = Matrix4X4f(clip_mat);
         //--- projection space.
-        m_uniform_buffer_datas[0].m_proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
-        //m_uniform_buffer_datas[0].m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
+        m_uniform_buffer_datas[0].m_proj = proj;
         //--- view space.
-        m_uniform_buffer_datas[0].m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
-        m_uniform_buffer_datas[0].m_view_eye = Vector3f(0.0f, 0.0f, 0.5f, 1.0f);
+        m_uniform_buffer_datas[0].m_view = view;
+        m_uniform_buffer_datas[0].m_view_eye = view_eye;
         //--- world space. 
         m_uniform_buffer_datas[0].m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
         m_uniform_buffer_datas[0].m_worid.translate(Vector3f(-0.0f, -0.0f, -0.5f, 1.0f));
@@ -99,34 +108,34 @@ void Sample3_MultiSubpass::Render()
         //--- clip space.
         m_uniform_buffer_datas[1].m_clip = Matrix4X4f(clip_mat);
         //--- projection space.
-        m_uniform_buffer_datas[1].m_proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
+        m_uniform_buffer_datas[1].m_proj = proj;
         //m_uniform_buffer_datas[1].m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
         //--- view space.
-        m_uniform_buffer_datas[1].m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
-        m_uniform_buffer_datas[1].m_view_eye = Vector3f(0.0f, 0.0f, 0.5f, 1.0f);
+        m_uniform_buffer_datas[1].m_view = view;
+        m_uniform_buffer_datas[1].m_view_eye = view_eye;
         //--- world space.
         m_uniform_buffer_datas[1].m_worid.translate(Vector3f(-0.2f, -0.2f, -0.4f, 1.0f));
-        //m_uniform_buffer_datas[1].m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
+
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffers[1], m_VK_basic_uniform_buffer_memories[1], &m_uniform_buffer_datas[1], sizeof(BasicUniformBuffer));
 
         m_uniform_buffer_datas[2].m_clip = Matrix4X4f(clip_mat);
         //--- projection space.
-        m_uniform_buffer_datas[2].m_proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
+        m_uniform_buffer_datas[2].m_proj = proj;
         //m_uniform_buffer_datas[2].m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
         //--- view space.
-        m_uniform_buffer_datas[2].m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
-        m_uniform_buffer_datas[2].m_view_eye = Vector3f(0.0f, 0.0f, 0.5f, 1.0f);
+        m_uniform_buffer_datas[2].m_view = view;
+        m_uniform_buffer_datas[2].m_view_eye = view_eye;
         //--- world space. 
         m_uniform_buffer_datas[2].m_worid.translate(Vector3f(0.3f, 0.3f, -0.49f, 1.0f));
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffers[2], m_VK_basic_uniform_buffer_memories[2], &m_uniform_buffer_datas[2], sizeof(BasicUniformBuffer));
 
         m_uniform_buffer_datas[3].m_clip = Matrix4X4f(clip_mat);
         //--- projection space.
-        m_uniform_buffer_datas[3].m_proj.perspective(90, 1.0f / asratio, 0.01f, 10.0f);
+        m_uniform_buffer_datas[3].m_proj = proj;
         //m_uniform_buffer_datas[3].m_proj.ortho(-1.0f, 1.0f, -1.0f * asratio, 1.0 * asratio, -1.0f, 1.0f);
         //--- view space.
-        m_uniform_buffer_datas[3].m_view.lookAt(Vector3f(0.0f, 0.0f, 0.5f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f, 1.0f), Vector3f(0.0f, 1.0f, 0.0f, 1.0f));
-        m_uniform_buffer_datas[3].m_view_eye = Vector3f(0.0f, 0.0f, 0.5f, 1.0f);
+        m_uniform_buffer_datas[3].m_view = view;
+        m_uniform_buffer_datas[3].m_view_eye = view_eye;
         //--- world space. 
         m_uniform_buffer_datas[3].m_worid.translate(Vector3f(-0.3f, -0.3f, -0.48f, 1.0f));
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffers[3], m_VK_basic_uniform_buffer_memories[3], &m_uniform_buffer_datas[3], sizeof(BasicUniformBuffer));
@@ -146,7 +155,7 @@ void Sample3_MultiSubpass::Render()
         //2. begin render pass.
         VkRect2D render_area = {};
         render_area.offset = { 0, 0 };
-        render_area.extent = { screen_size.GetWidth(), screen_size.GetHeight() };
+        render_area.extent = { m_current_res.GetWidth(), m_current_res.GetHeight() };
 
         VkClearValue clear_color; clear_color.color = { 0.15f, 0.15f, 0.15f, 1.0f };
         VkClearValue clear_depth; clear_depth.depthStencil = { 1.0f, 0 };
@@ -175,8 +184,8 @@ void Sample3_MultiSubpass::Render()
         VkViewport viewport = {};
         viewport.x = 0;
         viewport.y = 0;
-        viewport.width = static_cast<float>(screen_size.GetWidth());
-        viewport.height = static_cast<float>(screen_size.GetHeight());
+        viewport.width = static_cast<float>(m_current_res.GetWidth());
+        viewport.height = static_cast<float>(m_current_res.GetHeight());
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
 
@@ -258,6 +267,7 @@ void Sample3_MultiSubpass::Render()
 void Sample3_MultiSubpass::Resize(Size_ui32 i_width, Size_ui32 i_height)
 {
     SDLOG("Resize(%u,%u)", i_width, i_height);
+    m_current_res.SetResolution(i_width, i_height);
     VkResult result;
     //1. clear old devices.
     m_mgr->DestroyFramebuffer(m_VK_frame_buffer);

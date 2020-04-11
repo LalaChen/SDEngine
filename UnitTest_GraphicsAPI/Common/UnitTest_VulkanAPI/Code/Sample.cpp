@@ -1,3 +1,4 @@
+#include "VulkanAPITestManager.h"
 #include "Sample.h"
 
 LightUniformBuffer::LightUniformBuffer()
@@ -22,6 +23,7 @@ Sample::Sample(const ObjectName &i_object_name, VulkanAPITestManager *i_mgr)
 : Object(i_object_name)
 , m_mgr(i_mgr)
 {
+    m_current_res = m_mgr->GetScreenResolution();
 }
 
 Sample::~Sample()
