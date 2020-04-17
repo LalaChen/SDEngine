@@ -28,9 +28,10 @@ SOFTWARE.
 #include <list>
 #include <algorithm>
 
+#include "LogManager.h"
+#include "TextureFormat_Vulkan.h"
 #include "VulkanCreationArg.h"
 #include "VulkanWrapper.h"
-#include "LogManager.h"
 #include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -370,6 +371,69 @@ void VulkanManager::InitializeLogicDevice()
     }
     else {
         SDLOG("Get present queue(%p).", m_VK_present_queue);
+    }
+}
+
+void VulkanManager::InitializeSettings()
+{
+    //-------- Collect depth format.
+    std::vector<TextureFormatEnum> depth_format = {
+        TextureFormat_D32_SFLOAT_S8_UINT, //Default Depth
+        TextureFormat_D24_UNORM_S8_UINT,
+        TextureFormat_D32_SFLOAT,
+        TextureFormat_D16_UNORM,
+    };
+
+    for (TextureFormatEnum &fmt : depth_format) {
+        VkFormat vk_fmt = TextureFormat_Vulkan::Convert(fmt);
+        VkFormatProperties fmt_props;
+        vkGetPhysicalDeviceFormatProperties(m_VK_physical_device, vk_fmt, &fmt_props);
+        if ((fmt_props.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) ==
+            VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+            m_supported_depth_buffer_formats.push_back(fmt);
+        }
+    }
+
+    if (m_supported_depth_buffer_formats.size() > 0) {
+        SDLOG("Default depth buffer format is (%d).", m_supported_depth_buffer_formats[0]);
+    }
+    else {
+        SDLOGE("There is no supported depth format in this device.");
+    }
+    //-------- Collect color format.
+    std::vector<TextureFormatEnum> color_format = {
+        TextureFormat_R8G8B8A8_UNORM, //Default Color Buffer,
+        TextureFormat_R8G8B8A8_SNORM,
+        TextureFormat_R8G8B8A8_UINT,
+        TextureFormat_R8G8B8A8_SINT,
+        TextureFormat_R32G32B32A32_SFLOAT,
+        TextureFormat_R8G8_UNORM,
+        TextureFormat_R8G8_SNORM,
+        TextureFormat_R8G8_UINT,
+        TextureFormat_R8G8_SINT,
+        TextureFormat_R32G32_SFLOAT,
+        TextureFormat_R8_UNORM,
+        TextureFormat_R8_SNORM,
+        TextureFormat_R8_UINT,
+        TextureFormat_R8_SINT,
+        TextureFormat_R32_SFLOAT
+    };
+
+    for (TextureFormatEnum &fmt : color_format) {
+        VkFormat vk_fmt = TextureFormat_Vulkan::Convert(fmt);
+        VkFormatProperties fmt_props;
+        vkGetPhysicalDeviceFormatProperties(m_VK_physical_device, vk_fmt, &fmt_props);
+        if ((fmt_props.optimalTilingFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT) ==
+            VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT) {
+            m_supported_color_buffer_formats.push_back(fmt);
+        }
+    }
+
+    if (m_supported_color_buffer_formats.size() > 0) {
+        SDLOG("Default color buffer format is (%d).", m_supported_color_buffer_formats[0]);
+    }
+    else {
+        SDLOGE("There is no supported color format in this device.");
     }
 }
 

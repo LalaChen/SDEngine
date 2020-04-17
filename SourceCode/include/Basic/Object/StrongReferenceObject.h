@@ -158,10 +158,12 @@ public:
      */
     Type& GetRef() const
     {
-        if ((*this))
+        if ((*this) != nullptr) {
             return *(this->get());
-        else
+        }
+        else {
             throw NullReferenceException();
+        }
     }
 
     /*! \fn const Type& GetConstRef() const;
@@ -169,10 +171,12 @@ public:
      */
     const Type& GetConstRef() const
     {
-        if ((*this))
+        if ((*this) != nullptr) {
             return *(this->get());
-        else
+        }
+        else {
             throw NullReferenceException();
+        }
     }
 
     /*! \fn Type* GetPtr() const;
@@ -199,13 +203,25 @@ public:
         return (this->get() == nullptr);
     }
 
+    /*! \fn void Reset();
+     *  \brief Reset this reference.
+     */
+    void Reset()
+    {
+        this->reset();
+    }
+
     /*! \fn long UseCount() const;
      *  \brief return how many references keeping this instance.
      */
     long UseCount() const
     {
-        if (this->get() == nullptr) return 0;
-        else return this->use_count();
+        if (this->get() == nullptr) {
+            return 0;
+        }
+        else {
+            return this->use_count();
+        }
     }
 };
 

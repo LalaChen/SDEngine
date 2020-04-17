@@ -115,6 +115,12 @@ public:
      */
     vec3 scale(float i_s) const;
 
+    /*! \fn vec3 scale(const vec3 &i_s) const;
+     *  \param [in] i_s scale factor.
+     *  \brief Scale the vec or position.
+     */
+    vec3 scale(const vec3 &i_s) const;
+
     /*! \fn vec3 operator+(const vec3 &i_b) const;
      *  \param [in] i_b target vec
      *  \brief Add operator.
@@ -230,6 +236,12 @@ public://------------------------------ operator function ----------------------
      *  \brief Scale the vec or position.
      */
     vec2 scale(float i_s) const;
+
+    /*! \fn vec2 scale(const vec2 &i_s) const;
+     *  \param [in] i_s scale factor.
+     *  \brief Scale the vec or position.
+     */
+    vec2 scale(const vec2 &i_s) const;
 
     /*! \fn vec2 operator+(const vec2 &i_b) const;
      *  \param [in] i_b target vec

@@ -23,27 +23,38 @@ SOFTWARE.
 
 */
 
-/*! \file      TextureType_Vulkan.h
- *  \brief     Introduce of class TextureType_Vulkan.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/08/17
- *  \copyright MIT License.
- */
-#include <vulkan/vulkan.h>
-
-#include "SDEngineMacro.h"
-#include "TextureType.h"
+#include "BasicShapeCreator.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
-
-class TextureType_Vulkan
+//-------------------------- static part ---------------------------
+vec3 BasicShapeCreator::CalculateTangetVector(const vec3& i_v1, const vec3& i_v2, const vec2& i_st1, const vec2& i_st2)
 {
-public:
-    static VkImageType Convert(const TextureTypeEnum &i_src);
-    static VkImageViewType ConvertView(const TextureTypeEnum &i_src);
-public:
-    static VkImageType TextureTypes[TextureType_MAX_DEFINE_VALUE];
-    static VkImageViewType TextureViewTypes[TextureType_MAX_DEFINE_VALUE];
-};
+	vec3 tangent;
+	vec3 tan_a, tan_b;
+	float det = i_st1.x * i_st2.y - i_st2.x * i_st1.y;
+	//tan_a
+	tan_a.x = (i_st2.y * i_v1.x - i_v2.x * i_st1.y) / det;
+	tan_a.y = (i_st2.y * i_v1.y - i_v2.y * i_st1.y) / det;
+	tan_a.z = (i_st2.y * i_v1.z - i_v2.z * i_st1.y) / det;
+	//tan_b
+	tan_b.x = (i_st1.x * i_v2.x - i_v1.x * i_st2.x) / det;
+	tan_b.y = (i_st1.x * i_v2.y - i_v1.y * i_st2.x) / det;
+	tan_b.z = (i_st1.x * i_v2.z - i_v1.z * i_st2.x) / det;
+
+	tangent = vec3::normalize(tan_a + tan_b);
+
+	return tangent;
+}
+
+//------------------------------------------------------
+SD_SINGLETON_DECLARATION_IMPL(BasicShapeCreator);
+
+BasicShapeCreator::BasicShapeCreator()
+{
+}
+
+BasicShapeCreator::~BasicShapeCreator()
+{
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

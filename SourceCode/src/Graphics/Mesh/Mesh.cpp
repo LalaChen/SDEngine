@@ -47,9 +47,10 @@ void Mesh::RegisterVertexBuffer(const VertexBufferUsageEnum &i_usage, const Vert
 
 void Mesh::BindVertexBuffers()
 {
-    for (uint32_t idx = 0; idx < VertexBufferUsage_BUFFER_GROUP; ++idx) {
-        if (m_vertex_attribs[static_cast<uint32_t>(idx)].IsNull() == false) {
-            //GraphicsManager::GetRef().
+    for (uint32_t va_idx = 0; va_idx < VertexBufferUsage_BUFFER_GROUP; ++va_idx) {
+          
+        if (m_vertex_attribs[va_idx].IsNull() == false) {
+            //
         }
     }
 }

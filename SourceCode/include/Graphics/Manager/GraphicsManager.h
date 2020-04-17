@@ -139,6 +139,11 @@ public:
     void UnregisterRenderPass(const ObjectName &i_target_rp_name);
     void ReleaseRenderPasses();
     RenderPassWeakReferenceObject GetRenderPass(const ObjectName &i_target_rp_name) const;
+public:
+    TextureFormatEnum GetDefaultDepthBufferFormat() const;
+    bool IsSupportedDepthBufferFormat(TextureFormatEnum i_fmt) const;
+    TextureFormatEnum GetDefaultColorBufferFormat() const;
+    bool IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) const;
 protected:
 //------------ Render Flow Function -------------
     virtual void RenderBegin() = 0;
@@ -148,6 +153,9 @@ protected:
     SD_DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_screen_size, ScreenResolution);
 protected:
     std::list<RenderPassStrongReferenceObject> m_rp_list;
+protected:
+    std::vector<TextureFormatEnum> m_supported_depth_buffer_formats;
+    std::vector<TextureFormatEnum> m_supported_color_buffer_formats;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

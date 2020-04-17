@@ -24,6 +24,7 @@ SOFTWARE.
 */
 
 #include "LogManager.h"
+#include "BasicShapeCreator.h"
 #include "AssimpModelLoader.h"
 #include "GraphicsManager.h"
 
@@ -39,6 +40,8 @@ GraphicsManager::GraphicsManager()
     SD_SINGLETON_DECLARATION_REGISTER;
     // Assimp Model Loader.
     new AssimpModelLoader();
+    // Basic Shader Creator
+    new BasicShapeCreator();
 }
 
 GraphicsManager::~GraphicsManager()
@@ -67,6 +70,51 @@ void GraphicsManager::Render()
     RenderToScreen();
     //4. Execute some operations for each graphics API after rendering.
     RenderEnd();
+}
+
+TextureFormatEnum GraphicsManager::GetDefaultDepthBufferFormat() const
+{
+    if (m_supported_depth_buffer_formats.size() > 0) {
+        return m_supported_depth_buffer_formats[0];
+    }
+    else {
+        SDLOGE("We don't have default supported depth format.");
+        return TextureFormat_MAX_DEFINE_VALUE;
+    }
+}
+
+bool GraphicsManager::IsSupportedDepthBufferFormat(TextureFormatEnum i_fmt) const
+{
+    for (const TextureFormatEnum &fmt : m_supported_depth_buffer_formats) {
+        if (fmt == i_fmt) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+TextureFormatEnum GraphicsManager::GetDefaultColorBufferFormat() const
+{
+    if (m_supported_color_buffer_formats.size() > 0) {
+        return m_supported_color_buffer_formats[0];
+    }
+    else {
+        SDLOGE("We don't have default supported depth format.");
+        return TextureFormat_MAX_DEFINE_VALUE;
+    }
+}
+
+bool GraphicsManager::IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) const
+{
+    for (const TextureFormatEnum &fmt : m_supported_color_buffer_formats) {
+        if (fmt == i_fmt) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -51,32 +51,6 @@ VkResult VulkanManager::CreateVKFrameBuffer(
     return result;
 }
 
-VkResult VulkanManager::CreateVkImageView(
-    VkImageView& io_iv_handle,
-    const VkImage i_img_handle,
-    VkImageViewType i_view_type,
-    VkFormat i_img_format,
-    VkComponentMapping i_comp_swizzle,
-    VkImageSubresourceRange i_sub_src_range)
-{
-    VkImageViewCreateInfo iv_c_info = {};
-    iv_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    iv_c_info.pNext = nullptr;
-    iv_c_info.flags = 0;
-    iv_c_info.viewType = i_view_type;
-    iv_c_info.image = i_img_handle;
-    iv_c_info.format = i_img_format;
-    iv_c_info.components = i_comp_swizzle;
-    iv_c_info.subresourceRange = i_sub_src_range;
-    return vkCreateImageView(m_VK_device, &iv_c_info, nullptr, &io_iv_handle);
-}
-
-void VulkanManager::DestroyVkImageView(VkImageView &io_iv_handle)
-{
-    vkDestroyImageView(m_VK_device, io_iv_handle, nullptr);
-    io_iv_handle = VK_NULL_HANDLE;
-}
-
 void VulkanManager::DestroyVkFrameBuffer(VkFramebuffer &io_fb_handle)
 {
     vkDestroyFramebuffer(m_VK_device, io_fb_handle, nullptr);

@@ -36,6 +36,14 @@ VkImageType TextureType_Vulkan::TextureTypes[TextureType_MAX_DEFINE_VALUE] =
     VK_IMAGE_TYPE_3D
 };
 
+VkImageViewType TextureType_Vulkan::TextureViewTypes[TextureType_MAX_DEFINE_VALUE] = {
+    VK_IMAGE_VIEW_TYPE_1D,
+    VK_IMAGE_VIEW_TYPE_2D,
+    VK_IMAGE_VIEW_TYPE_2D_ARRAY,
+    VK_IMAGE_VIEW_TYPE_CUBE,
+    VK_IMAGE_VIEW_TYPE_3D
+};
+
 VkImageType TextureType_Vulkan::Convert(const TextureTypeEnum &i_src)
 {
     if (i_src != TextureType_MAX_DEFINE_VALUE) {
@@ -43,6 +51,16 @@ VkImageType TextureType_Vulkan::Convert(const TextureTypeEnum &i_src)
     }
     else {
         return VK_IMAGE_TYPE_MAX_ENUM;
+    }
+}
+
+VkImageViewType TextureType_Vulkan::ConvertView(const TextureTypeEnum &i_src)
+{
+    if (i_src != TextureType_MAX_DEFINE_VALUE) {
+        return TextureViewTypes[static_cast<uint32_t>(i_src)];
+    }
+    else {
+        return VK_IMAGE_VIEW_TYPE_MAX_ENUM;
     }
 }
 

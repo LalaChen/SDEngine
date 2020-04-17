@@ -67,6 +67,12 @@ public://Raw Data Part.
      */
     CompHandle m_memory_handle;
 
+    /*! \var CompHandle m_view_handle;
+     *  \brief The view handle. We bind view to shader or framebufer in Vulkan system. 
+     *         This value is nullptr in opengl system.
+     */
+    CompHandle m_view_handle;
+
     /*! \var TextureTypeEnum m_texture_type;
      *  \brief The texture type.
      */

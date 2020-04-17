@@ -33,6 +33,7 @@ SOFTWARE.
 #pragma once
 
 #include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 #include "Bitmap.h"
 #include "SamplerIdentity.h"
 #include "TextureIdentity.h"
@@ -40,6 +41,7 @@ SOFTWARE.
 
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
+using SDE::Basic::FilePathString;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -66,6 +68,13 @@ public:
      */
     virtual ~Texture();
 public:
+    /*! \fn void InitializeFromImageResource(const FilePathString &i_filename, Size_ui32 i_mipmap_levels = 1);
+     *  \param [in] i_filename Filename of resource..
+     *  \param [in] i_mipmap_levels Mipmap level.
+     *  \brief This function is used to create texture that is used to input to shader. We will ask data from ImagerLoader.
+     */
+    void InitializeFromImageResource(const FilePathString &i_filename, Size_ui32 i_mipmap_levels = 1);
+    
     /*! \fn void InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_levels = 1);
      *  \param [in] i_bitmap_wref Target bitmap.
      *  \param [in] i_mipmap_levels Mipmap level.
@@ -115,6 +124,8 @@ public:
 
     const CompHandle GetSamplerHandle() const;
 
+    const CompHandle GetViewHandle() const;
+
     TextureTypeEnum GetTextureType() const;
 
     TextureFormatEnum GetTextureFormat() const;
@@ -142,6 +153,11 @@ inline const CompHandle Texture::GetHandle() const
 inline const CompHandle Texture::GetSamplerHandle() const
 {
     return m_sampler_idnetity.m_sampler_handle;
+}
+
+inline const CompHandle Texture::GetViewHandle() const
+{
+    return m_tex_identity.m_view_handle;
 }
 
 inline TextureTypeEnum Texture::GetTextureType() const

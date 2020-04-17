@@ -310,6 +310,17 @@ protected:
 
     void DestroyVKRenderPass(VkRenderPass &io_rp_handle);
 public:
+//----------- Vulkan ImageView Function ------------
+    VkResult CreateVkImageView(
+        VkImageView& io_iv_handle,
+        const VkImage i_img_handle,
+        VkImageViewType i_view_type,
+        VkFormat i_img_format,
+        VkComponentMapping i_comp_swizzle,
+        VkImageSubresourceRange i_sub_src_range);
+
+    void DestroyVkImageView(VkImageView& io_iv_handle);
+public:
 //----------- Vulkan FrameBuffer Function ------------
     VkResult CreateVKFrameBuffer(
         VkFramebuffer &io_fb_handle,
@@ -318,16 +329,6 @@ public:
         Size_ui32 i_width,
         Size_ui32 i_height,
         Size_ui32 i_layers = 1);
-
-    VkResult CreateVkImageView(
-        VkImageView &io_iv_handle,
-        const VkImage i_img_handle,
-        VkImageViewType i_view_type,
-        VkFormat i_img_format,
-        VkComponentMapping i_comp_swizzle,
-        VkImageSubresourceRange i_sub_src_range);
-
-    void DestroyVkImageView(VkImageView &io_iv_handle);
 
     void DestroyVkFrameBuffer(VkFramebuffer& io_fb_handle);
 public:
@@ -341,6 +342,7 @@ protected:
     void InitializeDebugMessage();
     void InitializePhysicalDevice();
     void InitializeLogicDevice();
+    void InitializeSettings();
     void InitializeSwapChain();
     void InitializePresentRenderPass();
     void InitializeSCImageViewsAndFBs();

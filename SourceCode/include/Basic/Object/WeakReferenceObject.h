@@ -152,9 +152,12 @@ public:
      */
     Type& GetRef() const
     {
-        if (this->lock())
+        if (this->lock() != nullptr) {
             return *(this->lock().get());
-        else throw NullReferenceException();
+        }
+        else {
+            throw NullReferenceException();
+        }
     }
 
     /*! \fn const Type& GetConstRef() const;
@@ -162,9 +165,12 @@ public:
      */
     const Type& GetConstRef() const
     {
-        if (this->lock())
+        if (this->lock() != nullptr) {
             return *(this->lock().get());
-        else throw NullReferenceException();
+        }
+        else {
+            throw NullReferenceException();
+        }
     }
 
     /*! \fn Type* GetPtr() const;
@@ -196,8 +202,12 @@ public:
      */
     long UseCount() const
     {
-        if (this->lock().get() == nullptr) return 0;
-        else return this->use_count();
+        if (this->lock().get() == nullptr) {
+            return 0;
+        }
+        else {
+            return this->use_count();
+        }
     }
 };
 

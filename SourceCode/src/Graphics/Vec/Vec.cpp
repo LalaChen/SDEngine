@@ -73,6 +73,15 @@ vec3 vec3::scale(float i_s) const
     return r;
 }
 
+vec3 vec3::scale(const vec3& i_s) const
+{
+    vec3 r;
+    r.x = x * i_s.x;
+    r.y = y * i_s.y;
+    r.z = z * i_s.z;
+    return r;
+}
+
 float vec3::dot(const vec3 &i_b) const
 {
     return x * i_b.x + y * i_b.y + z * i_b.z;
@@ -168,6 +177,14 @@ vec2 vec2::scale(float i_s) const
     vec2 r;//result
     r.x = x * i_s;
     r.y = y * i_s;
+    return r;
+}
+
+vec2 vec2::scale(const vec2 &i_s) const
+{
+    vec2 r;//result
+    r.x = x * i_s.x;
+    r.y = y * i_s.y;
     return r;
 }
 

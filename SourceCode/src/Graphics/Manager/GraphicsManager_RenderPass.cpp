@@ -12,7 +12,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     std::vector<AttachmentDescription> att_descs;
     AttachmentDescription att_desc;
     //--- Color Attachment for sp0(FirstLight).
-    att_desc.m_format = TextureFormat_R8G8B8A8_UNORM;
+    att_desc.m_format = GetDefaultColorBufferFormat();
     att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_sample_counts = SampleCount_1;
@@ -22,7 +22,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     att_desc.m_stencil_store_op = AttachmentStoreOperator_DONT_CARE;
     att_descs.push_back(att_desc);
     //--- Depth Attachment for sp0(FirstLight).
-    att_desc.m_format = TextureFormat_D32_SFLOAT_S8_UINT;
+    att_desc.m_format = GetDefaultDepthBufferFormat();
     att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_sample_counts = SampleCount_1;
@@ -33,7 +33,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     att_descs.push_back(att_desc);
 
     //--- Color Attachment for sp1(SecondLight).
-    att_desc.m_format = TextureFormat_R8G8B8A8_UNORM;
+    att_desc.m_format = GetDefaultColorBufferFormat();
     att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_sample_counts = SampleCount_1;
@@ -43,7 +43,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     att_desc.m_stencil_store_op = AttachmentStoreOperator_DONT_CARE;
     att_descs.push_back(att_desc);
     //--- Depth Attachment for sp1(SecondLight).
-    att_desc.m_format = TextureFormat_D32_SFLOAT_S8_UINT;
+    att_desc.m_format = GetDefaultDepthBufferFormat();
     att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_sample_counts = SampleCount_1;
@@ -54,7 +54,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     att_descs.push_back(att_desc);
 
     //--- Color Attachment for sp2(TransparentObject).
-    att_desc.m_format = TextureFormat_R8G8B8A8_UNORM;
+    att_desc.m_format = GetDefaultColorBufferFormat();
     att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_sample_counts = SampleCount_1;
@@ -64,7 +64,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     att_desc.m_stencil_store_op = AttachmentStoreOperator_DONT_CARE;
     att_descs.push_back(att_desc);
     //--- Depth Attachment for sp2(TransparentObject).
-    att_desc.m_format = TextureFormat_D32_SFLOAT_S8_UINT;
+    att_desc.m_format = GetDefaultDepthBufferFormat();
     att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_sample_counts = SampleCount_1;

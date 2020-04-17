@@ -24,6 +24,7 @@ SOFTWARE.
 */
 
 #include "LogManager.h"
+#include "ImageLoader.h"
 #include "GraphicsManager.h"
 #include "Texture.h"
 
@@ -41,6 +42,22 @@ Texture::~Texture()
 }
 
 //--- Texture Data Function
+void Texture::InitializeFromImageResource(const FilePathString &i_filename, Size_ui32 i_mipmap_levels)
+{
+    if (ImageLoader::IsNull() == false) {
+        BitmapStrongReferenceObject target_sref = ImageLoader::GetRef().ReadBitmap(i_filename);
+        if (target_sref.IsNull() == false) {
+            InitializeFromBitmap(target_sref, i_mipmap_levels);
+        }
+        else {
+            SDLOGW("We can't find texture(%s)", i_filename.c_str());
+        }
+    }
+    else {
+        SDLOGE("ImageLoader is nullptr.");
+    }
+}
+
 void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_level)
 {
     if (i_bitmap_wref.IsNull() == false) {
@@ -136,12 +153,18 @@ void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
 {
     if (m_tex_identity.m_image_handle == SD_NULL_HANDLE) {
         m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;
-        m_tex_identity.m_texture_format = i_format;
         m_tex_identity.m_mipmap_levels = i_mipmap_levels;
         m_tex_identity.m_image_size.m_width = i_width;
         m_tex_identity.m_image_size.m_height = i_height;
         m_tex_identity.m_image_size.m_length = 1;
         if (i_layout == ImageLayout_COLOR_ATTACHMENT_OPTIMAL) {
+            if (GraphicsManager::GetRef().IsSupportedColorBufferFormat(i_format) == true) {
+                m_tex_identity.m_texture_format = i_format;
+            }
+            else {
+                SDLOGW("Depth TextureFormat(%d) isn't supported in this device. Use default.", i_format);
+                m_tex_identity.m_texture_format = GraphicsManager::GetRef().GetDefaultColorBufferFormat();
+            }
             m_tex_identity.m_init_layout = i_layout;
             m_tex_identity.m_aspect = ImageAspect_ASPECT_COLOR;
             m_tex_identity.m_image_usages.push_back(ImageUsage_COLOR_ATTACHMENT);
@@ -150,6 +173,13 @@ void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
             GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
         }
         else if (i_layout == ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+            if (GraphicsManager::GetRef().IsSupportedDepthBufferFormat(i_format) == true) {
+                m_tex_identity.m_texture_format = i_format;
+            }
+            else {
+                SDLOGW("Depth TextureFormat(%d) isn't supported in this device. Use default.", i_format);
+                m_tex_identity.m_texture_format = GraphicsManager::GetRef().GetDefaultDepthBufferFormat();
+            }
             m_tex_identity.m_init_layout = i_layout;
             m_tex_identity.m_aspect = ImageAspect_ASPECT_DEPTH;
             m_tex_identity.m_image_usages.push_back(ImageUsage_DEPTH_ATTACHMENT);

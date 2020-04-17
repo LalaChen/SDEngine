@@ -202,6 +202,12 @@
     <Filter Include="src\Basic\FileSystem\Android">
       <UniqueIdentifier>{f1c72272-6478-4726-9b61-7287465ef0e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Graphics\BasicShapeCreator">
+      <UniqueIdentifier>{07a7a893-041c-4229-89d1-73f86f83a9f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\BasicShapeCreator">
+      <UniqueIdentifier>{75c7364e-0209-439f-8824-14106e46796d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -648,6 +654,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\FileResourceRequester.h">
       <Filter>include\Basic\FileSystem</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicShapeCreator\BasicShapeCreator.h">
+      <Filter>include\Graphics\BasicShapeCreator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1012,6 +1021,24 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\FileResourceRequester.cpp">
       <Filter>src\Basic\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Plane.cpp">
+      <Filter>src\Graphics\BasicShapeCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator.cpp">
+      <Filter>src\Graphics\BasicShapeCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Axis.cpp">
+      <Filter>src\Graphics\BasicShapeCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Cube.cpp">
+      <Filter>src\Graphics\BasicShapeCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Cone.cpp">
+      <Filter>src\Graphics\BasicShapeCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKImageView.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

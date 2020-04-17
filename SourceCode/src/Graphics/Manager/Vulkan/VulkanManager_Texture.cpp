@@ -44,8 +44,10 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
     VkResult result = VK_SUCCESS;
     VkImage &image_handle = reinterpret_cast<VkImage&>(io_tex_identity.m_image_handle);
     VkDeviceMemory &memory_handle = reinterpret_cast<VkDeviceMemory&>(io_tex_identity.m_memory_handle);
+    VkImageView &view_handle = reinterpret_cast<VkImageView&>(io_tex_identity.m_view_handle);
     VkDeviceSize &allocated_size = reinterpret_cast<VkDeviceSize&>(io_tex_identity.m_allocated_size);
     VkImageType image_type = TextureType_Vulkan::Convert(io_tex_identity.m_texture_type);
+    VkImageViewType view_type = TextureType_Vulkan::ConvertView(io_tex_identity.m_texture_type);
     VkFormat image_format = TextureFormat_Vulkan::Convert(io_tex_identity.m_texture_format);
     VkImageLayout init_layout = ImageLayout_Vulkan::Convert(io_tex_identity.m_init_layout);
     VkImageUsageFlags init_usages = ImageUsage_Vulkan::Convert(io_tex_identity.m_image_usages);
@@ -105,6 +107,34 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
 
     if (result != VK_SUCCESS) {
         SDLOGE("Allocated sampler for this image failure(%x)!!!", result);
+        return;
+    }
+
+    //4. create image vie for this texture.
+    VkComponentMapping swizzle = {
+        VK_COMPONENT_SWIZZLE_IDENTITY, 
+        VK_COMPONENT_SWIZZLE_IDENTITY, 
+        VK_COMPONENT_SWIZZLE_IDENTITY,
+        VK_COMPONENT_SWIZZLE_IDENTITY };
+
+    VkImageSubresourceRange subres = {};
+    subres.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subres.baseMipLevel = 0;
+    subres.levelCount = io_tex_identity.m_mipmap_levels;
+    subres.baseArrayLayer = 0;
+    subres.layerCount = io_tex_identity.m_array_layers;
+
+    if (image_format == VK_FORMAT_D16_UNORM ||
+        image_format == VK_FORMAT_D16_UNORM_S8_UINT ||
+        image_format == VK_FORMAT_D24_UNORM_S8_UINT ||
+        image_format == VK_FORMAT_D32_SFLOAT ||
+        image_format == VK_FORMAT_D32_SFLOAT_S8_UINT) {
+        subres.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    }
+
+    result = CreateVkImageView(view_handle, image_handle, view_type, image_format, swizzle, subres);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create image view for this image failure(%x)!!!", result);
         return;
     }
 }

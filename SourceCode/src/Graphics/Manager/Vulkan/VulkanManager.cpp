@@ -116,6 +116,7 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             //egl like
             InitializeDebugMessage();
             InitializePhysicalDevice();
+            InitializeSettings();
             InitializeLogicDevice();
             InitializeCommandPoolAndBuffers();
             //graphics
