@@ -43,9 +43,9 @@ void Sample2_DrawScene::Resize(Size_ui32 i_width, Size_ui32 i_height)
 void Sample2_DrawScene::Destroy()
 {
     m_meshes.clear();
-    m_render_flow_sref.reset();
-    m_color_buffer_sref.reset();
-    m_depth_buffer_sref.reset();
+    m_render_flow_sref.Reset();
+    m_color_buffer_sref.Reset();
+    m_depth_buffer_sref.Reset();
 }
 
 void Sample2_DrawScene::ImportAssimpModel(ModelData &io_model)
@@ -268,12 +268,14 @@ void Sample2_DrawScene::CreateRenderPassAndFramebuffer()
     Resolution res_size = GraphicsManager::GetRef().GetScreenResolution();
     m_color_buffer_sref = new Texture("Sample2_ColorBuffer");
     m_color_buffer_sref.GetRef().Initialize2DColorOrDepthBuffer(
-        res_size.GetWidth(), res_size.GetHeight(), TextureFormat_R8G8B8A8_UNORM,
+        res_size.GetWidth(), res_size.GetHeight(),
+        GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
         ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
 
     m_depth_buffer_sref = new Texture("Sample2_DepthBuffer");
     m_depth_buffer_sref.GetRef().Initialize2DColorOrDepthBuffer(
-        res_size.GetWidth(), res_size.GetHeight(), TextureFormat_D32_SFLOAT_S8_UINT,
+        res_size.GetWidth(), res_size.GetHeight(), 
+        GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
         ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
     ClearValue clear_color = {0.15f, 0.15f, 0.15f, 1.0f};

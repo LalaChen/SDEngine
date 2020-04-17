@@ -1534,7 +1534,8 @@ void Sample3_MultiSubpass::CreateRenderPassAndFramebuffer()
         }
     }
 
-    VkImageView ivs[4] = {m_VK_color_buffer_image_views[0], m_VK_depth_buffer_image_views[0], m_VK_color_buffer_image_views[1], m_VK_depth_buffer_image_views[1] };
+    //VkImageView ivs[4] = {m_VK_color_buffer_image_views[0], m_VK_depth_buffer_image_views[0], m_VK_color_buffer_image_views[1], m_VK_depth_buffer_image_views[1] }; //view can share.
+    VkImageView ivs[4] = { m_VK_color_buffer_image_views[0], m_VK_depth_buffer_image_views[0], m_VK_color_buffer_image_views[0], m_VK_depth_buffer_image_views[0] };
 
     VkFramebufferCreateInfo fbo_c_info = {};
     fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

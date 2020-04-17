@@ -171,6 +171,7 @@
     <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample1_DrawTriangle.h" />
     <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample2_DrawScene.h" />
     <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample3_MultiSubpass.h" />
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample4_DrawObjects.h" />
     <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager.h" />
     <ClInclude Include="VulkanTestGLFWApplication.h" />
   </ItemGroup>
@@ -179,6 +180,7 @@
     <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample1_DrawTriangle.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample2_DrawScene.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample3_MultiSubpass.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample4_DrawObjects.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager_ScreenRenderer.cpp" />
     <ClCompile Include="main.cpp" />
