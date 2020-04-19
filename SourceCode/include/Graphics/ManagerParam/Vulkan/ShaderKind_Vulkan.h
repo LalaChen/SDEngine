@@ -30,8 +30,11 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
-#include <vulkan/vulkan.h>
+#include <vector>
 
+#include "VulkanWrapper.h"
+
+#include "SDEngineMacro.h"
 #include "ShaderKind.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -42,6 +45,14 @@ public:
     static VkShaderStageFlagBits Convert(const ShaderKindEnum &i_src);
 public:
     static VkShaderStageFlagBits ShaderKinds[ShaderKind_MAX_DEFINE_VALUE];
+};
+
+class ShaderStage_Vulkan
+{
+public:
+    static VkShaderStageFlags Convert(const std::vector<ShaderStageEnum> & i_srcs);
+public:
+    static VkShaderStageFlagBits ShaderStages[ShaderStage_MAX_DEFINE_VALUE];
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

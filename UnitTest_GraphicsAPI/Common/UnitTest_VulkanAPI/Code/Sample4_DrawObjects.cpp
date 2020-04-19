@@ -41,6 +41,8 @@ void Sample4_DrawObjects::Initialize()
     CreateTexture();
     CreateObjects();
     CreateCamera();
+    CreateRenderPassAndFramebuffer();
+    CreatePipeline();
 }
 
 void Sample4_DrawObjects::Render()
@@ -69,6 +71,7 @@ void Sample4_DrawObjects::Destroy()
     m_camera.m_forward_rf.Reset();
     m_tex_sref.Reset();
     m_forward_rp_sref.Reset();
+    m_pipeline_sref.Reset();
 }
 
 void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
@@ -212,4 +215,21 @@ void Sample4_DrawObjects::CreateCamera()
         m_current_res.GetWidth(), m_current_res.GetHeight(),
         GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
         ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+}
+
+void Sample4_DrawObjects::CreatePipeline()
+{
+    ShaderModules shader_modules;
+    ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("PhongShaderVert");
+    vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/PhongShader.vert.spv", "main");
+    ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("PhongShaderFrag");
+    frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/PhongShader.frag.spv", "main");
+    shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader_sref;
+    shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
+
+    GraphicsPipelineParam params;
+    m_pipeline_sref = new GraphicsPipeline("PhongShader_Forward");
+    m_pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, 0);
+    m_pipeline_sref.GetRef().Initialize(shader_modules);
+
 }

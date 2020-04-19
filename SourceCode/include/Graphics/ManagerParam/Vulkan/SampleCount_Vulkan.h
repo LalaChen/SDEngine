@@ -32,8 +32,11 @@ SOFTWARE.
 
 #pragma once
 
-#include <vulkan/vulkan.h>
 
+
+#include "VulkanWrapper.h"
+
+#include "SDEngineMacro.h"
 #include "SampleCount.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________

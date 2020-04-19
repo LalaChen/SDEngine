@@ -36,6 +36,18 @@ VkShaderStageFlagBits ShaderKind_Vulkan::ShaderKinds[ShaderKind_MAX_DEFINE_VALUE
     VK_SHADER_STAGE_COMPUTE_BIT
 };
 
+VkShaderStageFlagBits ShaderStage_Vulkan::ShaderStages[ShaderStage_MAX_DEFINE_VALUE] =
+{
+    VK_SHADER_STAGE_VERTEX_BIT,
+    VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
+    VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
+    VK_SHADER_STAGE_GEOMETRY_BIT,
+    VK_SHADER_STAGE_FRAGMENT_BIT,
+    VK_SHADER_STAGE_COMPUTE_BIT,
+    VK_SHADER_STAGE_ALL_GRAPHICS,
+    VK_SHADER_STAGE_ALL
+};
+
 VkShaderStageFlagBits ShaderKind_Vulkan::Convert(const ShaderKindEnum &i_src)
 {
     if (i_src != ShaderKind_MAX_DEFINE_VALUE) {
@@ -43,6 +55,22 @@ VkShaderStageFlagBits ShaderKind_Vulkan::Convert(const ShaderKindEnum &i_src)
     }
     else {
         return VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
+    }
+}
+
+VkShaderStageFlags ShaderStage_Vulkan::Convert(const std::vector<ShaderStageEnum> &i_srcs)
+{
+    if (i_srcs.size() > 0) {
+        VkShaderStageFlags result = 0;
+        for (const ShaderStageEnum &src : i_srcs) {
+            if (src != ShaderStage_MAX_DEFINE_VALUE) {
+                result = result | ShaderStages[static_cast<uint32_t>(src)];
+            }
+        }
+        return result;
+    }
+    else {
+        return 0;
     }
 }
 

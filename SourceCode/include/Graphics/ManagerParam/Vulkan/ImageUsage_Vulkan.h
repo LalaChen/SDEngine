@@ -33,8 +33,7 @@ SOFTWARE.
 #pragma once
 
 #include <vector>
-
-#include <vulkan/vulkan.h>
+#include "VulkanWrapper.h"
 
 #include "SDEngineCommonType.h"
 #include "ImageUsage.h"

@@ -23,43 +23,19 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "UniformDescriptorLayout.h"
 
-#pragma once
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
-#include "MemoryAccessMask.h"
-#include "PipelineStage.h"
-#include "ImageUsage.h"
-#include "ImageLayout.h"
-#include "ImageAspect.h"
-#include "ImageTiling.h"
-#include "PipelineBindPoint.h"
-#include "UniformBindingType.h"
+UniformBinding::UniformBinding()
+: m_binding_id(0)
+, m_binding_type(UniformBindingType_MAX_DEFINE_VALUE)
+, m_element_number(0)
+{
+}
+
+UniformBinding::~UniformBinding()
+{
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

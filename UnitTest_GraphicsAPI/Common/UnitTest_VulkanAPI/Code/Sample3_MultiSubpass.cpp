@@ -931,7 +931,7 @@ void Sample3_MultiSubpass::CreateShaderPrograms()
         var_main_texture.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER; //sampler2D
         var_main_texture.descriptorCount = 1;
         var_main_texture.stageFlags = VK_SHADER_STAGE_ALL_GRAPHICS; //use at all shader. 
-        var_main_texture.pImmutableSamplers = &m_VK_main_texture_sampler;
+        var_main_texture.pImmutableSamplers = nullptr; //Use it while we set nullptr when we write descriptor.
 
         //--- ii. Write create descriptor set layout info.
         std::vector<VkDescriptorSetLayoutBinding> uniform_var_location_set0;

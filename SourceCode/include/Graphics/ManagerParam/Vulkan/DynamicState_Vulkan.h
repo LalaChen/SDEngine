@@ -30,7 +30,7 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
-#include <vulkan/vulkan.h>
+#include "VulkanWrapper.h"
 
 #include "SDEngineMacro.h"
 #include "DynamicState.h"

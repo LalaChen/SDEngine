@@ -44,6 +44,8 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  */
 class SDENGINE_CLASS VulkanManager : public GraphicsManager
 {
+public:
+    static VkBool32 ConvertBoolean(bool flag);
 protected:
     static const uint32_t MaxImgAcqirationTime; //nanosecond.
     static const uint32_t MaxFenceWaitTime;
@@ -106,13 +108,16 @@ public:
     void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
     void DeleteShaderModule(ShaderModuleIdentity &io_identity) override;
 public:
+    void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref) override;
+    void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) override;
+public:
     void CreateRenderPass(RenderPassIdentity &io_identity) override;
     void BeginRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferIdentity &i_fb_identity, const ImageOffset &i_start_pos, const ImageSize &i_render_size, const std::vector<ClearValue> &i_clear_values) override;
     void GoToNextStepOfRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferGroupIdentity &i_target_fbg_identity) override;
     void EndRenderPass(const CompHandle i_cmd_buffer_handle) override;
     void DestroyRenderPass(RenderPassIdentity &io_identity) override;
 public:
-    void CreateFrameBuffer(FrameBufferIdentity &io_identity, const std::vector<TextureWeakReferenceObject>& i_buf_wrefs) override;
+    void CreateFrameBuffer(FrameBufferIdentity &io_identity, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs) override;
     void CreateFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
     void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
     void DestroyFrameBuffer(FrameBufferIdentity &io_identity) override;
@@ -258,6 +263,24 @@ protected:
         const Size_ui64 i_binary_size);
 
     void DestroyVKShaderModule(VkShaderModule &io_shader_module_handle);
+
+    VkResult CreateVKDescriptorSetLayout(
+        VkDescriptorSetLayout &io_layout_handle,
+        const VkDescriptorSetLayoutCreateInfo &i_c_info);
+
+    void DestroyVKDescriptorSetLayout(VkDescriptorSetLayout &io_layout_handle);
+
+    VkResult CreateVKPipelineLayout(
+        VkPipelineLayout &io_layout_handle,
+        const VkPipelineLayoutCreateInfo &i_c_info);
+
+    void DestroyVKPipelineLayout(VkPipelineLayout &io_layout_handle);
+
+    VkResult CreateVKPipeline(
+        VkPipeline &io_pipeline_handle,
+        const VkGraphicsPipelineCreateInfo &i_c_info);
+
+    void DestroyVKPipeline(VkPipeline &io_pipeline_handle);
 protected:
 //----------- Vulkan image layout changing Function ------------
     void SwitchVKImageLayout(
@@ -312,14 +335,14 @@ protected:
 public:
 //----------- Vulkan ImageView Function ------------
     VkResult CreateVkImageView(
-        VkImageView& io_iv_handle,
+        VkImageView &io_iv_handle,
         const VkImage i_img_handle,
         VkImageViewType i_view_type,
         VkFormat i_img_format,
         VkComponentMapping i_comp_swizzle,
         VkImageSubresourceRange i_sub_src_range);
 
-    void DestroyVkImageView(VkImageView& io_iv_handle);
+    void DestroyVkImageView(VkImageView &io_iv_handle);
 public:
 //----------- Vulkan FrameBuffer Function ------------
     VkResult CreateVKFrameBuffer(
@@ -330,7 +353,7 @@ public:
         Size_ui32 i_height,
         Size_ui32 i_layers = 1);
 
-    void DestroyVkFrameBuffer(VkFramebuffer& io_fb_handle);
+    void DestroyVkFrameBuffer(VkFramebuffer &io_fb_handle);
 public:
     bool IsContainerNecessaryQueueFlags(VkQueueFlags i_flags);
 protected:

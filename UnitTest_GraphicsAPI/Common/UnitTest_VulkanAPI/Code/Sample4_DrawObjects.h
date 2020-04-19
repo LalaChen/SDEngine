@@ -18,6 +18,10 @@ using SDE::Graphics::RenderFlow;
 using SDE::Graphics::RenderFlowStrongReferenceObject;
 using SDE::Graphics::RenderFlowWeakReferenceObject;
 
+using SDE::Graphics::GraphicsPipeline;
+using SDE::Graphics::GraphicsPipelineStrongReferenceObject;
+using SDE::Graphics::GraphicsPipelineWeakReferenceObject;
+
 using SDE::Math::Transform;
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample1_DrawObjects);
@@ -67,10 +71,12 @@ private:
     void CreateTexture();
     void CreateObjects();
     void CreateCamera();
+    void CreatePipeline();
 protected:
     SampleCameraData m_camera;
     RenderPassStrongReferenceObject m_forward_rp_sref;
     TextureStrongReferenceObject m_tex_sref;
+    GraphicsPipelineStrongReferenceObject m_pipeline_sref;
     std::list<ObjectData> m_cube_objects;
     float m_cube_side_length;
     uint32_t m_cube_row;

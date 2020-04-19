@@ -23,43 +23,27 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      UniformBindingType.h
+ *  \brief     Introduce of enum VertexBufferFormat.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/06/30
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
-#include "MemoryAccessMask.h"
-#include "PipelineStage.h"
-#include "ImageUsage.h"
-#include "ImageLayout.h"
-#include "ImageAspect.h"
-#include "ImageTiling.h"
-#include "PipelineBindPoint.h"
-#include "UniformBindingType.h"
+#include "SDEngineMacro.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+/*! \enum UniformBindingTypeEnum
+ *  \brief UniformBindingTypeEnum is enum for defining bind type about uniform variable.
+ */
+enum UniformBindingTypeEnum
+{
+    UniformBindingType_UNIFORM_BUFFER = 0, /*!< Uniform buffer.*/
+    UniformBindingType_COMBINED_IMAGE_SAMPLER, /*!< texture.*/
+    UniformBindingType_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

@@ -49,6 +49,9 @@ SOFTWARE.
 #include "LogicOperator.h"
 #include "DynamicState.h"
 
+#include "VertexAttribDescription.h"
+#include "UniformDescriptorLayout.h"
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class Viewport
@@ -156,6 +159,11 @@ public:
      *  \brief Record the primitive. Default is triangle.
      */
     PrimitiveEnum m_primitive;
+
+    /*! \var bool m_restart_enable;
+     *  \brief Restart vertexID or not. Default is false.
+     */
+    bool m_restart_enable;
 };
 
 /*! \class RasterizationInfo
@@ -174,10 +182,15 @@ public:
      */
     ~RasterizationInfo();
 public:
-    /*! \var bool m_enable_discard;
+    /*! \var bool m_discard_enable;
      *  \brief Enable discard or not. Default is false.
      */
-    bool m_enable_discard; //close rasterization or not.
+    bool m_discard_enable; //close rasterization or not.
+
+    /*! \var bool m_discard_enable;
+     *  \brief Set polygon fill or line. Default is fill.
+     */
+    PolygonModeEnum m_polygon_mode;
 
     /*! \var FrontFaceModeEnum m_front_face;
      *  \brief Tell use what kind of face is front face. Default is counter clockwise.
@@ -189,10 +202,10 @@ public:
      */
     FaceCullingEnum m_face_culling;
 
-    /*! \var bool m_enable_depth_bias;
+    /*! \var bool m_depth_bias_enable;
      *  \brief Tell us we enable depth bias or not. Default is false.
      */
-    bool m_enable_depth_bias;
+    bool m_depth_bias_enable;
 
     /*! \var float m_depth_bias_constant_factor;
      *  \brief Depth bias formula is D = S * b + C. C is constant factor.
@@ -455,7 +468,7 @@ public:
     LogicOperatorEnum m_logic_op;
 
     /*! \var std::vector<ColorBlendAttachmentInfo> m_blend_infos;
-     *  \brief Blend infos for each attachment in target attachement.
+     *  \brief Blend infos for each attachment in target subpass.
      */
     std::vector<ColorBlendAttachmentInfo> m_blend_infos;
 
@@ -481,6 +494,31 @@ public:
      */
     ~GraphicsPipelineParam();
 public:
+    /*! \var std::vector<VertexAttribBindingDescription> m_va_binding_descs;
+     *  \brief The information about vertex attribute binding of this pipeline.
+     */
+    std::vector<VertexAttribBindingDescription> m_va_binding_descs;
+
+    /*! \var std::vector<VertexAttribLocationDescription> m_va_location_descs;
+     *  \brief The information about vertex attribute location of this pipeline.
+     */
+    std::vector<VertexAttribLocationDescription> m_va_location_descs;
+
+    /*! \var PrimitiveInfo m_primitive_info;
+     *  \brief Primitive info.
+     */
+    PrimitiveInfo m_primitive_info;
+public:
+    /*! \var uint32_t m_patch_ctrl_points;
+     *  \brief ctrl points number for tessellation. 3 is triangle. 4 is quad.
+     */
+    uint32_t m_patch_ctrl_points;
+public:
+    /*! \var std::vector<UniformBinding> m_uniform_binding_infos;
+     *  \brief The information about uniform of this pipeline.
+     */
+    std::vector<UniformBinding> m_uniform_binding_infos;
+public:
     /*! \var Viewport m_viewport;
      *  \brief Viewport setting.
      */
@@ -491,13 +529,29 @@ public:
      */
     ScissorRegion m_scissor_region;
 
-    /*! \var PrimitiveInfo m_primitive_info;
-     *  \brief Primitive info.
+    /*! \var RasterizationInfo m_rasterization_info;
+     *  \brief Rasterization info.
      */
-    PrimitiveInfo m_primitive_info;
     RasterizationInfo m_rasterization_info;
+
+    /*! \var DepthStencilInfo m_depth_stencil_info;
+     *  \brief Depth stencil info.
+     */
     DepthStencilInfo m_depth_stencil_info;
-    std::vector<ColorBlendState> m_att_color_b_states;
+
+    /*! \var SampleShadingInfo m_sample_shading_info;
+     *  \brief Sample shading info.
+     */
+    SampleShadingInfo m_sample_shading_info;
+
+    /*! \var ColorBlendState m_attachment_blend_state;
+     *  \brief Blend function parameter.
+     */
+    ColorBlendState m_attachment_blend_state;
+
+    /*! \var std::vector<DynamicStateEnum> m_dynamic_states;
+     *  \brief Dynamic state.(Decide what function we need to set at everyframe.)
+     */
     std::vector<DynamicStateEnum> m_dynamic_states;
 };
 

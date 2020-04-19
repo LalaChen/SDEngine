@@ -35,6 +35,7 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "RenderPass.h"
+#include "ShaderModule.h"
 #include "GraphicsPipelineParam.h"
 #include "GraphicsPipelineIdentity.h"
 #include "Object.h"
@@ -43,6 +44,12 @@ using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class SDENGINE_CLASS ShaderModules
+{
+public:
+    ShaderModuleWeakReferenceObject m_shaders[ShaderKind_GRAPHICS_SHADER_NUMBER];
+};
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GraphicsPipeline);
 
@@ -63,21 +70,35 @@ public:
      *  \brief Destructor of GraphicsPipeline.
      */
     virtual ~GraphicsPipeline();
+public:
+    /*! \fn void Initialize(const ShaderModules &i_shaders);
+     *  \param [in] i_shaders ShaderModules of this pipeline.
+     *  \brief Initialize this pipeline.
+     */
+    void Initialize(const ShaderModules &i_shaders);
+public:
+    /*! \fn void SetGraphicsPipelineParams(const GraphicsPipelineParam &i_params, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id);
+     *  \param [in] i_params Description about this pipeline.
+     *  \param [in] i_rp_wref Weak reference of render pass which is the reference of this pipeline.
+     *  \param [in] i_sp_id Target step that we can use this shader.
+     *  \brief Set parameters for creating graphics pipeline.
+     */
+    void SetGraphicsPipelineParams(const GraphicsPipelineParam &i_params, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id);
 protected:
     /*! \var GraphicsPipelineIdentity m_identity;
      *  \brief Record basic identity
      */
     GraphicsPipelineIdentity m_identity;
-
-    /*! \var uint32_t m_passID;
-     *  \brief Claim this pipeline is used at which render pass.
-     */
-    uint32_t m_passID;
     
     /*! \var RenderPassWeakReferenceObject m_target_rp_wref;
      *  \brief The render pass we want to use this in pipeline.
      */
     RenderPassWeakReferenceObject m_target_rp_wref;
+
+    /*! \var bool m_initialized;
+     *  \brief Return this pipeline is initialized.
+     */
+    bool m_initialized;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

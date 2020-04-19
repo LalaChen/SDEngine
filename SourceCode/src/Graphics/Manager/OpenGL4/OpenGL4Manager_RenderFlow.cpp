@@ -36,6 +36,14 @@ void OpenGL4Manager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
 {
 }
 
+void OpenGL4Manager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref)
+{
+}
+
+void OpenGL4Manager::DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity)
+{
+}
+
 void OpenGL4Manager::CreateRenderPass(RenderPassIdentity &io_identity)
 {
 }

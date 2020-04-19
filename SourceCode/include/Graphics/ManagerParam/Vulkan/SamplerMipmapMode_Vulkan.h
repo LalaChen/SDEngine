@@ -32,8 +32,9 @@ SOFTWARE.
 
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "VulkanWrapper.h"
 
+#include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SamplerMipmapMode.h"
 

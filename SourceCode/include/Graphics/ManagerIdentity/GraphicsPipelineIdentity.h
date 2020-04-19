@@ -37,6 +37,8 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 
+#include "GraphicsPipelineParam.h"
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class GraphicsPipelineIdentity
@@ -55,16 +57,31 @@ public:
      *  \brief The destructor of GraphicsPipelineIdentity Class.
      */
     ~GraphicsPipelineIdentity();
-protected:
+public:
     /*! \var CompHandle m_pipeline_handle;
      *  \brief The pipeline handle. It is valid while the value is not equal 0.
      */
     CompHandle m_pipeline_handle;
 
+    /*! \var CompHandle m_descriptor_layout_handle;
+     *  \brief The descriptor layout handle. It is valid while the value is not equal 0.(Opengl doesn't need.)
+     */
+    CompHandle m_descriptor_layout_handle;
+
     /*! \var CompHandle m_pipeline_layout_handle;
      *  \brief The pipeline layout handle. It is valid while the value is not equal 0.(Opengl doesn't need.)
      */
     CompHandle m_pipeline_layout_handle;
+
+    /*! \var uint32_t m_subpass_id;
+     *  \brief Claim this pipeline is used at which sub pass of this render pass.
+     */
+    uint32_t m_subpass_id;
+
+    /*! \var GraphicsPipelineParam m_params;
+     *  \brief Problem about GraphicsPipeline.
+     */
+    GraphicsPipelineParam m_params;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

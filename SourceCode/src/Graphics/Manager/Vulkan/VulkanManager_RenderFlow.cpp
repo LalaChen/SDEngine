@@ -37,19 +37,6 @@ SOFTWARE.
 #include "ShaderKind_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
-
-void VulkanManager::CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content)
-{
-    VkShaderModule &shader_module = reinterpret_cast<VkShaderModule&>(io_identity.m_prog_handle);
-    CreateVKShaderModule(shader_module, i_content.data(), i_content.size());
-}
-
-void VulkanManager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
-{
-    VkShaderModule &shader_module = reinterpret_cast<VkShaderModule&>(io_identity.m_prog_handle);
-    DestroyVKShaderModule(shader_module);
-}
-
 //-------- RenderPass --------
 void VulkanManager::CreateRenderPass(RenderPassIdentity &io_identity)
 {

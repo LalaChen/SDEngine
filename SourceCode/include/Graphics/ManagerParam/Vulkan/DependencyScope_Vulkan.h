@@ -32,7 +32,7 @@ SOFTWARE.
 
 #include <vector>
 
-#include <vulkan/vulkan.h>
+#include "VulkanWrapper.h"
 
 #include "DependencyScope.h"
 

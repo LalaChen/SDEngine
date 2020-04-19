@@ -32,7 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "VulkanWrapper.h"
 
 #include "SDEngineMacro.h"
 #include "Primitive.h"

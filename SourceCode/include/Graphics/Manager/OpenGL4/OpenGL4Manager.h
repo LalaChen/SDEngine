@@ -84,6 +84,9 @@ public:
     void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
     void DeleteShaderModule(ShaderModuleIdentity &io_identity) override;
 public:
+    void CreateGraphicsPipeline(GraphicsPipelineIdentity& io_identity, const ShaderModules& i_shaders, const RenderPassWeakReferenceObject& i_rp_wref) override;
+    void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) override;
+public:
     void CreateRenderPass(RenderPassIdentity &io_identity) override;
     void BeginRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferIdentity &i_fb_identity, const ImageOffset &i_start_pos, const ImageSize &i_render_size, const std::vector<ClearValue> &i_clear_values) override;
     void GoToNextStepOfRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferGroupIdentity &i_target_fbg_identity) override;

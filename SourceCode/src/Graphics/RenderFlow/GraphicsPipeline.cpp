@@ -23,17 +23,33 @@ SOFTWARE.
 
 */
 
+#include "LogManager.h"
+#include "GraphicsManager.h"
 #include "GraphicsPipeline.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 GraphicsPipeline::GraphicsPipeline(const ObjectName &i_object_name)
 : Object(i_object_name)
+, m_initialized(false)
 {
 }
 
 GraphicsPipeline::~GraphicsPipeline()
 {
+}
+
+void GraphicsPipeline::SetGraphicsPipelineParams(const GraphicsPipelineParam &i_params, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id)
+{
+    m_identity.m_params = i_params;
+    m_target_rp_wref = i_rp_wref;
+}
+
+void GraphicsPipeline::Initialize(const ShaderModules &i_shaders)
+{
+    SDLOG("Initialize graphics pipeline (%s).", m_object_name.c_str());
+    GraphicsManager::GetRef().CreateGraphicsPipeline(m_identity, i_shaders, m_target_rp_wref);
+    m_initialized = true;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

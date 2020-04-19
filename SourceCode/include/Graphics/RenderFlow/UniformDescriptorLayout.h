@@ -20,42 +20,38 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-#include "VulkanWrapper.h"
-#include "LogManager.h"
-#include "VulkanManager.h"
+/*! \file      UniformDescriptorLayout.h
+ *  \brief     Introduce of class UniformDescriptorLayout.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/04/18
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include <vector>
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+
+#include "ShaderKind.h"
+#include "UniformBindingType.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VkResult VulkanManager::CreateVKShaderModule(
-    VkShaderModule &io_shader_module_handle,
-    const UByte *i_binary_ptr,
-    const Size_ui64 i_binary_size)
+class SDENGINE_CLASS UniformBinding
 {
-    VkResult result = VK_SUCCESS;
-
-    VkShaderModuleCreateInfo c_info = {};
-    c_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    c_info.pNext = nullptr;
-    c_info.flags = 0;
-    c_info.codeSize = i_binary_size;
-    c_info.pCode = reinterpret_cast<const uint32_t*>(i_binary_ptr);
-
-    result = vkCreateShaderModule(m_VK_device, &c_info, nullptr, &io_shader_module_handle);
-    if (result != VK_SUCCESS) {
-        SDLOGW("Failed to create shader module! Result = %x.", result);
-    }
-
-    return result;
-}
-
-void VulkanManager::DestroyVKShaderModule(VkShaderModule &io_shader_module_handle)
-{
-    if (io_shader_module_handle != VK_NULL_HANDLE) {
-        vkDestroyShaderModule(m_VK_device, io_shader_module_handle, nullptr);
-    }
-    io_shader_module_handle = VK_NULL_HANDLE;
-}
+public:
+    UniformBinding();
+    ~UniformBinding();
+public:
+    uint32_t m_binding_id;
+    UniformBindingTypeEnum m_binding_type;
+    uint32_t m_element_number;
+    std::vector<ShaderStageEnum> m_target_stages;
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

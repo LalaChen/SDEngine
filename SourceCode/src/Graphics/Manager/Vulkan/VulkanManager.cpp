@@ -52,6 +52,16 @@ std::vector<const char*> VulkanManager::NecessaryExtensions = {
 };
 
 
+VkBool32 VulkanManager::ConvertBoolean(bool flag)
+{
+    if (flag == true) {
+        return VK_TRUE;
+    }
+    else {
+        return VK_FALSE;
+    }
+}
+
 //------------------------------------------------
 
 VulkanManager::VulkanManager()

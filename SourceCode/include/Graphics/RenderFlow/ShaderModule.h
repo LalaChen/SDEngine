@@ -85,11 +85,30 @@ public:
      *  \retval -2 Empty content.
      */
     int32_t LoadBinaryShader(ShaderKindEnum i_kind, const std::vector<UByte> &i_content, const char *i_entry_name);
+public:
+    std::string GetEntryName() const;
+    ShaderKindEnum GetShaderKind() const;
+    CompHandle GetHandle() const;
 protected:
     /*! \var ShaderModuleIdentity m_identity;
      *  \brief Idenity of shader module.
      */
     ShaderModuleIdentity m_identity;
 };
+
+inline std::string ShaderModule::GetEntryName() const
+{
+    return m_identity.m_entry_name;
+}
+
+inline ShaderKindEnum ShaderModule::GetShaderKind() const
+{
+    return m_identity.m_shader_kind;
+}
+
+inline CompHandle ShaderModule::GetHandle() const
+{
+    return m_identity.m_prog_handle;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

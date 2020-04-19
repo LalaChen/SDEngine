@@ -23,43 +23,24 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
- *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
- *  \copyright MIT License.
- */
+#include "UniformBindingType_Vulkan.h"
 
-#pragma once
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
-#include "MemoryAccessMask.h"
-#include "PipelineStage.h"
-#include "ImageUsage.h"
-#include "ImageLayout.h"
-#include "ImageAspect.h"
-#include "ImageTiling.h"
-#include "PipelineBindPoint.h"
-#include "UniformBindingType.h"
+VkDescriptorType UniformBindingType_Vulkan::UniformBindingTypes[UniformBindingType_MAX_DEFINE_VALUE] =
+{
+    VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+    VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
+};
+
+VkDescriptorType UniformBindingType_Vulkan::Convert(const UniformBindingTypeEnum &i_src)
+{
+    if (i_src != UniformBindingType_MAX_DEFINE_VALUE) {
+        return UniformBindingTypes[SD_ENUM_TO_UINT(i_src)];
+    }
+    else {
+        return VK_DESCRIPTOR_TYPE_MAX_ENUM;
+    }
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

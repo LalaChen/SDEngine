@@ -57,6 +57,7 @@ ScissorRegion::~ScissorRegion()
 //--- PrimitiveInfo
 PrimitiveInfo::PrimitiveInfo()
 : m_primitive(Primitive_TRIANGLE)
+, m_restart_enable(false)
 {
 }
 
@@ -66,10 +67,11 @@ PrimitiveInfo::~PrimitiveInfo()
 
 //--- RasterizationInfo
 RasterizationInfo::RasterizationInfo()
-: m_enable_discard(false)
+: m_discard_enable(false)
+, m_polygon_mode(PolygonMode_FILL)
 , m_front_face(FrontFaceMode_COUNTER_CLOCKWISE)
 , m_face_culling(FaceCulling_BACK_FACE)
-, m_enable_depth_bias(false)
+, m_depth_bias_enable(false)
 , m_depth_bias_constant_factor(0.0f)
 , m_depth_bias_slope_factor(1.0f)
 , m_depth_bias_clamp(1.0f)
@@ -157,6 +159,7 @@ ColorBlendState::~ColorBlendState()
 
 //--- GraphicsPipelineParam
 GraphicsPipelineParam::GraphicsPipelineParam()
+: m_patch_ctrl_points(3)
 {
 }
 

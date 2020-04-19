@@ -39,6 +39,7 @@ SOFTWARE.
 #include "SDEngineCommonFunction.h"
 #include "ManagerParam.h"
 #include "ManagerIdentity.h"
+#include "GraphicsPipeline.h"
 #include "RenderPass.h"
 #include "ImageLoader.h"
 #include "Resolution.h"
@@ -115,6 +116,9 @@ public:
 public:
     virtual void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) = 0;
     virtual void DeleteShaderModule(ShaderModuleIdentity &io_identity) = 0;
+public:
+    virtual void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref) = 0;
+    virtual void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) = 0;
 public:
     virtual void CreateRenderPass(RenderPassIdentity &io_identity) = 0;
     virtual void BeginRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferIdentity &i_fb_identity, const ImageOffset &i_start_pos, const ImageSize &i_render_size, const std::vector<ClearValue> &i_clear_values) = 0;

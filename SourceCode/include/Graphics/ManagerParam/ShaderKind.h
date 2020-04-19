@@ -54,7 +54,34 @@ enum ShaderKindEnum
     /*!< Compute shader.*/
     ShaderKind_COMPUTE,
     /*!< Bound of enum.*/
-    ShaderKind_MAX_DEFINE_VALUE
+    ShaderKind_MAX_DEFINE_VALUE,
+    /*!< Bound of graphics shaders.*/
+    ShaderKind_GRAPHICS_SHADER_NUMBER = 5
+};
+
+/*! \enum ShaderStageEnum
+ *  \brief Enum ShaderStageEnum is used to specify uniform variable is used to which stage.
+ */
+enum ShaderStageEnum
+{
+    /*!< Vertex shader.*/
+    ShaderStage_VERTEX = 0,
+    /*!< Tesselation controller shader.*/
+    ShaderStage_TESS_CTRL,
+    /*!< Tesselation evaluation shader.*/
+    ShaderStage_TESS_EVA,
+    /*!< Geometry shader.*/
+    ShaderStage_GEOMETRY,
+    /*!< Fragment shader.*/
+    ShaderStage_FRAGMENT,
+    /*!< Compute shader.*/
+    ShaderStage_COMPUTE,
+    /*!< Graphics shaders.*/
+    ShaderStage_GRAPHICS_ALL,
+    /*!< Computer shaders.*/
+    ShaderStage_ALL,
+    /*!< Bound of enum.*/
+    ShaderStage_MAX_DEFINE_VALUE
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

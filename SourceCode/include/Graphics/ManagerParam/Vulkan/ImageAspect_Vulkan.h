@@ -34,7 +34,7 @@ SOFTWARE.
 
 #include <vector>
 
-#include <vulkan/vulkan.h>
+#include "VulkanWrapper.h"
 
 #include "SDEngineCommonType.h"
 #include "ImageAspect.h"
