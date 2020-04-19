@@ -86,6 +86,7 @@ public:
      */
     int32_t LoadBinaryShader(ShaderKindEnum i_kind, const std::vector<UByte> &i_content, const char *i_entry_name);
 public:
+    const char* GetEntryNameCStr() const;
     std::string GetEntryName() const;
     ShaderKindEnum GetShaderKind() const;
     CompHandle GetHandle() const;
@@ -95,6 +96,11 @@ protected:
      */
     ShaderModuleIdentity m_identity;
 };
+
+inline const char* ShaderModule::GetEntryNameCStr() const
+{
+    return m_identity.m_entry_name.c_str();
+}
 
 inline std::string ShaderModule::GetEntryName() const
 {

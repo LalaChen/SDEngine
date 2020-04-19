@@ -52,6 +52,7 @@ void GraphicsManager::Initialize()
 {
     SDLOG("Initialize.");
     InitializeDefaultRenderPasses();
+    InitializeDefaultPipelineInfos();
 }
 
 void GraphicsManager::Release()

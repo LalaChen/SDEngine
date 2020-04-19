@@ -1058,5 +1058,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKPipeline.cpp">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager_PipelineInfos.cpp">
+      <Filter>src\Graphics\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -228,8 +228,24 @@ void Sample4_DrawObjects::CreatePipeline()
     shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
 
     GraphicsPipelineParam params;
+    params.m_primitive_info.m_primitive = Primitive_TRIANGLE;
+    params.m_depth_stencil_info.m_depth_test_enable = true;
+    params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
+    params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
+    params.m_dynamic_states.push_back(DynamicState_SCISSOR);
+    //
+    params.m_uniform_binding_infos.resize(2);
+    params.m_uniform_binding_infos[0].m_binding_id = 0;
+    params.m_uniform_binding_infos[0].m_binding_type = UniformBindingType_UNIFORM_BUFFER;
+    params.m_uniform_binding_infos[0].m_element_number = 1;
+    params.m_uniform_binding_infos[0].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
+
+    params.m_uniform_binding_infos[1].m_binding_id = 1;
+    params.m_uniform_binding_infos[1].m_binding_type = UniformBindingType_COMBINED_IMAGE_SAMPLER;
+    params.m_uniform_binding_infos[1].m_element_number = 1;
+    params.m_uniform_binding_infos[1].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
+  
     m_pipeline_sref = new GraphicsPipeline("PhongShader_Forward");
     m_pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, 0);
     m_pipeline_sref.GetRef().Initialize(shader_modules);
-
 }

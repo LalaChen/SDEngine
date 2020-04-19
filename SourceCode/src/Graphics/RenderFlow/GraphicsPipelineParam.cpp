@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "GraphicsManager.h"
 #include "GraphicsPipelineParam.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -161,6 +162,8 @@ ColorBlendState::~ColorBlendState()
 GraphicsPipelineParam::GraphicsPipelineParam()
 : m_patch_ctrl_points(3)
 {
+    GraphicsManager::GetRef().GetBasicVertexAttribInfos(
+        m_va_binding_descs, m_va_location_descs, 2);
 }
 
 GraphicsPipelineParam::~GraphicsPipelineParam()

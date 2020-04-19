@@ -126,7 +126,7 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     desc_set_c_info.bindingCount = static_cast<uint32_t>(layout_bindings.size());
     desc_set_c_info.pBindings = layout_bindings.data();//set = 0
 
-    if (CreateVKDescriptorSetLayout(descriptor_set_layout_handle, desc_set_c_info) == VK_SUCCESS) {
+    if (CreateVKDescriptorSetLayout(descriptor_set_layout_handle, desc_set_c_info) != VK_SUCCESS) {
         return;
     }
 
@@ -139,7 +139,7 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
             stage_c_info.pNext = nullptr;
             stage_c_info.flags = 0;
             stage_c_info.stage = ShaderKind_Vulkan::Convert(i_shaders.m_shaders[sID].GetConstRef().GetShaderKind());
-            stage_c_info.pName = i_shaders.m_shaders[sID].GetConstRef().GetEntryName().c_str();
+            stage_c_info.pName = i_shaders.m_shaders[sID].GetConstRef().GetEntryNameCStr();
             stage_c_info.module = reinterpret_cast<VkShaderModule>(i_shaders.m_shaders[sID].GetConstRef().GetHandle());
             stage_c_infos.push_back(stage_c_info);
         }
@@ -274,7 +274,7 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     pipeline_layout_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipeline_layout_c_info.pNext = nullptr;
     pipeline_layout_c_info.flags = 0;
-    pipeline_layout_c_info.setLayoutCount = 0;
+    pipeline_layout_c_info.setLayoutCount = 1;
     pipeline_layout_c_info.pSetLayouts = reinterpret_cast<VkDescriptorSetLayout*>(&io_identity.m_descriptor_layout_handle);
     pipeline_layout_c_info.pushConstantRangeCount = 0;
     pipeline_layout_c_info.pPushConstantRanges = nullptr;

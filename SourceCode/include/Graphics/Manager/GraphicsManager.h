@@ -137,6 +137,8 @@ public:
 //------------- Render Function -----------------
     void Render();
 public:
+    void InitializeDefaultPipelineInfos();
+    void GetBasicVertexAttribInfos(std::vector<VertexAttribBindingDescription> &io_binds, std::vector<VertexAttribLocationDescription> &io_locations, uint32_t i_tex_dimension = 2) const;
 //-------- Managing RenderPass Function ---------
     void InitializeDefaultRenderPasses();
     void RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp_sref);
@@ -160,6 +162,9 @@ protected:
 protected:
     std::vector<TextureFormatEnum> m_supported_depth_buffer_formats;
     std::vector<TextureFormatEnum> m_supported_color_buffer_formats;
+protected:
+    std::vector<VertexAttribBindingDescription> m_default_va_binding_descs;
+    std::vector<VertexAttribLocationDescription> m_default_va_location_descs;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
