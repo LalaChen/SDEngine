@@ -110,7 +110,7 @@ VkResult VulkanManager::CreateVKPipeline(
     const VkGraphicsPipelineCreateInfo &i_c_info)
 {
     VkResult result = VK_SUCCESS;
-    result = vkCreateGraphicsPipelines(m_VK_device, nullptr, 1, &i_c_info, nullptr, &io_pipeline_handle);
+    result = vkCreateGraphicsPipelines(m_VK_device, VK_NULL_HANDLE, 1, &i_c_info, nullptr, &io_pipeline_handle);
 
     if (result != VK_SUCCESS) {
         SDLOGW("Failed to create pipeline set. Result = %x.", result);
