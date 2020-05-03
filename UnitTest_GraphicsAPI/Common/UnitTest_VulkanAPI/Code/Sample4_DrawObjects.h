@@ -1,5 +1,7 @@
 #pragma once
 
+#define SINGLE_FLOW
+
 #include "Sample.h"
 
 using SDE::Graphics::Texture;
@@ -22,19 +24,44 @@ using SDE::Graphics::GraphicsPipeline;
 using SDE::Graphics::GraphicsPipelineStrongReferenceObject;
 using SDE::Graphics::GraphicsPipelineWeakReferenceObject;
 
+using SDE::Graphics::CommandBuffer;
+using SDE::Graphics::CommandBufferStrongReferenceObject;
+using SDE::Graphics::CommandBufferWeakReferenceObject;
+
+using SDE::Graphics::CommandPool;
+using SDE::Graphics::CommandPoolStrongReferenceObject;
+using SDE::Graphics::CommandPoolWeakReferenceObject;
+
 using SDE::Math::Transform;
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample1_DrawObjects);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample4_DrawObjects);
 
-class ObjectData
+class ObjectMaterialData
 {
 public:
-    ObjectData();
-    ~ObjectData();
+    ObjectMaterialData();
+    ~ObjectMaterialData();
 public:
-    MeshStrongReferenceObject m_mesh;
-    TextureWeakReferenceObject m_texture;
+    void Initialize(VulkanAPITestManager *i_mgr, const GraphicsPipelineWeakReferenceObject &i_pipeline_wref, const TextureWeakReferenceObject &i_main_tex_wref);
+    void Release(VulkanAPITestManager *i_mgr);
 public:
+    GraphicsPipelineWeakReferenceObject m_pipeline_wref;
+    TextureWeakReferenceObject m_main_tex_wref;
+    VkDescriptorPool m_desc_pool;
+    VkDescriptorSet m_desc_set;
+    VkBuffer m_basic_ub; //Common
+    VkDeviceMemory m_basic_mem;
+    VkBuffer m_light_ub;
+    VkDeviceMemory m_light_mem;
+};
+
+class LightData
+{
+public:
+    LightData();
+    ~LightData();
+public:
+    LightUniformBuffer m_light_data;
     Transform m_trans;
 };
 
@@ -44,13 +71,30 @@ public:
     SampleCameraData();
     ~SampleCameraData();
 public:
-    //for camera
+    RenderFlowStrongReferenceObject m_forward_rf;
+public:
     TextureStrongReferenceObject m_color_buffer;
     TextureStrongReferenceObject m_depth_buffer;
-    RenderFlowStrongReferenceObject m_forward_rf;
 public:
     Transform m_trans;
 };
+
+class ObjectData
+{
+public:
+    ObjectData();
+    ~ObjectData();
+public:
+    void UpdateMaterial(VulkanAPITestManager* i_mgr, const SampleCameraData &i_camera, const LightData &i_light);
+public:
+    MeshStrongReferenceObject m_mesh;
+public:
+    TextureWeakReferenceObject m_texture;
+    Transform m_trans;
+public:
+    ObjectMaterialData m_material;
+};
+
 
 class Sample4_DrawObjects : public Sample
 {
@@ -77,6 +121,13 @@ protected:
     RenderPassStrongReferenceObject m_forward_rp_sref;
     TextureStrongReferenceObject m_tex_sref;
     GraphicsPipelineStrongReferenceObject m_pipeline_sref;
+protected:
+    std::vector<CommandBufferWeakReferenceObject> m_cmd_buf_wrefs;
+#if defined(SINGLE_FLOW)
+    CommandPoolStrongReferenceObject m_cmd_pool_sref;
+#else
+#endif
+protected:
     std::list<ObjectData> m_cube_objects;
     float m_cube_side_length;
     uint32_t m_cube_row;

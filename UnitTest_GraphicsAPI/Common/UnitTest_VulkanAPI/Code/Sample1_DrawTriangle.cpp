@@ -714,12 +714,12 @@ void Sample1_DrawTriangle::CreateUniformBuffer()
     for (uint32_t i = 0; i < 2; ++i) {
         result = m_mgr->CreateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, sizeof(BasicUniformBuffer), m_VK_basic_uniform_buffers[i]);
         if (result != VK_SUCCESS) {
-            SDLOGE("Create uniform buffer[i] failure!!!", i);
+            SDLOGE("Create uniform buffer[%d] failure!!!", i);
         }
 
         result = m_mgr->AllocateMemoryAndBindToBuffer(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0, m_VK_basic_uniform_buffers[i], m_VK_basic_uniform_buffer_memories[i]);
         if (result != VK_SUCCESS) {
-            SDLOGE("Allocate uniform buffer[i] failure!!!", i);
+            SDLOGE("Allocate uniform buffer[%d] failure!!!", i);
         }
     }
 }

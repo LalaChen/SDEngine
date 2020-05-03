@@ -17,6 +17,9 @@ class VulkanAPITestManager;
 class BasicUniformBuffer
 {
 public:
+    BasicUniformBuffer();
+    ~BasicUniformBuffer();
+public:
     Matrix4X4f m_clip;
     Matrix4X4f m_proj;
     Matrix4X4f m_view;

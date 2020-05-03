@@ -35,6 +35,7 @@ set (SD_ENGINE_INC_DIRS
         ${SD_ENGINE_INC_DIR}/Basic/Object
         ${SD_ENGINE_INC_DIR}/Basic/KeyMap
         ${SD_ENGINE_INC_DIR}/Graphics
+        ${SD_ENGINE_INC_DIR}/Graphics/BasicShapeCreator
         ${SD_ENGINE_INC_DIR}/Graphics/Resolution
         ${SD_ENGINE_INC_DIR}/Graphics/Manager
         ${SD_ENGINE_INC_DIR}/Graphics/ManagerIdentity
@@ -129,6 +130,7 @@ add_library( # Sets the name of the library.
              ../../Common/UnitTest_VulkanAPI/Code/Sample1_DrawTriangle.cpp
              ../../Common/UnitTest_VulkanAPI/Code/Sample2_DrawScene.cpp
              ../../Common/UnitTest_VulkanAPI/Code/Sample3_MultiSubpass.cpp
+             ../../Common/UnitTest_VulkanAPI/Code/Sample4_DrawObjects.cpp
              ../../Common/UnitTest_VulkanAPI/Code/VulkanAPITestManager.cpp
              ../../Common/UnitTest_VulkanAPI/Code/VulkanAPITestManager_ScreenRenderer.cpp
         )

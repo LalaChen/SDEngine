@@ -1,6 +1,14 @@
 #include "VulkanAPITestManager.h"
 #include "Sample.h"
 
+BasicUniformBuffer::BasicUniformBuffer()
+{
+}
+
+BasicUniformBuffer::~BasicUniformBuffer()
+{
+}
+
 LightUniformBuffer::LightUniformBuffer()
 : m_ambient(1.0f, 1.0f, 1.0f, 1.0f)
 , m_diffuse(1.0f, 1.0f, 1.0f, 1.0f)

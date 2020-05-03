@@ -2,15 +2,188 @@
 #include "VulkanAPITestManager.h"
 #include "Sample4_DrawObjects.h"
 
+#include "UniformBindingType_Vulkan.h"
+
 using namespace SDE::Math;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
-ObjectData::ObjectData()
+VkDescriptorType DescriptorTypes[UniformBindingType_MAX_DEFINE_VALUE] = {
+    VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+    VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
+};
+
+ObjectMaterialData::ObjectMaterialData()
+: m_desc_pool(VK_NULL_HANDLE)
+, m_desc_set(VK_NULL_HANDLE)
+, m_basic_ub(VK_NULL_HANDLE)
+, m_basic_mem(VK_NULL_HANDLE)
+, m_light_ub(VK_NULL_HANDLE)
+, m_light_mem(VK_NULL_HANDLE)
 {
 }
 
-ObjectData::~ObjectData()
+ObjectMaterialData::~ObjectMaterialData()
+{
+}
+
+void ObjectMaterialData::Initialize(VulkanAPITestManager *i_mgr, const GraphicsPipelineWeakReferenceObject &i_pipeline_wref, const TextureWeakReferenceObject &i_main_tex_wref)
+{
+    VkResult result = VK_SUCCESS;
+    VkDescriptorSetLayout layout = reinterpret_cast<VkDescriptorSetLayout>(i_pipeline_wref.GetConstRef().GetDescriptorLayoutHandle());
+    const GraphicsPipelineParam &params = i_pipeline_wref.GetConstRef().GetPipelineParams();
+    m_pipeline_wref = i_pipeline_wref;
+    m_main_tex_wref = i_main_tex_wref;
+    //1. caculate uniform variable types and their numbers.
+    uint32_t type_numbers[UniformBindingType_MAX_DEFINE_VALUE];
+
+    for (const UniformBinding &binding: params.m_uniform_binding_infos) {
+        type_numbers[binding.m_binding_type]++;
+    }
+    //2. Create descriptor pool size.
+    //------ VkDescriptorPoolSize(Light and Basic Buffer. Both 1)
+    std::vector<VkDescriptorPoolSize> type_sizes;
+    type_sizes.resize(UniformBindingType_MAX_DEFINE_VALUE);
+
+    for (uint32_t type_id = 0; type_id < UniformBindingType_MAX_DEFINE_VALUE; ++type_id) {
+        type_sizes[type_id] = {};
+        type_sizes[type_id].type = DescriptorTypes[static_cast<UniformBindingTypeEnum>(type_id)];
+        type_sizes[type_id].descriptorCount = type_numbers[type_id];
+    }
+    //3. Create descriptor.
+    result = i_mgr->CreateDescriptorPool(type_sizes, 1, false, m_desc_pool);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Allocate descriptror pool failure!!!");
+        return;
+    }
+
+    //4. allocate descriptor set.
+    VkDescriptorSetAllocateInfo desc_set_a_info = {};
+    desc_set_a_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    desc_set_a_info.pNext = nullptr;
+    desc_set_a_info.descriptorPool = m_desc_pool;
+    desc_set_a_info.descriptorSetCount = 1;
+    desc_set_a_info.pSetLayouts = &layout;
+    result = i_mgr->AllocateDescriptorSet(desc_set_a_info, m_desc_set);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Allocate descriptor set failure!!!");
+        return;
+    }
+
+    //5. create uniform buffer.
+    result = i_mgr->CreateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, sizeof(BasicUniformBuffer), m_basic_ub);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create basic uniform buffer failure!!!");
+        return;
+    }
+    result = i_mgr->AllocateMemoryAndBindToBuffer(
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        0, m_basic_ub, m_basic_mem);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create basic uniform buffer memory failure!!!");
+    }
+
+    result = i_mgr->CreateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, sizeof(LightUniformBuffer), m_light_ub);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create light uniform buffer failure!!!");
+        return;
+    }
+
+    result = i_mgr->AllocateMemoryAndBindToBuffer(
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        0, m_light_ub, m_light_mem);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create light uniform buffer memory failure!!!");
+        return;
+    }
+
+    //6. create write descriptor set infos.
+    //6.1 for uniform buffer.
+    VkDescriptorBufferInfo basic_uniform_b_info = {};
+    basic_uniform_b_info.buffer = m_basic_ub;
+    basic_uniform_b_info.offset = 0;
+    basic_uniform_b_info.range = sizeof(BasicUniformBuffer);
+    VkWriteDescriptorSet basic_set_info = {};
+    basic_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    basic_set_info.pNext = nullptr;
+    basic_set_info.dstSet = m_desc_set;
+    basic_set_info.dstBinding = 0; //binding 0, set 0
+    basic_set_info.descriptorCount = 1;
+    basic_set_info.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    basic_set_info.pBufferInfo = &basic_uniform_b_info;
+    basic_set_info.pImageInfo = nullptr;
+    basic_set_info.pTexelBufferView = nullptr;
+    basic_set_info.dstArrayElement = 0;
+
+    VkDescriptorBufferInfo light_uniform_b_info = {};
+    light_uniform_b_info.buffer = m_light_ub;
+    light_uniform_b_info.offset = 0;
+    light_uniform_b_info.range = sizeof(LightUniformBuffer);
+    VkWriteDescriptorSet light_set_info = {};
+    light_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    light_set_info.pNext = nullptr;
+    light_set_info.dstSet = m_desc_set;
+    light_set_info.dstBinding = 0; //binding 0, set 0
+    light_set_info.descriptorCount = 1;
+    light_set_info.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    light_set_info.pBufferInfo = &light_uniform_b_info;
+    light_set_info.pImageInfo = nullptr;
+    light_set_info.pTexelBufferView = nullptr;
+    light_set_info.dstArrayElement = 0;
+
+    //6.2 for texture.
+    VkDescriptorImageInfo main_texture_i_info = {};
+    main_texture_i_info.sampler = reinterpret_cast<VkSampler>(i_main_tex_wref.GetConstRef().GetSamplerHandle());
+    main_texture_i_info.imageView = reinterpret_cast<VkImageView>(i_main_tex_wref.GetConstRef().GetViewHandle());
+    main_texture_i_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+    VkWriteDescriptorSet main_tex_set_info = {};
+    main_tex_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    main_tex_set_info.pNext = nullptr;
+    main_tex_set_info.dstSet = m_desc_set;
+    main_tex_set_info.dstBinding = 1; //binding 1, set 0
+    main_tex_set_info.descriptorCount = 1;
+    main_tex_set_info.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    main_tex_set_info.pBufferInfo = nullptr;
+    main_tex_set_info.pImageInfo = &main_texture_i_info;
+    main_tex_set_info.pTexelBufferView = nullptr;
+    main_tex_set_info.dstArrayElement = 0;
+
+    std::vector<VkWriteDescriptorSet> descriptor_set_infos = {
+        basic_set_info,
+        light_set_info,
+        main_tex_set_info
+    };
+    i_mgr->UpdateDescriptorSet(descriptor_set_infos);
+}
+
+void ObjectMaterialData::Release(VulkanAPITestManager* i_mgr)
+{
+    if (m_desc_set != VK_NULL_HANDLE) {
+        m_desc_set = VK_NULL_HANDLE; //free by pool.
+    }
+
+    if (m_desc_pool != VK_NULL_HANDLE) {
+        i_mgr->DestroyDescriptorPool(m_desc_pool);
+        m_desc_pool = VK_NULL_HANDLE;
+    }
+
+    if (m_basic_ub != VK_NULL_HANDLE) {
+        i_mgr->DestroyBuffer(m_basic_ub);
+        m_basic_ub = VK_NULL_HANDLE;
+    }
+
+    if (m_light_ub != VK_NULL_HANDLE) {
+        i_mgr->DestroyBuffer(m_light_ub);
+        m_light_ub = VK_NULL_HANDLE;
+    }
+}
+
+LightData::LightData()
+{
+}
+
+LightData::~LightData()
 {
 }
 
@@ -21,6 +194,15 @@ SampleCameraData::SampleCameraData()
 SampleCameraData::~SampleCameraData()
 {
 }
+
+ObjectData::ObjectData()
+{
+}
+
+ObjectData::~ObjectData()
+{
+}
+
 
 Sample4_DrawObjects::Sample4_DrawObjects(VulkanAPITestManager *i_mgr)
 : Sample("DrawObjects", i_mgr)
@@ -38,15 +220,31 @@ Sample4_DrawObjects::~Sample4_DrawObjects()
 
 void Sample4_DrawObjects::Initialize()
 {
-    CreateTexture();
-    CreateObjects();
-    CreateCamera();
+    m_current_res = m_mgr->GetScreenResolution();
     CreateRenderPassAndFramebuffer();
     CreatePipeline();
+    CreateTexture();
+    CreateObjects();
+    CreateCommandBufferAndPool();
 }
 
 void Sample4_DrawObjects::Render()
 {
+#if defined(SINGLE_FLOW)
+    //1. Begin Command Buffer
+    m_cmd_buf_wrefs[0].GetRef().Begin();
+    m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_cmd_buf_wrefs[0]);
+
+
+    for (const ObjectData& obj : m_cube_objects) {
+        
+    }
+
+    m_camera.m_forward_rf.GetRef().EndRenderFlow(m_cmd_buf_wrefs[0]);
+    m_cmd_buf_wrefs[0].GetRef().End();
+    GraphicsManager::GetRef().SubmitCommandBufferToQueue(m_cmd_buf_wrefs);
+#else
+#endif
 }
 
 void Sample4_DrawObjects::Resize(Size_ui32 i_width, Size_ui32 i_height)
@@ -56,7 +254,6 @@ void Sample4_DrawObjects::Resize(Size_ui32 i_width, Size_ui32 i_height)
     m_camera.m_forward_rf.Reset();
 
     m_current_res = m_mgr->GetScreenResolution();
-    CreateCamera();
     CreateRenderPassAndFramebuffer();
 }
 
@@ -72,10 +269,14 @@ void Sample4_DrawObjects::Destroy()
     m_tex_sref.Reset();
     m_forward_rp_sref.Reset();
     m_pipeline_sref.Reset();
+    m_cmd_pool_sref.Reset();
 }
 
 void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
 {
+    //
+    CreateCamera();
+    //
     SDLOG("Create render pass");
     //1. Initialize Forward render pass.
     m_forward_rp_sref = new RenderPass("ForwardPass");
@@ -143,14 +344,15 @@ void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
     sp_denp.m_dependencies.push_back(DependencyScope_REGION);
     sp_denps.push_back(sp_denp);
 
-    ClearValue clear_color = { 0.15f, 0.15f, 0.15f, 1.0f };
+    ClearValue clear_color = { 0.75f, 0.15f, 0.15f, 1.0f };
     ClearValue clear_dands;
-    clear_dands.depth_stencil.depth = 1.0f; clear_dands.depth_stencil.stencil = 1;
+    clear_dands.depth_stencil.depth = 1.0f;
+    clear_dands.depth_stencil.stencil = 1;
 
     m_forward_rp_sref.GetRef().AddRenderPassDescription(att_descs, sp_descs, sp_denps);
     m_forward_rp_sref.GetRef().Initialize();
     m_camera.m_forward_rf = new RenderFlow("ForwardPathRF", ImageOffset(0, 0, 0), 
-        ImageSize(m_current_res.GetWidth(), m_current_res.GetHeight(), 0));
+        ImageSize(m_current_res.GetWidth(), m_current_res.GetHeight(), 1));
     m_camera.m_forward_rf.GetRef().RegisterRenderPass(m_forward_rp_sref);
     m_camera.m_forward_rf.GetRef().AllocateFrameBuffer();
     m_camera.m_forward_rf.GetRef().RegisterBufferToFrameBuffer(m_camera.m_color_buffer, 0, clear_color);
@@ -160,6 +362,12 @@ void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
 
 void Sample4_DrawObjects::CreateCommandBufferAndPool()
 {
+#if defined(SINGLE_FLOW)
+    m_cmd_pool_sref = new CommandPool("Sample4_SinglePool");
+    m_cmd_pool_sref.GetRef().Initialize();
+    m_cmd_buf_wrefs.push_back(m_cmd_pool_sref.GetRef().AllocateCommandBuffer());
+#else
+#endif
 }
 
 void Sample4_DrawObjects::CreateTexture()
@@ -191,6 +399,8 @@ void Sample4_DrawObjects::CreateObjects()
                 (*last_obj_iter).m_texture = m_tex_sref;
                 (*last_obj_iter).m_trans.m_position = start_pos + 
                     Vector3f(m_cube_side_length * row, m_cube_side_length * col, m_cube_side_length * depth);
+                //
+                (*last_obj_iter).m_material.Initialize(m_mgr, m_pipeline_sref, m_tex_sref);
             }
         }
     }
@@ -215,6 +425,12 @@ void Sample4_DrawObjects::CreateCamera()
         m_current_res.GetWidth(), m_current_res.GetHeight(),
         GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
         ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+    m_camera.m_trans.LookAt(
+        Vector3f(0.0f, 0.5f, 5.0f, 1.0f),
+        Vector3f::Origin,
+        Vector3f::PositiveY
+    );
 }
 
 void Sample4_DrawObjects::CreatePipeline()
@@ -234,16 +450,22 @@ void Sample4_DrawObjects::CreatePipeline()
     params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
     params.m_dynamic_states.push_back(DynamicState_SCISSOR);
     //
-    params.m_uniform_binding_infos.resize(2);
+    params.m_uniform_binding_infos.resize(3);
+    //
     params.m_uniform_binding_infos[0].m_binding_id = 0;
     params.m_uniform_binding_infos[0].m_binding_type = UniformBindingType_UNIFORM_BUFFER;
     params.m_uniform_binding_infos[0].m_element_number = 1;
     params.m_uniform_binding_infos[0].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
 
     params.m_uniform_binding_infos[1].m_binding_id = 1;
-    params.m_uniform_binding_infos[1].m_binding_type = UniformBindingType_COMBINED_IMAGE_SAMPLER;
+    params.m_uniform_binding_infos[1].m_binding_type = UniformBindingType_UNIFORM_BUFFER;
     params.m_uniform_binding_infos[1].m_element_number = 1;
     params.m_uniform_binding_infos[1].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
+
+    params.m_uniform_binding_infos[2].m_binding_id = 2;
+    params.m_uniform_binding_infos[2].m_binding_type = UniformBindingType_COMBINED_IMAGE_SAMPLER;
+    params.m_uniform_binding_infos[2].m_element_number = 1;
+    params.m_uniform_binding_infos[2].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
   
     m_pipeline_sref = new GraphicsPipeline("PhongShader_Forward");
     m_pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, 0);
