@@ -62,7 +62,7 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_pipeline_handle);
     VkPipelineLayout &pipeline_layout_handle = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout_handle);
     VkDescriptorSetLayout &descriptor_set_layout_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_descriptor_layout_handle);
-    const VkRenderPass render_pass_handle = reinterpret_cast<VkRenderPass>(i_rp_wref.GetConstRef().GetHandle());
+    VkRenderPass render_pass_handle = reinterpret_cast<VkRenderPass>(i_rp_wref.GetConstRef().GetHandle());
     std::vector<VkVertexInputBindingDescription> va_input_binding_descs;
     std::vector<VkVertexInputAttributeDescription> va_input_location_descs;
 

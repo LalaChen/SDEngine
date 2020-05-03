@@ -35,6 +35,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "VertexBufferUsage.h"
 #include "VertexBuffer.h"
+#include "CommandBuffer.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
@@ -69,7 +70,7 @@ public:
      *         mesh. If we want to update data, we need get weak reference at fitst.
      */
     void RegisterVertexBuffer(const VertexBufferUsageEnum &i_usage, const VertexBufferStrongReferenceObject &i_va_sref);
-    void BindVertexBuffers();
+    void BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cmd_buf_wref);
 protected:
     VertexBufferStrongReferenceObject m_vertex_attribs[VertexBufferUsage_MAX_DEFINE_VALUE];
 };

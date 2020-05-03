@@ -84,6 +84,22 @@ public:
      *  \brief Set parameters for creating graphics pipeline.
      */
     void SetGraphicsPipelineParams(const GraphicsPipelineParam &i_params, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id);
+public:
+    /*! \fn const CompHandle GetHandle() const;
+     *  \brief return handle of pipeline.
+     */
+    const CompHandle GetHandle() const;
+
+     /*! \fn const CompHandle GetDescriptorLayoutHandle() const;
+      *  \brief return handle of descriptor layout of this pipeline.
+      */
+    const CompHandle GetDescriptorLayoutHandle() const;
+
+    /*! \fn const CompHandle GetPipelineParams() const;
+     *  \brief return pipeline parameters.
+     */
+    const GraphicsPipelineParam& GetPipelineParams() const;
+
 protected:
     /*! \var GraphicsPipelineIdentity m_identity;
      *  \brief Record basic identity
@@ -100,5 +116,20 @@ protected:
      */
     bool m_initialized;
 };
+
+inline const CompHandle GraphicsPipeline::GetHandle() const
+{
+    return m_identity.m_pipeline_handle;
+}
+
+inline const CompHandle GraphicsPipeline::GetDescriptorLayoutHandle() const
+{
+    return m_identity.m_descriptor_layout_handle;
+}
+
+inline const GraphicsPipelineParam& GraphicsPipeline::GetPipelineParams() const
+{
+    return m_identity.m_params;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

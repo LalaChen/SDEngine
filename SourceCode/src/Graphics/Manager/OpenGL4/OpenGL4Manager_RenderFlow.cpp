@@ -48,15 +48,15 @@ void OpenGL4Manager::CreateRenderPass(RenderPassIdentity &io_identity)
 {
 }
 
-void OpenGL4Manager::BeginRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferIdentity &i_fb_identity, const ImageOffset &i_start_pos, const ImageSize &i_render_size, const std::vector<ClearValue> &i_clear_values)
+void OpenGL4Manager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size)
 {
 }
 
-void OpenGL4Manager::GoToNextStepOfRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferGroupIdentity &i_target_fbg_identity)
+void OpenGL4Manager::GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id)
 {
 }
 
-void OpenGL4Manager::EndRenderPass(const CompHandle i_cmd_buffer_handle)
+void OpenGL4Manager::EndRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
 {
 }
 
@@ -64,7 +64,7 @@ void OpenGL4Manager::DestroyRenderPass(RenderPassIdentity &io_identity)
 {
 }
 
-void OpenGL4Manager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs)
+void OpenGL4Manager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs)
 {
 }
 

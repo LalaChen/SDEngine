@@ -194,7 +194,7 @@ public:
      */
     bool IsNull() const
     {
-        return (this->lock().get() == nullptr);
+        return (this->expired() == true);
     }
 
     /*! \fn long UseCount() const;
@@ -202,12 +202,7 @@ public:
      */
     long UseCount() const
     {
-        if (this->lock().get() == nullptr) {
-            return 0;
-        }
-        else {
-            return this->use_count();
-        }
+        return this->use_count();
     }
 };
 

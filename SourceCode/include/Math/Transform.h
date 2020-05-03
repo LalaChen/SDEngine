@@ -63,6 +63,15 @@ public:
      *  \brief Decompose matrix to translation, rotation and scale. Please note that it will cause error when decompose non-uniform-scale.
      */
     static Transform DecomposeMatrixToTransform(const Matrix4X4f &i_src);
+
+    /*! \fn static Transform LookAt(const Vector3f &i_start, const Vector3f &i_end, const Vector3f &i_up);
+     *  \param [in] i_start Start position.
+     *  \param [in] i_focus focus on this position.
+     *  \param [in] i_up Vup vector.
+     *  \brief Make look at position.
+     */
+    static Transform LookAt(const Vector3f &i_start, const Vector3f &i_focus, const Vector3f &i_up);
+
 public:
     /*! \fn Transform();
      *  \brief The constructor of Transform Class.

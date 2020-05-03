@@ -20,33 +20,34 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-/*! \file      CommandBufferIdentity.h
- *  \brief     Introduce of class about CommandBufferIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2020/02/05
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-
-#include "CommandBufferLevel.h"
+#include "VulkanStructureInitializer.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS CommandBufferIdentity
+VkCommandBufferBeginInfo InitializeVKCommandBufferBeginInfo()
 {
-public:
-    CommandBufferIdentity();
-    ~CommandBufferIdentity();
-public:
-    CompHandle m_handle;
-    CommandBufferLevelEnum m_cmd_buffer_level;
-};
+    VkCommandBufferBeginInfo info = {};
+    info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    info.pNext = nullptr;
+    info.flags = 0;
+    info.pInheritanceInfo = nullptr;
+    return info;
+}
+
+VkCommandBufferInheritanceInfo InitializeVkCommandBufferInheritanceInfo()
+{
+    VkCommandBufferInheritanceInfo info = {};
+    info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+    info.pNext = nullptr;
+    info.framebuffer = VK_NULL_HANDLE;
+    info.renderPass = VK_NULL_HANDLE;
+    info.subpass = 0;
+    info.queryFlags = 0;
+    info.occlusionQueryEnable = VK_FALSE;
+    info.pipelineStatistics = 0;
+    return info;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

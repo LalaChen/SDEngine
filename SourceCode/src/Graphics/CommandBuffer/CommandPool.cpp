@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "GraphicsManager.h"
 #include "LogManager.h"
 #include "CommandBuffer.h"
 #include "CommandPool.h"
@@ -38,15 +39,19 @@ CommandPool::CommandPool(const ObjectName& i_object_name)
 
 CommandPool::~CommandPool()
 {
+    for (std::list<CommandBufferStrongReferenceObject>::iterator iter = m_cmd_buf_srefs.begin(); iter != m_cmd_buf_srefs.end(); ) {
+        iter = m_cmd_buf_srefs.erase(iter);
+    }
 }
 
 void CommandPool::Initialize()
 {
+    GraphicsManager::GetRef().CreateCommandPool(m_identity);
 }
 
 CommandBufferWeakReferenceObject CommandPool::AllocateCommandBuffer(const ObjectName &i_buffer_name, const CommandBufferLevelEnum &i_level)
 {
-    CommandPoolStrongReferenceObject this_sref = this;
+    CommandPoolStrongReferenceObject this_sref = GetThisSharedPtrByType<CommandPool>();
     CommandBufferStrongReferenceObject alloc_buf_sref = new CommandBuffer(StringFormat("%s_%s", m_object_name.c_str(), i_buffer_name.c_str()), this_sref.StaticCastToWeakPtr<Object>(), i_level);
     m_cmd_buf_srefs.push_back(alloc_buf_sref);
     return alloc_buf_sref;

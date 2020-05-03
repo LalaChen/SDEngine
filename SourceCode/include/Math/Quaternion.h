@@ -69,6 +69,13 @@ public:
      */
     static Quaternion Lerp(const Quaternion &i_src, const Quaternion &i_dest, float i_ratio);
 
+    /*! \fn static Quaternion LookAt(const Vector3f &i_forward, const Vector3f &i_up);
+     *  \param [in] i_forward start quaternion.
+     *  \param [in] i_up destination quaternion.
+     *  \brief Return rotation of this looking at.
+     */
+    static Quaternion LookAt(const Vector3f &i_forward, const Vector3f &i_up);
+
     /*! \fn static Quaternion ConvertFromMatrix(const Matrix4X4f &i_mat)
      *  \param [in] i_mat target matrix.
      *  \brief Return quaternion converted matrix.

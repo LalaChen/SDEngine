@@ -38,6 +38,7 @@ const Vector3f Vector3f::PositiveX(1.0f, 0.0f, 0.0f, 0.0f);
 const Vector3f Vector3f::PositiveY(0.0f, 1.0f, 0.0f, 0.0f);
 const Vector3f Vector3f::PositiveZ(0.0f, 0.0f, 1.0f, 0.0f);
 const Vector3f Vector3f::Zero(0.0f, 0.0f, 0.0f, 0.0f);
+const Vector3f Vector3f::Origin(0.0f, 0.0f, 0.0f, 1.0f);
 
 //constructor
 Vector3f::Vector3f()

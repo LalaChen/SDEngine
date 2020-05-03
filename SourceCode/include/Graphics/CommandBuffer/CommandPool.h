@@ -36,7 +36,6 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-
 #include "CommandPoolIdentity.h"
 #include "CommandBuffer.h"
 #include "Object.h"
@@ -50,6 +49,8 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandPool);
 
 class SDENGINE_CLASS CommandPool : public Object
 {
+public:
+    friend class GraphicsManager;
 public:
     /*! \fn explicit CommandPool(const ObjectName &i_object_name);
      *  \param [in] i_object_name Name of this object.

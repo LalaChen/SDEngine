@@ -52,6 +52,13 @@ Quaternion Quaternion::Lerp(const Quaternion &i_src, const Quaternion &i_dest, f
     return glm::lerp(i_src.m_quat, i_dest.m_quat, i_ratio);
 }
 
+Quaternion Quaternion::LookAt(const Vector3f &i_forward, const Vector3f &i_up)
+{
+    return glm::quatLookAt(
+        glm::vec3(i_forward.m_vec.x, i_forward.m_vec.y, i_forward.m_vec.z),
+        glm::vec3(i_up.m_vec.x, i_up.m_vec.y, i_up.m_vec.z));
+}
+
 Quaternion Quaternion::ConvertFromMatrix(const Matrix4X4f &i_mat)
 {
     return glm::toQuat(i_mat.m_matrix);

@@ -57,6 +57,8 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Texture);
 class SDENGINE_CLASS Texture : public Object
 {
 public:
+    friend class GraphicsManager;
+public:
     /*! \fn explicit Texture(const ObjectName &i_object_name);
      *  \param [in] i_object_name Name of this texture.
      *  \brief Default constructor about texture.

@@ -35,6 +35,7 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "VertexBufferMemoryType.h"
 #include "VertexBufferIdentity.h"
+#include "CommandBuffer.h"
 #include "Object.h"
 
 using SDE::Basic::UByte;
@@ -80,12 +81,20 @@ public:
      */
     Size_ui64 GetDeviceSize() const;
 public:
-    /* \fn virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
-     * \param [in] i_data_ptr Data pointer.
-     * \param [in] i_data_size Data size.
-     * \brief Refresh data into buffer.
+    /*! \fn virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
+     *  \param [in] i_data_ptr Data pointer.
+     *  \param [in] i_data_size Data size.
+     *  \brief Refresh data into buffer.
      */
     virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
+public:
+    /*! \fn void BindVertexBuffer(const CommandBufferWeakReferenceObject &i_cmd_buffer_wref, uint32_t i_binding_id); 
+     *  \param [in] i_cmd_buffer_wref Target began command buffer.
+     *  \param [in] i_binding_id Binding channel we want.
+     *  \param [in] i_offset. Binding start address.
+     *  \brief Specify binding channel for this vertex buffer and then bind.
+     */
+    void BindVertexBuffer(const CommandBufferWeakReferenceObject &i_cmd_buffer_wref, uint32_t i_binding_id, Size_ui64 i_offset);
 protected:
 	/*! \var VertexBufferIdentity m_identity;
      *  \brief The identity. We keep all handles or ids from graphics API.
@@ -107,5 +116,15 @@ protected:
      */
     SD_DECLARE_ATTRIBUTE_VAR_GET(VertexBufferFormatEnum, m_format, Format);
 };
+
+inline Size_ui64 VertexBuffer::GetBufferSize() const
+{
+    return m_identity.m_data_size;
+}
+
+inline Size_ui64 VertexBuffer::GetDeviceSize() const
+{
+    return m_identity.m_memory_size;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

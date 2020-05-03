@@ -32,8 +32,6 @@ SOFTWARE.
 
 #pragma once
 
-
-
 #include "VulkanWrapper.h"
 
 #include "SDEngineMacro.h"

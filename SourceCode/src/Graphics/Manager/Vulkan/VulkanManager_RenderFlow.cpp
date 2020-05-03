@@ -167,19 +167,22 @@ void VulkanManager::DestroyRenderPass(RenderPassIdentity &io_identity)
     DestroyVKRenderPass(rp_handle);
 }
 
-void VulkanManager::BeginRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferIdentity &i_fb_identity, const ImageOffset &i_start_pos, const ImageSize &i_render_size, const std::vector<ClearValue> &i_clear_values)
+void VulkanManager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size)
 {
-    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(i_cmd_buffer_handle);
-    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(i_fb_identity.m_rp_handle);
-    VkFramebuffer fb_handle = reinterpret_cast<VkFramebuffer>(i_fb_identity.m_fb_handle);
+    const FrameBufferIdentity &fb_identity = GetIdentity(i_fb_wref);
+    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cmd_buf_wref);
+    const RenderPassIdentity &rp_identity = GetIdentity(i_rp_wref);
+    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
+    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_rp_handle);
+    VkFramebuffer fb_handle = reinterpret_cast<VkFramebuffer>(fb_identity.m_fb_handle);
     VkRect2D render_area = {};
     Size_ui32 final_w = i_render_size.m_width, final_h = i_render_size.m_height;
 
-    if (final_w + i_start_pos.m_x > i_fb_identity.m_size.m_width) {
-        final_w = i_fb_identity.m_size.m_width - i_start_pos.m_x;
+    if (final_w + i_start_pos.m_x > fb_identity.m_size.m_width) {
+        final_w = fb_identity.m_size.m_width - i_start_pos.m_x;
     }
-    if (final_h + i_start_pos.m_y > i_fb_identity.m_size.m_height) {
-        final_h = i_fb_identity.m_size.m_height - i_start_pos.m_y;
+    if (final_h + i_start_pos.m_y > fb_identity.m_size.m_height) {
+        final_h = fb_identity.m_size.m_height - i_start_pos.m_y;
     }
 
     render_area.offset.x = i_start_pos.m_x;
@@ -188,10 +191,10 @@ void VulkanManager::BeginRenderPass(const CompHandle i_cmd_buffer_handle, const 
     render_area.extent.height = final_h;
 
     std::vector<VkClearValue> clear_values;
-    clear_values.resize(i_clear_values.size());
+    clear_values.resize(fb_identity.m_clear_values.size());
     for (uint32_t i = 0; i < clear_values.size(); ++i) {
         const UBytePtr dst_ptr = reinterpret_cast<const UBytePtr>(&clear_values[i]);
-        const UBytePtr src_ptr = (const UBytePtr)(&i_clear_values[i]);
+        const UBytePtr src_ptr = (const UBytePtr)(&fb_identity.m_clear_values[i]);
         size_t dst_size = sizeof(VkClearValue);
         std::memcpy(dst_ptr, src_ptr, dst_size);
     }
@@ -199,86 +202,36 @@ void VulkanManager::BeginRenderPass(const CompHandle i_cmd_buffer_handle, const 
     BeginVkRenderPass(cmd_handle, rp_handle, fb_handle, render_area, clear_values);
 }
 
-void VulkanManager::GoToNextStepOfRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferGroupIdentity &i_target_fbg_identity)
+void VulkanManager::GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id)
 {
-    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(i_cmd_buffer_handle);
+    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cmd_buf_wref);
+    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
     GotoNextStepInVKRenderPass(cmd_handle);
 }
 
-void VulkanManager::EndRenderPass(const CompHandle i_cmd_buffer_handle)
+void VulkanManager::EndRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
 {
-    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(i_cmd_buffer_handle);
+    const CommandBufferIdentity& cmd_buf_identity = GetIdentity(i_cmd_buf_wref);
+    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
     EndVkRenderPass(cmd_handle);
 }
 
 //-------- FrameBuffer --------
-void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs)
+void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs)
 {
     VkResult result = VK_SUCCESS;
-    //1. create all image view of this framebuffer
+    //1. get all image views of this framebuffer
     std::vector<VkImageView> ivs;
-    for (uint32_t iv_ID = 0; iv_ID < io_identity.m_iv_identities.size(); ++iv_ID) {
-        ImageViewIdentity& iv_identity = io_identity.m_iv_identities[iv_ID];
-        VkImageView &iv_handle = reinterpret_cast<VkImageView&>(iv_identity.m_iv_handle);
-        const VkImage img_handle = reinterpret_cast<VkImage>(i_buf_wrefs[iv_ID].GetConstRef().GetHandle());
-        
-        TextureTypeEnum tex_type = i_buf_wrefs[iv_ID].GetConstRef().GetTextureType();
-        VkImageViewType vk_iv_type = VK_IMAGE_VIEW_TYPE_MAX_ENUM;
-        if (tex_type == TextureType_TEXTURE_1D) {
-            if (iv_identity.m_layer_count == 1) {
-                vk_iv_type = VK_IMAGE_VIEW_TYPE_1D;
-            }
-            else {
-                vk_iv_type = VK_IMAGE_VIEW_TYPE_1D_ARRAY;
-            }
-        }
-        else if (tex_type == TextureType_TEXTURE_2D) {
-            if (iv_identity.m_layer_count == 1) {
-                vk_iv_type = VK_IMAGE_VIEW_TYPE_2D;
-            }
-            else {
-                vk_iv_type = VK_IMAGE_VIEW_TYPE_2D_ARRAY;
-            }
-        }
-        else if (tex_type == TextureType_TEXTURE_CUBE_MAP) {
-            if (iv_identity.m_layer_count == 1) {
-                vk_iv_type = VK_IMAGE_VIEW_TYPE_CUBE;
-            }
-            else {
-                vk_iv_type = VK_IMAGE_VIEW_TYPE_CUBE_ARRAY;
-            }
-        }
-        else {
-            SDLOGE("We can't create image view for tex[%s](%d)", i_buf_wrefs[iv_ID].GetConstRef().GetObjectName().c_str(), tex_type);
-            return;
-        }
 
-        VkFormat vk_format = TextureFormat_Vulkan::Convert(iv_identity.m_format);
-        VkImageSubresourceRange img_sub_range = {};
-        img_sub_range.aspectMask = ImageAspect_Vulkan::Convert(iv_identity.m_aspect);
-        img_sub_range.baseMipLevel = iv_identity.m_base_mip_level;
-        img_sub_range.levelCount = iv_identity.m_level_count;
-        img_sub_range.baseArrayLayer = iv_identity.m_base_array_level;
-        img_sub_range.layerCount = iv_identity.m_layer_count;
-
-        VkComponentMapping comp_mapping = {};
-        comp_mapping.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-        comp_mapping.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-        comp_mapping.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-        comp_mapping.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-        
-        result = CreateVkImageView(iv_handle, img_handle, vk_iv_type, vk_format, comp_mapping, img_sub_range);
-        if (result != VK_SUCCESS) {
-            SDLOGE("Create image view for texture[%s] failure(%d).", i_buf_wrefs[iv_ID].GetConstRef().GetObjectName().c_str(), result);
-            return;
-        }
-        else {
-            ivs.push_back(iv_handle);
-        }
+    for (const TextureWeakReferenceObject &buf_wref : i_buf_wrefs) {
+        const TextureIdentity &tex_identity = GetIdentity(buf_wref);
+        ivs.push_back(reinterpret_cast<VkImageView>(tex_identity.m_view_handle));
     }
+
     //2. create framebuffer.
+    const RenderPassIdentity &rp_identity = GetIdentity(i_rp_wref);
     VkFramebuffer &fb_handle = reinterpret_cast<VkFramebuffer&>(io_identity.m_fb_handle);
-    VkRenderPass &rp_handle = reinterpret_cast<VkRenderPass&>(io_identity.m_rp_handle);
+    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_rp_handle);
     result = CreateVKFrameBuffer(fb_handle, rp_handle, ivs, io_identity.m_size.m_width, io_identity.m_size.m_height, io_identity.m_size.m_length);
     if (result != VK_SUCCESS) {
         SDLOGE("Create Framebuffer failure(%d)!!!.",  result);
@@ -297,11 +250,6 @@ void VulkanManager::DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identit
 
 void VulkanManager::DestroyFrameBuffer(FrameBufferIdentity &io_identity)
 {
-    for (ImageViewIdentity &iv_identity : io_identity.m_iv_identities) {
-        VkImageView &iv_handle = reinterpret_cast<VkImageView&>(iv_identity.m_iv_handle);
-        DestroyVkImageView(iv_handle);
-        iv_identity = ImageViewIdentity();
-    }
     VkFramebuffer &fb_handle = reinterpret_cast<VkFramebuffer&>(io_identity.m_fb_handle);
     DestroyVkFrameBuffer(fb_handle);
     io_identity = FrameBufferIdentity();

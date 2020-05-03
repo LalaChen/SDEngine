@@ -45,12 +45,11 @@ void Mesh::RegisterVertexBuffer(const VertexBufferUsageEnum &i_usage, const Vert
     m_vertex_attribs[i_usage] = i_va_sref;
 }
 
-void Mesh::BindVertexBuffers()
+void Mesh::BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
 {
     for (uint32_t va_idx = 0; va_idx < VertexBufferUsage_BUFFER_GROUP; ++va_idx) {
-          
         if (m_vertex_attribs[va_idx].IsNull() == false) {
-            //
+            m_vertex_attribs[va_idx].GetRef().BindVertexBuffer(i_cmd_buf_wref, va_idx, 0);
         }
     }
 }

@@ -26,14 +26,27 @@ SOFTWARE.
 
 _______________SD_START_MATH_NAMESPACE_______________
 
-//--------------------- static part -----------------------------------
+//----------------------------------- static part -----------------------------------
 Transform Transform::DecomposeMatrixToTransform(const Matrix4X4f &i_src)
 {
 	Transform result;
     Matrix4X4f::decompose(i_src, result.m_scale, result.m_rotation, result.m_skew, result.m_position, result.m_perspective);
 	return result;
 }
+Transform Transform::LookAt(const Vector3f &i_start, const Vector3f &i_focus, const Vector3f &i_up)
+{
+    Transform result;
+    Vector3f forward = (i_focus - i_start).normalize();
+    Vector3f vup = i_up.normalize();
+    forward.RepresentVector();
+    result.m_position = i_start;
+    if (forward.parallel(i_up) == false) {
+        result.m_rotation = Quaternion::LookAt(forward, vup);
+    }
+    return result;
+}
 
+//-----------------------------------------------------------------------------------
 Transform::Transform()
 : m_position(0.0f, 0.0f, 0.0f, 1.0f)
 , m_rotation(0.0f, 0.0f, 0.0f, 1.0f)

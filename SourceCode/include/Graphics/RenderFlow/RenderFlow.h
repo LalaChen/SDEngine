@@ -34,8 +34,8 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-
 #include "Color4f.h"
+#include "CommandBuffer.h"
 #include "RenderPass.h"
 #include "Object.h"
 
@@ -91,20 +91,25 @@ public:
      */
     void RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value);
 public:
-    /* \fn void BeginRenderFlow();
-     * \brief Start this render follow. We will start first step.
+    /* \fn void BeginRenderFlow(Command);
+     * \param [in] i_cmd_buf_wref Command buffer weak reference.
+     * \param [in] i_start_pos Start Position.
+     * \param [in] i_render_size Render Size.
+     * \brief Start this render flow. We will start first step.
      */
-    void BeginRenderFlow();
+    void BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cmd_buf_wref);
 
     /* \fn void BeginRenderFlow();
-     * \brief Go to next step of this render follow.
+     * \param [in] i_cmd_buf_wref Command buffer weak reference.
+     * \brief Go to next step of this render flow.
      */
-    void GoToNextStep();
+    void GoToNextStep(const CommandBufferWeakReferenceObject &i_cmd_buf_wref);
 
     /* \fn void EndRenderFlow();
-     * \brief End this render follow.
+     * \param [in] i_cmd_buf_wref Command buffer weak reference.
+     * \brief End this render flow.
      */
-    void EndRenderFlow();
+    void EndRenderFlow(const CommandBufferWeakReferenceObject &i_cmd_buf_wref);
 protected:
     /*! \var RenderPassWeakReferenceObject m_rp_wref;
      *  \brief Target render pass.
@@ -125,6 +130,11 @@ protected:
      *  \brief Tell the size of render area.
      */
     ImageSize m_size;
+
+    /*! \var uint32_t m_current_step;
+     *  \brief Current step.(Subpass ID)
+     */
+    uint32_t m_current_step;
 };
 
 

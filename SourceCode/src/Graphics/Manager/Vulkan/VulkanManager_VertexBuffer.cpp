@@ -148,4 +148,12 @@ void VulkanManager::UnmapBuffer(const VertexBufferIdentity &i_identity)
     UnmapVkDeviceMemory(vk_memory_handle);
 }
 
+void VulkanManager::BindVertexBuffer(const VertexBufferIdentity &i_vb_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset)
+{
+    VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(i_cb_wref.GetConstRef().GetHandle());
+    VkBuffer vertex_buffer = reinterpret_cast<VkBuffer>(i_vb_identity.m_buffer_handle);
+    BindVkVertexBuffer(cmd_buffer, vertex_buffer, i_binding_id, static_cast<VkDeviceSize>(i_offset));
+
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

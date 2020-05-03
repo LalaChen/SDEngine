@@ -34,28 +34,23 @@ CommandBuffer::CommandBuffer(const ObjectName &i_object_name, const WeakReferenc
 , m_origin_pool(i_cmd_pool)
 {
     m_identity.m_cmd_buffer_level = i_level;
-    m_identity.m_cmd_buffer_handle = i_cmd_pool.DynamicCastTo<CommandPool>().GetConstRef().GetHandle();
     //Create command buffer by manager.
-
+    GraphicsManager::GetRef().AllocateCommandBuffer(m_identity, m_origin_pool.DynamicCastTo<CommandPool>());
 }
 
 CommandBuffer::~CommandBuffer()
 {
+    //Free Command Buffer via its pool.
 }
 
-void CommandBuffer::Begin()
+void CommandBuffer::Begin(const CommandBufferInheritanceInfo &i_cmd_inheritance_info)
 {
+    GraphicsManager::GetRef().BeginCommandBuffer(m_identity, i_cmd_inheritance_info);
 }
 
 void CommandBuffer::End()
 {
-}
-
-void CommandBuffer::Recycle()
-{
-    CommandBufferStrongReferenceObject del_this = this;
-    m_origin_pool.DynamicCastTo<CommandPool>().GetRef().RecycleCommandBuffer(del_this.StaticCastToWeakPtr<CommandBuffer>());
-    //should call ctor of command buffer at end.
+    GraphicsManager::GetRef().EndCommandBuffer(m_identity);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

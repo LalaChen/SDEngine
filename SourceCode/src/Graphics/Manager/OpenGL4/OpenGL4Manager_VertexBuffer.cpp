@@ -53,6 +53,10 @@ void OpenGL4Manager::UnmapBuffer(const VertexBufferIdentity &i_identity)
 {
 }
 
+void OpenGL4Manager::BindVertexBuffer(const VertexBufferIdentity &i_vb_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset)
+{
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________
 
 #endif

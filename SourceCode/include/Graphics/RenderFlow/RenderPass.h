@@ -38,8 +38,6 @@ SOFTWARE.
 #include "AttachmentReference.h"
 #include "ImageViewIdentity.h"
 #include "RenderPassIdentity.h"
-
-#include "FrameBuffer.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
@@ -56,6 +54,8 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(RenderPass);
  */
 class SDENGINE_CLASS RenderPass : public Object
 {
+public:
+    friend class GraphicsManager;
 public:
     /*! \fn explicit RenderPass(const ObjectName &i_object_name);
      *  \param [in] i_object_name Name of this object.
@@ -86,10 +86,10 @@ public:
      */
     const CompHandle GetHandle() const;
 
-    /*! \fn std::vector<ImageViewIdentity> CreateImageViewDescriptions();
-     *  \brief return ImageView description corresponding this render pass. We only assign format to description.
+    /*! \fn std::vector<TextureFormatEnum> CreateImageViewFormats();
+     *  \brief return ImageView format corresponding this render pass. We only assign format to description.
      */
-    std::vector<ImageViewIdentity> CreateImageViewDescriptions() const;
+    std::vector<TextureFormatEnum> CreateImageViewFormats() const;
 
     /*! \fn const std::vector<SubpassDescription>& GetSubpassDescriptions() const;
      *  \brief return subpass description.
@@ -105,24 +105,24 @@ public:
      *
      */
 protected:
-    /*! \var RenderPassIdentity m_rp_identity;
+    /*! \var RenderPassIdentity m_identity;
      *  \brief Identity about render pass.
      */
-    RenderPassIdentity m_rp_identity;
+    RenderPassIdentity m_identity;
 };
 
 inline const CompHandle RenderPass::GetHandle() const
 {
-    return m_rp_identity.m_rp_handle;
+    return m_identity.m_rp_handle;
 }
 
 inline const std::vector<SubpassDescription>& RenderPass::GetSubpassDescriptions() const
 {
-    return m_rp_identity.m_subpasses_descs;
+    return m_identity.m_subpasses_descs;
 }
 
 inline const std::vector<AttachmentDescription>& RenderPass::GetAttachmentDescriptions() const
 {
-    return m_rp_identity.m_attachment_descs;
+    return m_identity.m_attachment_descs;
 }
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -23,30 +23,38 @@ SOFTWARE.
 
 */
 
-/*! \file      CommandBufferIdentity.h
- *  \brief     Introduce of class about CommandBufferIdentity.
+/*! \file      QueryFlags_Vulkan.h
+ *  \brief     Introduce of classes about QueryFlags.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/02/05
+ *  \date      2020/05/02
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include <vector>
 
-#include "CommandBufferLevel.h"
+#include "VulkanWrapper.h"
+
+#include "SDEngineMacro.h"
+#include "QueryFlags.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS CommandBufferIdentity
+class QueryControlFlag_Vulkan
 {
 public:
-    CommandBufferIdentity();
-    ~CommandBufferIdentity();
+    static VkQueryControlFlags Convert(const QueryControlFlagMask &i_flag_mask);
 public:
-    CompHandle m_handle;
-    CommandBufferLevelEnum m_cmd_buffer_level;
+    static VkQueryControlFlagBits QueryControlFlags[QueryControlFlag_MAX_DEFINE_VALUE];
 };
+
+class QueryPipelineStatisticFlag_Vulkan
+{
+public:
+    static VkQueryPipelineStatisticFlags Convert(const QueryPipelineStatisticFlagMask &i_flag_mask);
+public:
+    static VkQueryPipelineStatisticFlagBits QueryPipelineStatisticFlags[QueryPipelineStatisticFlag_MAX_DEFINE_VALUE];
+}; 
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

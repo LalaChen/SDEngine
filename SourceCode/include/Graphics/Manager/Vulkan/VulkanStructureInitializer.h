@@ -20,33 +20,24 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-/*! \file      CommandBufferIdentity.h
- *  \brief     Introduce of class about CommandBufferIdentity.
+
+/*! \file      VulkanStructureInitializer.h
+ *  \brief     Introduce of function VulkanStructureInitializer.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/02/05
+ *  \date      2020/05/01
  *  \copyright MIT License.
  */
 
-#pragma once
-
+#include "VulkanWrapper.h"
 #include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-
-#include "CommandBufferLevel.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS CommandBufferIdentity
-{
-public:
-    CommandBufferIdentity();
-    ~CommandBufferIdentity();
-public:
-    CompHandle m_handle;
-    CommandBufferLevelEnum m_cmd_buffer_level;
-};
+VkCommandBufferBeginInfo InitializeVKCommandBufferBeginInfo();
+
+VkCommandBufferInheritanceInfo InitializeVkCommandBufferInheritanceInfo();
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
+

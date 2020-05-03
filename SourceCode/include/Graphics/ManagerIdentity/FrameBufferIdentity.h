@@ -63,20 +63,15 @@ public:
      */
     CompHandle m_fb_handle;
 
-    /*! \var CompHandle m_rp_handle;
-     *  \brief Render pass handle. Don't destroy it.
-     */
-    CompHandle m_rp_handle;
-
     /*! \var ImageSize m_size;
      *  \brief Size of this framebuffer. Attribute m_length is used to layer.
      */
     ImageSize m_size;
 
-    /*! \var std::vector<ImageViewIdentity> m_iv_identities;
-     *  \brief Image view identities of this framebuffer.
+    /*! \var std::vector<TextureFormatEnum> m_buffer_formats;
+     *  \brief Buffer formats of this framebuffer.
      */
-    std::vector<ImageViewIdentity> m_iv_identities;
+    std::vector<TextureFormatEnum> m_buffer_formats;
 
     /*! \var std::vector<ClearValue> m_clear_values;
      *  \brief Clear values about each attachment.

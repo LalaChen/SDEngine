@@ -20,33 +20,42 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-/*! \file      CommandBufferIdentity.h
- *  \brief     Introduce of class about CommandBufferIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2020/02/05
- *  \copyright MIT License.
- */
+#if defined(_WIN32) || defined(_WIN64)
 
-#pragma once
-
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-
-#include "CommandBufferLevel.h"
+#include "OpenGL4Manager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS CommandBufferIdentity
+void OpenGL4Manager::CreateCommandPool(CommandPoolIdentity &io_identity)
 {
-public:
-    CommandBufferIdentity();
-    ~CommandBufferIdentity();
-public:
-    CompHandle m_handle;
-    CommandBufferLevelEnum m_cmd_buffer_level;
-};
+}
+
+void OpenGL4Manager::DestroyCommandPool(CommandPoolIdentity &io_identity)
+{
+}
+
+void OpenGL4Manager::AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref)
+{
+}
+
+void OpenGL4Manager::BeginCommandBuffer(const CommandBufferIdentity &i_identity, const CommandBufferInheritanceInfo &i_inheritance_info)
+{
+}
+
+void OpenGL4Manager::EndCommandBuffer(const CommandBufferIdentity &i_identity)
+{
+}
+
+void OpenGL4Manager::FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref)
+{
+}
+
+void OpenGL4Manager::SubmitCommandBufferToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cmd_bufs)
+{
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
+
+#endif

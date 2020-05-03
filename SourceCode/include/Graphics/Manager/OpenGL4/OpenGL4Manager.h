@@ -69,6 +69,15 @@ public:
      */
     void PrintSystemInformation() override;
 public:
+//----------- Command Buffer and Pool Function (OpenGL doesn't have command buffer) ------------
+    void CreateCommandPool(CommandPoolIdentity &io_identity) override;
+    void DestroyCommandPool(CommandPoolIdentity &io_identity) override;
+    void AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) override;
+    void BeginCommandBuffer(const CommandBufferIdentity &i_identity, const CommandBufferInheritanceInfo &i_inheritance_info) override;
+    void EndCommandBuffer(const CommandBufferIdentity &i_identity) override;
+    void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) override;
+    void SubmitCommandBufferToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cmd_bufs) override;
+public:
 //----------- Vertex Buffer Function ------------
     void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type) override;
     void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
@@ -81,19 +90,21 @@ public:
     void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum& i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) override;
     void DeleteTextureImage(TextureIdentity &io_identity) override;
 public:
+    void BindVertexBuffer(const VertexBufferIdentity &i_vb_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset) override;
+public:
     void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
     void DeleteShaderModule(ShaderModuleIdentity &io_identity) override;
 public:
-    void CreateGraphicsPipeline(GraphicsPipelineIdentity& io_identity, const ShaderModules& i_shaders, const RenderPassWeakReferenceObject& i_rp_wref) override;
+    void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref) override;
     void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) override;
 public:
     void CreateRenderPass(RenderPassIdentity &io_identity) override;
-    void BeginRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferIdentity &i_fb_identity, const ImageOffset &i_start_pos, const ImageSize &i_render_size, const std::vector<ClearValue> &i_clear_values) override;
-    void GoToNextStepOfRenderPass(const CompHandle i_cmd_buffer_handle, const FrameBufferGroupIdentity &i_target_fbg_identity) override;
-    void EndRenderPass(const CompHandle i_cmd_buffer_handle) override;
+    void BeginRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size) override;
+    void GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id) override;
+    void EndRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref) override;
     void DestroyRenderPass(RenderPassIdentity &io_identity) override;
 public:
-    void CreateFrameBuffer(FrameBufferIdentity &io_identity, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs) override;
+    void CreateFrameBuffer(FrameBufferIdentity &io_identity, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs) override;
     void CreateFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
     void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
     void DestroyFrameBuffer(FrameBufferIdentity &io_identity) override;

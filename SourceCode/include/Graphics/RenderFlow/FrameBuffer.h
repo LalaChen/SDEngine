@@ -32,11 +32,13 @@ SOFTWARE.
 
 #pragma once
 
+#include "SDEngineMacro.h"
 #include "ClearValue.h"
 #include "ImageViewIdentity.h"
 #include "FrameBufferGroupIdentity.h"
 #include "FrameBufferIdentity.h"
 #include "SubpassDescription.h"
+#include "RenderPass.h"
 #include "Object.h"
 
 using SDE::Basic::Object;
@@ -53,6 +55,8 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(FrameBuffer);
 class SDENGINE_CLASS FrameBuffer : public Object
 {
 public:
+    friend class GraphicsManager;
+public:
     /*! \fn explicit FrameBuffer(const ObjectName &i_object_name, const ImageSize &i_size);
      *  \param [in] i_object_name Name of this framebuffer.
      *  \param [in] i_size Size of framebuffer. z is used to store layer.
@@ -65,19 +69,16 @@ public:
      */
     virtual ~FrameBuffer();
 public:
-    /*! \fn void Initialize(const std::vector<SubpassDescription>& i_sp_descs, const std::vector<AttachmentDescription> &i_att_descs);
-     *  \param [in] i_sp_descs tell us subpass description. 
-     *  \param [in] i_att_descs tell us attachment description.
-     *  \brief Initialize framebuffer. Please call this function after calling AddRenderPassInfos and RegisterBuffer.
+    /*! \fn void Initialize();
+     *  \brief Initialize framebuffer. Please call this function after calling RegisterTargetRenderPass and RegisterBuffer.
      */
-    void Initialize(const std::vector<SubpassDescription> &i_sp_descs, const std::vector<AttachmentDescription> &i_att_descs);
+    void Initialize();
 public:
-    /*! \fn void AddRenderPassInfos(const std::vector<ImageViewIdentity> &i_iv_descs, const CompHandle i_rp_handle);
-     *  \param [in] i_iv_descs descriptions about all buffer links in this FrameBuffer. Real handle will be initialized 
-     *              when initialization of Framebuffer.
-     *  \brief Add information for specifying links between buffers and this Framebuffer.
+    /*! \fn void RegisterTargetRenderPass(const RenderPassWeakReferenceObject &i_rp_wref);
+     *  \param [in] i_rp_wref Target RenderPass.
+     *  \brief Register target RenderPass for specifying formats between buffers and this Framebuffer.
      */
-    void AddRenderPassInfos(const std::vector<ImageViewIdentity> &i_iv_descs, const CompHandle i_rp_handle);
+    void RegisterTargetRenderPass(const RenderPassWeakReferenceObject &i_rp_wref);
 
     /* \fn void RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value);
      * \param [in] i_tex_wref Texture we want to register its to image view.
@@ -85,12 +86,19 @@ public:
      * \param [in] i_clear_value Clear value.
      */
     void RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value);
+public:
+    CompHandle GetHandle() const;
 protected:
 
-    /* \var FrameBufferIdentity m_fb_identity;
+    /* \var FrameBufferIdentity m_identity;
      * \brief Identity for frame buffer.
      */
-    FrameBufferIdentity m_fb_identity;
+    FrameBufferIdentity m_identity;
+
+    /*! \var RenderPassWeakReferenceObject m_target_rp_wref;
+     *  \brief Identity about render pass.
+     */
+    RenderPassWeakReferenceObject m_target_rp_wref;
 
     /*! \var std::vector<FrameBufferGroupIdentity> m_fbg_identities;
      *  \brief Indicate which framebuffer using for each step.
@@ -102,5 +110,10 @@ protected:
      */
     std::vector<TextureWeakReferenceObject> m_buf_wrefs;
 };
+
+inline CompHandle FrameBuffer::GetHandle() const
+{
+    return m_identity.m_fb_handle;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

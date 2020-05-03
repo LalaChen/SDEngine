@@ -23,30 +23,18 @@ SOFTWARE.
 
 */
 
-/*! \file      CommandBufferIdentity.h
- *  \brief     Introduce of class about CommandBufferIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2020/02/05
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-
-#include "CommandBufferLevel.h"
+#include "CommandBufferInheritanceInfo.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS CommandBufferIdentity
+CommandBufferInheritanceInfo::CommandBufferInheritanceInfo()
+: m_sp_id(-1)
+, m_occusion_query_enable(false)
 {
-public:
-    CommandBufferIdentity();
-    ~CommandBufferIdentity();
-public:
-    CompHandle m_handle;
-    CommandBufferLevelEnum m_cmd_buffer_level;
-};
+}
+
+CommandBufferInheritanceInfo::~CommandBufferInheritanceInfo()
+{
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -70,6 +70,11 @@ public:
      *  \brief Zero vector.
      */
     static const Vector3f Zero;
+
+    /*! \var static const Vector3f Origin;
+     *  \brief Origin.
+     */
+    static const Vector3f Origin;
 public:
     /*! \fn Vector3f();
      *  \brief Default constructor. We will initialize this vector by zero vector.

@@ -63,3 +63,5 @@ SOFTWARE.
 #include "ImageTiling.h"
 #include "PipelineBindPoint.h"
 #include "UniformBindingType.h"
+#include "CommandBufferLevel.h"
+#include "QueryFlags.h"

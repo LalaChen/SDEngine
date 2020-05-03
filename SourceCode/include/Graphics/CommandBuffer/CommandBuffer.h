@@ -34,7 +34,8 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "CommandBufferIdentity.h"
-#include "WeakReferenceObject.h"
+#include "CommandBufferInheritanceInfo.h"
+#include "FrameBuffer.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
@@ -48,6 +49,8 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandBuffer);
 
 class SDENGINE_CLASS CommandBuffer : public Object
 {
+public:
+    friend class GraphicsManager;
 public:
     /*! \fn explicit CommandBuffer(const ObjectName &i_object_name, WeakReferenceObject<Object> &i_cmd_pool, const CommandPoolWeakReferenceObject &i_cmd_pool);
      *  \param [in] i_object_name Name of this object.
@@ -63,16 +66,21 @@ public:
     virtual ~CommandBuffer();
 public:
     
-    void Begin();
+    void Begin(const CommandBufferInheritanceInfo &i_cmd_inheritance_info = CommandBufferInheritanceInfo());
     
     void End();
-
-    void Recycle();
+public:
+    const CompHandle GetHandle() const;
 protected:
 
     CommandBufferIdentity m_identity;
 
     WeakReferenceObject<Object> m_origin_pool;
 };
+
+inline const CompHandle CommandBuffer::GetHandle() const
+{
+    return m_identity.m_handle;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

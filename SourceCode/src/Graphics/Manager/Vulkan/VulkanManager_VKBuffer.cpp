@@ -167,6 +167,11 @@ VkResult VulkanManager::CopyVkBuffer(
     return result;
 }
 
+void VulkanManager::BindVkVertexBuffer(VkCommandBuffer i_cmd_buffer, VkBuffer i_vertex_buffer, uint32_t i_binding_id, VkDeviceSize i_offset)
+{
+    vkCmdBindVertexBuffers(i_cmd_buffer, i_binding_id, 1, &i_vertex_buffer, &i_offset);
+}
+
 void VulkanManager::DestroyVkBuffer(VkBuffer &io_buffer_handle)
 {
     if (io_buffer_handle != VK_NULL_HANDLE) {

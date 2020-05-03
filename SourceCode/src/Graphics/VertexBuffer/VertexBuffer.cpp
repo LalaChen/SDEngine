@@ -44,14 +44,9 @@ VertexBuffer::~VertexBuffer()
     }
 }
 
-Size_ui64 VertexBuffer::GetBufferSize() const
+void VertexBuffer::BindVertexBuffer(const CommandBufferWeakReferenceObject &i_cmd_buffer_wref, uint32_t i_binding_id, Size_ui64 i_offset)
 {
-    return m_identity.m_data_size;
-}
-
-Size_ui64 VertexBuffer::GetDeviceSize() const
-{
-    return m_identity.m_memory_size;
+    GraphicsManager::GetRef().BindVertexBuffer(m_identity, i_cmd_buffer_wref, i_binding_id, i_offset);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

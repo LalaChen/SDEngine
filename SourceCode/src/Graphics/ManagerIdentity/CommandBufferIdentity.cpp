@@ -28,7 +28,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 CommandBufferIdentity::CommandBufferIdentity()
-: m_cmd_buffer_handle(SD_NULL_HANDLE)
+: m_handle(SD_NULL_HANDLE)
 , m_cmd_buffer_level(CommandBufferLevel_PRIMARY)
 {
 

@@ -33,6 +33,7 @@ RenderFlow::RenderFlow(const ObjectName &i_object_name, const ImageOffset &i_ren
 : Object(i_object_name)
 , m_position(i_render_pos)
 , m_size(i_render_size)
+, m_current_step(0u)
 {
 }
 
@@ -49,15 +50,14 @@ void RenderFlow::AllocateFrameBuffer()
 {
     if (m_rp_wref.IsNull() == false) {
         m_fb_sref = new FrameBuffer(m_object_name + "_FrameBuffer", m_size);
-        //1. Create ImageView Desciption from Attachment Desciption.
-        m_fb_sref.GetRef().AddRenderPassInfos(m_rp_wref.GetRef().CreateImageViewDescriptions(), m_rp_wref.GetRef().GetHandle());
+        m_fb_sref.GetRef().RegisterTargetRenderPass(m_rp_wref);
     }
     else {
         SDLOGE("No target render pass in RenderFlow(%s).", m_object_name.c_str());
     }
 }
 
-void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject& i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value)
+void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value)
 {
     if (m_fb_sref.IsNull() == false) {
         m_fb_sref.GetRef().RegisterBuffer(i_tex_wref, i_idx, i_clear_value);
@@ -70,7 +70,7 @@ void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject& i
 void RenderFlow::Initialize()
 {
     if (m_fb_sref.IsNull() == false && m_rp_wref.IsNull() == false) {
-        m_fb_sref.GetRef().Initialize(m_rp_wref.GetRef().GetSubpassDescriptions(), m_rp_wref.GetRef().GetAttachmentDescriptions());
+        m_fb_sref.GetRef().Initialize();
     }
     else {
         SDLOGE("One or both of render pass or frame buffer are null. RP null(%d). FB null(%d)."
@@ -78,19 +78,21 @@ void RenderFlow::Initialize()
     }
 }
 
-void RenderFlow::BeginRenderFlow()
+void RenderFlow::BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
 {
-
+    m_current_step = 0;
+    GraphicsManager::GetRef().BeginRenderPass(i_cmd_buf_wref, m_fb_sref, m_rp_wref, m_position, m_size);
 }
 
-void RenderFlow::GoToNextStep()
+void RenderFlow::GoToNextStep(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
 {
-
+    m_current_step++;
+    GraphicsManager::GetRef().GoToNextStepOfRenderPass(i_cmd_buf_wref, m_fb_sref, m_current_step);
 }
 
-void RenderFlow::EndRenderFlow()
+void RenderFlow::EndRenderFlow(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
 {
-
+    GraphicsManager::GetRef().EndRenderPass(i_cmd_buf_wref);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

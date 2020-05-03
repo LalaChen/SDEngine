@@ -23,30 +23,29 @@ SOFTWARE.
 
 */
 
-/*! \file      CommandBufferIdentity.h
- *  \brief     Introduce of class about CommandBufferIdentity.
- *  \author    Kuan-Chih, Chen
- *  \date      2020/02/05
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-
-#include "CommandBufferLevel.h"
+#include "LogManager.h"
+#include "GraphicsManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS CommandBufferIdentity
+const TextureIdentity& GraphicsManager::GetIdentity(const TextureWeakReferenceObject& i_tex_wref) const
 {
-public:
-    CommandBufferIdentity();
-    ~CommandBufferIdentity();
-public:
-    CompHandle m_handle;
-    CommandBufferLevelEnum m_cmd_buffer_level;
-};
+    return i_tex_wref.GetConstRef().m_tex_identity;
+}
+
+const FrameBufferIdentity& GraphicsManager::GetIdentity(const FrameBufferWeakReferenceObject &i_fb_wref) const
+{
+    return i_fb_wref.GetConstRef().m_identity;
+}
+
+const CommandBufferIdentity& GraphicsManager::GetIdentity(const CommandBufferWeakReferenceObject &i_cmd_buf_wref) const
+{
+    return i_cmd_buf_wref.GetConstRef().m_identity;
+}
+
+const RenderPassIdentity& GraphicsManager::GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const
+{
+    return i_rp_wref.GetConstRef().m_identity;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

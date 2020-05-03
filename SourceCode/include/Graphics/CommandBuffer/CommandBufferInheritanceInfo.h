@@ -23,30 +23,44 @@ SOFTWARE.
 
 */
 
-/*! \file      CommandBufferIdentity.h
- *  \brief     Introduce of class about CommandBufferIdentity.
+/*! \file      CommandBufferInheritanceInfo.h
+ *  \brief     Introduce of class CommandBufferInheritanceInfo.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/02/05
+ *  \date      2020/05/02
  *  \copyright MIT License.
  */
 
 #pragma once
 
+#include <list>
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-
-#include "CommandBufferLevel.h"
+#include "RenderPass.h"
+#include "FrameBuffer.h"
+#include "QueryFlags.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS CommandBufferIdentity
+class SDENGINE_CLASS CommandBufferInheritanceInfo
 {
 public:
-    CommandBufferIdentity();
-    ~CommandBufferIdentity();
+    CommandBufferInheritanceInfo();
+    ~CommandBufferInheritanceInfo();
 public:
-    CompHandle m_handle;
-    CommandBufferLevelEnum m_cmd_buffer_level;
+    bool IsValid() const;
+public:
+    RenderPassWeakReferenceObject m_rp_wref;
+    FrameBufferWeakReferenceObject m_fb_wref;
+    uint32_t m_sp_id;
+    bool m_occusion_query_enable;
+    QueryControlFlagMask m_ctrl_mask;
+    QueryPipelineStatisticFlagMask m_pipe_stat_mask;
 };
+
+inline bool CommandBufferInheritanceInfo::IsValid() const
+{
+    return (m_rp_wref.IsNull() == false && m_fb_wref.IsNull() == false);
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
