@@ -34,7 +34,7 @@ SOFTWARE.
 
 #include "VertexBufferFormat.h"
 #include "VertexBufferUsage.h"
-#include "VertexBufferMemoryType.h"
+#include "MemoryType.h"
 #include "BitmapPixelDataType.h"
 #include "TextureType.h"
 #include "TextureFormat.h"

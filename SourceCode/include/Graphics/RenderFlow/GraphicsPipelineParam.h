@@ -48,6 +48,7 @@ SOFTWARE.
 #include "BlendOperator.h"
 #include "LogicOperator.h"
 #include "DynamicState.h"
+#include "PipelineBindPoint.h"
 
 #include "VertexAttribDescription.h"
 #include "UniformDescriptorLayout.h"
@@ -493,6 +494,11 @@ public:
      *  \brief The destructor of GraphicsPipelineParam Class.
      */
     ~GraphicsPipelineParam();
+public:
+    /*! \var PipelineBindPointEnum m_pipe_bind_point;
+     *  \brief The information about pipeline kind. Default is Graphics.
+     */
+    PipelineBindPointEnum m_pipe_bind_point;
 public:
     /*! \var std::vector<VertexAttribBindingDescription> m_va_binding_descs;
      *  \brief The information about vertex attribute binding of this pipeline.

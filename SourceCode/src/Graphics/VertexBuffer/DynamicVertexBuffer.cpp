@@ -30,7 +30,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 DynamicVertexBuffer::DynamicVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format)
-: VertexBuffer(i_object_name, i_va_location, i_format, VertexBufferMemoryType_DYNAMIC)
+: VertexBuffer(i_object_name, i_va_location, i_format, MemoryType_DYNAMIC)
 {
 }
 
@@ -51,13 +51,13 @@ void DynamicVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_s
             //----- Smaller than new one, delete old buffer.
             GraphicsManager::GetRef().DeleteVertexBuffer(m_identity);
             //----- Create new one.
-            GraphicsManager::GetRef().CreateVertexBuffer(m_identity, i_data_size, m_memory_type);
+            GraphicsManager::GetRef().CreateVertexBuffer(m_identity, i_data_size);
         }
     }
     else {
         //----- Create new one.
         SDLOG("Dynamic buffer is initialized first time. Allocate new one!!!");
-        GraphicsManager::GetRef().CreateVertexBuffer(m_identity, i_data_size, m_memory_type);
+        GraphicsManager::GetRef().CreateVertexBuffer(m_identity, i_data_size);
     }
 
     //2. refresh dynamic buffer.(host)
@@ -69,16 +69,16 @@ void DynamicVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_s
     }
 }
 
-VoidPtr DynamicVertexBuffer::MapBufferMemory()
+VoidPtr DynamicVertexBuffer::MapMemory()
 {
     VoidPtr local_ptr = nullptr;
-    GraphicsManager::GetRef().MapBuffer(m_identity, local_ptr);
+    GraphicsManager::GetRef().MapVertexBuffer(m_identity, local_ptr);
     return local_ptr;
 }
 
-void DynamicVertexBuffer::UnmapBufferMemory()
+void DynamicVertexBuffer::UnmapMemory()
 {
-    GraphicsManager::GetRef().UnmapBuffer(m_identity);
+    GraphicsManager::GetRef().UnmapVertexBuffer(m_identity);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

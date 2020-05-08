@@ -96,23 +96,32 @@ public:
     /*
      * We will set i_data_size to VertexBufferIdentity::m_buffer_size and assign allocated memory size to m_memory_size
      */
-    void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type) override;
+    void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size) override;
     void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
     void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
     void DeleteVertexBuffer(VertexBufferIdentity &io_identity) override;
-    void MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) override;
-    void UnmapBuffer(const VertexBufferIdentity &i_identity) override;
+    void MapVertexBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) override;
+    void UnmapVertexBuffer(const VertexBufferIdentity &i_identity) override;
+//----------- Index Buffer Interface Function ------------
+public:
+    void CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui64 i_data_size) override;
+    void RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
+    void RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
+    void DeleteIndexBuffer(IndexBufferIdentity &io_identity) override;
+    void MapIndexBuffer(const IndexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) override;
+    void UnmapIndexBuffer(const IndexBufferIdentity &i_identity) override;
 public:
     void CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;
     void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) override;
     void DeleteTextureImage(TextureIdentity &io_identity) override;
 public:
-    void BindVertexBuffer(const VertexBufferIdentity &i_vb_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset) override;
+    void BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset) override;
 public:
     void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
     void DeleteShaderModule(ShaderModuleIdentity &io_identity) override;
 public:
     void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref) override;
+    void BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref) override;
     void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) override;
 public:
     void CreateRenderPass(RenderPassIdentity &io_identity) override;
@@ -302,6 +311,8 @@ protected:
     VkResult CreateVKPipeline(
         VkPipeline &io_pipeline_handle,
         const VkGraphicsPipelineCreateInfo &i_c_info);
+
+    void BindVkPipeline(VkCommandBuffer i_cb_handle, VkPipeline i_pipe_handle, VkPipelineBindPoint i_pipe_point);
 
     void DestroyVKPipeline(VkPipeline &io_pipeline_handle);
 protected:

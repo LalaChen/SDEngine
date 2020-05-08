@@ -23,38 +23,59 @@ SOFTWARE.
 
 */
 
-#include "SDEngineMacro.h"
 #include "LogManager.h"
 #include "GraphicsManager.h"
-#include "StaticVertexBuffer.h"
+#include "DynamicIndexBuffer.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-StaticVertexBuffer::StaticVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format)
-: VertexBuffer(i_object_name, i_va_location, i_format, MemoryType_STATIC)
+DynamicIndexBuffer::DynamicIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type)
+: IndexBuffer(i_object_name, i_format, i_memory_type)
 {
 }
 
-StaticVertexBuffer::~StaticVertexBuffer()
+DynamicIndexBuffer::~DynamicIndexBuffer()
 {
 }
 
-void StaticVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size)
+void DynamicIndexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size)
 {
     //1. Ckeck CompHandle is null handle or not.
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
-        SDLOGW("Static vertex buffer had been initialized. Please refresh data after clear old one.");
-        return;
+        //--- No, compare current buffer size with new one.
+        if (m_identity.m_data_size < i_data_size) {
+            SDLOG("Dynamic buffer size is small than input datas. Delete old and allocate new one!!!");
+            //----- Smaller than new one, delete old buffer.
+            GraphicsManager::GetRef().DeleteIndexBuffer(m_identity);
+            //----- Create new one.
+            GraphicsManager::GetRef().CreateIndexBuffer(m_identity, i_data_size);
+        }
     }
-    //2. Create new one.
-    GraphicsManager::GetRef().CreateVertexBuffer(m_identity, i_data_size);
-    //3. refresh static buffer.(staging)
+    else {
+        //----- Create new one.
+        SDLOG("Dynamic buffer is initialized first time. Allocate new one!!!");
+        GraphicsManager::GetRef().CreateIndexBuffer(m_identity, i_data_size);
+    }
+
+    //2. refresh dynamic buffer.(host)
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
-        GraphicsManager::GetRef().RefreshStaticVertexBuffer(m_identity, i_data_ptr, i_data_size);
+        GraphicsManager::GetRef().RefreshDynamicIndexBuffer(m_identity, i_data_ptr, i_data_size);
     }
     else {
         SDLOG("Reallocate or initialize buffer failure.");
     }
+}
+
+VoidPtr DynamicIndexBuffer::MapMemory()
+{
+    VoidPtr local_ptr = nullptr;
+    GraphicsManager::GetRef().MapIndexBuffer(m_identity, local_ptr);
+    return local_ptr;
+}
+
+void DynamicIndexBuffer::UnmapMemory()
+{
+    GraphicsManager::GetRef().UnmapIndexBuffer(m_identity);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

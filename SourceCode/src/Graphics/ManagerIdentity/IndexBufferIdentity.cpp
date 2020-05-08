@@ -1,19 +1,18 @@
-#include "VertexBufferIdentity.h"
+#include "IndexBufferIdentity.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VertexBufferIdentity::VertexBufferIdentity()
+IndexBufferIdentity::IndexBufferIdentity()
 : m_buffer_handle(SD_NULL_HANDLE)
 , m_memory_handle(SD_NULL_HANDLE)
 , m_data_size(0)
 , m_memory_size(0)
-, m_format(VertexBufferFormat_MAX_DEFINE_VALUE)
+, m_format(IndexBufferFormat_X32_UINT)
 , m_memory_type(MemoryType_MAX_DEFINE_VALUE)
-, m_location(0)
 {
 }
 
-VertexBufferIdentity::~VertexBufferIdentity()
+IndexBufferIdentity::~IndexBufferIdentity()
 {
 }
 

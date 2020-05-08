@@ -208,6 +208,12 @@
     <Filter Include="include\Graphics\BasicShapeCreator">
       <UniqueIdentifier>{75c7364e-0209-439f-8824-14106e46796d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\IndexBuffer">
+      <UniqueIdentifier>{b12e51f0-2337-40c2-a679-1adb33a0bd51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\IndexBuffer">
+      <UniqueIdentifier>{2629ca5e-4b9c-4432-8b08-d4583dbaa202}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -370,9 +376,6 @@
       <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferFormat.h">
-      <Filter>include\Graphics\ManagerParam</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferMemoryType.h">
       <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\VertexBufferUsage.h">
@@ -677,6 +680,22 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\QueryFlags_Vulkan.h">
       <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\IndexBuffer\IndexBuffer.h">
+      <Filter>include\Graphics\IndexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\IndexBufferFormat.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\IndexBufferIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\MemoryType.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\IndexBuffer\StaticIndexBuffer.h">
+      <Filter>include\Graphics\IndexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\IndexBuffer\DynamicIndexBuffer.h">
+      <Filter>include\Graphics\IndexBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1087,6 +1106,18 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager_Identity.cpp">
       <Filter>src\Graphics\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\IndexBufferIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\IndexBuffer\IndexBuffer.cpp">
+      <Filter>src\Graphics\IndexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\IndexBuffer\DynamicIndexBuffer.cpp">
+      <Filter>src\Graphics\IndexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\IndexBuffer\StaticIndexBuffer.cpp">
+      <Filter>src\Graphics\IndexBuffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

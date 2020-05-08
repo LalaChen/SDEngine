@@ -203,6 +203,26 @@ ObjectData::~ObjectData()
 {
 }
 
+void ObjectData::UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraData &i_camera, const LightData &i_light)
+{
+}
+
+void ObjectData::Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
+{
+    //1. use program.
+    m_material.m_pipeline_wref.GetRef().Use(i_cmd_buf_wref);
+    //2. bind descriptor set.
+    std::vector<VkDescriptorSet> descs = { m_material.m_desc_set };
+    std::vector<uint32_t> dynamic_offs = {};
+    i_mgr->BindDescriptorSets(
+        reinterpret_cast<VkCommandBuffer>(i_cmd_buf_wref.GetConstRef().GetHandle()),
+        reinterpret_cast<VkPipelineLayout>(m_material.m_pipeline_wref.GetConstRef().GetPipelineLayoutHandle()),
+        VK_PIPELINE_BIND_POINT_GRAPHICS, 0, descs, dynamic_offs);
+    //3. bind mesh vertex attributes.
+    m_mesh.GetRef().BindVertexBuffers(i_cmd_buf_wref);
+    //4. draw mesh.
+}
+
 
 Sample4_DrawObjects::Sample4_DrawObjects(VulkanAPITestManager *i_mgr)
 : Sample("DrawObjects", i_mgr)
@@ -236,8 +256,8 @@ void Sample4_DrawObjects::Render()
     m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_cmd_buf_wrefs[0]);
 
 
-    for (const ObjectData& obj : m_cube_objects) {
-        
+    for (ObjectData &obj : m_cube_objects) {
+        obj.Draw(m_mgr, m_cmd_buf_wrefs[0]);
     }
 
     m_camera.m_forward_rf.GetRef().EndRenderFlow(m_cmd_buf_wrefs[0]);

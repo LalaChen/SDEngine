@@ -38,6 +38,7 @@ SOFTWARE.
 #include "BlendFactor_Vulkan.h"
 #include "LogicOperator_Vulkan.h"
 #include "DynamicState_Vulkan.h"
+#include "PipelineBindPoint_Vulkan.h"
 
 #include "LogManager.h"
 #include "VulkanManager.h"
@@ -59,7 +60,7 @@ void VulkanManager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
 //-------- GraphicsPipeline --------
 void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref)
 {
-    VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_pipeline_handle);
+    VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
     VkPipelineLayout &pipeline_layout_handle = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout_handle);
     VkDescriptorSetLayout &descriptor_set_layout_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_descriptor_layout_handle);
     VkRenderPass render_pass_handle = reinterpret_cast<VkRenderPass>(i_rp_wref.GetConstRef().GetHandle());
@@ -309,9 +310,18 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     }
 }
 
+void VulkanManager::BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref)
+{
+    const CommandBufferIdentity cb_identity = GetIdentity(i_cb_wref);
+    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    VkPipeline pipe_handle = reinterpret_cast<VkPipeline>(i_identity.m_handle);
+    VkPipelineBindPoint pipe_bp = PipelineBindPoint_Vulkan::Convert(i_identity.m_params.m_pipe_bind_point);
+    BindVkPipeline(cb_handle, pipe_handle, pipe_bp);
+}
+
 void VulkanManager::DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity)
 {
-    VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_pipeline_handle);
+    VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
     VkPipelineLayout &pipeline_layout_handle = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout_handle);
     VkDescriptorSetLayout &descriptor_set_layout_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_descriptor_layout_handle);
 

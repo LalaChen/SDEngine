@@ -23,47 +23,48 @@ SOFTWARE.
 
 */
 
-/*! \file      DynamicVertexBuffer.h
- *  \brief     Introduce of class DynamicVertexBuffer.
+/*! \file      DynamicIndexBuffer.h
+ *  \brief     Introduce of class DynamicIndexBuffer.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/05/08
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class DynamicVertexBuffer
- *  In our graphic system, DynamicVertexBuffer objects are used to keep vertex datas.
- */
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DynamicVertexBuffer);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DynamicIndexBuffer);
 
-class SDENGINE_CLASS DynamicVertexBuffer : public VertexBuffer
+/*! \class DynamicVertexBuffer
+ *  In our graphic system, StaticIndexBuffer objects are used to keep index datas in host memory.
+ */
+class SDENGINE_CLASS DynamicIndexBuffer : public IndexBuffer
 {
 public:
-    /*! \fn explicit DynamicVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format);
+    friend class GraphicsManager;
+public:
+    /*! \fn explicit DynamicVertexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
      *  \param [in] i_object_name Name of this buffer.
-     *  \param [in] i_va_location Attribute location of this buffer.
-     *  \param [in] i_value_type The value type of this buffer.
+     *  \param [in] i_format The format.
+     *  \param [in] i_memory_type The memory type of this buffer memory.
      *  \brief The constructor of DynamicVertexBuffer Class.
      */
-    explicit DynamicVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format);
+    explicit DynamicIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
 
     /*! \fn ~DynamicVertexBuffer()
      *  \brief The destructor of DynamicVertexBuffer Class.
      */
-    virtual ~DynamicVertexBuffer();
+    virtual ~DynamicIndexBuffer();
 public:
-    /*! \fn void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) override;
-     *  \param [in] i_data_ptr Data pointer.
-     *  \param [in] i_data_size Data size.
-     *  \brief Refresh data into buffer.
+    /* \fn void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) override;
+     * \param [in] i_data_ptr Data pointer.
+     * \param [in] i_data_size Data size.
+     * \brief Refresh data into buffer.
      */
     void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) override;
-
 public:
     /*! \fn VoidPtr MapMemory();
      *  \brief Return map buffer memory.

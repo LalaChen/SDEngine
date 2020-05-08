@@ -36,6 +36,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "RenderPass.h"
 #include "ShaderModule.h"
+#include "CommandBuffer.h"
 #include "GraphicsPipelineParam.h"
 #include "GraphicsPipelineIdentity.h"
 #include "Object.h"
@@ -59,6 +60,8 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GraphicsPipeline);
  */
 class SDENGINE_CLASS GraphicsPipeline : public Object
 {
+public:
+    friend class GraphicsManager;
 public:
     /*! \fn explicit GraphicsPipeline(const ObjectName &i_object_name);
      *  \param [in] i_object_name Name of this object.
@@ -95,11 +98,18 @@ public:
       */
     const CompHandle GetDescriptorLayoutHandle() const;
 
+    /*! \fn const CompHandle GetPipelineLayoutHandle() const;
+ *  \brief return handle of pipeline layout of this pipeline.
+ */
+    const CompHandle GetPipelineLayoutHandle() const;
+
     /*! \fn const CompHandle GetPipelineParams() const;
      *  \brief return pipeline parameters.
      */
     const GraphicsPipelineParam& GetPipelineParams() const;
+public:
 
+    void Use(const CommandBufferWeakReferenceObject &i_cmd_buf_wref);
 protected:
     /*! \var GraphicsPipelineIdentity m_identity;
      *  \brief Record basic identity
@@ -119,12 +129,17 @@ protected:
 
 inline const CompHandle GraphicsPipeline::GetHandle() const
 {
-    return m_identity.m_pipeline_handle;
+    return m_identity.m_handle;
 }
 
 inline const CompHandle GraphicsPipeline::GetDescriptorLayoutHandle() const
 {
     return m_identity.m_descriptor_layout_handle;
+}
+
+inline const CompHandle GraphicsPipeline::GetPipelineLayoutHandle() const
+{
+    return m_identity.m_pipeline_layout_handle;
 }
 
 inline const GraphicsPipelineParam& GraphicsPipeline::GetPipelineParams() const

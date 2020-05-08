@@ -43,6 +43,11 @@ const CommandBufferIdentity& GraphicsManager::GetIdentity(const CommandBufferWea
     return i_cmd_buf_wref.GetConstRef().m_identity;
 }
 
+const VertexBufferIdentity& GraphicsManager::GetIdentity(const VertexBufferWeakReferenceObject &i_vb_wref) const
+{
+    return i_vb_wref.GetConstRef().m_identity;
+}
+
 const RenderPassIdentity& GraphicsManager::GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const
 {
     return i_rp_wref.GetConstRef().m_identity;

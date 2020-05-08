@@ -29,8 +29,8 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVKShaderModule(
-    VkShaderModule& io_shader_module_handle,
-    const UByte* i_binary_ptr,
+    VkShaderModule &io_shader_module_handle,
+    const UByte *i_binary_ptr,
     const Size_ui64 i_binary_size)
 {
     VkResult result = VK_SUCCESS;
@@ -119,7 +119,12 @@ VkResult VulkanManager::CreateVKPipeline(
     return result;
 }
 
-void VulkanManager::DestroyVKPipeline(VkPipeline & io_pipeline_handle)
+void VulkanManager::BindVkPipeline(VkCommandBuffer i_cb_handle, VkPipeline i_pipe_handle, VkPipelineBindPoint i_pipe_point)
+{
+    vkCmdBindPipeline(i_cb_handle, i_pipe_point, i_pipe_handle);
+}
+
+void VulkanManager::DestroyVKPipeline(VkPipeline &io_pipeline_handle)
 {
     if (io_pipeline_handle != VK_NULL_HANDLE) {
         vkDestroyPipeline(m_VK_device, io_pipeline_handle, nullptr);

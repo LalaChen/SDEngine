@@ -31,6 +31,7 @@ SOFTWARE.
  */
 
 #include "VertexBufferIdentity.h"
+#include "IndexBufferIdentity.h"
 #include "TextureIdentity.h"
 #include "SamplerIdentity.h"
 #include "ShaderModuleIdentity.h"

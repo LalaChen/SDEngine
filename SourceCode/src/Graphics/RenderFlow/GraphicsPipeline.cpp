@@ -52,4 +52,9 @@ void GraphicsPipeline::Initialize(const ShaderModules &i_shaders)
     m_initialized = true;
 }
 
+void GraphicsPipeline::Use(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
+{
+    GraphicsManager::GetRef().BindGraphicsPipeline(m_identity, i_cmd_buf_wref);
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

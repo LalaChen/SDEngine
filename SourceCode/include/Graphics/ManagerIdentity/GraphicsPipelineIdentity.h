@@ -58,10 +58,10 @@ public:
      */
     ~GraphicsPipelineIdentity();
 public:
-    /*! \var CompHandle m_pipeline_handle;
+    /*! \var CompHandle m_handle;
      *  \brief The pipeline handle. It is valid while the value is not equal 0.
      */
-    CompHandle m_pipeline_handle;
+    CompHandle m_handle;
 
     /*! \var CompHandle m_descriptor_layout_handle;
      *  \brief The descriptor layout handle. It is valid while the value is not equal 0.(Opengl doesn't need.)

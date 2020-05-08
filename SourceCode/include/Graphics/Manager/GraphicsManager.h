@@ -43,6 +43,7 @@ SOFTWARE.
 #include "CommandBufferInheritanceInfo.h"
 #include "CommandPool.h"
 #include "CommandBuffer.h"
+#include "VertexBuffer.h"
 #include "RenderPass.h"
 #include "ImageLoader.h"
 #include "Resolution.h"
@@ -114,23 +115,32 @@ public:
     virtual void SubmitCommandBufferToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cmd_bufs) = 0;
 public:
 //----------- Vertex Buffer Function ------------
-    virtual void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type) = 0;
+    virtual void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size) = 0;
     virtual void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
     virtual void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
     virtual void DeleteVertexBuffer(VertexBufferIdentity &io_identity) = 0;
-    virtual void MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) = 0;
-    virtual void UnmapBuffer(const VertexBufferIdentity &i_identity) = 0;
+    virtual void MapVertexBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) = 0;
+    virtual void UnmapVertexBuffer(const VertexBufferIdentity& i_identity) = 0;
+    //----------- Index Buffer Interface Function ------------
+public:
+    virtual void CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui64 i_data_size) = 0;
+    virtual void RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
+    virtual void RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
+    virtual void DeleteIndexBuffer(IndexBufferIdentity &io_identity) = 0;
+    virtual void MapIndexBuffer(const IndexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) = 0;
+    virtual void UnmapIndexBuffer(const IndexBufferIdentity &i_identity) = 0;
 public:
     virtual void CreateTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity) = 0;
     virtual void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) = 0;
     virtual void DeleteTextureImage(TextureIdentity &io_identity) = 0;
 public:
-    virtual void BindVertexBuffer(const VertexBufferIdentity &i_vb_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset) = 0;
+    virtual void BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset) = 0;
 public:
     virtual void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) = 0;
     virtual void DeleteShaderModule(ShaderModuleIdentity &io_identity) = 0;
 public:
     virtual void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref) = 0;
+    virtual void BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref) = 0;
     virtual void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) = 0;
 public:
     virtual void CreateRenderPass(RenderPassIdentity &io_identity) = 0;
@@ -168,6 +178,7 @@ protected:
     const FrameBufferIdentity& GetIdentity(const FrameBufferWeakReferenceObject &i_fb_wref) const;
     const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject& i_cmd_buf_wref) const;
     const RenderPassIdentity& GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const;
+    const VertexBufferIdentity& GetIdentity(const VertexBufferWeakReferenceObject &i_vb_wref) const;
 protected:
 //------------ Render Flow Function -------------
     virtual void RenderBegin() = 0;

@@ -49,7 +49,7 @@ enum VertexBufferUsageEnum
     VertexBufferUsage_TANGENT_BUFFER, /*!< Use for storing tangents.(vec3)*/
     VertexBufferUsage_BINORMAL_BUFFER , /*!< Use for storing binormals.(vec3)*/
     VertexBufferUsage_COLOR_BUFFER, /*!< Use for storing colors.(Color4f)*/
-    VertexBufferUsage_ELEMENT_BUFFER, /*!< Use for storing elements.(uint32_t)*/
+    VertexBufferUsage_ELEMENT_BUFFER, /*!< Use for indice buffer.*/
     VertexBufferUsage_MAX_DEFINE_VALUE, /*!< Bound of enum.*/
     VertexBufferUsage_BUFFER_GROUP = VertexBufferUsage_COLOR_BUFFER + 1 /*!< Bound of vertex array.*/
 };

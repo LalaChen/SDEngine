@@ -29,7 +29,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 //----------- Vertex Buffer Function ------------
-void OpenGL4Manager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size, VertexBufferMemoryTypeEnum i_memory_type)
+void OpenGL4Manager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size)
 {
 }
 
@@ -45,15 +45,40 @@ void OpenGL4Manager::DeleteVertexBuffer(VertexBufferIdentity &io_identity)
 {
 }
 
-void OpenGL4Manager::MapBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle)
+void OpenGL4Manager::MapVertexBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle)
 {
 }
 
-void OpenGL4Manager::UnmapBuffer(const VertexBufferIdentity &i_identity)
+void OpenGL4Manager::UnmapVertexBuffer(const VertexBufferIdentity &i_identity)
 {
 }
 
-void OpenGL4Manager::BindVertexBuffer(const VertexBufferIdentity &i_vb_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset)
+void OpenGL4Manager::BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset)
+{
+}
+
+//----------- Index Buffer Function ------------
+void OpenGL4Manager::CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui64 i_data_size)
+{
+}
+
+void OpenGL4Manager::RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+{
+}
+
+void OpenGL4Manager::RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+{
+}
+
+void OpenGL4Manager::DeleteIndexBuffer(IndexBufferIdentity &io_identity)
+{
+}
+
+void OpenGL4Manager::MapIndexBuffer(const IndexBufferIdentity &i_identity, VoidPtr &io_buffer_handle)
+{
+}
+
+void OpenGL4Manager::UnmapIndexBuffer(const IndexBufferIdentity &i_identity)
 {
 }
 

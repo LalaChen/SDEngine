@@ -161,6 +161,7 @@ ColorBlendState::~ColorBlendState()
 //--- GraphicsPipelineParam
 GraphicsPipelineParam::GraphicsPipelineParam()
 : m_patch_ctrl_points(3)
+, m_pipe_bind_point(PipelineBindPoint_GRAPHICS)
 {
     GraphicsManager::GetRef().GetBasicVertexAttribInfos(
         m_va_binding_descs, m_va_location_descs, 2);

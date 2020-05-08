@@ -40,6 +40,10 @@ void OpenGL4Manager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identit
 {
 }
 
+void OpenGL4Manager::BindGraphicsPipeline(const GraphicsPipelineIdentity& i_identity, const CommandBufferWeakReferenceObject& i_cb_wref)
+{
+}
+
 void OpenGL4Manager::DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity)
 {
 }

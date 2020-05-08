@@ -23,38 +23,30 @@ SOFTWARE.
 
 */
 
+/*! \file      MemoryType.h
+ *  \brief     Introduce of class MemoryTypeEnum.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2019/07/05
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
 #include "SDEngineMacro.h"
-#include "LogManager.h"
-#include "GraphicsManager.h"
-#include "StaticVertexBuffer.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-StaticVertexBuffer::StaticVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format)
-: VertexBuffer(i_object_name, i_va_location, i_format, MemoryType_STATIC)
+/*! \enum MemoryTypeEnum
+ *  \brief The memory type of this buffer.
+ *  The dynamic memory means the content in this buffer will be modified in future using.
+ *  The static memory means the content is immutable after initializing.
+ */
+enum MemoryTypeEnum
 {
-}
+    MemoryType_DYNAMIC = 0, /*!< Dynamic buffer.*/
+    MemoryType_STATIC = 1, /*!< Static buffer.*/
+    MemoryType_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
 
-StaticVertexBuffer::~StaticVertexBuffer()
-{
-}
-
-void StaticVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size)
-{
-    //1. Ckeck CompHandle is null handle or not.
-    if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
-        SDLOGW("Static vertex buffer had been initialized. Please refresh data after clear old one.");
-        return;
-    }
-    //2. Create new one.
-    GraphicsManager::GetRef().CreateVertexBuffer(m_identity, i_data_size);
-    //3. refresh static buffer.(staging)
-    if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
-        GraphicsManager::GetRef().RefreshStaticVertexBuffer(m_identity, i_data_ptr, i_data_size);
-    }
-    else {
-        SDLOG("Reallocate or initialize buffer failure.");
-    }
-}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

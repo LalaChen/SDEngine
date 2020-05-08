@@ -26,20 +26,20 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "LogManager.h"
 #include "GraphicsManager.h"
-#include "StaticVertexBuffer.h"
+#include "StaticIndexBuffer.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-StaticVertexBuffer::StaticVertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format)
-: VertexBuffer(i_object_name, i_va_location, i_format, MemoryType_STATIC)
+StaticIndexBuffer::StaticIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type)
+: IndexBuffer(i_object_name, i_format, MemoryType_STATIC)
 {
 }
 
-StaticVertexBuffer::~StaticVertexBuffer()
+StaticIndexBuffer::~StaticIndexBuffer()
 {
 }
 
-void StaticVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size)
+void StaticIndexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size)
 {
     //1. Ckeck CompHandle is null handle or not.
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
@@ -47,10 +47,10 @@ void StaticVertexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_si
         return;
     }
     //2. Create new one.
-    GraphicsManager::GetRef().CreateVertexBuffer(m_identity, i_data_size);
+    GraphicsManager::GetRef().CreateIndexBuffer(m_identity, i_data_size);
     //3. refresh static buffer.(staging)
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
-        GraphicsManager::GetRef().RefreshStaticVertexBuffer(m_identity, i_data_ptr, i_data_size);
+        GraphicsManager::GetRef().RefreshStaticIndexBuffer(m_identity, i_data_ptr, i_data_size);
     }
     else {
         SDLOG("Reallocate or initialize buffer failure.");

@@ -35,6 +35,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "VertexBufferUsage.h"
 #include "VertexBuffer.h"
+#include "IndexBuffer.h"
 #include "CommandBuffer.h"
 #include "Object.h"
 
@@ -63,16 +64,47 @@ public:
      */
     virtual ~Mesh();
 public:
-    /*! \fn void RegisterVertexBuffer(const VertexBufferUsageEnum &i_usage, const VertexBufferStrongReferenceObject &i_va);
+    /*! \fn void RegisterVertexBuffer(VertexBufferUsageEnum i_usage, const VertexBufferStrongReferenceObject &i_va);
      *  \param [in] i_usage Register buffer to channels.
      *  \param [in] i_va_sref Register target buffer. Please note that we will keep strong reference.
      *  \brief Register vertex buffer reference object to target channel. Please note that we will keep strong reference in
      *         mesh. If we want to update data, we need get weak reference at fitst.
      */
-    void RegisterVertexBuffer(const VertexBufferUsageEnum &i_usage, const VertexBufferStrongReferenceObject &i_va_sref);
-    void BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cmd_buf_wref);
+    void RegisterVertexBuffer(VertexBufferUsageEnum i_usage, const VertexBufferStrongReferenceObject &i_va_sref);
+
+    /*! \fn void RegisterIndexBuffer(const IndexBufferStrongReferenceObject &i_idx_sref);
+     *  \param [in] i_idx_sref Register target buffer. Please note that we will keep strong reference.
+     *  \brief Register index buffer reference object. Please note that we will keep strong reference in
+     *         mesh. If we want to update data, we need get weak reference at fitst.
+     */
+    void RegisterIndexBuffer(const IndexBufferStrongReferenceObject &i_idx_sref);
+
+    /*! \fn void BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb_wref);
+     *  \param [in] i_cb_wref Target recording buffer.
+     *  \brief Bind vertex attributes for this command buffer.
+     */
+    void BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb_wref);
+
+    /*! \fn void BindIndexBuffer(const CommandBufferWeakReferenceObject &i_cb_wref);
+     *  \param [in] i_cb_wref Target recording buffer.
+     *  \brief Bind index buffer for this command buffer.
+     */
+    void BindIndexBuffer(const CommandBufferWeakReferenceObject &i_cb_wref);
+
+    /*! \fn void Render(const CommandBufferWeakReferenceObject &i_cb_wref);
+     *  \param [in] i_cb_wref Target recording buffer.
+     */
+    void Render(const CommandBufferWeakReferenceObject &i_cb_wref);
 protected:
+    /*! \fn VertexBufferStrongReferenceObject m_vertex_attribs[VertexBufferUsage_MAX_DEFINE_VALUE];
+     *  \param [in] m_vertex_attribs Vertex attributes.
+     */
     VertexBufferStrongReferenceObject m_vertex_attribs[VertexBufferUsage_MAX_DEFINE_VALUE];
+
+    /*! \fn IndexBufferStrongReferenceObject m_index_buffer;
+     *  \param [in] m_index_buffer Index buffer.
+     */
+    IndexBufferStrongReferenceObject m_index_buffer;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

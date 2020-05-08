@@ -23,10 +23,10 @@ SOFTWARE.
 
 */
 
-/*! \file      VertexBufferMemoryType.h
- *  \brief     Introduce of class VertexBufferMemoryTypeEnum.
+/*! \file      IndexBufferFormat.h
+ *  \brief     Introduce of enum IndexBufferFormat.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/05
+ *  \date      2019/06/30
  *  \copyright MIT License.
  */
 
@@ -36,17 +36,14 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \enum VertexBufferMemoryTypeEnum
- *  \brief The memory type of this buffer.
- *  The dynamic memory means the content in this buffer will be modified in future using.
- *  The static memory means the content is immutable after initializing.
+/*! \enum IndexBufferFormatEnum
+ *  \brief IndexBufferFormatEnum is enum for defining format type about index buffer.
  */
-enum VertexBufferMemoryTypeEnum
+enum IndexBufferFormatEnum
 {
-    VertexBufferMemoryType_DYNAMIC = 0, /*!< Dynamic buffer.*/
-    VertexBufferMemoryType_STATIC = 1, /*!< Static buffer.*/
-    VertexBufferMemoryType_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+    IndexBufferFormat_X16_UINT = 0, /*!< x unsigned short.*/
+    IndexBufferFormat_X32_UINT, /*!< x unsigned int32.*/
+    IndexBufferFormat_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
-
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

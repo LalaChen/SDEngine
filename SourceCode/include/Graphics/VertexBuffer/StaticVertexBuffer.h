@@ -37,7 +37,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class StaticVertexBuffer
- *  In our graphic system, StaticVertexBuffer objects are used to keep vertex datas.
+ *  In our graphic system, StaticVertexBuffer objects are used to keep vertex datas in device.
  */
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(StaticVertexBuffer);
 

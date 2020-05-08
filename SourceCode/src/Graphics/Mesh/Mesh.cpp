@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "LogManager.h"
 #include "GraphicsManager.h"
 #include "Mesh.h"
 
@@ -37,21 +38,43 @@ Mesh::~Mesh()
 {
 }
 
-void Mesh::RegisterVertexBuffer(const VertexBufferUsageEnum &i_usage, const VertexBufferStrongReferenceObject &i_va_sref)
+void Mesh::RegisterVertexBuffer(VertexBufferUsageEnum i_usage, const VertexBufferStrongReferenceObject &i_va_sref)
 {
     if (m_vertex_attribs[i_usage].IsNull() == false) {
-        m_vertex_attribs[i_usage] = nullptr;
+        SDLOG("Vertex Attribute[%d] isn't null. Reset it.", i_usage);
+        m_vertex_attribs[i_usage].Reset();
     }
     m_vertex_attribs[i_usage] = i_va_sref;
 }
 
-void Mesh::BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
+void Mesh::RegisterIndexBuffer(const IndexBufferStrongReferenceObject &i_idx_sref)
+{
+    if (m_index_buffer.IsNull() == false) {
+        SDLOG("Index Attribute isn't null. Reset it.");
+        m_index_buffer.Reset();
+    }
+    m_index_buffer = i_idx_sref;
+}
+
+void Mesh::BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb_wref)
 {
     for (uint32_t va_idx = 0; va_idx < VertexBufferUsage_BUFFER_GROUP; ++va_idx) {
         if (m_vertex_attribs[va_idx].IsNull() == false) {
-            m_vertex_attribs[va_idx].GetRef().BindVertexBuffer(i_cmd_buf_wref, va_idx, 0);
+            m_vertex_attribs[va_idx].GetRef().Bind(i_cb_wref, va_idx, 0);
         }
     }
+}
+
+void Mesh::BindIndexBuffer(const CommandBufferWeakReferenceObject& i_cb_wref)
+{
+    if (m_index_buffer.IsNull() == false) {
+        m_index_buffer.GetRef().Bind(i_cb_wref, 0);
+    }
+}
+
+void Mesh::Render(const CommandBufferWeakReferenceObject &i_cb_wref)
+{
+   
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -37,7 +37,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum VertexBufferFormatEnum
- *  \brief VertexBufferFormatTypeEnum is enum for defining format type about vertex buffer.
+ *  \brief VertexBufferFormatEnum is enum for defining format type about vertex buffer.
  */
 enum VertexBufferFormatEnum
 {
@@ -62,10 +62,10 @@ enum VertexBufferFormatEnum
     VertexBufferFormat_X16Y16Z16_SINT, /*!< xyz signed short.*/
     VertexBufferFormat_X16Y16Z16W16_SINT, /*!< xyzw signed short.*/
 //------ unsigned int32.
-    VertexBufferFormat_X32_UINT, /*!< x signed int32.*/
-    VertexBufferFormat_X32Y32_UINT, /*!< xy signed int32.*/
-    VertexBufferFormat_X32Y32Z32_UINT, /*!< xyz signed int32.*/
-    VertexBufferFormat_X32Y32Z32W32_UINT, /*!< xyzw signed int32.*/
+    VertexBufferFormat_X32_UINT, /*!< x unsigned int32.*/
+    VertexBufferFormat_X32Y32_UINT, /*!< xy unsigned int32.*/
+    VertexBufferFormat_X32Y32Z32_UINT, /*!< xyz unsigned int32.*/
+    VertexBufferFormat_X32Y32Z32W32_UINT, /*!< xyzw unsigned int32.*/
 //------ signed int32
     VertexBufferFormat_X32_SINT, /*!< x signed int32.*/
     VertexBufferFormat_X32Y32_SINT, /*!< xy signed int32.*/

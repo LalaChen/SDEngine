@@ -29,11 +29,8 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 //------------------- class VertexBuffer -----------------
-VertexBuffer::VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format, VertexBufferMemoryTypeEnum i_memory_type)
+VertexBuffer::VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type)
 : Object(i_object_name)
-, m_location(i_va_location)
-, m_memory_type(i_memory_type)
-, m_format(i_format)
 {
 }
 
@@ -44,9 +41,9 @@ VertexBuffer::~VertexBuffer()
     }
 }
 
-void VertexBuffer::BindVertexBuffer(const CommandBufferWeakReferenceObject &i_cmd_buffer_wref, uint32_t i_binding_id, Size_ui64 i_offset)
+void VertexBuffer::Bind(const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset)
 {
-    GraphicsManager::GetRef().BindVertexBuffer(m_identity, i_cmd_buffer_wref, i_binding_id, i_offset);
+    GraphicsManager::GetRef().BindVertexBuffer(m_identity, i_cb_wref, i_binding_id, i_offset);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

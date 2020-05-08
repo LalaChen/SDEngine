@@ -33,7 +33,7 @@ SOFTWARE.
 #pragma once
 
 #include "SDEngineMacro.h"
-#include "VertexBufferMemoryType.h"
+#include "MemoryType.h"
 #include "VertexBufferIdentity.h"
 #include "CommandBuffer.h"
 #include "Object.h"
@@ -52,10 +52,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(VertexBuffer);
 class SDENGINE_CLASS VertexBuffer : public Object
 {
 public:
-	/*! \type  typedef std::vector< UByte > VertexDatas;
-	 *  \brief type of ubyte-buffer.
-	 */
-	typedef std::vector<UByte> VertexDatas;
+    friend class GraphicsManager;
 public:
 	/*! \fn explicit VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format);
 	 *  \param [in] i_object_name Name of this buffer.
@@ -64,7 +61,7 @@ public:
      *  \param [in] i_memory_type The memory type of this buffer memory.
 	 *  \brief The constructor of VertexBuffer Class.
 	 */
-	explicit VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format, VertexBufferMemoryTypeEnum i_memory_type);
+	explicit VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
 
 	/*! \fn ~VertexBuffer()
 	 *  \brief The destructor of VertexBuffer Class.
@@ -80,6 +77,21 @@ public:
      *  \brief return allocated size of vertex buffer.
      */
     Size_ui64 GetDeviceSize() const;
+
+    /*! \fn uint32_t GetAttribLocation() const;
+     *  \brief return attribute location of vertex buffer.
+     */
+    uint32_t GetAttribLocation() const;
+
+    /*! \fn MemoryTypeEnum GetMemoryType() const;
+     *  \brief return memory type of vertex buffer.
+     */
+    MemoryTypeEnum GetMemoryType() const;
+
+    /*! \fn VertexBufferFormatEnum GetFormat() const;
+     *  \brief return buffer type of vertex buffer.
+     */
+    VertexBufferFormatEnum GetFormat() const;
 public:
     /*! \fn virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
      *  \param [in] i_data_ptr Data pointer.
@@ -88,33 +100,18 @@ public:
      */
     virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
 public:
-    /*! \fn void BindVertexBuffer(const CommandBufferWeakReferenceObject &i_cmd_buffer_wref, uint32_t i_binding_id); 
-     *  \param [in] i_cmd_buffer_wref Target began command buffer.
+    /*! \fn void Bind(const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset); 
+     *  \param [in] i_cb_wref Target began command buffer.
      *  \param [in] i_binding_id Binding channel we want.
      *  \param [in] i_offset. Binding start address.
      *  \brief Specify binding channel for this vertex buffer and then bind.
      */
-    void BindVertexBuffer(const CommandBufferWeakReferenceObject &i_cmd_buffer_wref, uint32_t i_binding_id, Size_ui64 i_offset);
+    void Bind(const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset);
 protected:
 	/*! \var VertexBufferIdentity m_identity;
      *  \brief The identity. We keep all handles or ids from graphics API.
 	 */
     VertexBufferIdentity m_identity;
-protected:
-	/*! \var uint32_t m_location;
-	 *  \brief Record the input location of this buffer.
-     */
-	SD_DECLARE_ATTRIBUTE_VAR_GET(uint32_t, m_location, AttribLocation);
-
-    /*! \var VertexBufferKindEnum m_memory_type;
-     *  \brief Keep memory type.
-     */
-    SD_DECLARE_ATTRIBUTE_VAR_GET(VertexBufferMemoryTypeEnum, m_memory_type, MemoryType);
-
-    /*! \var ValueTypeEnum m_format;
-     *  \brief Record the buffer format.
-     */
-    SD_DECLARE_ATTRIBUTE_VAR_GET(VertexBufferFormatEnum, m_format, Format);
 };
 
 inline Size_ui64 VertexBuffer::GetBufferSize() const
@@ -125,6 +122,21 @@ inline Size_ui64 VertexBuffer::GetBufferSize() const
 inline Size_ui64 VertexBuffer::GetDeviceSize() const
 {
     return m_identity.m_memory_size;
+}
+
+inline uint32_t VertexBuffer::GetAttribLocation() const
+{
+    return m_identity.m_location;
+}
+
+inline MemoryTypeEnum VertexBuffer::GetMemoryType() const
+{
+    return m_identity.m_memory_type;
+}
+
+inline VertexBufferFormatEnum VertexBuffer::GetFormat() const
+{
+    return m_identity.m_format;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
