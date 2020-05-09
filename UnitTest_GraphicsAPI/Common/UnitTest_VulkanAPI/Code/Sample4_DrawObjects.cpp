@@ -123,7 +123,7 @@ void ObjectMaterialData::Initialize(VulkanAPITestManager *i_mgr, const GraphicsP
     light_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     light_set_info.pNext = nullptr;
     light_set_info.dstSet = m_desc_set;
-    light_set_info.dstBinding = 0; //binding 0, set 0
+    light_set_info.dstBinding = 1; //binding 1, set 0
     light_set_info.descriptorCount = 1;
     light_set_info.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     light_set_info.pBufferInfo = &light_uniform_b_info;
@@ -365,7 +365,7 @@ void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
     sp_denp.m_dependencies.push_back(DependencyScope_REGION);
     sp_denps.push_back(sp_denp);
 
-    ClearValue clear_color = { 0.75f, 0.15f, 0.15f, 1.0f };
+    ClearValue clear_color = { 0.75f, 0.15f, 0.0f, 1.0f };
     ClearValue clear_dands;
     clear_dands.depth_stencil.depth = 1.0f;
     clear_dands.depth_stencil.stencil = 1;
