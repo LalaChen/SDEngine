@@ -361,9 +361,9 @@ void VulkanAPITestManager::RenderDebug()
     }
 }
 
-void VulkanAPITestManager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
+void VulkanAPITestManager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
 {
-    VulkanManager::Resize(i_new_surface, i_w, i_h);
+    VulkanManager::Resize(i_ns_handle, i_w, i_h);
     for (uint32_t sample_idx = 0; sample_idx < m_samples.size(); ++sample_idx) {
         m_samples[sample_idx]->Resize(i_w, i_h);
     }

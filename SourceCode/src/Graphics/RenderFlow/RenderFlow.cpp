@@ -78,21 +78,21 @@ void RenderFlow::Initialize()
     }
 }
 
-void RenderFlow::BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
+void RenderFlow::BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref)
 {
     m_current_step = 0;
-    GraphicsManager::GetRef().BeginRenderPass(i_cmd_buf_wref, m_fb_sref, m_rp_wref, m_position, m_size);
+    GraphicsManager::GetRef().BeginRenderPass(i_cb_wref, m_fb_sref, m_rp_wref, m_position, m_size);
 }
 
-void RenderFlow::GoToNextStep(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
+void RenderFlow::GoToNextStep(const CommandBufferWeakReferenceObject &i_cb_wref)
 {
     m_current_step++;
-    GraphicsManager::GetRef().GoToNextStepOfRenderPass(i_cmd_buf_wref, m_fb_sref, m_current_step);
+    GraphicsManager::GetRef().GoToNextStepOfRenderPass(i_cb_wref, m_fb_sref, m_current_step);
 }
 
-void RenderFlow::EndRenderFlow(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
+void RenderFlow::EndRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref)
 {
-    GraphicsManager::GetRef().EndRenderPass(i_cmd_buf_wref);
+    GraphicsManager::GetRef().EndRenderPass(i_cb_wref);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -93,7 +93,7 @@ public:
 public:
     void RenderToScreen() override;
     void RenderDebug();
-    void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
+    void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
 public:
     void SetCurrentSampleIndex(uint32_t i_sample_idx);
 protected:

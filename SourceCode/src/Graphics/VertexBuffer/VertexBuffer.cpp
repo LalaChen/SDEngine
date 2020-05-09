@@ -32,6 +32,8 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 VertexBuffer::VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type)
 : Object(i_object_name)
 {
+    m_identity.m_memory_type = i_memory_type;
+    m_identity.m_format = i_format;
 }
 
 VertexBuffer::~VertexBuffer()

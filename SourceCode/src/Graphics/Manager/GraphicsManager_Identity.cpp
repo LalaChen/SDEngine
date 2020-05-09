@@ -38,9 +38,14 @@ const FrameBufferIdentity& GraphicsManager::GetIdentity(const FrameBufferWeakRef
     return i_fb_wref.GetConstRef().m_identity;
 }
 
-const CommandBufferIdentity& GraphicsManager::GetIdentity(const CommandBufferWeakReferenceObject &i_cmd_buf_wref) const
+const CommandBufferIdentity& GraphicsManager::GetIdentity(const CommandBufferWeakReferenceObject &i_cb_wref) const
 {
-    return i_cmd_buf_wref.GetConstRef().m_identity;
+    return i_cb_wref.GetConstRef().m_identity;
+}
+
+const RenderPassIdentity& GraphicsManager::GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const
+{
+    return i_rp_wref.GetConstRef().m_identity;
 }
 
 const VertexBufferIdentity& GraphicsManager::GetIdentity(const VertexBufferWeakReferenceObject &i_vb_wref) const
@@ -48,9 +53,9 @@ const VertexBufferIdentity& GraphicsManager::GetIdentity(const VertexBufferWeakR
     return i_vb_wref.GetConstRef().m_identity;
 }
 
-const RenderPassIdentity& GraphicsManager::GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const
+const IndexBufferIdentity& GraphicsManager::GetIdentity(const IndexBufferWeakReferenceObject &i_ib_wref) const
 {
-    return i_rp_wref.GetConstRef().m_identity;
+    return i_ib_wref.GetConstRef().m_identity;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -154,7 +154,7 @@ inline const CompHandle Texture::GetHandle() const
 
 inline const CompHandle Texture::GetSamplerHandle() const
 {
-    return m_sampler_idnetity.m_sampler_handle;
+    return m_sampler_idnetity.m_handle;
 }
 
 inline const CompHandle Texture::GetViewHandle() const

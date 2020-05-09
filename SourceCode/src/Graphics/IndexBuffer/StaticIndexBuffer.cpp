@@ -30,7 +30,7 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-StaticIndexBuffer::StaticIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type)
+StaticIndexBuffer::StaticIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format)
 : IndexBuffer(i_object_name, i_format, MemoryType_STATIC)
 {
 }
@@ -55,6 +55,8 @@ void StaticIndexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_siz
     else {
         SDLOG("Reallocate or initialize buffer failure.");
     }
+    //3. calculate index array number.
+    CalculateIndexArraySize();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

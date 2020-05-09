@@ -30,7 +30,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 void VulkanManager::SwitchVKImageLayout(
-    VkCommandBuffer i_cmd_buffer,
+    VkCommandBuffer i_cb_handle,
     VkImage i_image_handle,
     uint32_t i_sub_src_range_aspect_mask,
     uint32_t i_sub_src_range_base_mip_lv,
@@ -62,7 +62,7 @@ void VulkanManager::SwitchVKImageLayout(
     barrier.srcQueueFamilyIndex = i_src_queue_family_id;
     barrier.dstQueueFamilyIndex = i_dst_queue_family_id;
 
-    vkCmdPipelineBarrier(i_cmd_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT,
+    vkCmdPipelineBarrier(i_cb_handle, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT,
         0,
         0, nullptr, //memory barrier
         0, nullptr, //buffer memory barrier
@@ -71,7 +71,7 @@ void VulkanManager::SwitchVKImageLayout(
 }
 
 void VulkanManager::SwitchVKBufferLayout(
-    VkCommandBuffer i_cmd_buffer,
+    VkCommandBuffer i_cb_handle,
     VkBuffer i_buffer_handle,
     VkDeviceSize i_offset,
     VkDeviceSize i_size,
@@ -93,7 +93,7 @@ void VulkanManager::SwitchVKBufferLayout(
     barrier.srcQueueFamilyIndex = i_src_queue_family_id;
     barrier.dstQueueFamilyIndex = i_dst_queue_family_id;
 
-    vkCmdPipelineBarrier(i_cmd_buffer, i_src_pipeline_stage, i_dst_pipeline_stage,
+    vkCmdPipelineBarrier(i_cb_handle, i_src_pipeline_stage, i_dst_pipeline_stage,
         0,
         0, nullptr, //memory barrier
         1, &barrier, //buffer memory barrier

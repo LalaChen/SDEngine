@@ -44,6 +44,7 @@ SOFTWARE.
 #include "CommandPool.h"
 #include "CommandBuffer.h"
 #include "VertexBuffer.h"
+#include "IndexBuffer.h"
 #include "RenderPass.h"
 #include "ImageLoader.h"
 #include "Resolution.h"
@@ -120,7 +121,7 @@ public:
     virtual void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
     virtual void DeleteVertexBuffer(VertexBufferIdentity &io_identity) = 0;
     virtual void MapVertexBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) = 0;
-    virtual void UnmapVertexBuffer(const VertexBufferIdentity& i_identity) = 0;
+    virtual void UnmapVertexBuffer(const VertexBufferIdentity &i_identity) = 0;
     //----------- Index Buffer Interface Function ------------
 public:
     virtual void CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui64 i_data_size) = 0;
@@ -132,9 +133,10 @@ public:
 public:
     virtual void CreateTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity) = 0;
     virtual void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) = 0;
-    virtual void DeleteTextureImage(TextureIdentity &io_identity) = 0;
+    virtual void DeleteTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) = 0;
 public:
     virtual void BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset) = 0;
+    virtual void BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset) = 0;
 public:
     virtual void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) = 0;
     virtual void DeleteShaderModule(ShaderModuleIdentity &io_identity) = 0;
@@ -144,9 +146,9 @@ public:
     virtual void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) = 0;
 public:
     virtual void CreateRenderPass(RenderPassIdentity &io_identity) = 0;
-    virtual void BeginRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size) = 0;
-    virtual void GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id) = 0;
-    virtual void EndRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref) = 0;
+    virtual void BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size) = 0;
+    virtual void GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id) = 0;
+    virtual void EndRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref) = 0;
     virtual void DestroyRenderPass(RenderPassIdentity &io_identity) = 0;
 public:
     virtual void CreateFrameBuffer(FrameBufferIdentity &io_identity, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs) = 0;
@@ -154,8 +156,10 @@ public:
     virtual void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) = 0;
     virtual void DestroyFrameBuffer(FrameBufferIdentity &io_identity) = 0;
 public:
+    virtual void DrawByIndices(const IndexBufferWeakReferenceObject &i_ib_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) = 0;
+public:
 //------------- Resize Function -----------------
-    virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) = 0;
+    virtual void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:
 //------------- Render Function -----------------
     void Render();
@@ -174,11 +178,12 @@ public:
     TextureFormatEnum GetDefaultColorBufferFormat() const;
     bool IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) const;
 protected:
-    const TextureIdentity& GetIdentity(const TextureWeakReferenceObject& i_tex_wref) const;
+    const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex_wref) const;
     const FrameBufferIdentity& GetIdentity(const FrameBufferWeakReferenceObject &i_fb_wref) const;
-    const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject& i_cmd_buf_wref) const;
+    const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject& i_cb_wref) const;
     const RenderPassIdentity& GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const;
     const VertexBufferIdentity& GetIdentity(const VertexBufferWeakReferenceObject &i_vb_wref) const;
+    const IndexBufferIdentity& GetIdentity(const IndexBufferWeakReferenceObject &i_ib_wref) const;
 protected:
 //------------ Render Flow Function -------------
     virtual void RenderBegin() = 0;

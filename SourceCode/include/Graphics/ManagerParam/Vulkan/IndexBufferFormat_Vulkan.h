@@ -23,40 +23,31 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
-#include "GraphicsManager.h"
-#include "IndexBuffer.h"
+/*! \file      IndexBufferFormat_Vulkan.h
+ *  \brief     Introduce of class IndexBufferFormat_Vulkan.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/05/09
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include <vector>
+#include "VulkanWrapper.h"
+
+#include "SDEngineCommonType.h"
+#include "IndexBufferFormat.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-IndexBuffer::IndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type)
-: Object(i_object_name)
+class IndexBufferFormat_Vulkan
 {
-    m_identity.m_memory_type = i_memory_type;
-    m_identity.m_format = i_format;
-}
-
-IndexBuffer::~IndexBuffer()
-{
-}
-
-void IndexBuffer::Bind(const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset)
-{
-    GraphicsManager::GetRef().BindIndexBuffer(m_identity, i_cb_wref, i_offset);
-}
-
-void IndexBuffer::CalculateIndexArraySize()
-{
-    if (m_identity.m_format == IndexBufferFormat_X16_UINT) {
-        m_identity.m_index_array_size = static_cast<uint32_t>(m_identity.m_data_size / 2);
-    }
-    else if (m_identity.m_format == IndexBufferFormat_X32_UINT) {
-        m_identity.m_index_array_size = static_cast<uint32_t>(m_identity.m_data_size / 4);
-    }
-    else {
-        SDLOGE("No corrent format of index buffer.");
-        m_identity.m_index_array_size = 0;
-    }
-}
+public:
+    static VkFormat Convert(const IndexBufferFormatEnum &i_src);
+    static VkIndexType ConvertIndexType(const IndexBufferFormatEnum &i_src);
+public:
+    static VkFormat BufferFormats[IndexBufferFormat_MAX_DEFINE_VALUE];
+    static VkIndexType IndexTypes[IndexBufferFormat_MAX_DEFINE_VALUE];
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

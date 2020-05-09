@@ -49,10 +49,9 @@ public:
     /*! \fn explicit StaticIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
      *  \param [in] i_object_name Name of this buffer.
      *  \param [in] i_format The format.
-     *  \param [in] i_memory_type The memory type of this buffer memory.
      *  \brief The constructor of StaticIndexBuffer Class.
      */
-    explicit StaticIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
+    explicit StaticIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format);
 
     /*! \fn ~StaticIndexBuffer()
      *  \brief The destructor of StaticIndexBuffer Class.

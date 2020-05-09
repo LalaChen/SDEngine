@@ -29,8 +29,8 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-DynamicIndexBuffer::DynamicIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type)
-: IndexBuffer(i_object_name, i_format, i_memory_type)
+DynamicIndexBuffer::DynamicIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format)
+: IndexBuffer(i_object_name, i_format, MemoryType_DYNAMIC)
 {
 }
 
@@ -64,6 +64,8 @@ void DynamicIndexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_si
     else {
         SDLOG("Reallocate or initialize buffer failure.");
     }
+    //3. calculate index array number.
+    CalculateIndexArraySize();
 }
 
 VoidPtr DynamicIndexBuffer::MapMemory()

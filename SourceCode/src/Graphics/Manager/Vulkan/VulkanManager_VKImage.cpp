@@ -69,9 +69,10 @@ VkResult VulkanManager::CreateVkImage(
 }
 
 VkResult VulkanManager::CopyVkBufferToVkImage(
-    VkBuffer i_src_buffer_handle,
+    VkCommandBuffer i_cb_handle,
+    VkBuffer i_sb_handle,
     VkDeviceSize i_data_size,
-    VkImage i_dst_image_handle,
+    VkImage i_di_handle,
     VkOffset3D i_image_offset,
     VkExtent3D i_image_size,
     VkAccessFlags i_src_access_flags,
@@ -89,14 +90,14 @@ VkResult VulkanManager::CopyVkBufferToVkImage(
     cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     cmd_buf_c_info.pInheritanceInfo = nullptr;
 
-    result = vkBeginCommandBuffer(m_VK_main_cmd_buffer, &cmd_buf_c_info);
+    result = vkBeginCommandBuffer(i_cb_handle, &cmd_buf_c_info);
     if (result != VK_SUCCESS) {
-        SDLOGW("We can't begin command buffer at copy buffer to image(%x)!!!", m_VK_main_cmd_buffer);
+        SDLOGW("We can't begin command buffer at copy buffer to image(%x)!!!", i_cb_handle);
         return result;
     }
     //2. set buffer memory barrier (block when transfer).
-    SwitchVKImageLayout(m_VK_main_cmd_buffer,
-        i_dst_image_handle,
+    SwitchVKImageLayout(i_cb_handle,
+        i_di_handle,
         VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1,
         i_dst_image_original_layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         i_src_pipe_stage_flags, VK_PIPELINE_STAGE_TRANSFER_BIT);
@@ -113,55 +114,18 @@ VkResult VulkanManager::CopyVkBufferToVkImage(
     buf_to_img_cpy_info.imageOffset = i_image_offset;
     buf_to_img_cpy_info.imageExtent = i_image_size;
 
-    vkCmdCopyBufferToImage(m_VK_main_cmd_buffer, i_src_buffer_handle, i_dst_image_handle, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &buf_to_img_cpy_info);
+    vkCmdCopyBufferToImage(i_cb_handle, i_sb_handle, i_di_handle, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &buf_to_img_cpy_info);
 
     //4. set buffer memory barrier (block transfer).
-    SwitchVKImageLayout(m_VK_main_cmd_buffer,
-        i_dst_image_handle,
+    SwitchVKImageLayout(i_cb_handle,
+        i_di_handle,
         VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, i_dst_image_final_layout,
         VK_PIPELINE_STAGE_TRANSFER_BIT, i_dst_pipe_stage_flags);
-
+ 
     //5. Submit command.
-    VkSubmitInfo submit_info = {};
-    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submit_info.pNext = nullptr;
-    submit_info.waitSemaphoreCount = 0;
-    submit_info.pWaitSemaphores = nullptr;
-    submit_info.signalSemaphoreCount = 0;
-    submit_info.pSignalSemaphores = nullptr;
-    submit_info.pWaitDstStageMask = nullptr;
-    submit_info.commandBufferCount = 1;
-    submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
-
-    result = vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence);
-    if (result != VK_SUCCESS) {
-        SDLOGW("Submit command buffer failure when copying buffer to image !!!");
-        return result;
-    }
-
-    do {
-        result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
-    } while (result == VK_TIMEOUT);
-    if (result != VK_SUCCESS) {
-        SDLOGW("Wait sync failure(%d)!!!", result);
-        return result;
-    }
-
-    //Reset main command buffer sync.
-    result = vkResetFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence);
-    if (result != VK_SUCCESS) {
-        SDLOGW("reset main command buffer fence failure when copying buffer to image !!!");
-        return result;
-    }
-
-    result = vkResetCommandBuffer(m_VK_main_cmd_buffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
-    if (result != VK_SUCCESS) {
-        SDLOGW("reset main command buffer failure!!!");
-        return result;
-    }
-
-    return VK_SUCCESS;
+    std::vector<VkCommandBuffer> cb_handles = {i_cb_handle};
+    return SubmitVkCommandBuffers(cb_handles);
 }
 
 void VulkanManager::DestroyVkImage(VkImage &io_image_handle)

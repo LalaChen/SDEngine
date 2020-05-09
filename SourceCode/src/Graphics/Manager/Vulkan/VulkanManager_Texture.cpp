@@ -86,7 +86,7 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
 
     //3. Create sampler for this texture.
     float max_lod = static_cast<float>(io_tex_identity.m_mipmap_levels);
-    VkSampler &sampler_handle = reinterpret_cast<VkSampler&>(io_sampler_identity.m_sampler_handle);
+    VkSampler &sampler_handle = reinterpret_cast<VkSampler&>(io_sampler_identity.m_handle);
     result = CreateVkSampler(
         sampler_handle,
         SamplerFilterType_Vulkan::Convert(io_sampler_identity.m_min_filter_type),
@@ -182,6 +182,7 @@ void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidP
             dst_layout = ImageLayout_Vulkan::Convert(i_dst_layout);
         }
         CopyVkBufferToVkImage(
+            m_VK_main_cmd_buffer,
             staging_buffer_handle, i_data_size,
             image_handle, image_offset, image_size,
             0, 0,
@@ -195,11 +196,13 @@ void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidP
     }
 }
 
-void VulkanManager::DeleteTextureImage(TextureIdentity &io_identity)
+void VulkanManager::DeleteTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity)
 {
     //destroy image handle.
     VkImage &image_handle = reinterpret_cast<VkImage&>(io_identity.m_image_handle);
-    DestroyVkImage(image_handle);    
+    DestroyVkImage(image_handle);
+    VkSampler &sample_handle = reinterpret_cast<VkSampler&>(io_sampler_identity.m_handle);
+    DestroyVkSampler(sample_handle);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

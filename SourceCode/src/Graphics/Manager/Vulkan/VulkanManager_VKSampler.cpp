@@ -29,7 +29,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVkSampler(
-    VkSampler & io_sampler_handle,
+    VkSampler & io_handle,
     VkFilter i_mag_filter_type,
     VkFilter i_min_filter_type,
     VkSamplerMipmapMode i_mipmap_mode,
@@ -66,16 +66,15 @@ VkResult VulkanManager::CreateVkSampler(
     sampler_c_info.borderColor = i_border_color;
     sampler_c_info.unnormalizedCoordinates = i_unnormalize_coord;
 
-    return vkCreateSampler(m_VK_device, &sampler_c_info, nullptr, &io_sampler_handle);
+    return vkCreateSampler(m_VK_device, &sampler_c_info, nullptr, &io_handle);
 }
 
-void VulkanManager::FreeVkSampler(SamplerIdentity &io_identity)
+void VulkanManager::DestroyVkSampler(VkSampler &io_handle)
 {
-    if (io_identity.m_sampler_handle != SD_NULL_HANDLE) {
-        VkSampler &sampler_handle = reinterpret_cast<VkSampler&>(io_identity.m_sampler_handle);
-        vkDestroySampler(m_VK_device, sampler_handle, nullptr);
+    if (io_handle != VK_NULL_HANDLE) {
+        vkDestroySampler(m_VK_device, io_handle, nullptr);
     }
-    io_identity = SamplerIdentity();
+    io_handle = VK_NULL_HANDLE;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -132,14 +132,12 @@ void Sample2_DrawScene::CreateModel()
         }
         //--- Indice Buffer
         if (model.m_mesh_datas[meshID].m_face_indices.size() > 0) {
-            vaID = static_cast<uint32_t>(VertexBufferUsage_ELEMENT_BUFFER);
-            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
-                StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
-                vaID, VertexBufferFormat_X32_UINT);
+            StaticIndexBufferStrongReferenceObject va_sref = new StaticIndexBuffer(
+                StringFormat("%s_Indice", model.m_mesh_datas[meshID].m_name.c_str()),IndexBufferFormat_X32_UINT);
             va_sref.GetRef().RefreshBufferData(
-                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_ELEMENT_BUFFER].data(),
-                model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_ELEMENT_BUFFER].size());
-            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_ELEMENT_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+                model.m_mesh_datas[meshID].m_face_indices.data(),
+                model.m_mesh_datas[meshID].m_face_indices.size());
+            mesh_sref.GetRef().RegisterIndexBuffer(va_sref.StaticCastTo<IndexBuffer>());
         }
         m_meshes.push_back(mesh_sref);
     }

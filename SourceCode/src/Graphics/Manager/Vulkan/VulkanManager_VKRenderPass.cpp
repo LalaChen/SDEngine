@@ -49,7 +49,7 @@ VkResult VulkanManager::CreateVKRenderPass(
 }
 
 void VulkanManager::BeginVkRenderPass(
-    VkCommandBuffer i_cmd_buffer,
+    VkCommandBuffer i_cb_handle,
     VkRenderPass i_rp_handle,
     VkFramebuffer i_fb_handle,
     const VkRect2D &i_render_area,
@@ -65,17 +65,17 @@ void VulkanManager::BeginVkRenderPass(
     rp_begin_info.clearValueCount = static_cast<uint32_t>(i_clear_values.size());
     rp_begin_info.pClearValues = i_clear_values.data();
 
-    vkCmdBeginRenderPass(i_cmd_buffer, &rp_begin_info, i_sp_content);
+    vkCmdBeginRenderPass(i_cb_handle, &rp_begin_info, i_sp_content);
 }
 
-void VulkanManager::GotoNextStepInVKRenderPass(VkCommandBuffer i_cmd_buffer, VkSubpassContents i_sp_content)
+void VulkanManager::GotoNextStepInVKRenderPass(VkCommandBuffer i_cb_handle, VkSubpassContents i_sp_content)
 {
-    vkCmdNextSubpass(i_cmd_buffer, i_sp_content);
+    vkCmdNextSubpass(i_cb_handle, i_sp_content);
 }
 
-void VulkanManager::EndVkRenderPass(VkCommandBuffer i_cmd_buffer)
+void VulkanManager::EndVkRenderPass(VkCommandBuffer i_cb_handle)
 {
-    vkCmdEndRenderPass(i_cmd_buffer);
+    vkCmdEndRenderPass(i_cb_handle);
 }
 
 void VulkanManager::DestroyVKRenderPass(VkRenderPass &io_rp_handle)

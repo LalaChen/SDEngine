@@ -24,6 +24,7 @@ SOFTWARE.
 */
 
 #include "StaticVertexBuffer.h"
+#include "StaticIndexBuffer.h"
 #include "BasicShapeCreator.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -135,12 +136,12 @@ MeshStrongReferenceObject BasicShapeCreator::CreatePlane(
 	StaticVertexBufferStrongReferenceObject nbuf_sref = new StaticVertexBuffer("PlaneNBuffer", VertexBufferUsage_NORMAL_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
 	nbuf_sref.GetRef().RefreshBufferData(n_data.data(), n_data.size() * sizeof(vec3));
 	StaticVertexBufferStrongReferenceObject bnbuf_sref = new StaticVertexBuffer("PlaneBNBuffer", VertexBufferUsage_BINORMAL_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
-	nbuf_sref.GetRef().RefreshBufferData(bn_data.data(), bn_data.size() * sizeof(vec3));
+	bnbuf_sref.GetRef().RefreshBufferData(bn_data.data(), bn_data.size() * sizeof(vec3));
 	StaticVertexBufferStrongReferenceObject tnbuf_sref = new StaticVertexBuffer("PlaneTNBuffer", VertexBufferUsage_TANGENT_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
-	nbuf_sref.GetRef().RefreshBufferData(tn_data.data(), tn_data.size() * sizeof(vec3));
+	tnbuf_sref.GetRef().RefreshBufferData(tn_data.data(), tn_data.size() * sizeof(vec3));
 	StaticVertexBufferStrongReferenceObject tbuf_sref = new StaticVertexBuffer("PlaneTBuffer", VertexBufferUsage_TEX_COORD_BUFFER, VertexBufferFormat_X32Y32_SFLOAT);
 	tbuf_sref.GetRef().RefreshBufferData(t_data.data(), t_data.size() * sizeof(vec2));
-	StaticVertexBufferStrongReferenceObject ibuf_sref = new StaticVertexBuffer("PlaneIBuffer", VertexBufferUsage_ELEMENT_BUFFER, VertexBufferFormat_X32_UINT);
+	StaticIndexBufferStrongReferenceObject ibuf_sref = new StaticIndexBuffer("PlaneIBuffer", IndexBufferFormat_X32_UINT);
 	ibuf_sref.GetRef().RefreshBufferData(i_data.data(), i_data.size() * sizeof(uint32_t));
 
 	mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, vbuf_sref.StaticCastTo<VertexBuffer>());
@@ -148,7 +149,7 @@ MeshStrongReferenceObject BasicShapeCreator::CreatePlane(
 	mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_BINORMAL_BUFFER, bnbuf_sref.StaticCastTo<VertexBuffer>());
 	mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_TANGENT_BUFFER, tnbuf_sref.StaticCastTo<VertexBuffer>());
 	mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_TEX_COORD_BUFFER, tbuf_sref.StaticCastTo<VertexBuffer>());
-	mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_ELEMENT_BUFFER, ibuf_sref.StaticCastTo<VertexBuffer>());
+	mesh.GetRef().RegisterIndexBuffer(ibuf_sref.StaticCastTo<IndexBuffer>());
 
 	return mesh;
 }

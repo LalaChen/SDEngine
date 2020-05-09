@@ -24,7 +24,7 @@ std::string MeshData::ToString(uint32_t i_level) const
         tabs += "---";
     }
     ss << tabs << StringFormat("M[%s]:\n", m_name.c_str());
-    for (uint32_t i = 0; i < VertexBufferUsage_BUFFER_GROUP; ++i) {
+    for (uint32_t i = 0; i < VertexBufferUsage_MAX_DEFINE_VALUE; ++i) {
         if (m_vertex_attribs[i].size() > 0) {
             ss << tabs << tabs << StringFormat("VA[%d](%llu)\n", i, m_vertex_attribs[i].size());
         }

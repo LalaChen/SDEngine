@@ -39,7 +39,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \enum VertexBufferUsageKindEnum
- *  \brief The vertex buffer usage kind.
+ *  \brief The vertex buffer usage kind. The number will be used to vertex attribute location.
  */
 enum VertexBufferUsageEnum
 {
@@ -49,9 +49,7 @@ enum VertexBufferUsageEnum
     VertexBufferUsage_TANGENT_BUFFER, /*!< Use for storing tangents.(vec3)*/
     VertexBufferUsage_BINORMAL_BUFFER , /*!< Use for storing binormals.(vec3)*/
     VertexBufferUsage_COLOR_BUFFER, /*!< Use for storing colors.(Color4f)*/
-    VertexBufferUsage_ELEMENT_BUFFER, /*!< Use for indice buffer.*/
     VertexBufferUsage_MAX_DEFINE_VALUE, /*!< Bound of enum.*/
-    VertexBufferUsage_BUFFER_GROUP = VertexBufferUsage_COLOR_BUFFER + 1 /*!< Bound of vertex array.*/
 };
 
 extern SDENGINE_API const std::string VertexBufferUsageEnumNames[VertexBufferUsage_MAX_DEFINE_VALUE];

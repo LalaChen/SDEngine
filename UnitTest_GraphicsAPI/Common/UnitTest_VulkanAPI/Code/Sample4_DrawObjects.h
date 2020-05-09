@@ -86,7 +86,7 @@ public:
     ~ObjectData();
 public:
     void UpdateMaterial(VulkanAPITestManager* i_mgr, const SampleCameraData &i_camera, const LightData &i_light);
-    void Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakReferenceObject &i_cmd_buf_wref);
+    void Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakReferenceObject &i_cb_wref);
 public:
     MeshStrongReferenceObject m_mesh;
 public:

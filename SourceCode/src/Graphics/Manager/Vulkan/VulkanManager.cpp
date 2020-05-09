@@ -222,7 +222,7 @@ void VulkanManager::ReleaseGraphicsSystem()
 }
 
 //----------------------- Render Flow -----------------------
-void VulkanManager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
+void VulkanManager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
 {
     for (VkFramebuffer &fbo : m_VK_sc_image_fbs) {
         if (fbo != VK_NULL_HANDLE) {
@@ -245,7 +245,7 @@ void VulkanManager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_
         m_VK_swap_chain = VK_NULL_HANDLE;
     }
 
-    VkSurfaceKHR new_VK_surface = reinterpret_cast<VkSurfaceKHR>(i_new_surface);
+    VkSurfaceKHR new_VK_surface = reinterpret_cast<VkSurfaceKHR>(i_ns_handle);
     if (m_VK_surface != new_VK_surface && new_VK_surface != SD_NULL_HANDLE) {
         vkDestroySurfaceKHR(m_VK_instance, m_VK_surface, nullptr);
         m_VK_surface = new_VK_surface;

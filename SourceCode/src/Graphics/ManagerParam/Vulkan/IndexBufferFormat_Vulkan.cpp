@@ -23,39 +23,39 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
-#include "GraphicsManager.h"
-#include "IndexBuffer.h"
+#include "IndexBufferFormat_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-IndexBuffer::IndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type)
-: Object(i_object_name)
+VkFormat IndexBufferFormat_Vulkan::BufferFormats[IndexBufferFormat_MAX_DEFINE_VALUE] =
 {
-    m_identity.m_memory_type = i_memory_type;
-    m_identity.m_format = i_format;
-}
+    VK_FORMAT_R16_UINT,
+    VK_FORMAT_R32_UINT
+};
 
-IndexBuffer::~IndexBuffer()
+VkIndexType IndexBufferFormat_Vulkan::IndexTypes[IndexBufferFormat_MAX_DEFINE_VALUE] =
 {
-}
+    VK_INDEX_TYPE_UINT16,
+    VK_INDEX_TYPE_UINT32
+};
 
-void IndexBuffer::Bind(const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset)
+VkFormat IndexBufferFormat_Vulkan::Convert(const IndexBufferFormatEnum &i_src)
 {
-    GraphicsManager::GetRef().BindIndexBuffer(m_identity, i_cb_wref, i_offset);
-}
-
-void IndexBuffer::CalculateIndexArraySize()
-{
-    if (m_identity.m_format == IndexBufferFormat_X16_UINT) {
-        m_identity.m_index_array_size = static_cast<uint32_t>(m_identity.m_data_size / 2);
-    }
-    else if (m_identity.m_format == IndexBufferFormat_X32_UINT) {
-        m_identity.m_index_array_size = static_cast<uint32_t>(m_identity.m_data_size / 4);
+    if (i_src != IndexBufferFormat_MAX_DEFINE_VALUE) {
+        return BufferFormats[SD_ENUM_TO_UINT(i_src)];
     }
     else {
-        SDLOGE("No corrent format of index buffer.");
-        m_identity.m_index_array_size = 0;
+        return VK_FORMAT_MAX_ENUM;
+    }
+}
+
+VkIndexType IndexBufferFormat_Vulkan::ConvertIndexType(const IndexBufferFormatEnum &i_src)
+{
+    if (i_src != IndexBufferFormat_MAX_DEFINE_VALUE) {
+        return IndexTypes[SD_ENUM_TO_UINT(i_src)];
+    }
+    else {
+        return VK_INDEX_TYPE_MAX_ENUM;
     }
 }
 

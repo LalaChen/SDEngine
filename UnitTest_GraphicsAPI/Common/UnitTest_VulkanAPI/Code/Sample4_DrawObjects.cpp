@@ -207,20 +207,22 @@ void ObjectData::UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraD
 {
 }
 
-void ObjectData::Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
+void ObjectData::Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakReferenceObject &i_cb_wref)
 {
     //1. use program.
-    m_material.m_pipeline_wref.GetRef().Use(i_cmd_buf_wref);
+    m_material.m_pipeline_wref.GetRef().Use(i_cb_wref);
     //2. bind descriptor set.
     std::vector<VkDescriptorSet> descs = { m_material.m_desc_set };
     std::vector<uint32_t> dynamic_offs = {};
     i_mgr->BindDescriptorSets(
-        reinterpret_cast<VkCommandBuffer>(i_cmd_buf_wref.GetConstRef().GetHandle()),
+        reinterpret_cast<VkCommandBuffer>(i_cb_wref.GetConstRef().GetHandle()),
         reinterpret_cast<VkPipelineLayout>(m_material.m_pipeline_wref.GetConstRef().GetPipelineLayoutHandle()),
         VK_PIPELINE_BIND_POINT_GRAPHICS, 0, descs, dynamic_offs);
     //3. bind mesh vertex attributes.
-    m_mesh.GetRef().BindVertexBuffers(i_cmd_buf_wref);
+    m_mesh.GetRef().BindVertexBuffers(i_cb_wref);
     //4. draw mesh.
+    m_mesh.GetRef().BindIndexBuffer(i_cb_wref);
+    m_mesh.GetRef().Render(i_cb_wref);
 }
 
 
@@ -254,7 +256,6 @@ void Sample4_DrawObjects::Render()
     //1. Begin Command Buffer
     m_cmd_buf_wrefs[0].GetRef().Begin();
     m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_cmd_buf_wrefs[0]);
-
 
     for (ObjectData &obj : m_cube_objects) {
         obj.Draw(m_mgr, m_cmd_buf_wrefs[0]);
@@ -409,6 +410,7 @@ void Sample4_DrawObjects::CreateObjects()
         -1.0f * static_cast<float>(m_cube_row) / 2.0f,
         0.0f,
         -1.0f * static_cast<float>(m_cube_depth) / 2.0f);
+    (*last_obj_iter).m_material.Initialize(m_mgr, m_pipeline_sref, m_tex_sref);
 
     for (uint32_t row = 0; row < m_cube_row; ++row) {
         for (uint32_t col = 0; col < m_cube_col; ++col) {

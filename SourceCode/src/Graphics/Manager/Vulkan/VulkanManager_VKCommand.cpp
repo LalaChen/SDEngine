@@ -45,36 +45,36 @@ void VulkanManager::DestroyVkCommandPool(VkCommandPool &io_pool_handle)
 }
 
 VkResult VulkanManager::AllocateVkCommandBuffer(
-    VkCommandBuffer &io_cmd_handle,
-    VkCommandPool i_pool_handle,
+    VkCommandBuffer &io_cb_handle,
+    VkCommandPool i_cp_handle,
     VkCommandBufferLevel i_level)
 {
     VkCommandBufferAllocateInfo cmd_buf_a_info = {};
     cmd_buf_a_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     cmd_buf_a_info.pNext = nullptr;
-    cmd_buf_a_info.commandPool = i_pool_handle;
+    cmd_buf_a_info.commandPool = i_cp_handle;
     cmd_buf_a_info.level = i_level; //VkCommandBufferLevel
     cmd_buf_a_info.commandBufferCount = 1;
-    return vkAllocateCommandBuffers(m_VK_device, &cmd_buf_a_info, &io_cmd_handle);
+    return vkAllocateCommandBuffers(m_VK_device, &cmd_buf_a_info, &io_cb_handle);
 }
 
 void VulkanManager::FreeVkCommandBuffer(
-    VkCommandBuffer &io_cmd_handle,
-    VkCommandPool i_pool_handle)
+    VkCommandBuffer &io_cb_handle,
+    VkCommandPool i_cp_handle)
 {
-    vkFreeCommandBuffers(m_VK_device, i_pool_handle, 1, &io_cmd_handle);
+    vkFreeCommandBuffers(m_VK_device, i_cp_handle, 1, &io_cb_handle);
 }
 
 VkResult VulkanManager::BeginVkCommandBuffer(
-    VkCommandBuffer i_cmd_buffer,
+    VkCommandBuffer i_cb_handle,
     const VkCommandBufferBeginInfo &i_info)
 {
-    return vkBeginCommandBuffer(i_cmd_buffer, &i_info);
+    return vkBeginCommandBuffer(i_cb_handle, &i_info);
 }
 
-VkResult VulkanManager::EndVkCommandBuffer(VkCommandBuffer i_cmd_buffer)
+VkResult VulkanManager::EndVkCommandBuffer(VkCommandBuffer i_cb_handle)
 {
-    return vkEndCommandBuffer(i_cmd_buffer);
+    return vkEndCommandBuffer(i_cb_handle);
 }
 
 VkResult VulkanManager::SubmitVkCommandBuffers(const std::vector<VkCommandBuffer> &i_cb_handles)

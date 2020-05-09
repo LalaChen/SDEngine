@@ -57,6 +57,10 @@ void OpenGL4Manager::BindVertexBuffer(const VertexBufferIdentity &i_identity, co
 {
 }
 
+void OpenGL4Manager::BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset)
+{
+}
+
 //----------- Index Buffer Function ------------
 void OpenGL4Manager::CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui64 i_data_size)
 {

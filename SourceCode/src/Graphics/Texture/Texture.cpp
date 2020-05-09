@@ -38,7 +38,7 @@ Texture::Texture(const ObjectName &i_object_name)
 
 Texture::~Texture()
 {
-    GraphicsManager::GetRef().DeleteTextureImage(m_tex_identity);
+    GraphicsManager::GetRef().DeleteTextureImage(m_tex_identity, m_sampler_idnetity);
 }
 
 //--- Texture Data Function

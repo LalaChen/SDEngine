@@ -20,43 +20,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
+#include "VulkanWrapper.h"
 #include "LogManager.h"
-#include "GraphicsManager.h"
-#include "IndexBuffer.h"
+#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-IndexBuffer::IndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type)
-: Object(i_object_name)
+void VulkanManager::DrawByVkIndexBuffer(
+    VkCommandBuffer i_cb_handle,
+    uint32_t i_indice_size,
+    uint32_t i_instance_count,
+    uint32_t i_first_index,
+    int32_t i_index_offest,
+    uint32_t i_first_instance)
 {
-    m_identity.m_memory_type = i_memory_type;
-    m_identity.m_format = i_format;
-}
-
-IndexBuffer::~IndexBuffer()
-{
-}
-
-void IndexBuffer::Bind(const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset)
-{
-    GraphicsManager::GetRef().BindIndexBuffer(m_identity, i_cb_wref, i_offset);
-}
-
-void IndexBuffer::CalculateIndexArraySize()
-{
-    if (m_identity.m_format == IndexBufferFormat_X16_UINT) {
-        m_identity.m_index_array_size = static_cast<uint32_t>(m_identity.m_data_size / 2);
-    }
-    else if (m_identity.m_format == IndexBufferFormat_X32_UINT) {
-        m_identity.m_index_array_size = static_cast<uint32_t>(m_identity.m_data_size / 4);
-    }
-    else {
-        SDLOGE("No corrent format of index buffer.");
-        m_identity.m_index_array_size = 0;
-    }
+    vkCmdDrawIndexed(i_cb_handle, i_indice_size, i_instance_count, i_first_index, i_index_offest, i_first_instance);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

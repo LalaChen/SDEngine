@@ -109,7 +109,7 @@ public:
     const GraphicsPipelineParam& GetPipelineParams() const;
 public:
 
-    void Use(const CommandBufferWeakReferenceObject &i_cmd_buf_wref);
+    void Use(const CommandBufferWeakReferenceObject &i_cb_wref);
 protected:
     /*! \var GraphicsPipelineIdentity m_identity;
      *  \brief Record basic identity

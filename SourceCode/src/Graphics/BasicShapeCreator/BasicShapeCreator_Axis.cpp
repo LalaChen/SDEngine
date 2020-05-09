@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "StaticIndexBuffer.h"
 #include "StaticVertexBuffer.h"
 #include "BasicShapeCreator.h"
 
@@ -85,12 +86,12 @@ MeshStrongReferenceObject BasicShapeCreator::CreateAxis(float i_length)
 	vbuf_sref.GetRef().RefreshBufferData(v_data.data(), v_data.size() * sizeof(vec3));
 	StaticVertexBufferStrongReferenceObject cbuf_sref = new StaticVertexBuffer("AxisCBuffer", VertexBufferUsage_COLOR_BUFFER, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
 	cbuf_sref.GetRef().RefreshBufferData(c_data.data(), c_data.size() * sizeof(Color4f));
-	StaticVertexBufferStrongReferenceObject ibuf_sref = new StaticVertexBuffer("AxisIBuffer", VertexBufferUsage_ELEMENT_BUFFER, VertexBufferFormat_X32_UINT);
+	StaticIndexBufferStrongReferenceObject ibuf_sref = new StaticIndexBuffer("AxisIBuffer", IndexBufferFormat_X32_UINT);
 	ibuf_sref.GetRef().RefreshBufferData(i_data.data(), i_data.size() * sizeof(uint32_t));
 
 	mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, vbuf_sref.StaticCastTo<VertexBuffer>());
 	mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_COLOR_BUFFER, cbuf_sref.StaticCastTo<VertexBuffer>());
-	mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_ELEMENT_BUFFER, ibuf_sref.StaticCastTo<VertexBuffer>());
+	mesh.GetRef().RegisterIndexBuffer(ibuf_sref.StaticCastTo<IndexBuffer>());
 
 	return mesh;
 }

@@ -37,7 +37,7 @@ void OpenGL4Manager::RefreshTextureImage(const TextureIdentity &i_identity, Void
 {
 }
 
-void OpenGL4Manager::DeleteTextureImage(TextureIdentity &io_identity)
+void OpenGL4Manager::DeleteTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity)
 {
 }
 

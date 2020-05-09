@@ -53,7 +53,7 @@ void OpenGL4Manager::ReleaseGraphicsSystem()
     SDLOG("Release OpenGL4Manager.");
 }
 
-void OpenGL4Manager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
+void OpenGL4Manager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
 {
     glViewport(0, 0, i_w, i_h);
     glClearColor(0.2f, 0.5f, 0.8f, 1.0f);

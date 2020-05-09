@@ -20,43 +20,24 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
 #include "LogManager.h"
-#include "GraphicsManager.h"
-#include "IndexBuffer.h"
+#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-IndexBuffer::IndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type)
-: Object(i_object_name)
+void VulkanManager::DrawByIndices(const IndexBufferWeakReferenceObject &i_ib_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number)
 {
-    m_identity.m_memory_type = i_memory_type;
-    m_identity.m_format = i_format;
-}
-
-IndexBuffer::~IndexBuffer()
-{
-}
-
-void IndexBuffer::Bind(const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset)
-{
-    GraphicsManager::GetRef().BindIndexBuffer(m_identity, i_cb_wref, i_offset);
-}
-
-void IndexBuffer::CalculateIndexArraySize()
-{
-    if (m_identity.m_format == IndexBufferFormat_X16_UINT) {
-        m_identity.m_index_array_size = static_cast<uint32_t>(m_identity.m_data_size / 2);
-    }
-    else if (m_identity.m_format == IndexBufferFormat_X32_UINT) {
-        m_identity.m_index_array_size = static_cast<uint32_t>(m_identity.m_data_size / 4);
-    }
-    else {
-        SDLOGE("No corrent format of index buffer.");
-        m_identity.m_index_array_size = 0;
-    }
+    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
+    const IndexBufferIdentity &ib_idnetity = GetIdentity(i_ib_wref);
+    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    DrawByVkIndexBuffer(cb_handle, 
+        ib_idnetity.m_index_array_size,
+        i_ins_number,
+        i_first_id,
+        i_offset,
+        i_first_ins_id);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

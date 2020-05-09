@@ -52,15 +52,15 @@ void OpenGL4Manager::CreateRenderPass(RenderPassIdentity &io_identity)
 {
 }
 
-void OpenGL4Manager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size)
+void OpenGL4Manager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size)
 {
 }
 
-void OpenGL4Manager::GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id)
+void OpenGL4Manager::GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id)
 {
 }
 
-void OpenGL4Manager::EndRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
+void OpenGL4Manager::EndRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref)
 {
 }
 

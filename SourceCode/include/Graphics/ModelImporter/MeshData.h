@@ -69,10 +69,10 @@ public:
      */
     std::string ToString(uint32_t i_level = 0) const;
 public:
-    /*! \var std::vector<float> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
+    /*! \var std::vector<float> m_vertex_attribs[VertexBufferUsage_MAX_DEFINE_VALUE];
      *  \brief vertex attributes.
      */
-    std::vector<float> m_vertex_attribs[VertexBufferUsage_BUFFER_GROUP];
+    std::vector<float> m_vertex_attribs[VertexBufferUsage_MAX_DEFINE_VALUE];
 
     /*! \var std::vector<uint32_t> m_face_indices;
      *  \brief vertex indices.

@@ -7,8 +7,8 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 void GraphicsManager::InitializeDefaultPipelineInfos()
 {
     uint32_t va_id;
-    m_default_va_binding_descs.resize(SD_ENUM_TO_UINT(VertexBufferUsage_BUFFER_GROUP));
-    m_default_va_location_descs.resize(SD_ENUM_TO_UINT(VertexBufferUsage_BUFFER_GROUP));
+    m_default_va_binding_descs.resize(SD_ENUM_TO_UINT(VertexBufferUsage_MAX_DEFINE_VALUE));
+    m_default_va_location_descs.resize(SD_ENUM_TO_UINT(VertexBufferUsage_MAX_DEFINE_VALUE));
 
     va_id = SD_ENUM_TO_UINT(VertexBufferUsage_VERTEX_BUFFER);
     m_default_va_binding_descs[va_id].m_binding_ID = va_id;

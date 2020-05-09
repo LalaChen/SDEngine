@@ -29,7 +29,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVKShaderModule(
-    VkShaderModule &io_shader_module_handle,
+    VkShaderModule &io_sm_handle,
     const UByte *i_binary_ptr,
     const Size_ui64 i_binary_size)
 {
@@ -42,7 +42,7 @@ VkResult VulkanManager::CreateVKShaderModule(
     c_info.codeSize = i_binary_size;
     c_info.pCode = reinterpret_cast<const uint32_t*>(i_binary_ptr);
 
-    result = vkCreateShaderModule(m_VK_device, &c_info, nullptr, &io_shader_module_handle);
+    result = vkCreateShaderModule(m_VK_device, &c_info, nullptr, &io_sm_handle);
     if (result != VK_SUCCESS) {
         SDLOGW("Failed to create shader module! Result = %x.", result);
     }
@@ -50,12 +50,12 @@ VkResult VulkanManager::CreateVKShaderModule(
     return result;
 }
 
-void VulkanManager::DestroyVKShaderModule(VkShaderModule& io_shader_module_handle)
+void VulkanManager::DestroyVKShaderModule(VkShaderModule& io_sm_handle)
 {
-    if (io_shader_module_handle != VK_NULL_HANDLE) {
-        vkDestroyShaderModule(m_VK_device, io_shader_module_handle, nullptr);
+    if (io_sm_handle != VK_NULL_HANDLE) {
+        vkDestroyShaderModule(m_VK_device, io_sm_handle, nullptr);
     }
-    io_shader_module_handle = VK_NULL_HANDLE;
+    io_sm_handle = VK_NULL_HANDLE;
 }
 
 

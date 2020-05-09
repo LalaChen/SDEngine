@@ -46,13 +46,12 @@ class SDENGINE_CLASS DynamicIndexBuffer : public IndexBuffer
 public:
     friend class GraphicsManager;
 public:
-    /*! \fn explicit DynamicVertexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
+    /*! \fn explicit DynamicVertexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format);
      *  \param [in] i_object_name Name of this buffer.
      *  \param [in] i_format The format.
-     *  \param [in] i_memory_type The memory type of this buffer memory.
      *  \brief The constructor of DynamicVertexBuffer Class.
      */
-    explicit DynamicIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
+    explicit DynamicIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format);
 
     /*! \fn ~DynamicVertexBuffer()
      *  \brief The destructor of DynamicVertexBuffer Class.

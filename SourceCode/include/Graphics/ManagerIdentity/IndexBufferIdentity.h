@@ -70,6 +70,11 @@ public:
      */
     Size_ui64 m_data_size;
 
+    /*! \var Size_ui32 m_index_array_size;
+     *  \brief current index amount.
+     */
+    Size_ui32 m_index_array_size;
+
     /*! \var Size_ui64 m_memory_size;
      *  \brief current allocated memory size.
      */

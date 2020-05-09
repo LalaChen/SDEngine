@@ -9,8 +9,7 @@ const std::string VertexBufferUsageEnumNames[VertexBufferUsage_MAX_DEFINE_VALUE]
     "TexCoords",
     "Tangents",
     "Binormals",
-    "Colors",
-    "Indices"
+    "Colors"
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

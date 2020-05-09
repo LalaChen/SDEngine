@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "IndexBufferFormat_Vulkan.h"
 #include "LogManager.h"
 #include "VulkanManager.h"
 
@@ -78,7 +79,7 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
     VkResult result = VK_SUCCESS;
     const VkBuffer &buffer_handle = reinterpret_cast<const VkBuffer&>(i_identity.m_buffer_handle);
     VkBuffer staging_buffer_handle = VK_NULL_HANDLE;
-    VkDeviceMemory staging_memory = VK_NULL_HANDLE;
+    VkDeviceMemory staging_memory_handle = VK_NULL_HANDLE;
     VkDeviceSize staging_memory_size = 0;
 
     //1. create staging host visible buffer and then refresh data into the one.
@@ -89,14 +90,14 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
         return;
     }
 
-    result = AllocatVkDeviceMemoryForVkBuffer(staging_memory, staging_memory_size, staging_buffer_handle, 0u, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    result = AllocatVkDeviceMemoryForVkBuffer(staging_memory_handle, staging_memory_size, staging_buffer_handle, 0u, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
     if (result != VK_SUCCESS) {
         SDLOGW("Allocate staging memory failure.");
         return;
     }
 
     //--- ii. refresh data to temporary buffer.
-    result = RefreshDataToHostVisibleVKDeviceMemory(staging_memory, staging_memory_size, i_data_ptr, i_data_size);
+    result = RefreshDataToHostVisibleVKDeviceMemory(staging_memory_handle, staging_memory_size, i_data_ptr, i_data_size);
     if (result != VK_SUCCESS) {
         SDLOGW("Refresh host visible buffer failure.");
         return;
@@ -104,13 +105,14 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
 
     //2. Copy temporary host visible buffer to target static buffer.
     CopyVkBuffer(
+        m_VK_main_cmd_buffer,
         staging_buffer_handle, i_data_size,
         buffer_handle,
         0, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
     //3. free temporary memory and buffer.
-    FreeVkDeviceMemory(staging_memory);
+    FreeVkDeviceMemory(staging_memory_handle);
 
     DestroyVkBuffer(staging_buffer_handle);
 }
@@ -179,7 +181,7 @@ void VulkanManager::CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui6
     }
 
     //2. Create buffer.   
-    VkBufferUsageFlags buf_usage_flags = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    VkBufferUsageFlags buf_usage_flags = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
     result = CreateVkBuffer(buffer_handle, io_identity.m_data_size, buf_usage_flags, VK_SHARING_MODE_EXCLUSIVE);
     if (result != VK_SUCCESS) {
         SDLOGE("VKError : Create buffer error. code=%d", result);
@@ -232,7 +234,9 @@ void VulkanManager::RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identi
 
     //2. Copy temporary host visible buffer to target static buffer.
     CopyVkBuffer(
-        staging_buffer_handle, i_data_size,
+        m_VK_main_cmd_buffer,
+        staging_buffer_handle,
+        i_data_size,
         buffer_handle,
         0, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
@@ -273,6 +277,15 @@ void VulkanManager::UnmapIndexBuffer(const IndexBufferIdentity &i_identity)
 {
     VkDeviceMemory memory_handle = reinterpret_cast<VkDeviceMemory>(i_identity.m_memory_handle);
     UnmapVkDeviceMemory(memory_handle);
+}
+
+void VulkanManager::BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset)
+{
+    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
+    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    VkBuffer ib_handle = reinterpret_cast<VkBuffer>(i_identity.m_buffer_handle);
+    VkIndexType index_type = IndexBufferFormat_Vulkan::ConvertIndexType(i_identity.m_format);
+    BindVkIndexBuffer(cb_handle, ib_handle, static_cast<VkDeviceSize>(i_offset), index_type);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -167,10 +167,10 @@ void VulkanManager::DestroyRenderPass(RenderPassIdentity &io_identity)
     DestroyVKRenderPass(rp_handle);
 }
 
-void VulkanManager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size)
+void VulkanManager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size)
 {
     const FrameBufferIdentity &fb_identity = GetIdentity(i_fb_wref);
-    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cmd_buf_wref);
+    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cb_wref);
     const RenderPassIdentity &rp_identity = GetIdentity(i_rp_wref);
     VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
     VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_rp_handle);
@@ -202,16 +202,16 @@ void VulkanManager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cm
     BeginVkRenderPass(cmd_handle, rp_handle, fb_handle, render_area, clear_values);
 }
 
-void VulkanManager::GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id)
+void VulkanManager::GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id)
 {
-    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cmd_buf_wref);
+    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cb_wref);
     VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
     GotoNextStepInVKRenderPass(cmd_handle);
 }
 
-void VulkanManager::EndRenderPass(const CommandBufferWeakReferenceObject &i_cmd_buf_wref)
+void VulkanManager::EndRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref)
 {
-    const CommandBufferIdentity& cmd_buf_identity = GetIdentity(i_cmd_buf_wref);
+    const CommandBufferIdentity& cmd_buf_identity = GetIdentity(i_cb_wref);
     VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
     EndVkRenderPass(cmd_handle);
 }

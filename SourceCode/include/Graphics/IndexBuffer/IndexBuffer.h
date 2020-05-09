@@ -90,6 +90,11 @@ public:
      */
     Size_ui64 GetDeviceSize() const;
 protected:
+    /*! \fn void CalculateIndexArraySize();
+     *  \brief Calculate index array size.
+     */
+    void CalculateIndexArraySize();
+protected:
     /*! \var IndexBufferIdentity m_identity;
      *  \brief Index buffer identity.
      */
