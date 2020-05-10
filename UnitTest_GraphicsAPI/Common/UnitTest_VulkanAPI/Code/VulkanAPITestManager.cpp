@@ -30,10 +30,10 @@ VulkanAPITestManager::VulkanAPITestManager()
 , m_VK_screen_indices_buffer(VK_NULL_HANDLE)
 , m_VK_screen_ibuf_memory(VK_NULL_HANDLE)
 {
+    m_samples.push_back(new Sample4_DrawObjects(this));
     m_samples.push_back(new Sample3_MultiSubpass(this));
     m_samples.push_back(new Sample1_DrawTriangle(this));
     //m_samples.push_back(new Sample2_DrawScene(this));
-    m_samples.push_back(new Sample4_DrawObjects(this));
 }
 
 VulkanAPITestManager::~VulkanAPITestManager()

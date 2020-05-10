@@ -28,6 +28,34 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+void VulkanManager::SetVkViewport(
+    VkCommandBuffer i_cb_handle,
+    const VkViewport &i_viewport)
+{
+    vkCmdSetViewport(i_cb_handle, 0, 1, &i_viewport);
+}
+
+void VulkanManager::SetVkViewports(
+    VkCommandBuffer i_cb_handle,
+    const std::vector<VkViewport> &i_viewports)
+{
+    vkCmdSetViewport(i_cb_handle, 0, static_cast<uint32_t>(i_viewports.size()), i_viewports.data());
+}
+
+void VulkanManager::SetVkScissors(
+    VkCommandBuffer i_cb_handle,
+    const std::vector<VkRect2D> &i_rects)
+{
+    vkCmdSetScissor(i_cb_handle, 0, static_cast<uint32_t>(i_rects.size()), i_rects.data());
+}
+
+void VulkanManager::SetVkScissor(
+    VkCommandBuffer i_cb_handle,
+    const VkRect2D &i_rect)
+{
+    vkCmdSetScissor(i_cb_handle, 0, 1, &i_rect);
+}
+
 void VulkanManager::DrawByVkIndexBuffer(
     VkCommandBuffer i_cb_handle,
     uint32_t i_indice_size,

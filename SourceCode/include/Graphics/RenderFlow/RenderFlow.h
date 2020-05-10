@@ -137,5 +137,4 @@ protected:
     uint32_t m_current_step;
 };
 
-
 ______________SD_END_GRAPHICS_NAMESPACE______________

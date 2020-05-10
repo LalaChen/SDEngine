@@ -72,6 +72,31 @@ Matrix4X4f Transform::MakeAffineTransformMatrix() const
     return result;
 }
 
+Matrix4X4f Transform::MakeViewMatrix() const
+{
+    Matrix4X4f result;
+    result = m_rotation.toMatrix4X4f().inverse();
+    result.m_matrix[3][0] = m_position.m_vec.x;
+    result.m_matrix[3][1] = m_position.m_vec.y;
+    result.m_matrix[3][2] = m_position.m_vec.z;
+    return result.inverse();
+}
+
+Vector3f Transform::GetForward() const
+{
+    return m_rotation.rotate(Vector3f::PositiveZ);
+}
+
+Vector3f Transform::GetRight() const
+{
+    return m_rotation.rotate(Vector3f::PositiveX);
+}
+
+Vector3f Transform::GetTop() const
+{
+    return m_rotation.rotate(Vector3f::PositiveY);
+}
+
 Transform& Transform::operator=(const Transform &i_src)
 {
     if (&i_src == this) {

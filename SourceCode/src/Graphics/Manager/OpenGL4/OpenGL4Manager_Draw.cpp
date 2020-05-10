@@ -27,6 +27,22 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+void OpenGL4Manager::SetViewport(const CommandBufferWeakReferenceObject& i_cb_wref, const Viewport &i_vp)
+{
+}
+
+void OpenGL4Manager::SetViewports(const CommandBufferWeakReferenceObject& i_cb_wref, const std::vector<Viewport> &i_vps)
+{
+}
+
+void OpenGL4Manager::SetScissor(const CommandBufferWeakReferenceObject &i_cb_wref, const ScissorRegion &i_region)
+{
+}
+
+void OpenGL4Manager::SetScissors(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<ScissorRegion> &i_regions)
+{
+}
+
 void OpenGL4Manager::DrawByIndices(const IndexBufferWeakReferenceObject &i_ib_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number)
 {
 }

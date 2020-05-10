@@ -8,6 +8,12 @@ using namespace SDE::Math;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
+float gClipMat[16] = {
+    1.0f,  0.0f, 0.0f, 0.0f,
+    0.0f, -1.0f, 0.0f, 0.0f,
+    0.0f,  0.0f, 1.0f, 0.0f,
+    0.0f,  0.0f, 0.0f, 1.0f };
+
 VkDescriptorType DescriptorTypes[UniformBindingType_MAX_DEFINE_VALUE] = {
     VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
     VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
@@ -205,6 +211,30 @@ ObjectData::~ObjectData()
 
 void ObjectData::UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraData &i_camera, const LightData &i_light)
 {
+    BasicUniformBuffer ub = {};
+    ub.m_clip = Matrix4X4f(gClipMat);
+    ub.m_proj = i_camera.m_proj_mat;
+    ub.m_view = i_camera.m_trans.MakeViewMatrix();
+    ub.m_view_eye = i_camera.m_trans.m_position;
+    ub.m_worid = m_trans.MakeAffineTransformMatrix();
+
+    LightUniformBuffer lb = {};
+    lb = i_light.m_light_data;
+    if (lb.m_kind == 0) {// direction light.
+        lb.m_position = i_light.m_trans.GetForward();
+    }
+    else if (lb.m_kind == 1) { //position light,
+        lb.m_position = i_light.m_trans.m_position;
+    }
+    else if (lb.m_kind == 2) { //spot light.
+        lb.m_position = i_light.m_trans.m_position;
+        lb.m_direction = i_light.m_trans.GetForward();
+    }
+    else {
+        lb.m_position = i_light.m_trans.GetForward();
+    }
+    i_mgr->RefreshHostDeviceBufferData(m_material.m_basic_ub, m_material.m_basic_mem, &ub, sizeof(BasicUniformBuffer));
+    i_mgr->RefreshHostDeviceBufferData(m_material.m_light_ub, m_material.m_light_mem, &lb, sizeof(LightUniformBuffer));
 }
 
 void ObjectData::Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakReferenceObject &i_cb_wref)
@@ -246,16 +276,30 @@ void Sample4_DrawObjects::Initialize()
     CreateRenderPassAndFramebuffer();
     CreatePipeline();
     CreateTexture();
+    CreateLight();
     CreateObjects();
     CreateCommandBufferAndPool();
 }
 
 void Sample4_DrawObjects::Render()
 {
+    Viewport vp;
+    vp.m_x = 0.0f; vp.m_y = 0.0f; 
+    vp.m_width = static_cast<float>(m_current_res.GetWidth());
+    vp.m_height = static_cast<float>(m_current_res.GetHeight());
+    vp.m_min_depth = 0.0f;
+    vp.m_max_depth = 1.0f;
+
+    ScissorRegion sr;
+    sr.m_x = 0.0f; sr.m_y = 0.0f;
+    sr.m_width = vp.m_width; sr.m_height = vp.m_height;
+
 #if defined(SINGLE_FLOW)
     //1. Begin Command Buffer
     m_cmd_buf_wrefs[0].GetRef().Begin();
     m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_cmd_buf_wrefs[0]);
+    GraphicsManager::GetRef().SetViewport(m_cmd_buf_wrefs[0], vp);
+    GraphicsManager::GetRef().SetScissor(m_cmd_buf_wrefs[0], sr);
 
     for (ObjectData &obj : m_cube_objects) {
         obj.Draw(m_mgr, m_cmd_buf_wrefs[0]);
@@ -423,6 +467,7 @@ void Sample4_DrawObjects::CreateObjects()
                     Vector3f(m_cube_side_length * row, m_cube_side_length * col, m_cube_side_length * depth);
                 //
                 (*last_obj_iter).m_material.Initialize(m_mgr, m_pipeline_sref, m_tex_sref);
+                (*last_obj_iter).UpdateMaterial(m_mgr, m_camera, m_light);
             }
         }
     }
@@ -447,12 +492,18 @@ void Sample4_DrawObjects::CreateCamera()
         m_current_res.GetWidth(), m_current_res.GetHeight(),
         GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
         ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+    m_camera.m_proj_mat.perspective(90, m_current_res.GetRatio(), 0.01f, 10.0f);
 
     m_camera.m_trans.LookAt(
         Vector3f(0.0f, 0.5f, 5.0f, 1.0f),
         Vector3f::Origin,
         Vector3f::PositiveY
     );
+}
+
+void Sample4_DrawObjects::CreateLight()
+{
+    m_light.m_trans = Transform::LookAt(Vector3f(0.2f, 5.0f, 0.2f, 1.0f), Vector3f::Origin, Vector3f::PositiveZ);
 }
 
 void Sample4_DrawObjects::CreatePipeline()
@@ -468,6 +519,7 @@ void Sample4_DrawObjects::CreatePipeline()
     GraphicsPipelineParam params;
     params.m_primitive_info.m_primitive = Primitive_TRIANGLE;
     params.m_depth_stencil_info.m_depth_test_enable = true;
+    params.m_rasterization_info.m_face_culling = FaceCulling_NONE;
     params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
     params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
     params.m_dynamic_states.push_back(DynamicState_SCISSOR);

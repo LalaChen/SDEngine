@@ -95,6 +95,16 @@ public:
      */
     Matrix4X4f MakeAffineTransformMatrix() const;
 
+    /*! \fn Matrix4X4f MakeViewMatrix() const
+     *  \brief Make view matrix.
+     */
+    Matrix4X4f MakeViewMatrix() const;
+
+public:
+    Vector3f GetForward() const;
+    Vector3f GetRight() const;
+    Vector3f GetTop() const;
+
     //================================= Operator Function ==================================
 public:
     /*! \fn Transform& operator=(const Transform &i_src);

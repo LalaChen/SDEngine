@@ -77,6 +77,7 @@ public:
     TextureStrongReferenceObject m_depth_buffer;
 public:
     Transform m_trans;
+    Matrix4X4f m_proj_mat;
 };
 
 class ObjectData
@@ -114,11 +115,13 @@ public:
     VkImageView GetColorBufferImageView() override;
 private:
     void CreateTexture();
-    void CreateObjects();
     void CreateCamera();
+    void CreateLight();
+    void CreateObjects();
     void CreatePipeline();
 protected:
     SampleCameraData m_camera;
+    LightData m_light;
     RenderPassStrongReferenceObject m_forward_rp_sref;
     TextureStrongReferenceObject m_tex_sref;
     GraphicsPipelineStrongReferenceObject m_pipeline_sref;

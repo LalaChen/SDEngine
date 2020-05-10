@@ -156,6 +156,10 @@ public:
     virtual void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) = 0;
     virtual void DestroyFrameBuffer(FrameBufferIdentity &io_identity) = 0;
 public:
+    virtual void SetViewport(const CommandBufferWeakReferenceObject &i_cb_wref, const Viewport &i_vp) = 0;
+    virtual void SetViewports(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<Viewport> &i_vps) = 0;
+    virtual void SetScissor(const CommandBufferWeakReferenceObject &i_cb_wref, const ScissorRegion &i_region) = 0;
+    virtual void SetScissors(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<ScissorRegion> &i_regions) = 0;
     virtual void DrawByIndices(const IndexBufferWeakReferenceObject &i_ib_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) = 0;
 public:
 //------------- Resize Function -----------------
@@ -180,7 +184,7 @@ public:
 protected:
     const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex_wref) const;
     const FrameBufferIdentity& GetIdentity(const FrameBufferWeakReferenceObject &i_fb_wref) const;
-    const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject& i_cb_wref) const;
+    const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject &i_cb_wref) const;
     const RenderPassIdentity& GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const;
     const VertexBufferIdentity& GetIdentity(const VertexBufferWeakReferenceObject &i_vb_wref) const;
     const IndexBufferIdentity& GetIdentity(const IndexBufferWeakReferenceObject &i_ib_wref) const;
