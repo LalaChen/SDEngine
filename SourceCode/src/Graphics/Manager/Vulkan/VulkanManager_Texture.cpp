@@ -139,7 +139,7 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
     }
 }
 
-void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum& i_dst_layout)
+void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout)
 {
     if (i_identity.m_image_handle != VK_NULL_HANDLE && 
         i_data_size <= i_identity.m_allocated_size && 
