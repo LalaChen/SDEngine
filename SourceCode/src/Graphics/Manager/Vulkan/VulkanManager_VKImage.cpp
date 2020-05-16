@@ -122,6 +122,8 @@ VkResult VulkanManager::CopyVkBufferToVkImage(
         VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, i_dst_image_final_layout,
         VK_PIPELINE_STAGE_TRANSFER_BIT, i_dst_pipe_stage_flags);
+
+    vkEndCommandBuffer(i_cb_handle);
  
     //5. Submit command.
     std::vector<VkCommandBuffer> cb_handles = {i_cb_handle};
