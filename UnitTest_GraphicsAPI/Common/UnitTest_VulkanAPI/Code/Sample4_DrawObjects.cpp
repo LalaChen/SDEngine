@@ -216,7 +216,7 @@ void ObjectData::UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraD
     ub.m_proj = i_camera.m_proj_mat;
     ub.m_view = i_camera.m_trans.MakeViewMatrix();
     ub.m_view_eye = i_camera.m_trans.m_position;
-    ub.m_worid = m_trans.MakeAffineTransformMatrix();
+    ub.m_worid = m_trans.MakeWorldMatrix();
 
     LightUniformBuffer lb = {};
     lb = i_light.m_light_data;
@@ -363,10 +363,10 @@ void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
     att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
     att_desc.m_sample_counts = SampleCount_1;
-    att_desc.m_load_op = AttachmentLoadOperator_DONT_CARE;
-    att_desc.m_store_op = AttachmentStoreOperator_DONT_CARE;
-    att_desc.m_stencil_load_op = AttachmentLoadOperator_CLEAR;
-    att_desc.m_stencil_store_op = AttachmentStoreOperator_STORE;
+    att_desc.m_load_op = AttachmentLoadOperator_CLEAR;
+    att_desc.m_store_op = AttachmentStoreOperator_STORE;
+    att_desc.m_stencil_load_op = AttachmentLoadOperator_DONT_CARE;
+    att_desc.m_stencil_store_op = AttachmentStoreOperator_DONT_CARE;
     att_descs.push_back(att_desc);
 
     //1.2. prepare attachment references data.
@@ -409,10 +409,8 @@ void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
     sp_denp.m_dependencies.push_back(DependencyScope_REGION);
     sp_denps.push_back(sp_denp);
 
-    ClearValue clear_color = { 0.75f, 0.15f, 0.0f, 1.0f };
-    ClearValue clear_dands;
-    clear_dands.depth_stencil.depth = 1.0f;
-    clear_dands.depth_stencil.stencil = 1;
+    ClearValue clear_color = { 0.0f, 0.15f, 0.75f, 1.0f };
+    ClearValue clear_dands = {1.0f, 1};
 
     m_forward_rp_sref.GetRef().AddRenderPassDescription(att_descs, sp_descs, sp_denps);
     m_forward_rp_sref.GetRef().Initialize();
