@@ -170,6 +170,7 @@ void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
             m_tex_identity.m_image_usages.push_back(ImageUsage_COLOR_ATTACHMENT);
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_SAMPLED);
             GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
         }
         else if (i_layout == ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
@@ -185,6 +186,7 @@ void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
             m_tex_identity.m_image_usages.push_back(ImageUsage_DEPTH_ATTACHMENT);
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_SAMPLED);
             GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
         }
         else {
