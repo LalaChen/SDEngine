@@ -40,21 +40,7 @@ MeshStrongReferenceObject BasicShapeCreator::CreatePlane(
 {
 	MeshStrongReferenceObject mesh;
 
-	std::vector<vec3> vertices = {
-		vec3(0.5f, 0.5f,-0.5f), //0
-		vec3(0.5f, 0.5f, 0.5f), //1
-		vec3(-0.5f, 0.5f, 0.5f), //2
-		vec3(-0.5f, 0.5f,-0.5f), //3
-	};
-
-	std::vector<vec2> tex_coords = {
-		vec2(0.0f, 0.0f),
-		vec2(0.0f, 1.0f),
-		vec2(1.0f, 1.0f),
-		vec2(1.0f, 0.0f)
-	};
-
-	vec3 center(vec3::normalize(vec3(i_center.m_vec.x, i_center.m_vec.y, i_center.m_vec.z)));
+	vec3 center(vec3(i_center.m_vec.x, i_center.m_vec.y, i_center.m_vec.z));
     vec3 u(vec3::normalize(vec3(i_u.m_vec.x, i_u.m_vec.y, i_u.m_vec.z)));
     vec3 v(vec3::normalize(vec3(i_v.m_vec.x, i_v.m_vec.y, i_v.m_vec.z)));
 
@@ -92,17 +78,17 @@ MeshStrongReferenceObject BasicShapeCreator::CreatePlane(
 		for (j = 0; j < width_number; ++j) {
 			//1. calculate this face
 			f_vertices[0] = left_back_pos + v_add_size.scale(static_cast<float>(i    )) + u_add_size.scale(static_cast<float>(j    ));
-			f_vertices[1] = left_back_pos + v_add_size.scale(static_cast<float>(i + 1)) + u_add_size.scale(static_cast<float>(j    ));
+			f_vertices[1] = left_back_pos + v_add_size.scale(static_cast<float>(i    )) + u_add_size.scale(static_cast<float>(j + 1));
 			f_vertices[2] = left_back_pos + v_add_size.scale(static_cast<float>(i + 1)) + u_add_size.scale(static_cast<float>(j + 1));
-			f_vertices[3] = left_back_pos + v_add_size.scale(static_cast<float>(i    )) + u_add_size.scale(static_cast<float>(j + 1));
+			f_vertices[3] = left_back_pos + v_add_size.scale(static_cast<float>(i + 1)) + u_add_size.scale(static_cast<float>(j    ));
 			f_normals[0] = normal;
 			f_normals[1] = normal;
 			f_normals[2] = normal;
 			f_normals[3] = normal;
-			f_textures[0] = vec2(tex_wrap_u_unit_length *  j     , tex_wrap_v_unit_length *  i     );
-			f_textures[1] = vec2(tex_wrap_u_unit_length *  j     , tex_wrap_v_unit_length * (i + 1));
-			f_textures[2] = vec2(tex_wrap_u_unit_length * (j + 1), tex_wrap_v_unit_length * (i + 1));
-			f_textures[3] = vec2(tex_wrap_u_unit_length * (j + 1), tex_wrap_v_unit_length *  i     );
+			f_textures[0] = vec2(tex_wrap_u_unit_length *  i     , tex_wrap_v_unit_length *  j     );
+			f_textures[1] = vec2(tex_wrap_u_unit_length *  i     , tex_wrap_v_unit_length * (j + 1));
+			f_textures[2] = vec2(tex_wrap_u_unit_length * (i + 1), tex_wrap_v_unit_length * (j + 1));
+			f_textures[3] = vec2(tex_wrap_u_unit_length * (i + 1), tex_wrap_v_unit_length *  j     );
 			f_tangent = CalculateTangetVector(
 				vec3::normalize(f_vertices[0] - f_vertices[2]), //v1
 				vec3::normalize(f_vertices[1] - f_vertices[2]), //v2

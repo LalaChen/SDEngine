@@ -57,7 +57,8 @@ public:
 public:
     MeshStrongReferenceObject CreateCube(
         const Vector3f &i_center = Vector3f::Zero,
-        const Vector3f &i_scale = Vector3f(1.0f, 1.0f, 1.0f));
+        const Vector3f &i_scale = Vector3f(1.0f, 1.0f, 1.0f),
+        const Vector3f& i_tex_scale = Vector3f(1.0f, 1.0f, 1.0f));
 
     MeshStrongReferenceObject CreatePlane(
         const Vector3f &i_center = Vector3f::Zero, 

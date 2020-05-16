@@ -29,20 +29,21 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-MeshStrongReferenceObject BasicShapeCreator::CreateCube(const Vector3f &i_center, const Vector3f &i_scale)
+MeshStrongReferenceObject BasicShapeCreator::CreateCube(const Vector3f &i_center, const Vector3f &i_scale, const Vector3f &i_tex_scale)
 {
 	MeshStrongReferenceObject mesh;
 
 	vec3 center = vec3(i_center.m_vec.x, i_center.m_vec.y, i_center.m_vec.z);
 	vec3 scale = vec3(i_scale.m_vec.x, i_scale.m_vec.y, i_scale.m_vec.z);
+	vec3 tex_scale = vec3(i_tex_scale.m_vec.x, i_tex_scale.m_vec.y, i_tex_scale.m_vec.z);
 
 	std::vector<vec3> vertices = {
-		vec3(0.5f, 0.5f,-0.5f), //0
-		vec3(0.5f, 0.5f, 0.5f), //1
+		vec3( 0.5f, 0.5f,-0.5f), //0
+		vec3( 0.5f, 0.5f, 0.5f), //1
 		vec3(-0.5f, 0.5f, 0.5f), //2
 		vec3(-0.5f, 0.5f,-0.5f), //3
-		vec3(0.5f,-0.5f,-0.5f), //4
-		vec3(0.5f,-0.5f, 0.5f), //5
+		vec3( 0.5f,-0.5f,-0.5f), //4
+		vec3( 0.5f,-0.5f, 0.5f), //5
 		vec3(-0.5f,-0.5f, 0.5f), //6
 		vec3(-0.5f,-0.5f,-0.5f)  //7 
 	};
@@ -64,18 +65,18 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCube(const Vector3f &i_center
 	};
 
 	std::vector<uint32_t> v_indices = {
-		5,4,7, //-y
-		5,7,6,
-		0,1,2, //+y
-		0,2,3,
-		5,1,0, //+x
-		5,0,4,
-		6,2,1, //+z
-		6,1,5,
-		7,3,2, //-x
-		7,2,6,
-		4,0,3, //-z
-		4,3,7
+		5,7,4, //-y
+		5,6,7,
+		0,2,1, //+y
+		0,3,2,
+		1,5,0, //+x
+		0,5,4,
+		6,1,2, //+z
+		6,5,1,
+		7,2,3, //-x
+		7,6,2,
+		3,0,4, //-z
+		3,4,7
 	};
 
 	std::vector<uint32_t> n_indices = {
@@ -94,8 +95,18 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCube(const Vector3f &i_center
 	};
 
 	std::vector<uint32_t> t_indices = {
-		2,3,0,
-		2,0,1
+		0,2,1, //-y
+		0,3,2,
+		3,1,2, //+y
+		3,0,2,
+		0,1,2, //+x
+		2,1,3,
+		1,3,0, //+z
+		1,2,3,
+		1,3,0, //-x
+		1,2,3,
+		3,0,1, //-z
+		3,1,2
 	};
 
 	std::vector<vec3> v_data;
@@ -114,16 +125,18 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCube(const Vector3f &i_center
 	for (uint32_t face = 0, data_triangle = 0; face < 6; ++face) {
 		for (uint32_t triangle = 0; triangle < 2; ++triangle) {
 			for (uint32_t order = 0; order < 3; ++order) {
-				f_vertices[order] = vertices[v_indices[order]].scale(scale) + center;
-				f_normals[order] = vec3::normalize(normals[n_indices[order]].scale(scale));
-				if (order == 2 || order == 4) {
-					f_textures[order] = tex_coords[t_indices[order]].scale(vec2(scale.z, scale.y));
+				uint32_t rv_order = face * 6 + triangle * 3 + order;
+				uint32_t rt_order = triangle * 3 + order;
+				f_vertices[order] = vertices[v_indices[rv_order]].scale(scale) + center;
+				f_normals[order] = vec3::normalize(normals[n_indices[rv_order]].scale(scale));
+				if (face == 2 || face == 4) {
+					f_textures[order] = tex_coords[t_indices[rv_order]].scale(vec2(tex_scale.z, tex_scale.y));
 				}
-				else if (order == 0 || order == 1) {
-					f_textures[order] = tex_coords[t_indices[order]].scale(vec2(scale.z, scale.x));
+				else if (face == 0 || face == 1) {
+					f_textures[order] = tex_coords[t_indices[rv_order]].scale(vec2(tex_scale.z, tex_scale.x));
 				}
-				else if (order == 3 || order == 5) {
-					f_textures[order] = tex_coords[t_indices[order]].scale(vec2(scale.x, scale.y));
+				else if (face == 3 || face == 5) {
+					f_textures[order] = tex_coords[t_indices[rv_order]].scale(vec2(tex_scale.x, tex_scale.y));
 				}
 			}
 			f_tangent = CalculateTangetVector(
