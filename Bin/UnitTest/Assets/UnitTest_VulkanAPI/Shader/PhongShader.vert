@@ -42,15 +42,15 @@ layout(binding = 1) uniform LightUniforms {
 	float constantAttenuation;
 	float linearAttenuation;
 	float quadraticAttenuation;
-	int kind; //0: directional, 1: spot, 2: point
+	uint kind; //0: directional, 1: spot, 2: point
 } light;
 
 //Uniform Material buffer
 layout(binding = 2) uniform MaterialUniforms {
-	vec4 emission;
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
+	vec4 emission;
 	float shininess;
 } material;
 

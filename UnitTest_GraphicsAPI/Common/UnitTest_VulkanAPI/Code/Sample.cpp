@@ -18,12 +18,24 @@ LightUniformBuffer::LightUniformBuffer()
 , m_constant_attenuation(1.0f)
 , m_linear_attenuation(1.0f)
 , m_quadratic_attenuation(1.0f)
-, m_shininess(1.0f)
 , m_kind(0)
 {
 }
 
 LightUniformBuffer::~LightUniformBuffer()
+{
+}
+
+MaterialUniformBuffer::MaterialUniformBuffer()
+: m_ambient(0.2f, 0.2f, 0.2f, 1.0f)
+, m_diffuse(0.6f, 0.6f, 0.6f, 1.0f)
+, m_specular(0.2f, 0.2f, 0.2f, 1.0f)
+, m_emission(0.0f, 0.0f, 0.0f, 1.0f)
+, m_shineness(1.0f)
+{
+}
+
+MaterialUniformBuffer::~MaterialUniformBuffer()
 {
 }
 

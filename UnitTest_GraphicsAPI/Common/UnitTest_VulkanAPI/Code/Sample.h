@@ -44,8 +44,20 @@ public:
     float m_constant_attenuation;
     float m_linear_attenuation;
     float m_quadratic_attenuation;
-    float m_shininess;
     int32_t m_kind;
+};
+
+class MaterialUniformBuffer
+{
+public:
+    MaterialUniformBuffer();
+    ~MaterialUniformBuffer();
+public:
+    Color4f m_ambient;
+    Color4f m_diffuse;
+    Color4f m_specular;
+    Color4f m_emission;
+    float m_shineness;
 };
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample);

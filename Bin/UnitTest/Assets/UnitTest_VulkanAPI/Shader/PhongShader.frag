@@ -37,15 +37,15 @@ layout(binding = 1) uniform LightUniforms {
 	float constantAttenuation;
 	float linearAttenuation;
 	float quadraticAttenuation;
-	int kind; //0: directional, 1: spot, 2: point
+	uint kind; //0: directional, 1: spot, 2: point
 } light;
 
 //Uniform Material buffer
 layout(binding = 2) uniform MaterialUniforms {
-	vec4 emission;
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
+    vec4 emission;
 	float shininess;
 } material;
 
@@ -98,7 +98,7 @@ void CalculateSpotLightDAndSAndNDL(inout vec4 ioDiffuse, inout vec4 ioSpecular, 
 
 vec4 CalculateLighting()
 {
-	vec4 ambient, diffuse, specular;
+	vec4 ambient = vec4(0.0), diffuse = vec4(0.0), specular = vec4(0.0);
 	float nDotL;
 	ambient = material.ambient * light.ambient;
 	if (light.kind == 0) {
@@ -110,10 +110,14 @@ vec4 CalculateLighting()
 	else if (light.kind == 2) {
 		CalculatePointLightDAndSAndNDL(diffuse, specular, nDotL);
 	}
+	else {
+	    diffuse = vec4(1.0, 0.0, 0.0, 1.0);
+	}
 	return ambient + diffuse + specular + material.emission;
 }
 
 void main()
 {
 	fragColor = CalculateLighting() * texture(mainTexture, texCoord);
+	//fragColor = vec4(texCoord, 0.0, 1.0) * texture(mainTexture, texCoord);
 }

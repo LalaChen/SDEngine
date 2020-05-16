@@ -47,12 +47,15 @@ public:
 public:
     GraphicsPipelineWeakReferenceObject m_pipeline_wref;
     TextureWeakReferenceObject m_main_tex_wref;
+    MaterialUniformBuffer m_material;
     VkDescriptorPool m_desc_pool;
     VkDescriptorSet m_desc_set;
     VkBuffer m_basic_ub; //Common
     VkDeviceMemory m_basic_mem;
     VkBuffer m_light_ub;
     VkDeviceMemory m_light_mem;
+    VkBuffer m_material_ub;
+    VkDeviceMemory m_material_mem;
 };
 
 class LightData

@@ -48,6 +48,7 @@ set (SD_ENGINE_INC_DIRS
         ${SD_ENGINE_INC_DIR}/Graphics/ImageLoader
         ${SD_ENGINE_INC_DIR}/Graphics/Vec
         ${SD_ENGINE_INC_DIR}/Graphics/VertexBuffer
+        ${SD_ENGINE_INC_DIR}/Graphics/IndexBuffer
         ${SD_ENGINE_INC_DIR}/Graphics/Texture
         ${SD_ENGINE_INC_DIR}/Graphics/ModelImporter
         ${SD_ENGINE_INC_DIR}/Graphics/Mesh
