@@ -90,19 +90,35 @@ public:
     ~Transform();
     //================================== Matrix function  =================================
 public:
-    /*! \fn Matrix4X4f MakeAffineTransformMatrix() const
+    /*! \fn Matrix4X4f MakeWorldMatrix() const
      *  \brief Make transformation matrix(only transform, rotation, and scale).
      */
-    Matrix4X4f MakeAffineTransformMatrix() const;
+    Matrix4X4f MakeWorldMatrix() const;
 
     /*! \fn Matrix4X4f MakeViewMatrix() const
      *  \brief Make view matrix.
      */
     Matrix4X4f MakeViewMatrix() const;
 
+    /*! \fn Matrix4X4f MakeNormalMatrix() const
+     *  \brief Make normal matrix.
+     */
+    Matrix4X4f MakeNormalMatrix() const;
+
 public:
+    /*! \fn Vector3f GetForward() const;
+     *  \brief Make +w of object space.
+     */
     Vector3f GetForward() const;
+
+    /*! \fn Vector3f GetRight() const;
+     *  \brief Make +u of object space.
+     */
     Vector3f GetRight() const;
+
+    /*! \fn Vector3f GetTop() const;
+     *  \brief Make +v of object space.
+     */
     Vector3f GetTop() const;
 
     //================================= Operator Function ==================================

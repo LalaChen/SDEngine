@@ -63,7 +63,7 @@ Transform::~Transform()
 {
 }
 
-Matrix4X4f Transform::MakeAffineTransformMatrix() const
+Matrix4X4f Transform::MakeWorldMatrix() const
 {
     Matrix4X4f result;
     result.translate(m_position);
@@ -74,12 +74,14 @@ Matrix4X4f Transform::MakeAffineTransformMatrix() const
 
 Matrix4X4f Transform::MakeViewMatrix() const
 {
-    Matrix4X4f result;
-    result = m_rotation.toMatrix4X4f().inverse();
-    result.m_matrix[3][0] = m_position.m_vec.x;
-    result.m_matrix[3][1] = m_position.m_vec.y;
-    result.m_matrix[3][2] = m_position.m_vec.z;
-    return result.inverse();
+    return MakeWorldMatrix().inverse();
+}
+
+Matrix4X4f Transform::MakeNormalMatrix() const
+{
+    Matrix4X4f result = MakeWorldMatrix();
+    result.m_matrix[3][0] = 0.0f; result.m_matrix[3][1] = 0.0f; result.m_matrix[3][2] = 0.0f;
+    return result;
 }
 
 Vector3f Transform::GetForward() const
@@ -99,7 +101,7 @@ Vector3f Transform::GetTop() const
 
 Transform& Transform::operator=(const Transform &i_src)
 {
-    if (&i_src == this) {
+    if (&i_src != this) {
         m_position = i_src.m_position;
         m_rotation = i_src.m_rotation;
         m_scale = i_src.m_scale;
