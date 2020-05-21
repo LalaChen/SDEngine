@@ -68,9 +68,10 @@ public:
      *  \param [in] i_start Start position.
      *  \param [in] i_focus focus on this position.
      *  \param [in] i_up Vup vector.
+     *  \param [in] i_is_view Is making view transform object(forward is -z axis of object for right hand coordinate). Default false.
      *  \brief Make look at position.
      */
-    static Transform LookAt(const Vector3f &i_start, const Vector3f &i_focus, const Vector3f &i_up);
+    static Transform LookAt(const Vector3f &i_start, const Vector3f &i_focus, const Vector3f &i_up, bool i_is_view = false);
 
 public:
     /*! \fn Transform();

@@ -275,7 +275,7 @@ void ObjectData::UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraD
     LightUniformBuffer lb = {};
     lb = i_light.m_light_data;
     if (lb.m_kind == 0) {// direction light.
-        lb.m_position = i_light.m_trans.GetForward();
+        lb.m_position = i_light.m_trans.GetForward().negative();
     }
     else if (lb.m_kind == 1) { //position light,
         lb.m_position = i_light.m_trans.m_position;
@@ -546,18 +546,20 @@ void Sample4_DrawObjects::CreateCamera()
         m_current_res.GetWidth(), m_current_res.GetHeight(),
         GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
         ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-    m_camera.m_proj_mat.perspective(120, m_current_res.GetRatio(), 0.01f, 10.0f);
+    m_camera.m_proj_mat.perspective(120, m_current_res.GetRatio(), 0.01f, 1000.0f);
 
     m_camera.m_trans = Transform::LookAt(
-        Vector3f(0.0f, 0.5f, 3.0f, 1.0f),
+        Vector3f(0.0f, 1.5f, 7.0f, 1.0f),
         Vector3f::Origin,
-        Vector3f::PositiveY
-    );
+        Vector3f::PositiveY,
+        true);
+    SDLOG("%s", m_camera.m_trans.MakeWorldMatrix().ToFormatString("Camera", "").c_str());
 }
 
 void Sample4_DrawObjects::CreateLight()
 {
-    m_light.m_trans = Transform::LookAt(Vector3f(0.2f, 5.0f, 0.2f, 1.0f), Vector3f::Origin, Vector3f::PositiveZ);
+    m_light.m_trans = Transform::LookAt(Vector3f(1.0f, 3.0f, 1.0f, 1.0f), Vector3f::Origin, Vector3f::PositiveY);
+    SDLOG("%s",m_light.m_trans.MakeWorldMatrix().ToFormatString("Light","").c_str());
 }
 
 void Sample4_DrawObjects::CreatePipeline()

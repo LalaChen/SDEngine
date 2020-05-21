@@ -75,6 +75,7 @@ VkFormat TextureFormat_Vulkan::TextureFormatTypes[TextureFormat_MAX_DEFINE_VALUE
     //--- R
     VK_FORMAT_R32_SFLOAT, /*!read value by float. channel number is 1.*/
     //--- RG
+    VK_FORMAT_R32G32_SFLOAT,
     //--- RGBA
     VK_FORMAT_R32G32B32A32_SFLOAT, /*!read value by float. channel number is 4.*/
     //Special

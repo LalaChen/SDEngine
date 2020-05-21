@@ -61,7 +61,7 @@ vec3 CalculateLightDir(in vec4 iVertex)
 {
 	//Directional Light
     if (light.kind == 0) {
-		return normalize(light.direction.xyz);
+		return normalize(light.position.xyz);
 	} 
 	else if (light.kind == 1) {
 		return normalize(light.position.xyz - iVertex.xyz);
@@ -85,7 +85,7 @@ void main()
 	wNormal = normalize((basic.normal * vec4(normals, 0.0)).xyz);
 	texCoord = texCoords;
 	wLightDir = CalculateLightDir(vertex).xyz;
-	wViewDir = CalculateLightDir(vertex).xyz;
+	wViewDir = CalculateViewDir(vertex).xyz;
 	wVertex = vertex;
     gl_Position = basic.clip * basic.proj * basic.view * basic.world * vertex;
 }

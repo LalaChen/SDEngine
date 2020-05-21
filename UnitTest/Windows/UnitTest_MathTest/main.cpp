@@ -84,4 +84,10 @@ int main(int argc, char **argv)
     SDLOG("--- Scale    : %s", de_scale.ToString().c_str());
     SDLOG("--- Skew     : %s", de_skew.ToString().c_str());
     SDLOG("--- Prep     : %s", de_prespective.ToString().c_str());
+
+    //Transform :: lookat
+    Transform trans;
+    trans = Transform::LookAt(Vector3f(0.0, 0.0, 1.0, 1.0), Vector3f::Origin, Vector3f::PositiveY, true);
+    SDLOG("Transfrom World: %s", trans.MakeWorldMatrix().ToString().c_str());
+    SDLOG("Transfrom View: %s", trans.MakeViewMatrix().ToString().c_str());
 }

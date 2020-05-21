@@ -113,11 +113,12 @@ vec4 CalculateLighting()
 	else {
 	    diffuse = vec4(1.0, 0.0, 0.0, 1.0);
 	}
-	return ambient + diffuse + specular + material.emission;
+	return (ambient + diffuse + specular + material.emission) * texture(mainTexture, texCoord);
+	//return vec4(wViewDir, 1.0);
+	//return vec4(abs(nDotL), abs(nDotL), abs(nDotL), 1.0);
 }
 
 void main()
 {
-	fragColor = CalculateLighting() * texture(mainTexture, texCoord);
-	//fragColor = vec4(texCoord, 0.0, 1.0) * texture(mainTexture, texCoord);
+	fragColor = CalculateLighting();
 }

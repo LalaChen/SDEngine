@@ -33,12 +33,16 @@ Transform Transform::DecomposeMatrixToTransform(const Matrix4X4f &i_src)
     Matrix4X4f::decompose(i_src, result.m_scale, result.m_rotation, result.m_skew, result.m_position, result.m_perspective);
 	return result;
 }
-Transform Transform::LookAt(const Vector3f &i_start, const Vector3f &i_focus, const Vector3f &i_up)
+Transform Transform::LookAt(const Vector3f &i_start, const Vector3f &i_focus, const Vector3f &i_up, bool i_is_view)
 {
     Transform result;
     Vector3f forward = (i_focus - i_start).normalize();
     Vector3f vup = i_up.normalize();
     forward.RepresentVector();
+    if (i_is_view == false) {
+        //glm::quatLookAt return quaternion which forward is -z axis(right hand coordinate). So we need to inverse forward.
+        forward = forward.negative();
+    }
     result.m_position = i_start;
     if (forward.parallel(i_up) == false) {
         result.m_rotation = Quaternion::LookAt(forward, vup);
