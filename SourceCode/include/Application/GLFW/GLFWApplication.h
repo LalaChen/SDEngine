@@ -36,6 +36,8 @@ SOFTWARE.
 #include "Application.h"
 
 using SDE::Basic::Application;
+using SDE::Basic::KeyCodeEnum;
+using SDE::Basic::KeyStatusEnum;
 
 ________________SD_START_APP_NAMESPACE_______________
 
@@ -109,10 +111,19 @@ public:
      */
     void TerminateApplication() override;
 public:
+    /*! \fn KeyStatusEnum GetKeyStateByCode(KeyCodeEnum i_code) override;
+     *  \param [in] i_code Target key in keyboard.
+     *  \brief Get key status by key code. Return not support if the key isn't supported.
+     */
+    KeyStatusEnum GetKeyStateByCode(KeyCodeEnum i_code) override;
+public:
     void RunMainLoop();
+protected:
+    void InitializeKeyCodeMap();
 protected:
     GLFWwindow *m_window;
     GLFWmonitor *m_monitor;
+    int32_t m_key_code_map[KeyCodeEnum::KEY_MAX_NUMBER];
 };
 
 _________________SD_END_APP_NAMESPACE________________

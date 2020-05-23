@@ -192,6 +192,11 @@ void AndroidApplication::RefreshNativeWindow(ANativeWindow *i_window, int i_widt
     }
 }
 
+KeyStatusEnum AndroidApplication::GetKeyStateByCode(KeyCodeEnum i_code)
+{
+    return KEY_STATUS_NOT_SUPPORT;
+}
+
 void AndroidApplication::RunMainLoop()
 {
     m_current_state = AppState_INITIALIZE_GRAPHICS;

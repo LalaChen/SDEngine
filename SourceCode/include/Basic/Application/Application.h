@@ -103,6 +103,12 @@ public:
      */
     virtual void TerminateApplication() = 0;
 public:
+    /*! \fn virtual KeyStatusEnum GetKeyStateByCode(KeyCodeEnum i_code) = 0;
+     *  \param [in] i_code Target key in keyboard.
+     *  \brief Get key status by key code. Return not support if the key isn't supported.
+     */
+    virtual KeyStatusEnum GetKeyStateByCode(KeyCodeEnum i_code) = 0;
+public:
     /*! \fn virtual void Update();
      *  \brief Update app. Please call this function each frame.
      */

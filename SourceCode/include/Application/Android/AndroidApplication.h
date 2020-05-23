@@ -46,6 +46,8 @@ SOFTWARE.
 #include "Application.h"
 
 using SDE::Basic::Application;
+using SDE::Basic::KeyCodeEnum;
+using SDE::Basic::KeyStatusEnum;
 
 ________________SD_START_APP_NAMESPACE_______________
 
@@ -100,6 +102,12 @@ public:
     void Resume() override;
 
     void Pause() override;
+public:
+    /*! \fn KeyStatusEnum GetKeyStateByCode(KeyCodeEnum i_code) override;
+     *  \param [in] i_code Target key in keyboard.
+     *  \brief Get key status by key code. Return not support if the key isn't supported.
+     */
+    KeyStatusEnum GetKeyStateByCode(KeyCodeEnum i_code) override;
 public:
     void InitializeNativeWindow(ANativeWindow *i_window);
     void RefreshNativeWindow(ANativeWindow *i_window, int i_width, int i_height);

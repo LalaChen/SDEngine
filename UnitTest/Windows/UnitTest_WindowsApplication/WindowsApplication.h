@@ -4,6 +4,9 @@
 
 #include "Application.h"
 
+using SDE::Basic::KeyCodeEnum;
+using SDE::Basic::KeyStatusEnum;
+
 class WindowsApplication : public SDE::Basic::Application
 {
 public:
@@ -29,6 +32,13 @@ public:
      *  \brief release all mamager for terminating app.
      */
     void TerminateApplication() override;
+
+public:
+    /*! \fn KeyStatusEnum GetKeyStateByCode(KeyCodeEnum i_code) override;
+     *  \param [in] i_code Target key in keyboard.
+     *  \brief Get key status by key code. Return not support if the key isn't supported.
+     */
+    KeyStatusEnum GetKeyStateByCode(KeyCodeEnum i_code) override;
 public:
     void RunMainLoop();
 protected:

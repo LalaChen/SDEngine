@@ -122,6 +122,20 @@ public:
      */
     Vector3f GetTop() const;
 
+public:
+    /*! \fn void AddTranslation(const Vector3f &i_offset);
+     *  \param [in] i_offset offset.
+     *  \brief Add i_offset to postion.
+     */
+    void AddTranslation(const Vector3f &i_offset);
+
+    /*! \fn void AddTranslation(const Vector3f &i_offset);
+     *  \param [in] i_axis roation axis.
+     *  \param [in] i_angle roation angle.
+     *  \brief Rotation transfrom at current position via axis and angle. Angle is degree.
+     */
+    void AddRotation(const Vector3f &i_axis, float i_angle);
+
     //================================= Operator Function ==================================
 public:
     /*! \fn Transform& operator=(const Transform &i_src);

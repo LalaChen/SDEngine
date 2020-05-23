@@ -18,6 +18,9 @@ void GLFWApplication::KeyEventCallback(GLFWwindow* i_window, int i_key, int i_sc
             Application::GetRef().SetKeyboardStatus(key_id, false);
         }
     }
+    else {
+        //Handle special key.
+    }
 }
 
 //----- error return ------

@@ -13,7 +13,11 @@ GLFWApplication::GLFWApplication(const std::string &i_win_title, const Resolutio
 : Application(i_win_title, i_win_res, i_full_window, i_adopt_library, i_argc, i_argv)
 , m_window(nullptr)
 , m_monitor(nullptr)
+, m_key_code_map{0}
 {
+    for (int32_t key = 0; key < KEY_MAX_NUMBER; ++key) {
+        m_key_code_map[key] = GLFW_KEY_UNKNOWN;
+    }
     //1. set error callback.
     glfwSetErrorCallback(GLFWApplication::ErrorCallback);
     //2. create glfw window.
@@ -43,6 +47,8 @@ GLFWApplication::GLFWApplication(const std::string &i_win_title, const Resolutio
 
         m_win_res.SetResolution(mode->width, mode->height);
     }
+
+    //InitializeKeyCodeMap();
 
     m_window = glfwCreateWindow(m_win_res.GetWidth(), m_win_res.GetHeight(), i_win_title.c_str(), m_monitor, NULL);
     if (!m_window) {
@@ -231,6 +237,39 @@ void GLFWApplication::TerminateApplication()
     FileResourceRequester::Destroy();
 }
 
+KeyStatusEnum GLFWApplication::GetKeyStateByCode(KeyCodeEnum i_code)
+{
+    /*
+    if (i_code != KEY_MAX_NUMBER) {
+        int status = glfwGetKey(m_window, m_key_code_map[SD_ENUM_TO_UINT(i_code)]);
+        if (status == GLFW_RELEASE) {
+            return KEY_STATUS_RELEASE;
+        }
+        else if (status == GLFW_PRESS) {
+            return KEY_STATUS_PRESS;
+        }
+        else {
+            return KEY_STATUS_NOT_SUPPORT;
+        }
+    }
+    else {
+        return KEY_STATUS_NOT_SUPPORT;
+    }
+    */
+    if (i_code != KEY_MAX_NUMBER) {
+        SHORT status = GetKeyState(SD_ENUM_TO_INT(i_code));
+        if (status < 0) {
+            return KEY_STATUS_PRESS;
+        }
+        else {
+            return KEY_STATUS_RELEASE;
+        }
+    }
+    else {
+        return KEY_STATUS_NOT_SUPPORT;
+    }
+}
+
 void GLFWApplication::RunMainLoop()
 {
     //--- v. initialize glew.
@@ -269,6 +308,133 @@ void GLFWApplication::RunMainLoop()
   
     //Destroy App.
     Application::GetRef().TerminateApplication();
+}
+\
+//-------------------------------------------
+#define KEY_CODE_CPY(keyCode) \
+    m_key_code_map[SD_ENUM_TO_UINT(keyCode)] = GLFW_##keyCode;
+
+#define KEY_CODE_CPY2(keyCode, glfwKeyCode) \
+    m_key_code_map[SD_ENUM_TO_UINT(keyCode)] = glfwKeyCode;
+
+void GLFWApplication::InitializeKeyCodeMap()
+{
+    KEY_CODE_CPY(KEY_BACKSPACE);
+    KEY_CODE_CPY(KEY_TAB);
+    KEY_CODE_CPY(KEY_ENTER);
+    KEY_CODE_CPY(KEY_CAPS_LOCK);
+    KEY_CODE_CPY(KEY_PAUSE);
+    KEY_CODE_CPY(KEY_SPACE);
+    KEY_CODE_CPY(KEY_PAGE_UP);
+    KEY_CODE_CPY(KEY_PAGE_DOWN);
+    KEY_CODE_CPY(KEY_END);
+    KEY_CODE_CPY(KEY_HOME);
+    //
+    KEY_CODE_CPY(KEY_LEFT);
+    KEY_CODE_CPY(KEY_UP);
+    KEY_CODE_CPY(KEY_RIGHT);
+    KEY_CODE_CPY(KEY_DOWN);
+    //
+    KEY_CODE_CPY(KEY_0);
+    KEY_CODE_CPY(KEY_1);
+    KEY_CODE_CPY(KEY_2);
+    KEY_CODE_CPY(KEY_3);
+    KEY_CODE_CPY(KEY_4);
+    KEY_CODE_CPY(KEY_5);
+    KEY_CODE_CPY(KEY_6);
+    KEY_CODE_CPY(KEY_7);
+    KEY_CODE_CPY(KEY_8);
+    KEY_CODE_CPY(KEY_9);
+    //
+    KEY_CODE_CPY(KEY_A);
+    KEY_CODE_CPY(KEY_B);
+    KEY_CODE_CPY(KEY_C);
+    KEY_CODE_CPY(KEY_D);
+    KEY_CODE_CPY(KEY_E);
+    KEY_CODE_CPY(KEY_F);
+    KEY_CODE_CPY(KEY_G);
+    KEY_CODE_CPY(KEY_H);
+    KEY_CODE_CPY(KEY_I);
+    KEY_CODE_CPY(KEY_J);
+    KEY_CODE_CPY(KEY_K);
+    KEY_CODE_CPY(KEY_L);
+    KEY_CODE_CPY(KEY_M);
+    KEY_CODE_CPY(KEY_N);
+    KEY_CODE_CPY(KEY_O);
+    KEY_CODE_CPY(KEY_P);
+    KEY_CODE_CPY(KEY_Q);
+    KEY_CODE_CPY(KEY_R);
+    KEY_CODE_CPY(KEY_S);
+    KEY_CODE_CPY(KEY_T);
+    KEY_CODE_CPY(KEY_U);
+    KEY_CODE_CPY(KEY_V);
+    KEY_CODE_CPY(KEY_W);
+    KEY_CODE_CPY(KEY_X);
+    KEY_CODE_CPY(KEY_Y);
+    KEY_CODE_CPY(KEY_Z);
+    //
+    KEY_CODE_CPY2(KEY_NUMPAD0, GLFW_KEY_KP_0);
+    KEY_CODE_CPY2(KEY_NUMPAD1, GLFW_KEY_KP_1);
+    KEY_CODE_CPY2(KEY_NUMPAD2, GLFW_KEY_KP_2);
+    KEY_CODE_CPY2(KEY_NUMPAD3, GLFW_KEY_KP_3);
+    KEY_CODE_CPY2(KEY_NUMPAD4, GLFW_KEY_KP_4);
+    KEY_CODE_CPY2(KEY_NUMPAD5, GLFW_KEY_KP_5);
+    KEY_CODE_CPY2(KEY_NUMPAD6, GLFW_KEY_KP_6);
+    KEY_CODE_CPY2(KEY_NUMPAD7, GLFW_KEY_KP_7);
+    KEY_CODE_CPY2(KEY_NUMPAD8, GLFW_KEY_KP_8);
+    KEY_CODE_CPY2(KEY_NUMPAD9, GLFW_KEY_KP_9);
+    //
+    KEY_CODE_CPY2(KEY_MULTIPLY, GLFW_KEY_KP_MULTIPLY);
+    KEY_CODE_CPY2(KEY_ADD, GLFW_KEY_KP_ADD);
+    KEY_CODE_CPY2(KEY_SUBTRACT, GLFW_KEY_KP_SUBTRACT);
+    KEY_CODE_CPY2(KEY_DECIMAL, GLFW_KEY_KP_DECIMAL);
+    KEY_CODE_CPY2(KEY_DIVIDE, GLFW_KEY_KP_DIVIDE);
+    //
+    KEY_CODE_CPY(KEY_F1);
+    KEY_CODE_CPY(KEY_F2);
+    KEY_CODE_CPY(KEY_F3);
+    KEY_CODE_CPY(KEY_F4);
+    KEY_CODE_CPY(KEY_F5);
+    KEY_CODE_CPY(KEY_F6);
+    KEY_CODE_CPY(KEY_F7);
+    KEY_CODE_CPY(KEY_F8);
+    KEY_CODE_CPY(KEY_F9);
+    KEY_CODE_CPY(KEY_F10);
+    KEY_CODE_CPY(KEY_F11);
+    KEY_CODE_CPY(KEY_F12);
+    KEY_CODE_CPY(KEY_F13);
+    KEY_CODE_CPY(KEY_F14);
+    KEY_CODE_CPY(KEY_F15);
+    KEY_CODE_CPY(KEY_F16);
+    KEY_CODE_CPY(KEY_F17);
+    KEY_CODE_CPY(KEY_F18);
+    KEY_CODE_CPY(KEY_F19);
+    KEY_CODE_CPY(KEY_F20);
+    KEY_CODE_CPY(KEY_F21);
+    KEY_CODE_CPY(KEY_F22);
+    KEY_CODE_CPY(KEY_F23);
+    KEY_CODE_CPY(KEY_F24);
+    //
+    KEY_CODE_CPY(KEY_LEFT_SHIFT);
+    KEY_CODE_CPY(KEY_RIGHT_SHIFT);
+    KEY_CODE_CPY(KEY_LEFT_CONTROL);
+    KEY_CODE_CPY(KEY_RIGHT_CONTROL);
+    KEY_CODE_CPY(KEY_LEFT_ALT);
+    KEY_CODE_CPY(KEY_RIGHT_ALT);
+    //
+    KEY_CODE_CPY(KEY_SEMICOLON);
+    KEY_CODE_CPY(KEY_EQUAL);
+    KEY_CODE_CPY(KEY_COMMA);
+    KEY_CODE_CPY(KEY_MINUS);
+    KEY_CODE_CPY(KEY_PERIOD);
+    KEY_CODE_CPY(KEY_SLASH);
+    //
+    KEY_CODE_CPY(KEY_APOSTROPHE);
+    //
+    KEY_CODE_CPY(KEY_LEFT_BRACKET);
+    KEY_CODE_CPY(KEY_BACKSLASH);
+    KEY_CODE_CPY(KEY_RIGHT_BRACKET);
+    KEY_CODE_CPY(KEY_GRAVE_ACCENT);
 }
 
 _________________SD_END_APP_NAMESPACE________________

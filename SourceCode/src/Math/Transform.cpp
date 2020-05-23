@@ -103,6 +103,17 @@ Vector3f Transform::GetTop() const
     return m_rotation.rotate(Vector3f::PositiveY);
 }
 
+void Transform::AddTranslation(const Vector3f &i_offset)
+{
+    m_position += i_offset;
+}
+
+void Transform::AddRotation(const Vector3f &i_axis, float i_angle)
+{
+    Quaternion new_rot = Quaternion(i_axis, i_angle) * m_rotation;
+    m_rotation = new_rot;
+}
+
 Transform& Transform::operator=(const Transform &i_src)
 {
     if (&i_src != this) {

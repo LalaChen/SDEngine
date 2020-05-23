@@ -262,6 +262,21 @@ void WindowsApplication::TerminateApplication()
     LogManager::Destroy();
 }
 
+KeyStatusEnum WindowsApplication::GetKeyStateByCode(KeyCodeEnum i_code)
+{
+    if (i_code != KEY_MAX_NUMBER) {
+        SHORT status = GetKeyState(SD_ENUM_TO_INT(i_code));
+        if (status < 0) {
+            return KEY_STATUS_PRESS;
+        } else {
+            return KEY_STATUS_RELEASE;
+        }
+    }
+    else {
+        return KEY_STATUS_NOT_SUPPORT;
+    }
+}
+
 //======================= Run Function =======================
 void WindowsApplication::RunMainLoop()
 {

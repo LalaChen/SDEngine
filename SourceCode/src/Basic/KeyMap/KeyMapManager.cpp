@@ -30,7 +30,6 @@ ______________SD_START_BASIC_NAMESPACE_______________
 
 KeyMapManager::KeyMapManager(const ObjectName &i_object_name)
 : EventObject(i_object_name)
-, m_key_maps{false}
 {
     EventStrongReferenceObject key_event = new Event("KeyEvent");
     m_key_event_wref = key_event.StaticCastToWeakPtr<Event>();
@@ -46,7 +45,6 @@ void KeyMapManager::SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed)
     if (i_key_id >= 0 && i_key_id < 256) {
         KeyEventArg event_arg;
         event_arg.m_key_id = i_key_id;
-        m_key_maps[i_key_id] = i_is_pressed;
 
         if (i_is_pressed == true) {
             event_arg.m_key_state = 1;
