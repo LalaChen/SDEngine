@@ -314,9 +314,9 @@ Sample4_DrawObjects::Sample4_DrawObjects(VulkanAPITestManager *i_mgr)
 : Sample("DrawObjects", i_mgr)
 , m_cube_interval(0.05f)
 , m_cube_side_length(0.25f)
-, m_cube_row(5)
-, m_cube_col(5)
-, m_cube_depth(5)
+, m_cube_row(10)
+, m_cube_col(10)
+, m_cube_depth(10)
 {
 
 }
@@ -348,6 +348,11 @@ void Sample4_DrawObjects::Render()
     ScissorRegion sr;
     sr.m_x = 0.0f; sr.m_y = 0.0f;
     sr.m_width = vp.m_width; sr.m_height = vp.m_height;
+
+    UpdateCamera();
+    for (ObjectData &obj : m_cube_objects) {
+        obj.UpdateMaterial(m_mgr, m_camera, m_light);
+    }
 
 #if defined(SINGLE_FLOW)
     //1. Begin Command Buffer
@@ -607,4 +612,39 @@ void Sample4_DrawObjects::CreatePipeline()
     m_pipeline_sref = new GraphicsPipeline("PhongShader_Forward");
     m_pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, 0);
     m_pipeline_sref.GetRef().Initialize(shader_modules);
+}
+
+void Sample4_DrawObjects::UpdateCamera()
+{
+    if (Application::GetRef().GetKeyStateByCode(KEY_A) == KEY_STATUS_PRESS) {
+        m_camera.m_trans.AddRotation(m_camera.m_trans.GetTop(), Timer::GetRef().GetProgramDeltaTime() * 5.0f);
+    }
+    if (Application::GetRef().GetKeyStateByCode(KEY_D) == KEY_STATUS_PRESS) {
+        m_camera.m_trans.AddRotation(m_camera.m_trans.GetTop(), Timer::GetRef().GetProgramDeltaTime() * -5.0f);
+    }
+    if (Application::GetRef().GetKeyStateByCode(KEY_W) == KEY_STATUS_PRESS) {
+        //Camera forward is -z axis.
+        Vector3f offset = m_camera.m_trans.GetForward().negative().scale(Timer::GetRef().GetProgramDeltaTime() * 2.0f);//speed 2m/s
+        m_camera.m_trans.AddTranslation(offset);
+    }
+    if (Application::GetRef().GetKeyStateByCode(KEY_S) == KEY_STATUS_PRESS) {
+        Vector3f offset = m_camera.m_trans.GetForward().scale(Timer::GetRef().GetProgramDeltaTime() * 2.0f);//speed 2m/s
+        m_camera.m_trans.AddTranslation(offset);
+    }
+    if (Application::GetRef().GetKeyStateByCode(KEY_Q) == KEY_STATUS_PRESS) {
+        Vector3f offset = m_camera.m_trans.GetRight().negative().scale(Timer::GetRef().GetProgramDeltaTime() * 1.0f);//speed 2m/s
+        m_camera.m_trans.AddTranslation(offset);
+    }
+    if (Application::GetRef().GetKeyStateByCode(KEY_E) == KEY_STATUS_PRESS) {
+        Vector3f offset = m_camera.m_trans.GetRight().scale(Timer::GetRef().GetProgramDeltaTime() * 1.0f);//speed 2m/s
+        m_camera.m_trans.AddTranslation(offset);
+    }
+    if (Application::GetRef().GetKeyStateByCode(KEY_R) == KEY_STATUS_PRESS) {
+        Vector3f offset = m_camera.m_trans.GetTop().scale(Timer::GetRef().GetProgramDeltaTime() * 2.0f);//speed 2m/s
+        m_camera.m_trans.AddTranslation(offset);
+    }
+    if (Application::GetRef().GetKeyStateByCode(KEY_F) == KEY_STATUS_PRESS) {
+        Vector3f offset = m_camera.m_trans.GetTop().negative().scale(Timer::GetRef().GetProgramDeltaTime() * 2.0f);//speed 2m/s
+        m_camera.m_trans.AddTranslation(offset);
+    }
 }

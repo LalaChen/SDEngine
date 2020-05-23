@@ -89,8 +89,8 @@ public:
     ObjectData();
     ~ObjectData();
 public:
-    void UpdateMaterial(VulkanAPITestManager* i_mgr, const SampleCameraData &i_camera, const LightData &i_light);
-    void Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakReferenceObject &i_cb_wref);
+    void UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraData &i_camera, const LightData &i_light);
+    void Draw(VulkanAPITestManager *i_mgr, const CommandBufferWeakReferenceObject &i_cb_wref);
 public:
     MeshStrongReferenceObject m_mesh;
 public:
@@ -122,6 +122,7 @@ private:
     void CreateLight();
     void CreateObjects();
     void CreatePipeline();
+    void UpdateCamera();
 protected:
     SampleCameraData m_camera;
     LightData m_light;

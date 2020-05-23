@@ -41,17 +41,19 @@ void ApplicationManipulater::Release()
     Application::GetRef().UnregisterSlotFunctionFromKeyEvent(func_slot_sref);
 }
 
-bool ApplicationManipulater::OnReceiveKeyStateChanged(const EventArg& i_arg)
+bool ApplicationManipulater::OnReceiveKeyStateChanged(const EventArg &i_arg)
 {
     if (typeid(i_arg).hash_code() == typeid(KeyEventArg).hash_code()) {
         const KeyEventArg& arg = dynamic_cast<const KeyEventArg&>(i_arg);
         SDLOG("Key[%d](%d).", arg.m_key_id, arg.m_key_state);
 
-        VulkanAPITestManager* mgr = GraphicsManager::GetDynamicCastPtr<VulkanAPITestManager>();
+        VulkanAPITestManager *mgr = GraphicsManager::GetDynamicCastPtr<VulkanAPITestManager>();
         if (mgr != nullptr) {
             if (arg.m_key_state == 0) {
-                int32_t idx = arg.m_key_id - GLFW_KEY_0;
-                mgr->SetCurrentSampleIndex(idx);
+                if (arg.m_key_id >= GLFW_KEY_0 && arg.m_key_id <= GLFW_KEY_9) {
+                    int32_t idx = arg.m_key_id - GLFW_KEY_0;
+                    mgr->SetCurrentSampleIndex(idx);
+                }
             }
         }
 
