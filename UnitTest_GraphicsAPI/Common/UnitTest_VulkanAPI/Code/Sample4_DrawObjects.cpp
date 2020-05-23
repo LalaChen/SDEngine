@@ -632,11 +632,11 @@ void Sample4_DrawObjects::UpdateCamera()
         m_camera.m_trans.AddTranslation(offset);
     }
     if (Application::GetRef().GetKeyStateByCode(KEY_Q) == KEY_STATUS_PRESS) {
-        Vector3f offset = m_camera.m_trans.GetRight().negative().scale(Timer::GetRef().GetProgramDeltaTime() * 1.0f);//speed 2m/s
+        Vector3f offset = m_camera.m_trans.GetRight().scale(Timer::GetRef().GetProgramDeltaTime() * 1.0f);//speed 2m/s
         m_camera.m_trans.AddTranslation(offset);
     }
     if (Application::GetRef().GetKeyStateByCode(KEY_E) == KEY_STATUS_PRESS) {
-        Vector3f offset = m_camera.m_trans.GetRight().scale(Timer::GetRef().GetProgramDeltaTime() * 1.0f);//speed 2m/s
+        Vector3f offset = m_camera.m_trans.GetRight().negative().scale(Timer::GetRef().GetProgramDeltaTime() * 1.0f);//speed 2m/s
         m_camera.m_trans.AddTranslation(offset);
     }
     if (Application::GetRef().GetKeyStateByCode(KEY_R) == KEY_STATUS_PRESS) {
