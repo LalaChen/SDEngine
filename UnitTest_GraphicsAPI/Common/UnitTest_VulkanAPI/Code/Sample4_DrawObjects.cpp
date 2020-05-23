@@ -312,6 +312,7 @@ void ObjectData::Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakRefere
 
 Sample4_DrawObjects::Sample4_DrawObjects(VulkanAPITestManager *i_mgr)
 : Sample("DrawObjects", i_mgr)
+, m_cube_interval(0.05f)
 , m_cube_side_length(0.25f)
 , m_cube_row(5)
 , m_cube_col(5)
@@ -504,7 +505,7 @@ void Sample4_DrawObjects::CreateObjects()
         Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX, 100.0f, 100.0f, 100.0f, 100.0f);
     Vector3f start_pos = Vector3f(m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, 1.0f).scale(
         -1.0f * static_cast<float>(m_cube_row) / 2.0f,
-        0.0f,
+        0.25f,
         -1.0f * static_cast<float>(m_cube_depth) / 2.0f);
     (*last_obj_iter).m_material.Initialize(m_mgr, m_pipeline_sref, m_tex_sref);
     (*last_obj_iter).UpdateMaterial(m_mgr, m_camera, m_light);
@@ -518,7 +519,7 @@ void Sample4_DrawObjects::CreateObjects()
                 (*last_obj_iter).m_mesh = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
                 (*last_obj_iter).m_texture = m_tex_sref;
                 (*last_obj_iter).m_trans.m_position = start_pos + 
-                    Vector3f(m_cube_side_length * row, m_cube_side_length * col, m_cube_side_length * depth);
+                    Vector3f((m_cube_side_length + m_cube_interval) * row, (m_cube_side_length + m_cube_interval) * col, (m_cube_side_length + m_cube_interval) * depth);
                 //
                 (*last_obj_iter).m_material.Initialize(m_mgr, m_pipeline_sref, m_tex_sref);
                 (*last_obj_iter).UpdateMaterial(m_mgr, m_camera, m_light);

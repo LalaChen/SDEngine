@@ -136,6 +136,7 @@ protected:
 #endif
 protected:
     std::list<ObjectData> m_cube_objects;
+    float m_cube_interval;
     float m_cube_side_length;
     uint32_t m_cube_row;
     uint32_t m_cube_col;
