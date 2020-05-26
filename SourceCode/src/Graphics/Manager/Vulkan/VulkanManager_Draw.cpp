@@ -77,10 +77,10 @@ void VulkanManager::SetScissors(const CommandBufferWeakReferenceObject &i_cb_wre
     std::vector<VkRect2D> rects;
     rects.resize(i_regions.size());
     for (uint32_t idx = 0; idx < i_regions.size(); ++idx) {
-        rects[idx].offset.x      = i_regions[idx].m_x;
-        rects[idx].offset.y      = i_regions[idx].m_y;
-        rects[idx].extent.width  = i_regions[idx].m_width;
-        rects[idx].extent.height = i_regions[idx].m_height;
+        rects[idx].offset.x      = static_cast<uint32_t>(i_regions[idx].m_x);
+        rects[idx].offset.y      = static_cast<uint32_t>(i_regions[idx].m_y);
+        rects[idx].extent.width  = static_cast<uint32_t>(i_regions[idx].m_width);
+        rects[idx].extent.height = static_cast<uint32_t>(i_regions[idx].m_height);
     }
     SetVkScissors(cb_handle, rects);
 }

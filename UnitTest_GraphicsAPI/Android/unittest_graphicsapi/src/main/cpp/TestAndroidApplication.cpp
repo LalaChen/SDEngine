@@ -49,7 +49,7 @@ void TestAndroidApplication::Initialize()
     new AndroidLogManager();
     SDLOG("Initialize Android Application!!!");
 
-    new AndroidTimer();
+    new Timer();
     Timer::GetRef().Start();
 
     new AndroidAssetResourceManger(m_asset_mgr);

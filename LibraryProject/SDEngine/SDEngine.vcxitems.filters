@@ -19,9 +19,6 @@
     <Filter Include="include\Basic\Timer">
       <UniqueIdentifier>{fee0916d-13dc-4be6-a9b7-e5f2ecb5f0c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Basic\Timer\Windows">
-      <UniqueIdentifier>{77ac0a35-09f8-4fee-978f-a7e358e94428}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\Basic\FileSystem">
       <UniqueIdentifier>{36520b9b-3b85-4d29-ad64-445c64d103d0}</UniqueIdentifier>
     </Filter>
@@ -105,9 +102,6 @@
     </Filter>
     <Filter Include="src\Basic\Timer">
       <UniqueIdentifier>{2bc9b254-0b4f-4a9b-a4e3-17b371ffd422}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Basic\Timer\Windows">
-      <UniqueIdentifier>{265b7d03-5ba7-46ae-80c4-bf87acdd7d8e}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Basic\Object">
       <UniqueIdentifier>{69fc5ca8-a218-4b61-ae27-48903847ca43}</UniqueIdentifier>
@@ -193,12 +187,6 @@
     <Filter Include="src\Basic\LogManager\Android">
       <UniqueIdentifier>{4fdac99e-6b1b-4499-a228-e8b59cfe38b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Basic\Timer\Android">
-      <UniqueIdentifier>{33d00c10-6971-432b-af8d-6a4718fc6225}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Basic\Timer\Andeoid">
-      <UniqueIdentifier>{c8275979-65d9-4769-ba2f-cc7785218681}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Basic\FileSystem\Android">
       <UniqueIdentifier>{f1c72272-6478-4726-9b61-7287465ef0e8}</UniqueIdentifier>
     </Filter>
@@ -242,9 +230,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\Timer.h">
       <Filter>include\Basic\Timer</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\Windows\WindowsTimer.h">
-      <Filter>include\Basic\Timer\Windows</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\FileData.h">
       <Filter>include\Basic\FileSystem</Filter>
@@ -645,9 +630,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\LogManager\Android\AndroidLogManager.h">
       <Filter>include\Basic\LogManager\Android</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\Android\AndroidTimer.h">
-      <Filter>include\Basic\Timer\Android</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\AssetResourceManager.h">
       <Filter>include\Basic\FileSystem</Filter>
     </ClInclude>
@@ -718,9 +700,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\Timer.cpp">
       <Filter>src\Basic\Timer</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\Windows\WindowsTimer.cpp">
-      <Filter>src\Basic\Timer\Windows</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Object\Object.cpp">
       <Filter>src\Basic\Object</Filter>
@@ -1051,9 +1030,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\LogManager\Android\AndroidLogManager.cpp">
       <Filter>src\Basic\LogManager\Android</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\Android\AndroidTimer.cpp">
-      <Filter>src\Basic\Timer\Andeoid</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\FileSystem\Android\AndroidAssetResourceManager.cpp">
       <Filter>src\Basic\FileSystem\Android</Filter>

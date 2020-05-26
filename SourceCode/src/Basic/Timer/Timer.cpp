@@ -33,11 +33,6 @@ ______________SD_START_BASIC_NAMESPACE_______________
 SD_SINGLETON_DECLARATION_IMPL(Timer);
 
 Timer::Timer()
-: m_start_time(0.0)
-, m_previous_time(0.0)
-, m_current_time(0.0)
-, m_end_time(0.0)
-, m_delta_time(0.0)
 {
     SD_SINGLETON_DECLARATION_REGISTER;
 }
@@ -48,7 +43,7 @@ Timer::~Timer()
 
 void Timer::Start()
 {
-    GetCurrentTimeByOS(m_start_time);
+    m_start_time = std::chrono::high_resolution_clock::now();
     m_previous_time = m_start_time;
     m_current_time = m_start_time;
 }
@@ -56,13 +51,13 @@ void Timer::Start()
 void Timer::Update()
 {
     m_previous_time = m_current_time;
-    GetCurrentTimeByOS(m_current_time);
-    m_delta_time = m_current_time - m_previous_time;
+    m_current_time = std::chrono::high_resolution_clock::now();
+    m_delta_time = static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(m_current_time - m_previous_time).count()) / 1000.0;
 }
 
 void Timer::End()
 {
-    GetCurrentTimeByOS(m_end_time);
+    m_end_time = std::chrono::high_resolution_clock::now();
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

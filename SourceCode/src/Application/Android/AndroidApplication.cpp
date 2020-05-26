@@ -1,3 +1,4 @@
+#include "SDEngine.h"
 #include "SDEnginePlatform.h"
 #include "VulkanWrapper.h"
 #include "AndroidApplication.h"
@@ -28,7 +29,7 @@ void AndroidApplication::Initialize()
     new AndroidLogManager();
     SDLOG("Initialize Android Application!!!");
 
-    new AndroidTimer();
+    new Timer();
     Timer::GetRef().Start();
 
     new AndroidAssetResourceManger(m_asset_mgr);
@@ -151,7 +152,7 @@ void AndroidApplication::TerminateApplication()
     m_render_thread.join();
     //destroy Timer.
     Timer::GetRef().End();
-    SDLOG("APP Ending at %lf.", Timer::GetRef().GetEndProgramTime());
+    SDLOG("APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());
     Timer::Destroy();
     //destroy File Manager
     AssetResourceManager::Destroy();

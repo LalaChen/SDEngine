@@ -90,7 +90,7 @@ void VulkanTestGLFWApplication::Initialize()
     //new FileResourceRequester
     new FileResourceRequester();
     //new Timer.
-    new WindowsTimer();
+    new Timer();
     Timer::GetRef().Start();
     SDLOG("APP Starting at %lf.", Timer::GetRef().GetProgramStartTime());
     //new ImageWindowsLoader

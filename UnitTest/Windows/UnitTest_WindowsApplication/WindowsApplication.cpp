@@ -116,7 +116,7 @@ void WindowsApplication::Initialize()
     //new FileResourceRequester.
     new FileResourceRequester();
     //new Timer.
-    new WindowsTimer();
+    new Timer();
     Timer::GetRef().Start();
     SDLOG("APP Starting at %lf.", Timer::GetRef().GetProgramStartTime());
     //Initialize KeyBoard Mapping.
@@ -252,7 +252,7 @@ void WindowsApplication::TerminateApplication()
     SDLOG("Terminate Application.");
     //destroy Timer.
     Timer::GetRef().End();
-    SDLOG("APP Ending at %lf.", Timer::GetRef().GetEndProgramTime());
+    SDLOG("APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());
     Timer::Destroy();
     //destroy File Manager
     FileSystemManager::Destroy();

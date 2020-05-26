@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#if defined(_WIN32) || defined(_WIN64)
+
 #include "LogManager.h"
 #include "OpenGL4Manager.h"
 
@@ -48,3 +50,5 @@ void OpenGL4Manager::DrawByIndices(const IndexBufferWeakReferenceObject &i_ib_wr
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
+
+#endif
