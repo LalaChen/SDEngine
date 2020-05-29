@@ -39,6 +39,7 @@ SOFTWARE.
 #include "SDEngineCommonFunction.h"
 #include "ManagerParam.h"
 #include "ManagerIdentity.h"
+#include "PeriodCounter.h"
 #include "GraphicsPipeline.h"
 #include "CommandBufferInheritanceInfo.h"
 #include "CommandPool.h"
@@ -51,6 +52,7 @@ SOFTWARE.
 #include "EventArg.h"
 
 using SDE::Basic::EventArg;
+using SDE::Basic::PeriodCounter;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -203,6 +205,8 @@ protected:
 protected:
     std::vector<VertexAttribBindingDescription> m_default_va_binding_descs;
     std::vector<VertexAttribLocationDescription> m_default_va_location_descs;
+protected:
+    PeriodCounter m_fps;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

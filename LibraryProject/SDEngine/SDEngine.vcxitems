@@ -34,7 +34,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Object\Object.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Object\StrongReferenceObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Object\WeakReferenceObject.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\PeriodCounter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\Timer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\TimerMeasurer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicShapeCreator\BasicShapeCreator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandBufferInheritanceInfo.h" />
@@ -192,6 +194,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\LogManager\LogManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\LogManager\Windows\WindowsLogManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Object\Object.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\PeriodCounter.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\TimeMeasurer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\Timer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Axis.cpp" />

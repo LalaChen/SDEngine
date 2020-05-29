@@ -52,6 +52,8 @@ SOFTWARE.
 #include "Basic/Application/Application.h"
 #include "Basic/LogManager/LogManager.h"
 #include "Basic/Timer/Timer.h"
+#include "Basic/Timer/TimerMeasurer.h"
+#include "Basic/Timer/PeriodCounter.h"
 #include "Basic/FileSystem/FileSystemManager.h"
 #include "Basic/FileSystem/AssetResourceManager.h"
 #include "Basic/FileSystem/FileResourceRequester.h"

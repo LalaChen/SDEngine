@@ -684,6 +684,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\IndexBufferFormat_Vulkan.h">
       <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\PeriodCounter.h">
+      <Filter>include\Basic\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\TimerMeasurer.h">
+      <Filter>include\Basic\Timer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1111,6 +1117,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager_Draw.cpp">
       <Filter>src\Graphics\Manager\OpenGL4</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\TimeMeasurer.cpp">
+      <Filter>src\Basic\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\PeriodCounter.cpp">
+      <Filter>src\Basic\Timer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

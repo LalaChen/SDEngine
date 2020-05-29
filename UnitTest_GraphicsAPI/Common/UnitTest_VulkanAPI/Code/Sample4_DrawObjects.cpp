@@ -338,6 +338,8 @@ void Sample4_DrawObjects::Initialize()
 
 void Sample4_DrawObjects::Render()
 {
+    //TimerMeasurer tm("OneFrame");
+    //tm.Start();
     Viewport vp;
     vp.m_x = 0.0f; vp.m_y = 0.0f; 
     vp.m_width = static_cast<float>(m_current_res.GetWidth());
@@ -353,6 +355,7 @@ void Sample4_DrawObjects::Render()
     for (ObjectData &obj : m_cube_objects) {
         obj.UpdateMaterial(m_mgr, m_camera, m_light);
     }
+    //tm.Record();
 
 #if defined(SINGLE_FLOW)
     //1. Begin Command Buffer
@@ -367,9 +370,12 @@ void Sample4_DrawObjects::Render()
 
     m_camera.m_forward_rf.GetRef().EndRenderFlow(m_cmd_buf_wrefs[0]);
     m_cmd_buf_wrefs[0].GetRef().End();
-    GraphicsManager::GetRef().SubmitCommandBufferToQueue(m_cmd_buf_wrefs);
+    //tm.Record();
 #else
 #endif
+    GraphicsManager::GetRef().SubmitCommandBufferToQueue(m_cmd_buf_wrefs);
+    //tm.Stop();
+    //SDLOG("TimeMeasure : %s", tm.ToString().c_str());
 }
 
 void Sample4_DrawObjects::Resize(Size_ui32 i_width, Size_ui32 i_height)
@@ -617,10 +623,10 @@ void Sample4_DrawObjects::CreatePipeline()
 void Sample4_DrawObjects::UpdateCamera()
 {
     if (Application::GetRef().GetKeyStateByCode(KEY_A) == KEY_STATUS_PRESS) {
-        m_camera.m_trans.AddRotation(m_camera.m_trans.GetTop(), Timer::GetRef().GetProgramDeltaTime() * 5.0f);
+        m_camera.m_trans.AddRotation(m_camera.m_trans.GetTop(), Timer::GetRef().GetProgramDeltaTime() * -5.0f);
     }
     if (Application::GetRef().GetKeyStateByCode(KEY_D) == KEY_STATUS_PRESS) {
-        m_camera.m_trans.AddRotation(m_camera.m_trans.GetTop(), Timer::GetRef().GetProgramDeltaTime() * -5.0f);
+        m_camera.m_trans.AddRotation(m_camera.m_trans.GetTop(), Timer::GetRef().GetProgramDeltaTime() * 5.0f);
     }
     if (Application::GetRef().GetKeyStateByCode(KEY_W) == KEY_STATUS_PRESS) {
         //Camera forward is -z axis.
