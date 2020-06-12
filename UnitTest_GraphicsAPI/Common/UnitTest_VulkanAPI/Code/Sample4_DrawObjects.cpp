@@ -293,20 +293,20 @@ void ObjectData::UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraD
 
 void ObjectData::Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakReferenceObject &i_cb_wref)
 {
-    //1. use program.
-    m_material.m_pipeline_wref.GetRef().Use(i_cb_wref);
-    //2. bind descriptor set.
-    std::vector<VkDescriptorSet> descs = { m_material.m_desc_set };
-    std::vector<uint32_t> dynamic_offs = {};
-    i_mgr->BindDescriptorSets(
+   //1. use program.
+   m_material.m_pipeline_wref.GetRef().Use(i_cb_wref);
+   //2. bind descriptor set.
+   std::vector<VkDescriptorSet> descs = { m_material.m_desc_set };
+   std::vector<uint32_t> dynamic_offs = {};
+   i_mgr->BindDescriptorSets(
         reinterpret_cast<VkCommandBuffer>(i_cb_wref.GetConstRef().GetHandle()),
         reinterpret_cast<VkPipelineLayout>(m_material.m_pipeline_wref.GetConstRef().GetPipelineLayoutHandle()),
         VK_PIPELINE_BIND_POINT_GRAPHICS, 0, descs, dynamic_offs);
-    //3. bind mesh vertex attributes.
-    m_mesh.GetRef().BindVertexBuffers(i_cb_wref);
-    //4. draw mesh.
-    m_mesh.GetRef().BindIndexBuffer(i_cb_wref);
-    m_mesh.GetRef().Render(i_cb_wref);
+   //3. bind mesh vertex attributes.
+   m_mesh.GetRef().BindVertexBuffers(i_cb_wref);
+   //4. draw mesh.
+   m_mesh.GetRef().BindIndexBuffer(i_cb_wref);
+   m_mesh.GetRef().Render(i_cb_wref);
 }
 
 
@@ -334,45 +334,25 @@ void Sample4_DrawObjects::Initialize()
     CreateLight();
     CreateObjects();
     CreateCommandBufferAndPool();
+    //
+    RecordCommandBuffer();
 }
 
 void Sample4_DrawObjects::Render()
 {
     //TimerMeasurer tm("OneFrame");
     //tm.Start();
-    Viewport vp;
-    vp.m_x = 0.0f; vp.m_y = 0.0f; 
-    vp.m_width = static_cast<float>(m_current_res.GetWidth());
-    vp.m_height = static_cast<float>(m_current_res.GetHeight());
-    vp.m_min_depth = 0.0f;
-    vp.m_max_depth = 1.0f;
-
-    ScissorRegion sr;
-    sr.m_x = 0.0f; sr.m_y = 0.0f;
-    sr.m_width = vp.m_width; sr.m_height = vp.m_height;
 
     UpdateCamera();
     for (ObjectData &obj : m_cube_objects) {
         obj.UpdateMaterial(m_mgr, m_camera, m_light);
     }
     //tm.Record();
-
-#if defined(SINGLE_FLOW)
-    //1. Begin Command Buffer
-    m_cmd_buf_wrefs[0].GetRef().Begin();
-    m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_cmd_buf_wrefs[0]);
-    GraphicsManager::GetRef().SetViewport(m_cmd_buf_wrefs[0], vp);
-    GraphicsManager::GetRef().SetScissor(m_cmd_buf_wrefs[0], sr);
-
-    for (ObjectData &obj : m_cube_objects) {
-        obj.Draw(m_mgr, m_cmd_buf_wrefs[0]);
-    }
-
-    m_camera.m_forward_rf.GetRef().EndRenderFlow(m_cmd_buf_wrefs[0]);
-    m_cmd_buf_wrefs[0].GetRef().End();
-    //tm.Record();
-#else
+#ifdef defined(RECORD_EVERY_FRAME)
+    RecordCommandBuffer();
 #endif
+
+
     GraphicsManager::GetRef().SubmitCommandBufferToQueue(m_cmd_buf_wrefs);
     //tm.Stop();
     //SDLOG("TimeMeasure : %s", tm.ToString().c_str());
@@ -618,6 +598,37 @@ void Sample4_DrawObjects::CreatePipeline()
     m_pipeline_sref = new GraphicsPipeline("PhongShader_Forward");
     m_pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, 0);
     m_pipeline_sref.GetRef().Initialize(shader_modules);
+}
+
+void Sample4_DrawObjects::RecordCommandBuffer()
+{
+    Viewport vp;
+    vp.m_x = 0.0f; vp.m_y = 0.0f;
+    vp.m_width = static_cast<float>(m_current_res.GetWidth());
+    vp.m_height = static_cast<float>(m_current_res.GetHeight());
+    vp.m_min_depth = 0.0f;
+    vp.m_max_depth = 1.0f;
+
+    ScissorRegion sr;
+    sr.m_x = 0.0f; sr.m_y = 0.0f;
+    sr.m_width = vp.m_width; sr.m_height = vp.m_height;
+
+#if defined(SINGLE_FLOW)
+    //1. Begin Command Buffer
+    m_cmd_buf_wrefs[0].GetRef().Begin();
+    m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_cmd_buf_wrefs[0]);
+    GraphicsManager::GetRef().SetViewport(m_cmd_buf_wrefs[0], vp);
+    GraphicsManager::GetRef().SetScissor(m_cmd_buf_wrefs[0], sr);
+
+    for (ObjectData& obj : m_cube_objects) {
+        obj.Draw(m_mgr, m_cmd_buf_wrefs[0]);
+    }
+
+    m_camera.m_forward_rf.GetRef().EndRenderFlow(m_cmd_buf_wrefs[0]);
+    m_cmd_buf_wrefs[0].GetRef().End();
+    //tm.Record();
+#else
+#endif
 }
 
 void Sample4_DrawObjects::UpdateCamera()

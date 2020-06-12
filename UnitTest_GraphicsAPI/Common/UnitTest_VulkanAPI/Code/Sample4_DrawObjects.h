@@ -1,5 +1,6 @@
 #pragma once
 
+//#define RECORD_EVERY_FRAME
 #define SINGLE_FLOW
 
 #include "Sample.h"
@@ -116,6 +117,8 @@ public:
     void Resize(Size_ui32 i_width, Size_ui32 i_height) override;
     VkImage GetColorBuffer() override;
     VkImageView GetColorBufferImageView() override;
+protected:
+    void RecordCommandBuffer();
 private:
     void CreateTexture();
     void CreateCamera();
