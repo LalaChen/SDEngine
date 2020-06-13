@@ -115,4 +115,11 @@ VkResult VulkanManager::SubmitVkCommandBuffers(const std::vector<VkCommandBuffer
     return VK_SUCCESS;
 }
 
+void VulkanManager::ExecuteVkSecondaryCommandBuffersToPrimaryVkCommandBuffer(
+    VkCommandBuffer i_primary_cb_handle,
+    const std::vector<VkCommandBuffer>& i_second_cb_handles)
+{
+    vkCmdExecuteCommands(i_primary_cb_handle, i_second_cb_handles.size(), i_second_cb_handles.data());
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -52,7 +52,15 @@ void OpenGL4Manager::FreeCommandBuffer(CommandBufferIdentity &io_identity, const
 {
 }
 
-void OpenGL4Manager::SubmitCommandBufferToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cmd_bufs)
+void OpenGL4Manager::SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cb_wrefs)
+{
+}
+
+void OpenGL4Manager::SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject& i_cb_wref)
+{
+}
+
+void OpenGL4Manager::ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::vector<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs)
 {
 }
 

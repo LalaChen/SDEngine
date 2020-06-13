@@ -95,4 +95,13 @@ void RenderFlow::EndRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref
     GraphicsManager::GetRef().EndRenderPass(i_cb_wref);
 }
 
+CommandBufferInheritanceInfo RenderFlow::GetCurrentInheritanceInfo() const
+{
+    CommandBufferInheritanceInfo info;
+    info.m_fb_wref = m_fb_sref;
+    info.m_rp_wref = m_rp_wref;
+    info.m_sp_id = m_current_step;
+    return info;
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -28,7 +28,7 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-const TextureIdentity& GraphicsManager::GetIdentity(const TextureWeakReferenceObject& i_tex_wref) const
+const TextureIdentity& GraphicsManager::GetIdentity(const TextureWeakReferenceObject &i_tex_wref) const
 {
     return i_tex_wref.GetConstRef().m_tex_identity;
 }
@@ -41,6 +41,11 @@ const FrameBufferIdentity& GraphicsManager::GetIdentity(const FrameBufferWeakRef
 const CommandBufferIdentity& GraphicsManager::GetIdentity(const CommandBufferWeakReferenceObject &i_cb_wref) const
 {
     return i_cb_wref.GetConstRef().m_identity;
+}
+
+const CommandPoolIdentity& GraphicsManager::GetIdentity(const CommandPoolWeakReferenceObject &i_cp_wref) const
+{
+    return i_cp_wref.GetConstRef().m_identity;
 }
 
 const RenderPassIdentity& GraphicsManager::GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const

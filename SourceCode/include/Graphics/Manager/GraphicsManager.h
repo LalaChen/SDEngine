@@ -115,7 +115,9 @@ public:
     virtual void BeginCommandBuffer(const CommandBufferIdentity &i_identity, const CommandBufferInheritanceInfo &i_inheritance_info) = 0;
     virtual void EndCommandBuffer(const CommandBufferIdentity &i_identity) = 0;
     virtual void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) = 0;
-    virtual void SubmitCommandBufferToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cmd_bufs) = 0;
+    virtual void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cb_wrefs) = 0;
+    virtual void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb_wref) = 0;
+    virtual void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::vector<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs) = 0;
 public:
 //----------- Vertex Buffer Function ------------
     virtual void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size) = 0;
@@ -187,6 +189,7 @@ protected:
     const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex_wref) const;
     const FrameBufferIdentity& GetIdentity(const FrameBufferWeakReferenceObject &i_fb_wref) const;
     const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject &i_cb_wref) const;
+    const CommandPoolIdentity& GetIdentity(const CommandPoolWeakReferenceObject &i_cp_wref) const;
     const RenderPassIdentity& GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const;
     const VertexBufferIdentity& GetIdentity(const VertexBufferWeakReferenceObject &i_vb_wref) const;
     const IndexBufferIdentity& GetIdentity(const IndexBufferWeakReferenceObject &i_ib_wref) const;

@@ -344,16 +344,16 @@ void Sample4_DrawObjects::Render()
     //tm.Start();
 
     UpdateCamera();
-    for (ObjectData &obj : m_cube_objects) {
+    for (ObjectData &obj : m_scene_objects) {
         obj.UpdateMaterial(m_mgr, m_camera, m_light);
     }
     //tm.Record();
-#ifdef defined(RECORD_EVERY_FRAME)
+#if defined(RECORD_EVERY_FRAME)
     RecordCommandBuffer();
 #endif
 
 
-    GraphicsManager::GetRef().SubmitCommandBufferToQueue(m_cmd_buf_wrefs);
+    GraphicsManager::GetRef().SubmitCommandBufferToQueue(m_main_cb_wref);
     //tm.Stop();
     //SDLOG("TimeMeasure : %s", tm.ToString().c_str());
 }
@@ -371,8 +371,8 @@ void Sample4_DrawObjects::Resize(Size_ui32 i_width, Size_ui32 i_height)
 
 void Sample4_DrawObjects::Destroy()
 {
-    for (std::list<ObjectData>::iterator obj_iter = m_cube_objects.begin(); obj_iter != m_cube_objects.end();) {
-        obj_iter = m_cube_objects.erase(obj_iter);
+    for (std::list<ObjectData>::iterator obj_iter = m_scene_objects.begin(); obj_iter != m_scene_objects.end();) {
+        obj_iter = m_scene_objects.erase(obj_iter);
     }
 
     m_camera.m_color_buffer.Reset();
@@ -381,9 +381,10 @@ void Sample4_DrawObjects::Destroy()
     m_tex_sref.Reset();
     m_forward_rp_sref.Reset();
     m_pipeline_sref.Reset();
-    for (CommandBufferWeakReferenceObject &cmd_wref : m_cmd_buf_wrefs) {
+    for (CommandBufferWeakReferenceObject &cmd_wref : m_secondary_cb_wrefs) {
         m_cmd_pool_sref.GetRef().RecycleCommandBuffer(cmd_wref);
     }
+    m_cmd_pool_sref.GetRef().RecycleCommandBuffer(m_main_cb_wref);
     m_cmd_pool_sref.Reset();
 }
 
@@ -475,11 +476,13 @@ void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
 
 void Sample4_DrawObjects::CreateCommandBufferAndPool()
 {
-#if defined(SINGLE_FLOW)
     m_cmd_pool_sref = new CommandPool("Sample4_SinglePool");
     m_cmd_pool_sref.GetRef().Initialize();
-    m_cmd_buf_wrefs.push_back(m_cmd_pool_sref.GetRef().AllocateCommandBuffer());
-#else
+    m_main_cb_wref = m_cmd_pool_sref.GetRef().AllocateCommandBuffer();
+#if !defined(SINGLE_FLOW)
+    for (uint32_t oID = 0; oID < m_scene_objects.size(); ++oID) {
+        m_secondary_cb_wrefs.push_back(m_cmd_pool_sref.GetRef().AllocateCommandBuffer(StringFormat("CommandBuffer%d",oID), CommandBufferLevel_SECONDARY));
+    }
 #endif
 }
 
@@ -494,8 +497,8 @@ void Sample4_DrawObjects::CreateObjects()
 {
     std::list<ObjectData>::reverse_iterator last_obj_iter;
     //Scene ---- Plane.
-    m_cube_objects.push_back(ObjectData());
-    last_obj_iter = m_cube_objects.rbegin();
+    m_scene_objects.push_back(ObjectData());
+    last_obj_iter = m_scene_objects.rbegin();
     (*last_obj_iter).m_mesh = BasicShapeCreator::GetRef().CreatePlane(
         Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX, 100.0f, 100.0f, 100.0f, 100.0f);
     Vector3f start_pos = Vector3f(m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, 1.0f).scale(
@@ -509,8 +512,8 @@ void Sample4_DrawObjects::CreateObjects()
     for (uint32_t row = 0; row < m_cube_row; ++row) {
         for (uint32_t col = 0; col < m_cube_col; ++col) {
             for (uint32_t depth = 0; depth < m_cube_depth; ++depth) {
-                m_cube_objects.push_back(ObjectData());
-                last_obj_iter = m_cube_objects.rbegin();
+                m_scene_objects.push_back(ObjectData());
+                last_obj_iter = m_scene_objects.rbegin();
                 (*last_obj_iter).m_mesh = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
                 (*last_obj_iter).m_texture = m_tex_sref;
                 (*last_obj_iter).m_trans.m_position = start_pos + 
@@ -619,19 +622,33 @@ void Sample4_DrawObjects::RecordCommandBuffer()
 
 #if defined(SINGLE_FLOW)
     //1. Begin Command Buffer
-    m_cmd_buf_wrefs[0].GetRef().Begin();
-    m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_cmd_buf_wrefs[0]);
-    GraphicsManager::GetRef().SetViewport(m_cmd_buf_wrefs[0], vp);
-    GraphicsManager::GetRef().SetScissor(m_cmd_buf_wrefs[0], sr);
+    m_main_cb_wref.GetRef().Begin();
+    m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb_wref);
+    GraphicsManager::GetRef().SetViewport(m_main_cb_wref, vp);
+    GraphicsManager::GetRef().SetScissor(m_main_cb_wref, sr);
 
-    for (ObjectData& obj : m_cube_objects) {
+    for (ObjectData& obj : m_scene_objects) {
         obj.Draw(m_mgr, m_cmd_buf_wrefs[0]);
     }
 
-    m_camera.m_forward_rf.GetRef().EndRenderFlow(m_cmd_buf_wrefs[0]);
-    m_cmd_buf_wrefs[0].GetRef().End();
-    //tm.Record();
+    m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb_wref);
+    m_main_cb_wref.GetRef().End();
 #else
+    m_main_cb_wref.GetRef().Begin();
+    m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb_wref);
+    uint32_t oID = 0u;
+    for (std::list<ObjectData>::iterator obj_iter = m_scene_objects.begin(); obj_iter != m_scene_objects.end(); ++obj_iter, ++oID) {
+        CommandBufferInheritanceInfo cb_inher_info = m_camera.m_forward_rf.GetRef().GetCurrentInheritanceInfo();
+        m_secondary_cb_wrefs[oID].GetRef().Begin(cb_inher_info);
+        GraphicsManager::GetRef().SetViewport(m_secondary_cb_wrefs[oID], vp);
+        GraphicsManager::GetRef().SetScissor(m_secondary_cb_wrefs[oID], sr);
+        (*obj_iter).Draw(m_mgr, m_main_cb_wref);
+        m_secondary_cb_wrefs[oID].GetRef().End();
+    }
+    GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(m_main_cb_wref, m_secondary_cb_wrefs);
+
+    m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb_wref);
+    m_main_cb_wref.GetRef().End();
 #endif
 }
 

@@ -91,7 +91,7 @@ public:
      */
     void RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value);
 public:
-    /* \fn void BeginRenderFlow(Command);
+    /* \fn void BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref);
      * \param [in] i_cb_wref Command buffer weak reference.
      * \param [in] i_start_pos Start Position.
      * \param [in] i_render_size Render Size.
@@ -99,17 +99,23 @@ public:
      */
     void BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref);
 
-    /* \fn void BeginRenderFlow();
+    /* \fn void GoToNextStep(const CommandBufferWeakReferenceObject &i_cb_wref);
      * \param [in] i_cb_wref Command buffer weak reference.
      * \brief Go to next step of this render flow.
      */
     void GoToNextStep(const CommandBufferWeakReferenceObject &i_cb_wref);
 
-    /* \fn void EndRenderFlow();
+    /* \fn void EndRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref);
      * \param [in] i_cb_wref Command buffer weak reference.
      * \brief End this render flow.
      */
     void EndRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref);
+   
+    /* \fn CommandBufferInheritanceInfo GetCurrentInheritanceInfo() const;
+     *
+     */
+    CommandBufferInheritanceInfo GetCurrentInheritanceInfo() const;
+
 protected:
     /*! \var RenderPassWeakReferenceObject m_rp_wref;
      *  \brief Target render pass.

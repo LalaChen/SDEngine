@@ -76,7 +76,9 @@ public:
     void BeginCommandBuffer(const CommandBufferIdentity &i_identity, const CommandBufferInheritanceInfo &i_inheritance_info) override;
     void EndCommandBuffer(const CommandBufferIdentity &i_identity) override;
     void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) override;
-    void SubmitCommandBufferToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cmd_bufs) override;
+    void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cb_wrefs) override;
+    void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb_wref) override;
+    void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::vector<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs) override;
 public:
 //----------- Vertex Buffer Function ------------
     void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size) override;

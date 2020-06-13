@@ -1,7 +1,7 @@
 #pragma once
 
 //#define RECORD_EVERY_FRAME
-#define SINGLE_FLOW
+//#define SINGLE_FLOW
 
 #include "Sample.h"
 
@@ -132,13 +132,13 @@ protected:
     TextureStrongReferenceObject m_tex_sref;
     GraphicsPipelineStrongReferenceObject m_pipeline_sref;
 protected:
-    std::vector<CommandBufferWeakReferenceObject> m_cmd_buf_wrefs;
-#if defined(SINGLE_FLOW)
-    CommandPoolStrongReferenceObject m_cmd_pool_sref;
-#else
+#if !defined(SINGLE_FLOW)
+    std::vector<CommandBufferWeakReferenceObject> m_secondary_cb_wrefs;
 #endif
+    CommandBufferWeakReferenceObject m_main_cb_wref;
+    CommandPoolStrongReferenceObject m_cmd_pool_sref;
 protected:
-    std::list<ObjectData> m_cube_objects;
+    std::list<ObjectData> m_scene_objects;
     float m_cube_interval;
     float m_cube_side_length;
     uint32_t m_cube_row;
