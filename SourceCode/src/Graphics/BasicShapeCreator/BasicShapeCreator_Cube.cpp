@@ -98,9 +98,9 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCube(const Vector3f &i_center
 		0,2,1, //-y
 		0,3,2,
 		3,1,2, //+y
-		3,0,2,
-		0,1,2, //+x
-		2,1,3,
+		3,0,1,
+		0,1,3, //+x
+		3,1,2,
 		1,3,0, //+z
 		1,2,3,
 		1,3,0, //-x
