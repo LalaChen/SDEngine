@@ -40,7 +40,7 @@ CommandBuffer::CommandBuffer(const ObjectName &i_object_name, const WeakReferenc
 
 CommandBuffer::~CommandBuffer()
 {
-    //Free Command Buffer via its pool.
+    GraphicsManager::GetRef().FreeCommandBuffer(m_identity, m_origin_pool.DynamicCastTo<CommandPool>());
 }
 
 void CommandBuffer::Begin(const CommandBufferInheritanceInfo &i_cmd_inheritance_info)

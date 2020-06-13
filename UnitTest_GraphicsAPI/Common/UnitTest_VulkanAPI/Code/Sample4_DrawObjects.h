@@ -101,7 +101,6 @@ public:
     ObjectMaterialData m_material;
 };
 
-
 class Sample4_DrawObjects : public Sample
 {
 public:

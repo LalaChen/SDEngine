@@ -62,7 +62,7 @@ void CommandPool::RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i
     for (std::list<CommandBufferStrongReferenceObject>::iterator iter = m_cmd_buf_srefs.begin(); iter != m_cmd_buf_srefs.end(); ) {
         if ((*iter) == i_src_wref) {
             iter = m_cmd_buf_srefs.erase(iter);
-            break;
+            return;
         }
         else {
             iter++;

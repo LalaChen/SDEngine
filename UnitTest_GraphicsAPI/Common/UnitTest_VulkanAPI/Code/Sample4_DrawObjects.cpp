@@ -366,6 +366,7 @@ void Sample4_DrawObjects::Resize(Size_ui32 i_width, Size_ui32 i_height)
 
     m_current_res = m_mgr->GetScreenResolution();
     CreateRenderPassAndFramebuffer();
+    RecordCommandBuffer();
 }
 
 void Sample4_DrawObjects::Destroy()
@@ -380,6 +381,9 @@ void Sample4_DrawObjects::Destroy()
     m_tex_sref.Reset();
     m_forward_rp_sref.Reset();
     m_pipeline_sref.Reset();
+    for (CommandBufferWeakReferenceObject &cmd_wref : m_cmd_buf_wrefs) {
+        m_cmd_pool_sref.GetRef().RecycleCommandBuffer(cmd_wref);
+    }
     m_cmd_pool_sref.Reset();
 }
 
