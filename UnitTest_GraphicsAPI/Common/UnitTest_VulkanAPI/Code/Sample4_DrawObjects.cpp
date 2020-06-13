@@ -381,9 +381,11 @@ void Sample4_DrawObjects::Destroy()
     m_tex_sref.Reset();
     m_forward_rp_sref.Reset();
     m_pipeline_sref.Reset();
+#if !defined(SINGLE_FLOW)
     for (CommandBufferWeakReferenceObject &cmd_wref : m_secondary_cb_wrefs) {
         m_cmd_pool_sref.GetRef().RecycleCommandBuffer(cmd_wref);
     }
+#endif
     m_cmd_pool_sref.GetRef().RecycleCommandBuffer(m_main_cb_wref);
     m_cmd_pool_sref.Reset();
 }
@@ -628,7 +630,7 @@ void Sample4_DrawObjects::RecordCommandBuffer()
     GraphicsManager::GetRef().SetScissor(m_main_cb_wref, sr);
 
     for (ObjectData& obj : m_scene_objects) {
-        obj.Draw(m_mgr, m_cmd_buf_wrefs[0]);
+        obj.Draw(m_mgr, m_main_cb_wref);
     }
 
     m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb_wref);
