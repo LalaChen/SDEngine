@@ -62,6 +62,7 @@ void VulkanManager::BeginCommandBuffer(const CommandBufferIdentity &i_identity, 
         inheritance_info.queryFlags = QueryControlFlag_Vulkan::Convert(i_inheritance_info.m_ctrl_mask);
         inheritance_info.pipelineStatistics = QueryPipelineStatisticFlag_Vulkan::Convert(i_inheritance_info.m_pipe_stat_mask);
         info.pInheritanceInfo = &inheritance_info;
+        info.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
     }
     BeginVkCommandBuffer(cb_handle, info);
 }

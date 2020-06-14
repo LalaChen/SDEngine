@@ -309,7 +309,6 @@ void ObjectData::Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakRefere
    m_mesh.GetRef().Render(i_cb_wref);
 }
 
-
 Sample4_DrawObjects::Sample4_DrawObjects(VulkanAPITestManager *i_mgr)
 : Sample("DrawObjects", i_mgr)
 , m_cube_interval(0.05f)
@@ -340,22 +339,16 @@ void Sample4_DrawObjects::Initialize()
 
 void Sample4_DrawObjects::Render()
 {
-    //TimerMeasurer tm("OneFrame");
-    //tm.Start();
-
     UpdateCamera();
     for (ObjectData &obj : m_scene_objects) {
         obj.UpdateMaterial(m_mgr, m_camera, m_light);
     }
-    //tm.Record();
+
 #if defined(RECORD_EVERY_FRAME)
     RecordCommandBuffer();
 #endif
 
-
     GraphicsManager::GetRef().SubmitCommandBufferToQueue(m_main_cb_wref);
-    //tm.Stop();
-    //SDLOG("TimeMeasure : %s", tm.ToString().c_str());
 }
 
 void Sample4_DrawObjects::Resize(Size_ui32 i_width, Size_ui32 i_height)
@@ -382,6 +375,9 @@ void Sample4_DrawObjects::Destroy()
     m_forward_rp_sref.Reset();
     m_pipeline_sref.Reset();
 #if !defined(SINGLE_FLOW)
+    for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
+        m_rec_threads[tID].Reset();
+    }
     for (CommandBufferWeakReferenceObject &cmd_wref : m_secondary_cb_wrefs) {
         m_cmd_pool_sref.GetRef().RecycleCommandBuffer(cmd_wref);
     }
@@ -484,6 +480,11 @@ void Sample4_DrawObjects::CreateCommandBufferAndPool()
 #if !defined(SINGLE_FLOW)
     for (uint32_t oID = 0; oID < m_scene_objects.size(); ++oID) {
         m_secondary_cb_wrefs.push_back(m_cmd_pool_sref.GetRef().AllocateCommandBuffer(StringFormat("CommandBuffer%d",oID), CommandBufferLevel_SECONDARY));
+    }
+    uint32_t max_threads = std::thread::hardware_concurrency();
+    m_rec_threads.resize(max_threads);
+    for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
+        m_rec_threads[tID] = new CommandRecordingThread(StringFormat("RecordThread_%d", tID));
     }
 #endif
 }
@@ -639,14 +640,50 @@ void Sample4_DrawObjects::RecordCommandBuffer()
     m_main_cb_wref.GetRef().Begin();
     m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb_wref);
     uint32_t oID = 0u;
+    CommandBufferInheritanceInfo cb_inher_info = m_camera.m_forward_rf.GetRef().GetCurrentInheritanceInfo();
+#if !defined(MULTI_THREAD)
     for (std::list<ObjectData>::iterator obj_iter = m_scene_objects.begin(); obj_iter != m_scene_objects.end(); ++obj_iter, ++oID) {
-        CommandBufferInheritanceInfo cb_inher_info = m_camera.m_forward_rf.GetRef().GetCurrentInheritanceInfo();
         m_secondary_cb_wrefs[oID].GetRef().Begin(cb_inher_info);
         GraphicsManager::GetRef().SetViewport(m_secondary_cb_wrefs[oID], vp);
         GraphicsManager::GetRef().SetScissor(m_secondary_cb_wrefs[oID], sr);
-        (*obj_iter).Draw(m_mgr, m_main_cb_wref);
+        (*obj_iter).Draw(m_mgr, m_secondary_cb_wrefs[oID]);
         m_secondary_cb_wrefs[oID].GetRef().End();
     }
+#else
+    uint32_t tID = 0;
+    for (std::list<ObjectData>::iterator obj_iter = m_scene_objects.begin(); 
+         obj_iter != m_scene_objects.end();
+         ++obj_iter, ++oID) {
+        ObjectData *obj_ref = &(*obj_iter);
+
+        std::function<void()> task_func = [this, oID, cb_inher_info, obj_ref]() {
+            Viewport vp;
+            vp.m_x = 0.0f; vp.m_y = 0.0f;
+            vp.m_width = static_cast<float>(m_current_res.GetWidth());
+            vp.m_height = static_cast<float>(m_current_res.GetHeight());
+            vp.m_min_depth = 0.0f;
+            vp.m_max_depth = 1.0f;
+
+            ScissorRegion sr;
+            sr.m_x = 0.0f; sr.m_y = 0.0f;
+            sr.m_width = vp.m_width; sr.m_height = vp.m_height;
+
+            m_secondary_cb_wrefs[oID].GetRef().Begin(cb_inher_info);
+            GraphicsManager::GetRef().SetViewport(m_secondary_cb_wrefs[oID], vp);
+            GraphicsManager::GetRef().SetScissor(m_secondary_cb_wrefs[oID], sr);
+            obj_ref->Draw(m_mgr, m_secondary_cb_wrefs[oID]);
+            m_secondary_cb_wrefs[oID].GetRef().End();
+        };
+        
+        m_rec_threads[tID].GetRef().AddTask(task_func);
+
+        tID = (tID + 1) % m_rec_threads.size();
+    }
+
+    for (tID = 0; tID < m_rec_threads.size(); ++tID) {
+        m_rec_threads[tID].GetRef().Wait();
+    }
+#endif
     GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(m_main_cb_wref, m_secondary_cb_wrefs);
 
     m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb_wref);
