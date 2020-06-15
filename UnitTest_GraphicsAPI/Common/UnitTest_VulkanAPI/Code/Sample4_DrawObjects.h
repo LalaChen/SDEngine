@@ -2,7 +2,6 @@
 
 #define RECORD_EVERY_FRAME
 //#define SINGLE_FLOW
-#define MULTI_THREAD
 
 #include "CommandRecordingThread.h"
 #include "Sample.h"
@@ -135,7 +134,6 @@ protected:
     GraphicsPipelineStrongReferenceObject m_pipeline_sref;
 protected:
 #if !defined(SINGLE_FLOW)
-    std::vector<CommandBufferWeakReferenceObject> m_secondary_cb_wrefs;
     std::vector<CommandRecordingThreadStrongReferenceObject> m_rec_threads;
 #endif
     CommandBufferWeakReferenceObject m_main_cb_wref;

@@ -58,7 +58,6 @@ void VulkanManager::BeginCommandBuffer(const CommandBufferIdentity &i_identity, 
         inheritance_info.renderPass = reinterpret_cast<VkRenderPass>(i_inheritance_info.m_rp_wref.GetConstRef().GetHandle());
         inheritance_info.framebuffer = reinterpret_cast<VkFramebuffer>(i_inheritance_info.m_fb_wref.GetConstRef().GetHandle());
         inheritance_info.occlusionQueryEnable = ConvertBoolean(i_inheritance_info.m_occusion_query_enable);
-        inheritance_info.occlusionQueryEnable = ConvertBoolean(i_inheritance_info.m_occusion_query_enable);
         inheritance_info.queryFlags = QueryControlFlag_Vulkan::Convert(i_inheritance_info.m_ctrl_mask);
         inheritance_info.pipelineStatistics = QueryPipelineStatisticFlag_Vulkan::Convert(i_inheritance_info.m_pipe_stat_mask);
         info.pInheritanceInfo = &inheritance_info;
@@ -110,7 +109,7 @@ void VulkanManager::SubmitCommandBufferToQueue(const CommandBufferWeakReferenceO
     }
 }
 
-void VulkanManager::ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject& i_primary_cb_wref, const std::vector<CommandBufferWeakReferenceObject>& i_secondary_cb_wrefs)
+void VulkanManager::ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs)
 {
     std::vector<VkCommandBuffer> sec_cb_handles;
     for (const CommandBufferWeakReferenceObject &cb_wref : i_secondary_cb_wrefs) {

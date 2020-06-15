@@ -67,6 +67,11 @@ public:
      *  \brief Initialize command pool for vulkan.
      */
     void Initialize();
+
+    /*! \fn void Clear();
+     *  \brief Free allocated command buffer.
+     */
+    void Clear();
 public:
     const CompHandle GetHandle() const;
 public:

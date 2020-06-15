@@ -92,7 +92,7 @@ public:
     void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) override;
     void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cb_wrefs) override;
     void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb_wref) override;
-    void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::vector<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs) override;
+    void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs) override;
 public:
 //----------- Vertex Buffer Interface Function ------------
     /*

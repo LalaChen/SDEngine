@@ -60,7 +60,7 @@ void OpenGL4Manager::SubmitCommandBufferToQueue(const CommandBufferWeakReference
 {
 }
 
-void OpenGL4Manager::ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::vector<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs)
+void OpenGL4Manager::ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs)
 {
 }
 

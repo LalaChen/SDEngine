@@ -117,7 +117,7 @@ public:
     virtual void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) = 0;
     virtual void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cb_wrefs) = 0;
     virtual void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb_wref) = 0;
-    virtual void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::vector<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs) = 0;
+    virtual void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs) = 0;
 public:
 //----------- Vertex Buffer Function ------------
     virtual void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size) = 0;

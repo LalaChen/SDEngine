@@ -39,14 +39,18 @@ CommandPool::CommandPool(const ObjectName& i_object_name)
 
 CommandPool::~CommandPool()
 {
-    for (std::list<CommandBufferStrongReferenceObject>::iterator iter = m_cmd_buf_srefs.begin(); iter != m_cmd_buf_srefs.end(); ) {
-        iter = m_cmd_buf_srefs.erase(iter);
-    }
 }
 
 void CommandPool::Initialize()
 {
     GraphicsManager::GetRef().CreateCommandPool(m_identity);
+}
+
+void CommandPool::Clear()
+{
+    for (std::list<CommandBufferStrongReferenceObject>::iterator iter = m_cmd_buf_srefs.begin(); iter != m_cmd_buf_srefs.end(); ) {
+        iter = m_cmd_buf_srefs.erase(iter);
+    }
 }
 
 CommandBufferWeakReferenceObject CommandPool::AllocateCommandBuffer(const ObjectName &i_buffer_name, const CommandBufferLevelEnum &i_level)
