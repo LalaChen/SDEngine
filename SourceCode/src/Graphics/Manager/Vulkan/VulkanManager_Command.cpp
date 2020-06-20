@@ -123,7 +123,6 @@ void VulkanManager::ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWea
     const CommandBufferIdentity &pri_cb_indentity = GetIdentity(i_primary_cb_wref);
     pri_cb_handle = reinterpret_cast<VkCommandBuffer>(pri_cb_indentity.m_handle);
 
-
     if (sec_cb_handles.size() > 0 && pri_cb_handle != VK_NULL_HANDLE) {
         ExecuteVkSecondaryCommandBuffersToPrimaryVkCommandBuffer(pri_cb_handle, sec_cb_handles);
     }

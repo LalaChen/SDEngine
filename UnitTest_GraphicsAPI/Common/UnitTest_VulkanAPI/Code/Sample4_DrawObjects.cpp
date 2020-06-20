@@ -313,9 +313,15 @@ Sample4_DrawObjects::Sample4_DrawObjects(VulkanAPITestManager *i_mgr)
 : Sample("DrawObjects", i_mgr)
 , m_cube_interval(0.05f)
 , m_cube_side_length(0.25f)
+#if defined(_WIN32) || defined(_WIN64)
 , m_cube_row(15)
 , m_cube_col(15)
 , m_cube_depth(15)
+#else
+, m_cube_row(10)
+, m_cube_col(10)
+, m_cube_depth(10)
+#endif
 {
 
 }
@@ -477,11 +483,19 @@ void Sample4_DrawObjects::CreateCommandBufferAndPool()
     m_main_cb_wref = m_cmd_pool_sref.GetRef().AllocateCommandBuffer();
 #if !defined(SINGLE_FLOW)
     uint32_t max_threads = std::thread::hardware_concurrency();
+    max_threads = 1;
     m_rec_threads.resize(max_threads);
+#if defined(RECORD_POOL_V2)
+    for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
+        m_rec_threads[tID] = new SecondaryCommandPoolThread(StringFormat("RecordThread_%d", tID));
+        m_rec_threads[tID].GetRef().Initialize();
+    }
+#else
     for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
         m_rec_threads[tID] = new CommandRecordingThread(StringFormat("RecordThread_%d", tID));
         m_rec_threads[tID].GetRef().Initialize(1);
     }
+#endif
 #endif
 }
 
@@ -620,6 +634,10 @@ void Sample4_DrawObjects::RecordCommandBuffer()
     sr.m_width = vp.m_width; sr.m_height = vp.m_height;
 
 #if defined(SINGLE_FLOW)
+#if defined(TIME_MEASURE)
+    TimerMeasurer tm("RecordCommandBufferSingle");
+    tm.Start();
+#endif
     //1. Begin Command Buffer
     m_main_cb_wref.GetRef().Begin();
     m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb_wref);
@@ -632,51 +650,98 @@ void Sample4_DrawObjects::RecordCommandBuffer()
 
     m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb_wref);
     m_main_cb_wref.GetRef().End();
+#if defined(TIME_MEASURE)
+    tm.Stop();
+    SDLOG("%s", tm.ToString().c_str());
+#endif
 #else
+    /*
+     * Notice : We can't record command buffers created from same command pool simultaneously.(Pool isn't thread-safe!!!) Or it will crash in my test.
+     */
+#if defined(TIME_MEASURE)
+    TimerMeasurer tm("RecordCommandBufferMulti");
+    tm.Start();
+#endif
     m_main_cb_wref.GetRef().Begin();
     m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb_wref);
     uint32_t oID = 0u;
-    CommandBufferInheritanceInfo cb_inher_info = m_camera.m_forward_rf.GetRef().GetCurrentInheritanceInfo();
-
     uint32_t tID = 0;
-    for (std::list<ObjectData>::iterator obj_iter = m_scene_objects.begin(); 
-         obj_iter != m_scene_objects.end();
-         ++obj_iter, ++oID) {
-        ObjectData *obj_ref = &(*obj_iter);
+    std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;
+    CommandBufferInheritanceInfo cb_inher_info = m_camera.m_forward_rf.GetRef().GetCurrentInheritanceInfo();
+#if defined(RECORD_POOL_V2)
+    for (SecondaryCommandPoolThreadStrongReferenceObject &rt_sref : m_rec_threads) {
+        rt_sref.GetRef().StartRecording(cb_inher_info);
+    }
 
-        std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, cb_inher_info, obj_ref](const CommandBufferWeakReferenceObject &i_cb_wref) {
-            Viewport vp;
-            vp.m_x = 0.0f; vp.m_y = 0.0f;
-            vp.m_width = static_cast<float>(m_current_res.GetWidth());
-            vp.m_height = static_cast<float>(m_current_res.GetHeight());
-            vp.m_min_depth = 0.0f;
-            vp.m_max_depth = 1.0f;
+    for (std::list<ObjectData>::iterator obj_iter = m_scene_objects.begin();
+        obj_iter != m_scene_objects.end();
+        ++obj_iter, ++oID) {
+        ObjectData* obj_ref = &(*obj_iter);
 
-            ScissorRegion sr;
-            sr.m_x = 0.0f; sr.m_y = 0.0f;
-            sr.m_width = vp.m_width; sr.m_height = vp.m_height;
+        std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, cb_inher_info, vp, sr, obj_ref](const CommandBufferWeakReferenceObject &i_cb_wref) {
+            GraphicsManager::GetRef().SetViewport(i_cb_wref, vp);
+            GraphicsManager::GetRef().SetScissor(i_cb_wref, sr);
+            obj_ref->Draw(m_mgr, i_cb_wref);
+        };
 
+        m_rec_threads[tID].GetRef().AddTask(task_func);
+
+        tID = (tID + 1) % m_rec_threads.size();
+    }
+
+#if defined(TIME_MEASURE)
+    tm.Record();
+#endif
+
+    for (tID = 0; tID < m_rec_threads.size(); ++tID) {
+        m_rec_threads[tID].GetRef().WaitAndStopRecording(secondary_cb_wrefs);
+    }
+#if defined(TIME_MEASURE)
+    tm.Record();
+#endif
+#else
+    for (std::list<ObjectData>::iterator obj_iter = m_scene_objects.begin();
+        obj_iter != m_scene_objects.end();
+        ++obj_iter, ++oID) {
+        ObjectData* obj_ref = &(*obj_iter);
+
+        std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, cb_inher_info, vp, sr, obj_ref](const CommandBufferWeakReferenceObject &i_cb_wref) {
             i_cb_wref.GetRef().Begin(cb_inher_info);
             GraphicsManager::GetRef().SetViewport(i_cb_wref, vp);
             GraphicsManager::GetRef().SetScissor(i_cb_wref, sr);
             obj_ref->Draw(m_mgr, i_cb_wref);
             i_cb_wref.GetRef().End();
         };
-        
+
         m_rec_threads[tID].GetRef().AddTask(task_func);
 
         tID = (tID + 1) % m_rec_threads.size();
     }
 
-    std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;
+#if defined(TIME_MEASURE)
+    tm.Record();
+#endif
+
     for (tID = 0; tID < m_rec_threads.size(); ++tID) {
         m_rec_threads[tID].GetRef().Wait(secondary_cb_wrefs);
     }
+#if defined(TIME_MEASURE)
+    tm.Record();
+#endif
 
+#endif
+    
     GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(m_main_cb_wref, secondary_cb_wrefs);
 
+#if defined(TIME_MEASURE)
+    tm.Record();
+#endif
     m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb_wref);
     m_main_cb_wref.GetRef().End();
+#if defined(TIME_MEASURE)
+    tm.Stop();
+    SDLOG("%s", tm.ToString().c_str());
+#endif
 #endif
 }
 

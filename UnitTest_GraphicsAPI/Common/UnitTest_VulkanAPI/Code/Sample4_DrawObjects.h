@@ -1,8 +1,11 @@
 #pragma once
 
-#define RECORD_EVERY_FRAME
+//#define RECORD_EVERY_FRAME
+#define RECORD_POOL_V2
+//#define TIME_MEASURE
 //#define SINGLE_FLOW
 
+#include "CommandRecordingThreadV2.h"
 #include "CommandRecordingThread.h"
 #include "Sample.h"
 
@@ -33,6 +36,10 @@ using SDE::Graphics::CommandBufferWeakReferenceObject;
 using SDE::Graphics::CommandPool;
 using SDE::Graphics::CommandPoolStrongReferenceObject;
 using SDE::Graphics::CommandPoolWeakReferenceObject;
+
+using SDE::Graphics::SecondaryCommandPoolThread;
+using SDE::Graphics::SecondaryCommandPoolThreadStrongReferenceObject;
+using SDE::Graphics::SecondaryCommandPoolThreadWeakReferenceObject;
 
 using SDE::Math::Transform;
 
@@ -134,7 +141,11 @@ protected:
     GraphicsPipelineStrongReferenceObject m_pipeline_sref;
 protected:
 #if !defined(SINGLE_FLOW)
+#if defined(RECORD_POOL_V2)
+    std::vector<SecondaryCommandPoolThreadStrongReferenceObject> m_rec_threads;
+#else
     std::vector<CommandRecordingThreadStrongReferenceObject> m_rec_threads;
+#endif
 #endif
     CommandBufferWeakReferenceObject m_main_cb_wref;
     CommandPoolStrongReferenceObject m_cmd_pool_sref;

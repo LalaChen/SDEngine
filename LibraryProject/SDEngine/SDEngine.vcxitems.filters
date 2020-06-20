@@ -690,7 +690,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\TimerMeasurer.h">
       <Filter>include\Basic\Timer</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandPoolThread.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\SecondaryCommandPoolThread.h">
       <Filter>include\Graphics\CommandBuffer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1127,7 +1127,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\PeriodCounter.cpp">
       <Filter>src\Basic\Timer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\CommandBuffer\CommandPoolThread.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\CommandBuffer\SecondaryCommandPoolThread.cpp">
       <Filter>src\Graphics\CommandBuffer</Filter>
     </ClCompile>
   </ItemGroup>

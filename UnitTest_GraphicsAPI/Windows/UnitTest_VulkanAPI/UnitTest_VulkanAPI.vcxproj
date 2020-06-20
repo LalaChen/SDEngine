@@ -168,6 +168,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThread.h" />
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThreadV2.h" />
     <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample.h" />
     <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample1_DrawTriangle.h" />
     <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample2_DrawScene.h" />
@@ -178,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThread.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThreadV2.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample1_DrawTriangle.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample2_DrawScene.cpp" />

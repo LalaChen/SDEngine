@@ -47,6 +47,9 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandPool);
 
+/*! \class CommandPool
+ *  \brief In Vulkan graphics system, CommandPool is used to allocate command buffer and manage the one's handle.
+ */
 class SDENGINE_CLASS CommandPool : public Object
 {
 public:
@@ -69,14 +72,21 @@ public:
     void Initialize();
 
     /*! \fn void Clear();
-     *  \brief Free allocated command buffer.
+     *  \brief Free allocated command buffers.
      */
     void Clear();
 public:
     const CompHandle GetHandle() const;
 public:
+    /*! \fn CommandBufferWeakReferenceObject  AllocateCommandBuffer(const ObjectName &i_buffer_name = "CommandBuffer", const CommandBufferLevelEnum &i_level = CommandBufferLevel_PRIMARY);
+     *  \brief Allocate command buffer.
+     */
     CommandBufferWeakReferenceObject AllocateCommandBuffer(const ObjectName &i_buffer_name = "CommandBuffer", const CommandBufferLevelEnum &i_level = CommandBufferLevel_PRIMARY);
 
+    /*! \fn void RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src_wref);
+     *  \param [in] i_src_wref Target command buffer.
+     *  \brief Free allocated command buffer.
+     */
     void RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src_wref);
 protected:
     /*! \var CommandPoolIdentity m_identity;
@@ -84,6 +94,9 @@ protected:
      */
     CommandPoolIdentity m_identity;
 
+    /*! \fn var std::list<CommandBufferStrongReferenceObject> m_cmd_buf_srefs;
+     *  \brief  Allocated command buffers.
+     */
     std::list<CommandBufferStrongReferenceObject> m_cmd_buf_srefs;
 };
 

@@ -19,27 +19,34 @@ using SDE::Graphics::CommandBuffer;
 using SDE::Graphics::CommandBufferStrongReferenceObject;
 using SDE::Graphics::CommandBufferWeakReferenceObject;
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandRecordingThread);
+using SDE::Graphics::CommandBufferInheritanceInfo;
 
-class CommandRecordingThread : public Object
+using SDE::Basic::ObjectName;
+
+typedef std::function<void(const CommandBufferWeakReferenceObject&)> RecordingTaskV2;
+
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandRecordingThreadV2);
+
+class CommandRecordingThreadV2 : public Object
 {
 public:
-    explicit CommandRecordingThread(const std::string &i_name);
-    virtual ~CommandRecordingThread();
+    CommandRecordingThreadV2(const ObjectName &i_object_name);
+    ~CommandRecordingThreadV2();
 public:
-    void Initialize(uint32_t i_default_cbs = 1);
+    void Initialize();
     void AddTask(const std::function<void(const CommandBufferWeakReferenceObject&)> &i_task);
-    void Wait(std::list<CommandBufferWeakReferenceObject> &io_submitted_list);
+    void StartRecording(const CommandBufferInheritanceInfo &i_info);
+    void WaitAndStopRecording(std::list<CommandBufferWeakReferenceObject> &io_submitted_list);
 protected:
-    void Run();
+    void Record();
 protected:
     CommandPoolStrongReferenceObject m_cp_sref;
-    std::list<CommandBufferWeakReferenceObject> m_cb_wrefs;
-    std::list<CommandBufferWeakReferenceObject>::iterator m_current_cb_iter;
+    CommandBufferWeakReferenceObject m_cb_wref;
 protected:
     std::thread m_thread;
     std::mutex m_mutex;
-    std::queue<std::function<void(const CommandBufferWeakReferenceObject&)>> m_task_pool;
+    std::queue<RecordingTaskV2> m_task_pool;
     std::condition_variable m_task_cv;
     bool m_stop;
+    bool m_recording;
 };

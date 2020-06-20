@@ -85,4 +85,5 @@ SOFTWARE.
 #include "Graphics/RenderFlow/FrameBuffer.h"
 #include "Graphics/CommandBuffer/CommandPool.h"
 #include "Graphics/CommandBuffer/CommandBuffer.h"
+#include "Graphics/CommandBuffer/SecondaryCommandPoolThread.h"
 #include "Graphics/ManagerParam/ManagerParam.h"

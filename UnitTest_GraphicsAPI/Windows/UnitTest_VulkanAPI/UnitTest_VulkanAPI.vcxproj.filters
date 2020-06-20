@@ -38,6 +38,9 @@
     <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThread.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThreadV2.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -68,6 +71,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThread.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThreadV2.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

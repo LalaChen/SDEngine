@@ -134,6 +134,8 @@ add_library( # Sets the name of the library.
              ../../Common/UnitTest_VulkanAPI/Code/Sample4_DrawObjects.cpp
              ../../Common/UnitTest_VulkanAPI/Code/VulkanAPITestManager.cpp
              ../../Common/UnitTest_VulkanAPI/Code/VulkanAPITestManager_ScreenRenderer.cpp
+             ../../Common/UnitTest_VulkanAPI/Code/CommandRecordingThread.cpp
+             ../../Common/UnitTest_VulkanAPI/Code/CommandRecordingThreadV2.cpp
         )
 
 # Specifies libraries CMake should link to your target library. You

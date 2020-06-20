@@ -47,6 +47,9 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandBuffer);
 
+/*! \class CommandBuffer
+ *  \brief In Vulkan graphics system, CommandBuffer is used to record command buffer.
+ */
 class SDENGINE_CLASS CommandBuffer : public Object
 {
 public:
@@ -65,16 +68,29 @@ public:
      */
     virtual ~CommandBuffer();
 public:
-    
+    /*! \fn void Begin(const CommandBufferInheritanceInfo &i_cmd_inheritance_info = CommandBufferInheritanceInfo());
+     *  \param [in] i_cmd_inheritance_info inheritance information of target main command buffer
+     *  \brief Begin record command. 
+     *         Note : 'i_cmd_inheritance_info' only used if this buffer is secondary buffer. It tells what renderpass,
+     *                framebuffer and other informations for this secondary command buffer used.
+     */
     void Begin(const CommandBufferInheritanceInfo &i_cmd_inheritance_info = CommandBufferInheritanceInfo());
     
+    /*! \fn void End();
+     *  \brief End of CommandBuffer.
+     */
     void End();
 public:
     const CompHandle GetHandle() const;
 protected:
-
+    /*! \var CommandBufferIdentity m_identity;
+     *  \brief Identity of this command buffer.
+     */
     CommandBufferIdentity m_identity;
 
+    /*! \var WeakReferenceObject<Object> m_origin_pool;
+     *  \brief The pool which allocate this command buffer.
+     */
     WeakReferenceObject<Object> m_origin_pool;
 };
 
