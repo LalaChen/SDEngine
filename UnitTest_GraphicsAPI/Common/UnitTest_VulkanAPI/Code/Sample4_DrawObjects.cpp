@@ -665,12 +665,12 @@ void Sample4_DrawObjects::RecordCommandBuffer()
     m_main_cb_wref.GetRef().Begin();
     m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb_wref);
     uint32_t oID = 0u;
-    uint32_t tID = 0;
+    uint32_t tID = 0u;
     std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;
     CommandBufferInheritanceInfo cb_inher_info = m_camera.m_forward_rf.GetRef().GetCurrentInheritanceInfo();
 #if defined(RECORD_POOL_V2)
     for (SecondaryCommandPoolThreadStrongReferenceObject &rt_sref : m_rec_threads) {
-        rt_sref.GetRef().StartRecording(cb_inher_info);
+        rt_sref.GetRef().StartRecording(cb_inher_info, vp, sr);
     }
 
     for (std::list<ObjectData>::iterator obj_iter = m_scene_objects.begin();
@@ -678,9 +678,7 @@ void Sample4_DrawObjects::RecordCommandBuffer()
         ++obj_iter, ++oID) {
         ObjectData* obj_ref = &(*obj_iter);
 
-        std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, cb_inher_info, vp, sr, obj_ref](const CommandBufferWeakReferenceObject &i_cb_wref) {
-            GraphicsManager::GetRef().SetViewport(i_cb_wref, vp);
-            GraphicsManager::GetRef().SetScissor(i_cb_wref, sr);
+        std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, obj_ref](const CommandBufferWeakReferenceObject &i_cb_wref) {
             obj_ref->Draw(m_mgr, i_cb_wref);
         };
 

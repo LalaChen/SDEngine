@@ -73,11 +73,13 @@ void SecondaryCommandPoolThread::AddTask(const CommandFunction &i_task)
     }
 }
 
-void SecondaryCommandPoolThread::StartRecording(const CommandBufferInheritanceInfo &i_info)
+void SecondaryCommandPoolThread::StartRecording(const CommandBufferInheritanceInfo &i_info, const Viewport &i_vp, const ScissorRegion &i_sr)
 {
     std::lock_guard<std::mutex> lck(m_mutex);
     m_cb_wref.GetRef().Begin(i_info);
     m_recording = true;
+    m_viewport = i_vp;
+    m_scissor_region = i_sr;
     m_task_cv.notify_one();
 }
 

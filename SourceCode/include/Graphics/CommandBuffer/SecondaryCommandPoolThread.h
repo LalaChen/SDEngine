@@ -40,6 +40,7 @@ SOFTWARE.
 #include <functional>
 
 #include "Object.h"
+#include "GraphicsPipelineParam.h"
 #include "CommandPool.h"
 #include "CommandBuffer.h"
 
@@ -90,11 +91,13 @@ public:
      */
     void AddTask(const CommandFunction &i_task);
 
-    /*! \fn void StartRecording(const CommandBufferInheritanceInfo &i_info);
+    /*! \fn void StartRecording(const CommandBufferInheritanceInfo &i_info, const Viewport &i_vp, const ScissorRegion &i_sr);
      *  \param [in] i_info Notify target renderpass, framebuffer and other infos for this secondary buffer.
+     *  \param [in] i_vp Viewport data.
+     *  \param [in] i_sr ScissorRegion data.
      *  \brief Start accepting task and recording it.
      */
-    void StartRecording(const CommandBufferInheritanceInfo &i_info);
+    void StartRecording(const CommandBufferInheritanceInfo &i_info, const Viewport &i_vp, const ScissorRegion &i_sr);
 
     /*! \fn void WaitAndStopRecording(std::list<CommandBufferWeakReferenceObject> &io_submitted_sc_list);
      *  \param [in] io_submitted_list Submit secondary command buffer to submitted_sc_list;
@@ -146,6 +149,16 @@ protected:
      *  \brief signal to notify starting recording for THIS FRAME.
      */
     bool m_recording;
+
+    /*! \fn Viewport m_viewport;
+     *  \brief Viewport information about this time recording.
+     */
+    Viewport m_viewport;
+
+    /*! \fn ScissorRegion m_scissor_region;
+     *  \brief ScissorRegion information about this time recording.
+     */
+    ScissorRegion m_scissor_region;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
