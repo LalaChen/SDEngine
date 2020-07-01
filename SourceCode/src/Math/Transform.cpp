@@ -83,7 +83,7 @@ Matrix4X4f Transform::MakeViewMatrix() const
 
 Matrix4X4f Transform::MakeNormalMatrix() const
 {
-    Matrix4X4f result = MakeWorldMatrix();
+    Matrix4X4f result = MakeWorldMatrix().inverse().transpose();
     result.m_matrix[3][0] = 0.0f; result.m_matrix[3][1] = 0.0f; result.m_matrix[3][2] = 0.0f;
     return result;
 }

@@ -23,40 +23,17 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
-#include "RenderPass.h"
+#include "UniformImages.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-RenderPass::RenderPass(const ObjectName &i_object_name)
-: Object(i_object_name)
+UniformImages::UniformImages(const ObjectName &i_object_name)
+: UniformVariable(i_object_name)
 {
 }
 
-RenderPass::~RenderPass()
+UniformImages::~UniformImages()
 {
-}
-
-void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescription> &i_att_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps)
-{
-    m_identity.m_attachment_descs = i_att_descs;
-    m_identity.m_subpasses_descs = i_sp_descs;
-    m_identity.m_sp_dependencies = i_sp_deps;
-}
-
-void RenderPass::Initialize()
-{
-    GraphicsManager::GetRef().CreateRenderPass(m_identity);
-}
-
-std::vector<TextureFormatEnum> RenderPass::CreateImageViewFormats() const
-{
-    std::vector<TextureFormatEnum> formats;
-    formats.resize(m_identity.m_attachment_descs.size());
-    for (uint32_t id = 0; id < formats.size(); ++id) {
-        formats[id] = m_identity.m_attachment_descs[id].m_format;
-    }
-    return formats;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

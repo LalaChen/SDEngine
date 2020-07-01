@@ -23,10 +23,10 @@ SOFTWARE.
 
 */
 
-/*! \file      VertexBufferIdentity.h
- *  \brief     Introduce of class VertexBufferIdentity.
+/*! \file      UniformBufferIdentity.h
+ *  \brief     Introduce of class UniformBufferIdentity.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2019/06/26
  *  \copyright MIT License.
  */
 
@@ -34,26 +34,24 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "MemoryType.h"
-#include "VertexBufferFormat.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class VertexBufferIdentity
- *  \brief Keep all graphics handle or ID about vertex buffer in this structure.
+/*! \class UniformBufferIdentity
+ *  \brief Keep all graphics handle or ID about uniform buffer in this structure.
  */
-class SDENGINE_CLASS VertexBufferIdentity
+class SDENGINE_CLASS UniformBufferIdentity
 {
 public:
-    /*! \fn explicit VertexBufferIdentity();
-     *  \brief The constructor of VertexBufferIdentity Class.
+    /*! \fn explicit UniformBufferIdentity();
+     *  \brief The constructor of UniformBufferIdentity Class.
      */
-    VertexBufferIdentity();
+    UniformBufferIdentity();
 
-    /*! \fn explicit ~VertexBufferIdentity();
-     *  \brief The destructor of VertexBufferIdentity Class.
+    /*! \fn explicit ~UniformBufferIdentity();
+     *  \brief The destructor of UniformBufferIdentity Class.
      */
-    ~VertexBufferIdentity();
+    ~UniformBufferIdentity();
 public:
     /*! \var CompHandle m_buffer_handle;
      *  \brief The buffer handle. It is valid while the value is not equal 0.
@@ -74,21 +72,6 @@ public:
      *  \brief current allocated memory size.
      */
     Size_ui64 m_memory_size;
-
-    /*! \var VertexBufferFormatEnum m_format;
-     *  \brief Current buffer format.
-     */
-    VertexBufferFormatEnum m_format;
-
-    /*! \var MemoryTypeEnum m_memory_type;
-     *  \brief Keep memory type.
-     */
-    MemoryTypeEnum m_memory_type;
-
-    /*! \var uint32_t m_location;
-     *  \brief Record the input location of this buffer.
-     */
-    uint32_t m_location;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

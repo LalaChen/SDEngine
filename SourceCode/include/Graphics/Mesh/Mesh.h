@@ -96,13 +96,13 @@ public:
      */
     void Render(const CommandBufferWeakReferenceObject &i_cb_wref);
 protected:
-    /*! \fn VertexBufferStrongReferenceObject m_vertex_attribs[VertexBufferUsage_MAX_DEFINE_VALUE];
-     *  \param [in] m_vertex_attribs Vertex attributes.
+    /*! \var VertexBufferStrongReferenceObject m_vertex_attribs[VertexBufferUsage_MAX_DEFINE_VALUE];
+     *  \brief Vertex attributes.
      */
     VertexBufferStrongReferenceObject m_vertex_attribs[VertexBufferUsage_MAX_DEFINE_VALUE];
 
-    /*! \fn IndexBufferStrongReferenceObject m_index_buffer;
-     *  \param [in] m_index_buffer Index buffer.
+    /*! \var IndexBufferStrongReferenceObject m_index_buffer;
+     *  \brief Index buffer.
      */
     IndexBufferStrongReferenceObject m_index_buffer;
 };

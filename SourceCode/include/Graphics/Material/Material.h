@@ -23,19 +23,39 @@ SOFTWARE.
 
 */
 
-#include "UniformDescriptorLayout.h"
+/*! \file      Material.h
+ *  \brief     Introduce of class Material.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/06/21
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include <vector>
+
+#include "Object.h"
+
+using SDE::Basic::ObjectName;
+using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-UniformBinding::UniformBinding()
-: m_binding_id(0)
-, m_binding_type(UniformBindingType_MAX_DEFINE_VALUE)
-, m_element_number(0)
-{
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Material);
 
-UniformBinding::~UniformBinding()
+/*! \class Material
+ *  \brief In our graphic system, Material is used to be the bridge between data and pipeline.
+ *         We keep data in material and used it when we update data into graphics card.
+ */
+class SDENGINE_CLASS Material : public Object
 {
-}
+public:
+    friend class GraphicsManager;
+public:
+    explicit Material(const ObjectName &i_object_name);
+    virtual ~Material();
+protected:
+    //std::vector<std::vector<UniformVariableStrongReferenceObject>> m_subpass_uniforms;
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

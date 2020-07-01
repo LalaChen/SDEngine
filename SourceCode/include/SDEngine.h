@@ -82,6 +82,8 @@ SOFTWARE.
 #include "Graphics/RenderFlow/AttachmentDescription.h"
 #include "Graphics/RenderFlow/SubpassDescription.h"
 #include "Graphics/RenderFlow/SubpassDependency.h"
+#include "Graphics/RenderFlow/DescriptorSet.h"
+#include "Graphics/RenderFlow/UniformBinding.h"
 #include "Graphics/RenderFlow/FrameBuffer.h"
 #include "Graphics/CommandBuffer/CommandPool.h"
 #include "Graphics/CommandBuffer/CommandBuffer.h"

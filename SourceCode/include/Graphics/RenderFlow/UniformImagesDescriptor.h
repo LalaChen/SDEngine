@@ -23,40 +23,31 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
-#include "RenderPass.h"
+/*! \file      UniformImagesDescriptor.h
+ *  \brief     Introduce of class about UniformImagesDescriptor.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/06/27
+ *  \copyright MIT License.
+ */
+
+#include "UniformVariableDescriptor.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-RenderPass::RenderPass(const ObjectName &i_object_name)
-: Object(i_object_name)
-{
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformImagesDescriptor);
 
-RenderPass::~RenderPass()
+class SDENGINE_CLASS UniformImagesDescriptor : public UniformVariableDescriptor
 {
-}
+public:
+    explicit UniformImagesDescriptor(const ObjectName &i_name, Size_ui32 i_number = 1, bool i_common_flag = false);
+    virtual ~UniformImagesDescriptor();
+public:
+    UniformBindingTypeEnum GetType() const override;
+};
 
-void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescription> &i_att_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps)
+inline UniformBindingTypeEnum UniformImagesDescriptor::GetType() const
 {
-    m_identity.m_attachment_descs = i_att_descs;
-    m_identity.m_subpasses_descs = i_sp_descs;
-    m_identity.m_sp_dependencies = i_sp_deps;
-}
-
-void RenderPass::Initialize()
-{
-    GraphicsManager::GetRef().CreateRenderPass(m_identity);
-}
-
-std::vector<TextureFormatEnum> RenderPass::CreateImageViewFormats() const
-{
-    std::vector<TextureFormatEnum> formats;
-    formats.resize(m_identity.m_attachment_descs.size());
-    for (uint32_t id = 0; id < formats.size(); ++id) {
-        formats[id] = m_identity.m_attachment_descs[id].m_format;
-    }
-    return formats;
+    return UniformBindingType_COMBINED_IMAGE_SAMPLER;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

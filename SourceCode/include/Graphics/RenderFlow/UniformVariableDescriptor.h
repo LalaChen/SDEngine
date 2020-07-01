@@ -23,40 +23,44 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
-#include "RenderPass.h"
+/*! \file      UniformVariableDescriptor.h
+ *  \brief     Introduce of class about UniformVariableDescriptor.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/06/27
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "UniformBindingType.h"
+#include "Object.h"
+
+using SDE::Basic::ObjectName;
+using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-RenderPass::RenderPass(const ObjectName &i_object_name)
-: Object(i_object_name)
-{
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformVariableDescriptor);
 
-RenderPass::~RenderPass()
+class SDENGINE_CLASS UniformVariableDescriptor : public Object
 {
-}
+public:
+    explicit UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_number, bool i_common_flag);
+    virtual ~UniformVariableDescriptor();
+public:
+    virtual UniformBindingTypeEnum GetType() const = 0;
+public:
+    bool GetCommonFlag() const;
+protected:
+    bool m_common_flag;
+    Size_ui32 m_number;
+};
 
-void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescription> &i_att_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps)
+inline bool UniformVariableDescriptor::GetCommonFlag() const
 {
-    m_identity.m_attachment_descs = i_att_descs;
-    m_identity.m_subpasses_descs = i_sp_descs;
-    m_identity.m_sp_dependencies = i_sp_deps;
-}
-
-void RenderPass::Initialize()
-{
-    GraphicsManager::GetRef().CreateRenderPass(m_identity);
-}
-
-std::vector<TextureFormatEnum> RenderPass::CreateImageViewFormats() const
-{
-    std::vector<TextureFormatEnum> formats;
-    formats.resize(m_identity.m_attachment_descs.size());
-    for (uint32_t id = 0; id < formats.size(); ++id) {
-        formats[id] = m_identity.m_attachment_descs[id].m_format;
-    }
-    return formats;
+    return m_common_flag;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

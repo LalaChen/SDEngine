@@ -63,4 +63,14 @@ const IndexBufferIdentity& GraphicsManager::GetIdentity(const IndexBufferWeakRef
     return i_ib_wref.GetConstRef().m_identity;
 }
 
+const UniformBufferIdentity& GraphicsManager::GetIdentity(const UniformBufferWeakReferenceObject &i_ub_wref) const
+{
+    return i_ub_wref.GetConstRef().m_identity;
+}
+
+const DescriptorSetIdentity& GraphicsManager::GetIdentity(const DescriptorSetWeakReferenceObject &i_desc_wref) const
+{
+    return i_desc_wref.GetConstRef().m_identity;
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

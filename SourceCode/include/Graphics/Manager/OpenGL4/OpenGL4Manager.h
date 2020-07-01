@@ -96,6 +96,12 @@ public:
     void MapIndexBuffer(const IndexBufferIdentity &i_identity, VoidPtr &io_buffer_handle)override;
     void UnmapIndexBuffer(const IndexBufferIdentity &i_identity) override;
 public:
+//----------- Uniform Buffer Interface Function ------------
+    void CreateUniformBuffer(UniformBufferIdentity &io_identity) override;
+    void MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref, VoidPtr &io_buffer_handle) override;
+    void UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref) override;
+    void DeleteUnifromBuffer(UniformBufferIdentity &io_identity) override;
+public:
     void CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;
     void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum& i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) override;
     void DeleteTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;

@@ -37,6 +37,7 @@ SOFTWARE.
 #include "RenderPass.h"
 #include "ShaderModule.h"
 #include "CommandBuffer.h"
+#include "UniformBufferDescriptor.h"
 #include "GraphicsPipelineParam.h"
 #include "GraphicsPipelineIdentity.h"
 #include "Object.h"
@@ -93,22 +94,24 @@ public:
      */
     const CompHandle GetHandle() const;
 
-     /*! \fn const CompHandle GetDescriptorLayoutHandle() const;
-      *  \brief return handle of descriptor layout of this pipeline.
-      */
+    /*! \fn const CompHandle GetDescriptorLayoutHandle() const;
+     *  \brief return handle of descriptor layout of this pipeline.
+     */
     const CompHandle GetDescriptorLayoutHandle() const;
 
     /*! \fn const CompHandle GetPipelineLayoutHandle() const;
- *  \brief return handle of pipeline layout of this pipeline.
- */
+     *  \brief return handle of pipeline layout of this pipeline.
+     */
     const CompHandle GetPipelineLayoutHandle() const;
 
-    /*! \fn const CompHandle GetPipelineParams() const;
+    /*! \fn const GraphicsPipelineParam& GetPipelineParams() const;
      *  \brief return pipeline parameters.
      */
     const GraphicsPipelineParam& GetPipelineParams() const;
 public:
-
+    /*! \fn const CompHandle GetPipelineParams() const;
+     *  \brief return pipeline parameters.
+     */
     void Use(const CommandBufferWeakReferenceObject &i_cb_wref);
 protected:
     /*! \var GraphicsPipelineIdentity m_identity;

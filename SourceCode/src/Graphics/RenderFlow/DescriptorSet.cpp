@@ -23,35 +23,17 @@ SOFTWARE.
 
 */
 
-/*! \file      UniformDescriptorLayout.h
- *  \brief     Introduce of class UniformDescriptorLayout.
- *  \author    Kuan-Chih, Chen
- *  \date      2020/04/18
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include <vector>
-
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-
-#include "ShaderKind.h"
-#include "UniformBindingType.h"
+#include "DescriptorSet.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS UniformBinding
+DescriptorSet::DescriptorSet(const ObjectName &i_object_name)
+: Object(i_object_name)
 {
-public:
-    UniformBinding();
-    ~UniformBinding();
-public:
-    uint32_t m_binding_id;
-    UniformBindingTypeEnum m_binding_type;
-    uint32_t m_element_number;
-    std::vector<ShaderStageEnum> m_target_stages;
-};
+}
+
+DescriptorSet::~DescriptorSet()
+{
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

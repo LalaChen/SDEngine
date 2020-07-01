@@ -23,24 +23,50 @@ SOFTWARE.
 
 */
 
-/*! \file      ManagerIdentity.h
- *  \brief     Include all ManagerIdentity.
+/*! \file      DescriptorSet.h
+ *  \brief     Introduce of class about DescriptorSet.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2020/06/21
  *  \copyright MIT License.
  */
 
-#include "VertexBufferIdentity.h"
-#include "IndexBufferIdentity.h"
-#include "TextureIdentity.h"
-#include "SamplerIdentity.h"
-#include "ShaderModuleIdentity.h"
-#include "GraphicsPipelineIdentity.h"
-#include "RenderPassIdentity.h"
-#include "FrameBufferIdentity.h"
-#include "FrameBufferGroupIdentity.h"
-#include "ImageViewIdentity.h"
-#include "CommandBufferIdentity.h"
-#include "CommandPoolIdentity.h"
+#pragma once
+
+#include "GraphicsPipeline.h"
+#include "UniformVariable.h"
 #include "DescriptorSetIdentity.h"
-#include "UniformBufferIdentity.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DescriptorSet);
+
+class DescriptorSet : public Object
+{
+public:
+    friend class GraphicsManager;
+public:
+    /*! \fn explicit DescriptorSet(const ObjectName &i_object_name);
+     *  \param [in] i_object_name Name of this object.
+     *  \brief Constructor of DescriptorSet
+     */
+    explicit DescriptorSet(const ObjectName &i_object_name);
+
+    /*! \fn virtual ~DescriptorSet();
+     *  \brief Destructor of DescriptorSet.
+     */
+    ~DescriptorSet();
+public:
+    void Initialize();
+protected:
+    /*! \var std::vector<std::vector<UniformVariableStrongReferenceObject>> m_sp_uniform_srefs;
+     *  \brief UniformVariables of each subpass.
+     */
+    std::vector<std::vector<UniformVariableStrongReferenceObject>> m_sp_uniform_srefs;
+
+    /*! \var DescriptorSetIdentity m_identity;
+     *  \brief Identity of descriptor set.
+     */
+    DescriptorSetIdentity m_identity;
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

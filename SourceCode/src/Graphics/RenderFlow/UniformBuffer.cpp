@@ -23,40 +23,51 @@ SOFTWARE.
 
 */
 
+#include "LogManager.h"
 #include "GraphicsManager.h"
-#include "RenderPass.h"
+#include "UniformBuffer.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-RenderPass::RenderPass(const ObjectName &i_object_name)
-: Object(i_object_name)
+UniformBuffer::UniformBuffer(const ObjectName &i_object_name)
+: UniformVariable(i_object_name)
+, m_modified(false)
 {
 }
 
-RenderPass::~RenderPass()
+UniformBuffer::~UniformBuffer()
 {
 }
 
-void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescription> &i_att_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps)
+void UniformBuffer::Initialize(const UniformBufferDescriptorWeakReferenceObject &i_desc_wref)
 {
-    m_identity.m_attachment_descs = i_att_descs;
-    m_identity.m_subpasses_descs = i_sp_descs;
-    m_identity.m_sp_dependencies = i_sp_deps;
-}
-
-void RenderPass::Initialize()
-{
-    GraphicsManager::GetRef().CreateRenderPass(m_identity);
-}
-
-std::vector<TextureFormatEnum> RenderPass::CreateImageViewFormats() const
-{
-    std::vector<TextureFormatEnum> formats;
-    formats.resize(m_identity.m_attachment_descs.size());
-    for (uint32_t id = 0; id < formats.size(); ++id) {
-        formats[id] = m_identity.m_attachment_descs[id].m_format;
+    if (m_ub_desc_wref.IsNull() == false) {
+        SDLOGE("UniformBuffer[%s] is initialized.", m_object_name.c_str());
     }
-    return formats;
+    m_ub_desc_wref = i_desc_wref;
+    m_identity.m_data_size = i_desc_wref.GetConstRef().GetBufferSize();
+    m_buffer.resize(m_identity.m_data_size);
+    m_buffer.shrink_to_fit();
+    //create uniform buffer.
+    GraphicsManager::GetRef().CreateUniformBuffer(m_identity);
+}
+
+bool UniformBuffer::SetBufferData(const std::vector<uint8_t> &i_data)
+{
+    m_buffer = i_data;
+    m_modified = true;
+}
+
+void UniformBuffer::Update()
+{
+    if (m_modified == true) {
+        void* mem_ptr = nullptr;
+        UniformBufferWeakReferenceObject this_wref = GetThisWeakPtrByType<UniformBuffer>();
+        GraphicsManager::GetRef().MapUniformBuffer(this_wref, mem_ptr);
+        std::memcpy(mem_ptr, m_buffer.data(), m_buffer.size());
+        GraphicsManager::GetRef().UnmapUniformBuffer(this_wref);
+        m_modified = false;
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -23,40 +23,43 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
-#include "RenderPass.h"
+/*! \file      UniformVariable.h
+ *  \brief     Introduce of class about UniformVariable.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/06/21
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "UniformBindingType.h"
+#include "Object.h"
+
+using SDE::Basic::ObjectName;
+using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-RenderPass::RenderPass(const ObjectName &i_object_name)
-: Object(i_object_name)
-{
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformVariable);
 
-RenderPass::~RenderPass()
+class UniformVariable : public Object
 {
-}
+public:
+    /*! \fn explicit UniformVariable(const ObjectName &i_object_name);
+     *  \param [in] i_object_name Name of this object.
+     *  \brief Constructor of UniformVariable.
+     */
+    explicit UniformVariable(const ObjectName &i_object_name);
 
-void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescription> &i_att_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps)
-{
-    m_identity.m_attachment_descs = i_att_descs;
-    m_identity.m_subpasses_descs = i_sp_descs;
-    m_identity.m_sp_dependencies = i_sp_deps;
-}
+    /*! \fn virtual ~UniformVariable();
+     *  \brief Destructor of UniformVariable.
+     */
+    virtual ~UniformVariable();
 
-void RenderPass::Initialize()
-{
-    GraphicsManager::GetRef().CreateRenderPass(m_identity);
-}
-
-std::vector<TextureFormatEnum> RenderPass::CreateImageViewFormats() const
-{
-    std::vector<TextureFormatEnum> formats;
-    formats.resize(m_identity.m_attachment_descs.size());
-    for (uint32_t id = 0; id < formats.size(); ++id) {
-        formats[id] = m_identity.m_attachment_descs[id].m_format;
-    }
-    return formats;
-}
+public:
+    virtual UniformBindingTypeEnum GetType() const = 0;
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

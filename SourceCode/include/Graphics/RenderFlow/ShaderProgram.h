@@ -23,40 +23,52 @@ SOFTWARE.
 
 */
 
-#include "GraphicsManager.h"
+/*! \file      ShaderProgram.h
+ *  \brief     Introduce of class about ShaderProgram.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/06/27
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#pragma once
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 #include "RenderPass.h"
+#include "GraphicsPipeline.h"
+#include "UniformImagesDescriptor.h"
+#include "UniformBufferDescriptor.h"
+#include "Object.h"
+
+using SDE::Basic::ObjectName;
+using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-RenderPass::RenderPass(const ObjectName &i_object_name)
-: Object(i_object_name)
-{
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ShaderProgram);
 
-RenderPass::~RenderPass()
+class RenderPassShaderGroup
 {
-}
+public:
+    std::vector<UniformVariableDescriptorStrongReferenceObject> m_uni_var_srefs;
+    std::vector<GraphicsPipelineStrongReferenceObject> m_pipeline_srefs;
+};
 
-void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescription> &i_att_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps)
+class SDENGINE_CLASS ShaderProgram : public Object
 {
-    m_identity.m_attachment_descs = i_att_descs;
-    m_identity.m_subpasses_descs = i_sp_descs;
-    m_identity.m_sp_dependencies = i_sp_deps;
-}
+public:
+    typedef std::vector<UniformVariableDescriptorStrongReferenceObject> UniformVariableDescriptors;
+    typedef std::vector<GraphicsPipelineStrongReferenceObject> GraphicsPipelines;
+public:
+    explicit ShaderProgram(const ObjectName &i_name);
+    virtual ~ShaderProgram();
+public:
+    void RegisterRenderPass(const RenderPassWeakReferenceObject &i_rp_wref);
+protected:
+    std::map<RenderPassWeakReferenceObject, RenderPassShaderGroup> m_common_desc;
+};
 
-void RenderPass::Initialize()
-{
-    GraphicsManager::GetRef().CreateRenderPass(m_identity);
-}
-
-std::vector<TextureFormatEnum> RenderPass::CreateImageViewFormats() const
-{
-    std::vector<TextureFormatEnum> formats;
-    formats.resize(m_identity.m_attachment_descs.size());
-    for (uint32_t id = 0; id < formats.size(); ++id) {
-        formats[id] = m_identity.m_attachment_descs[id].m_format;
-    }
-    return formats;
-}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -46,6 +46,8 @@ SOFTWARE.
 #include "CommandBuffer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "UniformBuffer.h"
+#include "DescriptorSet.h"
 #include "RenderPass.h"
 #include "ImageLoader.h"
 #include "Resolution.h"
@@ -126,14 +128,20 @@ public:
     virtual void DeleteVertexBuffer(VertexBufferIdentity &io_identity) = 0;
     virtual void MapVertexBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) = 0;
     virtual void UnmapVertexBuffer(const VertexBufferIdentity &i_identity) = 0;
-    //----------- Index Buffer Interface Function ------------
 public:
+//----------- Index Buffer Interface Function ------------
     virtual void CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui64 i_data_size) = 0;
     virtual void RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
     virtual void RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
     virtual void DeleteIndexBuffer(IndexBufferIdentity &io_identity) = 0;
     virtual void MapIndexBuffer(const IndexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) = 0;
     virtual void UnmapIndexBuffer(const IndexBufferIdentity &i_identity) = 0;
+public:
+//----------- Uniform Buffer Interface Function ------------
+    virtual void CreateUniformBuffer(UniformBufferIdentity &io_identity) = 0;
+    virtual void MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref, VoidPtr &io_buffer_handle) = 0;
+    virtual void UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref) = 0;
+    virtual void DeleteUnifromBuffer(UniformBufferIdentity &io_identity) = 0;
 public:
     virtual void CreateTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity) = 0;
     virtual void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) = 0;
@@ -193,6 +201,8 @@ protected:
     const RenderPassIdentity& GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const;
     const VertexBufferIdentity& GetIdentity(const VertexBufferWeakReferenceObject &i_vb_wref) const;
     const IndexBufferIdentity& GetIdentity(const IndexBufferWeakReferenceObject &i_ib_wref) const;
+    const UniformBufferIdentity& GetIdentity(const UniformBufferWeakReferenceObject &i_ub_wref) const;
+    const DescriptorSetIdentity& GetIdentity(const DescriptorSetWeakReferenceObject &i_desc_wref) const;
 protected:
 //------------ Render Flow Function -------------
     virtual void RenderBegin() = 0;
