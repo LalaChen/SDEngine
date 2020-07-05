@@ -96,14 +96,16 @@ public:
      */
     const std::vector<SubpassDescription>& GetSubpassDescriptions() const;
 
+    /*! \fn uint32_t GetSubpassAmount() const;
+     *  \brief return amount subpass.
+     */
+    uint32_t GetSubpassAmount() const;
+
     /*! \fn const std::vector<AttachmentDescription>& GetAttachmentDescriptions() const;
      *  \brief return attachment description.
      */
     const std::vector<AttachmentDescription>& GetAttachmentDescriptions() const;
 
-    /*! \fn const RenderPassIdentity &GetRenderPassIdentity() const;
-     *
-     */
 protected:
     /*! \var RenderPassIdentity m_identity;
      *  \brief Identity about render pass.
@@ -119,6 +121,11 @@ inline const CompHandle RenderPass::GetHandle() const
 inline const std::vector<SubpassDescription>& RenderPass::GetSubpassDescriptions() const
 {
     return m_identity.m_subpasses_descs;
+}
+
+inline uint32_t RenderPass::GetSubpassAmount() const
+{
+    return static_cast<uint32_t>(m_identity.m_subpasses_descs.size());
 }
 
 inline const std::vector<AttachmentDescription>& RenderPass::GetAttachmentDescriptions() const

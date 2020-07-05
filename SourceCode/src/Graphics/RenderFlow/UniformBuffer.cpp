@@ -52,7 +52,7 @@ void UniformBuffer::Initialize(const UniformBufferDescriptorWeakReferenceObject 
     GraphicsManager::GetRef().CreateUniformBuffer(m_identity);
 }
 
-bool UniformBuffer::SetBufferData(const std::vector<uint8_t> &i_data)
+void UniformBuffer::SetBufferData(const std::vector<uint8_t> &i_data)
 {
     m_buffer = i_data;
     m_modified = true;

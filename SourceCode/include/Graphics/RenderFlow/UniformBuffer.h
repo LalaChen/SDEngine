@@ -63,7 +63,7 @@ public:
 public:
     template<class Type> bool SetVariable(const std::string &i_var_name, const Type &i_data, Size_ui64 i_idx = 0);
 
-    bool SetBufferData(const std::vector<uint8_t> &i_data);
+    void SetBufferData(const std::vector<uint8_t> &i_data);
 
 public:
     void Update();

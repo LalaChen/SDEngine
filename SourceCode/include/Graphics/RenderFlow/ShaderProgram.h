@@ -47,14 +47,18 @@ using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ShaderProgram);
-
-class RenderPassShaderGroup
+class RenderPassGroup
 {
 public:
-    std::vector<UniformVariableDescriptorStrongReferenceObject> m_uni_var_srefs;
-    std::vector<GraphicsPipelineStrongReferenceObject> m_pipeline_srefs;
+    RenderPassGroup() {}
+    ~RenderPassGroup() {}
+public:
+    RenderPassWeakReferenceObject m_rp_wref;
+    std::vector<UniformVariableDescriptorWeakReferenceObject> m_uvd_wrefs;
+    std::vector<GraphicsPipelineWeakReferenceObject> m_gp_wrefs;
 };
+
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ShaderProgram);
 
 class SDENGINE_CLASS ShaderProgram : public Object
 {
@@ -65,10 +69,14 @@ public:
     explicit ShaderProgram(const ObjectName &i_name);
     virtual ~ShaderProgram();
 public:
-    void RegisterRenderPass(const RenderPassWeakReferenceObject &i_rp_wref);
-protected:
-    std::map<RenderPassWeakReferenceObject, RenderPassShaderGroup> m_common_desc;
-};
+    //Input prepared data.
+    void RegisterPipelinesForRenderPass(const RenderPassWeakReferenceObject &i_rp_wref, const GraphicsPipelines &i_gp_srefs, const UniformVariableDescriptors &i_uvd_srefs);
+public:
 
+protected:
+    std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
+    std::map<ObjectName, GraphicsPipelineStrongReferenceObject> m_pipe_srefs;
+    std::map<ObjectName, RenderPassGroup> m_rp_pipelines;
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

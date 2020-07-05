@@ -43,6 +43,19 @@ void GraphicsPipeline::SetGraphicsPipelineParams(const GraphicsPipelineParam &i_
 {
     m_identity.m_params = i_params;
     m_target_rp_wref = i_rp_wref;
+    m_uv_descriptor_wrefs.clear();
+    m_uv_descriptor_wrefs.resize(
+        m_identity.m_params.m_uniform_binding_infos.size());
+}
+
+void GraphicsPipeline::RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id)
+{
+    if (i_uvd_id < m_uv_descriptor_wrefs.size()) {
+        m_uv_descriptor_wrefs[i_uvd_id] = i_uvd_wref;
+    }
+    else {
+        SDLOGE("Wrong ID(%d).", i_uvd_id);
+    }
 }
 
 void GraphicsPipeline::Initialize(const ShaderModules &i_shaders)

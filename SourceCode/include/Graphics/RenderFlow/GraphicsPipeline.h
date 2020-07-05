@@ -38,6 +38,7 @@ SOFTWARE.
 #include "ShaderModule.h"
 #include "CommandBuffer.h"
 #include "UniformBufferDescriptor.h"
+#include "UniformImagesDescriptor.h"
 #include "GraphicsPipelineParam.h"
 #include "GraphicsPipelineIdentity.h"
 #include "Object.h"
@@ -85,9 +86,18 @@ public:
      *  \param [in] i_params Description about this pipeline.
      *  \param [in] i_rp_wref Weak reference of render pass which is the reference of this pipeline.
      *  \param [in] i_sp_id Target step that we can use this shader.
-     *  \brief Set parameters for creating graphics pipeline.
+     *  \brief Set parameters for creating graphics pipeline and allocate uniform variable descriptor 
+     *         weak references for let use registing.
      */
     void SetGraphicsPipelineParams(const GraphicsPipelineParam &i_params, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id);
+
+    /*! \fn void RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id);
+     *  \param [in] i_uvd_wref The descriptor corresponding with target uniform binding.
+     *  \param [in] i_uvd_id Target binding ID.
+     *  \brief Set parameters for creating graphics pipeline and allocate uniform variable descriptor
+     *         weak references for let use registing.
+     */
+    void RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id);
 public:
     /*! \fn const CompHandle GetHandle() const;
      *  \brief return handle of pipeline.
@@ -108,6 +118,11 @@ public:
      *  \brief return pipeline parameters.
      */
     const GraphicsPipelineParam& GetPipelineParams() const;
+
+    /*! \fn uint32_t GetSubpassID() const;
+     *  \brief return subpass id that we use this pipeline.
+     */
+    uint32_t GetSubpassID() const;
 public:
     /*! \fn const CompHandle GetPipelineParams() const;
      *  \brief return pipeline parameters.
@@ -123,6 +138,11 @@ protected:
      *  \brief The render pass we want to use this in pipeline.
      */
     RenderPassWeakReferenceObject m_target_rp_wref;
+
+    /*! \var std::vector<UniformVariableDescriptorWeakReferenceObject> m_uv_descriptor_wrefs;
+     *  \brief The uniform descriptor weak references.
+     */
+    std::vector<UniformVariableDescriptorWeakReferenceObject> m_uv_descriptor_wrefs;
 
     /*! \var bool m_initialized;
      *  \brief Return this pipeline is initialized.
@@ -148,6 +168,11 @@ inline const CompHandle GraphicsPipeline::GetPipelineLayoutHandle() const
 inline const GraphicsPipelineParam& GraphicsPipeline::GetPipelineParams() const
 {
     return m_identity.m_params;
+}
+
+inline uint32_t GraphicsPipeline::GetSubpassID() const
+{
+    return m_identity.m_subpass_id;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
