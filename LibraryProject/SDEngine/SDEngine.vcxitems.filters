@@ -202,6 +202,12 @@
     <Filter Include="src\Graphics\IndexBuffer">
       <UniqueIdentifier>{2629ca5e-4b9c-4432-8b08-d4583dbaa202}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\ShaderProgram">
+      <UniqueIdentifier>{4bf42591-2c13-451e-a3df-2a8e7b901800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\ShaderProgram">
+      <UniqueIdentifier>{17fef5be-a72f-4926-97ae-ecc1521fe0a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -522,16 +528,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\AttachmentReference.h">
       <Filter>include\Graphics\RenderFlow</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\GraphicsPipeline.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\GraphicsPipelineParam.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\RenderPass.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\ShaderModule.h">
       <Filter>include\Graphics\RenderFlow</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\SubpassDependency.h">
@@ -693,44 +690,53 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Material\Material.h">
       <Filter>include\Graphics\Material</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\DescriptorSet.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\UniformVariable.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\DescriptorSetIdentity.h">
       <Filter>include\Graphics\ManagerIdentity</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\UniformBinding.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\UniformBuffer.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\UniformBufferIdentity.h">
       <Filter>include\Graphics\ManagerIdentity</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\UniformImages.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\DescriptorSetPool.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\DescriptorSetPoolIdentity.h">
       <Filter>include\Graphics\ManagerIdentity</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\UniformImagesDescriptor.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\UniformBuffer.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\UniformVariableDescriptor.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\UniformBufferDescriptor.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\UniformBufferDescriptor.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\UniformImages.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\ShaderProgram.h">
-      <Filter>include\Graphics\RenderFlow</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\UniformImagesDescriptor.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\UniformVariable.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\UniformVariableDescriptor.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorSet.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorSetPool.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\GraphicsPipeline.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\GraphicsPipelineParam.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\ShaderModule.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\ShaderProgram.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\UniformBinding.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -998,16 +1004,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\AttachmentReference.cpp">
       <Filter>src\Graphics\RenderFlow</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\GraphicsPipeline.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\GraphicsPipelineParam.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\RenderPass.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\ShaderModule.cpp">
       <Filter>src\Graphics\RenderFlow</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\SubpassDependency.cpp">
@@ -1169,20 +1166,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Material\Material.cpp">
       <Filter>src\Graphics\Material</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\DescriptorSet.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\DescriptorSetIdentity.cpp">
       <Filter>src\Graphics\ManagerIdentity</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\UniformBinding.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\UniformBufferDescriptor.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\UniformBuffer.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\UniformBufferIdentity.cpp">
       <Filter>src\Graphics\ManagerIdentity</Filter>
@@ -1193,26 +1178,47 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager_UniformBuffer.cpp">
       <Filter>src\Graphics\Manager\OpenGL4</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\UniformVariable.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\UniformImages.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\DescriptorSetPool.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\DescriptorSetPoolIdentity.cpp">
       <Filter>src\Graphics\ManagerIdentity</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\UniformImagesDescriptor.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorSet.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\UniformVariableDescriptor.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorSetPool.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\ShaderProgram.cpp">
-      <Filter>src\Graphics\RenderFlow</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\GraphicsPipeline.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\GraphicsPipelineParam.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\ShaderModule.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\ShaderProgram.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\UniformBinding.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\UniformBuffer.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\UniformBufferDescriptor.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\UniformImages.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\UniformImagesDescriptor.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\UniformVariable.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\UniformVariableDescriptor.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

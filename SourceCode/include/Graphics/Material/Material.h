@@ -34,6 +34,9 @@ SOFTWARE.
 
 #include <vector>
 
+#include "UniformImages.h"
+#include "UniformBuffer.h"
+#include "ShaderProgram.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
@@ -55,7 +58,7 @@ public:
     explicit Material(const ObjectName &i_object_name);
     virtual ~Material();
 protected:
-    //std::vector<std::vector<UniformVariableStrongReferenceObject>> m_subpass_uniforms;
+    std::vector<std::vector<UniformVariableStrongReferenceObject>> m_uv_srefs;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

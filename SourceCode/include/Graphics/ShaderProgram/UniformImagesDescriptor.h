@@ -30,6 +30,8 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#pragma once
+
 #include "UniformVariableDescriptor.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________

@@ -22,3 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#include "Material.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+Material::Material(const ObjectName &i_name)
+: Object(i_name)
+{
+}
+
+Material::~Material()
+{
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________
