@@ -32,6 +32,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 GraphicsPipeline::GraphicsPipeline(const ObjectName &i_object_name)
 : Object(i_object_name)
 , m_initialized(false)
+, m_descriptor_counts{0}
 {
 }
 
@@ -44,8 +45,7 @@ void GraphicsPipeline::SetGraphicsPipelineParams(const GraphicsPipelineParam &i_
     m_identity.m_params = i_params;
     m_target_rp_wref = i_rp_wref;
     m_uv_descriptor_wrefs.clear();
-    m_uv_descriptor_wrefs.resize(
-        m_identity.m_params.m_uniform_binding_infos.size());
+    m_uv_descriptor_wrefs.resize(m_identity.m_params.m_uniform_binding_infos.size());
 }
 
 void GraphicsPipeline::RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id)
@@ -62,6 +62,9 @@ void GraphicsPipeline::Initialize(const ShaderModules &i_shaders)
 {
     SDLOG("Initialize graphics pipeline (%s).", m_object_name.c_str());
     GraphicsManager::GetRef().CreateGraphicsPipeline(m_identity, i_shaders, m_target_rp_wref);
+    for (UniformBinding &ub : m_identity.m_params.m_uniform_binding_infos) {
+        m_descriptor_counts[ub.m_binding_type]++;
+    }
     m_initialized = true;
 }
 

@@ -23,48 +23,20 @@ SOFTWARE.
 
 */
 
-/*! \file      DescriptorSetPool.h
- *  \brief     Introduce of class about DescriptorSetPool.
- *  \author    Kuan-Chih, Chen
- *  \date      2020/06/27
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "DescriptorPoolIdentity.h"
-#include "Object.h"
-
-using SDE::Basic::ObjectName;
-using SDE::Basic::Object;
+#include "LogManager.h"
+#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DescriptorSetPool);
-
-class SDENGINE_CLASS DescriptorSetPool : public Object
+VkResult VulkanManager::CreateVkDescriptorPool(VkDescriptorPool &io_handle, const VkDescriptorPoolCreateInfo &i_dp_c_info)
 {
-public:
-    friend class GraphicsManager;
-public:
-    /*! \fn explicit DescriptorSetPool(const ObjectName &i_object_name);
-     *  \param [in] i_object_name Name of this object.
-     *  \brief Constructor of DescriptorSetPool.
-     */
-    explicit DescriptorSetPool(const ObjectName &i_object_name);
+    return vkCreateDescriptorPool(m_VK_device, &i_dp_c_info, nullptr, &io_handle);
+}
 
-    /*! \fn virtual ~DescriptorSetPool();
-     *  \brief Destructor of DescriptorSetPool.
-     */
-    virtual ~DescriptorSetPool();
-public:
-
-    void Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE], uint32_t i_max_set, bool i_individual_flag = false);
-protected:
-
-    DescriptorPoolIdentity m_identity;
-};
+void VulkanManager::DestroyVkDescriptorPool(VkDescriptorPool &io_handle)
+{
+    vkDestroyDescriptorPool(m_VK_device, io_handle, nullptr);
+    io_handle = SD_NULL_HANDLE;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -83,6 +83,11 @@ public:
      *  \brief Print system information.
      */
     void PrintSystemInformation() override;
+//----------- Descriptor Set and Pool Function.
+public:
+    void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) override;
+    void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) override;
+//----------- Command Buffer and Pool Function
 public:
     void CreateCommandPool(CommandPoolIdentity &io_identity) override;
     void DestroyCommandPool(CommandPoolIdentity &io_identity) override;
@@ -152,7 +157,14 @@ public:
 public:
     void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
-//------- Vulkan command buffer private Function --------
+//------- Vulkan descriptor set and pool private Function ------
+    VkResult CreateVkDescriptorPool(
+        VkDescriptorPool &io_handle,
+        const VkDescriptorPoolCreateInfo &i_dp_c_info);
+
+    void DestroyVkDescriptorPool(VkDescriptorPool &io_handle);
+protected:
+//------- Vulkan command buffer and pool private Function --------
     VkResult CreateVkCommandPool(
         VkCommandPool &io_pool_handle,
         VkCommandPoolCreateFlags i_flag = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);

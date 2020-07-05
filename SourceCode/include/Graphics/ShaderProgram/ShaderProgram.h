@@ -47,7 +47,7 @@ using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class RenderPassGroup
+class SDENGINE_CLASS RenderPassGroup
 {
 public:
     RenderPassGroup() {}
@@ -72,11 +72,12 @@ public:
     //Input prepared data.
     void RegisterPipelinesForRenderPass(const RenderPassWeakReferenceObject &i_rp_wref, const GraphicsPipelines &i_gp_srefs, const UniformVariableDescriptors &i_uvd_srefs);
 public:
-
+    void Initialize();
 protected:
     std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
     std::map<ObjectName, GraphicsPipelineStrongReferenceObject> m_pipe_srefs;
     std::map<ObjectName, RenderPassGroup> m_rp_pipelines;
+    uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -111,6 +111,9 @@ public:
      */
     virtual void PrintSystemInformation() = 0;
 public:
+    virtual void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
+    virtual void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
+public:
     virtual void CreateCommandPool(CommandPoolIdentity &io_identity) = 0;
     virtual void DestroyCommandPool(CommandPoolIdentity &io_identity) = 0;
     virtual void AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) = 0;

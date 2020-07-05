@@ -40,7 +40,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DescriptorSet);
 
-class DescriptorSet : public Object
+class SDENGINE_CLASS DescriptorSet : public Object
 {
 public:
     friend class GraphicsManager;

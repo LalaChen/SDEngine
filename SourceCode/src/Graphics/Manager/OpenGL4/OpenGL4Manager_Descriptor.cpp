@@ -22,3 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#if defined(_WIN32) || defined(_WIN64)
+
+#include "LogManager.h"
+#include "OpenGL4Manager.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+void OpenGL4Manager::CreateDescriptorPool(DescriptorPoolIdentity &io_identity)
+{
+}
+
+void OpenGL4Manager::DestroyDescriptorPool(DescriptorPoolIdentity &io_identity)
+{
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________
+
+#endif

@@ -30,6 +30,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 ShaderProgram::ShaderProgram(const ObjectName &i_name)
 : Object(i_name)
+, m_descriptor_counts{0}
 {
 }
 
@@ -72,6 +73,21 @@ void ShaderProgram::RegisterPipelinesForRenderPass(const RenderPassWeakReference
     }
     else {
         SDLOGE("Render Pass[%s] is existed!!!", rp_name.c_str());
+    }
+}
+
+void ShaderProgram::Initialize()
+{
+    //1. calculate descriptor count.
+    m_descriptor_counts[UniformBindingType_UNIFORM_BUFFER] = 0;
+    m_descriptor_counts[UniformBindingType_COMBINED_IMAGE_SAMPLER] = 0;
+    std::map<ObjectName, GraphicsPipelineStrongReferenceObject>::iterator p_iter;
+    for (p_iter = m_pipe_srefs.begin(); p_iter != m_pipe_srefs.end(); ++p_iter) {
+        uint32_t pipe_dcounts[UniformBindingType_MAX_DEFINE_VALUE] = {0};
+        (*p_iter).second.GetRef().GetUniformDescriptorCounts(pipe_dcounts);
+        for (uint32_t count = 0; count < UniformBindingType_MAX_DEFINE_VALUE; ++count) {
+            m_descriptor_counts[count] += pipe_dcounts[count];
+        }
     }
 }
 

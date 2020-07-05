@@ -39,5 +39,7 @@ VkCommandBufferBeginInfo InitializeVKCommandBufferBeginInfo();
 
 VkCommandBufferInheritanceInfo InitializeVkCommandBufferInheritanceInfo();
 
+VkDescriptorPoolCreateInfo InitializeVkDescriptorPoolCreateInfo();
+
 ______________SD_END_GRAPHICS_NAMESPACE______________
 

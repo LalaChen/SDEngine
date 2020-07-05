@@ -123,6 +123,11 @@ public:
      *  \brief return subpass id that we use this pipeline.
      */
     uint32_t GetSubpassID() const;
+
+    /*! \fn void GetUniformDescriptorCounts(uint32_t io_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
+     *  \brief return subpass id that we use this pipeline.
+     */
+    void GetUniformDescriptorCounts(uint32_t io_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
 public:
     /*! \fn const CompHandle GetPipelineParams() const;
      *  \brief return pipeline parameters.
@@ -143,6 +148,11 @@ protected:
      *  \brief The uniform descriptor weak references.
      */
     std::vector<UniformVariableDescriptorWeakReferenceObject> m_uv_descriptor_wrefs;
+
+    /*! \var uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
+     *  \brief Count for descriptors.
+     */
+    uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
 
     /*! \var bool m_initialized;
      *  \brief Return this pipeline is initialized.
@@ -173,6 +183,13 @@ inline const GraphicsPipelineParam& GraphicsPipeline::GetPipelineParams() const
 inline uint32_t GraphicsPipeline::GetSubpassID() const
 {
     return m_identity.m_subpass_id;
+}
+
+inline void GraphicsPipeline::GetUniformDescriptorCounts(uint32_t io_counts[UniformBindingType_MAX_DEFINE_VALUE]) const
+{
+    for (uint32_t count = 0; count < UniformBindingType_MAX_DEFINE_VALUE; ++count) {
+        io_counts[count] = m_descriptor_counts[count];
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -23,30 +23,20 @@ SOFTWARE.
 
 */
 
-/*! \file      DescriptorSetPool.h
- *  \brief     Introduce of class about DescriptorSetPool.
- *  \author    Kuan-Chih, Chen
- *  \date      2020/06/27
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#pragma once
-
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "DescriptorPoolIdentity.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS DescriptorSetPoolIdentity
+DescriptorPoolIdentity::DescriptorPoolIdentity()
+: m_handle(SD_NULL_HANDLE)
+, m_max_set(0)
+, m_descriptor_counts{0}
+, m_individual_op_flag(false)
 {
-public:
-    DescriptorSetPoolIdentity();
-    ~DescriptorSetPoolIdentity();
-public:
-    CompHandle m_handle;
-    Size_ui32 m_max_set;
-};
+}
+
+DescriptorPoolIdentity::~DescriptorPoolIdentity()
+{
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

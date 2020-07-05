@@ -57,8 +57,11 @@ public:
 public:
     explicit Material(const ObjectName &i_object_name);
     virtual ~Material();
+public:
+    void Initialize(const ShaderProgramWeakReferenceObject &i_sp_wref);
 protected:
     std::vector<std::vector<UniformVariableStrongReferenceObject>> m_uv_srefs;
+    ShaderProgramWeakReferenceObject m_sp_wref;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -43,4 +43,5 @@ SOFTWARE.
 #include "CommandBufferIdentity.h"
 #include "CommandPoolIdentity.h"
 #include "DescriptorSetIdentity.h"
+#include "DescriptorPoolIdentity.h"
 #include "UniformBufferIdentity.h"

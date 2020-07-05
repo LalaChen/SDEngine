@@ -36,4 +36,11 @@ Material::~Material()
 {
 }
 
+void Material::Initialize(const ShaderProgramWeakReferenceObject &i_sp_wref)
+{
+    m_sp_wref = i_sp_wref;
+    //1. prepare descriptor pool.
+    
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

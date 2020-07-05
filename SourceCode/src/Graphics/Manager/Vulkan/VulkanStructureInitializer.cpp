@@ -50,4 +50,16 @@ VkCommandBufferInheritanceInfo InitializeVkCommandBufferInheritanceInfo()
     return info;
 }
 
+VkDescriptorPoolCreateInfo InitializeVkDescriptorPoolCreateInfo()
+{
+    VkDescriptorPoolCreateInfo info = {};
+    info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    info.flags = 0;
+    info.pNext = nullptr;
+    info.pPoolSizes = nullptr;
+    info.poolSizeCount = 0;
+    info.maxSets = 0;
+    return info;
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

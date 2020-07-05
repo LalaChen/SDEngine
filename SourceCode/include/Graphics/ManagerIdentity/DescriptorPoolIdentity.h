@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      DescriptorSetPool.h
- *  \brief     Introduce of class about DescriptorSetPool.
+/*! \file      DescriptorPoolIdentity.h
+ *  \brief     Introduce of class about DescriptorPoolIdentity.
  *  \author    Kuan-Chih, Chen
  *  \date      2020/06/27
  *  \copyright MIT License.
@@ -34,37 +34,20 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "DescriptorPoolIdentity.h"
-#include "Object.h"
-
-using SDE::Basic::ObjectName;
-using SDE::Basic::Object;
+#include "UniformBindingType.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DescriptorSetPool);
-
-class SDENGINE_CLASS DescriptorSetPool : public Object
+class SDENGINE_CLASS DescriptorPoolIdentity
 {
 public:
-    friend class GraphicsManager;
+    DescriptorPoolIdentity();
+    ~DescriptorPoolIdentity();
 public:
-    /*! \fn explicit DescriptorSetPool(const ObjectName &i_object_name);
-     *  \param [in] i_object_name Name of this object.
-     *  \brief Constructor of DescriptorSetPool.
-     */
-    explicit DescriptorSetPool(const ObjectName &i_object_name);
-
-    /*! \fn virtual ~DescriptorSetPool();
-     *  \brief Destructor of DescriptorSetPool.
-     */
-    virtual ~DescriptorSetPool();
-public:
-
-    void Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE], uint32_t i_max_set, bool i_individual_flag = false);
-protected:
-
-    DescriptorPoolIdentity m_identity;
+    CompHandle m_handle;
+    Size_ui32 m_max_set;
+    Size_ui32 m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
+    bool m_individual_op_flag;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

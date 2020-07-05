@@ -24,3 +24,27 @@ SOFTWARE.
 */
 
 #include "DescriptorSetPool.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+DescriptorSetPool::DescriptorSetPool(const ObjectName &i_object_name)
+: Object(i_object_name)
+{
+}
+
+DescriptorSetPool::~DescriptorSetPool()
+{
+}
+
+void DescriptorSetPool::Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE], uint32_t i_max_set, bool i_individual_flag)
+{
+    m_identity.m_max_set = i_max_set;
+    m_identity.m_individual_op_flag = i_individual_flag;
+    for (uint32_t type_id = 0; type_id < UniformBindingType_MAX_DEFINE_VALUE; ++type_id) {
+        m_identity.m_descriptor_counts[type_id] = i_d_counts[type_id];
+    }
+    //
+
+}
+
+______________SD_END_GRAPHICS_NAMESPACE______________

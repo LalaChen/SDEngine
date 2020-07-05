@@ -68,6 +68,10 @@ public:
      *  \brief Print system information.
      */
     void PrintSystemInformation() override;
+//----------- Descriptor Set Function (OpenGL doesn't have command buffer) ------------
+public:
+    void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) override;
+    void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) override;
 public:
 //----------- Command Buffer and Pool Function (OpenGL doesn't have command buffer) ------------
     void CreateCommandPool(CommandPoolIdentity &io_identity) override;
