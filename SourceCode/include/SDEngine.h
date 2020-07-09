@@ -85,7 +85,7 @@ SOFTWARE.
 #include "Graphics/RenderFlow/FrameBuffer.h"
 #include "Graphics/ShaderProgram/ShaderModule.h"
 #include "Graphics/ShaderProgram/DescriptorSet.h"
-#include "Graphics/ShaderProgram/DescriptorSetPool.h"
+#include "Graphics/ShaderProgram/DescriptorPool.h"
 #include "Graphics/ShaderProgram/UniformBinding.h"
 #include "Graphics/ShaderProgram/UniformBuffer.h"
 #include "Graphics/ShaderProgram/UniformImages.h"

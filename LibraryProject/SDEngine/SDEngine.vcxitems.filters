@@ -717,9 +717,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorSet.h">
       <Filter>include\Graphics\ShaderProgram</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorSetPool.h">
-      <Filter>include\Graphics\ShaderProgram</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\GraphicsPipeline.h">
       <Filter>include\Graphics\ShaderProgram</Filter>
     </ClInclude>
@@ -735,7 +732,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\UniformBinding.h">
       <Filter>include\Graphics\ShaderProgram</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\DescriptorPoolIdentity.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorPool.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\DescriptorPoolIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1179,9 +1181,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorSet.cpp">
       <Filter>src\Graphics\ShaderProgram</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorSetPool.cpp">
-      <Filter>src\Graphics\ShaderProgram</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\GraphicsPipeline.cpp">
       <Filter>src\Graphics\ShaderProgram</Filter>
     </ClCompile>
@@ -1224,6 +1223,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VkDescriptorSetAndPool.cpp">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\DescriptorPoolIdentity.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorPool.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\DescriptorPoolIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

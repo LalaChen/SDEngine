@@ -23,20 +23,22 @@ SOFTWARE.
 
 */
 
-#include "DescriptorSetPool.h"
+#include "GraphicsManager.h"
+#include "DescriptorPool.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-DescriptorSetPool::DescriptorSetPool(const ObjectName &i_object_name)
+DescriptorPool::DescriptorPool(const ObjectName &i_object_name)
 : Object(i_object_name)
 {
 }
 
-DescriptorSetPool::~DescriptorSetPool()
+DescriptorPool::~DescriptorPool()
 {
+    GraphicsManager::GetRef().DestroyDescriptorPool(m_identity);
 }
 
-void DescriptorSetPool::Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE], uint32_t i_max_set, bool i_individual_flag)
+void DescriptorPool::Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE], uint32_t i_max_set, bool i_individual_flag)
 {
     m_identity.m_max_set = i_max_set;
     m_identity.m_individual_op_flag = i_individual_flag;
@@ -44,7 +46,7 @@ void DescriptorSetPool::Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DE
         m_identity.m_descriptor_counts[type_id] = i_d_counts[type_id];
     }
     //
-
+    GraphicsManager::GetRef().CreateDescriptorPool(m_identity);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

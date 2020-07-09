@@ -161,7 +161,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\VertexAttribDescription.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorSet.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorSetPool.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorPool.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\GraphicsPipeline.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\GraphicsPipelineParam.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\ShaderModule.h" />
@@ -332,7 +332,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\SubpassDescription.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\VertexAttribDescription.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorSet.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorSetPool.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorPool.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\GraphicsPipeline.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\GraphicsPipelineParam.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\ShaderModule.cpp" />

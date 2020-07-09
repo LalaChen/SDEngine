@@ -25,6 +25,8 @@ SOFTWARE.
 
 #include "Material.h"
 
+using SDE::Basic::StringFormat;
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 Material::Material(const ObjectName &i_name)
@@ -40,7 +42,11 @@ void Material::Initialize(const ShaderProgramWeakReferenceObject &i_sp_wref)
 {
     m_sp_wref = i_sp_wref;
     //1. prepare descriptor pool.
-    
+    m_dsp_sref = new DescriptorPool(StringFormat("%s_DescriptorPool", m_object_name.c_str()));
+    uint32_t descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE] = {0};
+    uint32_t max_set = m_sp_wref.GetRef().GetPipelineAmount();
+    m_sp_wref.GetRef().GetDescriptorCount(descriptor_counts);
+    m_dsp_sref.GetRef().Initialize(descriptor_counts, max_set, false);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

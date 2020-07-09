@@ -32,8 +32,6 @@ SOFTWARE.
 
 #pragma once
 
-#pragma once
-
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "RenderPass.h"
@@ -73,11 +71,19 @@ public:
     void RegisterPipelinesForRenderPass(const RenderPassWeakReferenceObject &i_rp_wref, const GraphicsPipelines &i_gp_srefs, const UniformVariableDescriptors &i_uvd_srefs);
 public:
     void Initialize();
+public:
+    void GetDescriptorCount(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
+    uint32_t GetPipelineAmount() const;
 protected:
     std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
     std::map<ObjectName, GraphicsPipelineStrongReferenceObject> m_pipe_srefs;
     std::map<ObjectName, RenderPassGroup> m_rp_pipelines;
     uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
 };
+
+inline uint32_t ShaderProgram::GetPipelineAmount() const
+{
+    return static_cast<uint32_t>(m_pipe_srefs.size());
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

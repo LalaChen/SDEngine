@@ -42,9 +42,9 @@ using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DescriptorSetPool);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DescriptorPool);
 
-class SDENGINE_CLASS DescriptorSetPool : public Object
+class SDENGINE_CLASS DescriptorPool : public Object
 {
 public:
     friend class GraphicsManager;
@@ -53,12 +53,12 @@ public:
      *  \param [in] i_object_name Name of this object.
      *  \brief Constructor of DescriptorSetPool.
      */
-    explicit DescriptorSetPool(const ObjectName &i_object_name);
+    explicit DescriptorPool(const ObjectName &i_object_name);
 
     /*! \fn virtual ~DescriptorSetPool();
      *  \brief Destructor of DescriptorSetPool.
      */
-    virtual ~DescriptorSetPool();
+    virtual ~DescriptorPool();
 public:
 
     void Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE], uint32_t i_max_set, bool i_individual_flag = false);

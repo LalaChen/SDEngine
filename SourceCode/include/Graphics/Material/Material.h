@@ -34,6 +34,7 @@ SOFTWARE.
 
 #include <vector>
 
+#include "DescriptorPool.h"
 #include "UniformImages.h"
 #include "UniformBuffer.h"
 #include "ShaderProgram.h"
@@ -62,6 +63,7 @@ public:
 protected:
     std::vector<std::vector<UniformVariableStrongReferenceObject>> m_uv_srefs;
     ShaderProgramWeakReferenceObject m_sp_wref;
+    DescriptorPoolStrongReferenceObject m_dsp_sref;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

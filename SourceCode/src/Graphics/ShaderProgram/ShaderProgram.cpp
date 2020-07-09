@@ -91,4 +91,11 @@ void ShaderProgram::Initialize()
     }
 }
 
+void ShaderProgram::GetDescriptorCount(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE]) const
+{
+    for (uint32_t count = 0; count < UniformBindingType_MAX_DEFINE_VALUE; ++count) {
+        i_d_counts[count] = m_descriptor_counts[count];
+    }
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________
