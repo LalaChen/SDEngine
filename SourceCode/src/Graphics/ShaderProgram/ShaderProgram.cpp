@@ -98,4 +98,40 @@ void ShaderProgram::GetDescriptorCount(uint32_t i_d_counts[UniformBindingType_MA
     }
 }
 
+void ShaderProgram::AllocateEssentialObjects(
+    std::map<ObjectName, UniformVariableStrongReferenceObject>& io_uv_srefs,
+    DescriptorPoolWeakReferenceObject &io_pool_wref)
+{
+    //1. allocate uniform variable.
+    std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject>::iterator uvd_iter;
+    for (uvd_iter = m_uvd_srefs.begin(); uvd_iter != m_uvd_srefs.end(); ++uvd_iter) {
+        ObjectName uv_name = (*uvd_iter).second.GetRef().GetObjectName();
+        UniformVariableStrongReferenceObject uv_sref = (*uvd_iter).second.GetRef().AllocateUniformVariable();
+        if (uv_sref.IsNull() == false) {
+            io_uv_srefs[uv_name] = uv_sref;
+        }
+        else {
+            SDLOGE("Allocate uniform variable[%s,%d] failure.", uv_name.c_str(), (*uvd_iter).second.GetRef().GetType());
+        }
+    }
+    //2. allocate descriptor for each pipeline.
+    std::map<ObjectName, GraphicsPipelineStrongReferenceObject>::iterator pipe_iter;
+    std::list<DescriptorSetWeakReferenceObject> set_wrefs;
+    for (pipe_iter = m_pipe_srefs.begin(); pipe_iter != m_pipe_srefs.end(); ++pipe_iter) {
+        set_wrefs.push_back(
+            io_pool_wref.GetRef().AllocateDescriptorSet((*pipe_iter).second)
+        );
+    }
+
+    //3. bind descriptor set to uniform variables.
+    std::list<DescriptorSetWeakReferenceObject>::iterator set_iter;
+    for (pipe_iter = m_pipe_srefs.begin(), set_iter = set_wrefs.begin();
+        pipe_iter != m_pipe_srefs.end() && set_iter != set_wrefs.end();
+        ++pipe_iter, ++set_iter) {
+        //Check all uniform variables is one of variable in this pipeline.
+        //If it's one of uniform variables for this pipeline, we register 
+        //this descriptor set to this uniform variable.
+    }
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

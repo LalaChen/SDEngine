@@ -33,6 +33,7 @@ SOFTWARE.
 #pragma once
 
 #include "Texture.h"
+#include "UniformImagesDescriptor.h"
 #include "UniformVariable.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -52,8 +53,29 @@ public:
      *  \brief Destructor of UniformImages.
      */
     virtual ~UniformImages();
+
+public:
+    void Initialize(const UniformImagesDescriptorWeakReferenceObject &i_uid_wref);
+
+public:
+    inline UniformBindingTypeEnum GetType() const override;
+
+public:
+    Size_ui32 GetAmount() const;
+
 protected:
     std::vector<TextureWeakReferenceObject> m_tex_wrefs;
 };
+
+inline UniformBindingTypeEnum UniformImages::GetType() const
+{
+    return UniformBindingType_COMBINED_IMAGE_SAMPLER;
+}
+
+inline Size_ui32 UniformImages::GetAmount() const
+{
+    return static_cast<Size_ui32>(m_tex_wrefs.size());
+}
+
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

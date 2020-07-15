@@ -40,7 +40,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformBufferDescriptor);
 
-class UniformBufferVariableInfo
+class SDENGINE_CLASS UniformBufferVariableInfo
 {
 public:
     UniformBufferVariableInfo()
@@ -78,7 +78,7 @@ inline bool UniformBufferVariableInfo::IsValid() const
 class SDENGINE_CLASS UniformBufferDescriptor : public UniformVariableDescriptor
 {
 public:
-    explicit UniformBufferDescriptor(const ObjectName &i_name, Size_ui32 i_number = 1, bool i_common_flag = false);
+    explicit UniformBufferDescriptor(const ObjectName &i_name, Size_ui32 i_number = 1);
     virtual ~UniformBufferDescriptor();
 public:
     void AddVariable(const std::string &i_var_name, Size_ui32 i_var_type_size, Size_ui32 i_var_offset, Size_ui32 i_var_number = 1);
@@ -88,6 +88,7 @@ public:
     bool IsInitialized() const;
 public:
     UniformBindingTypeEnum GetType() const override;
+    UniformVariableStrongReferenceObject AllocateUniformVariable() override;
 protected:
     std::map<std::string, UniformBufferVariableInfo> m_variable_map;
     Size_ui32 m_total_size;

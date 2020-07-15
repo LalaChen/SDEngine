@@ -32,9 +32,15 @@ SOFTWARE.
 
 #pragma once
 
-#include "GraphicsPipeline.h"
-#include "UniformVariable.h"
+#include "Object.h"
+#include "WeakReferenceObject.h"
+#include "StrongReferenceObject.h"
 #include "DescriptorSetIdentity.h"
+
+using SDE::Basic::Object;
+using SDE::Basic::ObjectName;
+using SDE::Basic::StrongReferenceObject;
+using SDE::Basic::WeakReferenceObject;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -56,12 +62,11 @@ public:
      */
     ~DescriptorSet();
 public:
-    void Initialize();
+    void Initialize(
+        const WeakReferenceObject<Object> &i_pool_wref,
+        const WeakReferenceObject<Object> &i_pipe_wref);
 protected:
-    /*! \var std::vector<std::vector<UniformVariableStrongReferenceObject>> m_sp_uniform_srefs;
-     *  \brief UniformVariables of each subpass.
-     */
-    std::vector<std::vector<UniformVariableStrongReferenceObject>> m_sp_uniform_srefs;
+    WeakReferenceObject<Object> m_pool_wref;
 
     /*! \var DescriptorSetIdentity m_identity;
      *  \brief Identity of descriptor set.

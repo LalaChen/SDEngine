@@ -36,4 +36,9 @@ UniformImages::~UniformImages()
 {
 }
 
+void UniformImages::Initialize(const UniformImagesDescriptorWeakReferenceObject &i_uid_wref)
+{
+    m_tex_wrefs.resize(i_uid_wref.GetRef().GetNumber());
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

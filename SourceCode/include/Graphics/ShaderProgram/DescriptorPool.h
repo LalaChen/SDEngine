@@ -34,6 +34,8 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "GraphicsPipeline.h"
+#include "DescriptorSet.h"
 #include "DescriptorPoolIdentity.h"
 #include "Object.h"
 
@@ -62,9 +64,14 @@ public:
 public:
 
     void Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE], uint32_t i_max_set, bool i_individual_flag = false);
+
+    DescriptorSetWeakReferenceObject AllocateDescriptorSet(const GraphicsPipelineWeakReferenceObject &i_pipe_wref);
 protected:
+    uint32_t m_current_set;
 
     DescriptorPoolIdentity m_identity;
+
+    std::list<DescriptorSetStrongReferenceObject> m_set_srefs;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

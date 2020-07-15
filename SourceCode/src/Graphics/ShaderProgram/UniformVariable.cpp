@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "LogManager.h"
 #include "UniformVariable.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -36,6 +37,20 @@ UniformVariable::~UniformVariable()
 {
 }
 
+void UniformVariable::RegisterDescriptorSet(const DescriptorSetWeakReferenceObject& i_desc_set_wref)
+{
+    if (i_desc_set_wref.IsNull() == false) {
+        return;
+    }
 
+    std::list<DescriptorSetWeakReferenceObject>::iterator iter;
+    for (iter = m_target_set_wrefs.begin(); iter != m_target_set_wrefs.end(); ++iter) {
+        if ((*iter).IsEqualTo(i_desc_set_wref) == true) {
+            SDLOGE("Descriptor Set(%s) already registered.", i_desc_set_wref.GetConstRef().GetObjectName().c_str());
+            return;
+        }
+    }
+    m_target_set_wrefs.push_back(i_desc_set_wref);
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

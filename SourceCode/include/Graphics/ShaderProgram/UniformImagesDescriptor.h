@@ -32,6 +32,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "Texture.h"
 #include "UniformVariableDescriptor.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -41,10 +42,11 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformImagesDescriptor);
 class SDENGINE_CLASS UniformImagesDescriptor : public UniformVariableDescriptor
 {
 public:
-    explicit UniformImagesDescriptor(const ObjectName &i_name, Size_ui32 i_number = 1, bool i_common_flag = false);
+    explicit UniformImagesDescriptor(const ObjectName &i_name, Size_ui32 i_number = 1);
     virtual ~UniformImagesDescriptor();
 public:
     UniformBindingTypeEnum GetType() const override;
+    UniformVariableStrongReferenceObject AllocateUniformVariable() override;
 };
 
 inline UniformBindingTypeEnum UniformImagesDescriptor::GetType() const

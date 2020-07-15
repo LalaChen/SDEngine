@@ -87,6 +87,8 @@ public:
 public:
     void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) override;
+    void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) override;
+    void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) override;
 //----------- Command Buffer and Pool Function
 public:
     void CreateCommandPool(CommandPoolIdentity &io_identity) override;
@@ -163,6 +165,12 @@ protected:
         const VkDescriptorPoolCreateInfo &i_dp_c_info);
 
     void DestroyVkDescriptorPool(VkDescriptorPool &io_handle);
+
+    VkResult AllocateVkDescriptorSet(
+        VkDescriptorSet &io_handle,
+        const VkDescriptorSetAllocateInfo &i_a_info);
+
+    void FreeVkDescriptorSet(VkDescriptorSet &io_handle, VkDescriptorPool i_dp_handle);
 protected:
 //------- Vulkan command buffer and pool private Function --------
     VkResult CreateVkCommandPool(

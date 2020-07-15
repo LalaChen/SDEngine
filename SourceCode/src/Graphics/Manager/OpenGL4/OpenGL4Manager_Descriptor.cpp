@@ -38,6 +38,14 @@ void OpenGL4Manager::DestroyDescriptorPool(DescriptorPoolIdentity &io_identity)
 {
 }
 
+void OpenGL4Manager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref)
+{
+}
+
+void OpenGL4Manager::FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref)
+{
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________
 
 #endif

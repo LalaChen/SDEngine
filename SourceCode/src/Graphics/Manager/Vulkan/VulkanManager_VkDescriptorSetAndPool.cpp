@@ -28,7 +28,9 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VkResult VulkanManager::CreateVkDescriptorPool(VkDescriptorPool &io_handle, const VkDescriptorPoolCreateInfo &i_dp_c_info)
+VkResult VulkanManager::CreateVkDescriptorPool(
+    VkDescriptorPool &io_handle,
+    const VkDescriptorPoolCreateInfo &i_dp_c_info)
 {
     return vkCreateDescriptorPool(m_VK_device, &i_dp_c_info, nullptr, &io_handle);
 }
@@ -37,6 +39,19 @@ void VulkanManager::DestroyVkDescriptorPool(VkDescriptorPool &io_handle)
 {
     vkDestroyDescriptorPool(m_VK_device, io_handle, nullptr);
     io_handle = SD_NULL_HANDLE;
+}
+
+VkResult VulkanManager::AllocateVkDescriptorSet(
+    VkDescriptorSet &io_handle,
+    const VkDescriptorSetAllocateInfo &i_a_info)
+{
+    return vkAllocateDescriptorSets(m_VK_device, &i_a_info, &io_handle);
+}
+
+void VulkanManager::FreeVkDescriptorSet(VkDescriptorSet &io_handle, VkDescriptorPool i_dp_handle)
+{
+    vkFreeDescriptorSets(m_VK_device, i_dp_handle, 1, &io_handle);
+    io_handle = VK_NULL_HANDLE;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

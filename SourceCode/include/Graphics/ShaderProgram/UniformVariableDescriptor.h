@@ -35,6 +35,7 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "UniformBindingType.h"
+#include "UniformVariable.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
@@ -47,20 +48,20 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformVariableDescriptor);
 class SDENGINE_CLASS UniformVariableDescriptor : public Object
 {
 public:
-    explicit UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_number, bool i_common_flag);
+    explicit UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_number);
     virtual ~UniformVariableDescriptor();
 public:
     virtual UniformBindingTypeEnum GetType() const = 0;
+    virtual UniformVariableStrongReferenceObject AllocateUniformVariable() = 0;
 public:
-    bool GetCommonFlag() const;
+    Size_ui32 GetNumber() const;
 protected:
-    bool m_common_flag;
     Size_ui32 m_number;
 };
 
-inline bool UniformVariableDescriptor::GetCommonFlag() const
+inline Size_ui32 UniformVariableDescriptor::GetNumber() const
 {
-    return m_common_flag;
+    return m_number;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

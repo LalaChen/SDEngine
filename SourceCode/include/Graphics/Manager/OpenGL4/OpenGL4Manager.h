@@ -72,6 +72,8 @@ public:
 public:
     void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) override;
+    void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) override;
+    void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) override;
 public:
 //----------- Command Buffer and Pool Function (OpenGL doesn't have command buffer) ------------
     void CreateCommandPool(CommandPoolIdentity &io_identity) override;

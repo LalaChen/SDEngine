@@ -61,7 +61,7 @@ public:
 public:
     void Initialize(const ShaderProgramWeakReferenceObject &i_sp_wref);
 protected:
-    std::vector<std::vector<UniformVariableStrongReferenceObject>> m_uv_srefs;
+    std::map<ObjectName, UniformVariableStrongReferenceObject> m_uv_srefs;
     ShaderProgramWeakReferenceObject m_sp_wref;
     DescriptorPoolStrongReferenceObject m_dsp_sref;
 };

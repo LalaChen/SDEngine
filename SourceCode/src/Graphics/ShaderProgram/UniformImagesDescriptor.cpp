@@ -23,17 +23,26 @@ SOFTWARE.
 
 */
 
+#include "UniformImages.h"
 #include "UniformImagesDescriptor.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-UniformImagesDescriptor::UniformImagesDescriptor(const ObjectName& i_name, Size_ui32 i_number, bool i_common_flag)
-: UniformVariableDescriptor(i_name, i_number, i_common_flag)
+UniformImagesDescriptor::UniformImagesDescriptor(const ObjectName &i_name, Size_ui32 i_number)
+: UniformVariableDescriptor(i_name, i_number)
 {
 }
 
 UniformImagesDescriptor::~UniformImagesDescriptor()
 {
+}
+
+UniformVariableStrongReferenceObject UniformImagesDescriptor::AllocateUniformVariable()
+{
+    UniformImagesStrongReferenceObject ub_sref = new UniformImages(m_object_name);
+    UniformImagesDescriptorWeakReferenceObject this_wref = GetThisWeakPtrByType<UniformImagesDescriptor>();
+    ub_sref.GetRef().Initialize(this_wref);
+    return ub_sref.StaticCastTo<UniformVariable>();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

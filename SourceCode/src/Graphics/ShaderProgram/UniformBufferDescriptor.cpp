@@ -1,10 +1,11 @@
 #include "LogManager.h"
+#include "UniformBuffer.h"
 #include "UniformBufferDescriptor.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-UniformBufferDescriptor::UniformBufferDescriptor(const ObjectName &i_name, Size_ui32 i_number, bool i_common_flag)
-: UniformVariableDescriptor(i_name, i_number, i_common_flag)
+UniformBufferDescriptor::UniformBufferDescriptor(const ObjectName &i_name, Size_ui32 i_number)
+: UniformVariableDescriptor(i_name, i_number)
 , m_total_size(0)
 {
 }
@@ -51,6 +52,14 @@ UniformBufferVariableInfo UniformBufferDescriptor::GetVariableInfo(const std::st
     else {
         return UniformBufferVariableInfo();
     }
+}
+
+UniformVariableStrongReferenceObject UniformBufferDescriptor::AllocateUniformVariable()
+{
+    UniformBufferStrongReferenceObject ub_sref = new UniformBuffer(m_object_name);
+    UniformBufferDescriptorWeakReferenceObject this_wref = GetThisWeakPtrByType<UniformBufferDescriptor>();
+    ub_sref.GetRef().Initialize(this_wref);
+    return ub_sref.StaticCastTo<UniformVariable>();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

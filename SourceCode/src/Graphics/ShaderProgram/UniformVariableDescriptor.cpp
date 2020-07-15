@@ -27,10 +27,9 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-UniformVariableDescriptor::UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_number, bool i_common_flag)
+UniformVariableDescriptor::UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_number)
 : Object(i_name)
 , m_number(i_number)
-, m_common_flag(i_common_flag)
 {
 }
 

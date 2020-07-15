@@ -68,6 +68,16 @@ const UniformBufferIdentity& GraphicsManager::GetIdentity(const UniformBufferWea
     return i_ub_wref.GetConstRef().m_identity;
 }
 
+const GraphicsPipelineIdentity& GraphicsManager::GetIdentity(const GraphicsPipelineWeakReferenceObject &i_pipe_wref) const
+{
+    return i_pipe_wref.GetConstRef().m_identity;
+}
+
+const DescriptorPoolIdentity& GraphicsManager::GetIdentity(const DescriptorPoolWeakReferenceObject &i_pool_wref) const
+{
+    return i_pool_wref.GetConstRef().m_identity;
+}
+
 const DescriptorSetIdentity& GraphicsManager::GetIdentity(const DescriptorSetWeakReferenceObject &i_desc_wref) const
 {
     return i_desc_wref.GetConstRef().m_identity;

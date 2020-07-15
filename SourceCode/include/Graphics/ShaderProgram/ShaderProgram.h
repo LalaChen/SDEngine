@@ -36,6 +36,9 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "RenderPass.h"
 #include "GraphicsPipeline.h"
+#include "DescriptorPool.h"
+#include "UniformImages.h"
+#include "UniformBuffer.h"
 #include "UniformImagesDescriptor.h"
 #include "UniformBufferDescriptor.h"
 #include "Object.h"
@@ -74,6 +77,10 @@ public:
 public:
     void GetDescriptorCount(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
     uint32_t GetPipelineAmount() const;
+public: //Material Use.
+    void AllocateEssentialObjects(
+        std::map<ObjectName, UniformVariableStrongReferenceObject> &io_uv_srefs,
+        DescriptorPoolWeakReferenceObject &io_pool_wref);
 protected:
     std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
     std::map<ObjectName, GraphicsPipelineStrongReferenceObject> m_pipe_srefs;

@@ -23,6 +23,8 @@ SOFTWARE.
 
 */
 
+#include "GraphicsManager.h"
+#include "DescriptorPool.h"
 #include "DescriptorSet.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -34,6 +36,19 @@ DescriptorSet::DescriptorSet(const ObjectName &i_object_name)
 
 DescriptorSet::~DescriptorSet()
 {
+}
+
+void DescriptorSet::Initialize(
+    const WeakReferenceObject<Object> &i_pool_wref,
+    const WeakReferenceObject<Object> &i_pipe_wref)
+{
+    DescriptorPoolWeakReferenceObject pool_wref = i_pool_wref.DynamicCastTo<DescriptorPool>();
+    GraphicsPipelineWeakReferenceObject pipe_wref = i_pipe_wref.DynamicCastTo<GraphicsPipeline>();
+    if (pool_wref.IsNull() == false) {
+        m_pool_wref = i_pool_wref;
+        GraphicsManager::GetRef().AllocateDescriptorSet(m_identity, pool_wref, pipe_wref);
+    }
+
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -32,9 +32,12 @@ SOFTWARE.
 
 #pragma once
 
+#include <list>
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "UniformBindingType.h"
+#include "DescriptorSet.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
@@ -60,6 +63,10 @@ public:
 
 public:
     virtual UniformBindingTypeEnum GetType() const = 0;
+
+    void RegisterDescriptorSet(const DescriptorSetWeakReferenceObject &i_desc_set_wref);
+protected:
+    std::list<DescriptorSetWeakReferenceObject> m_target_set_wrefs;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

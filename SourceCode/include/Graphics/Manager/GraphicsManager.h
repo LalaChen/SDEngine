@@ -47,6 +47,7 @@ SOFTWARE.
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "UniformBuffer.h"
+#include "DescriptorPool.h"
 #include "DescriptorSet.h"
 #include "RenderPass.h"
 #include "ImageLoader.h"
@@ -113,6 +114,8 @@ public:
 public:
     virtual void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
     virtual void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
+    virtual void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) = 0;
+    virtual void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) = 0;
 public:
     virtual void CreateCommandPool(CommandPoolIdentity &io_identity) = 0;
     virtual void DestroyCommandPool(CommandPoolIdentity &io_identity) = 0;
@@ -205,6 +208,8 @@ protected:
     const VertexBufferIdentity& GetIdentity(const VertexBufferWeakReferenceObject &i_vb_wref) const;
     const IndexBufferIdentity& GetIdentity(const IndexBufferWeakReferenceObject &i_ib_wref) const;
     const UniformBufferIdentity& GetIdentity(const UniformBufferWeakReferenceObject &i_ub_wref) const;
+    const GraphicsPipelineIdentity& GetIdentity(const GraphicsPipelineWeakReferenceObject &i_pipe_wref) const;
+    const DescriptorPoolIdentity& GetIdentity(const DescriptorPoolWeakReferenceObject &i_pool_wref) const;
     const DescriptorSetIdentity& GetIdentity(const DescriptorSetWeakReferenceObject &i_desc_wref) const;
 protected:
 //------------ Render Flow Function -------------

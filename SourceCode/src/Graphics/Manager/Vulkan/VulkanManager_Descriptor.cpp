@@ -17,25 +17,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,/*==============  SD Engine License ==============
-MIT License
-
-Copyright (c) 2019 Kuan-Chih, Chen
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
@@ -74,8 +55,28 @@ void VulkanManager::CreateDescriptorPool(DescriptorPoolIdentity &io_identity)
 
 void VulkanManager::DestroyDescriptorPool(DescriptorPoolIdentity &io_identity)
 {
-    VkDescriptorPool& dp_handle = reinterpret_cast<VkDescriptorPool&>(io_identity.m_handle);
+    VkDescriptorPool &dp_handle = reinterpret_cast<VkDescriptorPool&>(io_identity.m_handle);
     DestroyVkDescriptorPool(dp_handle);
+}
+
+
+void VulkanManager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref)
+{
+    VkDescriptorSet &ds_handle = reinterpret_cast<VkDescriptorSet&>(io_identity.m_handle);
+    const DescriptorPoolIdentity &pool_identity = GetIdentity(i_pool_wref);
+    const GraphicsPipelineIdentity &pipe_identity = GetIdentity(i_pipe_wref);
+    VkDescriptorSetAllocateInfo a_info = InitializeVkDescriptorSetAllocateInfo();
+    a_info.descriptorPool = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
+    a_info.pSetLayouts = reinterpret_cast<const VkDescriptorSetLayout*>(&pipe_identity.m_descriptor_layout_handle);
+    a_info.descriptorSetCount = 1;
+}
+
+void VulkanManager::FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref)
+{
+    VkDescriptorSet &ds_handle = reinterpret_cast<VkDescriptorSet&>(io_identity.m_handle);
+    const DescriptorPoolIdentity &pool_identity = GetIdentity(i_pool_wref);
+    VkDescriptorPool dp_handle = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
+
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________ 

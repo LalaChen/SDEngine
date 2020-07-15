@@ -62,4 +62,15 @@ VkDescriptorPoolCreateInfo InitializeVkDescriptorPoolCreateInfo()
     return info;
 }
 
+VkDescriptorSetAllocateInfo InitializeVkDescriptorSetAllocateInfo()
+{
+    VkDescriptorSetAllocateInfo info = {};
+    info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    info.pNext = nullptr;
+    info.descriptorPool = VK_NULL_HANDLE;
+    info.descriptorSetCount = 0;
+    info.pSetLayouts = nullptr;
+    return info;
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

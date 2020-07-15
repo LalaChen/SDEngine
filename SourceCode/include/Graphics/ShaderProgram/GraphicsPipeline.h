@@ -145,7 +145,7 @@ protected:
     RenderPassWeakReferenceObject m_target_rp_wref;
 
     /*! \var std::vector<UniformVariableDescriptorWeakReferenceObject> m_uv_descriptor_wrefs;
-     *  \brief The uniform descriptor weak references.
+     *  \brief The uniform descriptor weak references. The real descriptors are kept at ShaderProgram.
      */
     std::vector<UniformVariableDescriptorWeakReferenceObject> m_uv_descriptor_wrefs;
 
