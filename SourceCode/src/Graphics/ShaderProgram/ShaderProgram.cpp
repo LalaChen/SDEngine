@@ -128,9 +128,15 @@ void ShaderProgram::AllocateEssentialObjects(
     for (pipe_iter = m_pipe_srefs.begin(), set_iter = set_wrefs.begin();
         pipe_iter != m_pipe_srefs.end() && set_iter != set_wrefs.end();
         ++pipe_iter, ++set_iter) {
-        //Check all uniform variables is one of variable in this pipeline.
-        //If it's one of uniform variables for this pipeline, we register 
-        //this descriptor set to this uniform variable.
+        std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter;
+        for (uv_iter = io_uv_srefs.begin(); uv_iter != io_uv_srefs.end(); ++uv_iter) {
+            //Check all uniform variables is one of variable in this pipeline.
+            //If it's one of uniform variables for this pipeline, we register 
+            //this descriptor set to this uniform variable.
+            if ((*pipe_iter).second.GetRef().IsThisUniformVariableUsed((*uv_iter).second) == true) {
+                (*uv_iter).second.GetRef().RegisterDescriptorSet((*set_iter));
+            }
+        }
     }
 }
 

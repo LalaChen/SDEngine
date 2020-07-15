@@ -98,6 +98,8 @@ public:
      *         weak references for let use registing.
      */
     void RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id);
+
+    bool IsThisUniformVariableUsed(const UniformVariableWeakReferenceObject &i_uv_wref) const;
 public:
     /*! \fn const CompHandle GetHandle() const;
      *  \brief return handle of pipeline.

@@ -58,6 +58,17 @@ void GraphicsPipeline::RegisterUniformVariableDescriptor(const UniformVariableDe
     }
 }
 
+bool GraphicsPipeline::IsThisUniformVariableUsed(const UniformVariableWeakReferenceObject &i_uv_wref) const
+{
+    std::vector<UniformVariableDescriptorWeakReferenceObject>::const_iterator uvd_iter;
+    for (uvd_iter = m_uv_descriptor_wrefs.begin(); uvd_iter != m_uv_descriptor_wrefs.end(); ++uvd_iter) {
+        if ((*uvd_iter).GetConstRef().GetObjectName().compare(i_uv_wref.GetConstRef().GetObjectName()) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void GraphicsPipeline::Initialize(const ShaderModules &i_shaders)
 {
     SDLOG("Initialize graphics pipeline (%s).", m_object_name.c_str());

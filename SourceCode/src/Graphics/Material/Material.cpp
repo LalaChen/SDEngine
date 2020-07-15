@@ -47,12 +47,10 @@ void Material::Initialize(const ShaderProgramWeakReferenceObject &i_sp_wref)
     uint32_t max_set = m_sp_wref.GetRef().GetPipelineAmount();
     m_sp_wref.GetRef().GetDescriptorCount(descriptor_counts);
     m_dsp_sref.GetRef().Initialize(descriptor_counts, max_set, false);
-    //2. allocate uniform variables for uniform descriptors.
+    //2. allocate uniform variables for uniform descriptors and descriptor sets.
     DescriptorPoolWeakReferenceObject dp_wref = m_dsp_sref.StaticCastToWeakPtr<DescriptorPool>();
     m_sp_wref.GetRef().AllocateEssentialObjects(m_uv_srefs, dp_wref);
-    //3. allocate descriptor sets.
-
-    //4. bind uniform variable to descriptor set.
+    //3. bind uniform variable to descriptor set.
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
