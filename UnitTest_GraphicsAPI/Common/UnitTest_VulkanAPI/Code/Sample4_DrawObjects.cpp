@@ -293,20 +293,22 @@ void ObjectData::UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraD
 
 void ObjectData::Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakReferenceObject &i_cb_wref)
 {
-   //1. use program.
-   m_material.m_pipeline_wref.GetRef().Use(i_cb_wref);
-   //2. bind descriptor set.
-   std::vector<VkDescriptorSet> descs = { m_material.m_desc_set };
-   std::vector<uint32_t> dynamic_offs = {};
-   i_mgr->BindDescriptorSets(
-        reinterpret_cast<VkCommandBuffer>(i_cb_wref.GetConstRef().GetHandle()),
-        reinterpret_cast<VkPipelineLayout>(m_material.m_pipeline_wref.GetConstRef().GetPipelineLayoutHandle()),
-        VK_PIPELINE_BIND_POINT_GRAPHICS, 0, descs, dynamic_offs);
-   //3. bind mesh vertex attributes.
-   m_mesh.GetRef().BindVertexBuffers(i_cb_wref);
-   //4. draw mesh.
-   m_mesh.GetRef().BindIndexBuffer(i_cb_wref);
-   m_mesh.GetRef().Render(i_cb_wref);
+    if (m_mesh.IsNull() == false) {
+        //1. use program.
+        m_material.m_pipeline_wref.GetRef().Use(i_cb_wref);
+        //2. bind descriptor set.
+        std::vector<VkDescriptorSet> descs = { m_material.m_desc_set };
+        std::vector<uint32_t> dynamic_offs = {};
+        i_mgr->BindDescriptorSets(
+            reinterpret_cast<VkCommandBuffer>(i_cb_wref.GetConstRef().GetHandle()),
+            reinterpret_cast<VkPipelineLayout>(m_material.m_pipeline_wref.GetConstRef().GetPipelineLayoutHandle()),
+            VK_PIPELINE_BIND_POINT_GRAPHICS, 0, descs, dynamic_offs);
+        //3. bind mesh vertex attributes.
+        m_mesh.GetRef().BindVertexBuffers(i_cb_wref);
+        //4. draw mesh.
+        m_mesh.GetRef().BindIndexBuffer(i_cb_wref);
+        m_mesh.GetRef().Render(i_cb_wref);
+    }
 }
 
 Sample4_DrawObjects::Sample4_DrawObjects(VulkanAPITestManager *i_mgr)
@@ -388,6 +390,9 @@ void Sample4_DrawObjects::Destroy()
     m_cmd_pool_sref.GetRef().RecycleCommandBuffer(m_main_cb_wref);
     m_cmd_pool_sref.GetRef().Clear(); //should do nothing.
     m_cmd_pool_sref.Reset();
+
+    m_cube_sref.Reset();
+    m_floor_sref.Reset();
 }
 
 void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
@@ -510,10 +515,11 @@ void Sample4_DrawObjects::CreateObjects()
 {
     std::list<ObjectData>::reverse_iterator last_obj_iter;
     //Scene ---- Plane.
+    m_floor_sref = BasicShapeCreator::GetRef().CreatePlane(
+        Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX, 100.0f, 100.0f, 100.0f, 100.0f);
     m_scene_objects.push_back(ObjectData());
     last_obj_iter = m_scene_objects.rbegin();
-    (*last_obj_iter).m_mesh = BasicShapeCreator::GetRef().CreatePlane(
-        Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX, 100.0f, 100.0f, 100.0f, 100.0f);
+    (*last_obj_iter).m_mesh = m_floor_sref;
     Vector3f start_pos = Vector3f(m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, 1.0f).scale(
         -1.0f * static_cast<float>(m_cube_row) / 2.0f,
         0.25f,
@@ -522,12 +528,13 @@ void Sample4_DrawObjects::CreateObjects()
     (*last_obj_iter).UpdateMaterial(m_mgr, m_camera, m_light);
 
     //Scene ---- Cubes
+    m_cube_sref = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
     for (uint32_t row = 0; row < m_cube_row; ++row) {
         for (uint32_t col = 0; col < m_cube_col; ++col) {
             for (uint32_t depth = 0; depth < m_cube_depth; ++depth) {
                 m_scene_objects.push_back(ObjectData());
                 last_obj_iter = m_scene_objects.rbegin();
-                (*last_obj_iter).m_mesh = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
+                (*last_obj_iter).m_mesh = m_cube_sref;
                 (*last_obj_iter).m_texture = m_tex_sref;
                 (*last_obj_iter).m_trans.m_position = start_pos + 
                     Vector3f((m_cube_side_length + m_cube_interval) * row, (m_cube_side_length + m_cube_interval) * col, (m_cube_side_length + m_cube_interval) * depth);

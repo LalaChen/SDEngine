@@ -101,7 +101,7 @@ public:
     void UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraData &i_camera, const LightData &i_light);
     void Draw(VulkanAPITestManager *i_mgr, const CommandBufferWeakReferenceObject &i_cb_wref);
 public:
-    MeshStrongReferenceObject m_mesh;
+    MeshWeakReferenceObject m_mesh;
 public:
     TextureWeakReferenceObject m_texture;
     Transform m_trans;
@@ -139,6 +139,8 @@ protected:
     RenderPassStrongReferenceObject m_forward_rp_sref;
     TextureStrongReferenceObject m_tex_sref;
     GraphicsPipelineStrongReferenceObject m_pipeline_sref;
+    MeshStrongReferenceObject m_cube_sref;
+    MeshStrongReferenceObject m_floor_sref;
 protected:
 #if !defined(SINGLE_FLOW)
 #if defined(RECORD_POOL_V2)
