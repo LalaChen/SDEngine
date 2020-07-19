@@ -43,5 +43,11 @@ VkDescriptorPoolCreateInfo InitializeVkDescriptorPoolCreateInfo();
 
 VkDescriptorSetAllocateInfo InitializeVkDescriptorSetAllocateInfo();
 
+VkDescriptorBufferInfo InitializeVkDescriptorBufferInfo();
+
+VkDescriptorImageInfo InitializeVkDescriptorImageInfo();
+
+VkWriteDescriptorSet InitializeVkWriteDescriptorSetInfo();
+
 ______________SD_END_GRAPHICS_NAMESPACE______________
 

@@ -37,7 +37,6 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "UniformBindingType.h"
-#include "DescriptorSet.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
@@ -50,11 +49,11 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformVariable);
 class UniformVariable : public Object
 {
 public:
-    /*! \fn explicit UniformVariable(const ObjectName &i_object_name);
+    /*! \fn explicit UniformVariable(const ObjectName &i_object_name, uint32_t i_binding_id);
      *  \param [in] i_object_name Name of this object.
      *  \brief Constructor of UniformVariable.
      */
-    explicit UniformVariable(const ObjectName &i_object_name);
+    explicit UniformVariable(const ObjectName &i_object_name, uint32_t i_binding_id);
 
     /*! \fn virtual ~UniformVariable();
      *  \brief Destructor of UniformVariable.
@@ -64,9 +63,16 @@ public:
 public:
     virtual UniformBindingTypeEnum GetType() const = 0;
 
-    void RegisterDescriptorSet(const DescriptorSetWeakReferenceObject &i_desc_set_wref);
+public:
+    uint32_t GetBindingID() const;
+
 protected:
-    std::list<DescriptorSetWeakReferenceObject> m_target_set_wrefs;
+    uint32_t m_binding_id;
 };
+
+inline uint32_t UniformVariable::GetBindingID() const
+{
+    return m_binding_id;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

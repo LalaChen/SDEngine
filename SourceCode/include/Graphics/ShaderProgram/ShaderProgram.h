@@ -55,8 +55,7 @@ public:
     ~RenderPassGroup() {}
 public:
     RenderPassWeakReferenceObject m_rp_wref;
-    std::vector<UniformVariableDescriptorWeakReferenceObject> m_uvd_wrefs;
-    std::vector<GraphicsPipelineWeakReferenceObject> m_gp_wrefs;
+    std::vector<uint32_t> m_pipe_orders;
 };
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ShaderProgram);
@@ -64,6 +63,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ShaderProgram);
 class SDENGINE_CLASS ShaderProgram : public Object
 {
 public:
+    typedef std::vector<RenderPassGroup> RenderPassGroups;
     typedef std::vector<UniformVariableDescriptorStrongReferenceObject> UniformVariableDescriptors;
     typedef std::vector<GraphicsPipelineStrongReferenceObject> GraphicsPipelines;
 public:
@@ -71,7 +71,10 @@ public:
     virtual ~ShaderProgram();
 public:
     //Input prepared data.
-    void RegisterPipelinesForRenderPass(const RenderPassWeakReferenceObject &i_rp_wref, const GraphicsPipelines &i_gp_srefs, const UniformVariableDescriptors &i_uvd_srefs);
+    void RegisterShaderProgramStructure(
+        const RenderPassGroups &i_rp_groups,
+        const GraphicsPipelines &i_gp_srefs,
+        const UniformVariableDescriptors &i_uvd_srefs);
 public:
     void Initialize();
 public:
@@ -80,11 +83,12 @@ public:
 public: //Material Use.
     void AllocateEssentialObjects(
         std::map<ObjectName, UniformVariableStrongReferenceObject> &io_uv_srefs,
+        std::vector<DescriptorSetWeakReferenceObject> &io_desc_set_wrefs,
         DescriptorPoolWeakReferenceObject &io_pool_wref);
 protected:
-    std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
-    std::map<ObjectName, GraphicsPipelineStrongReferenceObject> m_pipe_srefs;
-    std::map<ObjectName, RenderPassGroup> m_rp_pipelines;
+    std::vector<UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
+    std::vector<GraphicsPipelineStrongReferenceObject> m_pipe_srefs;
+    std::map<ObjectName, RenderPassGroup> m_rp_groups;
     uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
 };
 

@@ -42,6 +42,10 @@ void OpenGL4Manager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, c
 {
 }
 
+void OpenGL4Manager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs)
+{
+}
+
 void OpenGL4Manager::FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref)
 {
 }

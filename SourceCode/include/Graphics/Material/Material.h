@@ -60,10 +60,16 @@ public:
     virtual ~Material();
 public:
     void Initialize(const ShaderProgramWeakReferenceObject &i_sp_wref);
+public:
+//uniform variable getter and setter
+    void SetTexture();//Need to visit 
+public:
+//bind shader to command buffer.
 protected:
     std::map<ObjectName, UniformVariableStrongReferenceObject> m_uv_srefs;
     ShaderProgramWeakReferenceObject m_sp_wref;
     DescriptorPoolStrongReferenceObject m_dsp_sref;
+    std::vector<DescriptorSetWeakReferenceObject> m_ds_wrefs;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

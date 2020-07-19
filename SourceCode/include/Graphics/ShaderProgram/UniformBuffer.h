@@ -45,11 +45,12 @@ class UniformBuffer : public UniformVariable
 public:
     friend class GraphicsManager;
 public:
-    /*! \fn explicit UniformBuffer(const ObjectName &i_object_name);
+    /*! \fn explicit UniformBuffer(const ObjectName &i_object_name, uint32_t i_binding_id);
      *  \param [in] i_object_name Name of this object.
+     *  \param [in] i_binding_id ID of shader binding.
      *  \brief Constructor of UniformBuffer.
      */
-    explicit UniformBuffer(const ObjectName &i_object_name);
+    explicit UniformBuffer(const ObjectName &i_object_name, uint32_t i_binding_id);
 
     /*! \fn virtual ~UniformBuffer();
      *  \brief Destructor of UniformBuffer.
@@ -60,12 +61,14 @@ public:
     void Initialize(const UniformBufferDescriptorWeakReferenceObject &i_desc_wref);
 public:
     inline UniformBindingTypeEnum GetType() const override;
+
 public:
     template<class Type> bool SetVariable(const std::string &i_var_name, const Type &i_data, Size_ui64 i_idx = 0);
 
     void SetBufferData(const std::vector<uint8_t> &i_data);
 
 public:
+    // call set function and then update.
     void Update();
 protected:
 

@@ -130,6 +130,8 @@ public:
      *  \brief return subpass id that we use this pipeline.
      */
     void GetUniformDescriptorCounts(uint32_t io_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
+
+    Size_ui32 GetUniformBindingAmount() const;
 public:
     /*! \fn const CompHandle GetPipelineParams() const;
      *  \brief return pipeline parameters.
@@ -192,6 +194,11 @@ inline void GraphicsPipeline::GetUniformDescriptorCounts(uint32_t io_counts[Unif
     for (uint32_t count = 0; count < UniformBindingType_MAX_DEFINE_VALUE; ++count) {
         io_counts[count] = m_descriptor_counts[count];
     }
+}
+
+inline Size_ui32 GraphicsPipeline::GetUniformBindingAmount() const
+{
+    return static_cast<Size_ui32>(m_uv_descriptor_wrefs.size());
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

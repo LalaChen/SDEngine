@@ -27,8 +27,9 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-UniformVariableDescriptor::UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_number)
+UniformVariableDescriptor::UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number)
 : Object(i_name)
+, m_binding_id(i_binding_id)
 , m_number(i_number)
 {
 }

@@ -48,16 +48,23 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformVariableDescriptor);
 class SDENGINE_CLASS UniformVariableDescriptor : public Object
 {
 public:
-    explicit UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_number);
+    explicit UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number);
     virtual ~UniformVariableDescriptor();
 public:
     virtual UniformBindingTypeEnum GetType() const = 0;
     virtual UniformVariableStrongReferenceObject AllocateUniformVariable() = 0;
 public:
     Size_ui32 GetNumber() const;
+    Size_ui32 GetBindingID() const;
 protected:
+    Size_ui32 m_binding_id;
     Size_ui32 m_number;
 };
+
+inline Size_ui32 UniformVariableDescriptor::GetBindingID() const
+{
+    return m_binding_id;
+}
 
 inline Size_ui32 UniformVariableDescriptor::GetNumber() const
 {

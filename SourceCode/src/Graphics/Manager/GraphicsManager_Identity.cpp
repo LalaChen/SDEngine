@@ -33,6 +33,11 @@ const TextureIdentity& GraphicsManager::GetIdentity(const TextureWeakReferenceOb
     return i_tex_wref.GetConstRef().m_tex_identity;
 }
 
+const SamplerIdentity& GraphicsManager::GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex_wref) const
+{
+    return i_tex_wref.GetConstRef().m_sampler_idnetity;
+}
+
 const FrameBufferIdentity& GraphicsManager::GetIdentity(const FrameBufferWeakReferenceObject &i_fb_wref) const
 {
     return i_fb_wref.GetConstRef().m_identity;

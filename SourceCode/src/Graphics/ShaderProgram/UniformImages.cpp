@@ -27,8 +27,8 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-UniformImages::UniformImages(const ObjectName &i_object_name)
-: UniformVariable(i_object_name)
+UniformImages::UniformImages(const ObjectName &i_object_name, uint32_t i_binding_id)
+: UniformVariable(i_object_name, i_binding_id)
 {
 }
 

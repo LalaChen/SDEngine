@@ -62,7 +62,7 @@ DescriptorSetWeakReferenceObject DescriptorPool::AllocateDescriptorSet(const Gra
         DescriptorSetStrongReferenceObject new_set_sref = new DescriptorSet(StringFormat("%s_dset_%d", m_object_name.c_str(), m_current_set));
         new_set_sref.GetRef().Initialize(
             this_dp_wref.StaticCastTo<Object>(),
-            i_pipe_wref.StaticCastTo<Object>());
+            i_pipe_wref);
         m_set_srefs.push_back(new_set_sref);
         ds_wref = new_set_sref;
     }

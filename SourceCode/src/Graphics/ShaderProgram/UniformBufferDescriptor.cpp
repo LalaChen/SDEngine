@@ -4,8 +4,8 @@
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-UniformBufferDescriptor::UniformBufferDescriptor(const ObjectName &i_name, Size_ui32 i_number)
-: UniformVariableDescriptor(i_name, i_number)
+UniformBufferDescriptor::UniformBufferDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number)
+: UniformVariableDescriptor(i_name, i_binding_id, i_number)
 , m_total_size(0)
 {
 }
@@ -56,7 +56,7 @@ UniformBufferVariableInfo UniformBufferDescriptor::GetVariableInfo(const std::st
 
 UniformVariableStrongReferenceObject UniformBufferDescriptor::AllocateUniformVariable()
 {
-    UniformBufferStrongReferenceObject ub_sref = new UniformBuffer(m_object_name);
+    UniformBufferStrongReferenceObject ub_sref = new UniformBuffer(m_object_name, m_binding_id);
     UniformBufferDescriptorWeakReferenceObject this_wref = GetThisWeakPtrByType<UniformBufferDescriptor>();
     ub_sref.GetRef().Initialize(this_wref);
     return ub_sref.StaticCastTo<UniformVariable>();

@@ -48,6 +48,17 @@ VkResult VulkanManager::AllocateVkDescriptorSet(
     return vkAllocateDescriptorSets(m_VK_device, &i_a_info, &io_handle);
 }
 
+void VulkanManager::UpdateVkDescriptorSet(
+    const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos,
+    const std::vector<VkCopyDescriptorSet> &i_descriptor_c_infos)
+{
+    vkUpdateDescriptorSets(m_VK_device,
+        i_descriptor_w_infos.size(),
+        i_descriptor_w_infos.data(),
+        i_descriptor_c_infos.size(),
+        i_descriptor_c_infos.data());
+}
+
 void VulkanManager::FreeVkDescriptorSet(VkDescriptorSet &io_handle, VkDescriptorPool i_dp_handle)
 {
     vkFreeDescriptorSets(m_VK_device, i_dp_handle, 1, &io_handle);

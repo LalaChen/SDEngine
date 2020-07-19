@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "LogManager.h"
 #include "GraphicsManager.h"
 #include "DescriptorPool.h"
 #include "DescriptorSet.h"
@@ -40,15 +41,32 @@ DescriptorSet::~DescriptorSet()
 
 void DescriptorSet::Initialize(
     const WeakReferenceObject<Object> &i_pool_wref,
-    const WeakReferenceObject<Object> &i_pipe_wref)
+    const GraphicsPipelineWeakReferenceObject &i_pipe_wref)
 {
     DescriptorPoolWeakReferenceObject pool_wref = i_pool_wref.DynamicCastTo<DescriptorPool>();
-    GraphicsPipelineWeakReferenceObject pipe_wref = i_pipe_wref.DynamicCastTo<GraphicsPipeline>();
+
     if (pool_wref.IsNull() == false) {
         m_pool_wref = i_pool_wref;
-        GraphicsManager::GetRef().AllocateDescriptorSet(m_identity, pool_wref, pipe_wref);
+        Size_ui32 ub_amount = i_pipe_wref.GetConstRef().GetUniformBindingAmount();
+        m_uv_wrefs.resize(ub_amount);
+        GraphicsManager::GetRef().AllocateDescriptorSet(m_identity, pool_wref, i_pipe_wref);
     }
+}
 
+void DescriptorSet::RegisterUniformVariable(const UniformVariableWeakReferenceObject &i_uv_wref)
+{
+    for (UniformVariableWeakReferenceObject &uv : m_uv_wrefs) {
+        if (uv.GetConstRef().GetObjectName().compare(i_uv_wref.GetConstRef().GetObjectName()) == 0) {
+            SDLOGW("Uniform variable[%s]", i_uv_wref.GetConstRef().GetObjectName().c_str());
+            return;
+        }
+    }
+    m_uv_wrefs.push_back(i_uv_wref);
+}
+
+void DescriptorSet::Update()
+{
+    GraphicsManager::GetRef().WriteUniformVariablesToDescriptorSet(m_identity, m_uv_wrefs);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

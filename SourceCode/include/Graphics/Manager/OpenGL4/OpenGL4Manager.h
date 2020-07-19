@@ -73,6 +73,7 @@ public:
     void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) override;
+    void WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs) override;
     void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) override;
 public:
 //----------- Command Buffer and Pool Function (OpenGL doesn't have command buffer) ------------

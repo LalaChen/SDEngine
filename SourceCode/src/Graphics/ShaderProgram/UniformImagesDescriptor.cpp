@@ -28,8 +28,8 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-UniformImagesDescriptor::UniformImagesDescriptor(const ObjectName &i_name, Size_ui32 i_number)
-: UniformVariableDescriptor(i_name, i_number)
+UniformImagesDescriptor::UniformImagesDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number)
+: UniformVariableDescriptor(i_name, i_binding_id, i_number)
 {
 }
 
@@ -39,7 +39,7 @@ UniformImagesDescriptor::~UniformImagesDescriptor()
 
 UniformVariableStrongReferenceObject UniformImagesDescriptor::AllocateUniformVariable()
 {
-    UniformImagesStrongReferenceObject ub_sref = new UniformImages(m_object_name);
+    UniformImagesStrongReferenceObject ub_sref = new UniformImages(m_object_name, m_binding_id);
     UniformImagesDescriptorWeakReferenceObject this_wref = GetThisWeakPtrByType<UniformImagesDescriptor>();
     ub_sref.GetRef().Initialize(this_wref);
     return ub_sref.StaticCastTo<UniformVariable>();

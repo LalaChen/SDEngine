@@ -115,6 +115,7 @@ public:
     virtual void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
     virtual void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
     virtual void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) = 0;
+    virtual void WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs) = 0;
     virtual void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) = 0;
 public:
     virtual void CreateCommandPool(CommandPoolIdentity &io_identity) = 0;
@@ -201,6 +202,7 @@ public:
     bool IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) const;
 protected:
     const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex_wref) const;
+    const SamplerIdentity& GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex_wref) const;
     const FrameBufferIdentity& GetIdentity(const FrameBufferWeakReferenceObject &i_fb_wref) const;
     const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject &i_cb_wref) const;
     const CommandPoolIdentity& GetIdentity(const CommandPoolWeakReferenceObject &i_cp_wref) const;

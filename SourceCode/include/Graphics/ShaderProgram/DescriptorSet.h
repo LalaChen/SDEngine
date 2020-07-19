@@ -35,6 +35,7 @@ SOFTWARE.
 #include "Object.h"
 #include "WeakReferenceObject.h"
 #include "StrongReferenceObject.h"
+#include "GraphicsPipeline.h"
 #include "DescriptorSetIdentity.h"
 
 using SDE::Basic::Object;
@@ -64,9 +65,17 @@ public:
 public:
     void Initialize(
         const WeakReferenceObject<Object> &i_pool_wref,
-        const WeakReferenceObject<Object> &i_pipe_wref);
+        const GraphicsPipelineWeakReferenceObject &i_pipe_wref);
+
+    void RegisterUniformVariable(const UniformVariableWeakReferenceObject &i_uv_wref);
+
+    void Update();
 protected:
     WeakReferenceObject<Object> m_pool_wref;
+
+    std::vector<UniformVariableWeakReferenceObject> m_uv_wrefs;
+
+    GraphicsPipelineWeakReferenceObject m_target_pipe_wref;
 
     /*! \var DescriptorSetIdentity m_identity;
      *  \brief Identity of descriptor set.

@@ -43,11 +43,12 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformImages);
 class UniformImages : public UniformVariable
 {
 public:
-    /*! \fn explicit UniformImages(const ObjectName &i_object_name);
+    /*! \fn explicit UniformImages(const ObjectName &i_object_name, uint32_t i_binding_id);
      *  \param [in] i_object_name Name of this object.
+     *  \param [in] i_binding_id ID of shader binding.
      *  \brief Constructor of UniformImages.
      */
-    explicit UniformImages(const ObjectName &i_object_name);
+    explicit UniformImages(const ObjectName &i_object_name, uint32_t i_binding_id);
 
     /*! \fn virtual ~UniformImages();
      *  \brief Destructor of UniformImages.
@@ -63,6 +64,8 @@ public:
 public:
     Size_ui32 GetAmount() const;
 
+    const std::vector<TextureWeakReferenceObject>& GetTextures() const;
+
 protected:
     std::vector<TextureWeakReferenceObject> m_tex_wrefs;
 };
@@ -77,5 +80,9 @@ inline Size_ui32 UniformImages::GetAmount() const
     return static_cast<Size_ui32>(m_tex_wrefs.size());
 }
 
+inline const std::vector<TextureWeakReferenceObject>& UniformImages::GetTextures() const
+{
+    return m_tex_wrefs;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

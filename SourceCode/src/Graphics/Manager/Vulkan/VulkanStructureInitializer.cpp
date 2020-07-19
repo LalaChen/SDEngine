@@ -73,4 +73,34 @@ VkDescriptorSetAllocateInfo InitializeVkDescriptorSetAllocateInfo()
     return info;
 }
 
+VkDescriptorBufferInfo InitializeVkDescriptorBufferInfo()
+{
+    VkDescriptorBufferInfo info = {};
+    info.buffer = VK_NULL_HANDLE;
+    info.offset = 0;
+    info.range = 0;
+    return info;
+}
+
+VkDescriptorImageInfo InitializeVkDescriptorImageInfo()
+{
+    VkDescriptorImageInfo info = {};
+    return info;
+}
+
+VkWriteDescriptorSet InitializeVkWriteDescriptorSetInfo()
+{
+    VkWriteDescriptorSet info = {};
+    info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    info.pNext = nullptr;
+    info.dstSet = VK_NULL_HANDLE;
+    info.dstBinding = 0; //binding 0, set 0
+    info.descriptorCount = 0;
+    info.pBufferInfo = nullptr;
+    info.pImageInfo = nullptr;
+    info.pTexelBufferView = nullptr;
+    info.dstArrayElement = 0;
+    return info;
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________
