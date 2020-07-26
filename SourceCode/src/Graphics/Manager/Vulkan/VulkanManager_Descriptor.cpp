@@ -134,12 +134,24 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
     UpdateVkDescriptorSet(write_infos, copy_infos);
 }
 
+void VulkanManager::BindDescriptorSet(const DescriptorSetIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref)
+{
+    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
+    const GraphicsPipelineIdentity &pipe_identity = GetIdentity(i_pipe_wref);
+    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    VkDescriptorSet ds_handle = reinterpret_cast<VkDescriptorSet>(i_identity.m_handle);
+    VkPipelineLayout pipe_layout_handle = reinterpret_cast<VkPipelineLayout>(pipe_identity.m_pipeline_layout_handle);
+    BindVkDescriptorSet(
+        cb_handle, VK_PIPELINE_BIND_POINT_GRAPHICS,
+        pipe_layout_handle, ds_handle);
+}
+
 void VulkanManager::FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref)
 {
     VkDescriptorSet &ds_handle = reinterpret_cast<VkDescriptorSet&>(io_identity.m_handle);
     const DescriptorPoolIdentity &pool_identity = GetIdentity(i_pool_wref);
     VkDescriptorPool dp_handle = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
-
+    FreeVkDescriptorSet(ds_handle, dp_handle);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________ 

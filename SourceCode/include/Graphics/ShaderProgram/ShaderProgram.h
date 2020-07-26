@@ -76,8 +76,6 @@ public:
         const GraphicsPipelines &i_gp_srefs,
         const UniformVariableDescriptors &i_uvd_srefs);
 public:
-    void Initialize();
-public:
     void GetDescriptorCount(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
     uint32_t GetPipelineAmount() const;
 public: //Material Use.
@@ -85,11 +83,19 @@ public: //Material Use.
         std::map<ObjectName, UniformVariableStrongReferenceObject> &io_uv_srefs,
         std::vector<DescriptorSetWeakReferenceObject> &io_desc_set_wrefs,
         DescriptorPoolWeakReferenceObject &io_pool_wref);
+public:
+    void UseProgramWithTargetDescriptorSet(
+        const CommandBufferWeakReferenceObject &i_cb_wref,
+        const RenderPassWeakReferenceObject &i_rp_wref,
+        uint32_t i_sp_idx,
+        const std::vector<DescriptorSetWeakReferenceObject> &i_desc_set_wrefs);
+
 protected:
     std::vector<UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
     std::vector<GraphicsPipelineStrongReferenceObject> m_pipe_srefs;
-    std::map<ObjectName, RenderPassGroup> m_rp_groups;
+    std::vector<RenderPassGroup> m_rp_groups;
     uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
+    bool m_registered;
 };
 
 inline uint32_t ShaderProgram::GetPipelineAmount() const

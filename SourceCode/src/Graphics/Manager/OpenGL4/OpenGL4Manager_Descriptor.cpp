@@ -46,6 +46,10 @@ void OpenGL4Manager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIde
 {
 }
 
+void OpenGL4Manager::BindDescriptorSet(const DescriptorSetIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref)
+{
+}
+
 void OpenGL4Manager::FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref)
 {
 }

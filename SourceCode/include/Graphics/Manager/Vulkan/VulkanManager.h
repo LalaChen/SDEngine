@@ -89,6 +89,7 @@ public:
     void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) override;
     void WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs) override;
+    void BindDescriptorSet(const DescriptorSetIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) override;
     void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) override;
 //----------- Command Buffer and Pool Function
 public:
@@ -173,10 +174,18 @@ protected:
 
     void UpdateVkDescriptorSet(
         const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos,
-        const std::vector<VkCopyDescriptorSet> &i_descriptor_c_infos
-    );
+        const std::vector<VkCopyDescriptorSet> &i_descriptor_c_infos);
 
-    void FreeVkDescriptorSet(VkDescriptorSet &io_handle, VkDescriptorPool i_dp_handle);
+    void BindVkDescriptorSet(
+        VkCommandBuffer i_cb_handle,
+        VkPipelineBindPoint i_pipe_bind_point,
+        VkPipelineLayout i_pipe_layout_handle,
+        VkDescriptorSet i_ds_handle,
+        uint32_t i_dynamic_offset = 0);
+
+    void FreeVkDescriptorSet(
+        VkDescriptorSet &io_handle,
+        VkDescriptorPool i_dp_handle);
 protected:
 //------- Vulkan command buffer and pool private Function --------
     VkResult CreateVkCommandPool(
@@ -239,8 +248,7 @@ protected:
         VkCommandBuffer i_cb_handle,
         VkBuffer i_ib_handle,
         VkDeviceSize i_offset,
-        VkIndexType i_type
-    );
+        VkIndexType i_type);
 
     void DestroyVkBuffer(VkBuffer &io_buffer_handle);
 
@@ -312,8 +320,7 @@ protected:
         float i_min_lod = 0.0f,
         float i_max_lod = 1.0f,
         VkBorderColor i_border_color = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK,
-        VkBool32 i_unnormalize_coord = VK_FALSE
-    );
+        VkBool32 i_unnormalize_coord = VK_FALSE);
 
     void DestroyVkSampler(VkSampler &io_handle);
 protected:
@@ -366,7 +373,10 @@ protected:
         VkPipeline &io_pipeline_handle,
         const VkGraphicsPipelineCreateInfo &i_c_info);
 
-    void BindVkPipeline(VkCommandBuffer i_cb_handle, VkPipeline i_pipe_handle, VkPipelineBindPoint i_pipe_point);
+    void BindVkPipeline(
+        VkCommandBuffer i_cb_handle,
+        VkPipeline i_pipe_handle,
+        VkPipelineBindPoint i_pipe_point);
 
     void DestroyVKPipeline(VkPipeline &io_pipeline_handle);
 protected:
@@ -415,7 +425,9 @@ protected:
         const std::vector<VkClearValue> &i_clear_values,
         VkSubpassContents i_sp_contents = VK_SUBPASS_CONTENTS_INLINE);
 
-    void GotoNextStepInVKRenderPass(VkCommandBuffer i_cb_handle, VkSubpassContents i_sp_content = VK_SUBPASS_CONTENTS_INLINE);
+    void GotoNextStepInVKRenderPass(
+        VkCommandBuffer i_cb_handle,
+        VkSubpassContents i_sp_content = VK_SUBPASS_CONTENTS_INLINE);
 
     void EndVkRenderPass(VkCommandBuffer i_cb_handle);
 

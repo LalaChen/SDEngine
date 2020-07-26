@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "LogManager.h"
 #include "UniformImages.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -39,6 +40,23 @@ UniformImages::~UniformImages()
 void UniformImages::Initialize(const UniformImagesDescriptorWeakReferenceObject &i_uid_wref)
 {
     m_tex_wrefs.resize(i_uid_wref.GetRef().GetNumber());
+}
+
+bool UniformImages::SetTexture(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx)
+{
+    if (i_tex_wref.IsNull() == true) {
+        SDLOGW("Input null texture for UImages[%d].", i_idx);
+        return false;
+    }
+
+    if (i_idx < m_tex_wrefs.size()) {
+        m_tex_wrefs[i_idx] = i_tex_wref;
+        return true;
+    }
+    else {
+        SDLOGW("Out of range. Idx(%d). Size(%u)", i_idx, static_cast<uint32_t>(m_tex_wrefs.size()));
+        return false;
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

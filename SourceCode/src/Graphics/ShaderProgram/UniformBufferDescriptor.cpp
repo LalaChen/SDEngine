@@ -4,6 +4,15 @@
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+const Size_ui32 UniformBufferVariableInfo::TypeSizes[UniformBufferVariableType_MAX_DEFINE_VALUE] = {
+    sizeof(int32_t),
+    sizeof(uint32_t),
+    sizeof(float),
+    sizeof(Vector3f),
+    sizeof(Color4f),
+    sizeof(Matrix4X4f)
+};
+
 UniformBufferDescriptor::UniformBufferDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number)
 : UniformVariableDescriptor(i_name, i_binding_id, i_number)
 , m_total_size(0)
@@ -14,32 +23,36 @@ UniformBufferDescriptor::~UniformBufferDescriptor()
 {
 }
 
-void UniformBufferDescriptor::AddVariable(const std::string &i_var_name, Size_ui32 i_var_type_size, Size_ui32 i_var_offset, Size_ui32 i_var_number)
+void UniformBufferDescriptor::AddVariable(const std::string &i_var_name, UniformBufferVariableTypeEnum i_var_type, Size_ui32 i_var_offset, Size_ui32 i_var_number)
 {
     std::map<std::string, UniformBufferVariableInfo>::iterator var_iter;
     
     if (IsInitialized() == true) {
         SDLOGE("Add variable[%s] to UB[%s] failure because UBD is initialized !!!",
             i_var_name.c_str(), m_object_name.c_str());
+        return;
     }
 
-    if (i_var_type_size == 0) {
-        SDLOGE("Add variable[%s] to UBD[%s] failure because variable type size is zero!!!",
+    if (i_var_type == UniformBufferVariableType_MAX_DEFINE_VALUE) {
+        SDLOGE("Add variable[%s] to UBD[%s] failure because variable is invalid type!!!",
             i_var_name.c_str(), m_object_name.c_str());
+        return;
     }
 
     if (i_var_number == 0) {
         SDLOGE("Add variable[%s] to UBD[%s] failure because variable number is zero!!!",
             i_var_name.c_str(), m_object_name.c_str());
+        return;
     }
 
     var_iter = m_variable_map.find(i_var_name);
-    if (var_iter != m_variable_map.end() ){
+    if (var_iter != m_variable_map.end()) {
         SDLOGE("Add variable[%s] to UBD[%s] failure because variable name is exist!!!",
             i_var_name.c_str(), m_object_name.c_str());
+        return;
     }
     else {
-        m_variable_map[i_var_name] = UniformBufferVariableInfo(i_var_type_size, i_var_offset, i_var_number);
+        m_variable_map[i_var_name] = UniformBufferVariableInfo(i_var_type, UniformBufferVariableInfo::TypeSizes[i_var_type], i_var_offset, i_var_number);
     }
 }
 

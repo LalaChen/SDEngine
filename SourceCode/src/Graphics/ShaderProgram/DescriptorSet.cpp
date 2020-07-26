@@ -64,9 +64,14 @@ void DescriptorSet::RegisterUniformVariable(const UniformVariableWeakReferenceOb
     m_uv_wrefs.push_back(i_uv_wref);
 }
 
-void DescriptorSet::Update()
+void DescriptorSet::WriteDescriptor()
 {
     GraphicsManager::GetRef().WriteUniformVariablesToDescriptorSet(m_identity, m_uv_wrefs);
+}
+
+void DescriptorSet::Bind(const CommandBufferWeakReferenceObject &i_cb_wref) const
+{
+    GraphicsManager::GetRef().BindDescriptorSet(m_identity, i_cb_wref, m_target_pipe_wref);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

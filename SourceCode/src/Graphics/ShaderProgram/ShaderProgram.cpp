@@ -31,6 +31,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 ShaderProgram::ShaderProgram(const ObjectName &i_name)
 : Object(i_name)
 , m_descriptor_counts{0}
+, m_registered(false)
 {
 }
 
@@ -55,17 +56,9 @@ void ShaderProgram::RegisterShaderProgramStructure(
         }
     }
 
-    //1. tell us what pipeline we need to use.
-    for (uint32_t rpg_count = 0; rpg_count < i_rp_groups.size(); ++rpg_count) {
-        ObjectName rp_name = i_rp_groups[rpg_count].m_rp_wref.GetConstRef().GetObjectName();
-        std::map<ObjectName, RenderPassGroup>::iterator pipe_iter = m_rp_groups.find(rp_name);
-        if (pipe_iter == m_rp_groups.end()) {
-            m_rp_groups[rp_name] = i_rp_groups[rpg_count];
-        }
-        else {
-            SDLOGE("Render Pass[%s] is existed!!!", rp_name.c_str());
-        }
-    }
+    //1. tell us what pipeline we need to use in target render pass.
+    m_rp_groups = i_rp_groups;
+
     //2. cache used pipeline.
     m_pipe_srefs = i_gp_srefs;
     m_uvd_srefs = i_uvd_srefs;
@@ -81,10 +74,8 @@ void ShaderProgram::RegisterShaderProgramStructure(
             m_descriptor_counts[count] += pipe_dcounts[count];
         }
     }
-}
 
-void ShaderProgram::Initialize()
-{
+    m_registered = true;
 }
 
 void ShaderProgram::GetDescriptorCount(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE]) const
@@ -126,6 +117,26 @@ void ShaderProgram::AllocateEssentialObjects(
             if (m_pipe_srefs[pipe_set_count].GetRef().IsThisUniformVariableUsed((*uv_iter).second) == true) {
                 io_desc_set_wrefs[pipe_set_count].GetRef().RegisterUniformVariable((*uv_iter).second);
             }
+        }
+    }
+}
+
+void ShaderProgram::UseProgramWithTargetDescriptorSet(
+    const CommandBufferWeakReferenceObject &i_cb_wref,
+    const RenderPassWeakReferenceObject &i_rp_wref,
+    uint32_t i_sp_idx,
+    const std::vector<DescriptorSetWeakReferenceObject> &i_desc_set_wrefs)
+{
+    for (uint32_t rpg_id = 0; rpg_id < m_rp_groups.size(); ++rpg_id) {
+        if (m_rp_groups[rpg_id].m_rp_wref == i_rp_wref) {
+            if (i_sp_idx < m_rp_groups[rpg_id].m_pipe_orders.size()) {
+                uint32_t pipe_idx = m_rp_groups[rpg_id].m_pipe_orders[i_sp_idx];
+                if (pipe_idx < i_desc_set_wrefs.size() && pipe_idx < m_pipe_srefs.size()) {
+                    m_pipe_srefs[pipe_idx].GetRef().Use(i_cb_wref);
+                    i_desc_set_wrefs[pipe_idx].GetRef().Bind(i_cb_wref);
+                }
+            }
+            return;
         }
     }
 }

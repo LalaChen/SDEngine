@@ -137,14 +137,29 @@ public:
         Type *this_ptr = this->lock().get();
         Type *src_ptr = i_src.lock().get();
         if (this_ptr != nullptr && src_ptr != nullptr) {
-            if (this_ptr != src_ptr)
+            if (this_ptr != src_ptr) {
                 return this_ptr->IsEqualTo(*src_ptr);
-            else
+            }
+            else {
+                //Same object.
                 return true;
+            }
         }
         else {
             return false;
         }
+    }
+
+    bool operator==(const WeakReferenceObject<Type> &i_src) const {
+        Type* this_ptr = this->lock().get();
+        Type* src_ptr = i_src.lock().get();
+        return (this_ptr == src_ptr);
+    }
+
+    bool operator != (const WeakReferenceObject<Type> &i_src) const {
+        Type* this_ptr = this->lock().get();
+        Type* src_ptr = i_src.lock().get();
+        return (this_ptr != src_ptr);
     }
 public:
     /*! \fn Type& GetRef() const;

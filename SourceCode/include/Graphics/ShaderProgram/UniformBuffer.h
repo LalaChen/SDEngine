@@ -32,9 +32,16 @@ SOFTWARE.
 
 #pragma once
 
+#include "Color4f.h"
+#include "Vector3f.h"
+#include "Matrix4X4f.h"
 #include "UniformBufferDescriptor.h"
 #include "UniformBufferIdentity.h"
 #include "UniformVariable.h"
+
+using SDE::Graphics::Color4f;
+using SDE::Math::Vector3f;
+using SDE::Math::Matrix4X4f;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -63,9 +70,32 @@ public:
     inline UniformBindingTypeEnum GetType() const override;
 
 public:
-    template<class Type> bool SetVariable(const std::string &i_var_name, const Type &i_data, Size_ui64 i_idx = 0);
+    bool SetInt(const std::string &i_var_name, int32_t i_data, Size_ui32 i_idx = 0);
 
-    void SetBufferData(const std::vector<uint8_t> &i_data);
+    bool SetUint(const std::string &i_var_name, uint32_t i_data, Size_ui32 i_idx = 0);
+
+    bool SetFloat(const std::string &i_var_name, float i_data, Size_ui32 i_idx = 0);
+
+    bool SetVector3f(const std::string &i_var_name, const Vector3f &i_data, Size_ui32 i_idx = 0);
+
+    bool SetColor4f(const std::string &i_var_name, const Color4f &i_data, Size_ui32 i_idx = 0);
+
+    bool SetMatrix4X4f(const std::string &i_var_name, const Matrix4X4f &i_data, Size_ui32 i_idx = 0);
+public:
+    bool SetIntArray(const std::string &i_var_name, const std::vector<int32_t> &i_datas, Size_ui32 i_start_idx = 0);
+
+    bool SetUintArray(const std::string &i_var_name, const std::vector<uint32_t> &i_datas, Size_ui32 i_start_idx = 0);
+
+    bool SetFloatArray(const std::string &i_var_name, const std::vector<float> &i_datas, Size_ui32 i_start_idx = 0);
+
+    bool SetVector3fArray(const std::string &i_var_name, const std::vector<Vector3f> &i_datas, Size_ui32 i_start_idx = 0);
+
+    bool SetColor4fArray(const std::string &i_var_name, const std::vector<Color4f> &i_datas, Size_ui32 i_start_idx = 0);
+
+    bool SetMatrix4X4fArray(const std::string &i_var_name, const std::vector<Matrix4X4f> &i_datas, Size_ui32 i_start_idx = 0);
+public:
+    //
+    bool SetBufferData(const void *i_data, Size_ui32 i_data_size);
 
 public:
     // call set function and then update.
@@ -84,24 +114,6 @@ protected:
 inline UniformBindingTypeEnum UniformBuffer::GetType() const
 {
     return UniformBindingType_UNIFORM_BUFFER;
-}
-
-template<class Type>
-inline bool UniformBuffer::SetVariable(const std::string &i_var_name, const Type &i_data, Size_ui64 i_idx)
-{
-    if (m_ub_desc_wref.IsNull() == false) {
-        UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
-        if (ub_var_info.IsValid() == true) {
-            if (i_idx < ub_var_info.m_number) {
-                Size_ui32 final_offset = ub_var_info.m_offset + ub_var_info.m_type_size * i_idx;
-                std::memcpy(m_buffer.data() + final_offset, &i_data, ub_var_info.m_type_size);
-                m_modified = true;
-                return true;
-            }
-        }
-    }
-
-    return false;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

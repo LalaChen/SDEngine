@@ -116,6 +116,7 @@ public:
     virtual void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
     virtual void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) = 0;
     virtual void WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs) = 0;
+    virtual void BindDescriptorSet(const DescriptorSetIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) = 0;
     virtual void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) = 0;
 public:
     virtual void CreateCommandPool(CommandPoolIdentity &io_identity) = 0;

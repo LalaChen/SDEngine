@@ -40,16 +40,29 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformBufferDescriptor);
 
+enum UniformBufferVariableTypeEnum
+{
+    UniformBufferVariableType_INT = 0,
+    UniformBufferVariableType_UINT,
+    UniformBufferVariableType_FLOAT,
+    UniformBufferVariableType_VECTOR3F,
+    UniformBufferVariableType_COLOR4F,
+    UniformBufferVariableType_MATRIX4X4F,
+    UniformBufferVariableType_MAX_DEFINE_VALUE
+};
+
 class SDENGINE_CLASS UniformBufferVariableInfo
 {
+public:
+    static const Size_ui32 TypeSizes[UniformBufferVariableType_MAX_DEFINE_VALUE];
 public:
     UniformBufferVariableInfo()
     : m_type_size(0u), m_number(0u), m_offset(0u)
     {
     }
 
-    UniformBufferVariableInfo(Size_ui32 i_type_size, Size_ui32 i_offset, Size_ui32 i_number)
-    : m_type_size(i_type_size), m_number(i_number) ,m_offset(i_offset)
+    UniformBufferVariableInfo(UniformBufferVariableTypeEnum i_type, Size_ui32 i_type_size, Size_ui32 i_offset, Size_ui32 i_number)
+    : m_type(i_type), m_type_size(i_type_size), m_number(i_number), m_offset(i_offset)
     {
     }
 
@@ -60,6 +73,7 @@ public:
     Size_ui32 GetTotalSize() const;
     bool IsValid() const;
 public:
+    UniformBufferVariableTypeEnum m_type;
     Size_ui32 m_type_size;
     Size_ui32 m_number;
     Size_ui32 m_offset;
@@ -81,7 +95,7 @@ public:
     explicit UniformBufferDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number = 1);
     virtual ~UniformBufferDescriptor();
 public:
-    void AddVariable(const std::string &i_var_name, Size_ui32 i_var_type_size, Size_ui32 i_var_offset, Size_ui32 i_var_number = 1);
+    void AddVariable(const std::string &i_var_name, UniformBufferVariableTypeEnum i_var_type, Size_ui32 i_var_offset, Size_ui32 i_var_number = 1);
 public:
     UniformBufferVariableInfo GetVariableInfo(const std::string &i_var_name) const;
     Size_ui32 GetBufferSize() const;

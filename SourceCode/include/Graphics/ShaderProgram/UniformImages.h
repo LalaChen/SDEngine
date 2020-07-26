@@ -54,14 +54,16 @@ public:
      *  \brief Destructor of UniformImages.
      */
     virtual ~UniformImages();
-
 public:
+
     void Initialize(const UniformImagesDescriptorWeakReferenceObject &i_uid_wref);
 
+    bool SetTexture(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx);
 public:
-    inline UniformBindingTypeEnum GetType() const override;
 
+    inline UniformBindingTypeEnum GetType() const override;
 public:
+
     Size_ui32 GetAmount() const;
 
     const std::vector<TextureWeakReferenceObject>& GetTextures() const;

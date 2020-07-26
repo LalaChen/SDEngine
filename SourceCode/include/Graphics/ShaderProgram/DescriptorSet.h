@@ -69,7 +69,9 @@ public:
 
     void RegisterUniformVariable(const UniformVariableWeakReferenceObject &i_uv_wref);
 
-    void Update();
+    void WriteDescriptor();
+
+    void Bind(const CommandBufferWeakReferenceObject &i_cb_wref) const;
 protected:
     WeakReferenceObject<Object> m_pool_wref;
 
