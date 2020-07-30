@@ -9,39 +9,9 @@
 #include "CommandRecordingThread.h"
 #include "Sample.h"
 
-using SDE::Graphics::Texture;
-using SDE::Graphics::TextureStrongReferenceObject;
-using SDE::Graphics::TextureWeakReferenceObject;
-
-using SDE::Graphics::Mesh;
-using SDE::Graphics::MeshStrongReferenceObject;
-using SDE::Graphics::MeshWeakReferenceObject;
-
-using SDE::Graphics::RenderPass;
-using SDE::Graphics::RenderPassStrongReferenceObject;
-using SDE::Graphics::RenderPassWeakReferenceObject;
-
-using SDE::Graphics::RenderFlow;
-using SDE::Graphics::RenderFlowStrongReferenceObject;
-using SDE::Graphics::RenderFlowWeakReferenceObject;
-
-using SDE::Graphics::GraphicsPipeline;
-using SDE::Graphics::GraphicsPipelineStrongReferenceObject;
-using SDE::Graphics::GraphicsPipelineWeakReferenceObject;
-
-using SDE::Graphics::CommandBuffer;
-using SDE::Graphics::CommandBufferStrongReferenceObject;
-using SDE::Graphics::CommandBufferWeakReferenceObject;
-
-using SDE::Graphics::CommandPool;
-using SDE::Graphics::CommandPoolStrongReferenceObject;
-using SDE::Graphics::CommandPoolWeakReferenceObject;
-
-using SDE::Graphics::SecondaryCommandPoolThread;
-using SDE::Graphics::SecondaryCommandPoolThreadStrongReferenceObject;
-using SDE::Graphics::SecondaryCommandPoolThreadWeakReferenceObject;
-
-using SDE::Math::Transform;
+using namespace SDE::Basic;
+using namespace SDE::Graphics;
+using namespace SDE::Math;
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample4_DrawObjects);
 
@@ -127,6 +97,8 @@ public:
 protected:
     void RecordCommandBuffer();
 private:
+    void CreateShaderProgram();
+    void CreateMaterials();
     void CreateTexture();
     void CreateCamera();
     void CreateLight();
@@ -150,7 +122,7 @@ protected:
 #endif
 #endif
     CommandBufferWeakReferenceObject m_main_cb_wref;
-    CommandPoolStrongReferenceObject m_cmd_pool_sref;
+    CommandPoolStrongReferenceObject m_cp_sref;
 protected:
     std::list<ObjectData> m_scene_objects;
     float m_cube_interval;

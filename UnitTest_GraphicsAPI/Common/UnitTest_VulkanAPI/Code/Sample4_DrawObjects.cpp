@@ -387,9 +387,9 @@ void Sample4_DrawObjects::Destroy()
         m_rec_threads[tID].Reset();
     }
 #endif
-    m_cmd_pool_sref.GetRef().RecycleCommandBuffer(m_main_cb_wref);
-    m_cmd_pool_sref.GetRef().Clear(); //should do nothing.
-    m_cmd_pool_sref.Reset();
+    m_cp_sref.GetRef().RecycleCommandBuffer(m_main_cb_wref);
+    m_cp_sref.GetRef().Clear(); //should do nothing.
+    m_cp_sref.Reset();
 
     m_cube_sref.Reset();
     m_floor_sref.Reset();
@@ -483,9 +483,9 @@ void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
 
 void Sample4_DrawObjects::CreateCommandBufferAndPool()
 {
-    m_cmd_pool_sref = new CommandPool("Sample4_SinglePool");
-    m_cmd_pool_sref.GetRef().Initialize();
-    m_main_cb_wref = m_cmd_pool_sref.GetRef().AllocateCommandBuffer();
+    m_cp_sref = new CommandPool("Sample4_SinglePool");
+    m_cp_sref.GetRef().Initialize();
+    m_main_cb_wref = m_cp_sref.GetRef().AllocateCommandBuffer();
 #if !defined(SINGLE_FLOW)
     uint32_t max_threads = std::thread::hardware_concurrency();
     max_threads = 1;
