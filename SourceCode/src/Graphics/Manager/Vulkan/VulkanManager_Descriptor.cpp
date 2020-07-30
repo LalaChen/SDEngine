@@ -71,6 +71,7 @@ void VulkanManager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, co
     a_info.descriptorPool = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
     a_info.pSetLayouts = reinterpret_cast<const VkDescriptorSetLayout*>(&pipe_identity.m_descriptor_layout_handle);
     a_info.descriptorSetCount = 1;
+    AllocateVkDescriptorSet(ds_handle, a_info);
 }
 
 void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs)
