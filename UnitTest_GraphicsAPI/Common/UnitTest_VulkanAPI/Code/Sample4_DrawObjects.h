@@ -15,28 +15,6 @@ using namespace SDE::Math;
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample4_DrawObjects);
 
-class ObjectMaterialData
-{
-public:
-    ObjectMaterialData();
-    ~ObjectMaterialData();
-public:
-    void Initialize(VulkanAPITestManager *i_mgr, const GraphicsPipelineWeakReferenceObject &i_pipeline_wref, const TextureWeakReferenceObject &i_main_tex_wref);
-    void Release(VulkanAPITestManager *i_mgr);
-public:
-    GraphicsPipelineWeakReferenceObject m_pipeline_wref;
-    TextureWeakReferenceObject m_main_tex_wref;
-    MaterialUniformBuffer m_material;
-    VkDescriptorPool m_desc_pool;
-    VkDescriptorSet m_desc_set;
-    VkBuffer m_basic_ub; //Common
-    VkDeviceMemory m_basic_mem;
-    VkBuffer m_light_ub;
-    VkDeviceMemory m_light_mem;
-    VkBuffer m_material_ub;
-    VkDeviceMemory m_material_mem;
-};
-
 class LightData
 {
 public:
@@ -68,15 +46,15 @@ public:
     ObjectData();
     ~ObjectData();
 public:
-    void UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraData &i_camera, const LightData &i_light);
-    void Draw(VulkanAPITestManager *i_mgr, const CommandBufferWeakReferenceObject &i_cb_wref);
+    void InitalizeMaterial(const ShaderProgramWeakReferenceObject &i_sp_wref, const SampleCameraData &i_camera, const LightData &i_light, const TextureWeakReferenceObject &i_tex_wref);
+    void UpdateMaterial(const SampleCameraData &i_camera, const LightData &i_light);
+    void Draw(const RenderPassWeakReferenceObject &i_rp_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_sp_id);
 public:
     MeshWeakReferenceObject m_mesh;
 public:
     TextureWeakReferenceObject m_texture;
     Transform m_trans;
-public:
-    ObjectMaterialData m_material;
+    MaterialStrongReferenceObject m_mat_sref;
 };
 
 class Sample4_DrawObjects : public Sample
@@ -98,7 +76,6 @@ protected:
     void RecordCommandBuffer();
 private:
     void CreateShaderProgram();
-    void CreateMaterials();
     void CreateTexture();
     void CreateCamera();
     void CreateLight();
@@ -110,7 +87,7 @@ protected:
     LightData m_light;
     RenderPassStrongReferenceObject m_forward_rp_sref;
     TextureStrongReferenceObject m_tex_sref;
-    GraphicsPipelineStrongReferenceObject m_pipeline_sref;
+    ShaderProgramStrongReferenceObject m_phong_shader_sref;
     MeshStrongReferenceObject m_cube_sref;
     MeshStrongReferenceObject m_floor_sref;
 protected:

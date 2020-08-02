@@ -302,7 +302,7 @@ bool Material::SetMatrix4X4fArray(const ObjectName &i_ub_name, const std::string
     }
 }
 
-bool Material::SetDataUniformBuffer(const ObjectName &i_ub_name, const void *i_data, Size_ui32 i_data_size)
+bool Material::SetDataToUniformBuffer(const ObjectName &i_ub_name, const void *i_data, Size_ui32 i_data_size)
 {
     std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
     if (uv_iter != m_uv_srefs.end()) {
@@ -348,6 +348,14 @@ void Material::UseMaterial(const CommandBufferWeakReferenceObject &i_cb_wref, co
 {
     if (m_sp_wref.IsNull() == false) {
         m_sp_wref.GetRef().UseProgramWithTargetDescriptorSet(i_cb_wref, i_rp_wref, i_sp_id, m_ds_wrefs);
+    }
+}
+
+void Material::Update()
+{
+    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter;
+    for (uv_iter = m_uv_srefs.begin(); uv_iter != m_uv_srefs.end(); ++uv_iter) {
+        (*uv_iter).second.GetRef().Update();
     }
 }
 

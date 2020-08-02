@@ -93,7 +93,6 @@ public:
 
     /*! \fn void RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id);
      *  \param [in] i_uvd_wref The descriptor corresponding with target uniform binding.
-     *  \param [in] i_uvd_id Target binding ID.
      *  \brief Set parameters for creating graphics pipeline and allocate uniform variable descriptor
      *         weak references for let use registing.
      */

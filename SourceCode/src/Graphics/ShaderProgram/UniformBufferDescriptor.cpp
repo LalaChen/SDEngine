@@ -56,6 +56,15 @@ void UniformBufferDescriptor::AddVariable(const std::string &i_var_name, Uniform
     }
 }
 
+void UniformBufferDescriptor::AddVariableDone()
+{
+    m_total_size = 0;
+    std::map<std::string, UniformBufferVariableInfo>::iterator iter;
+    for (iter = m_variable_map.begin(); iter != m_variable_map.end(); ++iter) {
+        m_total_size += (*iter).second.GetTotalSize();
+    }
+}
+
 UniformBufferVariableInfo UniformBufferDescriptor::GetVariableInfo(const std::string &i_var_name) const
 {
     std::map<std::string, UniformBufferVariableInfo>::const_iterator var_iter = m_variable_map.find(i_var_name);

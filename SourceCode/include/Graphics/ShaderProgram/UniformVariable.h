@@ -63,6 +63,7 @@ public:
 public:
     virtual UniformBindingTypeEnum GetType() const = 0;
 
+    virtual void Update() = 0;
 public:
     uint32_t GetBindingID() const;
 

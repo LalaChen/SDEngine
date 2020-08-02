@@ -99,7 +99,7 @@ public:
 
 public:
     // call set function and then update.
-    void Update();
+    void Update() override;
 protected:
 
     UniformBufferIdentity m_identity;

@@ -96,6 +96,7 @@ public:
     virtual ~UniformBufferDescriptor();
 public:
     void AddVariable(const std::string &i_var_name, UniformBufferVariableTypeEnum i_var_type, Size_ui32 i_var_offset, Size_ui32 i_var_number = 1);
+    void AddVariableDone();
 public:
     UniformBufferVariableInfo GetVariableInfo(const std::string &i_var_name) const;
     Size_ui32 GetBufferSize() const;

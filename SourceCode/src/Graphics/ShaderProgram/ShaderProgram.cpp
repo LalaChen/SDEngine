@@ -50,7 +50,7 @@ void ShaderProgram::RegisterShaderProgramStructure(
     }
 
     for (uint32_t rpg_count = 0; rpg_count < i_rp_groups.size(); ++rpg_count) {
-        if (i_rp_groups[rpg_count].m_rp_wref.IsNull() == false) {
+        if (i_rp_groups[rpg_count].m_rp_wref.IsNull() == true) {
             SDLOGE("Render pass in group[%d] is nullptr.", rpg_count);
             return;
         }
@@ -104,7 +104,7 @@ void ShaderProgram::AllocateEssentialObjects(
     //2. allocate descriptor for each pipeline.
     io_desc_set_wrefs.resize(m_pipe_srefs.size());
     for (uint32_t pipe_count = 0; pipe_count < m_pipe_srefs.size(); ++pipe_count) {
-        io_desc_set_wrefs.push_back(io_pool_wref.GetRef().AllocateDescriptorSet(m_pipe_srefs[pipe_count]));
+        io_desc_set_wrefs[pipe_count] = io_pool_wref.GetRef().AllocateDescriptorSet(m_pipe_srefs[pipe_count]);
     }
 
     //3. bind descriptor set to uniform variables.
@@ -114,8 +114,9 @@ void ShaderProgram::AllocateEssentialObjects(
             //Check all uniform variables is one of variable in this pipeline.
             //If it's one of uniform variables for this pipeline, we register 
             //this uniform variable to this descriptor set.
-            if (m_pipe_srefs[pipe_set_count].GetRef().IsThisUniformVariableUsed((*uv_iter).second) == true) {
-                io_desc_set_wrefs[pipe_set_count].GetRef().RegisterUniformVariable((*uv_iter).second);
+            UniformVariableWeakReferenceObject uv_wref = (*uv_iter).second;
+            if (m_pipe_srefs[pipe_set_count].GetRef().IsThisUniformVariableUsed(uv_wref) == true) {
+                io_desc_set_wrefs[pipe_set_count].GetRef().RegisterUniformVariable(uv_wref, uv_wref.GetRef().GetBindingID());
             }
         }
     }

@@ -116,6 +116,7 @@ vec4 CalculateLighting()
 	return (ambient + diffuse + specular + material.emission) * texture(mainTexture, texCoord);
 	//return vec4(wViewDir, 1.0);
 	//return vec4(abs(nDotL), abs(nDotL), abs(nDotL), 1.0);
+	//return texture(mainTexture, texCoord);
 }
 
 void main()

@@ -92,7 +92,7 @@ public:
     bool SetMatrix4X4fArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<Matrix4X4f> &i_datas, Size_ui32 i_start_idx = 0);
 public:
 
-    bool SetDataUniformBuffer(const ObjectName &i_ub_name, const void *i_data, Size_ui32 i_data_size);
+    bool SetDataToUniformBuffer(const ObjectName &i_ub_name, const void *i_data, Size_ui32 i_data_size);
 public:
     //Need to refresh write descriptor. So it maybe has extra cost.
     bool SetTexture(const ObjectName &i_uv_name, const TextureWeakReferenceObject &i_tex_wref, int32_t i_idx = 0);//Need to visit
@@ -102,6 +102,7 @@ public:
     void RefreshLinkingWithShaderProgram();
 public:
 //bind shader to command buffer.
+    void Update();
     void UseMaterial(const CommandBufferWeakReferenceObject &i_cb_wref, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id);
 protected:
     std::map<ObjectName, UniformVariableStrongReferenceObject> m_uv_srefs;

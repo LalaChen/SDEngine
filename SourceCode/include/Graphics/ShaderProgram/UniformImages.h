@@ -61,7 +61,9 @@ public:
     bool SetTexture(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx);
 public:
 
-    inline UniformBindingTypeEnum GetType() const override;
+    UniformBindingTypeEnum GetType() const override;
+
+    void Update() override;
 public:
 
     Size_ui32 GetAmount() const;
@@ -85,6 +87,10 @@ inline Size_ui32 UniformImages::GetAmount() const
 inline const std::vector<TextureWeakReferenceObject>& UniformImages::GetTextures() const
 {
     return m_tex_wrefs;
+}
+
+inline void UniformImages::Update()
+{
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

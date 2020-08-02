@@ -53,9 +53,9 @@ void VulkanManager::UpdateVkDescriptorSet(
     const std::vector<VkCopyDescriptorSet> &i_descriptor_c_infos)
 {
     vkUpdateDescriptorSets(m_VK_device,
-        i_descriptor_w_infos.size(),
+        static_cast<uint32_t>(i_descriptor_w_infos.size()),
         i_descriptor_w_infos.data(),
-        i_descriptor_c_infos.size(),
+        static_cast<uint32_t>(i_descriptor_c_infos.size()),
         i_descriptor_c_infos.data());
 }
 

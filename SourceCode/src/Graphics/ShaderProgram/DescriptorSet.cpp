@@ -45,7 +45,8 @@ void DescriptorSet::Initialize(
 {
     DescriptorPoolWeakReferenceObject pool_wref = i_pool_wref.DynamicCastTo<DescriptorPool>();
 
-    if (pool_wref.IsNull() == false) {
+    if (pool_wref.IsNull() == false && i_pipe_wref.IsNull() == false) {
+        m_target_pipe_wref = i_pipe_wref;
         m_pool_wref = i_pool_wref;
         Size_ui32 ub_amount = i_pipe_wref.GetConstRef().GetUniformBindingAmount();
         m_uv_wrefs.resize(ub_amount);
@@ -53,15 +54,23 @@ void DescriptorSet::Initialize(
     }
 }
 
-void DescriptorSet::RegisterUniformVariable(const UniformVariableWeakReferenceObject &i_uv_wref)
+void DescriptorSet::RegisterUniformVariable(const UniformVariableWeakReferenceObject &i_uv_wref, uint32_t i_binding_id)
 {
     for (UniformVariableWeakReferenceObject &uv : m_uv_wrefs) {
-        if (uv.GetConstRef().GetObjectName().compare(i_uv_wref.GetConstRef().GetObjectName()) == 0) {
-            SDLOGW("Uniform variable[%s]", i_uv_wref.GetConstRef().GetObjectName().c_str());
-            return;
+        if (uv.IsNull() == false) {
+            if (uv.GetConstRef().GetObjectName().compare(i_uv_wref.GetConstRef().GetObjectName()) == 0) {
+                SDLOGW("Uniform variable[%s]", i_uv_wref.GetConstRef().GetObjectName().c_str());
+                return;
+            }
         }
     }
-    m_uv_wrefs.push_back(i_uv_wref);
+
+    if (i_binding_id < m_uv_wrefs.size()) {
+        m_uv_wrefs[i_binding_id] = i_uv_wref;
+    }
+    else {
+        SDLOGW("Try to bind target uv to ");
+    }
 }
 
 void DescriptorSet::WriteDescriptor()

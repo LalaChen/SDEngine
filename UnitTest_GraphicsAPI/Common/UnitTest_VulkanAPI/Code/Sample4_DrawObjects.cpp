@@ -19,226 +19,6 @@ VkDescriptorType DescriptorTypes[UniformBindingType_MAX_DEFINE_VALUE] = {
     VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
 };
 
-ObjectMaterialData::ObjectMaterialData()
-: m_desc_pool(VK_NULL_HANDLE)
-, m_desc_set(VK_NULL_HANDLE)
-, m_basic_ub(VK_NULL_HANDLE)
-, m_basic_mem(VK_NULL_HANDLE)
-, m_light_ub(VK_NULL_HANDLE)
-, m_light_mem(VK_NULL_HANDLE)
-, m_material_ub(VK_NULL_HANDLE)
-, m_material_mem(VK_NULL_HANDLE)
-{
-}
-
-ObjectMaterialData::~ObjectMaterialData()
-{
-}
-
-void ObjectMaterialData::Initialize(VulkanAPITestManager *i_mgr, const GraphicsPipelineWeakReferenceObject &i_pipeline_wref, const TextureWeakReferenceObject &i_main_tex_wref)
-{
-    VkResult result = VK_SUCCESS;
-    VkDescriptorSetLayout layout = reinterpret_cast<VkDescriptorSetLayout>(i_pipeline_wref.GetConstRef().GetDescriptorLayoutHandle());
-    const GraphicsPipelineParam &params = i_pipeline_wref.GetConstRef().GetPipelineParams();
-    m_pipeline_wref = i_pipeline_wref;
-    m_main_tex_wref = i_main_tex_wref;
-    //1. caculate uniform variable types and their numbers.
-    uint32_t type_numbers[UniformBindingType_MAX_DEFINE_VALUE] = {0};
-
-    for (const UniformBinding &binding: params.m_uniform_binding_infos) {
-        type_numbers[binding.m_binding_type]++;
-    }
-    //2. Create descriptor pool size.
-    //------ VkDescriptorPoolSize(Light and Basic Buffer. Both 1)
-    std::vector<VkDescriptorPoolSize> type_sizes;
-    type_sizes.resize(UniformBindingType_MAX_DEFINE_VALUE);
-
-    for (uint32_t type_id = 0; type_id < UniformBindingType_MAX_DEFINE_VALUE; ++type_id) {
-        type_sizes[type_id] = {};
-        type_sizes[type_id].type = DescriptorTypes[static_cast<UniformBindingTypeEnum>(type_id)];
-        type_sizes[type_id].descriptorCount = type_numbers[type_id];
-    }
-    //3. Create descriptor.
-    result = i_mgr->CreateDescriptorPool(type_sizes, 1, false, m_desc_pool);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Allocate descriptror pool failure!!!");
-        return;
-    }
-
-    //4. allocate descriptor set.
-    VkDescriptorSetAllocateInfo desc_set_a_info = {};
-    desc_set_a_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    desc_set_a_info.pNext = nullptr;
-    desc_set_a_info.descriptorPool = m_desc_pool;
-    desc_set_a_info.descriptorSetCount = 1;
-    desc_set_a_info.pSetLayouts = &layout;
-    result = i_mgr->AllocateDescriptorSet(desc_set_a_info, m_desc_set);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Allocate descriptor set failure!!!");
-        return;
-    }
-
-    //5. create uniform buffer.
-    result = i_mgr->CreateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, sizeof(BasicUniformBuffer), m_basic_ub);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Create basic uniform buffer failure!!!");
-        return;
-    }
-    result = i_mgr->AllocateMemoryAndBindToBuffer(
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        0, m_basic_ub, m_basic_mem);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Create basic uniform buffer memory failure!!!");
-    }
-
-    result = i_mgr->CreateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, sizeof(LightUniformBuffer), m_light_ub);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Create light uniform buffer failure!!!");
-        return;
-    }
-
-    result = i_mgr->AllocateMemoryAndBindToBuffer(
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        0, m_light_ub, m_light_mem);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Create light uniform buffer memory failure!!!");
-        return;
-    }
-
-    result = i_mgr->CreateBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, sizeof(MaterialUniformBuffer), m_material_ub);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Create material uniform buffer failure!!!");
-        return;
-    }
-
-    result = i_mgr->AllocateMemoryAndBindToBuffer(
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        0, m_material_ub, m_material_mem);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Create material uniform buffer memory failure!!!");
-        return;
-    }
-
-    //6. create write descriptor set infos.
-    //6.1 for uniform buffer.
-    VkDescriptorBufferInfo basic_uniform_b_info = {};
-    basic_uniform_b_info.buffer = m_basic_ub;
-    basic_uniform_b_info.offset = 0;
-    basic_uniform_b_info.range = sizeof(BasicUniformBuffer);
-    VkWriteDescriptorSet basic_set_info = {};
-    basic_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    basic_set_info.pNext = nullptr;
-    basic_set_info.dstSet = m_desc_set;
-    basic_set_info.dstBinding = 0; //binding 0, set 0
-    basic_set_info.descriptorCount = 1;
-    basic_set_info.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    basic_set_info.pBufferInfo = &basic_uniform_b_info;
-    basic_set_info.pImageInfo = nullptr;
-    basic_set_info.pTexelBufferView = nullptr;
-    basic_set_info.dstArrayElement = 0;
-
-    VkDescriptorBufferInfo light_uniform_b_info = {};
-    light_uniform_b_info.buffer = m_light_ub;
-    light_uniform_b_info.offset = 0;
-    light_uniform_b_info.range = sizeof(LightUniformBuffer);
-    VkWriteDescriptorSet light_set_info = {};
-    light_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    light_set_info.pNext = nullptr;
-    light_set_info.dstSet = m_desc_set;
-    light_set_info.dstBinding = 1; //binding 1, set 0
-    light_set_info.descriptorCount = 1;
-    light_set_info.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    light_set_info.pBufferInfo = &light_uniform_b_info;
-    light_set_info.pImageInfo = nullptr;
-    light_set_info.pTexelBufferView = nullptr;
-    light_set_info.dstArrayElement = 0;
-
-    VkDescriptorBufferInfo mat_uniform_b_info = {};
-    mat_uniform_b_info.buffer = m_material_ub;
-    mat_uniform_b_info.offset = 0;
-    mat_uniform_b_info.range = sizeof(MaterialUniformBuffer);
-    VkWriteDescriptorSet mat_set_info = {};
-    mat_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    mat_set_info.pNext = nullptr;
-    mat_set_info.dstSet = m_desc_set;
-    mat_set_info.dstBinding = 2; //binding 2, set 0
-    mat_set_info.descriptorCount = 1;
-    mat_set_info.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    mat_set_info.pBufferInfo = &mat_uniform_b_info;
-    mat_set_info.pImageInfo = nullptr;
-    mat_set_info.pTexelBufferView = nullptr;
-    mat_set_info.dstArrayElement = 0;
-
-    //6.2 for texture.
-    VkDescriptorImageInfo main_texture_i_info = {};
-    main_texture_i_info.sampler = reinterpret_cast<VkSampler>(i_main_tex_wref.GetConstRef().GetSamplerHandle());
-    main_texture_i_info.imageView = reinterpret_cast<VkImageView>(i_main_tex_wref.GetConstRef().GetViewHandle());
-    main_texture_i_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-    VkWriteDescriptorSet main_tex_set_info = {};
-    main_tex_set_info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    main_tex_set_info.pNext = nullptr;
-    main_tex_set_info.dstSet = m_desc_set;
-    main_tex_set_info.dstBinding = 3; //binding 3, set 0
-    main_tex_set_info.descriptorCount = 1;
-    main_tex_set_info.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    main_tex_set_info.pBufferInfo = nullptr;
-    main_tex_set_info.pImageInfo = &main_texture_i_info;
-    main_tex_set_info.pTexelBufferView = nullptr;
-    main_tex_set_info.dstArrayElement = 0;
-
-    std::vector<VkWriteDescriptorSet> descriptor_set_infos = {
-        basic_set_info,
-        light_set_info,
-        mat_set_info,
-        main_tex_set_info
-    };
-    i_mgr->UpdateDescriptorSet(descriptor_set_infos);
-
-    i_mgr->RefreshHostDeviceBufferData(m_material_ub, m_material_mem, &m_material, sizeof(MaterialUniformBuffer));
-}
-
-void ObjectMaterialData::Release(VulkanAPITestManager* i_mgr)
-{
-    if (m_desc_set != VK_NULL_HANDLE) {
-        m_desc_set = VK_NULL_HANDLE; //free by pool.
-    }
-
-    if (m_desc_pool != VK_NULL_HANDLE) {
-        i_mgr->DestroyDescriptorPool(m_desc_pool);
-        m_desc_pool = VK_NULL_HANDLE;
-    }
-
-    if (m_basic_ub != VK_NULL_HANDLE) {
-        i_mgr->DestroyBuffer(m_basic_ub);
-        m_basic_ub = VK_NULL_HANDLE;
-    }
-
-    if (m_light_ub != VK_NULL_HANDLE) {
-        i_mgr->DestroyBuffer(m_light_ub);
-        m_light_ub = VK_NULL_HANDLE;
-    }
-
-    if (m_material_ub != VK_NULL_HANDLE) {
-        i_mgr->DestroyBuffer(m_material_ub);
-        m_material_ub = VK_NULL_HANDLE;
-    }
-
-    if (m_basic_mem != VK_NULL_HANDLE) {
-        i_mgr->ReleaseMemory(m_basic_mem);
-        m_basic_mem = VK_NULL_HANDLE;
-    }
-
-    if (m_light_mem != VK_NULL_HANDLE) {
-        i_mgr->ReleaseMemory(m_light_mem);
-        m_light_mem = VK_NULL_HANDLE;
-    }
-
-    if (m_material_mem != VK_NULL_HANDLE) {
-        i_mgr->ReleaseMemory(m_material_mem);
-        m_material_mem = VK_NULL_HANDLE;
-    }
-}
-
 LightData::LightData()
 {
 }
@@ -263,7 +43,25 @@ ObjectData::~ObjectData()
 {
 }
 
-void ObjectData::UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraData &i_camera, const LightData &i_light)
+void ObjectData::InitalizeMaterial(
+    const ShaderProgramWeakReferenceObject &i_sp_wref,
+    const SampleCameraData &i_camera,
+    const LightData &i_light,
+    const TextureWeakReferenceObject &i_tex_wref)
+{
+    m_mat_sref = new Material("Material");
+    m_mat_sref.GetRef().BindShaderProgram(i_sp_wref);
+    UpdateMaterial(i_camera, i_light);
+    MaterialUniformBuffer mat_ub; //use default color.
+    m_mat_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniformBuffer));
+    m_mat_sref.GetRef().SetTexture("mainTexture", i_tex_wref);
+    //Set data done. Link with shader program.(Write descirptor)
+    m_mat_sref.GetRef().LinkWithShaderProgram();
+}
+
+void ObjectData::UpdateMaterial(
+    const SampleCameraData &i_camera,
+    const LightData &i_light)
 {
     BasicUniformBuffer ub = {};
     ub.m_clip = Matrix4X4f(gClipMat);
@@ -287,25 +85,22 @@ void ObjectData::UpdateMaterial(VulkanAPITestManager *i_mgr, const SampleCameraD
     else {
         lb.m_position = i_light.m_trans.GetForward();
     }
-    i_mgr->RefreshHostDeviceBufferData(m_material.m_basic_ub, m_material.m_basic_mem, &ub, sizeof(BasicUniformBuffer));
-    i_mgr->RefreshHostDeviceBufferData(m_material.m_light_ub, m_material.m_light_mem, &lb, sizeof(LightUniformBuffer));
+    m_mat_sref.GetRef().SetDataToUniformBuffer("basic", &ub, sizeof(BasicUniformBuffer));
+    m_mat_sref.GetRef().SetDataToUniformBuffer("light", &lb, sizeof(LightUniformBuffer));
+    m_mat_sref.GetRef().Update();
 }
 
-void ObjectData::Draw(VulkanAPITestManager* i_mgr, const CommandBufferWeakReferenceObject &i_cb_wref)
+void ObjectData::Draw(
+    const RenderPassWeakReferenceObject &i_rp_wref,
+    const CommandBufferWeakReferenceObject &i_cb_wref,
+    uint32_t i_sp_id)
 {
     if (m_mesh.IsNull() == false) {
-        //1. use program.
-        m_material.m_pipeline_wref.GetRef().Use(i_cb_wref);
-        //2. bind descriptor set.
-        std::vector<VkDescriptorSet> descs = { m_material.m_desc_set };
-        std::vector<uint32_t> dynamic_offs = {};
-        i_mgr->BindDescriptorSets(
-            reinterpret_cast<VkCommandBuffer>(i_cb_wref.GetConstRef().GetHandle()),
-            reinterpret_cast<VkPipelineLayout>(m_material.m_pipeline_wref.GetConstRef().GetPipelineLayoutHandle()),
-            VK_PIPELINE_BIND_POINT_GRAPHICS, 0, descs, dynamic_offs);
-        //3. bind mesh vertex attributes.
+        //1. use material.
+        m_mat_sref.GetRef().UseMaterial(i_cb_wref, i_rp_wref, i_sp_id);
+        //2. bind mesh vertex attributes.
         m_mesh.GetRef().BindVertexBuffers(i_cb_wref);
-        //4. draw mesh.
+        //3. draw mesh.
         m_mesh.GetRef().BindIndexBuffer(i_cb_wref);
         m_mesh.GetRef().Render(i_cb_wref);
     }
@@ -335,9 +130,10 @@ Sample4_DrawObjects::~Sample4_DrawObjects()
 void Sample4_DrawObjects::Initialize()
 {
     m_current_res = m_mgr->GetScreenResolution();
+    CreateCamera();
     CreateRenderPassAndFramebuffer();
-    CreatePipeline();
     CreateTexture();
+    CreateShaderProgram();
     CreateLight();
     CreateObjects();
     CreateCommandBufferAndPool();
@@ -349,7 +145,7 @@ void Sample4_DrawObjects::Render()
 {
     UpdateCamera();
     for (ObjectData &obj : m_scene_objects) {
-        obj.UpdateMaterial(m_mgr, m_camera, m_light);
+        obj.UpdateMaterial(m_camera, m_light);
     }
 
 #if defined(RECORD_EVERY_FRAME)
@@ -366,6 +162,7 @@ void Sample4_DrawObjects::Resize(Size_ui32 i_width, Size_ui32 i_height)
     m_camera.m_forward_rf.Reset();
 
     m_current_res = m_mgr->GetScreenResolution();
+    CreateCamera();
     CreateRenderPassAndFramebuffer();
     RecordCommandBuffer();
 }
@@ -381,7 +178,6 @@ void Sample4_DrawObjects::Destroy()
     m_camera.m_forward_rf.Reset();
     m_tex_sref.Reset();
     m_forward_rp_sref.Reset();
-    m_pipeline_sref.Reset();
 #if !defined(SINGLE_FLOW)
     for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
         m_rec_threads[tID].Reset();
@@ -393,12 +189,11 @@ void Sample4_DrawObjects::Destroy()
 
     m_cube_sref.Reset();
     m_floor_sref.Reset();
+    m_phong_shader_sref.Reset();
 }
 
 void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
 {
-    //
-    CreateCamera();
     //
     SDLOG("Create render pass");
     //1. Initialize Forward render pass.
@@ -488,7 +283,7 @@ void Sample4_DrawObjects::CreateCommandBufferAndPool()
     m_main_cb_wref = m_cp_sref.GetRef().AllocateCommandBuffer();
 #if !defined(SINGLE_FLOW)
     uint32_t max_threads = std::thread::hardware_concurrency();
-    max_threads = 1;
+    //max_threads = 1;
     m_rec_threads.resize(max_threads);
 #if defined(RECORD_POOL_V2)
     for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
@@ -502,6 +297,112 @@ void Sample4_DrawObjects::CreateCommandBufferAndPool()
     }
 #endif
 #endif
+}
+
+void Sample4_DrawObjects::CreateShaderProgram()
+{
+    //-------------------- PhongShaderWithTexture ---------------------------
+    m_phong_shader_sref = new ShaderProgram("PhongShaderWithTexture");
+    //1. Write uniform descriptor for this shader program.
+    UniformBufferDescriptorStrongReferenceObject basic_ubd_sref = new UniformBufferDescriptor("basic", 0);
+    basic_ubd_sref.GetRef().AddVariable("clip", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_clip));
+    basic_ubd_sref.GetRef().AddVariable("proj", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_proj));
+    basic_ubd_sref.GetRef().AddVariable("view", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_view));
+    basic_ubd_sref.GetRef().AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_worid));
+    basic_ubd_sref.GetRef().AddVariable("normal", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_normal));
+    basic_ubd_sref.GetRef().AddVariable("viewEye", UniformBufferVariableType_VECTOR3F, offsetof(BasicUniformBuffer, m_view_eye));
+    basic_ubd_sref.GetRef().AddVariableDone();
+
+    UniformBufferDescriptorStrongReferenceObject light_ubd_sref = new UniformBufferDescriptor("light", 1);
+    light_ubd_sref.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(LightUniformBuffer, m_ambient));
+    light_ubd_sref.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(LightUniformBuffer, m_diffuse));
+    light_ubd_sref.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(LightUniformBuffer, m_specular));
+    light_ubd_sref.GetRef().AddVariable("position", UniformBufferVariableType_VECTOR3F, offsetof(LightUniformBuffer, m_position));
+    light_ubd_sref.GetRef().AddVariable("direction", UniformBufferVariableType_VECTOR3F, offsetof(LightUniformBuffer, m_direction));
+    light_ubd_sref.GetRef().AddVariable("spotExponent", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_spot_exp));
+    light_ubd_sref.GetRef().AddVariable("spotCosCutoff", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_spot_cos_cutoff));
+    light_ubd_sref.GetRef().AddVariable("constantAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_constant_attenuation));
+    light_ubd_sref.GetRef().AddVariable("linearAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_linear_attenuation));
+    light_ubd_sref.GetRef().AddVariable("quadraticAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_quadratic_attenuation));
+    light_ubd_sref.GetRef().AddVariable("kind", UniformBufferVariableType_INT, offsetof(LightUniformBuffer, m_kind));
+    light_ubd_sref.GetRef().AddVariableDone();
+
+    UniformBufferDescriptorStrongReferenceObject mat_ubd_sref = new UniformBufferDescriptor("material", 2);
+    mat_ubd_sref.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_ambient));
+    mat_ubd_sref.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_diffuse));
+    mat_ubd_sref.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_specular));
+    mat_ubd_sref.GetRef().AddVariable("position", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_emission));
+    mat_ubd_sref.GetRef().AddVariable("direction", UniformBufferVariableType_FLOAT, offsetof(MaterialUniformBuffer, m_shineness));
+    mat_ubd_sref.GetRef().AddVariableDone();
+
+    UniformImagesDescriptorStrongReferenceObject mt_imgd_sref = new UniformImagesDescriptor("mainTexture", 3);
+
+    std::vector<UniformVariableDescriptorStrongReferenceObject> uvd_srefs;
+    uvd_srefs.push_back(basic_ubd_sref.StaticCastTo<UniformVariableDescriptor>());
+    uvd_srefs.push_back(light_ubd_sref.StaticCastTo<UniformVariableDescriptor>());
+    uvd_srefs.push_back(mat_ubd_sref.StaticCastTo<UniformVariableDescriptor>());
+    uvd_srefs.push_back(mt_imgd_sref.StaticCastTo<UniformVariableDescriptor>());
+    
+    //2. Create GraphicsPipeline.
+    //2.1 create shader module.
+    ShaderModules shader_modules;
+    ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("PhongShaderVert");
+    vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/PhongShader.vert.spv", "main");
+    ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("PhongShaderFrag");
+    frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/PhongShader.frag.spv", "main");
+    shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader_sref;
+    shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
+
+    //2.2 write pipeline parames.
+    GraphicsPipelineParam params;
+    params.m_primitive_info.m_primitive = Primitive_TRIANGLE;
+    params.m_depth_stencil_info.m_depth_test_enable = true;
+    params.m_rasterization_info.m_face_culling = FaceCulling_NONE;
+    params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
+    params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
+    params.m_dynamic_states.push_back(DynamicState_SCISSOR);
+    GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
+ 
+    params.m_uniform_binding_infos.resize(4);
+    params.m_uniform_binding_infos[0].m_binding_id = 0;
+    params.m_uniform_binding_infos[0].m_binding_type = UniformBindingType_UNIFORM_BUFFER;
+    params.m_uniform_binding_infos[0].m_element_number = 1;
+    params.m_uniform_binding_infos[0].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
+
+    params.m_uniform_binding_infos[1].m_binding_id = 1;
+    params.m_uniform_binding_infos[1].m_binding_type = UniformBindingType_UNIFORM_BUFFER;
+    params.m_uniform_binding_infos[1].m_element_number = 1;
+    params.m_uniform_binding_infos[1].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
+
+    params.m_uniform_binding_infos[2].m_binding_id = 2;
+    params.m_uniform_binding_infos[2].m_binding_type = UniformBindingType_UNIFORM_BUFFER;
+    params.m_uniform_binding_infos[2].m_element_number = 1;
+    params.m_uniform_binding_infos[2].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
+
+    params.m_uniform_binding_infos[3].m_binding_id = 3;
+    params.m_uniform_binding_infos[3].m_binding_type = UniformBindingType_COMBINED_IMAGE_SAMPLER;
+    params.m_uniform_binding_infos[3].m_element_number = 1;
+    params.m_uniform_binding_infos[3].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
+
+    //2.3 register uniform variable descriptor to pipeline.
+    GraphicsPipelineStrongReferenceObject pipeline_sref = new GraphicsPipeline("PhongShader_Forward");
+    pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, 0);
+    for (uint32_t uvd_count = 0; uvd_count < uvd_srefs.size(); ++uvd_count) {
+        pipeline_sref.GetRef().RegisterUniformVariableDescriptor(uvd_srefs[uvd_count], uvd_count);
+    }
+    pipeline_sref.GetRef().Initialize(shader_modules);
+
+    //2.4 prepare datas and then initalize shader structure.
+    std::vector<GraphicsPipelineStrongReferenceObject> pipe_srefs;
+    pipe_srefs.push_back(pipeline_sref);
+
+    std::vector<RenderPassGroup> rpgs;
+    RenderPassGroup forward_rp;
+    forward_rp.m_rp_wref = m_forward_rp_sref;
+    forward_rp.m_pipe_orders.push_back(0); //use pipeline 0 at sp0.
+    rpgs.push_back(forward_rp);
+    m_phong_shader_sref.GetRef().RegisterShaderProgramStructure(
+        rpgs, pipe_srefs, uvd_srefs);
 }
 
 void Sample4_DrawObjects::CreateTexture()
@@ -524,8 +425,8 @@ void Sample4_DrawObjects::CreateObjects()
         -1.0f * static_cast<float>(m_cube_row) / 2.0f,
         0.25f,
         -1.0f * static_cast<float>(m_cube_depth) / 2.0f);
-    (*last_obj_iter).m_material.Initialize(m_mgr, m_pipeline_sref, m_tex_sref);
-    (*last_obj_iter).UpdateMaterial(m_mgr, m_camera, m_light);
+    (*last_obj_iter).InitalizeMaterial(m_phong_shader_sref, m_camera, m_light, m_tex_sref);
+    (*last_obj_iter).UpdateMaterial(m_camera, m_light);
 
     //Scene ---- Cubes
     m_cube_sref = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
@@ -539,8 +440,8 @@ void Sample4_DrawObjects::CreateObjects()
                 (*last_obj_iter).m_trans.m_position = start_pos + 
                     Vector3f((m_cube_side_length + m_cube_interval) * row, (m_cube_side_length + m_cube_interval) * col, (m_cube_side_length + m_cube_interval) * depth);
                 //
-                (*last_obj_iter).m_material.Initialize(m_mgr, m_pipeline_sref, m_tex_sref);
-                (*last_obj_iter).UpdateMaterial(m_mgr, m_camera, m_light);
+                (*last_obj_iter).InitalizeMaterial(m_phong_shader_sref, m_camera, m_light, m_tex_sref);
+                (*last_obj_iter).UpdateMaterial(m_camera, m_light);
             }
         }
     }
@@ -579,52 +480,6 @@ void Sample4_DrawObjects::CreateLight()
 {
     m_light.m_trans = Transform::LookAt(Vector3f(1.0f, 3.0f, 1.0f, 1.0f), Vector3f::Origin, Vector3f::PositiveY);
     SDLOG("%s",m_light.m_trans.MakeWorldMatrix().ToFormatString("Light","").c_str());
-}
-
-void Sample4_DrawObjects::CreatePipeline()
-{
-    ShaderModules shader_modules;
-    ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("PhongShaderVert");
-    vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/PhongShader.vert.spv", "main");
-    ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("PhongShaderFrag");
-    frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/PhongShader.frag.spv", "main");
-    shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader_sref;
-    shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
-
-    GraphicsPipelineParam params;
-    params.m_primitive_info.m_primitive = Primitive_TRIANGLE;
-    params.m_depth_stencil_info.m_depth_test_enable = true;
-    params.m_rasterization_info.m_face_culling = FaceCulling_NONE;
-    params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
-    params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
-    params.m_dynamic_states.push_back(DynamicState_SCISSOR);
-    GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
-    //
-    params.m_uniform_binding_infos.resize(4);
-    //
-    params.m_uniform_binding_infos[0].m_binding_id = 0;
-    params.m_uniform_binding_infos[0].m_binding_type = UniformBindingType_UNIFORM_BUFFER;
-    params.m_uniform_binding_infos[0].m_element_number = 1;
-    params.m_uniform_binding_infos[0].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
-
-    params.m_uniform_binding_infos[1].m_binding_id = 1;
-    params.m_uniform_binding_infos[1].m_binding_type = UniformBindingType_UNIFORM_BUFFER;
-    params.m_uniform_binding_infos[1].m_element_number = 1;
-    params.m_uniform_binding_infos[1].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
-
-    params.m_uniform_binding_infos[2].m_binding_id = 2;
-    params.m_uniform_binding_infos[2].m_binding_type = UniformBindingType_UNIFORM_BUFFER;
-    params.m_uniform_binding_infos[2].m_element_number = 1;
-    params.m_uniform_binding_infos[2].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
-
-    params.m_uniform_binding_infos[3].m_binding_id = 3;
-    params.m_uniform_binding_infos[3].m_binding_type = UniformBindingType_COMBINED_IMAGE_SAMPLER;
-    params.m_uniform_binding_infos[3].m_element_number = 1;
-    params.m_uniform_binding_infos[3].m_target_stages.push_back(ShaderStage_GRAPHICS_ALL);
-  
-    m_pipeline_sref = new GraphicsPipeline("PhongShader_Forward");
-    m_pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, 0);
-    m_pipeline_sref.GetRef().Initialize(shader_modules);
 }
 
 void Sample4_DrawObjects::RecordCommandBuffer()
@@ -686,7 +541,7 @@ void Sample4_DrawObjects::RecordCommandBuffer()
         ObjectData* obj_ref = &(*obj_iter);
 
         std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, obj_ref](const CommandBufferWeakReferenceObject &i_cb_wref) {
-            obj_ref->Draw(m_mgr, i_cb_wref);
+            obj_ref->Draw(m_forward_rp_sref, i_cb_wref, 0);
         };
 
         m_rec_threads[tID].GetRef().AddTask(task_func);

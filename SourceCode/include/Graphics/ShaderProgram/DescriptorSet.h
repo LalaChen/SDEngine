@@ -67,7 +67,7 @@ public:
         const WeakReferenceObject<Object> &i_pool_wref,
         const GraphicsPipelineWeakReferenceObject &i_pipe_wref);
 
-    void RegisterUniformVariable(const UniformVariableWeakReferenceObject &i_uv_wref);
+    void RegisterUniformVariable(const UniformVariableWeakReferenceObject &i_uv_wref, uint32_t i_binding_id);
 
     void WriteDescriptor();
 
