@@ -77,7 +77,8 @@ public:
     virtual VkImageView GetColorBufferImageView() = 0;
 protected:
     virtual void CreateCommandBufferAndPool() = 0;
-    virtual void CreateRenderPassAndFramebuffer() = 0;
+    virtual void CreateRenderPass() = 0;
+    virtual void CreateFramebuffer() = 0;
 protected:
     VulkanAPITestManager *m_mgr;
     Resolution m_current_res;

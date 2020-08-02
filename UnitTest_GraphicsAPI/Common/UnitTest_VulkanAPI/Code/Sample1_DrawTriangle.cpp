@@ -61,7 +61,8 @@ void Sample1_DrawTriangle::Initialize()
     m_current_res = m_mgr->GetScreenResolution();
     //
     CreateCommandBufferAndPool();
-    CreateRenderPassAndFramebuffer();
+    CreateRenderPass();
+    CreateFramebuffer();
     //
     CreateBuffers();
     CreateTexture();
@@ -1202,7 +1203,7 @@ void Sample1_DrawTriangle::CreateCommandBufferAndPool()
     }
 }
 
-void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
+void Sample1_DrawTriangle::CreateRenderPass()
 {
     SDLOG("--- Vulkan initialize sample 1 render pass.");
     //1. Render Pass.
@@ -1284,6 +1285,11 @@ void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
         SDLOGE("Sample1 render pass create failure.");
         return;
     }
+}
+
+void Sample1_DrawTriangle::CreateFramebuffer()
+{
+    SDLOG("--- Vulkan initialize sample 1 framebuffer.");
     //2. create color and depth buffer.
     SDE::Graphics::Resolution screen_size = m_mgr->GetScreenResolution();
     //--- color buffer
@@ -1306,7 +1312,7 @@ void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
     cb_c_info.extent.depth = 1;
     cb_c_info.format = VK_FORMAT_R8G8B8A8_UNORM;
 
-    result = m_mgr->CreateImage(cb_c_info, m_VK_color_buffer);
+    VkResult result = m_mgr->CreateImage(cb_c_info, m_VK_color_buffer);
     if (result != VK_SUCCESS) {
         SDLOGE("Sample1 color buffer create failure.");
         return;
@@ -1394,7 +1400,7 @@ void Sample1_DrawTriangle::CreateRenderPassAndFramebuffer()
         return;
     }
 
-    VkImageView ivs[2] = {m_VK_color_buffer_image_view, m_VK_depth_buffer_image_view};
+    VkImageView ivs[2] = { m_VK_color_buffer_image_view, m_VK_depth_buffer_image_view };
 
     VkFramebufferCreateInfo fbo_c_info = {};
     fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

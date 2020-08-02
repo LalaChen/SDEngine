@@ -63,8 +63,9 @@ public:
     explicit Sample4_DrawObjects(VulkanAPITestManager *i_mgr);
     virtual ~Sample4_DrawObjects();
 protected:
-    void CreateRenderPassAndFramebuffer() override;
     void CreateCommandBufferAndPool() override;
+    void CreateRenderPass() override;
+    void CreateFramebuffer() override;
 public:
     void Initialize() override;
     void Render() override;
@@ -80,7 +81,6 @@ private:
     void CreateCamera();
     void CreateLight();
     void CreateObjects();
-    void CreatePipeline();
     void UpdateCamera();
 protected:
     SampleCameraData m_camera;

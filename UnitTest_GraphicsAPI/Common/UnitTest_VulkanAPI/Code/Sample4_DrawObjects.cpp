@@ -131,7 +131,8 @@ void Sample4_DrawObjects::Initialize()
 {
     m_current_res = m_mgr->GetScreenResolution();
     CreateCamera();
-    CreateRenderPassAndFramebuffer();
+    CreateRenderPass();
+    CreateFramebuffer();
     CreateTexture();
     CreateShaderProgram();
     CreateLight();
@@ -163,7 +164,7 @@ void Sample4_DrawObjects::Resize(Size_ui32 i_width, Size_ui32 i_height)
 
     m_current_res = m_mgr->GetScreenResolution();
     CreateCamera();
-    CreateRenderPassAndFramebuffer();
+    CreateFramebuffer();
     RecordCommandBuffer();
 }
 
@@ -192,7 +193,7 @@ void Sample4_DrawObjects::Destroy()
     m_phong_shader_sref.Reset();
 }
 
-void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
+void Sample4_DrawObjects::CreateRenderPass()
 {
     //
     SDLOG("Create render pass");
@@ -262,12 +263,18 @@ void Sample4_DrawObjects::CreateRenderPassAndFramebuffer()
     sp_denp.m_dependencies.push_back(DependencyScope_REGION);
     sp_denps.push_back(sp_denp);
 
-    ClearValue clear_color = { 0.15f, 0.15f, 0.75f, 1.0f };
-    ClearValue clear_dands = {1.0f, 1};
-
     m_forward_rp_sref.GetRef().AddRenderPassDescription(att_descs, sp_descs, sp_denps);
     m_forward_rp_sref.GetRef().Initialize();
-    m_camera.m_forward_rf = new RenderFlow("ForwardPathRF", ImageOffset(0, 0, 0), 
+}
+
+void Sample4_DrawObjects::CreateFramebuffer()
+{
+    SDLOG("Create Framebuffer and render flow.");
+
+    ClearValue clear_color = { 0.15f, 0.15f, 0.75f, 1.0f };
+    ClearValue clear_dands = { 1.0f, 1 };
+
+    m_camera.m_forward_rf = new RenderFlow("ForwardPathRF", ImageOffset(0, 0, 0),
         ImageSize(m_current_res.GetWidth(), m_current_res.GetHeight(), 1));
     m_camera.m_forward_rf.GetRef().RegisterRenderPass(m_forward_rp_sref);
     m_camera.m_forward_rf.GetRef().AllocateFrameBuffer();

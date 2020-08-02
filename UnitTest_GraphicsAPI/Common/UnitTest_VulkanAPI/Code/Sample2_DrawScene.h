@@ -43,8 +43,9 @@ public:
     VkImage GetColorBuffer() override { return VK_NULL_HANDLE; }
     VkImageView GetColorBufferImageView() override { return VK_NULL_HANDLE; }
 protected:
-    void CreateRenderPassAndFramebuffer() override;
     void CreateCommandBufferAndPool() override;
+    void CreateRenderPass() override;
+    void CreateFramebuffer() override;
 private:
     void CreateModel();
     void ImportAssimpModel(ModelData &io_model);

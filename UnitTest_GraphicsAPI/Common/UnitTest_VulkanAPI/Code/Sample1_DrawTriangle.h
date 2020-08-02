@@ -17,8 +17,9 @@ public:
     VkImage GetColorBuffer() override { return m_VK_color_buffer; }
     VkImageView GetColorBufferImageView() override { return m_VK_color_buffer_image_view; }
 protected:
-    void CreateRenderPassAndFramebuffer() override;
     void CreateCommandBufferAndPool() override;
+    void CreateRenderPass() override;
+    void CreateFramebuffer() override;
 private:
     void CreateBuffers();
     void CreateTexture();
