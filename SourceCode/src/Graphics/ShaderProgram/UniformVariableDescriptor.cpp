@@ -27,10 +27,12 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-UniformVariableDescriptor::UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number)
+UniformVariableDescriptor::UniformVariableDescriptor(const ObjectName &i_name, uint32_t i_binding_id, UniformBindingTypeEnum i_binding_type, Size_ui32 i_number, const std::vector<ShaderStageEnum> &i_stages)
 : Object(i_name)
 , m_binding_id(i_binding_id)
-, m_number(i_number)
+, m_binding_type(i_binding_type)
+, m_element_number(i_number)
+, m_target_stages(i_stages)
 {
 }
 

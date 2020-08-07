@@ -42,6 +42,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandBufferInheritanceInfo.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandPool.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\SecondaryCommandPoolThread.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\BasicPipelines.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ImageLoader\Bitmap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ImageLoader\ImageLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\IndexBuffer\DynamicIndexBuffer.h" />
@@ -51,6 +52,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\CommandPoolIdentity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\DescriptorSetIdentity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\DescriptorPoolIdentity.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\DescriptorSetLayoutIdentity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\FrameBufferGroupIdentity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\FrameBufferIdentity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\GraphicsPipelineIdentity.h" />
@@ -162,6 +164,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Resolution\Resolution.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorSet.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorPool.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorSetLayout.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\GraphicsPipeline.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\GraphicsPipelineParam.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\ShaderModule.h" />
@@ -229,6 +232,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\CommandPoolIdentity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\DescriptorSetIdentity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\DescriptorPoolIdentity.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\DescriptorSetLayoutIdentity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\FrameBufferGroupIdentity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\FrameBufferIdentity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\GraphicsPipelineIdentity.cpp" />
@@ -333,6 +337,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\VertexAttribDescription.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorSet.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorPool.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorSetLayout.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\GraphicsPipeline.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\GraphicsPipelineParam.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\ShaderModule.cpp" />

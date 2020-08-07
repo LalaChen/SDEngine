@@ -88,4 +88,9 @@ const DescriptorSetIdentity& GraphicsManager::GetIdentity(const DescriptorSetWea
     return i_desc_wref.GetConstRef().m_identity;
 }
 
+const DescriptorSetLayoutIdentity& GraphicsManager::GetIdentity(const DescriptorSetLayoutWeakReferenceObject &i_ds_layout_wref) const
+{
+    return i_ds_layout_wref.GetConstRef().m_identity;
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

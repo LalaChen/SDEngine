@@ -70,6 +70,8 @@ public:
     void PrintSystemInformation() override;
 //----------- Descriptor Set Function (OpenGL doesn't have command buffer) ------------
 public:
+    void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvd_wrefs) override;
+    void DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity) override;
     void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) override;

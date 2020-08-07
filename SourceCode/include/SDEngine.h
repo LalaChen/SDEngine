@@ -93,6 +93,7 @@ SOFTWARE.
 #include "Graphics/ShaderProgram/UniformVariableDescriptor.h"
 #include "Graphics/ShaderProgram/UniformBufferDescriptor.h"
 #include "Graphics/ShaderProgram/UniformImagesDescriptor.h"
+#include "Graphics/ShaderProgram/DescriptorSetLayout.h"
 #include "Graphics/Material/Material.h"
 #include "Graphics/CommandBuffer/CommandPool.h"
 #include "Graphics/CommandBuffer/CommandBuffer.h"

@@ -98,6 +98,10 @@ public:
      */
     void RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id);
 
+    /*! \fn bool IsThisUniformVariableUsed(const UniformVariableWeakReferenceObject &i_uv_wref) const;
+     *  \param [in] i_uv_wref Target uniform variable.
+     *  \brief To find out target uniform variable is in this ShaderProgram or not.
+     */
     bool IsThisUniformVariableUsed(const UniformVariableWeakReferenceObject &i_uv_wref) const;
 public:
     /*! \fn const CompHandle GetHandle() const;
@@ -147,10 +151,10 @@ protected:
      */
     RenderPassWeakReferenceObject m_target_rp_wref;
 
-    /*! \var std::vector<UniformVariableDescriptorWeakReferenceObject> m_uv_descriptor_wrefs;
+    /*! \var std::vector<UniformVariableDescriptorWeakReferenceObject> m_uvd_wrefs;
      *  \brief The uniform descriptor weak references. The real descriptors are kept at ShaderProgram.
      */
-    std::vector<UniformVariableDescriptorWeakReferenceObject> m_uv_descriptor_wrefs;
+    std::vector<UniformVariableDescriptorWeakReferenceObject> m_uvd_wrefs;
 
     /*! \var uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
      *  \brief Count for descriptors.
@@ -197,7 +201,7 @@ inline void GraphicsPipeline::GetUniformDescriptorCounts(uint32_t io_counts[Unif
 
 inline Size_ui32 GraphicsPipeline::GetUniformBindingAmount() const
 {
-    return static_cast<Size_ui32>(m_uv_descriptor_wrefs.size());
+    return static_cast<Size_ui32>(m_uvd_wrefs.size());
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

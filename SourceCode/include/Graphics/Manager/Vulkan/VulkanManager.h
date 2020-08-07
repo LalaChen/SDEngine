@@ -85,6 +85,8 @@ public:
     void PrintSystemInformation() override;
 //----------- Descriptor Set and Pool Function.
 public:
+    void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvd_wrefs) override;
+    void DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity) override;
     void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) override;
@@ -162,6 +164,12 @@ public:
     void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
 protected:
 //------- Vulkan descriptor set and pool private Function ------
+    VkResult CreateVkDescriptorSetLayout(
+        VkDescriptorSetLayout &io_handle,
+        const VkDescriptorSetLayoutCreateInfo &i_c_info);
+
+    void DestroyVkDescriptorSetLayout(VkDescriptorSetLayout& io_handle);
+
     VkResult CreateVkDescriptorPool(
         VkDescriptorPool &io_handle,
         const VkDescriptorPoolCreateInfo &i_dp_c_info);

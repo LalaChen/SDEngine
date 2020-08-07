@@ -83,6 +83,7 @@ private:
     void CreateObjects();
     void UpdateCamera();
 protected:
+    std::vector<DescriptorSetLayoutStrongReferenceObject> m_common_dsl_srefs;
     SampleCameraData m_camera;
     LightData m_light;
     RenderPassStrongReferenceObject m_forward_rp_sref;

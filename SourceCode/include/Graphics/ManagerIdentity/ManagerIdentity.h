@@ -45,3 +45,4 @@ SOFTWARE.
 #include "DescriptorSetIdentity.h"
 #include "DescriptorPoolIdentity.h"
 #include "UniformBufferIdentity.h"
+#include "DescriptorSetLayoutIdentity.h"

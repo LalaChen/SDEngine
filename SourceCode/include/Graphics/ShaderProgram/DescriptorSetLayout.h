@@ -20,32 +20,45 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-
-/*! \file      VulkanStructureInitializer.h
- *  \brief     Introduce of function VulkanStructureInitializer.
+/*! \file      DescriptorSetLayout.h
+ *  \brief     Introduce of class about DescriptorSetLayout.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/05/01
+ *  \date      2020/87/05
  *  \copyright MIT License.
  */
 
-#include "VulkanWrapper.h"
+#pragma once
+
 #include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "UniformVariableDescriptor.h"
+#include "DescriptorSetLayoutIdentity.h"
+#include "Object.h"
+
+using SDE::Basic::ObjectName;
+using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VkCommandBufferBeginInfo InitializeVKCommandBufferBeginInfo();
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DescriptorSetLayout);
 
-VkCommandBufferInheritanceInfo InitializeVkCommandBufferInheritanceInfo();
-
-VkDescriptorSetLayoutCreateInfo InitializeVkDescriptorSetLayoutCreateInfo();
-
-VkDescriptorPoolCreateInfo InitializeVkDescriptorPoolCreateInfo();
-
-VkDescriptorSetAllocateInfo InitializeVkDescriptorSetAllocateInfo();
-
-VkWriteDescriptorSet InitializeVkWriteDescriptorSetInfo();
+class SDENGINE_CLASS DescriptorSetLayout : public Object
+{
+public:
+    friend class GraphicsManager;
+public:
+    explicit DescriptorSetLayout(const ObjectName &i_object_name);
+    virtual ~DescriptorSetLayout();
+public:
+    void AddUniformVariableDescriptors(const std::vector<UniformVariableDescriptorStrongReferenceObject> &i_uvd_srefs);
+public:
+    void Initialize();
+protected:
+    DescriptorSetLayoutIdentity m_identity;
+    std::vector<UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
-

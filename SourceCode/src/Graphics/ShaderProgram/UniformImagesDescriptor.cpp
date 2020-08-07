@@ -28,8 +28,8 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-UniformImagesDescriptor::UniformImagesDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number)
-: UniformVariableDescriptor(i_name, i_binding_id, i_number)
+UniformImagesDescriptor::UniformImagesDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number, const std::vector<ShaderStageEnum> &i_stages)
+: UniformVariableDescriptor(i_name, i_binding_id, UniformBindingType_COMBINED_IMAGE_SAMPLER, i_number, i_stages)
 {
 }
 

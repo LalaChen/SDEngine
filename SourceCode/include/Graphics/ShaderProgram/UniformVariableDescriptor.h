@@ -34,6 +34,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "UniformBinding.h"
 #include "UniformBindingType.h"
 #include "UniformVariable.h"
 #include "Object.h"
@@ -48,7 +49,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformVariableDescriptor);
 class SDENGINE_CLASS UniformVariableDescriptor : public Object
 {
 public:
-    explicit UniformVariableDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number);
+    explicit UniformVariableDescriptor(const ObjectName &i_name, uint32_t i_binding_id, UniformBindingTypeEnum i_binding_type, Size_ui32 i_number, const std::vector<ShaderStageEnum> &i_stages);
     virtual ~UniformVariableDescriptor();
 public:
     virtual UniformBindingTypeEnum GetType() const = 0;
@@ -56,19 +57,47 @@ public:
 public:
     Size_ui32 GetNumber() const;
     Size_ui32 GetBindingID() const;
+    UniformBinding CreateUniformBinding() const;
 protected:
-    Size_ui32 m_binding_id;
-    Size_ui32 m_number;
+    /*! \var uint32_t m_binding_id;
+     *  \brief Binding location of this uniform binding.
+     */
+    uint32_t m_binding_id;
+
+    /*! \var UniformBindingTypeEnum m_binding_type;
+     *  \brief Binding type of this uniform binding.
+     */
+    UniformBindingTypeEnum m_binding_type;
+
+    /*! \var uint32_t m_element_number;
+     *  \brief Element number of this uniform binding.
+     */
+    Size_ui32 m_element_number;
+
+    /*! \var std::vector<ShaderStageEnum> m_target_stages;
+     *  \brief Stages can access this uniform binding.
+     */
+    std::vector<ShaderStageEnum> m_target_stages;
 };
 
-inline Size_ui32 UniformVariableDescriptor::GetBindingID() const
+inline uint32_t UniformVariableDescriptor::GetBindingID() const
 {
     return m_binding_id;
 }
 
 inline Size_ui32 UniformVariableDescriptor::GetNumber() const
 {
-    return m_number;
+    return m_element_number;
+}
+
+inline UniformBinding UniformVariableDescriptor::CreateUniformBinding() const
+{
+    UniformBinding result;
+    result.m_binding_id = m_binding_id;
+    result.m_binding_type = m_binding_type;
+    result.m_element_number = m_element_number;
+    result.m_target_stages = m_target_stages;
+    return result;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

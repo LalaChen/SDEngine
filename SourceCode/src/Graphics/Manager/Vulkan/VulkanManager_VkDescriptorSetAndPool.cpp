@@ -28,6 +28,19 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+VkResult VulkanManager::CreateVkDescriptorSetLayout(
+    VkDescriptorSetLayout &io_handle,
+    const VkDescriptorSetLayoutCreateInfo &i_c_info)
+{
+    return vkCreateDescriptorSetLayout(m_VK_device, &i_c_info, nullptr, &io_handle);
+}
+
+void VulkanManager::DestroyVkDescriptorSetLayout(VkDescriptorSetLayout &io_handle)
+{
+    vkDestroyDescriptorSetLayout(m_VK_device, io_handle, nullptr);
+    io_handle = VK_NULL_HANDLE;
+}
+
 VkResult VulkanManager::CreateVkDescriptorPool(
     VkDescriptorPool &io_handle,
     const VkDescriptorPoolCreateInfo &i_dp_c_info)

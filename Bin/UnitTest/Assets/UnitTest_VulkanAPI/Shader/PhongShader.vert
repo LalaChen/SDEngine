@@ -1,4 +1,6 @@
 #version 450
+//#extension GL_KHR_vulkan_glsl : enable
+
 //Input attribute.
 //format : layout(location = X) in GenType VarName;
 //X is means we need to bind buffer to attribute location X.
@@ -21,7 +23,7 @@ layout(location = 4) out vec3 wViewDir;
 //Uniform
 //layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
 //Uniform basic Buffer.
-layout(binding = 0) uniform BasicUniforms {
+layout(set = 0, binding = 0) uniform BasicUniforms {
     mat4 clip;
     mat4 proj;
 	mat4 view;
@@ -31,7 +33,7 @@ layout(binding = 0) uniform BasicUniforms {
 } basic;
 
 //Uniform Light Buffer.
-layout(binding = 1) uniform LightUniforms {
+layout(set = 0, binding = 1) uniform LightUniforms {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
@@ -46,7 +48,7 @@ layout(binding = 1) uniform LightUniforms {
 } light;
 
 //Uniform Material buffer
-layout(binding = 2) uniform MaterialUniforms {
+layout(set = 0, binding = 2) uniform MaterialUniforms {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
@@ -54,7 +56,7 @@ layout(binding = 2) uniform MaterialUniforms {
 	float shininess;
 } material;
 
-layout(binding = 3) uniform sampler2D mainTexture; 
+layout(set = 0, binding = 3) uniform sampler2D mainTexture; 
 
 //------- light vertices basic function -------
 vec3 CalculateLightDir(in vec4 iVertex)

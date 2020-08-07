@@ -63,7 +63,7 @@ public:
     explicit Material(const ObjectName &i_object_name);
     virtual ~Material();
 public:
-    void BindShaderProgram(const ShaderProgramWeakReferenceObject& i_sp_wref);
+    void BindShaderProgram(const ShaderProgramWeakReferenceObject &i_sp_wref);
 public:
 //uniform variable setter
     bool SetInt(const ObjectName &i_ub_name, const ObjectName &i_var_name, int32_t i_value, Size_ui32 i_idx = 0);

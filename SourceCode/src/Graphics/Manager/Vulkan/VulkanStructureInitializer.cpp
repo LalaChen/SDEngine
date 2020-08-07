@@ -50,6 +50,17 @@ VkCommandBufferInheritanceInfo InitializeVkCommandBufferInheritanceInfo()
     return info;
 }
 
+VkDescriptorSetLayoutCreateInfo InitializeVkDescriptorSetLayoutCreateInfo()
+{
+    VkDescriptorSetLayoutCreateInfo info = {};
+    info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    info.pNext = nullptr;
+    info.flags = 0;
+    info.bindingCount = 0;
+    info.pBindings = nullptr;
+    return info;
+}
+
 VkDescriptorPoolCreateInfo InitializeVkDescriptorPoolCreateInfo()
 {
     VkDescriptorPoolCreateInfo info = {};
@@ -70,21 +81,6 @@ VkDescriptorSetAllocateInfo InitializeVkDescriptorSetAllocateInfo()
     info.descriptorPool = VK_NULL_HANDLE;
     info.descriptorSetCount = 0;
     info.pSetLayouts = nullptr;
-    return info;
-}
-
-VkDescriptorBufferInfo InitializeVkDescriptorBufferInfo()
-{
-    VkDescriptorBufferInfo info = {};
-    info.buffer = VK_NULL_HANDLE;
-    info.offset = 0;
-    info.range = 0;
-    return info;
-}
-
-VkDescriptorImageInfo InitializeVkDescriptorImageInfo()
-{
-    VkDescriptorImageInfo info = {};
     return info;
 }
 

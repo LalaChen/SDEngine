@@ -30,6 +30,15 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+void OpenGL4Manager::CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvd_wrefs)
+{
+
+}
+
+void OpenGL4Manager::DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity)
+{
+}
+
 void OpenGL4Manager::CreateDescriptorPool(DescriptorPoolIdentity &io_identity)
 {
 }

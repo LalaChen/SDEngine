@@ -20,32 +20,30 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-
-/*! \file      VulkanStructureInitializer.h
- *  \brief     Introduce of function VulkanStructureInitializer.
+/*! \file      DescriptorSetLayoutIdentity.h
+ *  \brief     Introduce of class about DescriptorSetLayoutIdentity.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/05/01
+ *  \date      2020/08/05
  *  \copyright MIT License.
  */
 
-#include "VulkanWrapper.h"
+#pragma once
+
 #include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VkCommandBufferBeginInfo InitializeVKCommandBufferBeginInfo();
-
-VkCommandBufferInheritanceInfo InitializeVkCommandBufferInheritanceInfo();
-
-VkDescriptorSetLayoutCreateInfo InitializeVkDescriptorSetLayoutCreateInfo();
-
-VkDescriptorPoolCreateInfo InitializeVkDescriptorPoolCreateInfo();
-
-VkDescriptorSetAllocateInfo InitializeVkDescriptorSetAllocateInfo();
-
-VkWriteDescriptorSet InitializeVkWriteDescriptorSetInfo();
+class SDENGINE_CLASS DescriptorSetLayoutIdentity
+{
+public:
+    DescriptorSetLayoutIdentity();
+    ~DescriptorSetLayoutIdentity();
+public:
+    CompHandle m_handle;
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
-

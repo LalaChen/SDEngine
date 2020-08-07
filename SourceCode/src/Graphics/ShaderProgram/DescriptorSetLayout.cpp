@@ -20,32 +20,37 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-
-/*! \file      VulkanStructureInitializer.h
- *  \brief     Introduce of function VulkanStructureInitializer.
- *  \author    Kuan-Chih, Chen
- *  \date      2020/05/01
- *  \copyright MIT License.
- */
-
-#include "VulkanWrapper.h"
-#include "SDEngineMacro.h"
+#include "LogManager.h"
+#include "GraphicsManager.h"
+#include "DescriptorSetLayout.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VkCommandBufferBeginInfo InitializeVKCommandBufferBeginInfo();
+DescriptorSetLayout::DescriptorSetLayout(const ObjectName &i_object_name)
+: Object(i_object_name)
+{
+    GraphicsManager::GetRef().DestroyDescriptorSetLayout(m_identity);
+}
 
-VkCommandBufferInheritanceInfo InitializeVkCommandBufferInheritanceInfo();
+DescriptorSetLayout::~DescriptorSetLayout()
+{
+}
 
-VkDescriptorSetLayoutCreateInfo InitializeVkDescriptorSetLayoutCreateInfo();
+void DescriptorSetLayout::AddUniformVariableDescriptors(const std::vector<UniformVariableDescriptorStrongReferenceObject> &i_uvd_srefs)
+{
+    m_uvd_srefs = i_uvd_srefs;
+}
 
-VkDescriptorPoolCreateInfo InitializeVkDescriptorPoolCreateInfo();
-
-VkDescriptorSetAllocateInfo InitializeVkDescriptorSetAllocateInfo();
-
-VkWriteDescriptorSet InitializeVkWriteDescriptorSetInfo();
+void DescriptorSetLayout::Initialize()
+{
+    std::vector<UniformVariableDescriptorWeakReferenceObject> uvd_wrefs;
+    for (UniformVariableDescriptorStrongReferenceObject uvd_sref : m_uvd_srefs) {
+        uvd_wrefs.push_back(uvd_sref);
+    }
+    GraphicsManager::GetRef().CreateDescriptorSetLayout(m_identity, uvd_wrefs);
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
-

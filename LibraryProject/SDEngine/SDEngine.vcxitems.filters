@@ -208,6 +208,12 @@
     <Filter Include="src\Graphics\ShaderProgram">
       <UniqueIdentifier>{17fef5be-a72f-4926-97ae-ecc1521fe0a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\EmbeddedShaderProgram">
+      <UniqueIdentifier>{9e28ec69-3c88-4ad6-81a4-96a32b1abfcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\EmbeddedShaderProgram">
+      <UniqueIdentifier>{addf30bc-a639-4b2c-9263-8f7f55f41a2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -738,6 +744,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\DescriptorPoolIdentity.h">
       <Filter>include\Graphics\ManagerIdentity</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\BasicPipelines.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\DescriptorSetLayout.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\DescriptorSetLayoutIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1228,6 +1241,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\DescriptorPoolIdentity.cpp">
       <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\DescriptorSetLayoutIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorSetLayout.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

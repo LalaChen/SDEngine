@@ -191,6 +191,10 @@ void Sample4_DrawObjects::Destroy()
     m_cube_sref.Reset();
     m_floor_sref.Reset();
     m_phong_shader_sref.Reset();
+
+    for (DescriptorSetLayoutStrongReferenceObject &dsl_sref : m_common_dsl_srefs) {
+        dsl_sref.Reset();
+    }
 }
 
 void Sample4_DrawObjects::CreateRenderPass()
@@ -308,9 +312,7 @@ void Sample4_DrawObjects::CreateCommandBufferAndPool()
 
 void Sample4_DrawObjects::CreateShaderProgram()
 {
-    //-------------------- PhongShaderWithTexture ---------------------------
-    m_phong_shader_sref = new ShaderProgram("PhongShaderWithTexture");
-    //1. Write uniform descriptor for this shader program.
+    //1. new common descriptor set and its uniform variable descriptors.
     UniformBufferDescriptorStrongReferenceObject basic_ubd_sref = new UniformBufferDescriptor("basic", 0);
     basic_ubd_sref.GetRef().AddVariable("clip", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_clip));
     basic_ubd_sref.GetRef().AddVariable("proj", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_proj));
@@ -334,6 +336,18 @@ void Sample4_DrawObjects::CreateShaderProgram()
     light_ubd_sref.GetRef().AddVariable("kind", UniformBufferVariableType_INT, offsetof(LightUniformBuffer, m_kind));
     light_ubd_sref.GetRef().AddVariableDone();
 
+    //To do : modify binding number.
+    DescriptorSetLayoutStrongReferenceObject basic_dsl_sref = new DescriptorSetLayout("RenderDescriptorSetLayout");
+    basic_dsl_sref.GetRef().AddUniformVariableDescriptors({basic_ubd_sref.StaticCastTo<UniformVariableDescriptor>()});
+    m_common_dsl_srefs.push_back(basic_dsl_sref);
+
+    DescriptorSetLayoutStrongReferenceObject light_dsl_sref = new DescriptorSetLayout("LightDescriptorSetLayout");
+    light_dsl_sref.GetRef().AddUniformVariableDescriptors({light_ubd_sref.StaticCastTo<UniformVariableDescriptor>()});
+    m_common_dsl_srefs.push_back(light_dsl_sref);
+
+    //-------------------- PhongShaderWithTexture ---------------------------
+    m_phong_shader_sref = new ShaderProgram("PhongShaderWithTexture");
+    //1. Write uniform descriptor for this shader program.
     UniformBufferDescriptorStrongReferenceObject mat_ubd_sref = new UniformBufferDescriptor("material", 2);
     mat_ubd_sref.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_ambient));
     mat_ubd_sref.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_diffuse));
@@ -343,6 +357,9 @@ void Sample4_DrawObjects::CreateShaderProgram()
     mat_ubd_sref.GetRef().AddVariableDone();
 
     UniformImagesDescriptorStrongReferenceObject mt_imgd_sref = new UniformImagesDescriptor("mainTexture", 3);
+
+    DescriptorSetLayoutStrongReferenceObject mat_dsl_sref = new DescriptorSetLayout("MaterialDescriptorSetLayout");
+    mat_dsl_sref.GetRef().AddUniformVariableDescriptors({mat_ubd_sref.StaticCastTo<UniformVariableDescriptor>(), mt_imgd_sref.StaticCastTo<UniformVariableDescriptor>()});
 
     std::vector<UniformVariableDescriptorStrongReferenceObject> uvd_srefs;
     uvd_srefs.push_back(basic_ubd_sref.StaticCastTo<UniformVariableDescriptor>());

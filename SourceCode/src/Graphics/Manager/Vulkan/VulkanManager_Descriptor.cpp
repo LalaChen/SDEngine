@@ -24,6 +24,7 @@ SOFTWARE.
 */
 
 #include "VulkanStructureInitializer.h"
+#include "ShaderKind_Vulkan.h"
 #include "UniformBindingType_Vulkan.h"
 #include "UniformImages.h"
 #include "UniformBuffer.h"
@@ -31,6 +32,31 @@ SOFTWARE.
 #include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
+
+void VulkanManager::CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvd_wrefs)
+{
+    VkDescriptorSetLayout &dsl_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_handle);
+    std::vector<VkDescriptorSetLayoutBinding> vk_dsl_bindings;
+    for (const UniformVariableDescriptorWeakReferenceObject &uvd_wref : i_uvd_wrefs) {
+        UniformBinding ub = uvd_wref.GetConstRef().CreateUniformBinding();
+        VkDescriptorSetLayoutBinding vk_dsl_binding = {};
+        vk_dsl_binding.binding = ub.m_binding_id;
+        vk_dsl_binding.descriptorCount = ub.m_element_number;
+        vk_dsl_binding.descriptorType = UniformBindingType_Vulkan::Convert(ub.m_binding_type);
+        vk_dsl_binding.stageFlags = ShaderStage_Vulkan::Convert(ub.m_target_stages);
+        vk_dsl_binding.pImmutableSamplers = nullptr;
+        vk_dsl_bindings.push_back(vk_dsl_binding);
+    }
+    VkDescriptorSetLayoutCreateInfo dsl_c_info = InitializeVkDescriptorSetLayoutCreateInfo();
+    dsl_c_info.bindingCount = static_cast<uint32_t>(vk_dsl_bindings.size());
+    dsl_c_info.pBindings = vk_dsl_bindings.data();
+}
+
+void VulkanManager::DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity)
+{
+    VkDescriptorSetLayout &dsl_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_handle);
+    DestroyVkDescriptorSetLayout(dsl_handle);
+}
 
 void VulkanManager::CreateDescriptorPool(DescriptorPoolIdentity &io_identity)
 {
@@ -90,7 +116,7 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
                 UniformBufferWeakReferenceObject buffer_wref = uv_wref.DynamicCastTo<UniformBuffer>();
                 UniformBufferIdentity ub_identity = GetIdentity(buffer_wref);
 
-                VkDescriptorBufferInfo basic_uniform_b_info = InitializeVkDescriptorBufferInfo();
+                VkDescriptorBufferInfo basic_uniform_b_info = {};
                 basic_uniform_b_info.buffer = reinterpret_cast<VkBuffer>(ub_identity.m_buffer_handle);
                 basic_uniform_b_info.offset = 0;
                 basic_uniform_b_info.range = ub_identity.m_data_size;
@@ -114,7 +140,7 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
                 for (const TextureWeakReferenceObject &tex_wref : tex_wrefs) {
                     TextureIdentity tex_identity = GetIdentity(tex_wref);
                     SamplerIdentity sampler_identity = GetIdentityFromTexture(tex_wref);
-                    VkDescriptorImageInfo tex_i_info = InitializeVkDescriptorImageInfo();
+                    VkDescriptorImageInfo tex_i_info = {};
                     tex_i_info.sampler = reinterpret_cast<VkSampler>(sampler_identity.m_handle);
                     tex_i_info.imageView = reinterpret_cast<VkImageView>(tex_identity.m_view_handle);
                     tex_i_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;

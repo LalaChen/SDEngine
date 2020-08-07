@@ -67,6 +67,7 @@ public:
 
     DescriptorSetWeakReferenceObject AllocateDescriptorSet(const GraphicsPipelineWeakReferenceObject &i_pipe_wref);
 protected:
+
     uint32_t m_current_set;
 
     DescriptorPoolIdentity m_identity;

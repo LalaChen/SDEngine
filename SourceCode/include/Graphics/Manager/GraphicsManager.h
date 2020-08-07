@@ -49,6 +49,7 @@ SOFTWARE.
 #include "UniformBuffer.h"
 #include "DescriptorPool.h"
 #include "DescriptorSet.h"
+#include "DescriptorSetLayout.h"
 #include "RenderPass.h"
 #include "ImageLoader.h"
 #include "Resolution.h"
@@ -112,6 +113,8 @@ public:
      */
     virtual void PrintSystemInformation() = 0;
 public:
+    virtual void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvd_wrefs) = 0;
+    virtual void DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity) = 0;
     virtual void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
     virtual void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
     virtual void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) = 0;
@@ -214,6 +217,7 @@ protected:
     const GraphicsPipelineIdentity& GetIdentity(const GraphicsPipelineWeakReferenceObject &i_pipe_wref) const;
     const DescriptorPoolIdentity& GetIdentity(const DescriptorPoolWeakReferenceObject &i_pool_wref) const;
     const DescriptorSetIdentity& GetIdentity(const DescriptorSetWeakReferenceObject &i_desc_wref) const;
+    const DescriptorSetLayoutIdentity& GetIdentity(const DescriptorSetLayoutWeakReferenceObject &i_ds_layout_wref) const;
 protected:
 //------------ Render Flow Function -------------
     virtual void RenderBegin() = 0;

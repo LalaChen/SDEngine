@@ -13,8 +13,8 @@ const Size_ui32 UniformBufferVariableInfo::TypeSizes[UniformBufferVariableType_M
     sizeof(Matrix4X4f)
 };
 
-UniformBufferDescriptor::UniformBufferDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number)
-: UniformVariableDescriptor(i_name, i_binding_id, i_number)
+UniformBufferDescriptor::UniformBufferDescriptor(const ObjectName &i_name, Size_ui32 i_binding_id, Size_ui32 i_number, const std::vector<ShaderStageEnum> &i_stages)
+: UniformVariableDescriptor(i_name, i_binding_id, UniformBindingType_UNIFORM_BUFFER, i_number, i_stages)
 , m_total_size(0)
 {
 }

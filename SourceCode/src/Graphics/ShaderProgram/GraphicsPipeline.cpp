@@ -44,14 +44,14 @@ void GraphicsPipeline::SetGraphicsPipelineParams(const GraphicsPipelineParam &i_
 {
     m_identity.m_params = i_params;
     m_target_rp_wref = i_rp_wref;
-    m_uv_descriptor_wrefs.clear();
-    m_uv_descriptor_wrefs.resize(m_identity.m_params.m_uniform_binding_infos.size());
+    m_uvd_wrefs.clear();
+    m_uvd_wrefs.resize(m_identity.m_params.m_uniform_binding_infos.size());
 }
 
 void GraphicsPipeline::RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id)
 {
-    if (i_uvd_id < m_uv_descriptor_wrefs.size()) {
-        m_uv_descriptor_wrefs[i_uvd_id] = i_uvd_wref;
+    if (i_uvd_id < m_uvd_wrefs.size()) {
+        m_uvd_wrefs[i_uvd_id] = i_uvd_wref;
     }
     else {
         SDLOGE("Wrong ID(%d).", i_uvd_id);
@@ -61,7 +61,7 @@ void GraphicsPipeline::RegisterUniformVariableDescriptor(const UniformVariableDe
 bool GraphicsPipeline::IsThisUniformVariableUsed(const UniformVariableWeakReferenceObject &i_uv_wref) const
 {
     std::vector<UniformVariableDescriptorWeakReferenceObject>::const_iterator uvd_iter;
-    for (uvd_iter = m_uv_descriptor_wrefs.begin(); uvd_iter != m_uv_descriptor_wrefs.end(); ++uvd_iter) {
+    for (uvd_iter = m_uvd_wrefs.begin(); uvd_iter != m_uvd_wrefs.end(); ++uvd_iter) {
         if ((*uvd_iter).GetConstRef().GetObjectName().compare(i_uv_wref.GetConstRef().GetObjectName()) == 0) {
             return true;
         }

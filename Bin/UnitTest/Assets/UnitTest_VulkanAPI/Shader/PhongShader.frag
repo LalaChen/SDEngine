@@ -16,7 +16,7 @@ layout(location = 0) out vec4 fragColor;
 //Uniform
 //layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
 //Uniform basic Buffer.
-layout(binding = 0) uniform BasicUniforms {
+layout(set = 0, binding = 0) uniform BasicUniforms {
     mat4 clip;
     mat4 proj;
 	mat4 view;
@@ -26,7 +26,7 @@ layout(binding = 0) uniform BasicUniforms {
 } basic;
 
 //Uniform Light Buffer.
-layout(binding = 1) uniform LightUniforms {
+layout(set = 0, binding = 1) uniform LightUniforms {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
@@ -41,7 +41,7 @@ layout(binding = 1) uniform LightUniforms {
 } light;
 
 //Uniform Material buffer
-layout(binding = 2) uniform MaterialUniforms {
+layout(set = 0, binding = 2) uniform MaterialUniforms {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
@@ -49,7 +49,7 @@ layout(binding = 2) uniform MaterialUniforms {
 	float shininess;
 } material;
 
-layout(binding = 3) uniform sampler2D mainTexture; 
+layout(set = 0, binding = 3) uniform sampler2D mainTexture; 
 
 //------- light vertices basic function -------
 float calculateAttenation(in float dis)
