@@ -117,9 +117,8 @@ public:
     virtual void DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity) = 0;
     virtual void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
     virtual void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
-    virtual void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) = 0;
+    virtual void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const DescriptorSetLayoutWeakReferenceObject &i_layout_wref) = 0;
     virtual void WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs) = 0;
-    virtual void BindDescriptorSet(const DescriptorSetIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) = 0;
     virtual void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) = 0;
 public:
     virtual void CreateCommandPool(CommandPoolIdentity &io_identity) = 0;
@@ -164,8 +163,8 @@ public:
     virtual void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) = 0;
     virtual void DeleteShaderModule(ShaderModuleIdentity &io_identity) = 0;
 public:
-    virtual void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref) = 0;
-    virtual void BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref) = 0;
+    virtual void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs) = 0;
+    virtual void BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs) = 0;
     virtual void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) = 0;
 public:
     virtual void CreateRenderPass(RenderPassIdentity &io_identity) = 0;

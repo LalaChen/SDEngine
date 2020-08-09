@@ -31,6 +31,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 DescriptorSetLayout::DescriptorSetLayout(const ObjectName &i_object_name)
 : Object(i_object_name)
+, m_descriptor_counts{0}
 {
     GraphicsManager::GetRef().DestroyDescriptorSetLayout(m_identity);
 }
@@ -42,15 +43,31 @@ DescriptorSetLayout::~DescriptorSetLayout()
 void DescriptorSetLayout::AddUniformVariableDescriptors(const std::vector<UniformVariableDescriptorStrongReferenceObject> &i_uvd_srefs)
 {
     m_uvd_srefs = i_uvd_srefs;
+    for (UniformVariableDescriptorStrongReferenceObject &uvd_sref : m_uvd_srefs) {
+        UniformBindingTypeEnum ub_type = uvd_sref.GetRef().GetBindingType();
+        if (ub_type != UniformBindingType_MAX_DEFINE_VALUE) {
+            m_descriptor_counts[SD_ENUM_TO_UINT(ub_type)]++;
+        }
+        else {
+            SDLOGE("Error Uniform Binding in uniform variable descriptor(%s).", uvd_sref.GetRef().GetObjectName().c_str());
+        }
+    }
 }
 
 void DescriptorSetLayout::Initialize()
 {
     std::vector<UniformVariableDescriptorWeakReferenceObject> uvd_wrefs;
-    for (UniformVariableDescriptorStrongReferenceObject uvd_sref : m_uvd_srefs) {
+    for (UniformVariableDescriptorStrongReferenceObject &uvd_sref : m_uvd_srefs) {
         uvd_wrefs.push_back(uvd_sref);
     }
     GraphicsManager::GetRef().CreateDescriptorSetLayout(m_identity, uvd_wrefs);
+}
+
+void DescriptorSetLayout::AllocateUniformVariables(std::vector<UniformVariableStrongReferenceObject> &io_uv_srefs)
+{
+    for (uint32_t uvd_count = 0; uvd_count < m_uvd_srefs.size(); ++uvd_count) {
+        io_uv_srefs.push_back(m_uvd_srefs[uvd_count].GetRef().AllocateUniformVariable());
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

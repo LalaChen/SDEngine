@@ -47,7 +47,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformBuffer);
 
-class UniformBuffer : public UniformVariable
+class SDENGINE_CLASS UniformBuffer : public UniformVariable
 {
 public:
     friend class GraphicsManager;

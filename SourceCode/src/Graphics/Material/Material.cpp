@@ -23,6 +23,8 @@ SOFTWARE.
 
 */
 
+#include <algorithm>
+
 #include "LogManager.h"
 #include "Material.h"
 
@@ -52,7 +54,7 @@ void Material::BindShaderProgram(const ShaderProgramWeakReferenceObject &i_sp_wr
     m_dsp_sref.GetRef().Initialize(descriptor_counts, max_set, false);
     //2. allocate uniform variables for uniform descriptors and descriptor sets.
     DescriptorPoolWeakReferenceObject dp_wref = m_dsp_sref.StaticCastToWeakPtr<DescriptorPool>();
-    m_sp_wref.GetRef().AllocateEssentialObjects(m_uv_srefs, m_ds_wrefs, dp_wref);
+    m_sp_wref.GetRef().AllocateEssentialObjects(m_uv_wrefs, m_ds_wrefs, dp_wref);
 }
 
 void Material::LinkWithShaderProgram()
@@ -78,8 +80,8 @@ void Material::RefreshLinkingWithShaderProgram()
 
 bool Material::SetInt(const ObjectName &i_ub_name, const ObjectName &i_var_name, int32_t i_value, Size_ui32 i_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetInt(i_var_name, i_value, i_idx);
@@ -97,8 +99,8 @@ bool Material::SetInt(const ObjectName &i_ub_name, const ObjectName &i_var_name,
 
 bool Material::SetUint(const ObjectName &i_ub_name, const ObjectName &i_var_name, uint32_t i_value, Size_ui32 i_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetUint(i_var_name, i_value, i_idx);
@@ -116,8 +118,8 @@ bool Material::SetUint(const ObjectName &i_ub_name, const ObjectName &i_var_name
 
 bool Material::SetFloat(const ObjectName &i_ub_name, const ObjectName &i_var_name, float i_value, Size_ui32 i_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetFloat(i_var_name, i_value, i_idx);
@@ -135,8 +137,8 @@ bool Material::SetFloat(const ObjectName &i_ub_name, const ObjectName &i_var_nam
 
 bool Material::SetVector3f(const ObjectName &i_ub_name, const ObjectName &i_var_name, const Vector3f &i_value, Size_ui32 i_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetVector3f(i_var_name, i_value, i_idx);
@@ -154,8 +156,8 @@ bool Material::SetVector3f(const ObjectName &i_ub_name, const ObjectName &i_var_
 
 bool Material::SetColor4f(const ObjectName &i_ub_name, const ObjectName &i_var_name, const Color4f &i_value, Size_ui32 i_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetColor4f(i_var_name, i_value, i_idx);
@@ -173,8 +175,8 @@ bool Material::SetColor4f(const ObjectName &i_ub_name, const ObjectName &i_var_n
 
 bool Material::SetMatrix4X4f(const ObjectName &i_ub_name, const ObjectName &i_var_name, const Matrix4X4f &i_value, Size_ui32 i_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetMatrix4X4f(i_var_name, i_value, i_idx);
@@ -190,10 +192,10 @@ bool Material::SetMatrix4X4f(const ObjectName &i_ub_name, const ObjectName &i_va
     }
 }
 
-bool Material::SetIntArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<int32_t> &i_datas, Size_ui32 i_start_idx)
+bool Material::SetIntArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<int32_t> &i_datas, Size_ui32 i_start_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetIntArray(i_var_name, i_datas, i_start_idx);
@@ -209,10 +211,10 @@ bool Material::SetIntArray(const ObjectName &i_ub_name, const std::string &i_var
     }
 }
 
-bool Material::SetUintArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<uint32_t> &i_datas, Size_ui32 i_start_idx)
+bool Material::SetUintArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<uint32_t> &i_datas, Size_ui32 i_start_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetUintArray(i_var_name, i_datas, i_start_idx);
@@ -228,10 +230,10 @@ bool Material::SetUintArray(const ObjectName &i_ub_name, const std::string &i_va
     }
 }
 
-bool Material::SetFloatArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<float> &i_datas, Size_ui32 i_start_idx)
+bool Material::SetFloatArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<float> &i_datas, Size_ui32 i_start_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetFloatArray(i_var_name, i_datas, i_start_idx);
@@ -246,10 +248,10 @@ bool Material::SetFloatArray(const ObjectName &i_ub_name, const std::string &i_v
         return false;
     }
 }
-bool Material::SetVector3fArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<Vector3f> &i_datas, Size_ui32 i_start_idx)
+bool Material::SetVector3fArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<Vector3f> &i_datas, Size_ui32 i_start_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetVector3fArray(i_var_name, i_datas, i_start_idx);
@@ -265,10 +267,10 @@ bool Material::SetVector3fArray(const ObjectName &i_ub_name, const std::string &
     }
 }
 
-bool Material::SetColor4fArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<Color4f> &i_datas, Size_ui32 i_start_idx)
+bool Material::SetColor4fArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<Color4f> &i_datas, Size_ui32 i_start_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetColor4fArray(i_var_name, i_datas, i_start_idx);
@@ -283,10 +285,10 @@ bool Material::SetColor4fArray(const ObjectName &i_ub_name, const std::string &i
         return false;
     }
 }
-bool Material::SetMatrix4X4fArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<Matrix4X4f> &i_datas, Size_ui32 i_start_idx)
+bool Material::SetMatrix4X4fArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<Matrix4X4f> &i_datas, Size_ui32 i_start_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetMatrix4X4fArray(i_var_name, i_datas, i_start_idx);
@@ -304,8 +306,8 @@ bool Material::SetMatrix4X4fArray(const ObjectName &i_ub_name, const std::string
 
 bool Material::SetDataToUniformBuffer(const ObjectName &i_ub_name, const void *i_data, Size_ui32 i_data_size)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_ub_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_ub_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformBufferWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv_wref.IsNull() == false) {
             return target_uv_wref.GetRef().SetBufferData(i_data, i_data_size);
@@ -323,8 +325,8 @@ bool Material::SetDataToUniformBuffer(const ObjectName &i_ub_name, const void *i
 
 bool Material::SetTexture(const ObjectName &i_uv_name, const TextureWeakReferenceObject &i_tex_wref, int32_t i_idx)
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter = m_uv_srefs.find(i_uv_name);
-    if (uv_iter != m_uv_srefs.end()) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter = m_uv_wrefs.find(i_uv_name);
+    if (uv_iter != m_uv_wrefs.end()) {
         UniformImagesWeakReferenceObject target_uv_wref = (*uv_iter).second.DynamicCastTo<UniformImages>();
         if (target_uv_wref.IsNull() == false) {
             bool result = target_uv_wref.GetRef().SetTexture(i_tex_wref, i_idx);
@@ -344,17 +346,19 @@ bool Material::SetTexture(const ObjectName &i_uv_name, const TextureWeakReferenc
     }
 }
 
-void Material::UseMaterial(const CommandBufferWeakReferenceObject &i_cb_wref, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id)
+void Material::UseMaterial(const CommandBufferWeakReferenceObject &i_cb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_common_ds_wrefs, uint32_t i_sp_id)
 {
+    std::vector<DescriptorSetWeakReferenceObject> ds_wrefs = i_common_ds_wrefs;
+    ds_wrefs.insert(std::end(ds_wrefs), std::begin(m_ds_wrefs), std::end(m_ds_wrefs));
     if (m_sp_wref.IsNull() == false) {
-        m_sp_wref.GetRef().UseProgramWithTargetDescriptorSet(i_cb_wref, i_rp_wref, i_sp_id, m_ds_wrefs);
+        m_sp_wref.GetRef().UseProgramWithTargetDescriptorSet(i_cb_wref, i_rp_wref, i_sp_id, ds_wrefs);
     }
 }
 
 void Material::Update()
 {
-    std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter;
-    for (uv_iter = m_uv_srefs.begin(); uv_iter != m_uv_srefs.end(); ++uv_iter) {
+    std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter;
+    for (uv_iter = m_uv_wrefs.begin(); uv_iter != m_uv_wrefs.end(); ++uv_iter) {
         (*uv_iter).second.GetRef().Update();
     }
 }

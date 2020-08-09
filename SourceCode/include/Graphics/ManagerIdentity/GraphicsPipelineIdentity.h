@@ -63,11 +63,6 @@ public:
      */
     CompHandle m_handle;
 
-    /*! \var CompHandle m_descriptor_layout_handle;
-     *  \brief The descriptor layout handle. It is valid while the value is not equal 0.(Opengl doesn't need.)
-     */
-    CompHandle m_descriptor_layout_handle;
-
     /*! \var CompHandle m_pipeline_layout_handle;
      *  \brief The pipeline layout handle. It is valid while the value is not equal 0.(Opengl doesn't need.)
      */

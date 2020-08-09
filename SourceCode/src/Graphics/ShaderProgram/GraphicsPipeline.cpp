@@ -40,48 +40,40 @@ GraphicsPipeline::~GraphicsPipeline()
 {
 }
 
-void GraphicsPipeline::SetGraphicsPipelineParams(const GraphicsPipelineParam &i_params, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id)
+void GraphicsPipeline::SetGraphicsPipelineParams(
+    const GraphicsPipelineParam &i_params,
+    const RenderPassWeakReferenceObject &i_rp_wref,
+    const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs,
+    uint32_t i_sp_id)
 {
     m_identity.m_params = i_params;
     m_target_rp_wref = i_rp_wref;
-    m_uvd_wrefs.clear();
-    m_uvd_wrefs.resize(m_identity.m_params.m_uniform_binding_infos.size());
-}
-
-void GraphicsPipeline::RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id)
-{
-    if (i_uvd_id < m_uvd_wrefs.size()) {
-        m_uvd_wrefs[i_uvd_id] = i_uvd_wref;
+    m_dsl_wrefs = i_dsl_wrefs;
+    if (m_dsl_wrefs.size() > 4) {
+        SDLOGW("Min maxBoundDescriptorSets is 4. m_dsl_wrefs.size() is %u", static_cast<uint32_t>(m_dsl_wrefs.size()));
     }
-    else {
-        SDLOGE("Wrong ID(%d).", i_uvd_id);
-    }
-}
-
-bool GraphicsPipeline::IsThisUniformVariableUsed(const UniformVariableWeakReferenceObject &i_uv_wref) const
-{
-    std::vector<UniformVariableDescriptorWeakReferenceObject>::const_iterator uvd_iter;
-    for (uvd_iter = m_uvd_wrefs.begin(); uvd_iter != m_uvd_wrefs.end(); ++uvd_iter) {
-        if ((*uvd_iter).GetConstRef().GetObjectName().compare(i_uv_wref.GetConstRef().GetObjectName()) == 0) {
-            return true;
-        }
-    }
-    return false;
 }
 
 void GraphicsPipeline::Initialize(const ShaderModules &i_shaders)
 {
     SDLOG("Initialize graphics pipeline (%s).", m_object_name.c_str());
-    GraphicsManager::GetRef().CreateGraphicsPipeline(m_identity, i_shaders, m_target_rp_wref);
-    for (UniformBinding &ub : m_identity.m_params.m_uniform_binding_infos) {
-        m_descriptor_counts[ub.m_binding_type]++;
-    }
+    GraphicsManager::GetRef().CreateGraphicsPipeline(m_identity, i_shaders, m_target_rp_wref, m_dsl_wrefs);
     m_initialized = true;
 }
 
-void GraphicsPipeline::Use(const CommandBufferWeakReferenceObject &i_cb_wref)
+void GraphicsPipeline::UseAndBindDescriptorSets(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject>& i_ds_wrefs) const
 {
-    GraphicsManager::GetRef().BindGraphicsPipeline(m_identity, i_cb_wref);
+    //1. collect necessary descriptor sets for binding.
+    std::vector<DescriptorSetWeakReferenceObject> pipe_ds_wrefs;
+    for (const DescriptorSetWeakReferenceObject &ds_wref : i_ds_wrefs) {
+        for (uint32_t dsl_count = 0; dsl_count < m_dsl_wrefs.size(); ++dsl_count) {
+            if (ds_wref.GetRef().IsThisLayout(m_dsl_wrefs[dsl_count]) == true) {
+                pipe_ds_wrefs.push_back(ds_wref);
+            }
+        }
+    }
+    //2. Bind graphics pipeline with necenssary descriptor sets.
+    GraphicsManager::GetRef().BindGraphicsPipeline(m_identity, i_cb_wref, pipe_ds_wrefs);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

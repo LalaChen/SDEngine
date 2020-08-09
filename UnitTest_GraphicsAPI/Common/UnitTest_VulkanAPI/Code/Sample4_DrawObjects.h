@@ -46,15 +46,20 @@ public:
     ObjectData();
     ~ObjectData();
 public:
-    void InitalizeMaterial(const ShaderProgramWeakReferenceObject &i_sp_wref, const SampleCameraData &i_camera, const LightData &i_light, const TextureWeakReferenceObject &i_tex_wref);
-    void UpdateMaterial(const SampleCameraData &i_camera, const LightData &i_light);
+    void InitializeCommonUniformSet(const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_common_dsl_wrefs);
+    void UpdateCommonUniformSet(const SampleCameraData &i_camera, const LightData &i_light);
     void Draw(const RenderPassWeakReferenceObject &i_rp_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_sp_id);
 public:
-    MeshWeakReferenceObject m_mesh;
+    UniformBufferWeakReferenceObject m_basic_wrefs;
+    UniformBufferWeakReferenceObject m_light_wrefs;
+    DescriptorPoolStrongReferenceObject m_common_pool_sref;
+    std::vector<DescriptorSetWeakReferenceObject> m_common_set_wrefs;
 public:
-    TextureWeakReferenceObject m_texture;
-    Transform m_trans;
+    MeshWeakReferenceObject m_mesh;
+    MaterialWeakReferenceObject m_shared_mat_wref;
     MaterialStrongReferenceObject m_mat_sref;
+public:
+    Transform m_trans;
 };
 
 class Sample4_DrawObjects : public Sample
@@ -76,19 +81,26 @@ public:
 protected:
     void RecordCommandBuffer();
 private:
+    void CreateCommonUniformVariablesAndLayouts();
+    void CreateGeneralUniformVariablesAndLayouts();
     void CreateShaderProgram();
     void CreateTexture();
     void CreateCamera();
     void CreateLight();
+    void CreateSharedMaterial();
     void CreateObjects();
     void UpdateCamera();
 protected:
     std::vector<DescriptorSetLayoutStrongReferenceObject> m_common_dsl_srefs;
+protected:
+    std::vector<DescriptorSetLayoutStrongReferenceObject> m_general_dsl_srefs;
+protected:
     SampleCameraData m_camera;
     LightData m_light;
     RenderPassStrongReferenceObject m_forward_rp_sref;
     TextureStrongReferenceObject m_tex_sref;
     ShaderProgramStrongReferenceObject m_phong_shader_sref;
+    MaterialStrongReferenceObject m_shared_material_sref;
     MeshStrongReferenceObject m_cube_sref;
     MeshStrongReferenceObject m_floor_sref;
 protected:

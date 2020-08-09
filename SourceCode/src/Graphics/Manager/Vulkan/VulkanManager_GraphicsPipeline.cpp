@@ -58,14 +58,19 @@ void VulkanManager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
 }
 
 //-------- GraphicsPipeline --------
-void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref)
+void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs)
 {
     VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
     VkPipelineLayout &pipeline_layout_handle = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout_handle);
-    VkDescriptorSetLayout &descriptor_set_layout_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_descriptor_layout_handle);
     VkRenderPass render_pass_handle = reinterpret_cast<VkRenderPass>(i_rp_wref.GetConstRef().GetHandle());
     std::vector<VkVertexInputBindingDescription> va_input_binding_descs;
     std::vector<VkVertexInputAttributeDescription> va_input_location_descs;
+
+    std::vector<VkDescriptorSetLayout> vk_ds_layouts;
+    for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : i_dsl_wrefs) {
+        const DescriptorSetLayoutIdentity& dsl_identity = GetIdentity(dsl_wref);
+        vk_ds_layouts.push_back(reinterpret_cast<VkDescriptorSetLayout>(dsl_identity.m_handle));
+    }
 
     va_input_binding_descs.resize(io_identity.m_params.m_va_binding_descs.size());
     va_input_location_descs.resize(io_identity.m_params.m_va_location_descs.size());
@@ -108,30 +113,7 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     tessellation_state_c_info.flags = 0;
     tessellation_state_c_info.patchControlPoints = io_identity.m_params.m_patch_ctrl_points; //3 : triangle. 4 : quad.
 
-    //2. create uniform descriptor set layout.
-    std::vector<VkDescriptorSetLayoutBinding> layout_bindings;
-    layout_bindings.resize(io_identity.m_params.m_uniform_binding_infos.size());
-    for (uint32_t varID = 0; varID < layout_bindings.size(); ++varID) {
-        layout_bindings[varID] = {};
-        layout_bindings[varID].binding = io_identity.m_params.m_uniform_binding_infos[varID].m_binding_id;
-        layout_bindings[varID].descriptorCount = io_identity.m_params.m_uniform_binding_infos[varID].m_element_number;
-        layout_bindings[varID].descriptorType = UniformBindingType_Vulkan::Convert(io_identity.m_params.m_uniform_binding_infos[varID].m_binding_type);
-        layout_bindings[varID].stageFlags = ShaderStage_Vulkan::Convert(io_identity.m_params.m_uniform_binding_infos[varID].m_target_stages);
-        layout_bindings[varID].pImmutableSamplers = nullptr;
-    }
-
-    VkDescriptorSetLayoutCreateInfo desc_set_c_info = {}; //One set one layout.
-    desc_set_c_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    desc_set_c_info.pNext = nullptr;
-    desc_set_c_info.flags = 0;
-    desc_set_c_info.bindingCount = static_cast<uint32_t>(layout_bindings.size());
-    desc_set_c_info.pBindings = layout_bindings.data();//set = 0
-
-    if (CreateVKDescriptorSetLayout(descriptor_set_layout_handle, desc_set_c_info) != VK_SUCCESS) {
-        return;
-    }
-
-    //3. Prepare ShaderModules.
+    //2. Prepare ShaderModules.
     std::vector<VkPipelineShaderStageCreateInfo> stage_c_infos;
     for (uint32_t sID = 0; sID < ShaderKind_GRAPHICS_SHADER_NUMBER; ++sID) {
         if (i_shaders.m_shaders[sID].IsNull() == false) {
@@ -275,8 +257,8 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     pipeline_layout_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipeline_layout_c_info.pNext = nullptr;
     pipeline_layout_c_info.flags = 0;
-    pipeline_layout_c_info.setLayoutCount = 1;
-    pipeline_layout_c_info.pSetLayouts = reinterpret_cast<VkDescriptorSetLayout*>(&io_identity.m_descriptor_layout_handle);
+    pipeline_layout_c_info.setLayoutCount = static_cast<uint32_t>(vk_ds_layouts.size());
+    pipeline_layout_c_info.pSetLayouts = vk_ds_layouts.data();
     pipeline_layout_c_info.pushConstantRangeCount = 0;
     pipeline_layout_c_info.pPushConstantRanges = nullptr;
 
@@ -310,22 +292,27 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     }
 }
 
-void VulkanManager::BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref)
+void VulkanManager::BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs)
 {
-    const CommandBufferIdentity cb_identity = GetIdentity(i_cb_wref);
+    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
     VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     VkPipeline pipe_handle = reinterpret_cast<VkPipeline>(i_identity.m_handle);
+    VkPipelineLayout pipe_layout_handle = reinterpret_cast<VkPipelineLayout>(i_identity.m_pipeline_layout_handle);
     VkPipelineBindPoint pipe_bp = PipelineBindPoint_Vulkan::Convert(i_identity.m_params.m_pipe_bind_point);
+    std::vector<VkDescriptorSet> ds_handles;
+    for (const DescriptorSetWeakReferenceObject &ds_wref : i_ds_wrefs) {
+        const DescriptorSetIdentity &ds_identity = GetIdentity(ds_wref);
+        ds_handles.push_back(reinterpret_cast<VkDescriptorSet>(ds_identity.m_handle));
+    }
     BindVkPipeline(cb_handle, pipe_handle, pipe_bp);
+    BindVkDescriptorSets(cb_handle, pipe_bp, pipe_layout_handle, ds_handles);
 }
 
 void VulkanManager::DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity)
 {
     VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
     VkPipelineLayout &pipeline_layout_handle = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout_handle);
-    VkDescriptorSetLayout &descriptor_set_layout_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_descriptor_layout_handle);
 
-    DestroyVKDescriptorSetLayout(descriptor_set_layout_handle);
     DestroyVKPipelineLayout(pipeline_layout_handle);
     DestroyVKPipeline(pipeline_handle);
 }

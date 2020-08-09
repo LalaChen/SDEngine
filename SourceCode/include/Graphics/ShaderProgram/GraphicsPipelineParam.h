@@ -520,11 +520,6 @@ public:
      */
     uint32_t m_patch_ctrl_points;
 public:
-    /*! \var std::vector<UniformBinding> m_uniform_binding_infos;
-     *  \brief The information about uniform of this pipeline.
-     */
-    std::vector<UniformBinding> m_uniform_binding_infos;
-public:
     /*! \var Viewport m_viewport;
      *  \brief Viewport setting.
      */

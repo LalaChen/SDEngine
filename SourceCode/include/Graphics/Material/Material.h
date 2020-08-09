@@ -79,17 +79,17 @@ public:
     bool SetMatrix4X4f(const ObjectName &i_ub_name, const ObjectName &i_var_name, const Matrix4X4f &i_value, Size_ui32 i_idx = 0);
     
 public:
-    bool SetIntArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<int32_t> &i_datas, Size_ui32 i_start_idx = 0);
+    bool SetIntArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<int32_t> &i_datas, Size_ui32 i_start_idx = 0);
 
-    bool SetUintArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<uint32_t> &i_datas, Size_ui32 i_start_idx = 0);
+    bool SetUintArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<uint32_t> &i_datas, Size_ui32 i_start_idx = 0);
 
-    bool SetFloatArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<float> &i_datas, Size_ui32 i_start_idx = 0);
+    bool SetFloatArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<float> &i_datas, Size_ui32 i_start_idx = 0);
 
-    bool SetVector3fArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<Vector3f> &i_datas, Size_ui32 i_start_idx = 0);
+    bool SetVector3fArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<Vector3f> &i_datas, Size_ui32 i_start_idx = 0);
 
-    bool SetColor4fArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<Color4f> &i_datas, Size_ui32 i_start_idx = 0);
+    bool SetColor4fArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<Color4f> &i_datas, Size_ui32 i_start_idx = 0);
 
-    bool SetMatrix4X4fArray(const ObjectName &i_ub_name, const std::string &i_var_name, const std::vector<Matrix4X4f> &i_datas, Size_ui32 i_start_idx = 0);
+    bool SetMatrix4X4fArray(const ObjectName &i_ub_name, const ObjectName &i_var_name, const std::vector<Matrix4X4f> &i_datas, Size_ui32 i_start_idx = 0);
 public:
 
     bool SetDataToUniformBuffer(const ObjectName &i_ub_name, const void *i_data, Size_ui32 i_data_size);
@@ -103,9 +103,10 @@ public:
 public:
 //bind shader to command buffer.
     void Update();
-    void UseMaterial(const CommandBufferWeakReferenceObject &i_cb_wref, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id);
+    //To do : Input common descriptor set.
+    void UseMaterial(const CommandBufferWeakReferenceObject &i_cb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_common_ds_wrefs, uint32_t i_sp_id);
 protected:
-    std::map<ObjectName, UniformVariableStrongReferenceObject> m_uv_srefs;
+    std::map<ObjectName, UniformVariableWeakReferenceObject> m_uv_wrefs;
     ShaderProgramWeakReferenceObject m_sp_wref;
     DescriptorPoolStrongReferenceObject m_dsp_sref;
     /*! \var std::vector<DescriptorSetWeakReferenceObject> m_ds_wrefs;

@@ -36,11 +36,11 @@ void OpenGL4Manager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
 {
 }
 
-void OpenGL4Manager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref)
+void OpenGL4Manager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs)
 {
 }
 
-void OpenGL4Manager::BindGraphicsPipeline(const GraphicsPipelineIdentity& i_identity, const CommandBufferWeakReferenceObject& i_cb_wref)
+void OpenGL4Manager::BindGraphicsPipeline(const GraphicsPipelineIdentity& i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs)
 {
 }
 

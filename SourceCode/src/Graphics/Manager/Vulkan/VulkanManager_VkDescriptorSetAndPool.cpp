@@ -72,19 +72,19 @@ void VulkanManager::UpdateVkDescriptorSet(
         i_descriptor_c_infos.data());
 }
 
-void VulkanManager::BindVkDescriptorSet(
+void VulkanManager::BindVkDescriptorSets(
     VkCommandBuffer i_cb_handle,
     VkPipelineBindPoint i_pipe_bind_point,
     VkPipelineLayout i_pipe_layout_handle,
-    VkDescriptorSet i_ds_handle,
-    uint32_t i_dynamic_offset)
+    const std::vector<VkDescriptorSet> &i_ds_handles,
+    const std::vector<uint32_t> &i_dynamic_offsets)
 {
     vkCmdBindDescriptorSets(
         i_cb_handle,
         i_pipe_bind_point,
-        i_pipe_layout_handle,
-        0, 1, &i_ds_handle,
-        1, &i_dynamic_offset);
+        i_pipe_layout_handle, 0,
+        static_cast<uint32_t>(i_ds_handles.size()), i_ds_handles.data(),
+        static_cast<uint32_t>(i_dynamic_offsets.size()), i_dynamic_offsets.data());
 }
 
 void VulkanManager::FreeVkDescriptorSet(VkDescriptorSet &io_handle, VkDescriptorPool i_dp_handle)

@@ -56,9 +56,56 @@ public:
     void AddUniformVariableDescriptors(const std::vector<UniformVariableDescriptorStrongReferenceObject> &i_uvd_srefs);
 public:
     void Initialize();
+public:
+    /*! \fn void GetUniformDescriptorCounts(uint32_t io_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
+     *  \brief return descriptor count in this descriptor set layout.
+     */
+    void GetUniformDescriptorCounts(uint32_t io_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
+
+    int32_t GetUniformVariableIDByName(const std::string &i_uv_name) const;
+
+    Size_ui32 GetUniformBindingAmount() const;
+
+    /*! \fn void AllocateUniformVariables(std::vector<UniformVariableStrongReferenceObject> &io_uv_srefs);
+     *  \var [inout] io_uv_srefs container for returning allocated uniform variable.
+     *  \brief allocate uniform variables for this descriptor set layout. 
+     */
+    void AllocateUniformVariables(std::vector<UniformVariableStrongReferenceObject> &io_uv_srefs);
 protected:
+    /*! \var DescriptorSetLayoutIdentity m_identity;
+     *  \brief identity this descriptor set layout.
+     */
     DescriptorSetLayoutIdentity m_identity;
+
+    /*! \var std::vector<UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
+     *  \brief all uniform descriptors about this set layout.
+     *         Note : one uvd shouldn't in two or more layouts. 
+     */
     std::vector<UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
+    
+    uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
 };
+
+inline void DescriptorSetLayout::GetUniformDescriptorCounts(uint32_t io_counts[UniformBindingType_MAX_DEFINE_VALUE]) const
+{
+    for (uint32_t count = 0; count < UniformBindingType_MAX_DEFINE_VALUE; ++count) {
+        io_counts[count] = m_descriptor_counts[count];
+    }
+}
+
+inline Size_ui32 DescriptorSetLayout::GetUniformBindingAmount() const
+{
+    return static_cast<uint32_t>(m_uvd_srefs.size());
+}
+
+inline int32_t DescriptorSetLayout::GetUniformVariableIDByName(const std::string &i_uv_name) const
+{
+    for (uint32_t uvd_count = 0; uvd_count < m_uvd_srefs.size(); ++uvd_count) {
+        if (m_uvd_srefs[uvd_count].GetConstRef().GetObjectName().compare(i_uv_name) == 0) {
+            return uvd_count;
+        }
+    }
+    return -1;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

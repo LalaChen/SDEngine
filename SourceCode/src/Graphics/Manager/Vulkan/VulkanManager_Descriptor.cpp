@@ -33,7 +33,7 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void VulkanManager::CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvd_wrefs)
+void VulkanManager::CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity, const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvd_wrefs)
 {
     VkDescriptorSetLayout &dsl_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_handle);
     std::vector<VkDescriptorSetLayoutBinding> vk_dsl_bindings;
@@ -44,12 +44,13 @@ void VulkanManager::CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_id
         vk_dsl_binding.descriptorCount = ub.m_element_number;
         vk_dsl_binding.descriptorType = UniformBindingType_Vulkan::Convert(ub.m_binding_type);
         vk_dsl_binding.stageFlags = ShaderStage_Vulkan::Convert(ub.m_target_stages);
-        vk_dsl_binding.pImmutableSamplers = nullptr;
+        vk_dsl_binding.pImmutableSamplers = VK_NULL_HANDLE;
         vk_dsl_bindings.push_back(vk_dsl_binding);
     }
     VkDescriptorSetLayoutCreateInfo dsl_c_info = InitializeVkDescriptorSetLayoutCreateInfo();
     dsl_c_info.bindingCount = static_cast<uint32_t>(vk_dsl_bindings.size());
     dsl_c_info.pBindings = vk_dsl_bindings.data();
+    CreateVKDescriptorSetLayout(dsl_handle, dsl_c_info);
 }
 
 void VulkanManager::DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity)
@@ -88,14 +89,14 @@ void VulkanManager::DestroyDescriptorPool(DescriptorPoolIdentity &io_identity)
 }
 
 
-void VulkanManager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref)
+void VulkanManager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const DescriptorSetLayoutWeakReferenceObject &i_layout_wref)
 {
     VkDescriptorSet &ds_handle = reinterpret_cast<VkDescriptorSet&>(io_identity.m_handle);
     const DescriptorPoolIdentity &pool_identity = GetIdentity(i_pool_wref);
-    const GraphicsPipelineIdentity &pipe_identity = GetIdentity(i_pipe_wref);
+    const DescriptorSetLayoutIdentity &layout_identity = GetIdentity(i_layout_wref);
     VkDescriptorSetAllocateInfo a_info = InitializeVkDescriptorSetAllocateInfo();
     a_info.descriptorPool = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
-    a_info.pSetLayouts = reinterpret_cast<const VkDescriptorSetLayout*>(&pipe_identity.m_descriptor_layout_handle);
+    a_info.pSetLayouts = reinterpret_cast<const VkDescriptorSetLayout*>(&layout_identity.m_handle);
     a_info.descriptorSetCount = 1;
     AllocateVkDescriptorSet(ds_handle, a_info);
 }
@@ -159,18 +160,6 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
     }
 
     UpdateVkDescriptorSet(write_infos, copy_infos);
-}
-
-void VulkanManager::BindDescriptorSet(const DescriptorSetIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref)
-{
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
-    const GraphicsPipelineIdentity &pipe_identity = GetIdentity(i_pipe_wref);
-    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
-    VkDescriptorSet ds_handle = reinterpret_cast<VkDescriptorSet>(i_identity.m_handle);
-    VkPipelineLayout pipe_layout_handle = reinterpret_cast<VkPipelineLayout>(pipe_identity.m_pipeline_layout_handle);
-    BindVkDescriptorSet(
-        cb_handle, VK_PIPELINE_BIND_POINT_GRAPHICS,
-        pipe_layout_handle, ds_handle);
 }
 
 void VulkanManager::FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref)

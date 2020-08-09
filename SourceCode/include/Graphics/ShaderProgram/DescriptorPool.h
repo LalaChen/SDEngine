@@ -65,7 +65,7 @@ public:
 
     void Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE], uint32_t i_max_set, bool i_individual_flag = false);
 
-    DescriptorSetWeakReferenceObject AllocateDescriptorSet(const GraphicsPipelineWeakReferenceObject &i_pipe_wref);
+    DescriptorSetWeakReferenceObject AllocateDescriptorSet(const DescriptorSetLayoutWeakReferenceObject &i_dsl_wref);
 protected:
 
     uint32_t m_current_set;

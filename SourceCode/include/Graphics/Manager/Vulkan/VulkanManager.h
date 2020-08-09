@@ -89,9 +89,8 @@ public:
     void DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity) override;
     void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) override;
-    void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) override;
+    void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const DescriptorSetLayoutWeakReferenceObject &i_layout_wref) override;
     void WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs) override;
-    void BindDescriptorSet(const DescriptorSetIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const GraphicsPipelineWeakReferenceObject &i_pipe_wref) override;
     void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) override;
 //----------- Command Buffer and Pool Function
 public:
@@ -140,8 +139,8 @@ public:
     void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
     void DeleteShaderModule(ShaderModuleIdentity &io_identity) override;
 public:
-    void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref) override;
-    void BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref) override;
+    void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs) override;
+    void BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs) override;
     void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) override;
 public:
     void CreateRenderPass(RenderPassIdentity &io_identity) override;
@@ -184,12 +183,12 @@ protected:
         const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos,
         const std::vector<VkCopyDescriptorSet> &i_descriptor_c_infos);
 
-    void BindVkDescriptorSet(
+    void BindVkDescriptorSets(
         VkCommandBuffer i_cb_handle,
         VkPipelineBindPoint i_pipe_bind_point,
         VkPipelineLayout i_pipe_layout_handle,
-        VkDescriptorSet i_ds_handle,
-        uint32_t i_dynamic_offset = 0);
+        const std::vector<VkDescriptorSet> &i_ds_handles,
+        const std::vector<uint32_t> &i_dynamic_offsets = {});
 
     void FreeVkDescriptorSet(
         VkDescriptorSet &io_handle,

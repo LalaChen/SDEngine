@@ -40,38 +40,38 @@ ShaderProgram::~ShaderProgram()
 }
 
 void ShaderProgram::RegisterShaderProgramStructure(
-    const RenderPassGroups &i_rp_groups,
+    const RenderPassInfos &i_rp_infos,
     const GraphicsPipelines &i_gp_srefs,
-    const UniformVariableDescriptors &i_uvd_srefs)
+    const CommonDescriptorSetLayouts &i_common_dsl_wrefs,
+    const DescriptorSetLayouts &i_dsl_srefs)
 {
-    if (i_rp_groups.size() == 0) {
+    if (i_rp_infos.size() == 0) {
         SDLOGE("No render pass group.");
         return;
     }
 
-    for (uint32_t rpg_count = 0; rpg_count < i_rp_groups.size(); ++rpg_count) {
-        if (i_rp_groups[rpg_count].m_rp_wref.IsNull() == true) {
+    for (uint32_t rpg_count = 0; rpg_count < i_rp_infos.size(); ++rpg_count) {
+        if (i_rp_infos[rpg_count].m_rp_wref.IsNull() == true) {
             SDLOGE("Render pass in group[%d] is nullptr.", rpg_count);
             return;
         }
     }
 
-    //1. tell us what pipeline we need to use in target render pass.
-    m_rp_groups = i_rp_groups;
-
-    //2. cache used pipeline.
+    //1. set prepared information.
+    m_rp_infos = i_rp_infos;
     m_pipe_srefs = i_gp_srefs;
-    m_uvd_srefs = i_uvd_srefs;
+    m_common_dsl_wrefs = i_common_dsl_wrefs;
+    m_dsl_srefs = i_dsl_srefs;
 
-    //3.calculate descriptor set count.
+    //2.calculate descriptor set count.
     m_descriptor_counts[UniformBindingType_UNIFORM_BUFFER] = 0;
     m_descriptor_counts[UniformBindingType_COMBINED_IMAGE_SAMPLER] = 0;
-    std::map<ObjectName, GraphicsPipelineStrongReferenceObject>::iterator p_iter;
-    for (uint32_t pipe_count = 0; pipe_count < m_pipe_srefs.size(); ++pipe_count) {
-        uint32_t pipe_dcounts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
-        m_pipe_srefs[pipe_count].GetRef().GetUniformDescriptorCounts(pipe_dcounts);
+
+    for (uint32_t dsl_count = 0; dsl_count < m_dsl_srefs.size(); ++dsl_count) {
+        uint32_t dsl_dcounts[UniformBindingType_MAX_DEFINE_VALUE] = {0};
+        m_dsl_srefs[dsl_count].GetRef().GetUniformDescriptorCounts(dsl_dcounts);
         for (uint32_t count = 0; count < UniformBindingType_MAX_DEFINE_VALUE; ++count) {
-            m_descriptor_counts[count] += pipe_dcounts[count];
+            m_descriptor_counts[count] += dsl_dcounts[count];
         }
     }
 
@@ -86,39 +86,15 @@ void ShaderProgram::GetDescriptorCount(uint32_t i_d_counts[UniformBindingType_MA
 }
 
 void ShaderProgram::AllocateEssentialObjects(
-    std::map<ObjectName, UniformVariableStrongReferenceObject> &io_uv_srefs,
+    std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs,
     std::vector<DescriptorSetWeakReferenceObject> &io_desc_set_wrefs,
     DescriptorPoolWeakReferenceObject &io_pool_wref)
 {
-    //1. allocate uniform variable.
-    for (uint32_t uvd_count = 0; uvd_count < m_uvd_srefs.size(); ++uvd_count) {
-        ObjectName uv_name = m_uvd_srefs[uvd_count].GetRef().GetObjectName();
-        UniformVariableStrongReferenceObject uv_sref = m_uvd_srefs[uvd_count].GetRef().AllocateUniformVariable();
-        if (uv_sref.IsNull() == false) {
-            io_uv_srefs[uv_name] = uv_sref;
-        }
-        else {
-            SDLOGE("Allocate uniform variable[%s,%d] failure.", uv_name.c_str(), m_uvd_srefs[uvd_count].GetRef().GetType());
-        }
-    }
-    //2. allocate descriptor for each pipeline.
-    io_desc_set_wrefs.resize(m_pipe_srefs.size());
-    for (uint32_t pipe_count = 0; pipe_count < m_pipe_srefs.size(); ++pipe_count) {
-        io_desc_set_wrefs[pipe_count] = io_pool_wref.GetRef().AllocateDescriptorSet(m_pipe_srefs[pipe_count]);
-    }
-
-    //3. bind descriptor set to uniform variables.
-    for (uint32_t pipe_set_count = 0; pipe_set_count < m_pipe_srefs.size(); ++pipe_set_count) {
-        std::map<ObjectName, UniformVariableStrongReferenceObject>::iterator uv_iter;
-        for (uv_iter = io_uv_srefs.begin(); uv_iter != io_uv_srefs.end(); ++uv_iter) {
-            //Check all uniform variables is one of variable in this pipeline.
-            //If it's one of uniform variables for this pipeline, we register 
-            //this uniform variable to this descriptor set.
-            UniformVariableWeakReferenceObject uv_wref = (*uv_iter).second;
-            if (m_pipe_srefs[pipe_set_count].GetRef().IsThisUniformVariableUsed(uv_wref) == true) {
-                io_desc_set_wrefs[pipe_set_count].GetRef().RegisterUniformVariable(uv_wref, uv_wref.GetRef().GetBindingID());
-            }
-        }
+    //1. allocate descriptor for each pipeline.
+    io_desc_set_wrefs.resize(m_dsl_srefs.size());
+    for (uint32_t dsl_count = 0; dsl_count < m_dsl_srefs.size(); ++dsl_count) {
+        io_desc_set_wrefs[dsl_count] = io_pool_wref.GetRef().AllocateDescriptorSet(m_dsl_srefs[dsl_count]);
+        io_desc_set_wrefs[dsl_count].GetConstRef().LinkUniformVariables(io_uv_wrefs);
     }
 }
 
@@ -128,14 +104,11 @@ void ShaderProgram::UseProgramWithTargetDescriptorSet(
     uint32_t i_sp_idx,
     const std::vector<DescriptorSetWeakReferenceObject> &i_desc_set_wrefs)
 {
-    for (uint32_t rpg_id = 0; rpg_id < m_rp_groups.size(); ++rpg_id) {
-        if (m_rp_groups[rpg_id].m_rp_wref == i_rp_wref) {
-            if (i_sp_idx < m_rp_groups[rpg_id].m_pipe_orders.size()) {
-                uint32_t pipe_idx = m_rp_groups[rpg_id].m_pipe_orders[i_sp_idx];
-                if (pipe_idx < i_desc_set_wrefs.size() && pipe_idx < m_pipe_srefs.size()) {
-                    m_pipe_srefs[pipe_idx].GetRef().Use(i_cb_wref);
-                    i_desc_set_wrefs[pipe_idx].GetRef().Bind(i_cb_wref);
-                }
+    for (uint32_t rp_id = 0; rp_id < m_rp_infos.size(); ++rp_id) {
+        if (m_rp_infos[rp_id].m_rp_wref == i_rp_wref) {
+            if (i_sp_idx < m_rp_infos[rp_id].m_sp_pipe_infos.size()) {
+                uint32_t pipe_idx = m_rp_infos[rp_id].m_sp_pipe_infos[i_sp_idx].m_pipe_id;
+                m_pipe_srefs[pipe_idx].GetRef().UseAndBindDescriptorSets(i_cb_wref, i_desc_set_wrefs);
             }
             return;
         }

@@ -97,6 +97,7 @@ public:
         std::weak_ptr<T> this_wref(std::dynamic_pointer_cast<T>(shared_from_this()));
         return this_wref;
     }
+
 protected:
 
     /*! \var ObjectName m_object_name;

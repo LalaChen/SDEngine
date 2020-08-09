@@ -37,50 +37,47 @@ DescriptorSet::DescriptorSet(const ObjectName &i_object_name)
 
 DescriptorSet::~DescriptorSet()
 {
+    //We don't need to destroy graphics resource because real memory will keep at pool.
 }
 
 void DescriptorSet::Initialize(
     const WeakReferenceObject<Object> &i_pool_wref,
-    const GraphicsPipelineWeakReferenceObject &i_pipe_wref)
+    const DescriptorSetLayoutWeakReferenceObject &i_layout_wref)
 {
     DescriptorPoolWeakReferenceObject pool_wref = i_pool_wref.DynamicCastTo<DescriptorPool>();
 
-    if (pool_wref.IsNull() == false && i_pipe_wref.IsNull() == false) {
-        m_target_pipe_wref = i_pipe_wref;
+    if (pool_wref.IsNull() == false && i_layout_wref.IsNull() == false) {
+        //1. set data.
+        m_layout_wref = i_layout_wref;
         m_pool_wref = i_pool_wref;
-        Size_ui32 ub_amount = i_pipe_wref.GetConstRef().GetUniformBindingAmount();
-        m_uv_wrefs.resize(ub_amount);
-        GraphicsManager::GetRef().AllocateDescriptorSet(m_identity, pool_wref, i_pipe_wref);
-    }
-}
-
-void DescriptorSet::RegisterUniformVariable(const UniformVariableWeakReferenceObject &i_uv_wref, uint32_t i_binding_id)
-{
-    for (UniformVariableWeakReferenceObject &uv : m_uv_wrefs) {
-        if (uv.IsNull() == false) {
-            if (uv.GetConstRef().GetObjectName().compare(i_uv_wref.GetConstRef().GetObjectName()) == 0) {
-                SDLOGW("Uniform variable[%s]", i_uv_wref.GetConstRef().GetObjectName().c_str());
-                return;
-            }
-        }
-    }
-
-    if (i_binding_id < m_uv_wrefs.size()) {
-        m_uv_wrefs[i_binding_id] = i_uv_wref;
-    }
-    else {
-        SDLOGW("Try to bind target uv to ");
+        //2. allocate identity.
+        GraphicsManager::GetRef().AllocateDescriptorSet(m_identity, pool_wref, m_layout_wref);
+        //3. allocate uniform variables.
+        m_layout_wref.GetRef().AllocateUniformVariables(m_uv_srefs);
     }
 }
 
 void DescriptorSet::WriteDescriptor()
 {
-    GraphicsManager::GetRef().WriteUniformVariablesToDescriptorSet(m_identity, m_uv_wrefs);
+    std::vector<UniformVariableWeakReferenceObject> uv_wrefs;
+    uv_wrefs.resize(m_uv_srefs.size());
+    for (uint32_t uv_count = 0; uv_count < uv_wrefs.size(); ++uv_count) {
+        uv_wrefs[uv_count] = m_uv_srefs[uv_count];
+    }
+    GraphicsManager::GetRef().WriteUniformVariablesToDescriptorSet(m_identity, uv_wrefs);
 }
 
-void DescriptorSet::Bind(const CommandBufferWeakReferenceObject &i_cb_wref) const
+void DescriptorSet::LinkUniformVariables(
+    std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs) const
 {
-    GraphicsManager::GetRef().BindDescriptorSet(m_identity, i_cb_wref, m_target_pipe_wref);
+    for (const UniformVariableStrongReferenceObject &uv_sref : m_uv_srefs) {
+        std::string uv_name = uv_sref.GetRef().GetObjectName();
+        std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator iter;
+        iter = io_uv_wrefs.find(uv_name);
+        if (iter == io_uv_wrefs.end()) {
+            io_uv_wrefs[uv_name] = uv_sref;
+        }
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

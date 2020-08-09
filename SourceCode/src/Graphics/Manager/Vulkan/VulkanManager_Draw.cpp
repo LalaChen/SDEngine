@@ -63,10 +63,10 @@ void VulkanManager::SetScissor(const CommandBufferWeakReferenceObject &i_cb_wref
     const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
     VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     VkRect2D rect;
-    rect.offset.x = i_region.m_x;
-    rect.offset.y = i_region.m_y;
-    rect.extent.width = i_region.m_width;
-    rect.extent.height = i_region.m_height;
+    rect.offset.x = static_cast<int32_t>(i_region.m_x);
+    rect.offset.y = static_cast<int32_t>(i_region.m_y);
+    rect.extent.width = static_cast<uint32_t>(i_region.m_width);
+    rect.extent.height = static_cast<uint32_t>(i_region.m_height);
     SetVkScissor(cb_handle, rect);
 }
 

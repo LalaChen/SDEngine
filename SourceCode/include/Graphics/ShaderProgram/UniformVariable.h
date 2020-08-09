@@ -46,7 +46,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformVariable);
 
-class UniformVariable : public Object
+class SDENGINE_CLASS UniformVariable : public Object
 {
 public:
     /*! \fn explicit UniformVariable(const ObjectName &i_object_name, uint32_t i_binding_id);

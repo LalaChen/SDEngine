@@ -37,8 +37,8 @@ SOFTWARE.
 #include "RenderPass.h"
 #include "ShaderModule.h"
 #include "CommandBuffer.h"
-#include "UniformBufferDescriptor.h"
-#include "UniformImagesDescriptor.h"
+#include "DescriptorSetLayout.h"
+#include "DescriptorSet.h"
 #include "GraphicsPipelineParam.h"
 #include "GraphicsPipelineIdentity.h"
 #include "Object.h"
@@ -85,34 +85,22 @@ public:
     /*! \fn void SetGraphicsPipelineParams(const GraphicsPipelineParam &i_params, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id);
      *  \param [in] i_params Description about this pipeline.
      *  \param [in] i_rp_wref Weak reference of render pass which is the reference of this pipeline.
+     *  \param [in] i_dsl_wrefs Weak reference of Descriptors Set Layout for recording uniform variables using in this pipeline.
      *  \param [in] i_sp_id Target step that we can use this shader.
      *  \brief Set parameters for creating graphics pipeline and allocate uniform variable descriptor 
      *         weak references for let use registing.
      */
-    void SetGraphicsPipelineParams(const GraphicsPipelineParam &i_params, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id);
+    void SetGraphicsPipelineParams(
+        const GraphicsPipelineParam &i_params,
+        const RenderPassWeakReferenceObject &i_rp_wref,
+        const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs,
+        uint32_t i_sp_id);
 
-    /*! \fn void RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id);
-     *  \param [in] i_uvd_wref The descriptor corresponding with target uniform binding.
-     *  \brief Set parameters for creating graphics pipeline and allocate uniform variable descriptor
-     *         weak references for let use registing.
-     */
-    void RegisterUniformVariableDescriptor(const UniformVariableDescriptorWeakReferenceObject &i_uvd_wref, uint32_t i_uvd_id);
-
-    /*! \fn bool IsThisUniformVariableUsed(const UniformVariableWeakReferenceObject &i_uv_wref) const;
-     *  \param [in] i_uv_wref Target uniform variable.
-     *  \brief To find out target uniform variable is in this ShaderProgram or not.
-     */
-    bool IsThisUniformVariableUsed(const UniformVariableWeakReferenceObject &i_uv_wref) const;
 public:
     /*! \fn const CompHandle GetHandle() const;
      *  \brief return handle of pipeline.
      */
     const CompHandle GetHandle() const;
-
-    /*! \fn const CompHandle GetDescriptorLayoutHandle() const;
-     *  \brief return handle of descriptor layout of this pipeline.
-     */
-    const CompHandle GetDescriptorLayoutHandle() const;
 
     /*! \fn const CompHandle GetPipelineLayoutHandle() const;
      *  \brief return handle of pipeline layout of this pipeline.
@@ -128,18 +116,12 @@ public:
      *  \brief return subpass id that we use this pipeline.
      */
     uint32_t GetSubpassID() const;
-
-    /*! \fn void GetUniformDescriptorCounts(uint32_t io_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
-     *  \brief return subpass id that we use this pipeline.
-     */
-    void GetUniformDescriptorCounts(uint32_t io_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
-
-    Size_ui32 GetUniformBindingAmount() const;
 public:
-    /*! \fn const CompHandle GetPipelineParams() const;
+    /*! \fn void UseAndBindDescriptorSets(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs) const;
+     *  \param [in] i_cb_wref Target command buffer.
      *  \brief return pipeline parameters.
      */
-    void Use(const CommandBufferWeakReferenceObject &i_cb_wref);
+    void UseAndBindDescriptorSets(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs) const;
 protected:
     /*! \var GraphicsPipelineIdentity m_identity;
      *  \brief Record basic identity
@@ -151,10 +133,11 @@ protected:
      */
     RenderPassWeakReferenceObject m_target_rp_wref;
 
-    /*! \var std::vector<UniformVariableDescriptorWeakReferenceObject> m_uvd_wrefs;
-     *  \brief The uniform descriptor weak references. The real descriptors are kept at ShaderProgram.
+    /*! \var std::vector<DescriptorSetLayoutWeakReferenceObject> m_dsl_wrefs;
+     *  \brief The descriptor set weak references. The real dsl are kept at ShaderProgram and other object.
+     *         The order in array is the order of set.
      */
-    std::vector<UniformVariableDescriptorWeakReferenceObject> m_uvd_wrefs;
+    std::vector<DescriptorSetLayoutWeakReferenceObject> m_dsl_wrefs;
 
     /*! \var uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
      *  \brief Count for descriptors.
@@ -172,11 +155,6 @@ inline const CompHandle GraphicsPipeline::GetHandle() const
     return m_identity.m_handle;
 }
 
-inline const CompHandle GraphicsPipeline::GetDescriptorLayoutHandle() const
-{
-    return m_identity.m_descriptor_layout_handle;
-}
-
 inline const CompHandle GraphicsPipeline::GetPipelineLayoutHandle() const
 {
     return m_identity.m_pipeline_layout_handle;
@@ -190,18 +168,6 @@ inline const GraphicsPipelineParam& GraphicsPipeline::GetPipelineParams() const
 inline uint32_t GraphicsPipeline::GetSubpassID() const
 {
     return m_identity.m_subpass_id;
-}
-
-inline void GraphicsPipeline::GetUniformDescriptorCounts(uint32_t io_counts[UniformBindingType_MAX_DEFINE_VALUE]) const
-{
-    for (uint32_t count = 0; count < UniformBindingType_MAX_DEFINE_VALUE; ++count) {
-        io_counts[count] = m_descriptor_counts[count];
-    }
-}
-
-inline Size_ui32 GraphicsPipeline::GetUniformBindingAmount() const
-{
-    return static_cast<Size_ui32>(m_uvd_wrefs.size());
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -57,6 +57,7 @@ public:
 public:
     Size_ui32 GetNumber() const;
     Size_ui32 GetBindingID() const;
+    UniformBindingTypeEnum GetBindingType() const;
     UniformBinding CreateUniformBinding() const;
 protected:
     /*! \var uint32_t m_binding_id;
@@ -88,6 +89,11 @@ inline uint32_t UniformVariableDescriptor::GetBindingID() const
 inline Size_ui32 UniformVariableDescriptor::GetNumber() const
 {
     return m_element_number;
+}
+
+inline UniformBindingTypeEnum UniformVariableDescriptor::GetBindingType() const
+{
+    return m_binding_type;
 }
 
 inline UniformBinding UniformVariableDescriptor::CreateUniformBinding() const
