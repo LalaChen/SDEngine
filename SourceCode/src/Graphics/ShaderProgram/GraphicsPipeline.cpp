@@ -31,8 +31,8 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 GraphicsPipeline::GraphicsPipeline(const ObjectName &i_object_name)
 : Object(i_object_name)
-, m_initialized(false)
 , m_descriptor_counts{0}
+, m_initialized(false)
 {
 }
 

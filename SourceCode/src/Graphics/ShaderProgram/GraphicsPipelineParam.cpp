@@ -160,8 +160,8 @@ ColorBlendState::~ColorBlendState()
 
 //--- GraphicsPipelineParam
 GraphicsPipelineParam::GraphicsPipelineParam()
-: m_patch_ctrl_points(3)
-, m_pipe_bind_point(PipelineBindPoint_GRAPHICS)
+: m_pipe_bind_point(PipelineBindPoint_GRAPHICS)
+, m_patch_ctrl_points(3)
 {
 }
 

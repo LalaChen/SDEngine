@@ -483,6 +483,7 @@ void Sample4_DrawObjects::CreateSharedMaterial()
     m_shared_material_sref.GetRef().SetTexture("mainTexture", m_tex_sref);
     //Set data done. Link with shader program.(Write descirptor)
     m_shared_material_sref.GetRef().LinkWithShaderProgram();
+    m_shared_material_sref.GetRef().Update();
 }
 
 void Sample4_DrawObjects::CreateObjects()
@@ -687,41 +688,41 @@ void Sample4_DrawObjects::RecordCommandBuffer()
 void Sample4_DrawObjects::UpdateCamera()
 {
     if (Application::GetRef().GetKeyStateByCode(KEY_A) == KEY_STATUS_PRESS) {
-        m_camera.m_trans.AddRotation(m_camera.m_trans.GetTop(), Timer::GetRef().GetProgramDeltaTime() * 10.0f);
+        m_camera.m_trans.AddRotation(m_camera.m_trans.GetTop(), static_cast<float>(Timer::GetRef().GetProgramDeltaTime()) * 10.0f);
     }
 
     if (Application::GetRef().GetKeyStateByCode(KEY_D) == KEY_STATUS_PRESS) {
-        m_camera.m_trans.AddRotation(m_camera.m_trans.GetTop(), Timer::GetRef().GetProgramDeltaTime() * -10.0f);
+        m_camera.m_trans.AddRotation(m_camera.m_trans.GetTop(), static_cast<float>(Timer::GetRef().GetProgramDeltaTime()) * -10.0f);
     }
 
     if (Application::GetRef().GetKeyStateByCode(KEY_W) == KEY_STATUS_PRESS) {
         //Camera forward is -z axis.
-        Vector3f offset = m_camera.m_trans.GetForward().negative().scale(Timer::GetRef().GetProgramDeltaTime() * 2.0f);//speed 2m/s
+        Vector3f offset = m_camera.m_trans.GetForward().negative().scale(static_cast<float>(Timer::GetRef().GetProgramDeltaTime()) * 2.0f);//speed 2m/s
         m_camera.m_trans.AddTranslation(offset);
     }
 
     if (Application::GetRef().GetKeyStateByCode(KEY_S) == KEY_STATUS_PRESS) {
-        Vector3f offset = m_camera.m_trans.GetForward().scale(Timer::GetRef().GetProgramDeltaTime() * 2.0f);//speed 2m/s
+        Vector3f offset = m_camera.m_trans.GetForward().scale(static_cast<float>(Timer::GetRef().GetProgramDeltaTime()) * 2.0f);//speed 2m/s
         m_camera.m_trans.AddTranslation(offset);
     }
 
     if (Application::GetRef().GetKeyStateByCode(KEY_Q) == KEY_STATUS_PRESS) {
-        Vector3f offset = m_camera.m_trans.GetRight().negative().scale(Timer::GetRef().GetProgramDeltaTime() * 1.0f);//speed 2m/s
+        Vector3f offset = m_camera.m_trans.GetRight().negative().scale(static_cast<float>(Timer::GetRef().GetProgramDeltaTime()) * 1.0f);//speed 2m/s
         m_camera.m_trans.AddTranslation(offset);
     }
 
     if (Application::GetRef().GetKeyStateByCode(KEY_E) == KEY_STATUS_PRESS) {
-        Vector3f offset = m_camera.m_trans.GetRight().scale(Timer::GetRef().GetProgramDeltaTime() * 1.0f);//speed 2m/s
+        Vector3f offset = m_camera.m_trans.GetRight().scale(static_cast<float>(Timer::GetRef().GetProgramDeltaTime()) * 1.0f);//speed 2m/s
         m_camera.m_trans.AddTranslation(offset);
     }
    
     if (Application::GetRef().GetKeyStateByCode(KEY_R) == KEY_STATUS_PRESS) {
-        Vector3f offset = m_camera.m_trans.GetTop().scale(Timer::GetRef().GetProgramDeltaTime() * 2.0f);//speed 2m/s
+        Vector3f offset = m_camera.m_trans.GetTop().scale(static_cast<float>(Timer::GetRef().GetProgramDeltaTime()) * 2.0f);//speed 2m/s
         m_camera.m_trans.AddTranslation(offset);
     }
 
     if (Application::GetRef().GetKeyStateByCode(KEY_F) == KEY_STATUS_PRESS) {
-        Vector3f offset = m_camera.m_trans.GetTop().negative().scale(Timer::GetRef().GetProgramDeltaTime() * 2.0f);//speed 2m/s
+        Vector3f offset = m_camera.m_trans.GetTop().negative().scale(static_cast<float>(Timer::GetRef().GetProgramDeltaTime()) * 2.0f);//speed 2m/s
         m_camera.m_trans.AddTranslation(offset);
     }
 }
