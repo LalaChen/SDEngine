@@ -639,7 +639,7 @@ void Sample1_DrawTriangle::CreateTexture()
     SDLOG("Create Texture!!!");
     VkResult result = VK_SUCCESS;
     //1. load data and get w and h.
-    BitmapStrongReferenceObject bitmap_ref = ImageLoader::GetRef().ReadBitmap("Texture/Lenna.png");
+    BitmapStrongReferenceObject bitmap_ref = ImageLoader::GetRef().ReadBitmap("Texture/coordTest.png");
     //2. create info.
     if (bitmap_ref.IsNull() == false) {
         Size_ui32 img_w = bitmap_ref.GetRef().GetWidth();
@@ -977,12 +977,12 @@ void Sample1_DrawTriangle::CreateShaderPrograms()
     //--- i. read shader file.
     SDLOG("Create Shader Now!!!");
     FileData vert_shader, frag_shader;
-    if (FileResourceRequester::GetRef().AskFile("Shader/MainShader.vert.spv", vert_shader) == false) {
+    if (FileResourceRequester::GetRef().AskFile("Shader/TexShader.vert.spv", vert_shader) == false) {
         SDLOGE("shader/MainShader.vert.spv isn't exist!!!");
         return;
     }
 
-    if (FileResourceRequester::GetRef().AskFile("Shader/MainShader.frag.spv", frag_shader) == false) {
+    if (FileResourceRequester::GetRef().AskFile("Shader/TexShader.frag.spv", frag_shader) == false) {
         SDLOGE("shader/MainShader.frag.spv isn't exist!!!");
         return;
     }
