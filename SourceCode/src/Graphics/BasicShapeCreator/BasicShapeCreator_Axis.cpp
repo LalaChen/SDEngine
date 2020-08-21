@@ -29,7 +29,7 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-MeshStrongReferenceObject BasicShapeCreator::CreateAxis(float i_length)
+MeshStrongReferenceObject BasicShapeCreator::CreateAxis(float i_width, float i_length)
 {
 	MeshStrongReferenceObject mesh;
 
@@ -39,46 +39,100 @@ MeshStrongReferenceObject BasicShapeCreator::CreateAxis(float i_length)
 
 	//x axis
 	v_data.push_back(vec3(0.0f, 0.0f, 0.0f));
+	v_data.push_back(vec3(0.0f, 0.0f, i_width));
 	v_data.push_back(vec3(i_length, 0.0f, 0.0f));
+	
+	v_data.push_back(vec3(0.0f, 0.0f, 0.0f));
+	v_data.push_back(vec3(0.0f, 0.0f, -0.5f * i_width));
+	v_data.push_back(vec3(- 0.5 * i_length, 0.0f, 0.0f));
+	
 	c_data.push_back(Color4f::Red());
 	c_data.push_back(Color4f::Red());
+	c_data.push_back(Color4f::Red());
+	
+	c_data.push_back(Color4f::Red(0.3f));
+	c_data.push_back(Color4f::Red(0.3f));
+	c_data.push_back(Color4f::Red(0.3f));
+	
 	i_data.push_back(0);
 	i_data.push_back(1);
-
-	v_data.push_back(vec3(0.0f, 0.0f, 0.0f));
-	v_data.push_back(vec3(-i_length, 0.0f, 0.0f));
-	c_data.push_back(Color4f::Red(0.3f));
-	c_data.push_back(Color4f::Red(0.3f));
 	i_data.push_back(2);
+	i_data.push_back(0);
+	i_data.push_back(2);
+	i_data.push_back(1);
+
 	i_data.push_back(3);
+	i_data.push_back(4);
+	i_data.push_back(5);
+	i_data.push_back(3);
+	i_data.push_back(5);
+	i_data.push_back(4);
+
 	//y axis
 	v_data.push_back(vec3(0.0f, 0.0f, 0.0f));
 	v_data.push_back(vec3(0.0f, i_length, 0.0f));
-	c_data.push_back(Color4f::Green());
-	c_data.push_back(Color4f::Green());
-	i_data.push_back(4);
-	i_data.push_back(5);
+	v_data.push_back(vec3(0.0f, 0.0f, i_width));
 
 	v_data.push_back(vec3(0.0f, 0.0f, 0.0f));
-	v_data.push_back(vec3(0.0f, -i_length, 0.0f));
+	v_data.push_back(vec3(0.0f, -0.5f * i_length, 0.0f));
+	v_data.push_back(vec3(0.0f, 0.0f, -0.5f * i_width));
+
+	c_data.push_back(Color4f::Green());
+	c_data.push_back(Color4f::Green());
+	c_data.push_back(Color4f::Green());
+
 	c_data.push_back(Color4f::Green(0.3f));
 	c_data.push_back(Color4f::Green(0.3f));
+	c_data.push_back(Color4f::Green(0.3f));
+
 	i_data.push_back(6);
 	i_data.push_back(7);
+	i_data.push_back(8);
+
+	i_data.push_back(6);
+	i_data.push_back(8);
+	i_data.push_back(7);
+
+	i_data.push_back(9);
+	i_data.push_back(10);
+	i_data.push_back(11);
+
+	i_data.push_back(9);
+	i_data.push_back(11);
+	i_data.push_back(10);
+
 	//z axis
 	v_data.push_back(vec3(0.0f, 0.0f, 0.0f));
 	v_data.push_back(vec3(0.0f, 0.0f, i_length));
-	c_data.push_back(Color4f::Blue());
-	c_data.push_back(Color4f::Blue());
-	i_data.push_back(8);
-	i_data.push_back(9);
+	v_data.push_back(vec3(i_width, 0.0f, 0.0f));
 
 	v_data.push_back(vec3(0.0f, 0.0f, 0.0f));
-	v_data.push_back(vec3(0.0f, 0.0f, (-1.0f) * i_length));
+	v_data.push_back(vec3(0.0f, 0.0f, -0.5f * i_length));
+	v_data.push_back(vec3(-0.5f * i_width, 0.0f, 0.0f));
+
+	c_data.push_back(Color4f::Blue());
+	c_data.push_back(Color4f::Blue());
+	c_data.push_back(Color4f::Blue());
+
 	c_data.push_back(Color4f::Blue(0.3f));
 	c_data.push_back(Color4f::Blue(0.3f));
-	i_data.push_back(10);
-	i_data.push_back(11);
+	c_data.push_back(Color4f::Blue(0.3f));
+
+	i_data.push_back(12);
+	i_data.push_back(13);
+	i_data.push_back(14);
+
+	i_data.push_back(12);
+	i_data.push_back(14);
+	i_data.push_back(13);
+
+	i_data.push_back(15);
+	i_data.push_back(16);
+	i_data.push_back(17);
+
+	i_data.push_back(15);
+	i_data.push_back(17);
+	i_data.push_back(16);
 
 	mesh = new Mesh("Axis");
 

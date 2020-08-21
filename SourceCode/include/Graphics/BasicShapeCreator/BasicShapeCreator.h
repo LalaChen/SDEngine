@@ -70,7 +70,7 @@ public:
         float i_texture_wrap_x = 1.0f,
         float i_texture_wrap_y = 1.0f);
 
-    MeshStrongReferenceObject CreateAxis(float i_length = 1.0f);
+    MeshStrongReferenceObject CreateAxis(float i_width = 0.2f, float i_length = 2.0f);
 
     MeshStrongReferenceObject CreateCone(
         const Vector3f &i_center = Vector3f::Zero,
