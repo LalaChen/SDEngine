@@ -82,7 +82,7 @@ void Sample1_DrawTriangle::Render()
         angle += addAngle;
         float clip_mat[16] = {
             1.0f,  0.0f, 0.0f, 0.0f,
-            0.0f, -1.0f, 0.0f, 0.0f,
+            0.0f,  1.0f, 0.0f, 0.0f,
             0.0f,  0.0f, 1.0f, 0.0f,
             0.0f,  0.0f, 0.0f, 1.0f };
 
@@ -159,14 +159,15 @@ void Sample1_DrawTriangle::Render()
         //3. Start draw scene.
         //3.1 Set viewport.
         //------ Viewport
-        
+        //Negative Viewport for align vulkan screen space(-y up, +x right) to opengl (+y up , +x right)
         VkViewport viewport = {};
         viewport.x = 0;
-        viewport.y = 0;
+        viewport.y = static_cast<float>(m_current_res.GetHeight());
         viewport.width = static_cast<float>(m_current_res.GetWidth());
-        viewport.height = static_cast<float>(m_current_res.GetHeight());
+        viewport.height = -1.0f * static_cast<float>(m_current_res.GetHeight());
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
+
         m_mgr->SetMainViewportDynamically(m_VK_cmd_buffer, viewport);
         m_mgr->SetMainScissorDynamically(m_VK_cmd_buffer, render_area);
 
@@ -447,17 +448,17 @@ void Sample1_DrawTriangle::CreateBuffers()
 {
     SDLOG("Create Buffer!!!");
     std::vector<vec3> quad_vecs = {
-        vec3( 0.5f,  0.5f, -0.01f),
-        vec3(-0.5f,  0.5f, -0.01f),
-        vec3(-0.5f, -0.5f, -0.01f),
-        vec3( 0.5f, -0.5f, -0.01f)
+        vec3(-1.0f,  1.0f, 0.001f),
+        vec3(-1.0f, -1.0f, 0.001f),
+        vec3( 1.0f, -1.0f, 0.001f),
+        vec3( 1.0f,  1.0f, 0.001f)
     };
 
     std::vector<vec2> quad_texs = {
-        vec2( 0.0f, 0.0f),
-        vec2( 1.0f, 0.0f),
-        vec2( 1.0f, 1.0f),
-        vec2( 0.0f, 1.0f)
+        vec2(0.0f, 0.0f),
+        vec2(0.0f, 1.0f),
+        vec2(1.0f, 1.0f),
+        vec2(1.0f, 0.0f)
     };
 
     std::vector<Color4f> quad_colors = {

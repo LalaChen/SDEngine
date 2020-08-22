@@ -102,5 +102,11 @@
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\ScreenShader.vert">
       <Filter>shader</Filter>
     </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\AxesShader.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\AxesShader.vert">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

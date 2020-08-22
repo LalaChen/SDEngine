@@ -191,6 +191,8 @@
     <ClCompile Include="VulkanTestGLFWApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\AxesShader.frag" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\AxesShader.vert" />
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\MainShader.frag" />
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\MainShader.vert" />
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\PhongShader.frag" />

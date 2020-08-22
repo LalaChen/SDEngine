@@ -48,7 +48,10 @@ std::vector<const char*> VulkanManager::DesiredValidLayers = {
 };
 
 std::vector<const char*> VulkanManager::NecessaryExtensions = {
-    VK_KHR_SWAPCHAIN_EXTENSION_NAME
+    VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+    VK_KHR_MAINTENANCE1_EXTENSION_NAME,
+    //VK_KHR_MAINTENANCE2_EXTENSION_NAME,
+    //VK_KHR_MAINTENANCE3_EXTENSION_NAME
 };
 
 

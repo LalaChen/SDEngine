@@ -158,7 +158,7 @@ void Sample3_MultiSubpass::Render()
         render_area.offset = { 0, 0 };
         render_area.extent = { m_current_res.GetWidth(), m_current_res.GetHeight() };
 
-        VkClearValue clear_color; clear_color.color = { 0.15f, 0.15f, 0.15f, 1.0f };
+        VkClearValue clear_color; clear_color.color = { 0.75f, 0.15f, 0.15f, 1.0f };
         VkClearValue clear_depth; clear_depth.depthStencil = { 1.0f, 0 };
 
         VkClearValue clear_values[4] = {//correspond with image view.
@@ -406,7 +406,7 @@ void Sample3_MultiSubpass::Resize(Size_ui32 i_width, Size_ui32 i_height)
         }
     }
 
-    VkImageView ivs[4] = { m_VK_color_buffer_image_views[0], m_VK_depth_buffer_image_views[0], m_VK_color_buffer_image_views[1], m_VK_depth_buffer_image_views[1] };
+    VkImageView ivs[4] = { m_VK_color_buffer_image_views[0], m_VK_depth_buffer_image_views[0], m_VK_color_buffer_image_views[0], m_VK_depth_buffer_image_views[0] };
 
     VkFramebufferCreateInfo fbo_c_info = {};
     fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -1236,7 +1236,7 @@ void Sample3_MultiSubpass::CreateCommandBufferAndPool()
 
     result = m_mgr->CreateCommandPool(cmd_pool_c_info, m_VK_cmd_pool);
     if (result != VK_SUCCESS) {
-        SDLOGE("Create sample1 cmd pool failure!!!");;
+        SDLOGE("Create sample3 cmd pool failure!!!");;
         return;
     }
 
@@ -1249,7 +1249,7 @@ void Sample3_MultiSubpass::CreateCommandBufferAndPool()
 
     result = m_mgr->AllocateCommandBuffer(cmd_buf_a_info, m_VK_cmd_buffer);
     if (result != VK_SUCCESS) {
-        SDLOGE("Allocate sample1 cmd buffer failure!!!");
+        SDLOGE("Allocate sample3 cmd buffer failure!!!");
         return;
     }
 }
@@ -1358,6 +1358,7 @@ void Sample3_MultiSubpass::CreateRenderPass()
     sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+    sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- 0 to 1
     //*** IMPORTANT ***
     //Write after write dependency for sp 0 and 1. To tell behavior about execute two draw commands that are distinct in
@@ -1439,7 +1440,7 @@ void Sample3_MultiSubpass::CreateFramebuffer()
 
     VkResult result = m_mgr->CreateImage(cb_c_info, m_VK_color_buffer);
     if (result != VK_SUCCESS) {
-        SDLOGE("Sample1 color buffer create failure.");
+        SDLOGE("Sample3 color buffer create failure.");
         return;
     }
 
@@ -1554,7 +1555,7 @@ void Sample3_MultiSubpass::CreateFramebuffer()
     fbo_c_info.layers = 1;
     result = m_mgr->CreateVkFramebuffer(fbo_c_info, m_VK_frame_buffer);
     if (result != VK_SUCCESS) {
-        SDLOGE("Sample1 depth buffer image view failure.");
+        SDLOGE("Sample1 create frame buffer failure.");
         return;
     }
 }

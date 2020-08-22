@@ -304,17 +304,17 @@ void VulkanAPITestManager::InitializeScreenRendering()
 
     //3. create vertice and texture vbo for screen.
     std::vector<vec3> quad_vecs = {
-        vec3( 1.0f,  1.0f, -0.001f),
-        vec3(-1.0f,  1.0f, -0.001f),
-        vec3(-1.0f, -1.0f, -0.001f),
-        vec3( 1.0f, -1.0f, -0.001f)
+        vec3(-1.0f,  1.0f, 0.001f),
+        vec3(-1.0f, -1.0f, 0.001f),
+        vec3( 1.0f, -1.0f, 0.001f),
+        vec3( 1.0f,  1.0f, 0.001f)
     };
 
     std::vector<vec2> quad_texs = {
         vec2(0.0f, 0.0f),
-        vec2(1.0f, 0.0f),
+        vec2(0.0f, 1.0f),
         vec2(1.0f, 1.0f),
-        vec2(0.0f, 1.0f)
+        vec2(1.0f, 0.0f)
     };
 
     std::vector<uint16_t> quad_indices = {

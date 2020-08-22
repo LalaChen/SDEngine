@@ -139,22 +139,26 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
                 std::vector<VkDescriptorImageInfo>& uv_image_infos = decriptor_img_infos.back();
 
                 for (const TextureWeakReferenceObject &tex_wref : tex_wrefs) {
-                    TextureIdentity tex_identity = GetIdentity(tex_wref);
-                    SamplerIdentity sampler_identity = GetIdentityFromTexture(tex_wref);
-                    VkDescriptorImageInfo tex_i_info = {};
-                    tex_i_info.sampler = reinterpret_cast<VkSampler>(sampler_identity.m_handle);
-                    tex_i_info.imageView = reinterpret_cast<VkImageView>(tex_identity.m_view_handle);
-                    tex_i_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-                    uv_image_infos.push_back(tex_i_info);
+                    if (tex_wref.IsNull() == false) {
+                        TextureIdentity tex_identity = GetIdentity(tex_wref);
+                        SamplerIdentity sampler_identity = GetIdentityFromTexture(tex_wref);
+                        VkDescriptorImageInfo tex_i_info = {};
+                        tex_i_info.sampler = reinterpret_cast<VkSampler>(sampler_identity.m_handle);
+                        tex_i_info.imageView = reinterpret_cast<VkImageView>(tex_identity.m_view_handle);
+                        tex_i_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                        uv_image_infos.push_back(tex_i_info);
+                    }
                 }
 
-                VkWriteDescriptorSet texs_set_info = InitializeVkWriteDescriptorSetInfo();
-                texs_set_info.dstSet = reinterpret_cast<VkDescriptorSet>(i_identity.m_handle);
-                texs_set_info.dstBinding = binding_id;
-                texs_set_info.descriptorCount = static_cast<uint32_t>(uv_image_infos.size());
-                texs_set_info.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-                texs_set_info.pImageInfo = uv_image_infos.data();
-                write_infos.push_back(texs_set_info);
+                if (uv_image_infos.size() > 0) {
+                    VkWriteDescriptorSet texs_set_info = InitializeVkWriteDescriptorSetInfo();
+                    texs_set_info.dstSet = reinterpret_cast<VkDescriptorSet>(i_identity.m_handle);
+                    texs_set_info.dstBinding = binding_id;
+                    texs_set_info.descriptorCount = static_cast<uint32_t>(uv_image_infos.size());
+                    texs_set_info.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+                    texs_set_info.pImageInfo = uv_image_infos.data();
+                    write_infos.push_back(texs_set_info);
+                }
             }
         }
     }

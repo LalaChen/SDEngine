@@ -9,10 +9,10 @@ using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
 float gClipMat[16] = {
-   -1.0f,  0.0f, 0.0f, 0.0f,
-    0.0f, -1.0f, 0.0f, 0.0f,
-    0.0f,  0.0f, 1.0f, 0.0f,
-    0.0f,  0.0f, 0.0f, 1.0f };
+     1.0f,  0.0f, 0.0f, 0.0f,
+     0.0f,  1.0f, 0.0f, 0.0f,
+     0.0f,  0.0f, 1.0f, 0.0f,
+     0.0f,  0.0f, 0.0f, 1.0f };
 
 VkDescriptorType DescriptorTypes[UniformBindingType_MAX_DEFINE_VALUE] = {
     VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -54,7 +54,7 @@ void ObjectData::InitializeCommonUniformSet(const std::vector<DescriptorSetLayou
     m_common_pool_sref = new DescriptorPool("CommonPool");
     m_common_pool_sref.GetRef().Initialize(desc_counts, 1, false);
 
-    for (const DescriptorSetLayoutWeakReferenceObject& dsl_wref : i_common_dsl_wrefs) {
+    for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : i_common_dsl_wrefs) {
         m_common_set_wrefs.push_back(m_common_pool_sref.GetRef().AllocateDescriptorSet(dsl_wref));
         m_common_set_wrefs[m_common_set_wrefs.size() - 1].GetRef().LinkUniformVariables(uv_wrefs);
     }
@@ -230,9 +230,13 @@ void Sample4_DrawObjects::Destroy()
 
     m_cube_sref.Reset();
     m_floor_sref.Reset();
+    m_axes_sref.Reset();
 
     m_shared_material_sref.Reset();
+    m_axes_shared_material_sref.Reset();
+
     m_phong_shader_sref.Reset();
+    m_axes_shader_sref.Reset();
 
     for (DescriptorSetLayoutStrongReferenceObject &dsl_sref : m_common_dsl_srefs) {
         dsl_sref.Reset();
@@ -421,69 +425,138 @@ void Sample4_DrawObjects::CreateTexture()
 void Sample4_DrawObjects::CreateShaderProgram()
 {
     //-------------------- PhongShaderWithTexture ---------------------------
-    m_phong_shader_sref = new ShaderProgram("PhongShaderWithTexture");
-    //1. Create GraphicsPipeline.
-    //1.1 create shader module.
-    ShaderModules shader_modules;
-    ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("PhongShaderVert");
-    vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/PhongShader.vert.spv", "main");
-    ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("PhongShaderFrag");
-    frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/PhongShader.frag.spv", "main");
-    shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader_sref;
-    shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
+    {
+        m_phong_shader_sref = new ShaderProgram("PhongShaderWithTexture");
+        //1. Create GraphicsPipeline.
+        //1.1 create shader module.
+        ShaderModules shader_modules;
+        ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("PhongShaderVert");
+        vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/PhongShader.vert.spv", "main");
+        ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("PhongShaderFrag");
+        frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/PhongShader.frag.spv", "main");
+        shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader_sref;
+        shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
 
-    //1.2 write pipeline parames.
-    GraphicsPipelineParam params;
-    params.m_primitive_info.m_primitive = Primitive_TRIANGLE;
-    params.m_depth_stencil_info.m_depth_test_enable = true;
-    params.m_rasterization_info.m_face_culling = FaceCulling_NONE;
-    params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
-    params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
-    params.m_dynamic_states.push_back(DynamicState_SCISSOR);
-    GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
+        //1.2 write pipeline parames.
+        GraphicsPipelineParam params;
+        params.m_primitive_info.m_primitive = Primitive_TRIANGLE;
+        params.m_depth_stencil_info.m_depth_test_enable = true;
+        params.m_rasterization_info.m_face_culling = FaceCulling_BACK_FACE;
+        params.m_rasterization_info.m_front_face = FrontFaceMode_COUNTER_CLOCKWISE;
+        params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
+        params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
+        params.m_dynamic_states.push_back(DynamicState_SCISSOR);
+        GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
 
-    //1.3 prepare descriptor set layouts.
-    std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
-    std::vector<DescriptorSetLayoutWeakReferenceObject> common_dsl_wrefs;
-    for (uint32_t layout_count = 0; layout_count < m_common_dsl_srefs.size(); ++layout_count) {
-        dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
-        common_dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
+        //1.3 prepare descriptor set layouts.
+        std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
+        std::vector<DescriptorSetLayoutWeakReferenceObject> common_dsl_wrefs;
+        for (uint32_t layout_count = 0; layout_count < m_common_dsl_srefs.size(); ++layout_count) {
+            dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
+            common_dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
+        }
+        for (uint32_t layout_count = 0; layout_count < m_general_dsl_srefs.size(); ++layout_count) {
+            dsl_wrefs.push_back(m_general_dsl_srefs[layout_count]);
+        }
+
+        //2.3 register uniform variable descriptor to pipeline.
+        GraphicsPipelineStrongReferenceObject pipeline_sref = new GraphicsPipeline("PhongShader_Forward");
+        pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, dsl_wrefs, 0);
+        pipeline_sref.GetRef().Initialize(shader_modules);
+
+        //2.4 prepare datas and then initalize shader structure.
+        std::vector<GraphicsPipelineStrongReferenceObject> pipe_srefs;
+        pipe_srefs.push_back(pipeline_sref);
+
+        ShaderProgram::RenderPassInfos rp_infos;
+        RenderPassInfo forward_rp;
+        forward_rp.m_rp_wref = m_forward_rp_sref;
+        RenderSubPassPipelineInfo rsp_info;
+        rsp_info.m_dsl_wrefs = dsl_wrefs;
+        rsp_info.m_pipe_id = 0;
+        forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
+        rp_infos.push_back(forward_rp);
+        m_phong_shader_sref.GetRef().RegisterShaderProgramStructure(
+            rp_infos, pipe_srefs, common_dsl_wrefs, m_general_dsl_srefs);
     }
-    for (uint32_t layout_count = 0; layout_count < m_general_dsl_srefs.size(); ++layout_count) {
-        dsl_wrefs.push_back(m_general_dsl_srefs[layout_count]);
+    //-------------------- AxesShaderWithTexture ---------------------------
+    {
+        m_axes_shader_sref = new ShaderProgram("AxesShaderWithTexture");
+        //1. Create GraphicsPipeline.
+        //1.1 create shader module.
+        ShaderModules shader_modules;
+        ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("AxesShaderVert");
+        vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/AxesShader.vert.spv", "main");
+        ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("AxesShaderFrag");
+        frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/AxesShader.frag.spv", "main");
+        shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader_sref;
+        shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
+
+        //1.2 write pipeline parames.
+        GraphicsPipelineParam params;
+        params.m_primitive_info.m_primitive = Primitive_TRIANGLE;
+        params.m_depth_stencil_info.m_depth_test_enable = true;
+        params.m_rasterization_info.m_face_culling = FaceCulling_NONE;
+        params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
+        params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
+        params.m_dynamic_states.push_back(DynamicState_SCISSOR);
+        GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
+
+        //1.3 prepare descriptor set layouts.
+        std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
+        std::vector<DescriptorSetLayoutWeakReferenceObject> common_dsl_wrefs;
+        for (uint32_t layout_count = 0; layout_count < m_common_dsl_srefs.size(); ++layout_count) {
+            dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
+            common_dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
+        }
+        for (uint32_t layout_count = 0; layout_count < m_general_dsl_srefs.size(); ++layout_count) {
+            dsl_wrefs.push_back(m_general_dsl_srefs[layout_count]);
+        }
+
+        //2.3 register uniform variable descriptor to pipeline.
+        GraphicsPipelineStrongReferenceObject pipeline_sref = new GraphicsPipeline("AxesShader_Forward");
+        pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, dsl_wrefs, 0);
+        pipeline_sref.GetRef().Initialize(shader_modules);
+
+        //2.4 prepare datas and then initalize shader structure.
+        std::vector<GraphicsPipelineStrongReferenceObject> pipe_srefs;
+        pipe_srefs.push_back(pipeline_sref);
+
+        ShaderProgram::RenderPassInfos rp_infos;
+        RenderPassInfo forward_rp;
+        forward_rp.m_rp_wref = m_forward_rp_sref;
+        RenderSubPassPipelineInfo rsp_info;
+        rsp_info.m_dsl_wrefs = dsl_wrefs;
+        rsp_info.m_pipe_id = 0;
+        forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
+        rp_infos.push_back(forward_rp);
+        m_axes_shader_sref.GetRef().RegisterShaderProgramStructure(
+            rp_infos, pipe_srefs, common_dsl_wrefs, m_general_dsl_srefs);
     }
-
-    //2.3 register uniform variable descriptor to pipeline.
-    GraphicsPipelineStrongReferenceObject pipeline_sref = new GraphicsPipeline("PhongShader_Forward");
-    pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, dsl_wrefs, 0);
-    pipeline_sref.GetRef().Initialize(shader_modules);
-
-    //2.4 prepare datas and then initalize shader structure.
-    std::vector<GraphicsPipelineStrongReferenceObject> pipe_srefs;
-    pipe_srefs.push_back(pipeline_sref);
-
-    ShaderProgram::RenderPassInfos rp_infos;
-    RenderPassInfo forward_rp;
-    forward_rp.m_rp_wref = m_forward_rp_sref;
-    RenderSubPassPipelineInfo rsp_info;
-    rsp_info.m_dsl_wrefs = dsl_wrefs;
-    rsp_info.m_pipe_id = 0;
-    forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
-    rp_infos.push_back(forward_rp);
-    m_phong_shader_sref.GetRef().RegisterShaderProgramStructure(
-        rp_infos, pipe_srefs, common_dsl_wrefs, m_general_dsl_srefs);
 }
 
 void Sample4_DrawObjects::CreateSharedMaterial()
 {
-    m_shared_material_sref = new Material("Material");
-    m_shared_material_sref.GetRef().BindShaderProgram(m_phong_shader_sref);
-    MaterialUniformBuffer mat_ub; //use default color.
-    m_shared_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniformBuffer));
-    m_shared_material_sref.GetRef().SetTexture("mainTexture", m_tex_sref);
-    //Set data done. Link with shader program.(Write descirptor)
-    m_shared_material_sref.GetRef().LinkWithShaderProgram();
-    m_shared_material_sref.GetRef().Update();
+    {
+        m_shared_material_sref = new Material("Material");
+        m_shared_material_sref.GetRef().BindShaderProgram(m_phong_shader_sref);
+        MaterialUniformBuffer mat_ub; //use default color.
+        m_shared_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniformBuffer));
+        m_shared_material_sref.GetRef().SetTexture("mainTexture", m_tex_sref);
+        //Set data done. Link with shader program.(Write descirptor)
+        m_shared_material_sref.GetRef().LinkWithShaderProgram();
+        m_shared_material_sref.GetRef().Update();
+    }
+
+    {
+        m_axes_shared_material_sref = new Material("AxesMaterial");
+        m_axes_shared_material_sref.GetRef().BindShaderProgram(m_axes_shader_sref);
+        MaterialUniformBuffer mat_ub; //use default color.
+        m_axes_shared_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniformBuffer));
+        //Set data done. Link with shader program.(Write descirptor)
+        m_axes_shared_material_sref.GetRef().LinkWithShaderProgram();
+        m_axes_shared_material_sref.GetRef().Update();
+    }
 }
 
 void Sample4_DrawObjects::CreateObjects()
@@ -500,15 +573,25 @@ void Sample4_DrawObjects::CreateObjects()
     m_scene_objects.push_back(ObjectData());
     last_obj_iter = m_scene_objects.rbegin();
     (*last_obj_iter).m_mesh = m_floor_sref;
-    Vector3f start_pos = Vector3f(m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, 1.0f).scale(
-        -1.0f * static_cast<float>(m_cube_row) / 2.0f,
-        0.25f,
-        -1.0f * static_cast<float>(m_cube_depth) / 2.0f);
     (*last_obj_iter).InitializeCommonUniformSet(dsl_wrefs);
     (*last_obj_iter).UpdateCommonUniformSet(m_camera, m_light);
     (*last_obj_iter).m_shared_mat_wref = m_shared_material_sref;
 
+    //Scene ---- Axes.
+    m_axes_sref = BasicShapeCreator::GetRef().CreateAxis(0.2f, 20.0f);
+    m_scene_objects.push_back(ObjectData());
+    last_obj_iter = m_scene_objects.rbegin();
+    (*last_obj_iter).m_trans.m_position = Vector3f(0.0f, 0.0001f, 0.0f);
+    (*last_obj_iter).m_mesh = m_axes_sref;
+    (*last_obj_iter).InitializeCommonUniformSet(dsl_wrefs);
+    (*last_obj_iter).UpdateCommonUniformSet(m_camera, m_light);
+    (*last_obj_iter).m_shared_mat_wref = m_axes_shared_material_sref;
+
     //Scene ---- Cubes
+    Vector3f start_pos = Vector3f(m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, 1.0f).scale(
+        -1.0f * static_cast<float>(m_cube_row) / 2.0f,
+        0.25f,
+        -1.0f * static_cast<float>(m_cube_depth) / 2.0f);
     m_cube_sref = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
     for (uint32_t row = 0; row < m_cube_row; ++row) {
         for (uint32_t col = 0; col < m_cube_col; ++col) {
@@ -564,16 +647,17 @@ void Sample4_DrawObjects::CreateLight()
 
 void Sample4_DrawObjects::RecordCommandBuffer()
 {
+    //Negative viewport.
     Viewport vp;
-    vp.m_x = 0.0f; vp.m_y = 0.0f;
+    vp.m_x = 0.0f; vp.m_y = static_cast<float>(m_current_res.GetHeight());
     vp.m_width = static_cast<float>(m_current_res.GetWidth());
-    vp.m_height = static_cast<float>(m_current_res.GetHeight());
+    vp.m_height = -1.0f * static_cast<float>(m_current_res.GetHeight());
     vp.m_min_depth = 0.0f;
     vp.m_max_depth = 1.0f;
 
     ScissorRegion sr;
     sr.m_x = 0.0f; sr.m_y = 0.0f;
-    sr.m_width = vp.m_width; sr.m_height = vp.m_height;
+    sr.m_width = vp.m_width; sr.m_height = m_current_res.GetWidth();
 
 #if defined(SINGLE_FLOW)
 #if defined(TIME_MEASURE)
@@ -606,6 +690,8 @@ void Sample4_DrawObjects::RecordCommandBuffer()
 #endif
     m_main_cb_wref.GetRef().Begin();
     m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb_wref);
+    GraphicsManager::GetRef().SetViewport(m_main_cb_wref, vp);
+    GraphicsManager::GetRef().SetScissor(m_main_cb_wref, sr);
     uint32_t oID = 0u;
     uint32_t tID = 0u;
     std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;

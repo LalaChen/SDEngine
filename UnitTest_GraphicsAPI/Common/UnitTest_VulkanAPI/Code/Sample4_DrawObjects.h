@@ -100,9 +100,12 @@ protected:
     RenderPassStrongReferenceObject m_forward_rp_sref;
     TextureStrongReferenceObject m_tex_sref;
     ShaderProgramStrongReferenceObject m_phong_shader_sref;
+    ShaderProgramStrongReferenceObject m_axes_shader_sref;
     MaterialStrongReferenceObject m_shared_material_sref;
+    MaterialStrongReferenceObject m_axes_shared_material_sref;
     MeshStrongReferenceObject m_cube_sref;
     MeshStrongReferenceObject m_floor_sref;
+    MeshStrongReferenceObject m_axes_sref;
 protected:
 #if !defined(SINGLE_FLOW)
 #if defined(RECORD_POOL_V2)

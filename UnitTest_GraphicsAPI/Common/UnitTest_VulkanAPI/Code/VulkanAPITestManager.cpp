@@ -159,7 +159,7 @@ void VulkanAPITestManager::RenderToScreen()
         return;
     }
 
-    /*
+    ///*
     VkImageBlit blit_param = {};
     blit_param.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit_param.srcSubresource.baseArrayLayer = 0;
@@ -221,7 +221,7 @@ void VulkanAPITestManager::RenderToScreen()
     }
     //*/
 
-    ///*
+    /*
     //Begin RenderPass.
     VkRect2D render_area = {};
     render_area.offset = { 0, 0 };
@@ -269,9 +269,9 @@ void VulkanAPITestManager::RenderToScreen()
         //
         VkViewport viewport = {};
         viewport.x = 0;
-        viewport.y = 0;
+        viewport.y = m_screen_size.GetHeight();
         viewport.width = static_cast<float>(m_screen_size.GetWidth());
-        viewport.height = static_cast<float>(m_screen_size.GetHeight());
+        viewport.height = -1.0f * static_cast<float>(m_screen_size.GetHeight());
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
 
