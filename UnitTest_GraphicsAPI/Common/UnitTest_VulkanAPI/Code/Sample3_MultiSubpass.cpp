@@ -1267,8 +1267,8 @@ void Sample3_MultiSubpass::CreateRenderPass()
     attachment_descs[0].samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
     attachment_descs[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //Clear before using. If we set VK_ATTACHMENT_LOAD_OP_DONT_CARE, we can't clear via clearcolor.
     attachment_descs[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
-    attachment_descs[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;//
-    attachment_descs[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;//
+    attachment_descs[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //
+    attachment_descs[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; //
     attachment_descs[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     attachment_descs[0].finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     //--- Depth attachment description.
@@ -1277,8 +1277,8 @@ void Sample3_MultiSubpass::CreateRenderPass()
     attachment_descs[1].samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
     attachment_descs[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     attachment_descs[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
-    attachment_descs[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;//
-    attachment_descs[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;//
+    attachment_descs[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //
+    attachment_descs[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; //
     attachment_descs[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     attachment_descs[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     //Sp2 (don't clear data)
@@ -1287,8 +1287,8 @@ void Sample3_MultiSubpass::CreateRenderPass()
     attachment_descs[2].samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
     attachment_descs[2].loadOp = VK_ATTACHMENT_LOAD_OP_LOAD; //Don't clear color and depth buffer.
     attachment_descs[2].storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using.
-    attachment_descs[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;//
-    attachment_descs[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;//
+    attachment_descs[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //
+    attachment_descs[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; //
     attachment_descs[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     attachment_descs[2].finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     //--- Depth attachment description.
@@ -1297,8 +1297,8 @@ void Sample3_MultiSubpass::CreateRenderPass()
     attachment_descs[3].samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
     attachment_descs[3].loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
     attachment_descs[3].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    attachment_descs[3].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;//
-    attachment_descs[3].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;//
+    attachment_descs[3].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //
+    attachment_descs[3].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; //
     attachment_descs[3].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     attachment_descs[3].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     //1.2 write attachment references.
@@ -1358,7 +1358,6 @@ void Sample3_MultiSubpass::CreateRenderPass()
     sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-    sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
     //--- 0 to 1
     //*** IMPORTANT ***
     //Write after write dependency for sp 0 and 1. To tell behavior about execute two draw commands that are distinct in
@@ -1409,7 +1408,7 @@ void Sample3_MultiSubpass::CreateRenderPass()
     //1.6 create render pass.
     VkResult result = m_mgr->CreateRenderPass(pass_c_info, m_VK_render_pass);
     if (result != VK_SUCCESS) {
-        SDLOGE("Sample1 render pass create failure.");
+        SDLOGE("Sample3 render pass create failure.");
         return;
     }
 }
