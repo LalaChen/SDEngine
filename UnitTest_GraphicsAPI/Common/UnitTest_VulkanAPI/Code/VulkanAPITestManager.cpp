@@ -159,7 +159,7 @@ void VulkanAPITestManager::RenderToScreen()
         return;
     }
 
-    ///*
+    /*
     VkImageBlit blit_param = {};
     blit_param.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit_param.srcSubresource.baseArrayLayer = 0;
@@ -221,7 +221,7 @@ void VulkanAPITestManager::RenderToScreen()
     }
     //*/
 
-    /*
+    ///*
     //Begin RenderPass.
     VkRect2D render_area = {};
     render_area.offset = { 0, 0 };

@@ -53,8 +53,10 @@ set (SD_ENGINE_INC_DIRS
         ${SD_ENGINE_INC_DIR}/Graphics/ModelImporter
         ${SD_ENGINE_INC_DIR}/Graphics/Mesh
         ${SD_ENGINE_INC_DIR}/Graphics/Material
+        ${SD_ENGINE_INC_DIR}/Graphics/ShaderProgram
         ${SD_ENGINE_INC_DIR}/Graphics/RenderFlow
-        ${SD_ENGINE_INC_DIR}/Graphics/CommandBuffer/)
+        ${SD_ENGINE_INC_DIR}/Graphics/CommandBuffer
+        ${SD_ENGINE_INC_DIR}/Graphics/EmbeddedShaderProgramSource)
 
 message(STATUS "SDEngineRootDir: ${SD_ENGINE_DIR}")
 message(STATUS "SDThirdPartyRootDir: ${SD_THIRD_PARTY_DIR}")
