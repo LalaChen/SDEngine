@@ -85,7 +85,7 @@ void VulkanManager::SetScissors(const CommandBufferWeakReferenceObject &i_cb_wre
     SetVkScissors(cb_handle, rects);
 }
 
-void VulkanManager::DrawByIndices(const IndexBufferWeakReferenceObject &i_ib_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number)
+void VulkanManager::DrawByIndices(const CommandBufferWeakReferenceObject &i_cb_wref, const IndexBufferWeakReferenceObject &i_ib_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number)
 {
     const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
     const IndexBufferIdentity &ib_idnetity = GetIdentity(i_ib_wref);

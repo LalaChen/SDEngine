@@ -45,7 +45,7 @@ void OpenGL4Manager::SetScissors(const CommandBufferWeakReferenceObject &i_cb_wr
 {
 }
 
-void OpenGL4Manager::DrawByIndices(const IndexBufferWeakReferenceObject &i_ib_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number)
+void OpenGL4Manager::DrawByIndices(const CommandBufferWeakReferenceObject &i_cb_wref, const IndexBufferWeakReferenceObject &i_ib_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number)
 {
 }
 

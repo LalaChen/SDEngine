@@ -182,7 +182,7 @@ public:
     virtual void SetViewports(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<Viewport> &i_vps) = 0;
     virtual void SetScissor(const CommandBufferWeakReferenceObject &i_cb_wref, const ScissorRegion &i_region) = 0;
     virtual void SetScissors(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<ScissorRegion> &i_regions) = 0;
-    virtual void DrawByIndices(const IndexBufferWeakReferenceObject &i_ib_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) = 0;
+    virtual void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb_wref, const IndexBufferWeakReferenceObject& i_ib_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) = 0;
 public:
 //------------- Resize Function -----------------
     virtual void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) = 0;

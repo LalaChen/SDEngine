@@ -79,7 +79,7 @@ void Mesh::BindIndexBuffer(const CommandBufferWeakReferenceObject &i_cb_wref)
 
 void Mesh::Render(const CommandBufferWeakReferenceObject &i_cb_wref)
 {
-    GraphicsManager::GetRef().DrawByIndices(m_index_buffer, i_cb_wref, 0, 0, 0, 1);
+    GraphicsManager::GetRef().DrawByIndices(i_cb_wref, m_index_buffer, 0, 0, 0, 1);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
