@@ -66,13 +66,13 @@ VkResult VulkanManager::CreateVkSampler(
     sampler_c_info.borderColor = i_border_color;
     sampler_c_info.unnormalizedCoordinates = i_unnormalize_coord;
 
-    return vkCreateSampler(m_VK_device, &sampler_c_info, nullptr, &io_handle);
+    return vkCreateSampler(m_device_handle, &sampler_c_info, nullptr, &io_handle);
 }
 
 void VulkanManager::DestroyVkSampler(VkSampler &io_handle)
 {
     if (io_handle != VK_NULL_HANDLE) {
-        vkDestroySampler(m_VK_device, io_handle, nullptr);
+        vkDestroySampler(m_device_handle, io_handle, nullptr);
     }
     io_handle = VK_NULL_HANDLE;
 }

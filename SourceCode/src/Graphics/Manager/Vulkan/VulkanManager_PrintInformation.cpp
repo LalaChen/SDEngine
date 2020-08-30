@@ -27,6 +27,19 @@ SOFTWARE.
 #include "LogManager.h"
 #include "VulkanManager.h"
 
+#define SD_VK_IS_FEATURE( var, feature_bit ) ((var & feature_bit) == feature_bit)
+
+#define SD_VK_SHOW_LIMIT_INT32(limitProp) SDLOG(#limitProp" : %d.", picked_dev_props.limits.limitProp);
+#define SD_VK_SHOW_LIMIT_UINT32(limitProp) SDLOG(#limitProp" : %u.", picked_dev_props.limits.limitProp);
+#define SD_VK_SHOW_LIMIT_DEV_SIZE(limitProp) SDLOG(#limitProp" : %llu.", picked_dev_props.limits.limitProp);
+#define SD_VK_SHOW_LIMIT_UINT32_2(limitProp) SDLOG(#limitProp" : (%d, %d).", \
+    picked_dev_props.limits.limitProp[0], picked_dev_props.limits.limitProp[1]);
+#define SD_VK_SHOW_LIMIT_UINT32_3(limitProp) SDLOG(#limitProp" : (%d, %d, %d).", \
+    picked_dev_props.limits.limitProp[0], picked_dev_props.limits.limitProp[1], picked_dev_props.limits.limitProp[2]);
+#define SD_VK_SHOW_LIMIT_FLOAT(limitProp) SDLOG(#limitProp" : %lf.", picked_dev_props.limits.limitProp);
+#define SD_VK_SHOW_LIMIT_FLOAT_2(limitProp) SDLOG(#limitProp" : (%lf, %lf).", \
+    picked_dev_props.limits.limitProp[0], picked_dev_props.limits.limitProp[1]);
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 void VulkanManager::PrintSystemInformation()
@@ -35,7 +48,7 @@ void VulkanManager::PrintSystemInformation()
     SDLOG("Memory Information :");
     VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
     //1. Get memory property.
-    vkGetPhysicalDeviceMemoryProperties(m_VK_physical_device, &phy_dev_memory_props);
+    vkGetPhysicalDeviceMemoryProperties(m_phy_device_handle, &phy_dev_memory_props);
     for (uint32_t type = 0; type < phy_dev_memory_props.memoryTypeCount; ++type) {
         SDLOG("Type[%d] : Flags(%u) HeapID(%u)", type,
             phy_dev_memory_props.memoryTypes[type].propertyFlags,
@@ -54,47 +67,159 @@ void VulkanManager::PrintSystemInformation()
         VkFormatProperties format_prop;
         TextureFormatEnum format_enum = static_cast<TextureFormatEnum>(format_ID);
         VkFormat format = static_cast<VkFormat>(TextureFormat_Vulkan::Convert(format_enum));
-        vkGetPhysicalDeviceFormatProperties(m_VK_physical_device, format, &format_prop);
+        vkGetPhysicalDeviceFormatProperties(m_phy_device_handle, format, &format_prop);
         SDLOG("Format[%d](%d)(%s) :"
               " features(%08x)(StorageImage:%d),"
               " linearTile(%08x)(Sampler:%d)(CA:%d)(DA:%d)(BlitSRC:%d)(BlitDST:%d),"
               " optinalTile(%08x)(Sampler:%d)(CA:%d)(DA:%d)(BlitSRC:%d)(BlitDST:%d)",
             format_ID, format, TextureFormat_Vulkan::GetTextureFormatName(format_enum),
             format_prop.bufferFeatures,
-            SD_IS_FEATURE(format_prop.bufferFeatures, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT),
+            SD_VK_IS_FEATURE(format_prop.bufferFeatures, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT),
             format_prop.linearTilingFeatures,
-            SD_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT),
-            SD_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT),
-            SD_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
-            SD_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_BLIT_SRC_BIT),
-            SD_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_BLIT_DST_BIT),
+            SD_VK_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT),
+            SD_VK_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT),
+            SD_VK_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
+            SD_VK_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_BLIT_SRC_BIT),
+            SD_VK_IS_FEATURE(format_prop.linearTilingFeatures, VK_FORMAT_FEATURE_BLIT_DST_BIT),
             format_prop.optimalTilingFeatures,
-            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT),
-            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT),
-            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
-            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_BLIT_SRC_BIT),
-            SD_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_BLIT_DST_BIT)
+            SD_VK_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT),
+            SD_VK_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT),
+            SD_VK_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
+            SD_VK_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_BLIT_SRC_BIT),
+            SD_VK_IS_FEATURE(format_prop.optimalTilingFeatures, VK_FORMAT_FEATURE_BLIT_DST_BIT)
             );
     }
 
     VkPhysicalDeviceProperties picked_dev_props;
-    vkGetPhysicalDeviceProperties(m_VK_physical_device, &picked_dev_props);
-    SDLOG("Limits:");
-    SDLOG("maxColorAttachments : %d.", picked_dev_props.limits.maxColorAttachments);
-    SDLOG("maxBoundDescriptorSets : %d.", picked_dev_props.limits.maxBoundDescriptorSets);
-    SDLOG("maxDescriptorSetSamplers : %d.", picked_dev_props.limits.maxDescriptorSetSamplers);
-    SDLOG("maxDescriptorSetUniformBuffers : %d.", picked_dev_props.limits.maxDescriptorSetUniformBuffers);
-    SDLOG("maxDescriptorSetUniformBuffersDynamic : %d.", picked_dev_props.limits.maxDescriptorSetUniformBuffersDynamic);
-    SDLOG("maxDescriptorSetStorageBuffers : %d.", picked_dev_props.limits.maxDescriptorSetStorageBuffers);
-    SDLOG("maxDescriptorSetStorageBuffersDynamic : %d.", picked_dev_props.limits.maxDescriptorSetStorageBuffersDynamic);
-    SDLOG("maxDescriptorSetSampledImages : %d.", picked_dev_props.limits.maxDescriptorSetSampledImages);
-    SDLOG("maxDescriptorSetStorageImages : %d.", picked_dev_props.limits.maxDescriptorSetStorageImages);
-    SDLOG("maxDescriptorSetInputAttachments : %d.", picked_dev_props.limits.maxDescriptorSetInputAttachments);
-    SDLOG("maxPushConstantsSize : %d.", picked_dev_props.limits.maxPushConstantsSize);
-    SDLOG("maxVertexInputAttributes : %d.", picked_dev_props.limits.maxVertexInputAttributes);
-    SDLOG("maxVertexInputBindings : %d.", picked_dev_props.limits.maxVertexInputBindings);
-    SDLOG("maxVertexInputAttributeOffset : %d.", picked_dev_props.limits.maxVertexInputAttributeOffset);
-    SDLOG("maxVertexInputBindingStride : %d.", picked_dev_props.limits.maxVertexInputBindingStride);
+    vkGetPhysicalDeviceProperties(m_phy_device_handle, &picked_dev_props);
+    SDLOG("Target Device Service: %s(%d:%d:%d) driver version(%d, %d, %d) apiversion(%d, %d, %d).",
+        picked_dev_props.deviceName,
+        picked_dev_props.vendorID, picked_dev_props.deviceID, picked_dev_props.deviceType,
+        VK_VERSION_MAJOR(picked_dev_props.apiVersion), VK_VERSION_MINOR(picked_dev_props.apiVersion), VK_VERSION_PATCH(picked_dev_props.apiVersion),
+        VK_VERSION_MAJOR(picked_dev_props.driverVersion), VK_VERSION_MINOR(picked_dev_props.driverVersion), VK_VERSION_PATCH(picked_dev_props.driverVersion));
+    SDLOG("--- Limits ---");
+    SD_VK_SHOW_LIMIT_UINT32(maxImageDimension1D);
+    SD_VK_SHOW_LIMIT_UINT32(maxImageDimension2D);
+    SD_VK_SHOW_LIMIT_UINT32(maxImageDimension3D);
+    SD_VK_SHOW_LIMIT_UINT32(maxImageDimensionCube);
+    SD_VK_SHOW_LIMIT_UINT32(maxImageArrayLayers);
+    SD_VK_SHOW_LIMIT_UINT32(maxTexelBufferElements);
+    SD_VK_SHOW_LIMIT_UINT32(maxUniformBufferRange);
+    SD_VK_SHOW_LIMIT_UINT32(maxStorageBufferRange);
+    SD_VK_SHOW_LIMIT_UINT32(maxPushConstantsSize);
+    SD_VK_SHOW_LIMIT_UINT32(maxMemoryAllocationCount);
+    SD_VK_SHOW_LIMIT_UINT32(maxSamplerAllocationCount);
+    SD_VK_SHOW_LIMIT_DEV_SIZE(bufferImageGranularity);
+    SD_VK_SHOW_LIMIT_DEV_SIZE(sparseAddressSpaceSize);
+    SD_VK_SHOW_LIMIT_UINT32(maxBoundDescriptorSets);
+    SD_VK_SHOW_LIMIT_UINT32(maxPerStageDescriptorSamplers);
+    SD_VK_SHOW_LIMIT_UINT32(maxPerStageDescriptorUniformBuffers);
+    SD_VK_SHOW_LIMIT_UINT32(maxPerStageDescriptorStorageBuffers);
+    SD_VK_SHOW_LIMIT_UINT32(maxPerStageDescriptorSampledImages);
+    SD_VK_SHOW_LIMIT_UINT32(maxPerStageDescriptorStorageImages);
+    SD_VK_SHOW_LIMIT_UINT32(maxPerStageDescriptorStorageBuffers);
+    SD_VK_SHOW_LIMIT_UINT32(maxPerStageResources);
+    SD_VK_SHOW_LIMIT_UINT32(maxDescriptorSetSamplers);
+    SD_VK_SHOW_LIMIT_UINT32(maxDescriptorSetUniformBuffers);
+    SD_VK_SHOW_LIMIT_UINT32(maxDescriptorSetUniformBuffersDynamic);
+    SD_VK_SHOW_LIMIT_UINT32(maxDescriptorSetStorageBuffers);
+    SD_VK_SHOW_LIMIT_UINT32(maxDescriptorSetStorageBuffersDynamic);
+    SD_VK_SHOW_LIMIT_UINT32(maxDescriptorSetSampledImages);
+    SD_VK_SHOW_LIMIT_UINT32(maxDescriptorSetStorageImages);
+    SD_VK_SHOW_LIMIT_UINT32(maxDescriptorSetInputAttachments);
+    SD_VK_SHOW_LIMIT_UINT32(maxVertexInputAttributes);
+    SD_VK_SHOW_LIMIT_UINT32(maxVertexInputBindings);
+    SD_VK_SHOW_LIMIT_UINT32(maxVertexInputAttributeOffset);
+    SD_VK_SHOW_LIMIT_UINT32(maxVertexInputBindingStride);
+    SD_VK_SHOW_LIMIT_UINT32(maxVertexOutputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxTessellationGenerationLevel);
+    SD_VK_SHOW_LIMIT_UINT32(maxTessellationPatchSize);
+    SD_VK_SHOW_LIMIT_UINT32(maxTessellationControlPerVertexInputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxTessellationControlPerVertexOutputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxTessellationControlPerPatchOutputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxTessellationControlTotalOutputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxTessellationEvaluationInputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxTessellationEvaluationOutputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxGeometryShaderInvocations);
+    SD_VK_SHOW_LIMIT_UINT32(maxGeometryInputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxGeometryOutputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxGeometryOutputVertices);
+    SD_VK_SHOW_LIMIT_UINT32(maxGeometryTotalOutputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxGeometryShaderInvocations);
+    SD_VK_SHOW_LIMIT_UINT32(maxFragmentInputComponents);
+    SD_VK_SHOW_LIMIT_UINT32(maxFragmentOutputAttachments);
+    SD_VK_SHOW_LIMIT_UINT32(maxFragmentDualSrcAttachments);
+    SD_VK_SHOW_LIMIT_UINT32(maxFragmentCombinedOutputResources);
+    SD_VK_SHOW_LIMIT_UINT32(maxComputeSharedMemorySize);
+    SD_VK_SHOW_LIMIT_UINT32_3(maxComputeWorkGroupCount);
+    SD_VK_SHOW_LIMIT_UINT32(maxComputeWorkGroupInvocations);
+    SD_VK_SHOW_LIMIT_UINT32_3(maxComputeWorkGroupSize);
+    SD_VK_SHOW_LIMIT_UINT32(subPixelPrecisionBits);
+    SD_VK_SHOW_LIMIT_UINT32(subTexelPrecisionBits);
+    SD_VK_SHOW_LIMIT_UINT32(mipmapPrecisionBits);
+    SD_VK_SHOW_LIMIT_UINT32(maxDrawIndexedIndexValue);
+    SD_VK_SHOW_LIMIT_UINT32(maxDrawIndirectCount);
+    SD_VK_SHOW_LIMIT_FLOAT(maxSamplerLodBias);
+    SD_VK_SHOW_LIMIT_FLOAT(maxSamplerAnisotropy);
+    SD_VK_SHOW_LIMIT_UINT32(maxViewports);
+    SD_VK_SHOW_LIMIT_UINT32_2(maxViewportDimensions);
+    SD_VK_SHOW_LIMIT_FLOAT_2(viewportBoundsRange);
+    SD_VK_SHOW_LIMIT_UINT32(viewportSubPixelBits);
+    SD_VK_SHOW_LIMIT_DEV_SIZE(minMemoryMapAlignment);
+    SD_VK_SHOW_LIMIT_DEV_SIZE(minTexelBufferOffsetAlignment);
+    SD_VK_SHOW_LIMIT_DEV_SIZE(minUniformBufferOffsetAlignment);
+    SD_VK_SHOW_LIMIT_DEV_SIZE(minStorageBufferOffsetAlignment);
+    SD_VK_SHOW_LIMIT_INT32(minTexelOffset);
+    SD_VK_SHOW_LIMIT_UINT32(maxTexelOffset);
+    SD_VK_SHOW_LIMIT_INT32(minTexelGatherOffset);
+    SD_VK_SHOW_LIMIT_UINT32(maxTexelGatherOffset);
+    SD_VK_SHOW_LIMIT_FLOAT(minInterpolationOffset);
+    SD_VK_SHOW_LIMIT_FLOAT(maxInterpolationOffset);
+    SD_VK_SHOW_LIMIT_UINT32(subPixelInterpolationOffsetBits);
+    SD_VK_SHOW_LIMIT_UINT32(maxFramebufferWidth);
+    SD_VK_SHOW_LIMIT_UINT32(maxFramebufferHeight);
+    SD_VK_SHOW_LIMIT_UINT32(maxFramebufferLayers);
+    SD_VK_SHOW_LIMIT_UINT32(framebufferColorSampleCounts);
+    SD_VK_SHOW_LIMIT_UINT32(framebufferDepthSampleCounts);
+    SD_VK_SHOW_LIMIT_UINT32(framebufferStencilSampleCounts);
+    SD_VK_SHOW_LIMIT_UINT32(framebufferNoAttachmentsSampleCounts);
+    SD_VK_SHOW_LIMIT_UINT32(maxColorAttachments);
+    SD_VK_SHOW_LIMIT_UINT32(sampledImageColorSampleCounts);
+    SD_VK_SHOW_LIMIT_UINT32(sampledImageIntegerSampleCounts);
+    SD_VK_SHOW_LIMIT_UINT32(sampledImageDepthSampleCounts);
+    SD_VK_SHOW_LIMIT_UINT32(sampledImageStencilSampleCounts);
+    SD_VK_SHOW_LIMIT_UINT32(storageImageSampleCounts);
+    SD_VK_SHOW_LIMIT_UINT32(maxSampleMaskWords);
+    SD_VK_SHOW_LIMIT_UINT32(timestampComputeAndGraphics);
+    SD_VK_SHOW_LIMIT_FLOAT(timestampPeriod);
+    SD_VK_SHOW_LIMIT_UINT32(maxClipDistances);
+    SD_VK_SHOW_LIMIT_UINT32(maxCullDistances);
+    SD_VK_SHOW_LIMIT_UINT32(maxCombinedClipAndCullDistances);
+    SD_VK_SHOW_LIMIT_UINT32(discreteQueuePriorities);
+    SD_VK_SHOW_LIMIT_FLOAT_2(pointSizeRange);
+    SD_VK_SHOW_LIMIT_FLOAT_2(lineWidthRange);
+    SD_VK_SHOW_LIMIT_FLOAT(pointSizeGranularity);
+    SD_VK_SHOW_LIMIT_FLOAT(lineWidthGranularity);
+    SD_VK_SHOW_LIMIT_UINT32(strictLines);
+    SD_VK_SHOW_LIMIT_UINT32(standardSampleLocations);
+    SD_VK_SHOW_LIMIT_DEV_SIZE(optimalBufferCopyOffsetAlignment);
+    SD_VK_SHOW_LIMIT_DEV_SIZE(optimalBufferCopyRowPitchAlignment);
+    SD_VK_SHOW_LIMIT_DEV_SIZE(nonCoherentAtomSize);
+    
+    //----------------- surface information.
+    SDLOG("--- Surface Capabilities ---");
+    VkSurfaceCapabilitiesKHR sur_caps;
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_phy_device_handle, m_sur_handle, &sur_caps);
+    SDLOG("ImageCount Min:%d Max:%d", sur_caps.minImageCount, sur_caps.maxImageCount);
+    SDLOG("ImageExtents Min:(%d,%d) Cur:(%d,%d) Max:(%d,%d)",
+        sur_caps.minImageExtent.width, sur_caps.minImageExtent.height,
+        sur_caps.currentExtent.width, sur_caps.currentExtent.height,
+        sur_caps.maxImageExtent.width, sur_caps.maxImageExtent.height);
+    SDLOG("maxImageArrayLayers:%d", sur_caps.maxImageArrayLayers);
+    SDLOG("supportedTransforms:%d", sur_caps.supportedTransforms);
+    SDLOG("currentTransform:%x (VkSurfaceTransformFlagBitsKHR)", sur_caps.currentTransform);
+    SDLOG("supportedCompositeAlpha:%d", sur_caps.supportedCompositeAlpha);
+    SDLOG("supportedUsageFlags:%d", sur_caps.supportedUsageFlags);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

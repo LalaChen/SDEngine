@@ -48,13 +48,13 @@ class SDENGINE_CLASS VulkanManager : public GraphicsManager
 public:
     static VkBool32 ConvertBoolean(bool flag);
 protected:
-    static const uint32_t MaxImgAcqirationTime; //nanosecond.
-    static const uint32_t MaxFenceWaitTime;
-    static const VkClearValue ClearColor;
-    static const VkClearValue ClearDepth;
+    static const uint32_t sMaxImgAcqirationTime; //nanosecond.
+    static const uint32_t sMaxFenceWaitTime;
+    static const VkClearValue sClearColor;
+    static const VkClearValue sClearDepth;
 protected:
-    static std::vector<const char*> DesiredValidLayers;
-    static std::vector<const char*> NecessaryExtensions;
+    static std::vector<const char*> sDesiredValidLayers;
+    static std::vector<const char*> sNecessaryExtensions;
 public:
     static const std::vector<const char*>& GetDesiredValidLayers();
 public:
@@ -161,6 +161,8 @@ public:
     void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb_wref, const IndexBufferWeakReferenceObject &i_ib_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) override;
 public:
     void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
+public:
+    void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex_wref) override;
 protected:
 //------- Vulkan descriptor set and pool private Function ------
     VkResult CreateVkDescriptorSetLayout(
@@ -493,47 +495,47 @@ protected:
     void RenderToScreen() override;
     void RenderEnd() override;
 protected:
+//-------------------- Vulkan Builder -------------------
     void InitializeDebugMessage();
     void InitializePhysicalDevice();
-    void InitializeLogicDevice();
     void InitializeSettings();
+    void InitializeDevice();
     void InitializeSwapChain();
     void InitializePresentRenderPass();
     void InitializeSCImageViewsAndFBs();
     void InitializeCommandPoolAndBuffers();
 protected:
-    VkInstance m_VK_instance;
-    VkSurfaceKHR m_VK_surface;
+    //configuration
+    std::vector<VkQueueFlagBits> m_desired_queue_abilities;
+    std::vector<VkSurfaceFormatKHR> m_desired_sur_formats;
+    std::vector<VkPresentModeKHR> m_desired_pre_modes;
 protected:
-    VkDebugReportCallbackEXT m_VK_debug_report_cbk;
+    //Application Create.
+    VkInstance m_ins_handle;
+    VkSurfaceKHR m_sur_handle;
 protected:
-    std::vector<VkQueueFlagBits> m_VK_desired_queue_ability_lists;
-    VkQueueFlags m_VK_desired_queue_abilities;
-    std::vector<VkSurfaceFormatKHR> m_VK_desired_sur_fmts;
-    VkSurfaceFormatKHR m_VK_final_sur_fmt;
-    std::vector<VkPresentModeKHR> m_VK_desired_pre_mode_list;
+    VkDebugReportCallbackEXT m_debug_rp_cbk;
 protected:
-    VkPhysicalDevice m_VK_physical_device;
-    VkDevice m_VK_device;
-    int32_t m_VK_picked_queue_family_id;
-    VkQueue m_VK_present_queue;
+    VkQueueFlags m_final_q_abi_flag;
+    VkSurfaceFormatKHR m_final_sur_format;
 protected:
-    VkPresentModeKHR m_VK_final_present_mode;
-    VkSwapchainKHR m_VK_swap_chain;
-    VkSemaphore m_VK_acq_img_semaphore; //GPU to GPU lock
-    VkSemaphore m_VK_present_semaphore; //GPU to GPU lock
-    std::vector<VkImage> m_VK_sc_images;
-    std::vector<VkImageView> m_VK_sc_image_views;
-    std::vector<VkFramebuffer> m_VK_sc_image_fbs;
+    VkPhysicalDevice m_phy_device_handle;
+    VkDevice m_device_handle;
+    int32_t m_final_queue_fam_id;
+    VkQueue m_present_q_handle;
 protected:
-    VkRenderPass m_VK_present_render_pass;
+    VkPresentModeKHR m_final_p_mode;
+    VkSwapchainKHR m_sc_handle;
+    VkSemaphore m_acq_img_sema_handle; //GPU to GPU lock
+    VkSemaphore m_pre_sema_handle; //GPU to GPU lock
+    VkRenderPass m_pre_rp_handle;
+    std::vector<VkImage> m_sc_img_handles;
+    std::vector<VkImageView> m_sc_iv_handles;
+    std::vector<VkFramebuffer> m_sc_fb_handles;
 protected:
-    VkCommandPool m_VK_main_cmd_pool; //main render thread use.
-    VkCommandBuffer m_VK_main_cmd_buffer;
-    VkFence m_VK_main_cmd_buf_fence;
-protected:
- //--------------- Configuration ------------------
-    uint32_t m_queue_size; //use to allocate queues for multi-threads.
+    VkCommandPool m_main_cp_handle; //main render thread use.
+    VkCommandBuffer m_main_cb_handle;
+    VkFence m_main_cb_fence_handle;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

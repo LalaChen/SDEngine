@@ -47,13 +47,13 @@ VkResult VulkanManager::CreateVKFrameBuffer(
     fbo_c_info.width  = i_width;
     fbo_c_info.height = i_height;
     fbo_c_info.layers = i_layers;
-    result = vkCreateFramebuffer(m_VK_device, &fbo_c_info, nullptr, &io_fb_handle);
+    result = vkCreateFramebuffer(m_device_handle, &fbo_c_info, nullptr, &io_fb_handle);
     return result;
 }
 
 void VulkanManager::DestroyVkFrameBuffer(VkFramebuffer &io_fb_handle)
 {
-    vkDestroyFramebuffer(m_VK_device, io_fb_handle, nullptr);
+    vkDestroyFramebuffer(m_device_handle, io_fb_handle, nullptr);
     io_fb_handle = VK_NULL_HANDLE;
 }
 

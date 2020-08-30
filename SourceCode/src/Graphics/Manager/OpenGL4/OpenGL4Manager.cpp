@@ -68,6 +68,7 @@ void OpenGL4Manager::RenderBegin()
 
 void OpenGL4Manager::RenderToScreen()
 {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, 800, 600);
     glClearColor(0.2f, 0.5f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -76,6 +77,13 @@ void OpenGL4Manager::RenderToScreen()
 
 void OpenGL4Manager::RenderEnd() 
 {
+}
+
+
+void OpenGL4Manager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex_wref)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //render quad to screen.
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

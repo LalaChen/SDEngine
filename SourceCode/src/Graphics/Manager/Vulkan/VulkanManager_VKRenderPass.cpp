@@ -45,7 +45,7 @@ VkResult VulkanManager::CreateVKRenderPass(
     rp_c_info.subpassCount = static_cast<uint32_t>(i_vk_sps.size());
     rp_c_info.pSubpasses = i_vk_sps.data();
    
-    return vkCreateRenderPass(m_VK_device, &rp_c_info, nullptr, &io_rp_handle);
+    return vkCreateRenderPass(m_device_handle, &rp_c_info, nullptr, &io_rp_handle);
 }
 
 void VulkanManager::BeginVkRenderPass(
@@ -80,7 +80,7 @@ void VulkanManager::EndVkRenderPass(VkCommandBuffer i_cb_handle)
 
 void VulkanManager::DestroyVKRenderPass(VkRenderPass &io_rp_handle)
 {
-    vkDestroyRenderPass(m_VK_device, io_rp_handle, nullptr);
+    vkDestroyRenderPass(m_device_handle, io_rp_handle, nullptr);
     io_rp_handle = SD_NULL_HANDLE;
 }
 

@@ -42,7 +42,7 @@ VkResult VulkanManager::CreateVKShaderModule(
     c_info.codeSize = i_binary_size;
     c_info.pCode = reinterpret_cast<const uint32_t*>(i_binary_ptr);
 
-    result = vkCreateShaderModule(m_VK_device, &c_info, nullptr, &io_sm_handle);
+    result = vkCreateShaderModule(m_device_handle, &c_info, nullptr, &io_sm_handle);
     if (result != VK_SUCCESS) {
         SDLOGW("Failed to create shader module! Result = %x.", result);
     }
@@ -53,7 +53,7 @@ VkResult VulkanManager::CreateVKShaderModule(
 void VulkanManager::DestroyVKShaderModule(VkShaderModule& io_sm_handle)
 {
     if (io_sm_handle != VK_NULL_HANDLE) {
-        vkDestroyShaderModule(m_VK_device, io_sm_handle, nullptr);
+        vkDestroyShaderModule(m_device_handle, io_sm_handle, nullptr);
     }
     io_sm_handle = VK_NULL_HANDLE;
 }
@@ -64,7 +64,7 @@ VkResult VulkanManager::CreateVKDescriptorSetLayout(
     const VkDescriptorSetLayoutCreateInfo& i_c_info)
 {
     VkResult result = VK_SUCCESS;
-    result = vkCreateDescriptorSetLayout(m_VK_device, &i_c_info, nullptr, &io_layout_handle);
+    result = vkCreateDescriptorSetLayout(m_device_handle, &i_c_info, nullptr, &io_layout_handle);
 
     if (result != VK_SUCCESS) {
         SDLOGW("Failed to create descriptor set. Result = %x.", result);
@@ -77,7 +77,7 @@ void VulkanManager::DestroyVKDescriptorSetLayout(
     VkDescriptorSetLayout& io_layout_handle)
 {
     if (io_layout_handle != VK_NULL_HANDLE) {
-        vkDestroyDescriptorSetLayout(m_VK_device, io_layout_handle, nullptr);
+        vkDestroyDescriptorSetLayout(m_device_handle, io_layout_handle, nullptr);
     }
     io_layout_handle = VK_NULL_HANDLE;
 }
@@ -87,7 +87,7 @@ VkResult VulkanManager::CreateVKPipelineLayout(
     const VkPipelineLayoutCreateInfo &i_c_info)
 {
     VkResult result = VK_SUCCESS;
-    result = vkCreatePipelineLayout(m_VK_device, &i_c_info, nullptr, &io_layout_handle);
+    result = vkCreatePipelineLayout(m_device_handle, &i_c_info, nullptr, &io_layout_handle);
 
     if (result != VK_SUCCESS) {
         SDLOGW("Failed to create pipeline layout. Result = %x.", result);
@@ -100,7 +100,7 @@ void VulkanManager::DestroyVKPipelineLayout(
     VkPipelineLayout &io_layout_handle)
 {
     if (io_layout_handle != VK_NULL_HANDLE) {
-        vkDestroyPipelineLayout(m_VK_device, io_layout_handle, nullptr);
+        vkDestroyPipelineLayout(m_device_handle, io_layout_handle, nullptr);
     }
     io_layout_handle = VK_NULL_HANDLE;
 }
@@ -110,7 +110,7 @@ VkResult VulkanManager::CreateVKPipeline(
     const VkGraphicsPipelineCreateInfo &i_c_info)
 {
     VkResult result = VK_SUCCESS;
-    result = vkCreateGraphicsPipelines(m_VK_device, VK_NULL_HANDLE, 1, &i_c_info, nullptr, &io_pipeline_handle);
+    result = vkCreateGraphicsPipelines(m_device_handle, VK_NULL_HANDLE, 1, &i_c_info, nullptr, &io_pipeline_handle);
 
     if (result != VK_SUCCESS) {
         SDLOGW("Failed to create pipeline set. Result = %x.", result);
@@ -127,7 +127,7 @@ void VulkanManager::BindVkPipeline(VkCommandBuffer i_cb_handle, VkPipeline i_pip
 void VulkanManager::DestroyVKPipeline(VkPipeline &io_pipeline_handle)
 {
     if (io_pipeline_handle != VK_NULL_HANDLE) {
-        vkDestroyPipeline(m_VK_device, io_pipeline_handle, nullptr);
+        vkDestroyPipeline(m_device_handle, io_pipeline_handle, nullptr);
     }
     io_pipeline_handle = VK_NULL_HANDLE;
 }

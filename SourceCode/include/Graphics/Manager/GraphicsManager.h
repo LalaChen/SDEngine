@@ -188,6 +188,9 @@ public:
     virtual void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:
 //------------- Render Function -----------------
+    virtual void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex_wref) = 0;
+public:
+//------------- Render Function -----------------
     void Render();
 public:
     void InitializeDefaultPipelineInfos();

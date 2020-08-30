@@ -32,12 +32,12 @@ VkResult VulkanManager::CreateVkDescriptorSetLayout(
     VkDescriptorSetLayout &io_handle,
     const VkDescriptorSetLayoutCreateInfo &i_c_info)
 {
-    return vkCreateDescriptorSetLayout(m_VK_device, &i_c_info, nullptr, &io_handle);
+    return vkCreateDescriptorSetLayout(m_device_handle, &i_c_info, nullptr, &io_handle);
 }
 
 void VulkanManager::DestroyVkDescriptorSetLayout(VkDescriptorSetLayout &io_handle)
 {
-    vkDestroyDescriptorSetLayout(m_VK_device, io_handle, nullptr);
+    vkDestroyDescriptorSetLayout(m_device_handle, io_handle, nullptr);
     io_handle = VK_NULL_HANDLE;
 }
 
@@ -45,12 +45,12 @@ VkResult VulkanManager::CreateVkDescriptorPool(
     VkDescriptorPool &io_handle,
     const VkDescriptorPoolCreateInfo &i_dp_c_info)
 {
-    return vkCreateDescriptorPool(m_VK_device, &i_dp_c_info, nullptr, &io_handle);
+    return vkCreateDescriptorPool(m_device_handle, &i_dp_c_info, nullptr, &io_handle);
 }
 
 void VulkanManager::DestroyVkDescriptorPool(VkDescriptorPool &io_handle)
 {
-    vkDestroyDescriptorPool(m_VK_device, io_handle, nullptr);
+    vkDestroyDescriptorPool(m_device_handle, io_handle, nullptr);
     io_handle = SD_NULL_HANDLE;
 }
 
@@ -58,14 +58,14 @@ VkResult VulkanManager::AllocateVkDescriptorSet(
     VkDescriptorSet &io_handle,
     const VkDescriptorSetAllocateInfo &i_a_info)
 {
-    return vkAllocateDescriptorSets(m_VK_device, &i_a_info, &io_handle);
+    return vkAllocateDescriptorSets(m_device_handle, &i_a_info, &io_handle);
 }
 
 void VulkanManager::UpdateVkDescriptorSet(
     const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos,
     const std::vector<VkCopyDescriptorSet> &i_descriptor_c_infos)
 {
-    vkUpdateDescriptorSets(m_VK_device,
+    vkUpdateDescriptorSets(m_device_handle,
         static_cast<uint32_t>(i_descriptor_w_infos.size()),
         i_descriptor_w_infos.data(),
         static_cast<uint32_t>(i_descriptor_c_infos.size()),
@@ -89,7 +89,7 @@ void VulkanManager::BindVkDescriptorSets(
 
 void VulkanManager::FreeVkDescriptorSet(VkDescriptorSet &io_handle, VkDescriptorPool i_dp_handle)
 {
-    vkFreeDescriptorSets(m_VK_device, i_dp_handle, 1, &io_handle);
+    vkFreeDescriptorSets(m_device_handle, i_dp_handle, 1, &io_handle);
     io_handle = VK_NULL_HANDLE;
 }
 

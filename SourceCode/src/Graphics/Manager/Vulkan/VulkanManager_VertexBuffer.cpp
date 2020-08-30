@@ -105,7 +105,7 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
 
     //2. Copy temporary host visible buffer to target static buffer.
     CopyVkBuffer(
-        m_VK_main_cmd_buffer,
+        m_main_cb_handle,
         staging_buffer_handle, i_data_size,
         buffer_handle,
         0, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
@@ -234,7 +234,7 @@ void VulkanManager::RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identi
 
     //2. Copy temporary host visible buffer to target static buffer.
     CopyVkBuffer(
-        m_VK_main_cmd_buffer,
+        m_main_cb_handle,
         staging_buffer_handle,
         i_data_size,
         buffer_handle,

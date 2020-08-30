@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{ac346555-2097-4ceb-a848-4891e8f59b95}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FeatureApplication.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Sample.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FeatureApplication.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Sample.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\PhongShader.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\PhongShader.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.vert">
+      <Filter>shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>

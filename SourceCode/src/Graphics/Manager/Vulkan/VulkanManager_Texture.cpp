@@ -182,7 +182,7 @@ void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidP
             dst_layout = ImageLayout_Vulkan::Convert(i_dst_layout);
         }
         CopyVkBufferToVkImage(
-            m_VK_main_cmd_buffer,
+            m_main_cb_handle,
             staging_buffer_handle, i_data_size,
             image_handle, image_offset, image_size,
             0, 0,

@@ -65,7 +65,7 @@ VkResult VulkanManager::CreateVkImage(
         SDLOGW("Not support concurrent mode (I haven't design for concurrent res now)!!");
     }
 
-    return vkCreateImage(m_VK_device, &img_c_info, nullptr, &io_image_handle);
+    return vkCreateImage(m_device_handle, &img_c_info, nullptr, &io_image_handle);
 }
 
 VkResult VulkanManager::CopyVkBufferToVkImage(
@@ -133,7 +133,7 @@ VkResult VulkanManager::CopyVkBufferToVkImage(
 void VulkanManager::DestroyVkImage(VkImage &io_image_handle)
 {
     if (io_image_handle != VK_NULL_HANDLE) {
-        vkDestroyImage(m_VK_device, io_image_handle, nullptr);
+        vkDestroyImage(m_device_handle, io_image_handle, nullptr);
     }
     io_image_handle = VK_NULL_HANDLE;
 }

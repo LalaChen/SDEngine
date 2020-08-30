@@ -18,7 +18,7 @@ public:
     void Initialize() override;
     void Release() override;
 public:
-    VkRenderPass GetPresentRenderPass() { return m_VK_present_render_pass; }
+    VkRenderPass GetPresentRenderPass() { return m_pre_rp_handle; }
 public: //Memory Related.
     VkResult AllocateMemoryAndBindToBuffer(VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkBuffer i_VK_buffer, VkDeviceMemory &io_VK_memory);
     VkResult AllocateMemoryAndBindToImage(VkImage i_VK_img, VkFlags i_memo_prop_flags, VkDeviceSize i_VK_offset, VkDeviceMemory &io_VK_memory);

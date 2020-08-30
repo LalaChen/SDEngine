@@ -76,9 +76,9 @@ void VulkanManager::InitializeDebugMessage()
     create_info.pfnCallback = VulkanDebugCallback;
 
     PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT =
-        (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(m_VK_instance, "vkCreateDebugReportCallbackEXT");
+        (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(m_ins_handle, "vkCreateDebugReportCallbackEXT");
     if (vkCreateDebugReportCallbackEXT != nullptr) {
-        VkResult res = vkCreateDebugReportCallbackEXT(m_VK_instance, &create_info, nullptr, &m_VK_debug_report_cbk);
+        VkResult res = vkCreateDebugReportCallbackEXT(m_ins_handle, &create_info, nullptr, &m_debug_rp_cbk);
         if (res != VK_SUCCESS) {
             SDLOG("failed create debug messenger!");
         }
@@ -93,20 +93,20 @@ void VulkanManager::InitializePhysicalDevice()
     SDLOG("--- Vulkan initialize physical device.(Select graphics card)");
 
     uint32_t dev_count = 0;
-    vkEnumeratePhysicalDevices(m_VK_instance, &dev_count, nullptr);
+    vkEnumeratePhysicalDevices(m_ins_handle, &dev_count, nullptr);
     if (dev_count == 0) {
         throw std::runtime_error("failed to find GPUs with Vulkan support!");
     }
-    std::vector<VkPhysicalDevice> devices(dev_count);
-    vkEnumeratePhysicalDevices(m_VK_instance, &dev_count, devices.data());
+    std::vector<VkPhysicalDevice> phy_devices(dev_count);
+    vkEnumeratePhysicalDevices(m_ins_handle, &dev_count, phy_devices.data());
     uint32_t pickup_dev_score = 0;
-    for (VkPhysicalDevice &device : devices) {
+    for (VkPhysicalDevice &phy_device : phy_devices) {
         VkPhysicalDeviceProperties dev_property;
-        vkGetPhysicalDeviceProperties(device, &dev_property);
+        vkGetPhysicalDeviceProperties(phy_device, &dev_property);
         SDLOGD("--- DeviceID[%d] name : %s DevType : %d.", dev_property.deviceID, dev_property.deviceName, dev_property.deviceType);
         VkPhysicalDeviceFeatures dev_features;
         uint32_t dev_score = 0;
-        vkGetPhysicalDeviceFeatures(device, &dev_features);
+        vkGetPhysicalDeviceFeatures(phy_device, &dev_features);
         SDLOGD("------ Feature[alphaToOne] : %d", dev_features.alphaToOne);
         dev_score += dev_features.alphaToOne;
         SDLOGD("------ Feature[depthBiasClamp] : %d", dev_features.depthBiasClamp);
@@ -219,11 +219,11 @@ void VulkanManager::InitializePhysicalDevice()
         SDLOGD("------ Extension ------");
         bool exts_support = false;
         uint32_t avaible_ext_counts;
-        vkEnumerateDeviceExtensionProperties(device, nullptr, &avaible_ext_counts, nullptr);
+        vkEnumerateDeviceExtensionProperties(phy_device, nullptr, &avaible_ext_counts, nullptr);
 
         std::vector<VkExtensionProperties> avaible_exts(avaible_ext_counts);
-        vkEnumerateDeviceExtensionProperties(device, nullptr, &avaible_ext_counts, avaible_exts.data());
-        std::list<const char*> check_ext_names(NecessaryExtensions.begin(), NecessaryExtensions.end());
+        vkEnumerateDeviceExtensionProperties(phy_device, nullptr, &avaible_ext_counts, avaible_exts.data());
+        std::list<const char*> check_ext_names(sNecessaryExtensions.begin(), sNecessaryExtensions.end());
 
         for (VkExtensionProperties &avaible_ext : avaible_exts) {
             SDLOGD("Extension(%s)(%d)", avaible_ext.extensionName, avaible_ext.specVersion);
@@ -241,18 +241,18 @@ void VulkanManager::InitializePhysicalDevice()
         exts_support = check_ext_names.empty();
         //Calculate device score.
         if (dev_score > pickup_dev_score && exts_support == true) {
-            m_VK_physical_device = device;
+            m_phy_device_handle = phy_device;
             pickup_dev_score = dev_score;
         }
     }
 
-    if (m_VK_physical_device == VK_NULL_HANDLE) {
+    if (m_phy_device_handle == VK_NULL_HANDLE) {
         throw std::runtime_error("failed to find physical device!");
     }
 
     VkPhysicalDeviceProperties picked_dev_props;
-    vkGetPhysicalDeviceProperties(m_VK_physical_device, &picked_dev_props);
-    SDLOG("Final choose dev : %s(%d:%d:%d) driver version(%d, %d, %d) apiversion(%d, %d, %d), score : %d", 
+    vkGetPhysicalDeviceProperties(m_phy_device_handle, &picked_dev_props);
+    SDLOGD("Final choose dev : %s(%d:%d:%d) driver version(%d, %d, %d) apiversion(%d, %d, %d), score : %d", 
         picked_dev_props.deviceName,
         picked_dev_props.vendorID, picked_dev_props.deviceID, picked_dev_props.deviceType,
         VK_VERSION_MAJOR(picked_dev_props.apiVersion), VK_VERSION_MINOR(picked_dev_props.apiVersion), VK_VERSION_PATCH(picked_dev_props.apiVersion),
@@ -260,15 +260,15 @@ void VulkanManager::InitializePhysicalDevice()
         pickup_dev_score);
 }
 
-void VulkanManager::InitializeLogicDevice()
+void VulkanManager::InitializeDevice()
 {
     SDLOG("--- Vulkan initialize device.(Create devices queue)");
     SDLOG("------ Get queue family properties.");
     std::vector<VkQueueFamilyProperties> queue_families;
     uint32_t queue_families_count = 0;
-    vkGetPhysicalDeviceQueueFamilyProperties(m_VK_physical_device, &queue_families_count, nullptr);
+    vkGetPhysicalDeviceQueueFamilyProperties(m_phy_device_handle, &queue_families_count, nullptr);
     queue_families.resize(queue_families_count);
-    vkGetPhysicalDeviceQueueFamilyProperties(m_VK_physical_device, &queue_families_count, queue_families.data());
+    vkGetPhysicalDeviceQueueFamilyProperties(m_phy_device_handle, &queue_families_count, queue_families.data());
 
     SDLOG("------ Get avaiable layer again properties.");
     uint32_t layer_count = 0;
@@ -279,7 +279,7 @@ void VulkanManager::InitializeLogicDevice()
         avaiable_valid_layers.resize(layer_count);
         vkEnumerateInstanceLayerProperties(&layer_count, avaiable_valid_layers.data());
         for (uint32_t ext_id = 0; ext_id < avaiable_valid_layers.size(); ext_id++) {
-            for (const char *desired_name : DesiredValidLayers) {
+            for (const char *desired_name : sDesiredValidLayers) {
                 if (strcmp(desired_name, avaiable_valid_layers[ext_id].layerName) == 0) {
                     desired_valid_layer_names.push_back(desired_name);
                     break;
@@ -305,23 +305,23 @@ void VulkanManager::InitializeLogicDevice()
             queue_families[fam_id].queueCount > 0) {
             //check this family can be used to present on screen.
             VkBool32 present_support = VK_FALSE;
-            VkResult rst = vkGetPhysicalDeviceSurfaceSupportKHR(m_VK_physical_device, fam_id, m_VK_surface, &present_support);
+            VkResult rst = vkGetPhysicalDeviceSurfaceSupportKHR(m_phy_device_handle, fam_id, m_sur_handle, &present_support);
             if (present_support == VK_TRUE && rst == VK_SUCCESS) {
-                m_VK_picked_queue_family_id = static_cast<int32_t>(fam_id);
+                m_final_queue_fam_id = static_cast<int32_t>(fam_id);
                 break;
             }
         }
     }
 
-    if (m_VK_picked_queue_family_id >= 0) {
+    if (m_final_queue_fam_id >= 0) {
         SDLOGD("Final Present Queue Family[%d] : TimeStamp[%d] Flag(%x) Count:%d Extent3D(%d,%d,%d) ",
-            m_VK_picked_queue_family_id,
-            queue_families[m_VK_picked_queue_family_id].timestampValidBits,
-            queue_families[m_VK_picked_queue_family_id].queueFlags,
-            queue_families[m_VK_picked_queue_family_id].queueCount,
-            queue_families[m_VK_picked_queue_family_id].minImageTransferGranularity.width,
-            queue_families[m_VK_picked_queue_family_id].minImageTransferGranularity.height,
-            queue_families[m_VK_picked_queue_family_id].minImageTransferGranularity.depth);
+            m_final_queue_fam_id,
+            queue_families[m_final_queue_fam_id].timestampValidBits,
+            queue_families[m_final_queue_fam_id].queueFlags,
+            queue_families[m_final_queue_fam_id].queueCount,
+            queue_families[m_final_queue_fam_id].minImageTransferGranularity.width,
+            queue_families[m_final_queue_fam_id].minImageTransferGranularity.height,
+            queue_families[m_final_queue_fam_id].minImageTransferGranularity.depth);
     }
     else {
         throw std::runtime_error("Can't find desired queue family.");
@@ -333,12 +333,12 @@ void VulkanManager::InitializeLogicDevice()
     queue_c_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queue_c_info.pNext = nullptr;
     queue_c_info.flags = 0;
-    queue_c_info.queueFamilyIndex = static_cast<uint32_t>(m_VK_picked_queue_family_id);
+    queue_c_info.queueFamilyIndex = static_cast<uint32_t>(m_final_queue_fam_id);
     queue_c_info.queueCount = 1; //use signal queue. extend in future.
     queue_c_info.pQueuePriorities = quene_priorities;
 
     VkPhysicalDeviceFeatures dev_features = {};
-    vkGetPhysicalDeviceFeatures(m_VK_physical_device, &dev_features);
+    vkGetPhysicalDeviceFeatures(m_phy_device_handle, &dev_features);
 
     VkDeviceCreateInfo dev_c_info = {};
     dev_c_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -347,8 +347,8 @@ void VulkanManager::InitializeLogicDevice()
     dev_c_info.pQueueCreateInfos = &queue_c_info;
     dev_c_info.queueCreateInfoCount = 1;
     dev_c_info.pEnabledFeatures = nullptr; //use all features physical device support.
-    dev_c_info.ppEnabledExtensionNames = NecessaryExtensions.data();
-    dev_c_info.enabledExtensionCount = static_cast<uint32_t>(NecessaryExtensions.size());
+    dev_c_info.ppEnabledExtensionNames = sNecessaryExtensions.data();
+    dev_c_info.enabledExtensionCount = static_cast<uint32_t>(sNecessaryExtensions.size());
 
 #ifdef NDEBUG
     dev_c_info.enabledLayerCount = 0;
@@ -358,19 +358,19 @@ void VulkanManager::InitializeLogicDevice()
     dev_c_info.ppEnabledLayerNames = desired_valid_layer_names.data();
 #endif
 
-    if (vkCreateDevice(m_VK_physical_device, &dev_c_info, nullptr, &m_VK_device) != VK_SUCCESS) {
+    if (vkCreateDevice(m_phy_device_handle, &dev_c_info, nullptr, &m_device_handle) != VK_SUCCESS) {
         throw std::runtime_error("failed to create logical device!");
     }
 
-    if (m_VK_picked_queue_family_id >= 0) {
-        vkGetDeviceQueue(m_VK_device, static_cast<uint32_t>(m_VK_picked_queue_family_id), 0, &m_VK_present_queue);
+    if (m_final_queue_fam_id >= 0) {
+        vkGetDeviceQueue(m_device_handle, static_cast<uint32_t>(m_final_queue_fam_id), 0, &m_present_q_handle);
     }
 
-    if (m_VK_present_queue == SD_NULL_HANDLE) {
+    if (m_present_q_handle == SD_NULL_HANDLE) {
         throw std::runtime_error("fauled to get device queue");
     }
     else {
-        SDLOG("Get present queue(%p).", m_VK_present_queue);
+        SDLOG("Get present queue(%p).", m_present_q_handle);
     }
 }
 
@@ -387,7 +387,7 @@ void VulkanManager::InitializeSettings()
     for (TextureFormatEnum &fmt : depth_format) {
         VkFormat vk_fmt = TextureFormat_Vulkan::Convert(fmt);
         VkFormatProperties fmt_props;
-        vkGetPhysicalDeviceFormatProperties(m_VK_physical_device, vk_fmt, &fmt_props);
+        vkGetPhysicalDeviceFormatProperties(m_phy_device_handle, vk_fmt, &fmt_props);
         if ((fmt_props.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) ==
             VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
             m_supported_depth_buffer_formats.push_back(fmt);
@@ -422,7 +422,7 @@ void VulkanManager::InitializeSettings()
     for (TextureFormatEnum &fmt : color_format) {
         VkFormat vk_fmt = TextureFormat_Vulkan::Convert(fmt);
         VkFormatProperties fmt_props;
-        vkGetPhysicalDeviceFormatProperties(m_VK_physical_device, vk_fmt, &fmt_props);
+        vkGetPhysicalDeviceFormatProperties(m_phy_device_handle, vk_fmt, &fmt_props);
         if ((fmt_props.optimalTilingFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT) ==
             VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT) {
             m_supported_color_buffer_formats.push_back(fmt);
@@ -435,6 +435,11 @@ void VulkanManager::InitializeSettings()
     else {
         SDLOGE("There is no supported color format in this device.");
     }
+
+    //Queue abilities.
+    for (VkQueueFlagBits& flag : m_desired_queue_abilities) {
+        m_final_q_abi_flag |= flag;
+    }
 }
 
 void VulkanManager::InitializeCommandPoolAndBuffers()
@@ -444,20 +449,20 @@ void VulkanManager::InitializeCommandPoolAndBuffers()
     cmd_pool_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     cmd_pool_c_info.pNext = nullptr;
     cmd_pool_c_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; //VkCommandPoolCreateFlags
-    cmd_pool_c_info.queueFamilyIndex = m_VK_picked_queue_family_id;
+    cmd_pool_c_info.queueFamilyIndex = m_final_queue_fam_id;
 
-    if (vkCreateCommandPool(m_VK_device, &cmd_pool_c_info, nullptr, &m_VK_main_cmd_pool) != VK_SUCCESS) {
+    if (vkCreateCommandPool(m_device_handle, &cmd_pool_c_info, nullptr, &m_main_cp_handle) != VK_SUCCESS) {
         throw std::runtime_error("Create main command pool failure!");
     }
 
     VkCommandBufferAllocateInfo cmd_buf_a_info = {};
     cmd_buf_a_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     cmd_buf_a_info.pNext = nullptr;
-    cmd_buf_a_info.commandPool = m_VK_main_cmd_pool;
+    cmd_buf_a_info.commandPool = m_main_cp_handle;
     cmd_buf_a_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; //VkCommandBufferLevel
     cmd_buf_a_info.commandBufferCount = 1;
 
-    if (vkAllocateCommandBuffers(m_VK_device, &cmd_buf_a_info, &m_VK_main_cmd_buffer) != VK_SUCCESS) {
+    if (vkAllocateCommandBuffers(m_device_handle, &cmd_buf_a_info, &m_main_cb_handle) != VK_SUCCESS) {
         throw std::runtime_error("Create main command buffer failure!");
     }
 
@@ -466,7 +471,7 @@ void VulkanManager::InitializeCommandPoolAndBuffers()
     fence_c_info.pNext = nullptr;
     fence_c_info.flags = 0;
 
-    if (vkCreateFence(m_VK_device, &fence_c_info, nullptr, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
+    if (vkCreateFence(m_device_handle, &fence_c_info, nullptr, &m_main_cb_fence_handle) != VK_SUCCESS) {
         throw std::runtime_error("Create main cmd buf fence failure!");
     }
 }
@@ -478,7 +483,7 @@ void VulkanManager::InitializePresentRenderPass()
     //--- Attachment about color buffer for subpass 0, it's used to store rendering result to image getted from swapchain.
     VkAttachmentDescription clr_attachment_desc = {};
     clr_attachment_desc.flags = 0; //Write the other purpose about this attachment. We don't have other usage about this flag.
-    clr_attachment_desc.format = m_VK_final_sur_fmt.format;
+    clr_attachment_desc.format = m_final_sur_format.format;
     clr_attachment_desc.samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
     clr_attachment_desc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //Clear before using. If we set VK_ATTACHMENT_LOAD_OP_DONT_CARE, we can't clear via clearcolor.
     clr_attachment_desc.storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
@@ -543,7 +548,7 @@ void VulkanManager::InitializePresentRenderPass()
     pass_c_info.dependencyCount = static_cast<uint32_t>(sp_dependencies.size());
     pass_c_info.pDependencies = sp_dependencies.data();
 
-    if (vkCreateRenderPass(m_VK_device, &pass_c_info, nullptr, &m_VK_present_render_pass) != VK_SUCCESS) {
+    if (vkCreateRenderPass(m_device_handle, &pass_c_info, nullptr, &m_pre_rp_handle) != VK_SUCCESS) {
         throw std::runtime_error("Create present render pass failure!");
     }
 }
@@ -554,26 +559,16 @@ void VulkanManager::InitializeSwapChain()
     SDLOG("--- Vulkan initialize swap chains.(Create swap chain)");
     VkSurfaceCapabilitiesKHR sur_caps;
     SDLOGD("------- Get surface capability : ");
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_VK_physical_device, m_VK_surface, &sur_caps);
-    SDLOGD("ImageCount Min:%d Max:%d", sur_caps.minImageCount, sur_caps.maxImageCount);
-    SDLOGD("ImageExtents Min:(%d,%d) Cur:(%d,%d) Max:(%d,%d)",
-        sur_caps.minImageExtent.width, sur_caps.minImageExtent.height,
-        sur_caps.currentExtent.width, sur_caps.currentExtent.height,
-        sur_caps.maxImageExtent.width, sur_caps.maxImageExtent.height);
-    SDLOGD("maxImageArrayLayers:%d", sur_caps.maxImageArrayLayers);
-    SDLOGD("supportedTransforms:%d", sur_caps.supportedTransforms);
-    SDLOGD("currentTransform:%x (VkSurfaceTransformFlagBitsKHR)", sur_caps.currentTransform);
-    SDLOGD("supportedCompositeAlpha:%d", sur_caps.supportedCompositeAlpha);
-    SDLOGD("supportedUsageFlags:%d", sur_caps.supportedUsageFlags);
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_phy_device_handle, m_sur_handle, &sur_caps);
 
     bool has_desired_sur_fmt = false;
     std::vector<VkSurfaceFormatKHR> sur_formats;
     uint32_t sur_format_count;
-    vkGetPhysicalDeviceSurfaceFormatsKHR(m_VK_physical_device, m_VK_surface, &sur_format_count, nullptr);
+    vkGetPhysicalDeviceSurfaceFormatsKHR(m_phy_device_handle, m_sur_handle, &sur_format_count, nullptr);
 
     if (sur_format_count != 0) {
         sur_formats.resize(sur_format_count);
-        vkGetPhysicalDeviceSurfaceFormatsKHR(m_VK_physical_device, m_VK_surface, &sur_format_count, sur_formats.data());
+        vkGetPhysicalDeviceSurfaceFormatsKHR(m_phy_device_handle, m_sur_handle, &sur_format_count, sur_formats.data());
     }
 
     if (sur_format_count > 1) {
@@ -581,11 +576,11 @@ void VulkanManager::InitializeSwapChain()
             SDLOGD("Supported SurfaceFormat:(Format)%d, (colorSpace)%d", fmt.format, fmt.colorSpace);
         }
 
-        for (VkSurfaceFormatKHR &desired_fmt : m_VK_desired_sur_fmts) {
+        for (VkSurfaceFormatKHR &desired_fmt : m_desired_sur_formats) {
             for (VkSurfaceFormatKHR &fmt : sur_formats) {
                 if (fmt.colorSpace == desired_fmt.colorSpace &&
                     fmt.format == desired_fmt.format) {
-                    m_VK_final_sur_fmt = fmt;
+                    m_final_sur_format = fmt;
                     has_desired_sur_fmt = true;
                     break;
                 }
@@ -605,15 +600,15 @@ void VulkanManager::InitializeSwapChain()
         throw std::runtime_error("Desire surface format isn't exist.");
     }
 
-    SDLOGD("Desired SurfaceFormat:(%d, %d)", m_VK_final_sur_fmt.format, m_VK_final_sur_fmt.colorSpace);
+    SDLOGD("Desired SurfaceFormat:(%d, %d)", m_final_sur_format.format, m_final_sur_format.colorSpace);
 
     std::vector<VkPresentModeKHR> supported_p_modes;
     uint32_t supported_p_mode_count;
-    vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &supported_p_mode_count, nullptr);
+    vkGetPhysicalDeviceSurfacePresentModesKHR(m_phy_device_handle, m_sur_handle, &supported_p_mode_count, nullptr);
 
     if (supported_p_mode_count != 0) {
         supported_p_modes.resize(supported_p_mode_count);
-        vkGetPhysicalDeviceSurfacePresentModesKHR(m_VK_physical_device, m_VK_surface, &supported_p_mode_count, supported_p_modes.data());
+        vkGetPhysicalDeviceSurfacePresentModesKHR(m_phy_device_handle, m_sur_handle, &supported_p_mode_count, supported_p_modes.data());
     }
     else {
         throw std::runtime_error("No present mode supported!");
@@ -625,21 +620,21 @@ void VulkanManager::InitializeSwapChain()
 
     for (int mode_id = 0; mode_id < VK_PRESENT_MODE_RANGE_SIZE_KHR; mode_id++) {
         for (const VkPresentModeKHR &p_mode : supported_p_modes) {
-            if (m_VK_desired_pre_mode_list[mode_id] == p_mode) {
-                m_VK_final_present_mode = m_VK_desired_pre_mode_list[mode_id];
+            if (m_desired_pre_modes[mode_id] == p_mode) {
+                m_final_p_mode = m_desired_pre_modes[mode_id];
                 break;
             }
         }
-        if (m_VK_final_present_mode != VK_PRESENT_MODE_RANGE_SIZE_KHR) {
+        if (m_final_p_mode != VK_PRESENT_MODE_RANGE_SIZE_KHR) {
             break;
         }
     }
 
-    if (m_VK_final_present_mode == VK_PRESENT_MODE_RANGE_SIZE_KHR) {
+    if (m_final_p_mode == VK_PRESENT_MODE_RANGE_SIZE_KHR) {
         throw std::runtime_error("No desired present mode supported!");
     }
     else {
-        SDLOGD("final present mode : %d", m_VK_final_present_mode);
+        SDLOGD("final present mode : %d", m_final_p_mode);
     }
 
     if (sur_caps.currentExtent.width != 0 && sur_caps.currentExtent.height != 0) {
@@ -656,16 +651,16 @@ void VulkanManager::InitializeSwapChain()
         image_count = sur_caps.maxImageCount;
     }
 
-    uint32_t present_queue_fam_id = static_cast<uint32_t>(m_VK_picked_queue_family_id);
+    uint32_t present_queue_fam_id = static_cast<uint32_t>(m_final_queue_fam_id);
 
     VkSwapchainCreateInfoKHR sw_c_info = {};
     sw_c_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     sw_c_info.pNext = nullptr;
     sw_c_info.flags = 0;
-    sw_c_info.surface = m_VK_surface;
+    sw_c_info.surface = m_sur_handle;
     sw_c_info.minImageCount = image_count;
-    sw_c_info.imageFormat = m_VK_final_sur_fmt.format;
-    sw_c_info.imageColorSpace = m_VK_final_sur_fmt.colorSpace;
+    sw_c_info.imageFormat = m_final_sur_format.format;
+    sw_c_info.imageColorSpace = m_final_sur_format.colorSpace;
     sw_c_info.imageExtent = { m_screen_size.GetWidth(), m_screen_size.GetHeight() };
     sw_c_info.imageArrayLayers = 1;
     sw_c_info.imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
@@ -674,21 +669,21 @@ void VulkanManager::InitializeSwapChain()
     sw_c_info.pQueueFamilyIndices = &present_queue_fam_id;
     sw_c_info.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR; //Use this for android.(If use currentTransform as presentTransform, we will see double rotation)
     sw_c_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-    sw_c_info.presentMode = m_VK_final_present_mode;
+    sw_c_info.presentMode = m_final_p_mode;
     sw_c_info.clipped = VK_TRUE;
     sw_c_info.oldSwapchain = VK_NULL_HANDLE;
 
-    if (vkCreateSwapchainKHR(m_VK_device, &sw_c_info, nullptr, &m_VK_swap_chain) != VK_SUCCESS) {
+    if (vkCreateSwapchainKHR(m_device_handle, &sw_c_info, nullptr, &m_sc_handle) != VK_SUCCESS) {
         throw std::runtime_error("failed to create swap chain!");
     }
 
-    if (vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, nullptr) != VK_SUCCESS) {
+    if (vkGetSwapchainImagesKHR(m_device_handle, m_sc_handle, &image_count, nullptr) != VK_SUCCESS) {
         throw std::runtime_error("failed to get image number of swap chain!");
     }
 
     if (image_count > 0) {
-        m_VK_sc_images.resize(image_count);
-        if (vkGetSwapchainImagesKHR(m_VK_device, m_VK_swap_chain, &image_count, m_VK_sc_images.data()) == VK_SUCCESS) {
+        m_sc_img_handles.resize(image_count);
+        if (vkGetSwapchainImagesKHR(m_device_handle, m_sc_handle, &image_count, m_sc_img_handles.data()) == VK_SUCCESS) {
             SDLOG("SwapChainImages number : %u, ViewPort(%u,%u)", image_count, m_screen_size.GetWidth(), m_screen_size.GetHeight());
         }
         else {
@@ -701,7 +696,7 @@ void VulkanManager::InitializeSwapChain()
     acq_sem_c_info.pNext = nullptr;
     acq_sem_c_info.flags = 0;
 
-    if (vkCreateSemaphore(m_VK_device, &acq_sem_c_info, nullptr, &m_VK_acq_img_semaphore) != VK_SUCCESS) {
+    if (vkCreateSemaphore(m_device_handle, &acq_sem_c_info, nullptr, &m_acq_img_sema_handle) != VK_SUCCESS) {
         throw std::runtime_error("failed to create acq img semaphore!");
     }
 
@@ -710,7 +705,7 @@ void VulkanManager::InitializeSwapChain()
     present_sem_c_info.pNext = nullptr;
     present_sem_c_info.flags = 0;
 
-    if (vkCreateSemaphore(m_VK_device, &present_sem_c_info, nullptr, &m_VK_present_semaphore) != VK_SUCCESS) {
+    if (vkCreateSemaphore(m_device_handle, &present_sem_c_info, nullptr, &m_pre_sema_handle) != VK_SUCCESS) {
         throw std::runtime_error("failed to create present semaphore!");
     }
 }
@@ -719,17 +714,17 @@ void VulkanManager::InitializeSCImageViewsAndFBs()
 {
     SDLOG("--- Vulkan initialize image views.");
     //
-    m_VK_sc_image_views.resize(m_VK_sc_images.size());
-    m_VK_sc_image_fbs.resize(m_VK_sc_images.size());
-    for (uint32_t imgv_id = 0; imgv_id < m_VK_sc_image_views.size(); imgv_id++) {
+    m_sc_iv_handles.resize(m_sc_img_handles.size());
+    m_sc_fb_handles.resize(m_sc_img_handles.size());
+    for (uint32_t imgv_id = 0; imgv_id < m_sc_iv_handles.size(); imgv_id++) {
         //create image view for sc img[id].
         VkImageViewCreateInfo iv_c_info = {};
         iv_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         iv_c_info.pNext = nullptr;
         iv_c_info.flags = 0;
-        iv_c_info.image = m_VK_sc_images[imgv_id];
+        iv_c_info.image = m_sc_img_handles[imgv_id];
         iv_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        iv_c_info.format = m_VK_final_sur_fmt.format;
+        iv_c_info.format = m_final_sur_format.format;
         iv_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_R(r is r channel).
         iv_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable g in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_G(g is g channel).
         iv_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable b in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_B(b is b channel).
@@ -740,27 +735,27 @@ void VulkanManager::InitializeSCImageViewsAndFBs()
         iv_c_info.subresourceRange.baseArrayLayer = 0;
         iv_c_info.subresourceRange.layerCount = 1;
 
-        if (vkCreateImageView(m_VK_device, &iv_c_info, nullptr, &m_VK_sc_image_views[imgv_id]) != VK_SUCCESS) {
+        if (vkCreateImageView(m_device_handle, &iv_c_info, nullptr, &m_sc_iv_handles[imgv_id]) != VK_SUCCESS) {
             throw std::runtime_error(SDE::Basic::StringFormat("failed to create image views[%d]!", imgv_id).c_str());
         }
 
         //create fbo for sc img[id].
         VkImageView attachments[1] = {
-            m_VK_sc_image_views[imgv_id]
+            m_sc_iv_handles[imgv_id]
         };
 
         VkFramebufferCreateInfo fbo_c_info = {};
         fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         fbo_c_info.pNext = nullptr;
         fbo_c_info.flags = 0; //Reserved for future use
-        fbo_c_info.renderPass = m_VK_present_render_pass;
+        fbo_c_info.renderPass = m_pre_rp_handle;
         fbo_c_info.attachmentCount = 1;
         fbo_c_info.pAttachments = attachments;
         fbo_c_info.width = m_screen_size.GetWidth();
         fbo_c_info.height = m_screen_size.GetHeight();
         fbo_c_info.layers = 1;
 
-        if (vkCreateFramebuffer(m_VK_device, &fbo_c_info, nullptr, &m_VK_sc_image_fbs[imgv_id]) != VK_SUCCESS) {
+        if (vkCreateFramebuffer(m_device_handle, &fbo_c_info, nullptr, &m_sc_fb_handles[imgv_id]) != VK_SUCCESS) {
             throw std::runtime_error(SDE::Basic::StringFormat("failed to create FBO[%d]!", imgv_id).c_str());
         }
     }
@@ -770,7 +765,7 @@ bool VulkanManager::IsContainerNecessaryQueueFlags(VkQueueFlags i_flags)
 {
     bool inconsistent = false;
     
-    for (VkQueueFlags flag : m_VK_desired_queue_ability_lists) {
+    for (VkQueueFlags flag : m_desired_queue_abilities) {
         if ((i_flags & flag) != flag) {
             inconsistent = true;
             break;

@@ -52,7 +52,7 @@ void VulkanAPITestManager::InitializeScreenRendering()
     desc_set_c_info.pBindings = &var_main_texture; //set = 0
 
     //--- iii. Create descriptor set layout for screen render.
-    result = vkCreateDescriptorSetLayout(m_VK_device, &desc_set_c_info, nullptr, &m_VK_present_gp_set_layout);
+    result = vkCreateDescriptorSetLayout(m_device_handle, &desc_set_c_info, nullptr, &m_VK_present_gp_set_layout);
     if (result != VK_SUCCESS) {
         SDLOGW("Create screen render descriptor failure. Result = %x.", result);
     }
@@ -293,7 +293,7 @@ void VulkanAPITestManager::InitializeScreenRendering()
     graphics_pipeline_c_info.layout = m_VK_screen_pipeline_layout;
     graphics_pipeline_c_info.basePipelineHandle = VK_NULL_HANDLE;
     graphics_pipeline_c_info.basePipelineIndex = -1;
-    graphics_pipeline_c_info.renderPass = m_VK_present_render_pass;
+    graphics_pipeline_c_info.renderPass = m_pre_rp_handle;
     graphics_pipeline_c_info.subpass = 0;
 
     result = CreateGraphicsPipeline(graphics_pipeline_c_info, VK_NULL_HANDLE, m_VK_screen_pipeline);

@@ -34,13 +34,13 @@ VkResult VulkanManager::CreateVkCommandPool(VkCommandPool &io_pool_handle, VkCom
     cmd_pool_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     cmd_pool_c_info.pNext = nullptr;
     cmd_pool_c_info.flags = i_flag; //VkCommandPoolCreateFlags
-    cmd_pool_c_info.queueFamilyIndex = m_VK_picked_queue_family_id;
-    return vkCreateCommandPool(m_VK_device, &cmd_pool_c_info, nullptr, &io_pool_handle);
+    cmd_pool_c_info.queueFamilyIndex = m_final_queue_fam_id;
+    return vkCreateCommandPool(m_device_handle, &cmd_pool_c_info, nullptr, &io_pool_handle);
 }
 
 void VulkanManager::DestroyVkCommandPool(VkCommandPool &io_pool_handle)
 {
-    vkDestroyCommandPool(m_VK_device, io_pool_handle, nullptr);
+    vkDestroyCommandPool(m_device_handle, io_pool_handle, nullptr);
     io_pool_handle = VK_NULL_HANDLE;
 }
 
@@ -55,14 +55,14 @@ VkResult VulkanManager::AllocateVkCommandBuffer(
     cmd_buf_a_info.commandPool = i_cp_handle;
     cmd_buf_a_info.level = i_level; //VkCommandBufferLevel
     cmd_buf_a_info.commandBufferCount = 1;
-    return vkAllocateCommandBuffers(m_VK_device, &cmd_buf_a_info, &io_cb_handle);
+    return vkAllocateCommandBuffers(m_device_handle, &cmd_buf_a_info, &io_cb_handle);
 }
 
 void VulkanManager::FreeVkCommandBuffer(
     VkCommandBuffer &io_cb_handle,
     VkCommandPool i_cp_handle)
 {
-    vkFreeCommandBuffers(m_VK_device, i_cp_handle, 1, &io_cb_handle);
+    vkFreeCommandBuffers(m_device_handle, i_cp_handle, 1, &io_cb_handle);
 }
 
 VkResult VulkanManager::BeginVkCommandBuffer(
@@ -91,14 +91,14 @@ VkResult VulkanManager::SubmitVkCommandBuffers(const std::vector<VkCommandBuffer
     submit_info.commandBufferCount = static_cast<uint32_t>(i_cb_handles.size());
     submit_info.pCommandBuffers = i_cb_handles.data();
 
-    result = vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence);
+    result = vkQueueSubmit(m_present_q_handle, 1, &submit_info, m_main_cb_fence_handle);
 
     if (result != VK_SUCCESS) {
         SDLOGW("Submit command buffer failure(%d)!!!", result);
     }
 
     do {
-        result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
+        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, sMaxFenceWaitTime);
     } while (result == VK_TIMEOUT);
     if (result != VK_SUCCESS) {
         SDLOGW("Wait sync failure(%d)!!!", result);
@@ -106,7 +106,7 @@ VkResult VulkanManager::SubmitVkCommandBuffers(const std::vector<VkCommandBuffer
     }
 
     //Reset main command buffer sync.
-    result = vkResetFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence);
+    result = vkResetFences(m_device_handle, 1, &m_main_cb_fence_handle);
     if (result != VK_SUCCESS) {
         SDLOGW("reset command buffer fence failure(%d)!!!", result);
         return result;

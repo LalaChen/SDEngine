@@ -61,13 +61,6 @@ public:
      */
     ~BasicParameter();
 public:
-    /* \var Matrix4X4f m_clip;
-     * \brief Adjust vertices to y up when showing on screen.
-     *        In OpenGL, this is identity.
-     *        In Vulkan, this is y nagative matrix.
-     */
-    Matrix4X4f m_clip;
-
     /* \var Matrix4X4f m_proj;
      * \brief Convert vertices in view space to projection space(-1,1,-1,1,-1,1). 
      */

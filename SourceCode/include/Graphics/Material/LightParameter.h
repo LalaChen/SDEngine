@@ -112,11 +112,6 @@ public:
      */
     float m_quadratic_attenuation;
 
-    /* \var float m_shininess;
-     * \brief Shininess is used to simulate intensity of specular. 
-     */
-    float m_shininess;
-
     /* \var int32_t m_kind;
      * \brief Light kind. 0 is directional light. 1 is spot light. 2 is point light.
      */

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{98ED0BEB-A954-4EE4-AA56-B3645574F3FD}</ProjectGuid>
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{3495CE82-BDC5-4B3F-8B69-15B7BF72DCBF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>UnitTestVulkanAPI</RootNamespace>
+    <RootNamespace>UnitTestFeatureDeveloping</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -61,146 +61,161 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLFW.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
-    <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLFW.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLFW.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
-    <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLFW.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
+    <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)UnitTest_GraphicsAPI\Windows\Build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)UnitTest\Windows\Build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)UnitTest_GraphicsAPI\Windows\Build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)UnitTest\Windows\Build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)UnitTest\Windows\Build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)UnitTest_GraphicsAPI\Windows\Build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)UnitTest\Windows\Build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-    <IntDir>$(SolutionDir)UnitTest_GraphicsAPI\Windows\Build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)\</OutDir>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Common\$(ProjectName)\Code\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(SDGLFWAppLib);%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\Common\$(ProjectName)\Code\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>$(SDGLFWAppLib);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;VK_USE_PLATFORM_WIN32_KHR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Common\$(ProjectName)\Code\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(SDGLFWAppLib);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Common\$(ProjectName)\Code\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(SDGLFWAppLib);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;VK_USE_PLATFORM_WIN32_KHR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Common\$(ProjectName)\Code\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>$(SDGLFWAppLib);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThread.h" />
-    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThreadV2.h" />
-    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample.h" />
-    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample1_DrawTriangle.h" />
-    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample2_DrawScene.h" />
-    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample3_MultiSubpass.h" />
-    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample4_DrawObjects.h" />
-    <ClInclude Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager.h" />
-    <ClInclude Include="VulkanTestGLFWApplication.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThread.cpp" />
-    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\CommandRecordingThreadV2.cpp" />
-    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample.cpp" />
-    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample1_DrawTriangle.cpp" />
-    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample2_DrawScene.cpp" />
-    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample3_MultiSubpass.cpp" />
-    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\Sample4_DrawObjects.cpp" />
-    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager.cpp" />
-    <ClCompile Include="..\..\Common\UnitTest_VulkanAPI\Code\VulkanAPITestManager_ScreenRenderer.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Sample.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="VulkanTestGLFWApplication.cpp" />
+    <ClCompile Include="FeatureApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\AxesShader.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\AxesShader.vert" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\MainShader.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\MainShader.vert" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\PhongShader.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\PhongShader.vert" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\ScreenShader.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\ScreenShader.vert" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\TexShader.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_VulkanAPI\Shader\TexShader.vert" />
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.h" />
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Sample.h" />
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.h" />
+    <ClInclude Include="FeatureApplication.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.frag" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.vert" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\PhongShader.frag" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\PhongShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

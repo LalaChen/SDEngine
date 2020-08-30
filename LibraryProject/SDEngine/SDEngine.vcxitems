@@ -296,6 +296,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_Descriptor.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_Draw.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_GraphicsPipeline.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_RenderToScreen.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_UniformBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKCommand.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_InitializeVulkan.cpp" />

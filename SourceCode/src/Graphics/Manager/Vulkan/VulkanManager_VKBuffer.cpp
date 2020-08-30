@@ -51,7 +51,7 @@ VkResult VulkanManager::CreateVkBuffer(
         SDLOGW("Not support concurrent mode (I haven't design for concurrent res now)!!");
     }
 
-    return vkCreateBuffer(m_VK_device, &vec_buf_c_info, nullptr, &io_handle);
+    return vkCreateBuffer(m_device_handle, &vec_buf_c_info, nullptr, &io_handle);
 }
 
 VkResult VulkanManager::RefreshDataToHostVisibleVKDeviceMemory(VkDeviceMemory i_memory_handle, VkDeviceSize i_allocated_size, VoidPtr i_data_ptr, Size_ui64 i_data_size)
@@ -150,7 +150,7 @@ void VulkanManager::BindVkIndexBuffer(
 void VulkanManager::DestroyVkBuffer(VkBuffer &io_buffer_handle)
 {
     if (io_buffer_handle != VK_NULL_HANDLE) {
-        vkDestroyBuffer(m_VK_device, io_buffer_handle, nullptr);
+        vkDestroyBuffer(m_device_handle, io_buffer_handle, nullptr);
     }
     io_buffer_handle = VK_NULL_HANDLE;
 }

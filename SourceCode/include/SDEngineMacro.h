@@ -288,11 +288,6 @@ namespace App \
  */
 #define SD_ENUM_TO_INT( var )  static_cast<int>(var)
 
-/* \def SD_IS_FEATURE( var, feature_bit )
- * \brief chcek var has the feature or not.
- */
-#define SD_IS_FEATURE( var, feature_bit ) ((var & feature_bit) == feature_bit)
-
  /* \def SD_NULL_HANDLE
   * \brief null handle.
   */

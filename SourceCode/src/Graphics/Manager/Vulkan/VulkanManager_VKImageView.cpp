@@ -45,12 +45,12 @@ VkResult VulkanManager::CreateVkImageView(
     iv_c_info.format = i_img_format;
     iv_c_info.components = i_comp_swizzle;
     iv_c_info.subresourceRange = i_sub_src_range;
-    return vkCreateImageView(m_VK_device, &iv_c_info, nullptr, &io_iv_handle);
+    return vkCreateImageView(m_device_handle, &iv_c_info, nullptr, &io_iv_handle);
 }
 
 void VulkanManager::DestroyVkImageView(VkImageView& io_iv_handle)
 {
-    vkDestroyImageView(m_VK_device, io_iv_handle, nullptr);
+    vkDestroyImageView(m_device_handle, io_iv_handle, nullptr);
     io_iv_handle = VK_NULL_HANDLE;
 }
 

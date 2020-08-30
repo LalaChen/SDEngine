@@ -143,6 +143,9 @@ public:
     void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb_wref, const IndexBufferWeakReferenceObject &i_ib_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) override;
 public:
     void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
+public:
+//------------- Force Render Function -----------------
+    void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex_wref) override;
 protected:
 //--------------- Render Flow Function ------------------
     void RenderBegin() override;

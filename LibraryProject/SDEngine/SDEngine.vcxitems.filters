@@ -1250,5 +1250,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\DescriptorSetLayout.cpp">
       <Filter>src\Graphics\ShaderProgram</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_RenderToScreen.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

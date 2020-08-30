@@ -29,17 +29,17 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-const uint32_t VulkanManager::MaxImgAcqirationTime = 2000000000; //2s
-const uint32_t VulkanManager::MaxFenceWaitTime = 17000000; //17ms
-const VkClearValue VulkanManager::ClearColor = { {0.2f, 0.5f, 0.8f, 1.0f} };
-const VkClearValue VulkanManager::ClearDepth = { {1.0f, 0} };
+const uint32_t VulkanManager::sMaxImgAcqirationTime = 2000000000; //2s
+const uint32_t VulkanManager::sMaxFenceWaitTime = 17000000; //17ms
+const VkClearValue VulkanManager::sClearColor = { {0.2f, 0.5f, 0.8f, 1.0f} };
+const VkClearValue VulkanManager::sClearDepth = { {1.0f, 0} };
 
 const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
 {
-    return DesiredValidLayers;
+    return sDesiredValidLayers;
 }
 
-std::vector<const char*> VulkanManager::DesiredValidLayers = {
+std::vector<const char*> VulkanManager::sDesiredValidLayers = {
     "VK_LAYER_LUNARG_standard_validation",
     "VK_LAYER_RENDERDOC_Capture"//,
     //"VK_LAYER_VALVE_steam_overlay",
@@ -47,11 +47,9 @@ std::vector<const char*> VulkanManager::DesiredValidLayers = {
     //"VK_LAYER_NV_optimus"
 };
 
-std::vector<const char*> VulkanManager::NecessaryExtensions = {
+std::vector<const char*> VulkanManager::sNecessaryExtensions = {
     VK_KHR_SWAPCHAIN_EXTENSION_NAME,
     VK_KHR_MAINTENANCE1_EXTENSION_NAME,
-    //VK_KHR_MAINTENANCE2_EXTENSION_NAME,
-    //VK_KHR_MAINTENANCE3_EXTENSION_NAME
 };
 
 
@@ -66,36 +64,33 @@ VkBool32 VulkanManager::ConvertBoolean(bool flag)
 }
 
 //------------------------------------------------
-
 VulkanManager::VulkanManager()
-: m_VK_instance(VK_NULL_HANDLE)
-, m_VK_surface(VK_NULL_HANDLE)
+: m_desired_queue_abilities{ VK_QUEUE_GRAPHICS_BIT, VK_QUEUE_COMPUTE_BIT }
+, m_desired_sur_formats{ {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_R8G8B8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} }
+, m_desired_pre_modes{ VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR }
+// application created.
+, m_ins_handle(VK_NULL_HANDLE)
+, m_sur_handle(VK_NULL_HANDLE)
 // debug cbk
-, m_VK_debug_report_cbk(VK_NULL_HANDLE)
+, m_debug_rp_cbk(VK_NULL_HANDLE)
 // desired device properities
-, m_VK_desired_queue_ability_lists{VK_QUEUE_GRAPHICS_BIT, VK_QUEUE_COMPUTE_BIT}
-, m_VK_desired_queue_abilities(0)
-, m_VK_desired_sur_fmts{ {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_R8G8B8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} }
-, m_VK_final_sur_fmt{VK_FORMAT_UNDEFINED, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR }
-, m_VK_desired_pre_mode_list{ VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR }
+, m_final_q_abi_flag(0)
+, m_final_sur_format{VK_FORMAT_UNDEFINED, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR }
 // device(phy and logical)
-, m_VK_physical_device(VK_NULL_HANDLE)
-, m_VK_device(VK_NULL_HANDLE)
-, m_VK_picked_queue_family_id(-1)
-, m_VK_present_queue(VK_NULL_HANDLE)
+, m_phy_device_handle(VK_NULL_HANDLE)
+, m_device_handle(VK_NULL_HANDLE)
+, m_final_queue_fam_id(-1)
+, m_present_q_handle(VK_NULL_HANDLE)
 // swap chain
-, m_VK_final_present_mode(VK_PRESENT_MODE_RANGE_SIZE_KHR)
-, m_VK_swap_chain(VK_NULL_HANDLE)
-, m_VK_acq_img_semaphore(VK_NULL_HANDLE)
-, m_VK_present_semaphore(VK_NULL_HANDLE)
-// render screen RP.
-, m_VK_present_render_pass(VK_NULL_HANDLE)
+, m_final_p_mode(VK_PRESENT_MODE_RANGE_SIZE_KHR)
+, m_sc_handle(VK_NULL_HANDLE)
+, m_acq_img_sema_handle(VK_NULL_HANDLE)
+, m_pre_sema_handle(VK_NULL_HANDLE)
+, m_pre_rp_handle(VK_NULL_HANDLE)
 // main command pool
-, m_VK_main_cmd_pool(VK_NULL_HANDLE)
-, m_VK_main_cmd_buffer(VK_NULL_HANDLE)
-, m_VK_main_cmd_buf_fence(VK_NULL_HANDLE)
-// configuration
-, m_queue_size(3)
+, m_main_cp_handle(VK_NULL_HANDLE)
+, m_main_cb_handle(VK_NULL_HANDLE)
+, m_main_cb_fence_handle(VK_NULL_HANDLE)
 {
     SDLOG("New VulkanManager object.");
     if (InitVulkanFunction() == false) {
@@ -103,10 +98,6 @@ VulkanManager::VulkanManager()
     }
     else {
         SDLOG("Load vulkan library func successfully.");
-    }
-    //
-    for (VkQueueFlagBits& flag : m_VK_desired_queue_ability_lists) {
-        m_VK_desired_queue_abilities |= flag;
     }
 }
 
@@ -122,15 +113,15 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
     if (typeid(i_arg).hash_code() == typeid(VulkanCreationArg).hash_code()) {
         VulkanCreationArg vk_c_arg = dynamic_cast<const VulkanCreationArg&>(i_arg);
 
-        m_VK_instance = vk_c_arg.m_instance;
-        m_VK_surface = vk_c_arg.m_surface;
+        m_ins_handle = vk_c_arg.m_instance;
+        m_sur_handle = vk_c_arg.m_surface;
 
-        if (m_VK_instance != nullptr) {
+        if (m_ins_handle != nullptr) {
             //egl like
             InitializeDebugMessage();
             InitializePhysicalDevice();
             InitializeSettings();
-            InitializeLogicDevice();
+            InitializeDevice();
             InitializeCommandPoolAndBuffers();
             //graphics
             InitializeSwapChain();
@@ -150,108 +141,108 @@ void VulkanManager::ReleaseGraphicsSystem()
     SDLOG("Release VulkanManager.");
 
     PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT =
-        (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_VK_instance, "vkDestroyDebugReportCallbackEXT");
+        (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_ins_handle, "vkDestroyDebugReportCallbackEXT");
 
-    if (vkDestroyDebugReportCallbackEXT != nullptr && m_VK_debug_report_cbk != VK_NULL_HANDLE) {
-        vkDestroyDebugReportCallbackEXT(m_VK_instance, m_VK_debug_report_cbk, nullptr);
-        m_VK_debug_report_cbk = VK_NULL_HANDLE;
+    if (vkDestroyDebugReportCallbackEXT != nullptr && m_debug_rp_cbk != VK_NULL_HANDLE) {
+        vkDestroyDebugReportCallbackEXT(m_ins_handle, m_debug_rp_cbk, nullptr);
+        m_debug_rp_cbk = VK_NULL_HANDLE;
     }
     else {
         SDLOG("failed to load set up destroy debug messenger function!");
     }
 
-    if (m_VK_present_render_pass != VK_NULL_HANDLE) {
-        vkDestroyRenderPass(m_VK_device, m_VK_present_render_pass, nullptr);
-        m_VK_present_render_pass = VK_NULL_HANDLE;
+    if (m_pre_rp_handle != VK_NULL_HANDLE) {
+        vkDestroyRenderPass(m_device_handle, m_pre_rp_handle, nullptr);
+        m_pre_rp_handle = VK_NULL_HANDLE;
     }
 
-    if (m_VK_main_cmd_buffer != VK_NULL_HANDLE) {
-        vkFreeCommandBuffers(m_VK_device, m_VK_main_cmd_pool, 1, &m_VK_main_cmd_buffer);
-        m_VK_main_cmd_buffer = VK_NULL_HANDLE;
+    if (m_main_cb_handle != VK_NULL_HANDLE) {
+        vkFreeCommandBuffers(m_device_handle, m_main_cp_handle, 1, &m_main_cb_handle);
+        m_main_cb_handle = VK_NULL_HANDLE;
     }
 
-    if (m_VK_main_cmd_pool != VK_NULL_HANDLE) {
-        vkDestroyCommandPool(m_VK_device, m_VK_main_cmd_pool, nullptr);
-        m_VK_main_cmd_pool = VK_NULL_HANDLE;
+    if (m_main_cp_handle != VK_NULL_HANDLE) {
+        vkDestroyCommandPool(m_device_handle, m_main_cp_handle, nullptr);
+        m_main_cp_handle = VK_NULL_HANDLE;
     }
 
-    if (m_VK_acq_img_semaphore != VK_NULL_HANDLE) {
-        vkDestroySemaphore(m_VK_device, m_VK_acq_img_semaphore, nullptr);
-        m_VK_acq_img_semaphore = VK_NULL_HANDLE;
+    if (m_acq_img_sema_handle != VK_NULL_HANDLE) {
+        vkDestroySemaphore(m_device_handle, m_acq_img_sema_handle, nullptr);
+        m_acq_img_sema_handle = VK_NULL_HANDLE;
     }
 
-    if (m_VK_present_semaphore != VK_NULL_HANDLE) {
-        vkDestroySemaphore(m_VK_device, m_VK_present_semaphore, nullptr);
-        m_VK_present_semaphore = VK_NULL_HANDLE;
+    if (m_pre_sema_handle != VK_NULL_HANDLE) {
+        vkDestroySemaphore(m_device_handle, m_pre_sema_handle, nullptr);
+        m_pre_sema_handle = VK_NULL_HANDLE;
     }
 
-    for (VkFramebuffer &fbo : m_VK_sc_image_fbs) {
+    for (VkFramebuffer &fbo : m_sc_fb_handles) {
         if (fbo != VK_NULL_HANDLE) {
-            vkDestroyFramebuffer(m_VK_device, fbo, nullptr);
+            vkDestroyFramebuffer(m_device_handle, fbo, nullptr);
         }
         fbo = VK_NULL_HANDLE;
     }
-    m_VK_sc_image_fbs.clear();
+    m_sc_fb_handles.clear();
 
-    for (VkImageView &iv : m_VK_sc_image_views) {
+    for (VkImageView &iv : m_sc_iv_handles) {
         if (iv != VK_NULL_HANDLE) {
-            vkDestroyImageView(m_VK_device, iv, nullptr);
+            vkDestroyImageView(m_device_handle, iv, nullptr);
             iv = VK_NULL_HANDLE;
         }
     }
-    m_VK_sc_image_views.clear();
+    m_sc_iv_handles.clear();
 
-    if (m_VK_swap_chain != VK_NULL_HANDLE) {
-        vkDestroySwapchainKHR(m_VK_device, m_VK_swap_chain, nullptr);
-        m_VK_swap_chain = VK_NULL_HANDLE;
+    if (m_sc_handle != VK_NULL_HANDLE) {
+        vkDestroySwapchainKHR(m_device_handle, m_sc_handle, nullptr);
+        m_sc_handle = VK_NULL_HANDLE;
     }
 
-    if (m_VK_device != VK_NULL_HANDLE) {
-        vkDestroyDevice(m_VK_device, nullptr);
-        m_VK_device = VK_NULL_HANDLE;
+    if (m_device_handle != VK_NULL_HANDLE) {
+        vkDestroyDevice(m_device_handle, nullptr);
+        m_device_handle = VK_NULL_HANDLE;
     }
 
-    m_VK_physical_device = VK_NULL_HANDLE;
+    m_phy_device_handle = VK_NULL_HANDLE;
 
-    if (m_VK_surface != VK_NULL_HANDLE) {
-        vkDestroySurfaceKHR(m_VK_instance, m_VK_surface, nullptr);
-        m_VK_surface = VK_NULL_HANDLE;
+    if (m_sur_handle != VK_NULL_HANDLE) {
+        vkDestroySurfaceKHR(m_ins_handle, m_sur_handle, nullptr);
+        m_sur_handle = VK_NULL_HANDLE;
     }
 
-    if (m_VK_instance != VK_NULL_HANDLE) {
-        vkDestroyInstance(m_VK_instance, nullptr);
-        m_VK_instance = VK_NULL_HANDLE;
+    if (m_ins_handle != VK_NULL_HANDLE) {
+        vkDestroyInstance(m_ins_handle, nullptr);
+        m_ins_handle = VK_NULL_HANDLE;
     }
 }
 
 //----------------------- Render Flow -----------------------
 void VulkanManager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
 {
-    for (VkFramebuffer &fbo : m_VK_sc_image_fbs) {
+    for (VkFramebuffer &fbo : m_sc_fb_handles) {
         if (fbo != VK_NULL_HANDLE) {
-            vkDestroyFramebuffer(m_VK_device, fbo, nullptr);
+            vkDestroyFramebuffer(m_device_handle, fbo, nullptr);
         }
         fbo = VK_NULL_HANDLE;
     }
-    m_VK_sc_image_fbs.clear();
+    m_sc_fb_handles.clear();
 
-    for (VkImageView &iv : m_VK_sc_image_views) {
+    for (VkImageView &iv : m_sc_iv_handles) {
         if (iv != VK_NULL_HANDLE) {
-            vkDestroyImageView(m_VK_device, iv, nullptr);
+            vkDestroyImageView(m_device_handle, iv, nullptr);
             iv = VK_NULL_HANDLE;
         }
     }
-    m_VK_sc_image_views.clear();
+    m_sc_iv_handles.clear();
 
-    if (m_VK_swap_chain != VK_NULL_HANDLE) {
-        vkDestroySwapchainKHR(m_VK_device, m_VK_swap_chain, nullptr);
-        m_VK_swap_chain = VK_NULL_HANDLE;
+    if (m_sc_handle != VK_NULL_HANDLE) {
+        vkDestroySwapchainKHR(m_device_handle, m_sc_handle, nullptr);
+        m_sc_handle = VK_NULL_HANDLE;
     }
 
-    VkSurfaceKHR new_VK_surface = reinterpret_cast<VkSurfaceKHR>(i_ns_handle);
-    if (m_VK_surface != new_VK_surface && new_VK_surface != SD_NULL_HANDLE) {
-        vkDestroySurfaceKHR(m_VK_instance, m_VK_surface, nullptr);
-        m_VK_surface = new_VK_surface;
+    VkSurfaceKHR new_surface_handle = reinterpret_cast<VkSurfaceKHR>(i_ns_handle);
+    if (m_sur_handle != new_surface_handle && new_surface_handle != SD_NULL_HANDLE) {
+        vkDestroySurfaceKHR(m_ins_handle, new_surface_handle, nullptr);
+        m_sur_handle = new_surface_handle;
     }
 
     InitializeSwapChain();
@@ -263,109 +254,10 @@ void VulkanManager::RenderBegin()
 
 }
 
-void VulkanManager::RenderToScreen()
-{
-    //Get swapchain image.
-    uint32_t image_index;
-
-    VkResult result = vkAcquireNextImageKHR(
-        m_VK_device, m_VK_swap_chain, MaxImgAcqirationTime, 
-        m_VK_acq_img_semaphore, VK_NULL_HANDLE, &image_index);
-
-    if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-        SDLOGW("We can't get nxt swapchain image.");
-        return;
-    }
-    //Begin command buffer
-    VkCommandBufferBeginInfo cmd_buf_c_info = {};
-    cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    cmd_buf_c_info.pNext = nullptr;
-    cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    cmd_buf_c_info.pInheritanceInfo = nullptr;
-
-    if (vkBeginCommandBuffer(m_VK_main_cmd_buffer, &cmd_buf_c_info) != VK_SUCCESS) {
-        SDLOGW("We can't begin command buffer(%x)!!!", m_VK_main_cmd_buffer);
-        return;
-    }
-
-    //Begin RenderPass.
-    VkRect2D render_area = {};
-    render_area.offset = { 0, 0 };
-    render_area.extent = { m_screen_size.GetWidth(), m_screen_size.GetHeight() };
-
-    VkRenderPassBeginInfo rp_begin_info = {};
-    rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    rp_begin_info.pNext = nullptr;
-    rp_begin_info.renderPass = m_VK_present_render_pass;
-    rp_begin_info.framebuffer = m_VK_sc_image_fbs[image_index];
-    rp_begin_info.renderArea = render_area;
-    rp_begin_info.clearValueCount = 1;
-    rp_begin_info.pClearValues = &ClearColor;
-
-    vkCmdBeginRenderPass(m_VK_main_cmd_buffer, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
-
-    //Render to screen (To do : Compose buffers.)
-
-    //End RenderPass.
-    vkCmdEndRenderPass(m_VK_main_cmd_buffer);
-    //End command buffer
-    if (vkEndCommandBuffer(m_VK_main_cmd_buffer) != VK_SUCCESS) {
-        SDLOGW("We can't end command buffer(%x)!!!", m_VK_main_cmd_buffer);
-        return;
-    }
-
-    //Push command buffer to queue.
-    VkSemaphore wait_semaphores[1] = { m_VK_acq_img_semaphore };
-    VkPipelineStageFlags submit_wait_flags[1] = { VK_PIPELINE_STAGE_ALL_COMMANDS_BIT };
-    VkSubmitInfo submit_info = {};
-    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submit_info.pNext = nullptr;
-    submit_info.waitSemaphoreCount = 1;
-    submit_info.pWaitSemaphores = wait_semaphores; //wait acq image.
-    submit_info.pWaitDstStageMask = submit_wait_flags;
-    submit_info.signalSemaphoreCount = 1;
-    submit_info.pSignalSemaphores = &m_VK_present_semaphore; //set present semaphore.
-    submit_info.commandBufferCount = 1;
-    submit_info.pCommandBuffers = &m_VK_main_cmd_buffer;
-
-    if (vkQueueSubmit(m_VK_present_queue, 1, &submit_info, m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
-        SDLOGW("Submit command buffer to PresentQueue(%p) failure!!!", m_VK_present_queue);
-    }
-   
-    do {
-        result = vkWaitForFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence, VK_TRUE, MaxFenceWaitTime);
-    } while (result == VK_TIMEOUT);
-    if (result != VK_SUCCESS) {
-        SDLOGW("Wait sync failure(%d)!!!", result);
-        return;
-    }
-
-    //Reset main command buffer sync.
-    if (vkResetFences(m_VK_device, 1, &m_VK_main_cmd_buf_fence) != VK_SUCCESS) {
-        SDLOGW("reset main command buffer fence failure!!!");
-    }
-
-    //Present to screen
-    VkPresentInfoKHR p_info = {};
-    p_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    p_info.pNext = nullptr;
-    p_info.waitSemaphoreCount = 1;
-    p_info.pWaitSemaphores = &m_VK_present_semaphore;
-    p_info.swapchainCount = 1;
-    p_info.pSwapchains = &m_VK_swap_chain;
-    p_info.pImageIndices = &image_index;
-    p_info.pResults = nullptr;
-
-    if (vkQueuePresentKHR(m_VK_present_queue, &p_info) != VK_SUCCESS) {
-        SDLOGW("We can't present image by queue.");
-        return;
-    }
-}
-
 void VulkanManager::RenderEnd()
 {
     //Reset command buffers in pool.
-    if (vkResetCommandPool(m_VK_device, m_VK_main_cmd_pool, 0) != VK_SUCCESS) {
+    if (vkResetCommandPool(m_device_handle, m_main_cp_handle, 0) != VK_SUCCESS) {
         SDLOGW("reset command buffer in main pool failure!!!");
     }
 }

@@ -39,10 +39,10 @@ VkResult VulkanManager::AllocatVkDeviceMemoryForVkBuffer(
     VkResult result;
     //--- i. Pick up memory properties 
     VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
-    vkGetPhysicalDeviceMemoryProperties(m_VK_physical_device, &phy_dev_memory_props);
+    vkGetPhysicalDeviceMemoryProperties(m_phy_device_handle, &phy_dev_memory_props);
     //--- ii. Get memory requirements.
     VkMemoryRequirements mem_req;
-    vkGetBufferMemoryRequirements(m_VK_device, i_buffer_handle, &mem_req);
+    vkGetBufferMemoryRequirements(m_device_handle, i_buffer_handle, &mem_req);
     io_allocated_size = mem_req.size;
     //--- iii. find suitable type and then allocate memory.
     for (uint32_t mem_type_ID = 0; mem_type_ID < phy_dev_memory_props.memoryTypeCount; ++mem_type_ID) {
@@ -57,7 +57,7 @@ VkResult VulkanManager::AllocatVkDeviceMemoryForVkBuffer(
             mem_a_info.pNext = nullptr;
             mem_a_info.allocationSize = mem_req.size;
             mem_a_info.memoryTypeIndex = mem_type_ID;
-            result = vkAllocateMemory(m_VK_device, &mem_a_info, nullptr, &io_memory_handle);
+            result = vkAllocateMemory(m_device_handle, &mem_a_info, nullptr, &io_memory_handle);
             if (result != VK_SUCCESS) {
                 SDLOGE("VKError : Allocate memory failure. code=%d", result);
                 return result;
@@ -66,7 +66,7 @@ VkResult VulkanManager::AllocatVkDeviceMemoryForVkBuffer(
         }
     }
     //2. bind memory and buffer together.
-    result = vkBindBufferMemory(m_VK_device, i_buffer_handle, io_memory_handle, i_mem_offset);
+    result = vkBindBufferMemory(m_device_handle, i_buffer_handle, io_memory_handle, i_mem_offset);
     return result;
 }
 
@@ -80,11 +80,11 @@ VkResult VulkanManager::AllocateVkDeviceMemoryForVkImage(
     //1. Get device info.
     VkResult result;
     VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
-    vkGetPhysicalDeviceMemoryProperties(m_VK_physical_device, &phy_dev_memory_props);
+    vkGetPhysicalDeviceMemoryProperties(m_phy_device_handle, &phy_dev_memory_props);
 
     //2. Get requirement info of image.
     VkMemoryRequirements mem_req;
-    vkGetImageMemoryRequirements(m_VK_device, i_image_handle, &mem_req);
+    vkGetImageMemoryRequirements(m_device_handle, i_image_handle, &mem_req);
     io_allocated_size = mem_req.size;
 
     //3. Allocate memory space following memory type and prop flag.
@@ -100,7 +100,7 @@ VkResult VulkanManager::AllocateVkDeviceMemoryForVkImage(
             buffer_mem_a_info.pNext = nullptr;
             buffer_mem_a_info.allocationSize = io_allocated_size;
             buffer_mem_a_info.memoryTypeIndex = mem_type_ID;
-            result = vkAllocateMemory(m_VK_device, &buffer_mem_a_info, nullptr, &io_memory_handle);
+            result = vkAllocateMemory(m_device_handle, &buffer_mem_a_info, nullptr, &io_memory_handle);
             if (result != VK_SUCCESS) {
                 SDLOGE("Allocate memory failure.");
                 return result;
@@ -111,7 +111,7 @@ VkResult VulkanManager::AllocateVkDeviceMemoryForVkImage(
         }
     }
     //4. Bind memory to image.
-    return vkBindImageMemory(m_VK_device, i_image_handle, io_memory_handle, i_mem_offset);
+    return vkBindImageMemory(m_device_handle, i_image_handle, io_memory_handle, i_mem_offset);
 }
 
 VkResult VulkanManager::MapVkDeviceMemory(
@@ -121,7 +121,7 @@ VkResult VulkanManager::MapVkDeviceMemory(
 {
     VkResult result = VK_SUCCESS;
     i_local_ptr = VK_NULL_HANDLE;
-    result = vkMapMemory(m_VK_device, i_memory_handle, 0, i_allocated_size, 0, (void**)&i_local_ptr);
+    result = vkMapMemory(m_device_handle, i_memory_handle, 0, i_allocated_size, 0, (void**)&i_local_ptr);
     if (result != VK_SUCCESS) {
         SDLOGE("Map buffer memory failure!!!");
     }
@@ -137,7 +137,7 @@ VkResult VulkanManager::FlushMappedVkDeviceMemoryRanges(VkDeviceMemory i_memory_
     mem_ranges.memory = i_memory_handle;
     mem_ranges.offset = 0;
     mem_ranges.size = VK_WHOLE_SIZE;
-    result = vkFlushMappedMemoryRanges(m_VK_device, 1, &mem_ranges);
+    result = vkFlushMappedMemoryRanges(m_device_handle, 1, &mem_ranges);
     if (result != VK_SUCCESS) {
         SDLOGE("Map buffer flush failure!!!");
     }
@@ -146,13 +146,13 @@ VkResult VulkanManager::FlushMappedVkDeviceMemoryRanges(VkDeviceMemory i_memory_
 
 void VulkanManager::UnmapVkDeviceMemory(VkDeviceMemory i_memory_handle)
 {
-    vkUnmapMemory(m_VK_device, i_memory_handle);
+    vkUnmapMemory(m_device_handle, i_memory_handle);
 }
 
 void VulkanManager::FreeVkDeviceMemory(VkDeviceMemory &io_memory_handle)
 {
     if (io_memory_handle != VK_NULL_HANDLE) {
-        vkFreeMemory(m_VK_device, io_memory_handle, nullptr);
+        vkFreeMemory(m_device_handle, io_memory_handle, nullptr);
     }
     io_memory_handle = VK_NULL_HANDLE;
 }
