@@ -634,7 +634,7 @@ void VulkanManager::InitializeSwapChain()
         throw std::runtime_error("No desired present mode supported!");
     }
     else {
-        SDLOGD("final present mode : %d", m_final_p_mode);
+        SDLOG("final present mode : %d", m_final_p_mode);
     }
 
     if (sur_caps.currentExtent.width != 0 && sur_caps.currentExtent.height != 0) {

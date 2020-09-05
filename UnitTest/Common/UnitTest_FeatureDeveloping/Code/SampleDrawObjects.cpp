@@ -335,6 +335,7 @@ void SampleDrawObjects::CreateCommandBufferAndPool()
     uint32_t max_threads = std::thread::hardware_concurrency();
     //max_threads = 1;
     m_rec_threads.resize(max_threads);
+    SDLOG("Hardware concurrency : %u", max_threads);
 #if defined(RECORD_POOL_V2)
     for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
         m_rec_threads[tID] = new SecondaryCommandPoolThread(StringFormat("RecordThread_%d", tID));
@@ -615,6 +616,8 @@ void SampleDrawObjects::CreateCamera()
         m_current_res.GetWidth(), m_current_res.GetHeight(),
         GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
         ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+    float ratio = m_current_res.GetRatio();
     m_camera.m_proj_mat.perspective(120, m_current_res.GetRatio(), 0.01f, 1000.0f);
 
     SDLOG("%s", m_camera.m_trans.MakeWorldMatrix().ToFormatString("Camera", "").c_str());
@@ -647,7 +650,7 @@ void SampleDrawObjects::RecordCommandBuffer()
 
     ScissorRegion sr;
     sr.m_x = 0.0f; sr.m_y = 0.0f;
-    sr.m_width = vp.m_width; sr.m_height = m_current_res.GetWidth();
+    sr.m_width = vp.m_width; sr.m_height = m_current_res.GetHeight();
 
 #if defined(SINGLE_FLOW)
 #if defined(TIME_MEASURE)
@@ -660,8 +663,8 @@ void SampleDrawObjects::RecordCommandBuffer()
     GraphicsManager::GetRef().SetViewport(m_main_cb_wref, vp);
     GraphicsManager::GetRef().SetScissor(m_main_cb_wref, sr);
 
-    for (ObjectData& obj : m_scene_objects) {
-        obj.Draw(m_mgr, m_main_cb_wref);
+    for (ObjectData &obj : m_scene_objects) {
+        obj.Draw(m_forward_rp_sref, m_main_cb_wref, 0);
     }
 
     m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb_wref);

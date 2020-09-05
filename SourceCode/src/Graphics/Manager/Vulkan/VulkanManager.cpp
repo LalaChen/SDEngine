@@ -67,7 +67,7 @@ VkBool32 VulkanManager::ConvertBoolean(bool flag)
 VulkanManager::VulkanManager()
 : m_desired_queue_abilities{ VK_QUEUE_GRAPHICS_BIT, VK_QUEUE_COMPUTE_BIT }
 , m_desired_sur_formats{ {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_R8G8B8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} }
-, m_desired_pre_modes{ VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR }
+, m_desired_pre_modes{VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR }
 // application created.
 , m_ins_handle(VK_NULL_HANDLE)
 , m_sur_handle(VK_NULL_HANDLE)
@@ -125,10 +125,10 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializeCommandPoolAndBuffers();
             //graphics
             InitializeSwapChain();
-            InitializePresentRenderPass();
-            InitializeSCImageViewsAndFBs();
+            //InitializePresentRenderPass();
+            //InitializeSCImageViewsAndFBs();
             //
-            PrintSystemInformation();
+            //PrintSystemInformation();
         }
         else {
             throw std::runtime_error("VkInstance in arg is nullptr!!!");
@@ -241,12 +241,15 @@ void VulkanManager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
 
     VkSurfaceKHR new_surface_handle = reinterpret_cast<VkSurfaceKHR>(i_ns_handle);
     if (m_sur_handle != new_surface_handle && new_surface_handle != SD_NULL_HANDLE) {
-        vkDestroySurfaceKHR(m_ins_handle, new_surface_handle, nullptr);
+        SDLOG("Refresh surface for resize.");
+        vkDestroySurfaceKHR(m_ins_handle, m_sur_handle, nullptr);
         m_sur_handle = new_surface_handle;
+    }
+    else {
+        SDLOG("Surface no change. We don't need to refresh surface for resize.");
     }
 
     InitializeSwapChain();
-    InitializeSCImageViewsAndFBs();
 }
 
 void VulkanManager::RenderBegin()

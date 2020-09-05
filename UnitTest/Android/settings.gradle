@@ -1,2 +1,2 @@
 rootProject.name='AndroidUnitTest'
-include ':unittest_androidapp'
+include ':unittest_featuredeveloping'

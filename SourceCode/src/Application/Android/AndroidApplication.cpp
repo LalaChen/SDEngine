@@ -51,7 +51,7 @@ void AndroidApplication::InitializeGraphicsSystem()
         VkInstance instance = VK_NULL_HANDLE;
         VkSurfaceKHR surface = VK_NULL_HANDLE;
 
-        SDLOG("Adjust extension layers.");
+        SDLOG("[AppFlow] Adjust extension layers.");
         uint32_t ins_ext_prop_count = 0;
         std::vector<VkExtensionProperties> ins_ext_props;
         std::vector<const char*> ins_ext_prop_names;
@@ -66,7 +66,7 @@ void AndroidApplication::InitializeGraphicsSystem()
             }
         }
 
-        SDLOG("Adjust valid layers.");
+        SDLOG("[AppFlow] Adjust valid layers.");
         uint32_t layer_count = 0;
         std::vector<VkLayerProperties> avaiable_valid_layers;
         std::vector<const char*> desired_valid_layer_names;
@@ -75,7 +75,7 @@ void AndroidApplication::InitializeGraphicsSystem()
             avaiable_valid_layers.resize(layer_count);
             vkEnumerateInstanceLayerProperties(&layer_count, avaiable_valid_layers.data());
             for (uint32_t ext_id = 0; ext_id < avaiable_valid_layers.size(); ext_id++) {
-                SDLOG("--- Avaiable valid layer :%s[%s](%d)(%d)",
+                SDLOG("[AppFlow] --- Avaiable valid layer :%s[%s](%d)(%d)",
                       avaiable_valid_layers[ext_id].layerName,
                       avaiable_valid_layers[ext_id].description,
                       avaiable_valid_layers[ext_id].implementationVersion,
@@ -111,24 +111,24 @@ void AndroidApplication::InitializeGraphicsSystem()
         ins_c_info.ppEnabledLayerNames = desired_valid_layer_names.data();
 #endif
 
-        SDLOG("Vulkan instance creation !!!");
-        SDLOG("--- Vulkan create instance.");
+        SDLOG("[AppFlow] Vulkan instance creation !!!");
+        SDLOG("[AppFlow] --- Vulkan create instance.");
         if (vkCreateInstance(&ins_c_info, nullptr, (VkInstance*)&instance) != VK_SUCCESS) {
-            SDLOG("--- failed to create instance.");
+            SDLOG("[AppFlow] --- failed to create instance.");
             throw std::runtime_error("failed to create instance!");
         }
-        SDLOG("--- Vulkan create surface.");
+        SDLOG("[AppFlow] --- Vulkan create surface.");
         VkAndroidSurfaceCreateInfoKHR surface_c_info = {};
         surface_c_info.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
         surface_c_info.pNext = nullptr;
         surface_c_info.flags = 0;
         surface_c_info.window = m_window;
-        SDLOG("vkCreateAndroidSurfaceKHR(%p)", (void*)vkCreateAndroidSurfaceKHR);
+        SDLOG("[AppFlow] vkCreateAndroidSurfaceKHR(%p)", (void*)vkCreateAndroidSurfaceKHR);
         if (vkCreateAndroidSurfaceKHR(instance, &surface_c_info, nullptr, &surface) != VK_SUCCESS){
-            SDLOG("--- failed to create surface.");
+            SDLOG("[AppFlow] --- failed to create surface.");
             throw std::runtime_error("failed to create surface!");
         }
-        SDLOG("Vulkan instance creation end!!!");
+        SDLOG("[AppFlow] Vulkan instance creation end!!!");
         m_graphics_app_instance = reinterpret_cast<CompHandle>(instance);
 
         VulkanCreationArg arg;
@@ -143,20 +143,29 @@ void AndroidApplication::InitializeGraphicsSystem()
 
 void AndroidApplication::ReleaseGraphicsSystem()
 {
+    GraphicsManager::GetRef().ReleaseGraphicsSystem();
+    GraphicsManager::Destroy();
     m_window = nullptr;
 }
 
 void AndroidApplication::TerminateApplication()
 {
     m_current_state = AppState_TERMINATE;
+    m_pause_cv.notify_all();
     m_render_thread.join();
+    //
+    SDLOG("[AppFlow] Destroy GraphicsManager.");
+    ReleaseGraphicsSystem();
     //destroy Timer.
+    SDLOG("[AppFlow] Destroy Timer.");
     Timer::GetRef().End();
-    SDLOG("APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());
+    SDLOG("[AppFlow] APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());
     Timer::Destroy();
     //destroy File Manager
+    SDLOG("[AppFlow] Destroy AssetResourceManager.");
     AssetResourceManager::Destroy();
     //destroy LogManager
+    SDLOG("[AppFlow] Destroy LogManager.");
     LogManager::Destroy();
     //
     m_asset_mgr = nullptr;
@@ -170,6 +179,7 @@ void AndroidApplication::InitializeNativeWindow(ANativeWindow *i_window)
 void AndroidApplication::RefreshNativeWindow(ANativeWindow *i_window, int i_width, int i_height)
 {
     if (i_window != nullptr) {
+        SDLOG("[AppFlow] Refresh native for android.");
         VkSurfaceKHR new_surface = VK_NULL_HANDLE;
         m_window = i_window;
         //Update surface in graphics manager.
@@ -182,14 +192,13 @@ void AndroidApplication::RefreshNativeWindow(ANativeWindow *i_window, int i_widt
         if (vkCreateAndroidSurfaceKHR(app_VK_instance, &surface_c_info, nullptr, &new_surface) != VK_SUCCESS){
             throw std::runtime_error("failed to create surface!");
         }
-
         m_win_res.SetResolution(i_width, i_height);
-        GraphicsManager::GetRef().Resize(reinterpret_cast<CompHandle>(new_surface), i_width, i_height);
+        Resize(reinterpret_cast<CompHandle>(new_surface), i_width, i_height);
         m_current_state = AppState_RUN;
         m_pause_cv.notify_all();
     }
     else {
-        SDLOGE("i_window isn't nullptr. We can't register.");
+        SDLOGE("[AppFlow] i_window isn't nullptr. We can't register.");
     }
 }
 
@@ -207,19 +216,15 @@ void AndroidApplication::RunMainLoop()
         m_current_state = AppState_RUN;
         while (m_current_state == AppState_RUN || m_current_state == AppState_PAUSE) {
             if (m_current_state == AppState_RUN) {
-                if (m_resize_signal == true) {
-                    GraphicsManager::GetRef().Resize(SD_NULL_HANDLE, m_win_res.GetWidth(), m_win_res.GetHeight());
-                    m_resize_signal = false;
-                }
                 Update();
             }
             else {
                 std::unique_lock<std::mutex> mtx_lock(m_pause_mtx);
-                SDLOG("App Pause Start");
-                m_pause_cv.wait(mtx_lock, [this](){return (m_current_state == AppState_RUN);});
-                SDLOG("App Pause End - Go to Resume");
+                SDLOG("[AppFlow] App pause now");
+                m_pause_cv.wait(mtx_lock, [this](){return (m_current_state == AppState_RUN || m_current_state == AppState_TERMINATE);});
+                SDLOG("[AppFlow] App pause end - go to Resume");
                 Resume();
-                SDLOG("Resume End");
+                SDLOG("[AppFlow] App resume end");
             }
         }
     });
@@ -228,10 +233,11 @@ void AndroidApplication::RunMainLoop()
 void AndroidApplication::Pause()
 {
     if (m_current_state == AppState_RUN) {
+        SDLOG("[AppFlow] Set app pause.");
         m_current_state = AppState_PAUSE;
     }
     else {
-        SDLOG("Old state(%d) isn't AppState_Run. We can't stop.", m_current_state);
+        SDLOG("[AppFlow] Old state(%d) isn't AppState_Run. We can't stop.", m_current_state);
     }
 }
 

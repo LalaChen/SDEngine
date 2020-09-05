@@ -657,7 +657,7 @@ void Sample4_DrawObjects::RecordCommandBuffer()
 
     ScissorRegion sr;
     sr.m_x = 0.0f; sr.m_y = 0.0f;
-    sr.m_width = vp.m_width; sr.m_height = m_current_res.GetWidth();
+    sr.m_width = vp.m_width; sr.m_height = m_current_res.GetHeight();
 
 #if defined(SINGLE_FLOW)
 #if defined(TIME_MEASURE)

@@ -50,6 +50,8 @@ VulkanAPITestManager::~VulkanAPITestManager()
 void VulkanAPITestManager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
     VulkanManager::InitializeGraphicsSystem(i_arg);
+    InitializePresentRenderPass();
+    InitializeSCImageViewsAndFBs();
     InitializeScreenRendering();
 }
 
@@ -170,7 +172,7 @@ void VulkanAPITestManager::RenderToScreen()
     blit_param.srcOffsets[0].z = 0;
     blit_param.srcOffsets[1].x = m_screen_size.GetWidth();
     blit_param.srcOffsets[1].y = m_screen_size.GetHeight();
-    blit_param.srcOffsets[1].z = 0;
+    blit_param.srcOffsets[1].z = 1;
     blit_param.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit_param.dstSubresource.baseArrayLayer = 0;
     blit_param.dstSubresource.mipLevel = 0;
@@ -180,7 +182,7 @@ void VulkanAPITestManager::RenderToScreen()
     blit_param.dstOffsets[0].z = 0;
     blit_param.dstOffsets[1].x = m_screen_size.GetWidth();
     blit_param.dstOffsets[1].y = m_screen_size.GetHeight();
-    blit_param.dstOffsets[1].z = 0;
+    blit_param.dstOffsets[1].z = 1;
 
     if (m_samples[m_cur_sample_idx].GetRef().GetColorBuffer() != VK_NULL_HANDLE) {
         vkCmdBlitImage(m_main_cb_handle,
@@ -201,7 +203,7 @@ void VulkanAPITestManager::RenderToScreen()
     blit_param.srcOffsets[0].z = 0;
     blit_param.srcOffsets[1].x = 2;
     blit_param.srcOffsets[1].y = 2;
-    blit_param.srcOffsets[1].z = 0;
+    blit_param.srcOffsets[1].z = 1;
     blit_param.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit_param.dstSubresource.baseArrayLayer = 0;
     blit_param.dstSubresource.mipLevel = 0;
@@ -211,7 +213,7 @@ void VulkanAPITestManager::RenderToScreen()
     blit_param.dstOffsets[0].z = 0;
     blit_param.dstOffsets[1].x = m_screen_size.GetWidth();
     blit_param.dstOffsets[1].y = m_screen_size.GetHeight();
-    blit_param.dstOffsets[1].z = 0;
+    blit_param.dstOffsets[1].z = 1;
 
     if (m_red_error_img != VK_NULL_HANDLE) {
         vkCmdBlitImage(m_main_cb_handle,
@@ -364,6 +366,7 @@ void VulkanAPITestManager::RenderDebug()
 void VulkanAPITestManager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
 {
     VulkanManager::Resize(i_ns_handle, i_w, i_h);
+    InitializeSCImageViewsAndFBs();
     for (uint32_t sample_idx = 0; sample_idx < m_samples.size(); ++sample_idx) {
         m_samples[sample_idx]->Resize(i_w, i_h);
     }

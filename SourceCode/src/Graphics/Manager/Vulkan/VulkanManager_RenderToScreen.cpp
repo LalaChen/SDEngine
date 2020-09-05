@@ -69,7 +69,7 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
     blit_param.srcOffsets[0].z = 0;
     blit_param.srcOffsets[1].x = m_screen_size.GetWidth();
     blit_param.srcOffsets[1].y = m_screen_size.GetHeight();
-    blit_param.srcOffsets[1].z = 0;
+    blit_param.srcOffsets[1].z = 1;
     blit_param.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit_param.dstSubresource.baseArrayLayer = 0;
     blit_param.dstSubresource.mipLevel = 0;
@@ -79,7 +79,7 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
     blit_param.dstOffsets[0].z = 0;
     blit_param.dstOffsets[1].x = m_screen_size.GetWidth();
     blit_param.dstOffsets[1].y = m_screen_size.GetHeight();
-    blit_param.dstOffsets[1].z = 0;
+    blit_param.dstOffsets[1].z = 1;
 
     if (tex_identity.m_image_handle != VK_NULL_HANDLE) {
         vkCmdBlitImage(m_main_cb_handle,
@@ -142,6 +142,8 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
         SDLOGW("We can't present image by queue.");
         return;
     }
+
+    m_fps.AddCount();
 }
 
 

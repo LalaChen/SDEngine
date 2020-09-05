@@ -69,6 +69,7 @@ bool ApplicationManipulater::OnReceiveKeyStateChanged(const EventArg &i_arg)
 
 FeatureApplication::FeatureApplication(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv)
 : GLFWApplication(i_win_title, i_win_res, i_full_window, i_adopt_library, i_argc, i_argv)
+, m_cur_sample_idx(0)
 {
     m_app_manipulater = new ApplicationManipulater("APManipulater");
     m_app_manipulater.GetRef().Initalize();

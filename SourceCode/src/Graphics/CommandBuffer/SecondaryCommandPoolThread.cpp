@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include "SDEngineCommonFunction.h"
 #include "LogManager.h"
+#include "GraphicsManager.h"
 #include "SecondaryCommandPoolThread.h"
 
 using SDE::Basic::StringFormat;
@@ -80,6 +81,8 @@ void SecondaryCommandPoolThread::StartRecording(const CommandBufferInheritanceIn
     m_recording = true;
     m_viewport = i_vp;
     m_scissor_region = i_sr;
+    GraphicsManager::GetRef().SetViewport(m_cb_wref, m_viewport);
+    GraphicsManager::GetRef().SetScissor(m_cb_wref, m_scissor_region);
     m_task_cv.notify_one();
 }
 
