@@ -50,8 +50,6 @@ VulkanAPITestManager::~VulkanAPITestManager()
 void VulkanAPITestManager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
     VulkanManager::InitializeGraphicsSystem(i_arg);
-    InitializePresentRenderPass();
-    InitializeSCImageViewsAndFBs();
     InitializeScreenRendering();
 }
 
@@ -366,7 +364,6 @@ void VulkanAPITestManager::RenderDebug()
 void VulkanAPITestManager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
 {
     VulkanManager::Resize(i_ns_handle, i_w, i_h);
-    InitializeSCImageViewsAndFBs();
     for (uint32_t sample_idx = 0; sample_idx < m_samples.size(); ++sample_idx) {
         m_samples[sample_idx]->Resize(i_w, i_h);
     }

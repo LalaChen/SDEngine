@@ -125,8 +125,8 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializeCommandPoolAndBuffers();
             //graphics
             InitializeSwapChain();
-            //InitializePresentRenderPass();
-            //InitializeSCImageViewsAndFBs();
+            InitializePresentRenderPass();
+            InitializeSCImageViewsAndFBs();
             //
             //PrintSystemInformation();
         }
@@ -250,6 +250,7 @@ void VulkanManager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
     }
 
     InitializeSwapChain();
+    InitializeSCImageViewsAndFBs();
 }
 
 void VulkanManager::RenderBegin()
