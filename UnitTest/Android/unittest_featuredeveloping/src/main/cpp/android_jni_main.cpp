@@ -34,13 +34,14 @@ void JNICALL Java_com_sdengine_unittest_1featuredeveloping_MainActivity_Initiali
         jobject j_asset_mgr)
 {
 	LOGI("Create App instance.");
-    // TODO: implement InitializeApplication()
     AAssetManager *asset_mgr = AAssetManager_fromJava(env, j_asset_mgr);
-    //1. new Android Application.
+    //1. Check application have been created or not.
+	//   Orientation changing will trigger onCreate, so we need to do this.
+	//   That is, we will terminate app if orientation changed.
 	if (g_app != nullptr) {
 		TerminateApplication();
 	}
-
+    //1. new Android Application.
     g_app = new FeatureApplication("test",
                                    asset_mgr,
                                    SDE::Graphics::GraphicsLibrary_Vulkan,
