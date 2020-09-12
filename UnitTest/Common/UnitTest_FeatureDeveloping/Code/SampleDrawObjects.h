@@ -20,6 +20,12 @@ public:
     LightData();
     ~LightData();
 public:
+    void InitializeLightUniformSet(const DescriptorSetLayoutWeakReferenceObject &i_dsl_wref);
+    void UpdateLightUniformSet();
+public:
+    DescriptorPoolStrongReferenceObject m_light_pool_sref;
+    DescriptorSetWeakReferenceObject m_light_set_wref;
+    UniformBufferWeakReferenceObject m_light_wrefs;
     LightParameter m_light_data;
     Transform m_trans;
 };
@@ -45,14 +51,13 @@ public:
     ObjectData();
     ~ObjectData();
 public:
-    void InitializeCommonUniformSet(const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_common_dsl_wrefs);
-    void UpdateCommonUniformSet(const SampleCameraData &i_camera, const LightData &i_light);
-    void Draw(const RenderPassWeakReferenceObject &i_rp_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_sp_id);
+    void InitializeBasicUniformSet(const DescriptorSetLayoutWeakReferenceObject &i_basic_dsl_wref);
+    void UpdateCommonUniformSet(const SampleCameraData &i_camera);
+    void Draw(const RenderPassWeakReferenceObject &i_rp_wref, const CommandBufferWeakReferenceObject &i_cb_wref, const LightData &i_light_data, uint32_t i_sp_id);
 public:
     UniformBufferWeakReferenceObject m_basic_wrefs;
-    UniformBufferWeakReferenceObject m_light_wrefs;
-    DescriptorPoolStrongReferenceObject m_common_pool_sref;
-    std::vector<DescriptorSetWeakReferenceObject> m_common_set_wrefs;
+    DescriptorPoolStrongReferenceObject m_basic_pool_sref;
+    DescriptorSetWeakReferenceObject m_basic_set_wref;
 public:
     MeshWeakReferenceObject m_mesh;
     MaterialWeakReferenceObject m_shared_mat_wref;
@@ -90,7 +95,8 @@ private:
     void CreateObjects();
     void UpdateCamera();
 protected:
-    std::vector<DescriptorSetLayoutStrongReferenceObject> m_common_dsl_srefs;
+    DescriptorSetLayoutStrongReferenceObject m_basic_dsl_sref;
+    DescriptorSetLayoutStrongReferenceObject m_light_dsl_sref;
 protected:
     std::vector<DescriptorSetLayoutStrongReferenceObject> m_general_dsl_srefs;
 protected:

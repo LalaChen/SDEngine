@@ -32,7 +32,7 @@ layout(set = 0, binding = 0) uniform BasicUniforms {
 } basic;
 
 //Uniform Light Buffer.
-layout(set = 0, binding = 1) uniform LightUniforms {
+layout(set = 1, binding = 0) uniform LightUniforms {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
@@ -47,7 +47,7 @@ layout(set = 0, binding = 1) uniform LightUniforms {
 } light;
 
 //Uniform Material buffer
-layout(set = 1, binding = 0) uniform MaterialUniforms {
+layout(set = 2, binding = 0) uniform MaterialUniforms {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
@@ -55,7 +55,7 @@ layout(set = 1, binding = 0) uniform MaterialUniforms {
 	float shininess;
 } material;
 
-layout(set = 1, binding = 1) uniform sampler2D mainTexture; 
+layout(set = 2, binding = 1) uniform sampler2D mainTexture; 
 
 //------- light vertices basic function -------
 vec3 CalculateLightDir(in vec4 iVertex)

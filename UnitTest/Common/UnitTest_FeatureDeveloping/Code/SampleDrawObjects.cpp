@@ -13,6 +13,54 @@ LightData::~LightData()
 {
 }
 
+void LightData::InitializeLightUniformSet(const DescriptorSetLayoutWeakReferenceObject &i_dsl_wref)
+{
+    std::map<ObjectName, UniformVariableWeakReferenceObject> uv_wrefs;
+    uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
+    i_dsl_wref.GetRef().GetUniformDescriptorCounts(desc_counts);
+
+    //Visit all descriptor set layout to allocated set and get weak reference uniform variables.
+    m_light_pool_sref = new DescriptorPool("CommonPool");
+    m_light_pool_sref.GetRef().Initialize(desc_counts, 1, false);
+    m_light_set_wref = m_light_pool_sref.GetRef().AllocateDescriptorSet(i_dsl_wref);
+    m_light_set_wref.GetRef().LinkUniformVariables(uv_wrefs);
+
+    //Write descriptor.
+    if (m_light_set_wref.IsNull() == false) {
+        m_light_set_wref.GetRef().WriteDescriptor();
+    }
+
+    if (uv_wrefs.find("light") != uv_wrefs.end()) {
+        m_light_wrefs = uv_wrefs["light"].DynamicCastTo<UniformBuffer>();
+    }
+
+    if (m_light_wrefs.IsNull() == true) {
+        SDLOGE("We can't find light uniform buffer.");
+    }
+}
+
+void LightData::UpdateLightUniformSet()
+{
+    if (m_light_data.m_kind == 0) {// direction light.
+        m_light_data.m_position = m_trans.GetForward().negative();
+    }
+    else if (m_light_data.m_kind == 1) { //position light,
+        m_light_data.m_position = m_trans.m_position;
+    }
+    else if (m_light_data.m_kind == 2) { //spot light.
+        m_light_data.m_position = m_trans.m_position;
+        m_light_data.m_direction = m_trans.GetForward();
+    }
+    else {
+        m_light_data.m_position = m_trans.GetForward();
+    }
+
+    if (m_light_wrefs.IsNull() == false) {
+        m_light_wrefs.GetRef().SetBufferData(&m_light_data, sizeof(LightParameter));
+        m_light_wrefs.GetRef().Update();
+    }
+}
+
 SampleCameraData::SampleCameraData()
 {
 }
@@ -27,49 +75,37 @@ ObjectData::ObjectData()
 
 ObjectData::~ObjectData()
 {
-    m_common_pool_sref.Reset();
+    m_basic_pool_sref.Reset();
 }
 
-void ObjectData::InitializeCommonUniformSet(const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_common_dsl_wrefs)
+void ObjectData::InitializeBasicUniformSet(const DescriptorSetLayoutWeakReferenceObject &i_basic_dsl_wref)
 {
     std::map<ObjectName, UniformVariableWeakReferenceObject> uv_wrefs;
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
-    for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : i_common_dsl_wrefs) {
-        dsl_wref.GetRef().GetUniformDescriptorCounts(desc_counts);;
-    }
-    m_common_pool_sref = new DescriptorPool("CommonPool");
-    m_common_pool_sref.GetRef().Initialize(desc_counts, 1, false);
+    i_basic_dsl_wref.GetRef().GetUniformDescriptorCounts(desc_counts);
 
-    for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : i_common_dsl_wrefs) {
-        m_common_set_wrefs.push_back(m_common_pool_sref.GetRef().AllocateDescriptorSet(dsl_wref));
-        m_common_set_wrefs[m_common_set_wrefs.size() - 1].GetRef().LinkUniformVariables(uv_wrefs);
-    }
+    //Visit all descriptor set layout to allocated set and get weak reference uniform variables.
+    m_basic_pool_sref = new DescriptorPool("CommonPool");
+    m_basic_pool_sref.GetRef().Initialize(desc_counts, 1, false);
+    m_basic_set_wref = m_basic_pool_sref.GetRef().AllocateDescriptorSet(i_basic_dsl_wref);
+    m_basic_set_wref.GetRef().LinkUniformVariables(uv_wrefs);
 
-    for (DescriptorSetWeakReferenceObject &ds_wref : m_common_set_wrefs) {
-        if (ds_wref.IsNull() == false) {
-            ds_wref.GetRef().WriteDescriptor();
-        }
+    //Write descriptor.
+    if (m_basic_set_wref.IsNull() == false) {
+        m_basic_set_wref.GetRef().WriteDescriptor();
     }
 
     if (uv_wrefs.find("basic") != uv_wrefs.end()) {
         m_basic_wrefs = uv_wrefs["basic"].DynamicCastTo<UniformBuffer>();
     }
-    if (uv_wrefs.find("light") != uv_wrefs.end()) {
-        m_light_wrefs = uv_wrefs["light"].DynamicCastTo<UniformBuffer>();
-    }
 
     if (m_basic_wrefs.IsNull() == true) {
         SDLOGE("We can find basic uniform buffer.");
     }
-
-    if (m_light_wrefs.IsNull() == true) {
-        SDLOGE("We can find light uniform buffer.");
-    }
 }
 
 void ObjectData::UpdateCommonUniformSet(
-    const SampleCameraData &i_camera,
-    const LightData &i_light)
+    const SampleCameraData &i_camera)
 {
     BasicParameter ub = {};
     ub.m_proj = i_camera.m_proj_mat;
@@ -77,47 +113,36 @@ void ObjectData::UpdateCommonUniformSet(
     ub.m_view_eye = i_camera.m_trans.m_position;
     ub.m_worid = m_trans.MakeWorldMatrix();
 
-    LightParameter lb = {};
-    lb = i_light.m_light_data;
-    if (lb.m_kind == 0) {// direction light.
-        lb.m_position = i_light.m_trans.GetForward().negative();
-    }
-    else if (lb.m_kind == 1) { //position light,
-        lb.m_position = i_light.m_trans.m_position;
-    }
-    else if (lb.m_kind == 2) { //spot light.
-        lb.m_position = i_light.m_trans.m_position;
-        lb.m_direction = i_light.m_trans.GetForward();
-    }
-    else {
-        lb.m_position = i_light.m_trans.GetForward();
-    }
 
-    if (m_basic_wrefs.IsNull() == false && m_light_wrefs.IsNull() == false) {
+
+    if (m_basic_wrefs.IsNull() == false) {
         m_basic_wrefs.GetRef().SetBufferData(&ub, sizeof(BasicParameter));
         m_basic_wrefs.GetRef().Update();
-        m_light_wrefs.GetRef().SetBufferData(&lb, sizeof(LightParameter));
-        m_light_wrefs.GetRef().Update();
     }
 }
 
 void ObjectData::Draw(
     const RenderPassWeakReferenceObject &i_rp_wref,
     const CommandBufferWeakReferenceObject &i_cb_wref,
+    const LightData &i_light_data,
     uint32_t i_sp_id)
 {
+    std::vector<DescriptorSetWeakReferenceObject> common_set_wrefs = {
+        m_basic_set_wref,
+        i_light_data.m_light_set_wref
+    };
     if (m_mesh.IsNull() == false) {
         //1. use material.
         if (m_shared_mat_wref.IsNull() == false) {
             m_shared_mat_wref.GetRef().UseMaterial(
                 i_cb_wref, i_rp_wref,
-                m_common_set_wrefs,
+                common_set_wrefs,
                 i_sp_id);
         }
         else {
             m_mat_sref.GetRef().UseMaterial(
                 i_cb_wref, i_rp_wref,
-                m_common_set_wrefs,
+                common_set_wrefs,
                 i_sp_id);
         }
         //2. bind mesh vertex attributes.
@@ -173,7 +198,7 @@ void SampleDrawObjects::Render()
 {
     UpdateCamera();
     for (ObjectData &obj : m_scene_objects) {
-        obj.UpdateCommonUniformSet(m_camera, m_light);
+        obj.UpdateCommonUniformSet(m_camera);
     }
 
 #if defined(RECORD_EVERY_FRAME)
@@ -225,9 +250,8 @@ void SampleDrawObjects::Destroy()
     m_phong_shader_sref.Reset();
     m_axes_shader_sref.Reset();
 
-    for (DescriptorSetLayoutStrongReferenceObject &dsl_sref : m_common_dsl_srefs) {
-        dsl_sref.Reset();
-    }
+    m_basic_dsl_sref.Reset();
+    m_light_dsl_sref.Reset();
 
     for (DescriptorSetLayoutStrongReferenceObject &gen_sref : m_general_dsl_srefs) {
         gen_sref.Reset();
@@ -361,7 +385,12 @@ void SampleDrawObjects::CreateCommonUniformVariablesAndLayouts()
     basic_ubd_sref.GetRef().AddVariable("viewEye", UniformBufferVariableType_VECTOR3F, offsetof(BasicParameter, m_view_eye));
     basic_ubd_sref.GetRef().AddVariableDone();
 
-    UniformBufferDescriptorStrongReferenceObject light_ubd_sref = new UniformBufferDescriptor("light", 1);
+    m_basic_dsl_sref = new DescriptorSetLayout("RenderDescriptorSetLayout");
+    m_basic_dsl_sref.GetRef().AddUniformVariableDescriptors({ basic_ubd_sref.StaticCastTo<UniformVariableDescriptor>()});
+    m_basic_dsl_sref.GetRef().Initialize();
+
+    //
+    UniformBufferDescriptorStrongReferenceObject light_ubd_sref = new UniformBufferDescriptor("light", 0);
     light_ubd_sref.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(LightParameter, m_ambient));
     light_ubd_sref.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(LightParameter, m_diffuse));
     light_ubd_sref.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(LightParameter, m_specular));
@@ -375,11 +404,9 @@ void SampleDrawObjects::CreateCommonUniformVariablesAndLayouts()
     light_ubd_sref.GetRef().AddVariable("kind", UniformBufferVariableType_INT, offsetof(LightParameter, m_kind));
     light_ubd_sref.GetRef().AddVariableDone();
 
-    //To do : modify binding number.
-    DescriptorSetLayoutStrongReferenceObject basic_dsl_sref = new DescriptorSetLayout("RenderDescriptorSetLayout");
-    basic_dsl_sref.GetRef().AddUniformVariableDescriptors({ basic_ubd_sref.StaticCastTo<UniformVariableDescriptor>(), light_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
-    basic_dsl_sref.GetRef().Initialize();
-    m_common_dsl_srefs.push_back(basic_dsl_sref);
+    m_light_dsl_sref = new DescriptorSetLayout("LightDescriptorSetLayout");
+    m_light_dsl_sref.GetRef().AddUniformVariableDescriptors({ light_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
+    m_light_dsl_sref.GetRef().Initialize();
 }
 
 void SampleDrawObjects::CreateGeneralUniformVariablesAndLayouts()
@@ -438,10 +465,11 @@ void SampleDrawObjects::CreateShaderProgram()
         //1.3 prepare descriptor set layouts.
         std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
         std::vector<DescriptorSetLayoutWeakReferenceObject> common_dsl_wrefs;
-        for (uint32_t layout_count = 0; layout_count < m_common_dsl_srefs.size(); ++layout_count) {
-            dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
-            common_dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
-        }
+        common_dsl_wrefs.push_back(m_basic_dsl_sref);
+        common_dsl_wrefs.push_back(m_light_dsl_sref);
+        //prepare all descriptor set wref.
+        dsl_wrefs.push_back(m_basic_dsl_sref);
+        dsl_wrefs.push_back(m_light_dsl_sref);
         for (uint32_t layout_count = 0; layout_count < m_general_dsl_srefs.size(); ++layout_count) {
             dsl_wrefs.push_back(m_general_dsl_srefs[layout_count]);
         }
@@ -492,10 +520,12 @@ void SampleDrawObjects::CreateShaderProgram()
         //1.3 prepare descriptor set layouts.
         std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
         std::vector<DescriptorSetLayoutWeakReferenceObject> common_dsl_wrefs;
-        for (uint32_t layout_count = 0; layout_count < m_common_dsl_srefs.size(); ++layout_count) {
-            dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
-            common_dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
-        }
+        common_dsl_wrefs.push_back(m_basic_dsl_sref);
+        common_dsl_wrefs.push_back(m_light_dsl_sref);
+
+        //prepare all descriptor set wref.
+        dsl_wrefs.push_back(m_basic_dsl_sref);
+        dsl_wrefs.push_back(m_light_dsl_sref);
         for (uint32_t layout_count = 0; layout_count < m_general_dsl_srefs.size(); ++layout_count) {
             dsl_wrefs.push_back(m_general_dsl_srefs[layout_count]);
         }
@@ -549,10 +579,6 @@ void SampleDrawObjects::CreateSharedMaterial()
 void SampleDrawObjects::CreateObjects()
 {
     SDLOG("Create Objects.");
-    std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
-    for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : m_common_dsl_srefs) {
-        dsl_wrefs.push_back(dsl_wref);
-    }
     std::list<ObjectData>::reverse_iterator last_obj_iter;
     //Scene ---- Plane.
     m_floor_sref = BasicShapeCreator::GetRef().CreatePlane(
@@ -560,8 +586,8 @@ void SampleDrawObjects::CreateObjects()
     m_scene_objects.push_back(ObjectData());
     last_obj_iter = m_scene_objects.rbegin();
     (*last_obj_iter).m_mesh = m_floor_sref;
-    (*last_obj_iter).InitializeCommonUniformSet(dsl_wrefs);
-    (*last_obj_iter).UpdateCommonUniformSet(m_camera, m_light);
+    (*last_obj_iter).InitializeBasicUniformSet(m_basic_dsl_sref);
+    (*last_obj_iter).UpdateCommonUniformSet(m_camera);
     (*last_obj_iter).m_shared_mat_wref = m_shared_material_sref;
 
     //Scene ---- Axes.
@@ -570,8 +596,8 @@ void SampleDrawObjects::CreateObjects()
     last_obj_iter = m_scene_objects.rbegin();
     (*last_obj_iter).m_trans.m_position = Vector3f(0.0f, 0.0001f, 0.0f);
     (*last_obj_iter).m_mesh = m_axes_sref;
-    (*last_obj_iter).InitializeCommonUniformSet(dsl_wrefs);
-    (*last_obj_iter).UpdateCommonUniformSet(m_camera, m_light);
+    (*last_obj_iter).InitializeBasicUniformSet(m_basic_dsl_sref);
+    (*last_obj_iter).UpdateCommonUniformSet(m_camera);
     (*last_obj_iter).m_shared_mat_wref = m_axes_shared_material_sref;
 
     //Scene ---- Cubes
@@ -589,8 +615,8 @@ void SampleDrawObjects::CreateObjects()
                 (*last_obj_iter).m_trans.m_position = start_pos + 
                     Vector3f((m_cube_side_length + m_cube_interval) * row, (m_cube_side_length + m_cube_interval) * col, (m_cube_side_length + m_cube_interval) * depth);
                 //
-                (*last_obj_iter).InitializeCommonUniformSet(dsl_wrefs);
-                (*last_obj_iter).UpdateCommonUniformSet(m_camera, m_light);
+                (*last_obj_iter).InitializeBasicUniformSet(m_basic_dsl_sref);
+                (*last_obj_iter).UpdateCommonUniformSet(m_camera);
                 (*last_obj_iter).m_shared_mat_wref = m_shared_material_sref;
             }
         }
@@ -635,6 +661,8 @@ void SampleDrawObjects::InitializeCameraPosition()
 void SampleDrawObjects::CreateLight()
 {
     m_light.m_trans = Transform::LookAt(Vector3f(1.0f, 3.0f, 1.0f, 1.0f), Vector3f::Origin, Vector3f::PositiveY);
+    m_light.InitializeLightUniformSet(m_light_dsl_sref);
+    m_light.UpdateLightUniformSet();
     SDLOG("%s",m_light.m_trans.MakeWorldMatrix().ToFormatString("Light","").c_str());
 }
 
@@ -700,7 +728,7 @@ void SampleDrawObjects::RecordCommandBuffer()
         ObjectData* obj_ref = &(*obj_iter);
 
         std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, obj_ref](const CommandBufferWeakReferenceObject &i_cb_wref) {
-            obj_ref->Draw(m_forward_rp_sref, i_cb_wref, 0);
+            obj_ref->Draw(m_forward_rp_sref, i_cb_wref, m_light, 0);
         };
 
         m_rec_threads[tID].GetRef().AddTask(task_func);
