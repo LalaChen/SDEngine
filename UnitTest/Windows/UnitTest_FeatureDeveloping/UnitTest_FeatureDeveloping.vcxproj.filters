@@ -29,6 +29,9 @@
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FeatureApplication.h">
@@ -41,6 +44,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Camera.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

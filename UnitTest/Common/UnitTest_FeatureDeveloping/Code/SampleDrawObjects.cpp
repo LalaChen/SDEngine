@@ -61,14 +61,6 @@ void LightData::UpdateLightUniformSet()
     }
 }
 
-SampleCameraData::SampleCameraData()
-{
-}
-
-SampleCameraData::~SampleCameraData()
-{
-}
-
 ObjectData::ObjectData()
 {
 }
@@ -105,15 +97,13 @@ void ObjectData::InitializeBasicUniformSet(const DescriptorSetLayoutWeakReferenc
 }
 
 void ObjectData::UpdateCommonUniformSet(
-    const SampleCameraData &i_camera)
+    const CameraWeakReferenceObject &i_camera_wref)
 {
     BasicParameter ub = {};
-    ub.m_proj = i_camera.m_proj_mat;
+    ub.m_proj = i_camera_wref.GetRef().ToMatrix4X4();
     ub.m_view = i_camera.m_trans.MakeViewMatrix();
     ub.m_view_eye = i_camera.m_trans.m_position;
     ub.m_worid = m_trans.MakeWorldMatrix();
-
-
 
     if (m_basic_wrefs.IsNull() == false) {
         m_basic_wrefs.GetRef().SetBufferData(&ub, sizeof(BasicParameter));
@@ -179,8 +169,6 @@ void SampleDrawObjects::Initialize()
     m_current_res = GraphicsManager::GetRef().GetScreenResolution();
     CreateCommonUniformVariablesAndLayouts();
     CreateGeneralUniformVariablesAndLayouts();
-    CreateCamera();
-    InitializeCameraPosition();
     CreateRenderPass();
     CreateFramebuffer();
     CreateTexture();
@@ -210,13 +198,7 @@ void SampleDrawObjects::Render()
 
 void SampleDrawObjects::Resize(Size_ui32 i_width, Size_ui32 i_height)
 {
-    m_camera.m_color_buffer.Reset();
-    m_camera.m_depth_buffer.Reset();
-    m_camera.m_forward_rf.Reset();
-
-    m_current_res = GraphicsManager::GetRef().GetScreenResolution();
-    CreateCamera();
-    CreateFramebuffer();
+    m_camera_sref.GetRef().Resize();
     RecordCommandBuffer();
 }
 
@@ -226,9 +208,8 @@ void SampleDrawObjects::Destroy()
         obj_iter = m_scene_objects.erase(obj_iter);
     }
 
-    m_camera.m_color_buffer.Reset();
-    m_camera.m_depth_buffer.Reset();
-    m_camera.m_forward_rf.Reset();
+    m_camera_sref.Reset();
+
     m_tex_sref.Reset();
     m_forward_rp_sref.Reset();
 #if !defined(SINGLE_FLOW)
@@ -335,17 +316,14 @@ void SampleDrawObjects::CreateRenderPass()
 void SampleDrawObjects::CreateFramebuffer()
 {
     SDLOG("Create Framebuffer and render flow.");
-
-    ClearValue clear_color = { 0.15f, 0.15f, 0.75f, 1.0f };
-    ClearValue clear_dands = { 1.0f, 1 };
-
-    m_camera.m_forward_rf = new RenderFlow("ForwardPathRF", ImageOffset(0, 0, 0),
-        ImageSize(m_current_res.GetWidth(), m_current_res.GetHeight(), 1));
-    m_camera.m_forward_rf.GetRef().RegisterRenderPass(m_forward_rp_sref);
-    m_camera.m_forward_rf.GetRef().AllocateFrameBuffer();
-    m_camera.m_forward_rf.GetRef().RegisterBufferToFrameBuffer(m_camera.m_color_buffer, 0, clear_color);
-    m_camera.m_forward_rf.GetRef().RegisterBufferToFrameBuffer(m_camera.m_depth_buffer, 1, clear_dands);
-    m_camera.m_forward_rf.GetRef().Initialize();
+    m_camera_sref = new Camera("CameraObject");
+    m_camera_sref.GetRef().SetPerspective(120, m_current_res.GetRatio(), 0.01f, 1000.0f);
+    m_camera_sref.GetRef().SetTransform(Transform::LookAt(
+        Vector3f(1.0f, 1.5f, 7.0f, 1.0f),
+        Vector3f(0.0f, 1.5f, 0.0f, 1.0f),
+        Vector3f::PositiveY,
+        true));
+    m_camera_sref.GetRef().Initialize();
 }
 
 void SampleDrawObjects::CreateCommandBufferAndPool()
@@ -422,7 +400,6 @@ void SampleDrawObjects::CreateGeneralUniformVariablesAndLayouts()
     //2 material uis.
     UniformImagesDescriptorStrongReferenceObject mt_imgd_sref = new UniformImagesDescriptor("mainTexture", 1);
     //------- custom data.
-    //
     DescriptorSetLayoutStrongReferenceObject gen_dsl_sref = new DescriptorSetLayout("GeneralMaterialDescriptorSetLayout");
     gen_dsl_sref.GetRef().AddUniformVariableDescriptors({ mat_ubd_sref.StaticCastTo<UniformVariableDescriptor>(), mt_imgd_sref.StaticCastTo<UniformVariableDescriptor>()});
     gen_dsl_sref.GetRef().Initialize();
@@ -621,41 +598,6 @@ void SampleDrawObjects::CreateObjects()
             }
         }
     }
-}
-
-void SampleDrawObjects::CreateCamera()
-{
-    if (m_camera.m_color_buffer.IsNull() == false) {
-        m_camera.m_color_buffer.Reset();
-    }
-    m_camera.m_color_buffer = new Texture("CameraColorBuffer");
-    m_camera.m_color_buffer.GetRef().Initialize2DColorOrDepthBuffer(
-        m_current_res.GetWidth(), m_current_res.GetHeight(),
-        GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
-        ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
-
-    if (m_camera.m_depth_buffer.IsNull() == false) {
-        m_camera.m_depth_buffer.Reset();
-    }
-    m_camera.m_depth_buffer = new Texture("CameraDepthBuffer");
-    m_camera.m_depth_buffer.GetRef().Initialize2DColorOrDepthBuffer(
-        m_current_res.GetWidth(), m_current_res.GetHeight(),
-        GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
-        ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-    float ratio = m_current_res.GetRatio();
-    m_camera.m_proj_mat.perspective(120, m_current_res.GetRatio(), 0.01f, 1000.0f);
-
-    SDLOG("%s", m_camera.m_trans.MakeWorldMatrix().ToFormatString("Camera", "").c_str());
-}
-
-void SampleDrawObjects::InitializeCameraPosition()
-{
-    m_camera.m_trans = Transform::LookAt(
-        Vector3f(1.0f, 1.5f, 7.0f, 1.0f),
-        Vector3f(0.0f, 1.5f, 0.0f, 1.0f),
-        Vector3f::PositiveY,
-        true);
 }
 
 void SampleDrawObjects::CreateLight()

@@ -5,6 +5,7 @@
 //#define TIME_MEASURE
 //#define SINGLE_FLOW
 
+#include "Camera.h"
 #include "CommandRecordingThread.h"
 #include "Sample.h"
 
@@ -30,21 +31,6 @@ public:
     Transform m_trans;
 };
 
-class SampleCameraData
-{
-public:
-    SampleCameraData();
-    ~SampleCameraData();
-public:
-    RenderFlowStrongReferenceObject m_forward_rf;
-public:
-    TextureStrongReferenceObject m_color_buffer;
-    TextureStrongReferenceObject m_depth_buffer;
-public:
-    Transform m_trans;
-    Matrix4X4f m_proj_mat;
-};
-
 class ObjectData
 {
 public:
@@ -52,7 +38,7 @@ public:
     ~ObjectData();
 public:
     void InitializeBasicUniformSet(const DescriptorSetLayoutWeakReferenceObject &i_basic_dsl_wref);
-    void UpdateCommonUniformSet(const SampleCameraData &i_camera);
+    void UpdateCommonUniformSet(const CameraWeakReferenceObject &i_camera_wref);
     void Draw(const RenderPassWeakReferenceObject &i_rp_wref, const CommandBufferWeakReferenceObject &i_cb_wref, const LightData &i_light_data, uint32_t i_sp_id);
 public:
     UniformBufferWeakReferenceObject m_basic_wrefs;
@@ -74,7 +60,7 @@ public:
 protected:
     void CreateCommandBufferAndPool() override;
     void CreateRenderPass() override;
-    void CreateFramebuffer() override;
+    void CreateFramebuffer() override; //Create Camera Object.
 public:
     void Initialize() override;
     void Render() override;
@@ -88,8 +74,6 @@ private:
     void CreateGeneralUniformVariablesAndLayouts();
     void CreateShaderProgram();
     void CreateTexture();
-    void CreateCamera();
-    void InitializeCameraPosition();
     void CreateLight();
     void CreateSharedMaterial();
     void CreateObjects();
@@ -100,7 +84,7 @@ protected:
 protected:
     std::vector<DescriptorSetLayoutStrongReferenceObject> m_general_dsl_srefs;
 protected:
-    SampleCameraData m_camera;
+    CameraStrongReferenceObject m_camera_sref;
     LightData m_light;
     RenderPassStrongReferenceObject m_forward_rp_sref;
     TextureStrongReferenceObject m_tex_sref;

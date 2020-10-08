@@ -3,9 +3,10 @@
 #include "SampleDrawObjects.h"
 #include "FeatureApplication.h"
 
-using namespace::SDE::App;
-using namespace::SDE::Basic;
-using namespace::SDE::Graphics;
+using namespace SDE;
+using namespace SDE::Basic;
+using namespace SDE::Graphics;
+using namespace SDE::App;
 
 ApplicationManipulater::ApplicationManipulater(const ObjectName &i_object_name)
 : EventObject(i_object_name)
