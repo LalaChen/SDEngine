@@ -23,22 +23,32 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
-
-using SDE::Basic::LogManager;
-
-SD_SINGLETON_DECLARATION_IMPL(LogManager);
+#include "ComponentPool.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-LogManager::LogManager()
-: m_log_buffer{'\0'}
+ComponentPool::ComponentPool(const ObjectName &i_object_name)
+: EventObject(i_object_name)
 {
-    SD_SINGLETON_DECLARATION_REGISTER;
 }
 
-LogManager::~LogManager()
+ComponentPool::~ComponentPool()
 {
+}
+
+bool ComponentPool::DeleteComponent(const ComponentBaseWeakReferenceObject &i_del_comp_wref)
+{
+    std::list<ComponentBaseStrongReferenceObject>::iterator comp_iter;
+    for (comp_iter = m_comp_srefs.begin(); comp_iter != m_comp_srefs.end(); ++comp_iter) {
+        if ((*comp_iter) == i_del_comp_wref) {
+            comp_iter = m_comp_srefs.erase(comp_iter);
+            return true;
+        }
+        else {
+            comp_iter++;
+        }
+    }
+    return false;
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

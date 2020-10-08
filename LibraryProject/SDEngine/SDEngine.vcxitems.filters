@@ -214,6 +214,18 @@
     <Filter Include="src\Graphics\EmbeddedShaderProgram">
       <UniqueIdentifier>{addf30bc-a639-4b2c-9263-8f7f55f41a2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Graphics\BasicComponent">
+      <UniqueIdentifier>{869a6823-47cd-4143-aaf7-dde48a73cf89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\BasicComponent">
+      <UniqueIdentifier>{1b224521-a057-471e-94c9-61ce99695908}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Basic\ECS">
+      <UniqueIdentifier>{3f34f583-1239-48b0-bdde-0c36d8bdbbfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Basic\ECS">
+      <UniqueIdentifier>{f2f7be99-6429-4144-b83a-8a784b474201}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -753,6 +765,30 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\BasicPipelines.h">
       <Filter>include\Graphics\EmbeddedShaderProgram</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\TransformComponent.h">
+      <Filter>include\Graphics\BasicComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\ECS\Entity.h">
+      <Filter>include\Basic\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\ECS\Component.h">
+      <Filter>include\Basic\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\ECS\ECSManager.h">
+      <Filter>include\Basic\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\ECS\ComponentPool.h">
+      <Filter>include\Basic\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\ECS\ComponentBase.h">
+      <Filter>include\Basic\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\ECS\EntitiyGroup.h">
+      <Filter>include\Basic\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\ECS\System.h">
+      <Filter>include\Basic\ECS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1252,6 +1288,27 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_RenderToScreen.cpp">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\TransformComponent.cpp">
+      <Filter>src\Graphics\BasicComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\ECS\Component.cpp">
+      <Filter>src\Basic\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\ECS\Entity.cpp">
+      <Filter>src\Basic\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\ECS\ECSManager.cpp">
+      <Filter>src\Basic\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\ECS\ComponentPool.cpp">
+      <Filter>src\Basic\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\ECS\EntityGroup.cpp">
+      <Filter>src\Basic\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\ECS\System.cpp">
+      <Filter>src\Basic\ECS</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -103,4 +103,5 @@ void VulkanTestGLFWApplication::Initialize()
     else {
         new VulkanAPITestManager();
     }
+    new ECSManager();
 }

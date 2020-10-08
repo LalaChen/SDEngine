@@ -23,22 +23,31 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
+#include "Component.h"
 
-using SDE::Basic::LogManager;
-
-SD_SINGLETON_DECLARATION_IMPL(LogManager);
+using SDE::Basic::Component;
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-LogManager::LogManager()
-: m_log_buffer{'\0'}
+SD_COMPONENT_POOL_TYPE_IMPLEMENTATION(Component, Component);
+
+Component::Component(const ObjectName &i_object_name)
+: ComponentBase(i_object_name)
 {
-    SD_SINGLETON_DECLARATION_REGISTER;
 }
 
-LogManager::~LogManager()
+Component::~Component()
 {
+}
+
+void Component::SetEntity(const EntityWeakReferenceObject& i_entity_wref)
+{
+    m_entity_wref = i_entity_wref;
+}
+
+EntityWeakReferenceObject Component::GetEntity() const
+{
+    return m_entity_wref;
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

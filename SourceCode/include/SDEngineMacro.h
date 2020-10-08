@@ -202,6 +202,15 @@ namespace App \
     } \
     m_instance = this;
 
+#define SD_COMPONENT_POOL_TYPE_DECLARATION \
+    static std::type_index GetComponentPoolType();
+
+#define SD_COMPONENT_POOL_TYPE_IMPLEMENTATION(CompType, CompPoolType) \
+    std::type_index CompType::GetComponentPoolType() \
+    { \
+        return std::type_index(typeid(CompPoolType)); \
+    }
+
 //Variable Get/Set Declaration
 /*! \def SD_DECLARE_ATTRIBUTE_VAR_GET(Type,VarName,FunctionName)
  *   \brief Implement a c++ attribute with an getter. \n

@@ -43,6 +43,9 @@ void AndroidApplication::Initialize()
     }
     else {
     }
+
+    //Initialize ECSManager
+    new ECSManager();
 }
 
 void AndroidApplication::InitializeGraphicsSystem()
@@ -143,6 +146,9 @@ void AndroidApplication::InitializeGraphicsSystem()
 
 void AndroidApplication::ReleaseGraphicsSystem()
 {
+    //Initialize ECSManager
+    ECSManager::Destroy();
+
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
     GraphicsManager::Destroy();
     m_window = nullptr;

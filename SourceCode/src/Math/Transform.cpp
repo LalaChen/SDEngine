@@ -126,4 +126,26 @@ Transform& Transform::operator=(const Transform &i_src)
     return *this;
 }
 
+Transform Transform::operator*(const Transform &i_b) const
+{
+    Transform result;
+    Matrix4X4f this_mat = MakeWorldMatrix();
+    Matrix4X4f b_mat = i_b.MakeWorldMatrix();
+    return Transform::DecomposeMatrixToTransform(this_mat * b_mat);
+}
+
+Vector3f Transform::InverseVector3fToLocalSpace(const Vector3f &i_vec) const
+{
+    Vector3f result = i_vec;
+    //Tp -1
+    result.m_vec.x -= m_position.m_vec.x * m_position.m_vec.w;
+    result.m_vec.y -= m_position.m_vec.y * m_position.m_vec.w;
+    result.m_vec.z -= m_position.m_vec.z * m_position.m_vec.w;
+    //Rp -1
+    result = m_rotation.inverse().rotate(result);
+    //Sp -1
+    result.scale(1.0f / m_scale.m_vec.x, 1.0f / m_scale.m_vec.y, 1.0f / m_scale.m_vec.z);
+    return result;
+}
+
 ________________SD_END_MATH_NAMESPACE________________

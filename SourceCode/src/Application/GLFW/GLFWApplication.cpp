@@ -105,6 +105,9 @@ void GLFWApplication::Initialize()
         new VulkanManager();
     }
     //Initialize KeyBoard Mapping.
+    
+    //Initialize ECSManager
+    new ECSManager();
 }
 
 void GLFWApplication::InitializeGraphicsSystem()
@@ -216,6 +219,8 @@ void GLFWApplication::InitializeGraphicsSystem()
 void GLFWApplication::ReleaseGraphicsSystem()
 {
     SDLOG("Release Graphics System of Application.");
+    ECSManager::Destroy();
+    //
     GraphicsManager::GetRef().Release();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
     //destroy Graphics Manager.
@@ -224,6 +229,7 @@ void GLFWApplication::ReleaseGraphicsSystem()
 
 void GLFWApplication::TerminateApplication()
 {
+    ReleaseGraphicsSystem();
     SDLOG("Terminate Application.");
     //destroy Timer.
     Timer::GetRef().End();
@@ -303,8 +309,6 @@ void GLFWApplication::RunMainLoop()
             glfwPollEvents();
         }
     }
-
-    Application::GetRef().ReleaseGraphicsSystem();
   
     //Destroy App.
     Application::GetRef().TerminateApplication();

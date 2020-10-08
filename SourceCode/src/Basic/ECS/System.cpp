@@ -22,23 +22,3 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-
-#include "LogManager.h"
-
-using SDE::Basic::LogManager;
-
-SD_SINGLETON_DECLARATION_IMPL(LogManager);
-
-______________SD_START_BASIC_NAMESPACE_______________
-
-LogManager::LogManager()
-: m_log_buffer{'\0'}
-{
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
-
-LogManager::~LogManager()
-{
-}
-
-_______________SD_END_BASIC_NAMESPACE________________

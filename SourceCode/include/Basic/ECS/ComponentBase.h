@@ -23,21 +23,38 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
+/*! \file      ComponentBase.h
+ *  \brief     Introduce of class ComponentBase
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/10/02
+ *  \copyright MIT License.
+ */
 
-using SDE::Basic::LogManager;
+#pragma once
 
-SD_SINGLETON_DECLARATION_IMPL(LogManager);
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
+#include "EventObject.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-LogManager::LogManager()
-: m_log_buffer{'\0'}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ComponentBase);
+
+class SDENGINE_CLASS ComponentBase : public EventObject
 {
-    SD_SINGLETON_DECLARATION_REGISTER;
+public:
+    explicit ComponentBase(const ObjectName &i_object_name);
+    virtual ~ComponentBase();
+};
+
+inline ComponentBase::ComponentBase(const ObjectName &i_object_name)
+: EventObject(i_object_name)
+{
 }
 
-LogManager::~LogManager()
+inline ComponentBase::~ComponentBase()
 {
 }
 

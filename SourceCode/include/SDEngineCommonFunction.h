@@ -32,12 +32,14 @@ SOFTWARE.
 
 #pragma once
 
+#include <typeindex>
 #include <cstdarg>  // For va_start, etc.
 #include <iostream>
 #include <ctime>
 #include <string>
 #include <sstream>
 #include <vector>
+#include <utility>
 
 #include "SDEngineCommonType.h"
 #include "SDEngineMacro.h"

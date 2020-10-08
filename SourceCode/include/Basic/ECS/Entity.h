@@ -23,22 +23,42 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
+/*! \file      Entity.h
+ *  \brief     Introduce of class Entity
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/10/02
+ *  \copyright MIT License.
+ */
 
-using SDE::Basic::LogManager;
+#pragma once
 
-SD_SINGLETON_DECLARATION_IMPL(LogManager);
+#include <map>
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
+#include "ComponentBase.h"
+#include "EventObject.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-LogManager::LogManager()
-: m_log_buffer{'\0'}
-{
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Entity);
 
-LogManager::~LogManager()
+class SDENGINE_CLASS Entity : public EventObject
 {
-}
+    friend class ECSManager;
+public:
+    explicit Entity(const ObjectName &i_object_name);
+    virtual ~Entity();
+public:
+    bool IsMatch(const std::vector<std::type_index> &i_condition) const;
+    bool IsComponentExisted(const std::type_index &i_target_type) const;
+protected:
+    bool RegisterComponent(const std::type_index &i_type, const ComponentBaseWeakReferenceObject &i_comp_wref);
+    ComponentBaseWeakReferenceObject UnregisterComponent(const std::type_index &i_target_type);
+protected:
+    std::map<std::type_index, ComponentBaseWeakReferenceObject> m_comp_wrefs; //std::type_index is component pool type.
+};
 
 _______________SD_END_BASIC_NAMESPACE________________

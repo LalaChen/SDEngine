@@ -23,22 +23,34 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
+/*! \file      System.h
+ *  \brief     Introduce of class System
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/10/02
+ *  \copyright MIT License.
+ */
 
-using SDE::Basic::LogManager;
+#pragma once
 
-SD_SINGLETON_DECLARATION_IMPL(LogManager);
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+#include "EventObject.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-LogManager::LogManager()
-: m_log_buffer{'\0'}
-{
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(System);
 
-LogManager::~LogManager()
+class System : public EventObject
 {
-}
+    friend class ECSManager;
+public:
+    explicit System(const ObjectName &i_system_name);
+    virtual ~System();
+public:
+    virtual void Initialize() = 0;
+    virtual void Update() = 0;
+    virtual void Destroy() = 0;
+};
 
 _______________SD_END_BASIC_NAMESPACE________________

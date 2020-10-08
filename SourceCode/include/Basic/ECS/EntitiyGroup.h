@@ -23,22 +23,46 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
+/*! \file      EntityGroup.h
+ *  \brief     Introduce of class EntityGroup
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/10/04
+ *  \copyright MIT License.
+ */
 
-using SDE::Basic::LogManager;
+#pragma once
 
-SD_SINGLETON_DECLARATION_IMPL(LogManager);
+#include <map>
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
+#include "Entity.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-LogManager::LogManager()
-: m_log_buffer{'\0'}
-{
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(EntityGroup);
 
-LogManager::~LogManager()
+class SDENGINE_CLASS EntityGroup : public EventObject
 {
+    friend class ECSManager;
+public:
+    explicit EntityGroup(const ObjectName &i_object_name, const std::vector<std::type_index>& i_conditions);
+    virtual ~EntityGroup();
+public:
+    const std::list<EntityWeakReferenceObject>& GetEntities() const;
+    bool AddEntity(const EntityWeakReferenceObject &i_entity_wref);
+protected:
+    bool RemoveEntity(const EntityWeakReferenceObject &i_entity_wref);
+protected:
+    std::list<EntityWeakReferenceObject> m_entity_wrefs;
+    std::vector<std::type_index> m_conditions;
+};
+
+inline const std::list<EntityWeakReferenceObject>& EntityGroup::GetEntities() const
+{
+    return m_entity_wrefs;
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

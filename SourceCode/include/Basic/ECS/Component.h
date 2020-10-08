@@ -23,22 +23,41 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
+/*! \file      Component.h
+ *  \brief     Introduce of class Component
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/10/02
+ *  \copyright MIT License.
+ */
 
-using SDE::Basic::LogManager;
+#pragma once
 
-SD_SINGLETON_DECLARATION_IMPL(LogManager);
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
+#include "ComponentBase.h"
+#include "Entity.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-LogManager::LogManager()
-: m_log_buffer{'\0'}
-{
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Component);
 
-LogManager::~LogManager()
+class SDENGINE_CLASS Component : public ComponentBase
 {
-}
+public:
+    friend class Entity;
+    friend class ECSManager;
+public:
+    SD_COMPONENT_POOL_TYPE_DECLARATION;
+public:
+    explicit Component(const ObjectName &i_object_name);
+    virtual ~Component();
+protected:
+    void SetEntity(const EntityWeakReferenceObject &i_entity_wref);
+    EntityWeakReferenceObject GetEntity() const;
+protected:
+    EntityWeakReferenceObject m_entity_wref;
+};
 
 _______________SD_END_BASIC_NAMESPACE________________

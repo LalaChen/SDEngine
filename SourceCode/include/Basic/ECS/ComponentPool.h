@@ -23,22 +23,43 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
+/*! \file      ComponentPool.h
+ *  \brief     Introduce of class ComponentPool
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/10/02
+ *  \copyright MIT License.
+ */
 
-using SDE::Basic::LogManager;
+#pragma once
 
-SD_SINGLETON_DECLARATION_IMPL(LogManager);
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+
+#include "ComponentBase.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
-LogManager::LogManager()
-: m_log_buffer{'\0'}
-{
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ComponentPool);
 
-LogManager::~LogManager()
+class SDENGINE_CLASS ComponentPool : public EventObject
 {
+public:
+    explicit ComponentPool(const ObjectName &i_object_name);
+    virtual ~ComponentPool();
+public:
+    template<typename T, typename... TArgs> ComponentBaseWeakReferenceObject NewComponent(TArgs&&... i_args);
+    bool DeleteComponent(const ComponentBaseWeakReferenceObject &i_del_comp_wref);
+protected:
+    std::list<ComponentBaseStrongReferenceObject> m_comp_srefs;
+};
+
+template<typename T, typename... TArgs>
+inline ComponentBaseWeakReferenceObject ComponentPool::NewComponent(TArgs &&...i_args)
+{
+    ComponentBaseStrongReferenceObject comp_sref = new T(std::forward<TArgs>(i_args)...);
+    m_comp_srefs.push_back(comp_sref);
+    return comp_sref;
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

@@ -139,9 +139,22 @@ public:
     //================================= Operator Function ==================================
 public:
     /*! \fn Transform& operator=(const Transform &i_src);
+     *  \param [in] i_src target transform.
      *  \brief assign operator.
      */
     Transform& operator=(const Transform &i_src);
+
+    /*! \fn Transform& operator=(const Transform &i_b);
+     *  \param [in] i_b target transform.
+     *  \brief multiply operator.
+     */
+    Transform operator*(const Transform &i_b) const;
+
+    /*! \fn Vector3f InverseVector3fToLocalSpace(const Vector3f &i_vec) const;
+     *  \param [in] i_vec target vector3f.
+     *  \brief Convert Vector or Position to local space.
+     */
+    Vector3f InverseVector3fToLocalSpace(const Vector3f &i_vec) const;
 public:
     /*! \var Vector3f m_position;
      *  \brief variable recording position.
