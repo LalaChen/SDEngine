@@ -131,44 +131,15 @@ bool ECSManager::DeleteComponent(const std::type_index &i_type_index, const Comp
     }
 }
 
-SystemWeakReferenceObject ECSManager::RegisterSystem(const SystemStrongReferenceObject &i_system_sref)
+bool ECSManager::UnregisterSystem(const std::type_index &i_type_index)
 {
-    SystemWeakReferenceObject result;
-    if (i_system_sref.IsNull() == false) {
-        std::list<SystemStrongReferenceObject>::iterator iter;
-        for (iter = m_system_srefs.begin(); iter != m_system_srefs.end(); ++iter) {
-            if ((*iter).IsEqualTo(i_system_sref) == true) {
-                SDLOGW("Register exist system[%s] failure.", i_system_sref.GetRef().GetObjectName().c_str());
-                return result;
-            }
-        }
-        m_system_srefs.push_back(i_system_sref);
-        return i_system_sref;
+    std::map<std::type_index, SystemStrongReferenceObject>::iterator sys_iter = m_system_srefs.find(i_type_index);
+    if (sys_iter != m_system_srefs.end()) {
+        m_system_srefs.erase(sys_iter);
+        return true;
     }
     else {
-        SDLOGE("Register null system.");
-        return result;
-    }
-}
-
-bool ECSManager::UnregisterSystem(const SystemWeakReferenceObject &i_system_wref)
-{
-    if (i_system_wref.IsNull() == false) {
-        std::list<SystemStrongReferenceObject>::iterator iter;
-        for (iter = m_system_srefs.begin(); iter != m_system_srefs.end(); ) {
-            if ((*iter) == i_system_wref) {
-                iter = m_system_srefs.erase(iter);
-                return true;
-            }
-            else {
-                ++iter;
-            }
-        }
-        SDLOGE("Unregister non-exist system(%s).", i_system_wref.GetRef().GetObjectName().c_str());
-        return false;
-    }
-    else {
-        SDLOGE("Unregister null system .");
+        SDLOGE("Unregister non-exist system.");
         return false;
     }
 }
@@ -178,6 +149,24 @@ void ECSManager::NotifyEntityChanged(const EntityWeakReferenceObject &i_entity_w
     for (EntityGroupStrongReferenceObject &eg_sref : m_entity_group_srefs) {
         eg_sref.GetRef().AddEntity(i_entity_wref);
     }
+}
+
+void ECSManager::Initialize()
+{
+}
+
+void ECSManager::Update()
+{
+    std::list<SystemStrongReferenceObject>::iterator sys_iter;
+    for (std::map<std::type_index, SystemStrongReferenceObject>::iterator sys_iter = m_system_srefs.begin();
+        sys_iter != m_system_srefs.end();
+        ++sys_iter) {
+        (*sys_iter).second.GetRef().Update();
+    }
+}
+
+void ECSManager::Terminate()
+{
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

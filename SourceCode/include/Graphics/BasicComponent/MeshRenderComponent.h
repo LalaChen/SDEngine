@@ -23,18 +23,21 @@ SOFTWARE.
 
 */
 
-/*! \file      TransformComponent.h
- *  \brief     The class TransformComponent is used to describe geometry information and entity of each object.
+/*! \file      MeshRenderComponent.h
+ *  \brief     The class MeshRenderComponent is used to render mesh at location of owner(Entity).
  *             We will register it to Entity for performing application logic.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/10/01
+ *  \date      2020/10/10
  *  \copyright MIT License.
  */
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "Component.h"
+#include "RenderFlow.h"
+#include "Material.h"
+#include "Mesh.h"
 #include "Transform.h"
+#include "Component.h"
 
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
@@ -50,36 +53,20 @@ using SDE::Math::Matrix4X4f;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(TransformComponent);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(MeshRenderComponent);
 
-class SDENGINE_CLASS TransformComponent : public Component
+class SDENGINE_CLASS MeshRenderComponent : public Component
 {
 public:
     SD_COMPONENT_POOL_TYPE_DECLARATION;
 public:
-    explicit TransformComponent(const ObjectName &i_object_name);
-    virtual ~TransformComponent();
+    explicit MeshRenderComponent(const ObjectName &i_object_name);
+    virtual ~MeshRenderComponent();
 public:
-    void SetLocalPosition(const Vector3f &i_position);
-    void SetLocalRotation(const Quaternion &i_rotation);
-    void SetLocalScale(const Vector3f &i_scale);
-    void SetLocalTransform(const Transform &i_transform);
-    void SetWorldPosition(const Vector3f &i_position);
-    void SetWorldRotation(const Quaternion &i_rotation);
-    void SetWorldTransform(const Transform &i_transform);
-public:
-    void AddChild(TransformComponentWeakReferenceObject &i_target_wref);
-    bool RemoveChild(const TransformComponentWeakReferenceObject &i_child_wref);
+    bool AddMesh(const MeshWeakReferenceObject &i_mesh_wref, const MaterialWeakReferenceObject &i_mat_wref);
 protected:
-    void SetParent(const TransformComponentWeakReferenceObject &i_parent_wref);
-    void UpdateChildrenWorldTransform();
-    void UpdateWorldTransform();
-protected:
-    TransformComponentWeakReferenceObject m_parent_wref;
-    std::list<TransformComponentWeakReferenceObject> m_child_wrefs;
-protected:
-    Transform m_world_trans;
-    Transform m_local_trans;
+    std::map<MeshWeakReferenceObject, MaterialWeakReferenceObject> m_mesh_groups;
 };
+
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

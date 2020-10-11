@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include "LogManager.h"
 #include "Timer.h"
+#include "ECSManager.h"
 #include "GraphicsManager.h"
 #include "Application.h"
 
@@ -61,6 +62,7 @@ void Application::Update()
 {
     //Rendering.
     Timer::GetRef().Update();
+    ECSManager::GetRef().Update();
     GraphicsManager::GetRef().Render();
 }
 

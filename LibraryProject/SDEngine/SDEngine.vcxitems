@@ -44,6 +44,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\PeriodCounter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\Timer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Timer\TimerMeasurer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\CameraComponent.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\MeshRenderComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\TransformComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicShapeCreator\BasicShapeCreator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandBuffer.h" />
@@ -228,6 +230,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\PeriodCounter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\TimeMeasurer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Timer\Timer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\CameraComponent.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\MeshRenderComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\TransformComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Axis.cpp" />

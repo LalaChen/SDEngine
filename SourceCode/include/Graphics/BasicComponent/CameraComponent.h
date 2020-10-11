@@ -23,18 +23,19 @@ SOFTWARE.
 
 */
 
-/*! \file      TransformComponent.h
- *  \brief     The class TransformComponent is used to describe geometry information and entity of each object.
+/*! \file      CameraComponent.h
+ *  \brief     The class CameraComponent is used to perform rendering at location of owner(Entity).
  *             We will register it to Entity for performing application logic.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/10/01
+ *  \date      2020/10/10
  *  \copyright MIT License.
  */
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "Component.h"
+#include "RenderFlow.h"
 #include "Transform.h"
+#include "Component.h"
 
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
@@ -52,34 +53,45 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(TransformComponent);
 
-class SDENGINE_CLASS TransformComponent : public Component
+class SDENGINE_CLASS CameraComponent : public Component
 {
 public:
     SD_COMPONENT_POOL_TYPE_DECLARATION;
 public:
-    explicit TransformComponent(const ObjectName &i_object_name);
-    virtual ~TransformComponent();
+    explicit CameraComponent(const ObjectName &i_object_name);
+    virtual ~CameraComponent();
 public:
-    void SetLocalPosition(const Vector3f &i_position);
-    void SetLocalRotation(const Quaternion &i_rotation);
-    void SetLocalScale(const Vector3f &i_scale);
-    void SetLocalTransform(const Transform &i_transform);
-    void SetWorldPosition(const Vector3f &i_position);
-    void SetWorldRotation(const Quaternion &i_rotation);
-    void SetWorldTransform(const Transform &i_transform);
+    void SetPerspective(float i_angle, float i_aspect, float i_near, float i_far);
+    void SetRenderPass(const RenderPassWeakReferenceObject &i_rp_wref);
+    void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
 public:
-    void AddChild(TransformComponentWeakReferenceObject &i_target_wref);
-    bool RemoveChild(const TransformComponentWeakReferenceObject &i_child_wref);
+    void Initialize();
+    void Resize();
+    void Render();
 protected:
-    void SetParent(const TransformComponentWeakReferenceObject &i_parent_wref);
-    void UpdateChildrenWorldTransform();
-    void UpdateWorldTransform();
+    RenderFlowStrongReferenceObject m_rf_sref;
+    RenderPassWeakReferenceObject m_custom_rp_wref;
+    TextureStrongReferenceObject m_color_buf_sref;
+    TextureStrongReferenceObject m_depth_buf_sref;
 protected:
-    TransformComponentWeakReferenceObject m_parent_wref;
-    std::list<TransformComponentWeakReferenceObject> m_child_wrefs;
-protected:
-    Transform m_world_trans;
-    Transform m_local_trans;
+    ClearValue m_clear_color;
+    ClearValue m_clear_d_and_s;
+    Matrix4X4f m_proj_mat;
+    float m_fov;
+    float m_aspect;
+    float m_near;
+    float m_far;
 };
+
+inline void CameraComponent::SetRenderPass(const RenderPassWeakReferenceObject &i_rp_wref)
+{
+    m_custom_rp_wref = i_rp_wref;
+}
+
+inline void CameraComponent::SetClearValues(ClearValue i_color, ClearValue i_d_and_s)
+{
+    m_clear_color = i_color;
+    m_clear_d_and_s = i_d_and_s;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

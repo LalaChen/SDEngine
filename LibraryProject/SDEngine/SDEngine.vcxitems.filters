@@ -789,6 +789,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\ECS\System.h">
       <Filter>include\Basic\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\CameraComponent.h">
+      <Filter>include\Graphics\BasicComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\MeshRenderComponent.h">
+      <Filter>include\Graphics\BasicComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1309,6 +1315,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\ECS\System.cpp">
       <Filter>src\Basic\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\CameraComponent.cpp">
+      <Filter>src\Graphics\BasicComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\MeshRenderComponent.cpp">
+      <Filter>src\Graphics\BasicComponent</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

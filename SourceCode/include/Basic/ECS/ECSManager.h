@@ -64,18 +64,22 @@ public:
     template<typename T, typename... TArgs> ComponentBaseWeakReferenceObject AddComponentForEntity(const EntityWeakReferenceObject &i_entity_wref, TArgs &&...i_args);
     bool RemoveComponentFromEntity(const EntityWeakReferenceObject &i_entity_wref, const std::type_index &i_type_index);
 public:
-    SystemWeakReferenceObject RegisterSystem(const SystemStrongReferenceObject &i_system_sref);
-    bool UnregisterSystem(const SystemWeakReferenceObject &i_system_wref);
+    template<typename T, typename... TArgs> SystemWeakReferenceObject RegisterSystem(TArgs&&...i_args);
+    bool UnregisterSystem(const std::type_index &i_type_index);
 public:
     void NotifyEntityChanged(const EntityWeakReferenceObject &i_entity_wref);
+public:
+    void Initialize();
+    void Update();
+    void Terminate();
 protected:
     void LinkComponentAndEntity(const EntityWeakReferenceObject &i_entity_wref, const ComponentBaseWeakReferenceObject &i_comp_wref, const std::type_index &i_type);
     bool DeleteComponent(const std::type_index &i_type_index, const ComponentBaseWeakReferenceObject &i_comp_wref);
 protected:
     std::map<std::type_index, ComponentPoolStrongReferenceObject> m_comp_pool_srefs;
+    std::map<std::type_index, SystemStrongReferenceObject> m_system_srefs;
     std::list<EntityStrongReferenceObject> m_entity_srefs;
     std::list<EntityGroupStrongReferenceObject> m_entity_group_srefs;
-    std::list<SystemStrongReferenceObject> m_system_srefs;
 };
 
 template<typename T, typename... TArgs>
@@ -107,6 +111,23 @@ ComponentBaseWeakReferenceObject ECSManager::AddComponentForEntity(const EntityW
         SDLOGE("Add compoent type(%s) to null entity!!!", target_type.name());
     }
     return comp_wref;
+}
+
+template<typename T, typename... TArgs>
+SystemWeakReferenceObject ECSManager::RegisterSystem(TArgs &&...i_args)
+{
+    std::type_index target_type = typeid(T);
+    std::map<std::type_index, SystemStrongReferenceObject>::iterator sys_iter = m_system_srefs.find(target_type);
+    if (sys_iter == m_system_srefs.end()) {
+        SystemStrongReferenceObject system_sref = new T(std::forward<TArgs>(i_args)...);
+        m_system_srefs[target_type] = system_sref;
+        m_system_srefs[target_type].GetRef().Initialize();
+        return m_system_srefs[target_type];
+    }
+    else {
+        SDLOGE("Register system (type %s) repeatly.", target_type.name());
+        return SystemWeakReferenceObject();
+    }
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

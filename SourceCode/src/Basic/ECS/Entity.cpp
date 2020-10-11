@@ -93,4 +93,17 @@ bool Entity::IsComponentExisted(const std::type_index &i_target_type) const
     return (m_comp_wrefs.find(i_target_type) != m_comp_wrefs.end());
 }
 
+std::string Entity::ToString() const
+{
+    std::string result;
+    result += "Entity Name : " + m_object_name + "\n";
+    for (std::map<std::type_index, ComponentBaseWeakReferenceObject>::const_iterator comp_iter = m_comp_wrefs.begin();
+        comp_iter != m_comp_wrefs.end();
+        ++comp_iter)
+    {
+        result += "\tComp : " + m_object_name + " with type : " + (*comp_iter).first.name() + "\n";
+    }
+    return result;
+}
+
 _______________SD_END_BASIC_NAMESPACE________________

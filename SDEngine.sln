@@ -90,6 +90,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest_FeatureDeveloping"
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest_ECSSystem", "UnitTest\Windows\UnitTest_ECSSystem\UnitTest_ECSSystem.vcxproj", "{6E9E127E-12EC-48A9-AD54-F3200B7C790D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91519087-B1B1-4962-A0A3-4C1E8CFF40CE} = {91519087-B1B1-4962-A0A3-4C1E8CFF40CE}
+		{98030AE2-9A49-45F4-8626-78793B65A22A} = {98030AE2-9A49-45F4-8626-78793B65A22A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

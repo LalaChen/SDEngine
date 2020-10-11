@@ -54,6 +54,8 @@ public:
 public:
     bool IsMatch(const std::vector<std::type_index> &i_condition) const;
     bool IsComponentExisted(const std::type_index &i_target_type) const;
+public:
+    std::string ToString() const override;
 protected:
     bool RegisterComponent(const std::type_index &i_type, const ComponentBaseWeakReferenceObject &i_comp_wref);
     ComponentBaseWeakReferenceObject UnregisterComponent(const std::type_index &i_target_type);

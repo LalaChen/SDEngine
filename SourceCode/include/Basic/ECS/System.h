@@ -41,7 +41,7 @@ ______________SD_START_BASIC_NAMESPACE_______________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(System);
 
-class System : public EventObject
+class SDENGINE_CLASS System : public EventObject
 {
     friend class ECSManager;
 public:

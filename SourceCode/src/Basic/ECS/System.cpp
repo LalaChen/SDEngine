@@ -22,3 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#include "System.h"
+
+______________SD_START_BASIC_NAMESPACE_______________
+
+System::System(const ObjectName &i_system_name)
+: EventObject(i_system_name)
+{
+}
+
+System::~System()
+{
+}
+
+_______________SD_END_BASIC_NAMESPACE________________

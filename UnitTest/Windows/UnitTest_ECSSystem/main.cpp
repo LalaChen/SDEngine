@@ -43,6 +43,8 @@ public:
     void Initialize() override;
     void Update() override;
     void Destroy() override;
+public:
+    void PrintEntities();
 protected:
     EntityGroupWeakReferenceObject m_target_eg_wref;
 };
@@ -59,7 +61,9 @@ void GameSystem::Initialize()
 
     EntityWeakReferenceObject eab_wref = ECSManager::GetRef().CreateEntity("EAB_1");
     ECSManager::GetRef().AddComponentForEntity<ComponentA>(eab_wref, "EAB_1_CA", 1, 2, 3);
+    PrintEntities();
     ECSManager::GetRef().AddComponentForEntity<ComponentB>(eab_wref, "EAB_1_CA", "ComponentBTest1!!!", "ComponentBTest2!!!");
+    PrintEntities();
 }
 
 void GameSystem::Update()
@@ -70,13 +74,30 @@ void GameSystem::Destroy()
 {
 }
 
+void GameSystem::PrintEntities()
+{
+    const std::list<EntityWeakReferenceObject> &entities = m_target_eg_wref.GetRef().GetEntities();
+    SDLOG("---------- Print Group ------------");
+    for (const EntityWeakReferenceObject &entity : entities) {
+        SDLOG("%s", entity.GetRef().ToString().c_str());
+    }
+}
+
 class ECSTestApplication : public GLFWApplication
 {
 public:
     explicit ECSTestApplication(const std::string &i_win_title, const Resolution &i_win_res, 
         FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv);
     virtual ~ECSTestApplication();
+public:
+    void Initialize() override;
 };
+
+void ECSTestApplication::Initialize()
+{
+    GLFWApplication::Initialize();
+    ECSManager::GetRef().RegisterSystem<GameSystem>("GameSystem");
+}
 
 
 ECSTestApplication::ECSTestApplication(const std::string& i_win_title, const Resolution& i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library, int i_argc, char** i_argv)
