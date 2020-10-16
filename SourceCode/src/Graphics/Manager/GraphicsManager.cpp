@@ -58,6 +58,7 @@ void GraphicsManager::Initialize()
             }
     );
     SDLOG("Initialize.");
+    InitializeBasicDescriptorSetLayout();
     InitializeDefaultRenderPasses();
     InitializeDefaultPipelineInfos();
     m_fps.Start(1000.0, fps_cbk, false);

@@ -64,8 +64,11 @@ public:
     virtual ~MeshRenderComponent();
 public:
     bool AddMesh(const MeshWeakReferenceObject &i_mesh_wref, const MaterialWeakReferenceObject &i_mat_wref);
+    void RenderMesh(const Matrix4X4f &i_camera_mat);
 protected:
     std::map<MeshWeakReferenceObject, MaterialWeakReferenceObject> m_mesh_groups;
+protected:
+    //Create common descriptorset and buffer for meshes.
 };
 
 

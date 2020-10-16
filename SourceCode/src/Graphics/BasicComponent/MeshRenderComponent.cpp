@@ -34,6 +34,8 @@ SD_COMPONENT_POOL_TYPE_IMPLEMENTATION(MeshRenderComponent, MeshRenderComponent);
 MeshRenderComponent::MeshRenderComponent(const ObjectName &i_object_name)
 : Component(i_object_name)
 {
+    //1. Get default descriptor set for meshes render.
+
 }
 
 MeshRenderComponent::~MeshRenderComponent()

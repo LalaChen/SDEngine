@@ -1,7 +1,30 @@
+#include "BasicParameter.h"
+#include "LightParameter.h"
 #include "LogManager.h"
 #include "GraphicsManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
+
+void GraphicsManager::InitializeBasicDescriptorSetLayout()
+{
+    //1. For Meshes.
+    //1.1 Forward Rendering Passes.
+    UniformBufferDescriptorStrongReferenceObject basic_ubd_sref = new UniformBufferDescriptor("basic", 0);
+    basic_ubd_sref.GetRef().AddVariable("proj", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicParameter, m_proj));
+    basic_ubd_sref.GetRef().AddVariable("view", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicParameter, m_view));
+    basic_ubd_sref.GetRef().AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicParameter, m_worid));
+    basic_ubd_sref.GetRef().AddVariable("normal", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicParameter, m_normal));
+    basic_ubd_sref.GetRef().AddVariable("viewEye", UniformBufferVariableType_VECTOR3F, offsetof(BasicParameter, m_view_eye));
+    basic_ubd_sref.GetRef().AddVariableDone();
+
+    DescriptorSetLayoutStrongReferenceObject basic_dsl_sref = new DescriptorSetLayout("RenderDescriptorSetLayout");
+    basic_dsl_sref.GetRef().AddUniformVariableDescriptors({ basic_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
+    basic_dsl_sref.GetRef().Initialize();
+
+    m_mesh_dsl_srefs.push_back(basic_dsl_sref);
+    //1.2 Defer Passes.
+    //2. For Lighting 
+}
 
 void GraphicsManager::InitializeDefaultRenderPasses()
 {
