@@ -23,15 +23,23 @@ SOFTWARE.
 
 */
 
-#include "BasicParameter.h"
+#include "BasicUniforms.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-BasicParameter::BasicParameter()
+CameraUniforms::CameraUniforms()
 {
 }
 
-BasicParameter::~BasicParameter()
+CameraUniforms::~CameraUniforms()
+{
+}
+
+WorldUniforms::WorldUniforms()
+{
+}
+
+WorldUniforms::~WorldUniforms()
 {
 }
 

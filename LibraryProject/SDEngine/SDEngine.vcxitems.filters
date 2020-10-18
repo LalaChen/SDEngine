@@ -528,16 +528,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Mesh\Mesh.h">
       <Filter>include\Graphics\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Material\BasicParameter.h">
-      <Filter>include\Graphics\Material</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Material\BasicTextures.h">
-      <Filter>include\Graphics\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Material\LightParameter.h">
-      <Filter>include\Graphics\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Material\MaterialParameter.h">
       <Filter>include\Graphics\Material</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\AttachmentDescription.h">
@@ -795,6 +786,18 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\MeshRenderComponent.h">
       <Filter>include\Graphics\BasicComponent</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\LightComponent.h">
+      <Filter>include\Graphics\BasicComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\include\Graphics\Material\BasicUniforms.h">
+      <Filter>include\Graphics\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\include\Graphics\Material\MaterialUniforms.h">
+      <Filter>include\Graphics\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\include\Graphics\Material\LightUniforms.h">
+      <Filter>include\Graphics\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1043,16 +1046,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Mesh\Mesh.cpp">
       <Filter>src\Graphics\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Material\BasicParameter.cpp">
-      <Filter>src\Graphics\Material</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Material\BasicTextures.cpp">
-      <Filter>src\Graphics\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Material\LightParameter.cpp">
-      <Filter>src\Graphics\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Material\MaterialParameter.cpp">
       <Filter>src\Graphics\Material</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\AttachmentDescription.cpp">
@@ -1321,6 +1315,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\MeshRenderComponent.cpp">
       <Filter>src\Graphics\BasicComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\src\Graphics\Material\BasicUniforms.cpp">
+      <Filter>src\Graphics\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\src\Graphics\Material\MaterialUniforms.cpp">
+      <Filter>src\Graphics\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\src\Graphics\Material\LightUniforms.cpp">
+      <Filter>src\Graphics\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -23,11 +23,11 @@ SOFTWARE.
 
 */
 
-#include "MaterialParameter.h"
+#include "MaterialUniforms.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-MaterialParameter::MaterialParameter()
+MaterialUniforms::MaterialUniforms()
 : m_ambient(0.2f, 0.2f, 0.2f, 1.0f)
 , m_diffuse(0.7f, 0.7f, 0.7f, 1.0f)
 , m_specular(0.5f, 0.5f, 0.5f, 1.0f)
@@ -36,7 +36,7 @@ MaterialParameter::MaterialParameter()
 {
 }
 
-MaterialParameter::~MaterialParameter()
+MaterialUniforms::~MaterialUniforms()
 {
 }
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      Entity.h
- *  \brief     Introduce of class EntityManager
+/*! \file      ECSManager.h
+ *  \brief     Introduce of class ECSManager
  *  \author    Kuan-Chih, Chen
  *  \date      2020/10/02
  *  \copyright MIT License.

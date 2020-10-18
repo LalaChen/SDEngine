@@ -55,7 +55,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(TransformComponent);
 class SDENGINE_CLASS TransformComponent : public Component
 {
 public:
-    SD_COMPONENT_POOL_TYPE_DECLARATION;
+    SD_COMPONENT_POOL_TYPE_DECLARATION(TransformComponent, TransformComponent);
 public:
     explicit TransformComponent(const ObjectName &i_object_name);
     virtual ~TransformComponent();

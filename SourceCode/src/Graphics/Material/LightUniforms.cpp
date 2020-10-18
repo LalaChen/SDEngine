@@ -23,29 +23,24 @@ SOFTWARE.
 
 */
 
-#include "Component.h"
+#include "LightUniforms.h"
 
-using SDE::Basic::Component;
+_____________SD_START_GRAPHICS_NAMESPACE_____________
 
-______________SD_START_BASIC_NAMESPACE_______________
-
-Component::Component(const ObjectName &i_object_name)
-: ComponentBase(i_object_name)
+LightUniforms::LightUniforms()
+: m_ambient(0.2f, 0.2f, 0.2f, 1.0f)
+, m_diffuse(0.7f, 0.7f, 0.7f, 1.0f)
+, m_specular(0.1f, 0.1f, 0.1f, 1.0f)
+, m_spot_exp(0.0f)
+, m_spot_cos_cutoff(1.0f)
+, m_constant_attenuation(1.0f)
+, m_linear_attenuation(1.0f)
+, m_quadratic_attenuation(1.0f)
+, m_kind(0)
 {
 }
 
-Component::~Component()
+LightUniforms::~LightUniforms()
 {
 }
-
-void Component::SetEntity(const EntityWeakReferenceObject& i_entity_wref)
-{
-    m_entity_wref = i_entity_wref;
-}
-
-EntityWeakReferenceObject Component::GetEntity() const
-{
-    return m_entity_wref;
-}
-
-_______________SD_END_BASIC_NAMESPACE________________
+______________SD_END_GRAPHICS_NAMESPACE______________

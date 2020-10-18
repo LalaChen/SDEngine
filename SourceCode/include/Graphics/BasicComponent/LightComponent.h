@@ -1,4 +1,4 @@
-/*==============  SD Engine License ==============
+/* ==============  SD Engine License ==============
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -23,24 +23,37 @@ SOFTWARE.
 
 */
 
+/*! \file      CameraComponent.h
+ *  \brief     The class CameraComponent is used to perform rendering at location of owner(Entity).
+ *             We will register it to Entity for performing application logic.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/10/18
+ *  \copyright MIT License.
+ */
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 #include "LightParameter.h"
+#include "Component.h"
+
+using SDE::Basic::ObjectName;
+using SDE::Basic::Object;
+
+using SDE::Basic::Component;
+using SDE::Basic::ComponentStrongReferenceObject;
+using SDE::Basic::ComponentWeakReferenceObject;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-LightParameter::LightParameter()
-: m_ambient(0.2f, 0.2f, 0.2f, 1.0f)
-, m_diffuse(0.7f, 0.7f, 0.7f, 1.0f)
-, m_specular(0.1f, 0.1f, 0.1f, 1.0f)
-, m_spot_exp(0.0f)
-, m_spot_cos_cutoff(1.0f)
-, m_constant_attenuation(1.0f)
-, m_linear_attenuation(1.0f)
-, m_quadratic_attenuation(1.0f)
-, m_kind(0)
-{
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(LightComponent);
 
-LightParameter::~LightParameter()
+class SDENGINE_CLASS LightComponent : public Component
 {
-}
+public:
+    SD_COMPONENT_POOL_TYPE_DECLARATION(LightComponent, LightComponent);
+public:
+    explicit LightComponent(const ObjectName &i_object_name);
+    virtual ~LightComponent();
+};
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

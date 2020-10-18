@@ -29,10 +29,9 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_COMPONENT_POOL_TYPE_IMPLEMENTATION(CameraComponent, CameraComponent);
-
 CameraComponent::CameraComponent(const ObjectName &i_object_name)
 : Component(i_object_name)
+, m_workspace_type(WorkspaceType_Forward)
 , m_clear_color{ 0.15f, 0.15f, 0.75f, 1.0f }
 , m_clear_d_and_s{ 1.0f, 1 }
 , m_fov(120.0f)
@@ -44,55 +43,98 @@ CameraComponent::CameraComponent(const ObjectName &i_object_name)
 
 CameraComponent::~CameraComponent()
 {
-    m_rf_sref.Reset();
-    m_color_buf_sref.Reset();
-    m_depth_buf_sref.Reset();
+    ClearWorkspace();
 }
 
 void CameraComponent::Initialize()
 {
-    Resolution current_res = GraphicsManager::GetRef().GetScreenResolution();
-    if (m_color_buf_sref.IsNull() == false) {
-        m_color_buf_sref.Reset();
+    if (m_workspace_type == WorkspaceType_Forward) {
+        InitializeWorkspaceForForwardPath();
     }
-    m_color_buf_sref = new Texture("CameraColorBuffer");
-    m_color_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
-        current_res.GetWidth(), current_res.GetHeight(),
-        GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
-        ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
-
-    if (m_depth_buf_sref.IsNull() == false) {
-        m_depth_buf_sref.Reset();
-    }
-    m_depth_buf_sref = new Texture("CameraDepthBuffer");
-    m_depth_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
-        current_res.GetWidth(), current_res.GetHeight(),
-        GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
-        ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-    // Create render flow.
-    if (m_custom_rp_wref.IsNull() == false) {
-        SDLOG("Use custom render pass(%s)", m_custom_rp_wref.GetRef().GetObjectName().c_str());
-        m_rf_sref = new RenderFlow("RenderFlow", ImageOffset(0, 0, 0),
-            ImageSize(current_res.GetWidth(), current_res.GetHeight(), 1));
-        m_rf_sref.GetRef().RegisterRenderPass(m_custom_rp_wref);
-        m_rf_sref.GetRef().AllocateFrameBuffer();
-        m_rf_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buf_sref, 0, m_clear_color);
-        m_rf_sref.GetRef().RegisterBufferToFrameBuffer(m_depth_buf_sref, 1, m_clear_d_and_s);
-        m_rf_sref.GetRef().Initialize();
-    }
-    else {
-        //To Do : Create render flow with Forward or Defer.
+    else if (m_workspace_type == WorkspaceType_Deferred) {
+        InitializeWorkspaceForDeferredPath();
     }
 }
 
 void CameraComponent::Resize()
 {
+    ClearWorkspace();
+    Initialize();
+}
+
+void CameraComponent::Render(
+    const CommandBufferWeakReferenceObject &i_cb_wref,
+    const std::vector<DescriptorSetWeakReferenceObject> &i_light_ds_wrefs)
+{
+}
+
+//------------------ Private Part ---------------
+void CameraComponent::InitializeWorkspaceForForwardPath()
+{
+    RenderPassWeakReferenceObject forward_rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPath");
+
+    if (forward_rp_wref.IsNull() == false) {
+        Resolution current_res = GraphicsManager::GetRef().GetScreenResolution();
+        if (m_color_buf_sref.IsNull() == false) {
+            m_color_buf_sref.Reset();
+        }
+        m_color_buf_sref = new Texture("CameraColorBuffer");
+        m_color_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
+            current_res.GetWidth(), current_res.GetHeight(),
+            GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
+            ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
+
+        if (m_depth_buf_sref.IsNull() == false) {
+            m_depth_buf_sref.Reset();
+        }
+        m_depth_buf_sref = new Texture("CameraDepthBuffer");
+        m_depth_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
+            current_res.GetWidth(), current_res.GetHeight(),
+            GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
+            ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+        m_rf_sref = new RenderFlow("RenderFlow", ImageOffset(0, 0, 0),
+            ImageSize(current_res.GetWidth(), current_res.GetHeight(), 1));
+    }
+    else {
+        SDLOGE("Forward render pass doesn't exist. Please check!!!");
+    }
+}
+
+void CameraComponent::InitializeWorkspaceForDeferredPath()
+{
+    RenderPassWeakReferenceObject deferred_rp_wref = GraphicsManager::GetRef().GetRenderPass("DeferredPath");
+
+    if (deferred_rp_wref.IsNull() == false) {
+        Resolution current_res = GraphicsManager::GetRef().GetScreenResolution();
+        if (m_color_buf_sref.IsNull() == false) {
+            m_color_buf_sref.Reset();
+        }
+        m_color_buf_sref = new Texture("CameraColorBuffer");
+        m_color_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
+            current_res.GetWidth(), current_res.GetHeight(),
+            GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
+            ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
+
+        if (m_depth_buf_sref.IsNull() == false) {
+            m_depth_buf_sref.Reset();
+        }
+        m_depth_buf_sref = new Texture("CameraDepthBuffer");
+        m_depth_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
+            current_res.GetWidth(), current_res.GetHeight(),
+            GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
+            ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+    }
+    else {
+        SDLOGE("Deferred render pass doesn't exist. Please check!!!");
+    }
+}
+
+void CameraComponent::ClearWorkspace()
+{
     m_color_buf_sref.Reset();
     m_depth_buf_sref.Reset();
     m_rf_sref.Reset();
-
-    Initialize();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

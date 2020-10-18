@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      MaterialParameter.h
- *  \brief     Introduce of class MaterialParameter.
+/*! \file      MaterialUniforms.h
+ *  \brief     Introduce of class MaterialUniforms.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/10/12
  *  \copyright MIT License.
@@ -45,22 +45,22 @@ using SDE::Graphics::Color4f;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class MaterialParameter
- *    In our system, MaterialParameter is used to record parameters of object
- * about phong shading.
+/*! \class MaterialUniforms
+ *  \brief In our system, MaterialUniforms is used to record parameters of object
+ *         about phong shading.
  */
-class SDENGINE_CLASS MaterialParameter
+class SDENGINE_CLASS MaterialUniforms
 {
 public:
-    /* \fn MaterialParameter();
-     * \brief Ctor of MaterialParameter.
+    /* \fn MaterialUniforms();
+     * \brief Ctor of MaterialUniforms.
      */
-    MaterialParameter();
+    MaterialUniforms();
 
     /* \fn ~MaterialParameter();
-     * \brief Dtor of MaterialParameter.
+     * \brief Dtor of MaterialUniforms.
      */
-    ~MaterialParameter();
+    ~MaterialUniforms();
 public:
     /* \var Color4f m_ambient;
      * \brief ambient color of object.

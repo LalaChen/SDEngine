@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      BasicParameter.h
- *  \brief     Introduce of class BasicParameter.
+/*! \file      BasicUniforms.h
+ *  \brief     Introduce of class BasicUniforms.
  *  \author    Kuan-Chih, Chen
  *  \date      2019/10/12
  *  \copyright MIT License.
@@ -45,24 +45,24 @@ using SDE::Math::Vector3f;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class BasicParameter
- *    In our system, we use class BasicParameter to keeping uniform variables.
+/*! \class CameraUniforms
+ *    In our system, we use class CameraUniforms to keeping uniform variables about camera.
  */
-class SDENGINE_CLASS BasicParameter
+class SDENGINE_CLASS CameraUniforms
 {
 public:
-    /* \fn BasicParameter();
-     * \brief Ctor of BasicParameter.
+    /* \fn CameraUniforms();
+     * \brief Ctor of CameraUniforms.
      */
-    BasicParameter();
+    CameraUniforms();
 
-    /* \fn ~BasicParameter();
-     * \brief Dtor of BasicParameter.
+    /* \fn ~CameraUniforms();
+     * \brief Dtor of CameraUniforms.
      */
-    ~BasicParameter();
+    ~CameraUniforms();
 public:
     /* \var Matrix4X4f m_proj;
-     * \brief Convert vertices in view space to projection space(-1,1,-1,1,-1,1). 
+     * \brief Convert vertices in view space to projection space(-1,1,-1,1,-1,1).
      */
     Matrix4X4f m_proj;
 
@@ -71,8 +71,30 @@ public:
      */
     Matrix4X4f m_view;
 
+    /* \var Vector3f m_view_eye;
+     * \brief Eye position.
+     */
+    Vector3f m_view_eye;
+};
+
+/*! \class WorldUniforms
+ *    In our system, we use class WorldUniforms to keeping uniform variables about mesh renderers.
+ */
+class SDENGINE_CLASS WorldUniforms
+{
+public:
+    /* \fn WorldUniforms();
+     * \brief Ctor of WorldUniforms.
+     */
+    WorldUniforms();
+
+    /* \fn ~WorldUniforms();
+     * \brief Dtor of WorldUniforms.
+     */
+    ~WorldUniforms();
+public:
     /* \var Matrix4X4f m_worid;
-     * \brief Convert vertices in object space to view space.
+     * \brief Convert vertices in object space to world space.
      */
     Matrix4X4f m_worid;
 
@@ -80,11 +102,6 @@ public:
      * \brief Convert normals in object space to world space.
      */
     Matrix4X4f m_normal;
-
-    /* \var Vector3f m_view_eye;
-     * \brief camera position in world space.
-     */
-    Vector3f m_view_eye;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

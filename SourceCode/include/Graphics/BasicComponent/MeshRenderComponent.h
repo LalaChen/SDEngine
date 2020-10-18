@@ -58,17 +58,21 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(MeshRenderComponent);
 class SDENGINE_CLASS MeshRenderComponent : public Component
 {
 public:
-    SD_COMPONENT_POOL_TYPE_DECLARATION;
+    SD_COMPONENT_POOL_TYPE_DECLARATION(MeshRenderComponent, MeshRenderComponent);
 public:
     explicit MeshRenderComponent(const ObjectName &i_object_name);
     virtual ~MeshRenderComponent();
 public:
-    bool AddMesh(const MeshWeakReferenceObject &i_mesh_wref, const MaterialWeakReferenceObject &i_mat_wref);
-    void RenderMesh(const Matrix4X4f &i_camera_mat);
+    bool AppendMesh(const MeshWeakReferenceObject &i_mesh_wref, const MaterialWeakReferenceObject &i_mat_wref);
+    void RenderMesh(const Matrix4X4f &i_camera_mat, const RenderPassWeakReferenceObject &i_rp_wref, const CommandBufferWeakReferenceObject &i_cb_wref, const DescriptorSetWeakReferenceObject &i_light_ds_wref, uint32_t i_sp_id);
 protected:
-    std::map<MeshWeakReferenceObject, MaterialWeakReferenceObject> m_mesh_groups;
+    MeshWeakReferenceObject m_mesh_wref;
+    MaterialWeakReferenceObject m_mat_wref;
 protected:
     //Create common descriptorset and buffer for meshes.
+    DescriptorPoolStrongReferenceObject m_basic_pool_sref;
+    UniformBufferWeakReferenceObject m_basic_wrefs;
+    DescriptorSetWeakReferenceObject m_basic_set_wref;
 };
 
 

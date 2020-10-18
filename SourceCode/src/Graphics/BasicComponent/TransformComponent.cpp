@@ -28,8 +28,6 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_COMPONENT_POOL_TYPE_IMPLEMENTATION(TransformComponent, TransformComponent);
-
 TransformComponent::TransformComponent(const ObjectName &i_object_name)
 : Component(i_object_name)
 {

@@ -49,7 +49,7 @@ public:
     friend class Entity;
     friend class ECSManager;
 public:
-    SD_COMPONENT_POOL_TYPE_DECLARATION;
+    SD_COMPONENT_POOL_TYPE_DECLARATION(Component, Component);
 public:
     explicit Component(const ObjectName &i_object_name);
     virtual ~Component();

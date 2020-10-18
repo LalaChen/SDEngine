@@ -193,11 +193,8 @@ public:
 //------------- Render Function -----------------
     void Render();
 public:
-    void InitializeDefaultPipelineInfos();
     void GetBasicVertexAttribInfos(std::vector<VertexAttribBindingDescription> &io_binds, std::vector<VertexAttribLocationDescription> &io_locations, uint32_t i_tex_dimension = 2) const;
 //-------- Managing RenderPass Function ---------
-    void InitializeBasicDescriptorSetLayout();
-    void InitializeDefaultRenderPasses();
     void RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp_sref);
     void UnregisterRenderPass(const ObjectName &i_target_rp_name);
     void ReleaseRenderPasses();
@@ -207,6 +204,12 @@ public:
     bool IsSupportedDepthBufferFormat(TextureFormatEnum i_fmt) const;
     TextureFormatEnum GetDefaultColorBufferFormat() const;
     bool IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) const;
+public:
+    virtual DescriptorSetLayoutWeakReferenceObject GetBasicDescriptorSetLayout(const ObjectName &i_dsl_name) const;
+protected:
+    void InitializeDefaultPipelineInfos();
+    void InitializeBasicDescriptorSetLayout();
+    void InitializeDefaultRenderPasses();
 protected:
     const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex_wref) const;
     const SamplerIdentity& GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex_wref) const;
@@ -237,23 +240,12 @@ protected:
     std::vector<VertexAttribBindingDescription> m_default_va_binding_descs;
     std::vector<VertexAttribLocationDescription> m_default_va_location_descs;
 protected:
-    /*! \var std::vector<DescriptorSetLayoutStrongReferenceObject> m_mesh_common_dsl_srefs;
-     *  \brief DescriptorSetLeyout for MeshRenderer. It record all descriptor layout belonging mesh.
-     *         (MVP matrix)
+    /*! \var std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject> m_basic_dsl_maps;
+     *  \brief Map of DescriptorSetLeyouts for MeshRenderer(MVP Matrices), Light(Light Parameter) and Material(Textures).
+     *         It record all descriptor layout belonging mesh.
      */
-    std::vector<DescriptorSetLayoutStrongReferenceObject> m_mesh_dsl_srefs;
+    std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject> m_basic_dsl_maps;
 
-    /*! \var std::vector<DescriptorSetLayoutStrongReferenceObject> m_light_dsl_srefs;
-     *  \brief DescriptorSetLeyout for Light. It record all descriptor layout belonging light.
-     *         (Light Parameter)
-     */
-    std::vector<DescriptorSetLayoutStrongReferenceObject> m_light_dsl_srefs;
-
-    /*! \var std::vector<DescriptorSetLayoutStrongReferenceObject> m_mesh_common_dsl_srefs;
-     *  \brief DescriptorSetLeyout for Light. It record all descriptor layout belonging material.
-     *         (Materiials and textures)
-     */
-    std::vector<DescriptorSetLayoutStrongReferenceObject> m_material_default_dsl_srefs;
 protected:
     PeriodCounter m_fps;
 };

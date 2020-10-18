@@ -35,7 +35,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "RenderFlow.h"
 #include "Transform.h"
-#include "Component.h"
+#include "MeshRenderComponent.h"
 
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
@@ -56,23 +56,35 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(TransformComponent);
 class SDENGINE_CLASS CameraComponent : public Component
 {
 public:
-    SD_COMPONENT_POOL_TYPE_DECLARATION;
+    SD_COMPONENT_POOL_TYPE_DECLARATION(CameraComponent, CameraComponent);
+public:
+    enum WorkspaceType {
+        WorkspaceType_Forward = 0,
+        WorkspaceType_Deferred,
+        WorkspaceType_Other
+    };
 public:
     explicit CameraComponent(const ObjectName &i_object_name);
     virtual ~CameraComponent();
 public:
-    void SetPerspective(float i_angle, float i_aspect, float i_near, float i_far);
-    void SetRenderPass(const RenderPassWeakReferenceObject &i_rp_wref);
+    void SetPerspective(float i_fov, float i_aspect, float i_near, float i_far);
     void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
 public:
-    void Initialize();
-    void Resize();
-    void Render();
+    virtual void Initialize();
+    virtual void Resize();
+    virtual void Render(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_light_ds_wrefs);
 protected:
+    void InitializeWorkspaceForForwardPath();
+    void InitializeWorkspaceForDeferredPath();
+protected:
+    virtual void ClearWorkspace();
+protected:
+    WorkspaceType m_workspace_type;
     RenderFlowStrongReferenceObject m_rf_sref;
-    RenderPassWeakReferenceObject m_custom_rp_wref;
     TextureStrongReferenceObject m_color_buf_sref;
     TextureStrongReferenceObject m_depth_buf_sref;
+protected:
+    //Extra buffer for defer pass.
 protected:
     ClearValue m_clear_color;
     ClearValue m_clear_d_and_s;
@@ -83,15 +95,18 @@ protected:
     float m_far;
 };
 
-inline void CameraComponent::SetRenderPass(const RenderPassWeakReferenceObject &i_rp_wref)
-{
-    m_custom_rp_wref = i_rp_wref;
-}
-
 inline void CameraComponent::SetClearValues(ClearValue i_color, ClearValue i_d_and_s)
 {
     m_clear_color = i_color;
     m_clear_d_and_s = i_d_and_s;
+}
+
+inline void CameraComponent::SetPerspective(float i_fov, float i_aspect, float i_near, float i_far)
+{
+    m_fov = i_fov;
+    m_aspect = i_aspect;
+    m_near = i_near;
+    m_far = i_far;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -42,22 +42,22 @@ using SDE::Graphics::Color4f;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class LightParameter
- *    In our system, LightParameter is used to record parameters of light
- *  about phong shading.
+/*! \class LightUniforms
+ *  \brief In our system, LightUniforms is used to record parameters of light
+ *         about phong shading.
  */
-class SDENGINE_CLASS LightParameter
+class SDENGINE_CLASS LightUniforms
 {
 public:
     /* \fn LightParameter();
-     * \brief Ctor of LightParameter.
+     * \brief Ctor of LightUniforms.
      */
-    LightParameter();
+    LightUniforms();
 
-    /* \fn ~LightParameter();
-     * \brief Dtor of LightParameter.
+    /* \fn ~LightUniforms();
+     * \brief Dtor of LightUniforms.
      */
-    ~LightParameter();
+    ~LightUniforms();
 public:
     /* \var Color4f m_ambient;
      * \brief Ambient color of this light. Default is C(1.0, 1.0, 1.0, 1.0).
