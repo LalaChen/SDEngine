@@ -59,7 +59,7 @@ layout(set = 3, binding = 0) uniform MaterialUniforms {
 	float shininess;
 } material;
 
-layout(set = 3, binding = 1) uniform sampler2D textures[11]; 
+layout(set = 3, binding = 1) uniform sampler2D mainTexture; 
 
 //------- light vertices basic function -------
 vec3 CalculateLightDir(in vec4 iVertex)

@@ -52,7 +52,7 @@ layout(set = 3, binding = 0) uniform MaterialUniforms {
 	float shininess;
 } material;
 
-layout(set = 3, binding = 1) uniform sampler2D textures[11]; 
+layout(set = 3, binding = 1) uniform sampler2D mainTexture; 
 
 //------- light vertices basic function -------
 float calculateAttenation(in float dis)
@@ -116,7 +116,7 @@ vec4 CalculateLighting()
 	else {
 	    diffuse = vec4(1.0, 0.0, 0.0, 1.0);
 	}
-	return (ambient + diffuse + specular + material.emission) * texture(textures[0], texCoord);
+	return (ambient + diffuse + specular + material.emission) * texture(mainTexture, texCoord);
 	//return vec4(wViewDir, 1.0);
 	//return vec4(abs(nDotL), abs(nDotL), abs(nDotL), 1.0);
 	//return texture(mainTexture, texCoord);

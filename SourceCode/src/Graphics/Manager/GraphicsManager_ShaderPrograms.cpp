@@ -109,7 +109,7 @@ void GraphicsManager::InitializeBasicMaterialUniformDescriptors()
     mat_ubd_sref.GetRef().AddVariable("shininess", UniformBufferVariableType_FLOAT, offsetof(MaterialUniforms, m_shininess));
     mat_ubd_sref.GetRef().AddVariableDone();
 
-    UniformImagesDescriptorStrongReferenceObject mt_imgd_sref = new UniformImagesDescriptor("textures", 1, MaterialTextureType_MAX_DEFINE_VALUE);
+    UniformImagesDescriptorStrongReferenceObject mt_imgd_sref = new UniformImagesDescriptor("mainTexture", 1, 1);
 
     m_material_basic_uvds = { mat_ubd_sref.StaticCastTo<UniformVariableDescriptor>(), mt_imgd_sref.StaticCastTo<UniformVariableDescriptor>() };
 }
@@ -124,8 +124,8 @@ void GraphicsManager::InitializeBasicShaderPrograms()
         ShaderModules shader_modules;
         ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("PhongShaderVert");
         vert_shader_sref.GetRef().LoadBinaryShader(
-            ShaderKind_VERTEX, 
-            std::vector<UByte>(gVulkan_BasicShader_SP0_vert_spv,
+            ShaderKind_VERTEX, std::vector<UByte>(
+                gVulkan_BasicShader_SP0_vert_spv,
                 gVulkan_BasicShader_SP0_vert_spv + (sizeof(gVulkan_BasicShader_SP0_vert_spv) / sizeof(UByte))),
             "main");
         ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("PhongShaderFrag");
