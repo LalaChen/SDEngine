@@ -54,10 +54,10 @@ typedef char Byte;
  */
 typedef Byte* BytePtr;
 
-/*! \typedef unsigned char UByte;
+/*! \typedef uint8_t UByte;
     \brief represent byte.
 */
-typedef unsigned char UByte;
+typedef uint8_t UByte;
 
 /*! \typedef UByte* UBytePtr;
  *  \brief represent byte array pointer.

@@ -59,8 +59,11 @@ void GraphicsManager::Initialize()
     );
     SDLOG("Initialize.");
     InitializeBasicDescriptorSetLayout();
+    InitializeBasicMaterialUniformDescriptors();
     InitializeDefaultRenderPasses();
     InitializeDefaultPipelineInfos();
+    InitializeBasicShaderPrograms();
+
     m_fps.Start(1000.0, fps_cbk, false);
 }
 

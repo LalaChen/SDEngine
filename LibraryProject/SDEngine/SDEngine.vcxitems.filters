@@ -789,13 +789,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\LightComponent.h">
       <Filter>include\Graphics\BasicComponent</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\include\Graphics\Material\BasicUniforms.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Material\MaterialUniforms.h">
       <Filter>include\Graphics\Material</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\include\Graphics\Material\MaterialUniforms.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Material\BasicUniforms.h">
       <Filter>include\Graphics\Material</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\include\Graphics\Material\LightUniforms.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Material\LightUniforms.h">
       <Filter>include\Graphics\Material</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1316,14 +1316,25 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\MeshRenderComponent.cpp">
       <Filter>src\Graphics\BasicComponent</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\src\Graphics\Material\BasicUniforms.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Material\BasicUniforms.cpp">
       <Filter>src\Graphics\Material</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\src\Graphics\Material\MaterialUniforms.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Material\LightUniforms.cpp">
       <Filter>src\Graphics\Material</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\src\Graphics\Material\LightUniforms.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Material\MaterialUniforms.cpp">
       <Filter>src\Graphics\Material</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager_ShaderPrograms.cpp">
+      <Filter>src\Graphics\Manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.frag">
+      <Filter>include\Graphics\EmbeddedShaderProgram</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.vert">
+      <Filter>include\Graphics\EmbeddedShaderProgram</Filter>
+    </None>
   </ItemGroup>
 </Project>

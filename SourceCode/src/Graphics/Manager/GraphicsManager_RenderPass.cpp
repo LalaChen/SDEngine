@@ -1,7 +1,27 @@
-#include "BasicUniforms.h"
-#include "LightUniforms.h"
-#include "MaterialUniforms.h"
-#include "ModelData.h"
+/*==============  SD Engine License ==============
+MIT License
+
+Copyright (c) 2019 Kuan-Chih, Chen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
 #include "UniformBufferDescriptor.h"
 #include "UniformImagesDescriptor.h"
 #include "DescriptorSetLayout.h"
@@ -9,77 +29,6 @@
 #include "GraphicsManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
-
-DescriptorSetLayoutWeakReferenceObject GraphicsManager::GetBasicDescriptorSetLayout(const ObjectName &i_dsl_name) const
-{
-    DescriptorSetLayoutWeakReferenceObject result;
-    std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject>::const_iterator dsl_iter = m_basic_dsl_maps.find(i_dsl_name);
-    if (dsl_iter != m_basic_dsl_maps.end()) {
-        return (*dsl_iter).second;
-    }
-    else {
-        return DescriptorSetLayoutWeakReferenceObject();
-    }
-}
-
-void GraphicsManager::InitializeBasicDescriptorSetLayout()
-{
-    //1. For Cameras.
-    UniformBufferDescriptorStrongReferenceObject camera_ubd_sref = new UniformBufferDescriptor("camera", 0);
-    camera_ubd_sref.GetRef().AddVariable("proj", UniformBufferVariableType_MATRIX4X4F, offsetof(CameraUniforms, m_proj));
-    camera_ubd_sref.GetRef().AddVariable("view", UniformBufferVariableType_MATRIX4X4F, offsetof(CameraUniforms, m_view));
-    camera_ubd_sref.GetRef().AddVariable("viewEye", UniformBufferVariableType_VECTOR3F, offsetof(CameraUniforms, m_view_eye));
-    camera_ubd_sref.GetRef().AddVariableDone();
-    DescriptorSetLayoutStrongReferenceObject camera_dsl_sref = new DescriptorSetLayout("Camera");
-    camera_dsl_sref.GetRef().AddUniformVariableDescriptors({ camera_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
-    camera_dsl_sref.GetRef().Initialize();
-    m_basic_dsl_maps["Camera"] = camera_dsl_sref;
-
-    //2. For Meshes.
-    //Use for MVP matrices at all subpasses at Forward Pass and Defered Pass.
-    UniformBufferDescriptorStrongReferenceObject basic_ubd_sref = new UniformBufferDescriptor("geometry", 0);
-    basic_ubd_sref.GetRef().AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_worid));
-    basic_ubd_sref.GetRef().AddVariable("normal", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_normal));
-    basic_ubd_sref.GetRef().AddVariableDone();
-    DescriptorSetLayoutStrongReferenceObject basic_dsl_sref = new DescriptorSetLayout("MeshRender");
-    basic_dsl_sref.GetRef().AddUniformVariableDescriptors({ basic_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
-    basic_dsl_sref.GetRef().Initialize();
-    m_basic_dsl_maps["MeshRender"] = basic_dsl_sref;
-
-    //3. For light.
-    //Use for Record Light Parameter.
-    UniformBufferDescriptorStrongReferenceObject light_ubd_sref = new UniformBufferDescriptor("light", 0);
-    light_ubd_sref.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_ambient));
-    light_ubd_sref.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_diffuse));
-    light_ubd_sref.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_specular));
-    light_ubd_sref.GetRef().AddVariable("position", UniformBufferVariableType_VECTOR3F, offsetof(LightUniforms, m_position));
-    light_ubd_sref.GetRef().AddVariable("direction", UniformBufferVariableType_VECTOR3F, offsetof(LightUniforms, m_direction));
-    light_ubd_sref.GetRef().AddVariable("spotExponent", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_spot_exp));
-    light_ubd_sref.GetRef().AddVariable("spotCosCutoff", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_spot_cos_cutoff));
-    light_ubd_sref.GetRef().AddVariable("constantAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_constant_attenuation));
-    light_ubd_sref.GetRef().AddVariable("linearAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_linear_attenuation));
-    light_ubd_sref.GetRef().AddVariable("quadraticAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_quadratic_attenuation));
-    light_ubd_sref.GetRef().AddVariable("kind", UniformBufferVariableType_INT, offsetof(LightUniforms, m_kind));
-    light_ubd_sref.GetRef().AddVariableDone();
-    DescriptorSetLayoutStrongReferenceObject light_dsl_sref = new DescriptorSetLayout("Light");
-    light_dsl_sref.GetRef().AddUniformVariableDescriptors({ light_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
-    light_dsl_sref.GetRef().Initialize();
-    m_basic_dsl_maps["Light"] = light_dsl_sref;
-
-    //4. For Material.
-    UniformBufferDescriptorStrongReferenceObject mat_ubd_sref = new UniformBufferDescriptor("material", 0);
-    mat_ubd_sref.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_ambient));
-    mat_ubd_sref.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_diffuse));
-    mat_ubd_sref.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_specular));
-    mat_ubd_sref.GetRef().AddVariable("emission", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_emission));
-    mat_ubd_sref.GetRef().AddVariable("shininess", UniformBufferVariableType_FLOAT, offsetof(MaterialUniforms, m_shininess));
-    mat_ubd_sref.GetRef().AddVariableDone();
-    UniformImagesDescriptorStrongReferenceObject mt_imgd_sref = new UniformImagesDescriptor("textures", 1, MaterialTextureType_MAX_DEFINE_VALUE);
-    DescriptorSetLayoutStrongReferenceObject gen_dsl_sref = new DescriptorSetLayout("Material");
-    gen_dsl_sref.GetRef().AddUniformVariableDescriptors({ mat_ubd_sref.StaticCastTo<UniformVariableDescriptor>(), mt_imgd_sref.StaticCastTo<UniformVariableDescriptor>() });
-    gen_dsl_sref.GetRef().Initialize();
-    m_basic_dsl_maps["Material"] = gen_dsl_sref;
-}
 
 void GraphicsManager::InitializeDefaultRenderPasses()
 {
@@ -247,16 +196,14 @@ void GraphicsManager::InitializeDefaultRenderPasses()
 void GraphicsManager::RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp_sref)
 {
     if (i_rp_sref.IsNull() == false) {
-        bool is_exist = false;
-        for (RenderPassStrongReferenceObject& rp_sref : m_rp_list) {
-            if (rp_sref.GetRef().GetObjectName().compare(i_rp_sref.GetRef().GetObjectName()) == 0) {
-                is_exist = true;
-                break;
-            }
-        }
-        if (is_exist == false) {
+        std::map<ObjectName, RenderPassStrongReferenceObject>::iterator rp_iter = m_rp_map.find(i_rp_sref.GetRef().GetObjectName());
+          
+        if (rp_iter == m_rp_map.end()) {
             SDLOG("Register render pass[%s] to renderpass list.", i_rp_sref.GetRef().GetObjectName().c_str());
-            m_rp_list.push_back(i_rp_sref);
+            m_rp_map[i_rp_sref.GetRef().GetObjectName()] = i_rp_sref;
+        }
+        else {
+            SDLOGE("Register render pass[%s] to renderpass map failure. It already exist.", i_rp_sref.GetRef().GetObjectName().c_str());
         }
     }
     else {
@@ -266,31 +213,29 @@ void GraphicsManager::RegisterRenderPass(const RenderPassStrongReferenceObject &
 
 void GraphicsManager::UnregisterRenderPass(const ObjectName &i_target_rp_name)
 {
-    for (std::list<RenderPassStrongReferenceObject>::iterator rp_sref_iter = m_rp_list.begin(); rp_sref_iter != m_rp_list.end(); ) {
-        if ((*rp_sref_iter).GetRef().GetObjectName().compare(i_target_rp_name) == 0) {
-            rp_sref_iter = m_rp_list.erase(rp_sref_iter);
-            break;
-        }
-        else {
-            rp_sref_iter++;
-        }
+    std::map<ObjectName, RenderPassStrongReferenceObject>::iterator rp_iter = m_rp_map.find(i_target_rp_name);
+    if (rp_iter != m_rp_map.end()) {
+        m_rp_map.erase(rp_iter);
+    }
+    else {
+        SDLOGW("RenderPass[%s] isn't in render pass map.", i_target_rp_name.c_str());
     }
 }
 
 void GraphicsManager::ReleaseRenderPasses()
 {
     SDLOG("Release render passes");
-    for (std::list<RenderPassStrongReferenceObject>::iterator rp_sref_iter = m_rp_list.begin(); rp_sref_iter != m_rp_list.end(); ) {
-        rp_sref_iter = m_rp_list.erase(rp_sref_iter);
+    for (std::map<ObjectName, RenderPassStrongReferenceObject>::iterator rp_sref_iter = m_rp_map.begin(); rp_sref_iter != m_rp_map.end(); ) {
+        rp_sref_iter = m_rp_map.erase(rp_sref_iter);
     }
 }
 
-RenderPassWeakReferenceObject GraphicsManager::GetRenderPass(const ObjectName& i_target_rp_name) const
+RenderPassWeakReferenceObject GraphicsManager::GetRenderPass(const ObjectName &i_target_rp_name) const
 {
     RenderPassWeakReferenceObject target_rp_wref;
-    for (std::list<RenderPassStrongReferenceObject>::const_iterator rp_sref_iter = m_rp_list.begin(); rp_sref_iter != m_rp_list.end(); ) {
-        if ((*rp_sref_iter).GetRef().GetObjectName().compare(i_target_rp_name) == 0) {
-            target_rp_wref = (*rp_sref_iter);
+    for (std::map<ObjectName, RenderPassStrongReferenceObject>::const_iterator rp_sref_iter = m_rp_map.begin(); rp_sref_iter != m_rp_map.end(); ) {
+        if ((*rp_sref_iter).second.GetRef().GetObjectName().compare(i_target_rp_name) == 0) {
+            target_rp_wref = (*rp_sref_iter).second;
             break;
         }
         else {

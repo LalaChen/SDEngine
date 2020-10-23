@@ -49,7 +49,7 @@ void ObjectData::InitializeCommonUniformSet(const std::vector<DescriptorSetLayou
     std::map<ObjectName, UniformVariableWeakReferenceObject> uv_wrefs;
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
     for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : i_common_dsl_wrefs) {
-        dsl_wref.GetRef().GetUniformDescriptorCounts(desc_counts);;
+        dsl_wref.GetRef().GetUniformDescriptorCounts(desc_counts);
     }
     m_common_pool_sref = new DescriptorPool("CommonPool");
     m_common_pool_sref.GetRef().Initialize(desc_counts, 1, false);

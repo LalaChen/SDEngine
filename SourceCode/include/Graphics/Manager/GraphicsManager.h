@@ -50,6 +50,7 @@ SOFTWARE.
 #include "DescriptorPool.h"
 #include "DescriptorSet.h"
 #include "DescriptorSetLayout.h"
+#include "ShaderProgram.h"
 #include "RenderPass.h"
 #include "ImageLoader.h"
 #include "Resolution.h"
@@ -206,9 +207,12 @@ public:
     bool IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) const;
 public:
     virtual DescriptorSetLayoutWeakReferenceObject GetBasicDescriptorSetLayout(const ObjectName &i_dsl_name) const;
+    virtual void GetDefaultMaterialUniformVariableDescriptors(std::vector<UniformVariableDescriptorWeakReferenceObject> &io_uvds) const;
 protected:
     void InitializeDefaultPipelineInfos();
     void InitializeBasicDescriptorSetLayout();
+    void InitializeBasicMaterialUniformDescriptors();
+    void InitializeBasicShaderPrograms();
     void InitializeDefaultRenderPasses();
 protected:
     const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex_wref) const;
@@ -232,7 +236,7 @@ protected:
 protected:
     SD_DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_screen_size, ScreenResolution);
 protected:
-    std::list<RenderPassStrongReferenceObject> m_rp_list;
+    std::map<ObjectName, RenderPassStrongReferenceObject> m_rp_map;
 protected:
     std::vector<TextureFormatEnum> m_supported_depth_buffer_formats;
     std::vector<TextureFormatEnum> m_supported_color_buffer_formats;
@@ -245,6 +249,10 @@ protected:
      *         It record all descriptor layout belonging mesh.
      */
     std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject> m_basic_dsl_maps;
+
+    std::vector<UniformVariableDescriptorStrongReferenceObject> m_material_basic_uvds;
+
+    std::map<ObjectName, ShaderProgramStrongReferenceObject> m_shader_program_maps;
 
 protected:
     PeriodCounter m_fps;
