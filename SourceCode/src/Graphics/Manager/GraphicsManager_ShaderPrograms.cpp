@@ -132,7 +132,7 @@ void GraphicsManager::InitializeBasicShaderPrograms()
         frag_shader_sref.GetRef().LoadBinaryShader(
             ShaderKind_FRAGMENT, std::vector<UByte>(
                 gVulkan_BasicShader_SP0_frag_spv,
-                gVulkan_BasicShader_SP0_vert_spv + (sizeof(gVulkan_BasicShader_SP0_frag_spv) / sizeof(UByte))),
+                gVulkan_BasicShader_SP0_frag_spv + (sizeof(gVulkan_BasicShader_SP0_frag_spv) / sizeof(UByte))),
             "main");
         shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader_sref;
         shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
