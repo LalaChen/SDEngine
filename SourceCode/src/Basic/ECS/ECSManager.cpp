@@ -40,14 +40,14 @@ ECSManager::ECSManager()
 
 ECSManager::~ECSManager()
 {
-    for (std::list<EntityGroupStrongReferenceObject>::iterator group_iter = m_entity_group_srefs.begin();
-        group_iter != m_entity_group_srefs.end();) {
-        group_iter = m_entity_group_srefs.erase(group_iter);
+    for (std::list<EntityGroupStrongReferenceObject>::iterator group_iter = m_entity_group_list.begin();
+        group_iter != m_entity_group_list.end();) {
+        group_iter = m_entity_group_list.erase(group_iter);
     }
 
-    for (std::list<EntityStrongReferenceObject>::iterator entity_iter = m_entity_srefs.begin();
-        entity_iter != m_entity_srefs.end();) {
-        entity_iter = m_entity_srefs.erase(entity_iter);
+    for (std::list<EntityStrongReferenceObject>::iterator entity_iter = m_entity_list.begin();
+        entity_iter != m_entity_list.end();) {
+        entity_iter = m_entity_list.erase(entity_iter);
     }
     //
     std::map<std::type_index, ComponentPoolStrongReferenceObject>::iterator comp_pool_iter;
@@ -55,12 +55,17 @@ ECSManager::~ECSManager()
          comp_pool_iter != m_comp_pool_srefs.end();) {
         comp_pool_iter = m_comp_pool_srefs.erase(comp_pool_iter);
     }
+
+    std::map<std::type_index, SystemStrongReferenceObject>::iterator system_iter;
+    for (system_iter = m_system_map.begin(); system_iter != m_system_map.end();) {
+        system_iter = m_system_map.erase(system_iter);
+    }
 }
 
 EntityWeakReferenceObject ECSManager::CreateEntity(const ObjectName &i_object_name)
 {
     EntityStrongReferenceObject entity_sref = new Entity(i_object_name);
-    m_entity_srefs.push_back(entity_sref);
+    m_entity_list.push_back(entity_sref);
     return entity_sref.DynamicCastToPtr<Entity>();
 }
 
@@ -68,14 +73,14 @@ bool ECSManager::DeleteEntity(const EntityWeakReferenceObject &i_entity_wref)
 {
     //1. Find out entity.
     std::list<EntityStrongReferenceObject>::iterator entity_iter;
-    for (entity_iter = m_entity_srefs.begin(); entity_iter != m_entity_srefs.end(); ) {
+    for (entity_iter = m_entity_list.begin(); entity_iter != m_entity_list.end(); ) {
         if ((*entity_iter) == i_entity_wref) {
             //2. Remove its weak reference at all groups.
-            for (EntityGroupStrongReferenceObject &group_sref : m_entity_group_srefs) {
+            for (EntityGroupStrongReferenceObject &group_sref : m_entity_group_list) {
                 group_sref.GetRef().RemoveEntity(i_entity_wref);
             }
             //3. Remove it form entity list.
-            entity_iter = m_entity_srefs.erase(entity_iter);
+            entity_iter = m_entity_list.erase(entity_iter);
             return true;
         }
         else {
@@ -89,9 +94,9 @@ EntityGroupWeakReferenceObject ECSManager::AddEntityGroup(const ObjectName &i_gr
 {
     //1. Create entity groups.
     EntityGroupStrongReferenceObject group_sref = new EntityGroup(i_group_name, i_conditions);
-    m_entity_group_srefs.push_back(group_sref);
+    m_entity_group_list.push_back(group_sref);
     //2. Collect all entities belog this group.
-    for (EntityStrongReferenceObject &entity_sref : m_entity_srefs) {
+    for (EntityStrongReferenceObject &entity_sref : m_entity_list) {
         group_sref.GetRef().AddEntity(entity_sref);
     }
     return group_sref;
@@ -133,9 +138,9 @@ bool ECSManager::DeleteComponent(const std::type_index &i_type_index, const Comp
 
 bool ECSManager::UnregisterSystem(const std::type_index &i_type_index)
 {
-    std::map<std::type_index, SystemStrongReferenceObject>::iterator sys_iter = m_system_srefs.find(i_type_index);
-    if (sys_iter != m_system_srefs.end()) {
-        m_system_srefs.erase(sys_iter);
+    std::map<std::type_index, SystemStrongReferenceObject>::iterator sys_iter = m_system_map.find(i_type_index);
+    if (sys_iter != m_system_map.end()) {
+        m_system_map.erase(sys_iter);
         return true;
     }
     else {
@@ -144,25 +149,20 @@ bool ECSManager::UnregisterSystem(const std::type_index &i_type_index)
     }
 }
 
+SystemWeakReferenceObject ECSManager::GetSystem(const std::type_index &i_type_index)
+{
+    return m_system_map[i_type_index];
+}
+
 void ECSManager::NotifyEntityChanged(const EntityWeakReferenceObject &i_entity_wref)
 {
-    for (EntityGroupStrongReferenceObject &eg_sref : m_entity_group_srefs) {
+    for (EntityGroupStrongReferenceObject &eg_sref : m_entity_group_list) {
         eg_sref.GetRef().AddEntity(i_entity_wref);
     }
 }
 
 void ECSManager::Initialize()
 {
-}
-
-void ECSManager::Update()
-{
-    std::list<SystemStrongReferenceObject>::iterator sys_iter;
-    for (std::map<std::type_index, SystemStrongReferenceObject>::iterator sys_iter = m_system_srefs.begin();
-        sys_iter != m_system_srefs.end();
-        ++sys_iter) {
-        (*sys_iter).second.GetRef().Update();
-    }
 }
 
 void ECSManager::Terminate()

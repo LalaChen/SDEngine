@@ -189,16 +189,6 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
     sp_denp.m_dependencies.push_back(DependencyScope_REGION);
 
-    sp_denp = SubpassDependency();
-    sp_denp.m_src_spID = 2;
-    sp_denp.m_dst_spID = SD_SUBPASS_EXTERNAL;
-    sp_denp.m_src_pipeline_stages.push_back(PipelineStage_BOTTOM_OF_PIPE);
-    sp_denp.m_dst_pipeline_stages.push_back(PipelineStage_TOP_OF_PIPE);
-    sp_denp.m_src_mem_masks.push_back(MemoryAccessMask_MEMORY_WRITE);
-    sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
-    sp_denp.m_dependencies.push_back(DependencyScope_REGION);
-    sp_denps.push_back(sp_denp);
-
     forward_pass.GetRef().AddRenderPassDescription(att_descs, sp_descs, sp_denps);
     forward_pass.GetRef().Initialize();
 

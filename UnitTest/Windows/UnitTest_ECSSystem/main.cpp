@@ -7,6 +7,8 @@ using namespace SDE::App;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ComponentA);
+
 class ComponentA : public Component
 {
 public:
@@ -17,6 +19,8 @@ public:
 public:
     uint32_t m_a, m_b, m_c;
 };
+
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ComponentB);
 
 class ComponentB : public Component
 {
@@ -29,6 +33,8 @@ public:
     std::string m_name1;
     std::string m_name2;
 };
+
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GameSystem);
 
 class GameSystem : public System
 {
@@ -64,6 +70,7 @@ void GameSystem::Initialize()
 
 void GameSystem::Update()
 {
+    PrintEntities();
 }
 
 void GameSystem::Destroy()
@@ -87,12 +94,20 @@ public:
     virtual ~ECSTestApplication();
 public:
     void Initialize() override;
+protected:
+    void UpdateSystem() override;
 };
 
 void ECSTestApplication::Initialize()
 {
     GLFWApplication::Initialize();
     ECSManager::GetRef().RegisterSystem<GameSystem>("GameSystem");
+}
+
+void ECSTestApplication::UpdateSystem()
+{
+    SystemWeakReferenceObject gs_wref = ECSManager::GetRef().GetSystem(typeid(GameSystem));
+    gs_wref.GetRef().Update();
 }
 
 

@@ -162,6 +162,11 @@ public:
     void SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed);
 
 protected:
+    /*! \fn virtual void UpdateSystem();
+     *  \brief To update systems in ECSManager.
+     */
+    virtual void UpdateSystem();
+protected:
     /*! \var std::string m_win_title;
      *  \brief is full screen or not. [VarGet Attribute]
      */

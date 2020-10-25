@@ -60,9 +60,11 @@ void Application::Resume()
 
 void Application::Update()
 {
-    //Rendering.
+    //1. Update Timer.
     Timer::GetRef().Update();
-    ECSManager::GetRef().Update();
+    //2. Update System.
+    UpdateSystem();
+    //3. 
     GraphicsManager::GetRef().Render();
 }
 
@@ -106,6 +108,11 @@ bool Application::UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseStron
         SDLOGE("No key map manager.");
         return false;
     }
+}
+
+void Application::UpdateSystem()
+{
+
 }
 
 _______________SD_END_BASIC_NAMESPACE________________
