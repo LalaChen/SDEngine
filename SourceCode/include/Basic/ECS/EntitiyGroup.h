@@ -48,13 +48,14 @@ class SDENGINE_CLASS EntityGroup : public EventObject
 {
     friend class ECSManager;
 public:
-    explicit EntityGroup(const ObjectName &i_object_name, const std::vector<std::type_index>& i_conditions);
+    explicit EntityGroup(const ObjectName &i_object_name, const std::vector<std::type_index> &i_conditions);
     virtual ~EntityGroup();
 public:
     const std::list<EntityWeakReferenceObject>& GetEntities() const;
     bool AddEntity(const EntityWeakReferenceObject &i_entity_wref);
 protected:
     bool RemoveEntity(const EntityWeakReferenceObject &i_entity_wref);
+    bool IsCorresponded(const std::vector<std::type_index> &i_conditions) const;
 protected:
     std::list<EntityWeakReferenceObject> m_entity_wrefs;
     std::vector<std::type_index> m_conditions;

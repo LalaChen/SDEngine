@@ -293,6 +293,22 @@ namespace App \
  */
 #define SD_ENUM_TO_INT( var )  static_cast<int>(var)
 
+/*! \def SD_REF( var )
+ *  \brief get object by reference.
+ */
+#define SD_REF( var ) var.GetRef()
+#define SD_WREF( var ) SD_REF( var )
+#define SD_SREF( var ) SD_REF( var )
+#define SD_GET_COMP_WREF( var , type ) \
+   SD_REF(var).GetComponent(typeid(type)).DynamicCastTo<type>()
+
+ /*! \def SD_REF( var )
+  *  \brief get object by reference.
+  */
+#define SD_CONST_REF( var ) var.GetConstRef()
+#define SD_CONST_WREF( var ) SD_CONST_REF( var )
+#define SD_CONST_SREF( var ) SD_CONST_REF( var )
+
  /* \def SD_NULL_HANDLE
   * \brief null handle.
   */

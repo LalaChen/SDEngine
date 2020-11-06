@@ -121,7 +121,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
 
     //--- sp1 SecondLight
     sp_desc = SubpassDescription();
-    sp_desc.m_name = "SecondaryLight";
+    sp_desc.m_name = "SecondaryLights";
     sp_desc.m_bind_point = PipelineBindPoint_GRAPHICS;
     //--- color attachment reference.
     atta_ref.m_attachment_ID = 2;

@@ -23,39 +23,55 @@ SOFTWARE.
 
 */
 
-/*! \file      CameraComponent.h
- *  \brief     The class CameraComponent is used to perform rendering at location of owner(Entity).
- *             We will register it to Entity for performing application logic.
+/*! \file      GraphicsSystem.h
+ *  \brief     The class GraphicsSystem is used to perform rendering commands.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/10/18
+ *  \date      2020/10/25
  *  \copyright MIT License.
  */
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "LightUniforms.h"
-#include "Component.h"
+#include "EntitiyGroup.h"
+#include "CommandPool.h"
+#include "GraphicsManager.h"
+#include "SecondaryCommandPoolThread.h"
+#include "System.h"
 
 using SDE::Basic::ObjectName;
-using SDE::Basic::Object;
 
-using SDE::Basic::Component;
-using SDE::Basic::ComponentStrongReferenceObject;
-using SDE::Basic::ComponentWeakReferenceObject;
+using SDE::Basic::EntityGroup;
+using SDE::Basic::EntityGroupStrongReferenceObject;
+using SDE::Basic::EntityGroupWeakReferenceObject;
+
+using SDE::Basic::System;
+using SDE::Basic::SystemStrongReferenceObject;
+using SDE::Basic::SystemWeakReferenceObject;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(LightComponent);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GraphicsSystem)
 
-class SDENGINE_CLASS LightComponent : public Component
+class GraphicsSystem : public System
 {
 public:
-    SD_COMPONENT_POOL_TYPE_DECLARATION(LightComponent, LightComponent);
+    explicit GraphicsSystem(const ObjectName &i_object_name);
+    virtual ~GraphicsSystem();
 public:
-    explicit LightComponent(const ObjectName &i_object_name);
-    virtual ~LightComponent();
+    void Initialize() override;
+    void Update() override;
+    void Destroy() override;
+    void Resize();
 protected:
-    LightUniforms m_light_params;
+    virtual void RecordCommand();
+protected:
+    EntityGroupWeakReferenceObject m_camera_eg_wref;
+    EntityGroupWeakReferenceObject m_light_eg_wref;
+    EntityGroupWeakReferenceObject m_mesh_render_eg_wref;
+    CommandPoolStrongReferenceObject m_graphics_cp_sref;
+    CommandBufferWeakReferenceObject m_graphics_cb_wref;
+    std::vector<SecondaryCommandPoolThreadStrongReferenceObject> m_rec_thread_srefs;
+    bool m_scene_changed;
+    bool m_update_every_frame;
 };
-
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -76,6 +76,17 @@ ComponentBaseWeakReferenceObject Entity::UnregisterComponent(const std::type_ind
     return del_comp_wref;
 }
 
+ComponentBaseWeakReferenceObject Entity::GetComponent(const std::type_index &i_target_type) const
+{
+    std::map<std::type_index, ComponentBaseWeakReferenceObject>::const_iterator comp_iter = m_comp_wrefs.find(i_target_type);
+    if (comp_iter != m_comp_wrefs.end()) {
+        return (*comp_iter).second;
+    }
+    else {
+        return ComponentBaseWeakReferenceObject();
+    }
+}
+
 bool Entity::IsMatch(const std::vector<std::type_index> &i_condition) const
 {
     std::map<std::type_index, ComponentBaseWeakReferenceObject>::const_iterator comp_iter;

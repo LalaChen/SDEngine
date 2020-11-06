@@ -31,6 +31,8 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#pragma once
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "RenderFlow.h"
@@ -64,7 +66,12 @@ public:
     virtual ~MeshRenderComponent();
 public:
     bool AppendMesh(const MeshWeakReferenceObject &i_mesh_wref, const MaterialWeakReferenceObject &i_mat_wref);
-    void RenderMesh(const Matrix4X4f &i_camera_mat, const RenderPassWeakReferenceObject &i_rp_wref, const CommandBufferWeakReferenceObject &i_cb_wref, const DescriptorSetWeakReferenceObject &i_light_ds_wref, uint32_t i_sp_id);
+    void RenderMesh(
+        const RenderPassWeakReferenceObject &i_rp_wref,
+        const CommandBufferWeakReferenceObject &i_cb_wref,
+        const DescriptorSetWeakReferenceObject &i_camera_ds_wref,
+        const DescriptorSetWeakReferenceObject &i_light_ds_wref,
+        uint32_t i_sp_id);
 protected:
     MeshWeakReferenceObject m_mesh_wref;
     MaterialWeakReferenceObject m_mat_wref;

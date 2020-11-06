@@ -39,6 +39,7 @@ CameraComponent::CameraComponent(const ObjectName &i_object_name)
 , m_near(0.01f)
 , m_far(1000.0f)
 {
+    m_screen_size = GraphicsManager::GetRef().GetScreenResolution();
 }
 
 CameraComponent::~CameraComponent()
@@ -62,25 +63,18 @@ void CameraComponent::Resize()
     Initialize();
 }
 
-void CameraComponent::Render(
-    const CommandBufferWeakReferenceObject &i_cb_wref,
-    const std::vector<DescriptorSetWeakReferenceObject> &i_light_ds_wrefs)
-{
-}
-
 //------------------ Private Part ---------------
 void CameraComponent::InitializeWorkspaceForForwardPath()
 {
     RenderPassWeakReferenceObject forward_rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPath");
 
     if (forward_rp_wref.IsNull() == false) {
-        Resolution current_res = GraphicsManager::GetRef().GetScreenResolution();
         if (m_color_buf_sref.IsNull() == false) {
             m_color_buf_sref.Reset();
         }
         m_color_buf_sref = new Texture("CameraColorBuffer");
         m_color_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
-            current_res.GetWidth(), current_res.GetHeight(),
+            m_screen_size.GetWidth(), m_screen_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
             ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
 
@@ -89,12 +83,12 @@ void CameraComponent::InitializeWorkspaceForForwardPath()
         }
         m_depth_buf_sref = new Texture("CameraDepthBuffer");
         m_depth_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
-            current_res.GetWidth(), current_res.GetHeight(),
+            m_screen_size.GetWidth(), m_screen_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
             ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
         m_rf_sref = new RenderFlow("RenderFlow", ImageOffset(0, 0, 0),
-            ImageSize(current_res.GetWidth(), current_res.GetHeight(), 1));
+            ImageSize(m_screen_size.GetWidth(), m_screen_size.GetHeight(), 1));
     }
     else {
         SDLOGE("Forward render pass doesn't exist. Please check!!!");

@@ -35,6 +35,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "RenderFlow.h"
 #include "Transform.h"
+#include "Resolution.h"
 #include "MeshRenderComponent.h"
 
 using SDE::Basic::ObjectName;
@@ -51,10 +52,12 @@ using SDE::Math::Matrix4X4f;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(TransformComponent);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CameraComponent);
 
 class SDENGINE_CLASS CameraComponent : public Component
 {
+public:
+    friend class GraphicsSystem;
 public:
     SD_COMPONENT_POOL_TYPE_DECLARATION(CameraComponent, CameraComponent);
 public:
@@ -69,10 +72,10 @@ public:
 public:
     void SetPerspective(float i_fov, float i_aspect, float i_near, float i_far);
     void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
+    void SetCameraSize(const Resolution &i_size);
 public:
     virtual void Initialize();
     virtual void Resize();
-    virtual void Render(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_light_ds_wrefs);
 protected:
     void InitializeWorkspaceForForwardPath();
     void InitializeWorkspaceForDeferredPath();
@@ -86,6 +89,7 @@ protected:
 protected:
     //Extra buffer for defer pass.
 protected:
+    Resolution m_screen_size;
     ClearValue m_clear_color;
     ClearValue m_clear_d_and_s;
     Matrix4X4f m_proj_mat;
@@ -107,6 +111,11 @@ inline void CameraComponent::SetPerspective(float i_fov, float i_aspect, float i
     m_aspect = i_aspect;
     m_near = i_near;
     m_far = i_far;
+}
+
+inline void CameraComponent::SetCameraSize(const Resolution &i_screen_size)
+{
+    m_screen_size = i_screen_size;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

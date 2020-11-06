@@ -92,12 +92,18 @@ bool ECSManager::DeleteEntity(const EntityWeakReferenceObject &i_entity_wref)
 
 EntityGroupWeakReferenceObject ECSManager::AddEntityGroup(const ObjectName &i_group_name, const std::vector<std::type_index> &i_conditions)
 {
-    //1. Create entity groups.
-    EntityGroupStrongReferenceObject group_sref = new EntityGroup(i_group_name, i_conditions);
-    m_entity_group_list.push_back(group_sref);
+    //1. Change entity groups is exist or not.
+    for (EntityGroupStrongReferenceObject &eg_sref : m_entity_group_list) {
+        if (SD_SREF(eg_sref).IsCorresponded(i_conditions) == true) {
+            return eg_sref;
+        }
+    }
+
     //2. Collect all entities belog this group.
+    EntityGroupStrongReferenceObject group_sref = new EntityGroup(i_group_name, i_conditions);
+    m_entity_group_list.push_back(group_sref);    
     for (EntityStrongReferenceObject &entity_sref : m_entity_list) {
-        group_sref.GetRef().AddEntity(entity_sref);
+        SD_SREF(group_sref).AddEntity(entity_sref);
     }
     return group_sref;
 }
@@ -110,7 +116,10 @@ bool ECSManager::RemoveComponentFromEntity(const EntityWeakReferenceObject &i_en
         ComponentBaseWeakReferenceObject rem_comp_wref = i_entity_wref.GetRef().UnregisterComponent(i_type_index);
         //2. Delete component at entity.
         result = DeleteComponent(i_type_index, rem_comp_wref);
-        //3. To do : Update all entity groups for this entity.
+        //3. Update all entity groups for this entity.
+        for (EntityGroupStrongReferenceObject &group_sref : m_entity_group_list) {
+            group_sref.GetRef().RemoveEntity(i_entity_wref);
+        }
     }
     else {
         SDLOGE("Remove component with type(%s) at null entity.", i_type_index.name());

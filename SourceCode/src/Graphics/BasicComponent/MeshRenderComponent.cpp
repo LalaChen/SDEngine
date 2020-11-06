@@ -78,12 +78,18 @@ bool MeshRenderComponent::AppendMesh(const MeshWeakReferenceObject &i_mesh_wref,
     }
 }
 
-void MeshRenderComponent::RenderMesh(const Matrix4X4f &i_camera_mat, const RenderPassWeakReferenceObject &i_rp_wref, const CommandBufferWeakReferenceObject &i_cb_wref, const DescriptorSetWeakReferenceObject &i_light_ds_wref, uint32_t i_sp_id)
+void MeshRenderComponent::RenderMesh(
+    const RenderPassWeakReferenceObject &i_rp_wref,
+    const CommandBufferWeakReferenceObject &i_cb_wref,
+    const DescriptorSetWeakReferenceObject &i_light_ds_wref,
+    const DescriptorSetWeakReferenceObject &i_camera_ds_wref,
+    uint32_t i_sp_id)
 {
     if (m_mesh_wref.IsNull() == false) {
         if (m_mat_wref.IsNull() == false) {
             std::vector<DescriptorSetWeakReferenceObject> common_set_wrefs = {
                 m_basic_set_wref,
+                i_camera_ds_wref,
                 i_light_ds_wref
             };
             //1. use material.

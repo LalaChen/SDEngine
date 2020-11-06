@@ -32,6 +32,8 @@ EntityGroup::EntityGroup(const ObjectName &i_object_name, const std::vector<std:
 : EventObject(i_object_name)
 , m_conditions(i_conditions)
 {
+    EventStrongReferenceObject changed_event = new Event("ChangedEvent");
+    RegisterEvent(changed_event);
 }
 
 EntityGroup::~EntityGroup()
@@ -44,6 +46,7 @@ bool EntityGroup::AddEntity(const EntityWeakReferenceObject &i_entity_wref)
         if (i_entity_wref.GetRef().IsMatch(m_conditions) == true) {
             if (std::find(m_entity_wrefs.begin(), m_entity_wrefs.end(), i_entity_wref) == m_entity_wrefs.end()) {
                 m_entity_wrefs.push_back(i_entity_wref);
+                NotifyEvent("ChangedEvent", EventArg());
                 return true;
             }
             else {
@@ -75,6 +78,28 @@ bool EntityGroup::RemoveEntity(const EntityWeakReferenceObject &i_entity_wref)
         }
     }
     return false;
+}
+
+bool EntityGroup::IsCorresponded(const std::vector<std::type_index> &i_conditions) const
+{
+    if (i_conditions.size() != m_conditions.size()) {
+        return false;
+    }
+    else {
+        for (uint32_t src_id = 0; src_id < i_conditions.size(); ++src_id) {
+            bool is_type_exist = false;
+            for (uint32_t id = 0; id < m_conditions.size(); ++id) {
+                if (m_conditions[id] == i_conditions[src_id]) {
+                    is_type_exist = true;
+                    break;
+                }
+            }
+            if (is_type_exist == false) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

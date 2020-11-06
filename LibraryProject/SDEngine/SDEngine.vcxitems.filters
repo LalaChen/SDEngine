@@ -226,6 +226,12 @@
     <Filter Include="src\Basic\ECS">
       <UniqueIdentifier>{f2f7be99-6429-4144-b83a-8a784b474201}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Graphics\System">
+      <UniqueIdentifier>{0c5522b0-0ce4-43fe-8cc7-68d1e269ca87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\System">
+      <UniqueIdentifier>{908802d3-4287-4b15-bf0b-6436cc1a4680}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -798,6 +804,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Material\LightUniforms.h">
       <Filter>include\Graphics\Material</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\System\GraphicsSystem.h">
+      <Filter>include\Graphics\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1327,6 +1336,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager_ShaderPrograms.cpp">
       <Filter>src\Graphics\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\System\GraphicsSystem.cpp">
+      <Filter>src\Graphics\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
