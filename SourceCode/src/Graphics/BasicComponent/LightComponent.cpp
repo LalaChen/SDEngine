@@ -23,40 +23,17 @@ SOFTWARE.
 
 */
 
-/*! \file      LightComponent.h
- *  \brief     The class LightComponent is used to keep light data.
- *  \author    Kuan-Chih, Chen
- *  \date      2020/10/18
- *  \copyright MIT License.
- */
-
-#pragma once
-
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "LightUniforms.h"
-#include "Component.h"
-
-using SDE::Basic::ObjectName;
-using SDE::Basic::Object;
-
-using SDE::Basic::Component;
-using SDE::Basic::ComponentStrongReferenceObject;
-using SDE::Basic::ComponentWeakReferenceObject;
+#include "LightComponent.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(LightComponent);
-
-class SDENGINE_CLASS LightComponent : public Component
+LightComponent::LightComponent(const ObjectName &i_object_name)
+: Component(i_object_name)
 {
-public:
-    SD_COMPONENT_POOL_TYPE_DECLARATION(LightComponent, LightComponent);
-public:
-    explicit LightComponent(const ObjectName &i_object_name);
-    virtual ~LightComponent();
-protected:
-    LightUniforms m_light_params;
-};
+}
+
+LightComponent::~LightComponent()
+{
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

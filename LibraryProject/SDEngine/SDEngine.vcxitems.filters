@@ -1340,6 +1340,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\System\GraphicsSystem.cpp">
       <Filter>src\Graphics\System</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\LightComponent.cpp">
+      <Filter>src\Graphics\BasicComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.frag">

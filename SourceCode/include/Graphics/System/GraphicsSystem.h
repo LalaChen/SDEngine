@@ -30,6 +30,8 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#pragma once
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "EntitiyGroup.h"
@@ -62,6 +64,8 @@ public:
     void Update() override;
     void Destroy() override;
     void Resize();
+public:
+    const std::vector<SecondaryCommandPoolThreadStrongReferenceObject>& GetSecondaryCommandPool() const;
 protected:
     virtual void RecordCommand();
 protected:

@@ -31,11 +31,14 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#pragma once
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "RenderFlow.h"
 #include "Transform.h"
 #include "Resolution.h"
+#include "LightComponent.h"
 #include "MeshRenderComponent.h"
 
 using SDE::Basic::ObjectName;
@@ -76,6 +79,10 @@ public:
 public:
     virtual void Initialize();
     virtual void Resize();
+    virtual void RecordCommand(
+        const CommandBufferWeakReferenceObject &i_cb_wref,
+        const std::list<LightComponentWeakReferenceObject> &i_light_list,
+        const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list);
 protected:
     void InitializeWorkspaceForForwardPath();
     void InitializeWorkspaceForDeferredPath();

@@ -23,9 +23,13 @@ SOFTWARE.
 
 */
 
+#include "ECSManager.h"
+#include "GraphicsSystem.h"
 #include "GraphicsManager.h"
 #include "LogManager.h"
 #include "CameraComponent.h"
+
+using SDE::Basic::ECSManager;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -62,6 +66,63 @@ void CameraComponent::Resize()
     ClearWorkspace();
     Initialize();
 }
+
+void CameraComponent::RecordCommand(
+    const CommandBufferWeakReferenceObject &i_cb_wref,
+    const std::list<LightComponentWeakReferenceObject> &i_light_list,
+    const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list)
+{
+    GraphicsSystemWeakReferenceObject gs_wref = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
+    std::list<LightComponentWeakReferenceObject>::const_iterator light_wref_iter;
+    std::list<MeshRenderComponentWeakReferenceObject>::const_iterator mr_wref_iter;
+
+    const std::vector<SecondaryCommandPoolThreadStrongReferenceObject> &scp_threads = gs_wref.GetRef().GetSecondaryCommandPool();
+    std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;
+    Viewport vp;
+    vp.m_x = 0.0f; vp.m_y = static_cast<float>(m_screen_size.GetHeight());
+    vp.m_width = static_cast<float>(m_screen_size.GetWidth());
+    vp.m_height = -1.0f * static_cast<float>(m_screen_size.GetHeight());
+    vp.m_min_depth = 0.0f;
+    vp.m_max_depth = 1.0f;
+
+    ScissorRegion sr;
+    sr.m_x = 0.0f; sr.m_y = 0.0f;
+    sr.m_width = vp.m_width; sr.m_height = m_screen_size.GetHeight();
+
+    if (m_workspace_type == WorkspaceType_Forward) {
+        SD_SREF(m_rf_sref).BeginRenderFlow(i_cb_wref);
+        CommandBufferInheritanceInfo cb_inherit_info = SD_SREF(m_rf_sref).GetCurrentInheritanceInfo();
+        GraphicsManager::GetRef().SetViewport(i_cb_wref, vp);
+        GraphicsManager::GetRef().SetScissor(i_cb_wref, sr);
+
+        uint32_t tID = 0;
+        for (tID = 0; tID < scp_threads.size(); ++tID) {
+            SD_SREF(scp_threads[tID]).StartRecording(cb_inherit_info, vp, sr);
+        }
+
+        light_wref_iter = i_light_list.begin();
+        tID = 0;
+        for (mr_wref_iter = i_mesh_render_list.begin(); mr_wref_iter != i_mesh_render_list.end(); ++mr_wref_iter) {
+            std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, light_wref_iter, mr_wref_iter](const CommandBufferWeakReferenceObject& i_cb_wref) {
+                SD_WREF((*mr_wref_iter)).RenderMesh();
+            };
+
+            scp_threads[tID].GetRef().AddTask(task_func);
+            tID = (tID + 1) % scp_threads.size();
+        }
+        
+        for (tID = 0; tID < scp_threads.size(); ++tID) {
+            SD_SREF(scp_threads[tID]).WaitAndStopRecording(secondary_cb_wrefs);
+        }
+        SD_SREF(m_rf_sref).EndRenderFlow(i_cb_wref);
+
+        GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(i_cb_wref, secondary_cb_wrefs);
+    }
+    else if (m_workspace_type == WorkspaceType_Deferred) {
+
+    }
+}
+
 
 //------------------ Private Part ---------------
 void CameraComponent::InitializeWorkspaceForForwardPath()

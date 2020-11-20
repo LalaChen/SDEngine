@@ -143,13 +143,23 @@ void GraphicsSystem::RecordCommand()
     for (EntityWeakReferenceObject &mre_wref : mesh_render_entity_list) {
         mesh_render_list.push_back(SD_GET_COMP_WREF(mre_wref, MeshRenderComponent));
     }
+
+    SD_SREF(m_graphics_cb_wref).Begin();
     //2. update shadow map.
 
     //3. update stencil buffer. (To Do)
 
-    //4. record command.
-    SD_SREF(m_graphics_cb_wref).Begin();
+    //4. record command for camera.
+    for (CameraComponentWeakReferenceObject &camera_wref : camera_list) {
+        SD_WREF(camera_wref).RecordCommand(m_graphics_cb_wref, light_list, mesh_render_list);
+    }
+    
     SD_SREF(m_graphics_cb_wref).End();
+}
+
+const std::vector<SecondaryCommandPoolThreadStrongReferenceObject>& GraphicsSystem::GetSecondaryCommandPool() const
+{
+    return m_rec_thread_srefs;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
