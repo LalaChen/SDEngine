@@ -84,6 +84,7 @@ public:
         const std::list<LightComponentWeakReferenceObject> &i_light_list,
         const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list);
 protected:
+    void InitializeDescriptorSetAndPool();
     void InitializeWorkspaceForForwardPath();
     void InitializeWorkspaceForDeferredPath();
 protected:
@@ -93,6 +94,10 @@ protected:
     RenderFlowStrongReferenceObject m_rf_sref;
     TextureStrongReferenceObject m_color_buf_sref;
     TextureStrongReferenceObject m_depth_buf_sref;
+protected:
+    DescriptorPoolStrongReferenceObject m_dp_sref;
+    UniformBufferWeakReferenceObject m_buffer_wref;
+    DescriptorSetWeakReferenceObject m_ds_wref;
 protected:
     //Extra buffer for defer pass.
 protected:

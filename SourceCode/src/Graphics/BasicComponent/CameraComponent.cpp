@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "BasicUniforms.h"
 #include "ECSManager.h"
 #include "GraphicsSystem.h"
 #include "GraphicsManager.h"
@@ -53,6 +54,7 @@ CameraComponent::~CameraComponent()
 
 void CameraComponent::Initialize()
 {
+    InitializeDescriptorSetAndPool();
     if (m_workspace_type == WorkspaceType_Forward) {
         InitializeWorkspaceForForwardPath();
     }
@@ -64,7 +66,12 @@ void CameraComponent::Initialize()
 void CameraComponent::Resize()
 {
     ClearWorkspace();
-    Initialize();
+    if (m_workspace_type == WorkspaceType_Forward) {
+        InitializeWorkspaceForForwardPath();
+    }
+    else if (m_workspace_type == WorkspaceType_Deferred) {
+        InitializeWorkspaceForDeferredPath();
+    }
 }
 
 void CameraComponent::RecordCommand(
@@ -92,6 +99,8 @@ void CameraComponent::RecordCommand(
     if (m_workspace_type == WorkspaceType_Forward) {
         SD_SREF(m_rf_sref).BeginRenderFlow(i_cb_wref);
         CommandBufferInheritanceInfo cb_inherit_info = SD_SREF(m_rf_sref).GetCurrentInheritanceInfo();
+        RenderPassWeakReferenceObject current_rp = cb_inherit_info.m_rp_wref;
+
         GraphicsManager::GetRef().SetViewport(i_cb_wref, vp);
         GraphicsManager::GetRef().SetScissor(i_cb_wref, sr);
 
@@ -103,8 +112,10 @@ void CameraComponent::RecordCommand(
         light_wref_iter = i_light_list.begin();
         tID = 0;
         for (mr_wref_iter = i_mesh_render_list.begin(); mr_wref_iter != i_mesh_render_list.end(); ++mr_wref_iter) {
-            std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, light_wref_iter, mr_wref_iter](const CommandBufferWeakReferenceObject& i_cb_wref) {
-                SD_WREF((*mr_wref_iter)).RenderMesh();
+            DescriptorSetWeakReferenceObject light_ds_wref = SD_WREF((*light_wref_iter)).GetDescriptorSet();
+            MeshRenderComponentWeakReferenceObject mr_wref = (*mr_wref_iter);
+            std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, current_rp, light_ds_wref, mr_wref](const CommandBufferWeakReferenceObject &i_cb_wref) {
+                SD_WREF(mr_wref).RenderMesh(current_rp, i_cb_wref, m_ds_wref, light_ds_wref, 0);
             };
 
             scp_threads[tID].GetRef().AddTask(task_func);
@@ -125,6 +136,22 @@ void CameraComponent::RecordCommand(
 
 
 //------------------ Private Part ---------------
+void CameraComponent::InitializeDescriptorSetAndPool()
+{
+    m_dp_sref = new DescriptorPool("CameraPool");
+    std::map<ObjectName, UniformVariableWeakReferenceObject> uv_wrefs;
+    //1. Collect all descriptor set layouts used at this component.
+    uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
+    DescriptorSetLayoutWeakReferenceObject dsl_wref = GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Camera");
+    SD_SREF(dsl_wref).GetUniformDescriptorCounts(desc_counts);
+    SD_SREF(m_dp_sref).Initialize(desc_counts, 1, false);
+    //2. Allocate descriptor set.
+    m_ds_wref = SD_SREF(m_dp_sref).AllocateDescriptorSet(dsl_wref);
+    SD_SREF(m_ds_wref).WriteDescriptor();
+    SD_SREF(m_ds_wref).GetAllocatedUniformVariables(uv_wrefs);
+    m_buffer_wref = uv_wrefs["camera"].DynamicCastTo<UniformBuffer>();
+}
+
 void CameraComponent::InitializeWorkspaceForForwardPath()
 {
     RenderPassWeakReferenceObject forward_rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPath");

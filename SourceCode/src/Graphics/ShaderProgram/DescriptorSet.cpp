@@ -67,7 +67,7 @@ void DescriptorSet::WriteDescriptor()
     GraphicsManager::GetRef().WriteUniformVariablesToDescriptorSet(m_identity, uv_wrefs);
 }
 
-void DescriptorSet::LinkUniformVariables(
+void DescriptorSet::GetAllocatedUniformVariables(
     std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs) const
 {
     for (const UniformVariableStrongReferenceObject &uv_sref : m_uv_srefs) {

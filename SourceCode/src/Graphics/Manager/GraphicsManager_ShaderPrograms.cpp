@@ -34,7 +34,7 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-DescriptorSetLayoutWeakReferenceObject GraphicsManager::GetBasicDescriptorSetLayout(const ObjectName& i_dsl_name) const
+DescriptorSetLayoutWeakReferenceObject GraphicsManager::GetBasicDescriptorSetLayout(const ObjectName &i_dsl_name) const
 {
     DescriptorSetLayoutWeakReferenceObject result;
     std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject>::const_iterator dsl_iter = m_basic_dsl_maps.find(i_dsl_name);
@@ -46,9 +46,9 @@ DescriptorSetLayoutWeakReferenceObject GraphicsManager::GetBasicDescriptorSetLay
     }
 }
 
-void GraphicsManager::GetDefaultMaterialUniformVariableDescriptors(std::vector<UniformVariableDescriptorWeakReferenceObject>& io_uvds) const
+void GraphicsManager::GetDefaultMaterialUniformVariableDescriptors(std::vector<UniformVariableDescriptorWeakReferenceObject> &io_uvds) const
 {
-    for (const UniformVariableDescriptorStrongReferenceObject& uvd : m_material_basic_uvds) {
+    for (const UniformVariableDescriptorStrongReferenceObject &uvd : m_material_basic_uvds) {
         io_uvds.push_back(uvd);
     }
 }

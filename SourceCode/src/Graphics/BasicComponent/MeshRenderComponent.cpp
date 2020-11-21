@@ -43,7 +43,7 @@ MeshRenderComponent::MeshRenderComponent(const ObjectName &i_object_name)
     m_basic_pool_sref = new DescriptorPool("DescriptorSetPool");
     m_basic_pool_sref.GetRef().Initialize(desc_counts, 1, false);
     m_basic_set_wref = m_basic_pool_sref.GetRef().AllocateDescriptorSet(basic_dsl_wref);
-    m_basic_set_wref.GetRef().LinkUniformVariables(uv_wrefs);
+    m_basic_set_wref.GetRef().GetAllocatedUniformVariables(uv_wrefs);
 
     //3. Write descriptor to GPU for this set.
     if (m_basic_set_wref.IsNull() == false) {

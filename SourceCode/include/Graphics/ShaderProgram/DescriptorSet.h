@@ -78,11 +78,11 @@ public:
      */
     void WriteDescriptor();
 
-    /*! \fn void LinkUniformVariables(std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs) const;
+    /*! \fn void GetAllocatedUniformVariables(std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs) const;
      *  \param [inout] io_uv_wrefs Container for storing link variables.
      *  \brief Get weak reference links.
      */
-    void LinkUniformVariables(std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs) const;
+    void GetAllocatedUniformVariables(std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs) const;
 
     bool IsThisLayout(const DescriptorSetLayoutWeakReferenceObject &i_layout_wref) const;
 protected:

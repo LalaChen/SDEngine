@@ -35,6 +35,9 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "LightUniforms.h"
+#include "DescriptorPool.h"
+#include "DescriptorSet.h"
+#include "UniformBuffer.h"
 #include "Component.h"
 
 using SDE::Basic::ObjectName;
@@ -55,8 +58,23 @@ public:
 public:
     explicit LightComponent(const ObjectName &i_object_name);
     virtual ~LightComponent();
+public:
+    virtual void Initialize();
+public:
+    const DescriptorSetWeakReferenceObject GetDescriptorSet() const;
+protected:
+    void InitializeDescriptorSetAndPool();
+protected:
+    DescriptorPoolStrongReferenceObject m_dp_sref;
+    UniformBufferWeakReferenceObject m_buffer_wref;
+    DescriptorSetWeakReferenceObject m_ds_wref;
 protected:
     LightUniforms m_light_params;
 };
+
+inline const DescriptorSetWeakReferenceObject LightComponent::GetDescriptorSet() const
+{
+    return m_ds_wref;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

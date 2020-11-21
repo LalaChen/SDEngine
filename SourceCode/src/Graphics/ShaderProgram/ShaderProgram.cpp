@@ -94,7 +94,7 @@ void ShaderProgram::AllocateEssentialObjects(
     io_desc_set_wrefs.resize(m_dsl_srefs.size());
     for (uint32_t dsl_count = 0; dsl_count < m_dsl_srefs.size(); ++dsl_count) {
         io_desc_set_wrefs[dsl_count] = io_pool_wref.GetRef().AllocateDescriptorSet(m_dsl_srefs[dsl_count]);
-        io_desc_set_wrefs[dsl_count].GetConstRef().LinkUniformVariables(io_uv_wrefs);
+        io_desc_set_wrefs[dsl_count].GetConstRef().GetAllocatedUniformVariables(io_uv_wrefs);
     }
 }
 
