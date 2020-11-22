@@ -89,19 +89,16 @@ void VulkanTestGLFWApplication::Initialize()
     FileSystemManager::GetRef().Initialize();
     //new FileResourceRequester
     new FileResourceRequester();
-    //new Timer.
-    new Timer();
-    Timer::GetRef().Start();
-    SDLOG("APP Starting at %lf.", Timer::GetRef().GetProgramStartTime());
-    //new ImageWindowsLoader
-    new ImageLoader();
-    ImageLoader::GetRef().Initialize();
-    //new graphics engine.
-    if (m_adopt_library == GraphicsLibrary_OpenGL4) {
-        new OpenGL4Manager();
-    }
-    else {
-        new VulkanAPITestManager();
-    }
-    new ECSManager();
+    //Initialize KeyBoard Mapping.
+
+    //new Graphics Manager.
+    new VulkanAPITestManager();
+}
+
+void VulkanTestGLFWApplication::Update()
+{
+    //1. Update Timer.
+    Timer::GetRef().Update();
+    //2. 
+    VulkanAPITestManager::GetRef().Render();
 }

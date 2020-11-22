@@ -45,6 +45,7 @@ public:
     void Initialize() override;
     void Update() override;
     void Destroy() override;
+    void Resize() override;
 public:
     void PrintEntities();
 protected:
@@ -77,6 +78,10 @@ void GameSystem::Destroy()
 {
 }
 
+void GameSystem::Resize()
+{
+}
+
 void GameSystem::PrintEntities()
 {
     const std::list<EntityWeakReferenceObject> &entities = m_target_eg_wref.GetRef().GetEntities();
@@ -94,8 +99,6 @@ public:
     virtual ~ECSTestApplication();
 public:
     void Initialize() override;
-protected:
-    void UpdateSystem() override;
 };
 
 void ECSTestApplication::Initialize()
@@ -103,13 +106,6 @@ void ECSTestApplication::Initialize()
     GLFWApplication::Initialize();
     ECSManager::GetRef().RegisterSystem<GameSystem>("GameSystem");
 }
-
-void ECSTestApplication::UpdateSystem()
-{
-    SystemWeakReferenceObject gs_wref = ECSManager::GetRef().GetSystem(typeid(GameSystem));
-    gs_wref.GetRef().Update();
-}
-
 
 ECSTestApplication::ECSTestApplication(const std::string& i_win_title, const Resolution& i_win_res, FullWindowOption i_full_window, GraphicsLibraryEnum i_adopt_library, int i_argc, char** i_argv)
 : GLFWApplication(i_win_title, i_win_res, i_full_window, i_adopt_library, i_argc, i_argv)

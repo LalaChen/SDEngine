@@ -56,7 +56,7 @@ void ObjectData::InitializeCommonUniformSet(const std::vector<DescriptorSetLayou
 
     for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : i_common_dsl_wrefs) {
         m_common_set_wrefs.push_back(m_common_pool_sref.GetRef().AllocateDescriptorSet(dsl_wref));
-        m_common_set_wrefs[m_common_set_wrefs.size() - 1].GetRef().LinkUniformVariables(uv_wrefs);
+        m_common_set_wrefs[m_common_set_wrefs.size() - 1].GetRef().GetAllocatedUniformVariables(uv_wrefs);
     }
 
     for (DescriptorSetWeakReferenceObject &ds_wref : m_common_set_wrefs) {

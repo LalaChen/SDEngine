@@ -107,19 +107,23 @@ WindowsApplication::~WindowsApplication()
 
 void WindowsApplication::Initialize()
 {
-    SDLOG("Initialize Application.");
     //new LogManager.
     new WindowsLogManager();
+    SDLOG("Initialize Application.");
+    SDLOG("APP Starting at %lf.", Timer::GetRef().GetProgramStartTime());
     //new WindowsFileSystemManager.
     new WindowsFileSystemManager();
     FileSystemManager::GetRef().Initialize();
     //new FileResourceRequester.
     new FileResourceRequester();
-    //new Timer.
-    new Timer();
-    Timer::GetRef().Start();
-    SDLOG("APP Starting at %lf.", Timer::GetRef().GetProgramStartTime());
     //Initialize KeyBoard Mapping.
+    //
+    if (m_adopt_library == GraphicsLibrary_OpenGL4) {
+        new OpenGL4Manager();
+    }
+    else {
+        new VulkanManager();
+    }
 }
 
 void WindowsApplication::InitializeGraphicsSystem()
@@ -128,18 +132,14 @@ void WindowsApplication::InitializeGraphicsSystem()
     //new Graphics Manager.
     //--- iv. make current.
     if (m_adopt_library == GraphicsLibrary_OpenGL4) {
-        new OpenGL4Manager();
-
         //Create wgl context.
 
         //
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
-        GraphicsManager::GetRef().Initialize();
+        GraphicsManager::GetRef().InitializeBasicResource();
 
     }
     else if (m_adopt_library == GraphicsLibrary_Vulkan) {
-        new VulkanManager();
-
         VkInstance instance = VK_NULL_HANDLE;
         VkSurfaceKHR surface = VK_NULL_HANDLE;
 
@@ -230,7 +230,7 @@ void WindowsApplication::InitializeGraphicsSystem()
         arg.m_instance = instance;
         arg.m_surface = surface;
         GraphicsManager::GetRef().InitializeGraphicsSystem(arg);
-        GraphicsManager::GetRef().Initialize();
+        GraphicsManager::GetRef().InitializeBasicResource();
 
     } else {
         SDLOGE("Error engine type!!!");
@@ -241,19 +241,19 @@ void WindowsApplication::InitializeGraphicsSystem()
 void WindowsApplication::ReleaseGraphicsSystem()
 {
     SDLOG("Release Graphics System of Application.");
-    GraphicsManager::GetRef().Release();
+    GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
-    //destroy Graphics Manager.
-    GraphicsManager::Destroy();
 }
 
 void WindowsApplication::TerminateApplication()
 {
     SDLOG("Terminate Application.");
+    ECSManager::GetRef().Terminate();
+    ReleaseGraphicsSystem();
+    GraphicsManager::Destroy();
     //destroy Timer.
     Timer::GetRef().End();
     SDLOG("APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());
-    Timer::Destroy();
     //destroy File Manager
     FileSystemManager::Destroy();
     //destroy FileResourceRequester
@@ -319,4 +319,6 @@ void WindowsApplication::RunMainLoop()
             Application::GetRef().Update();
         }
     }
+
+    TerminateApplication();
 }

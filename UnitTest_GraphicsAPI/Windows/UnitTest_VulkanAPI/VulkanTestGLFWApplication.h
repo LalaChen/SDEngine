@@ -29,6 +29,7 @@ public:
     virtual ~VulkanTestGLFWApplication();
 public:
     void Initialize() override;
+    void Update() override;
 protected:
     ApplicationManipulaterStrongReferenceObject m_app_manipulater;
 };

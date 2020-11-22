@@ -23,7 +23,7 @@ void LightData::InitializeLightUniformSet(const DescriptorSetLayoutWeakReference
     m_light_pool_sref = new DescriptorPool("CommonPool");
     m_light_pool_sref.GetRef().Initialize(desc_counts, 1, false);
     m_light_set_wref = m_light_pool_sref.GetRef().AllocateDescriptorSet(i_dsl_wref);
-    m_light_set_wref.GetRef().LinkUniformVariables(uv_wrefs);
+    m_light_set_wref.GetRef().GetAllocatedUniformVariables(uv_wrefs);
 
     //Write descriptor.
     if (m_light_set_wref.IsNull() == false) {
@@ -80,7 +80,7 @@ void ObjectData::InitializeBasicUniformSet(const DescriptorSetLayoutWeakReferenc
     m_basic_pool_sref = new DescriptorPool("CommonPool");
     m_basic_pool_sref.GetRef().Initialize(desc_counts, 1, false);
     m_basic_set_wref = m_basic_pool_sref.GetRef().AllocateDescriptorSet(i_basic_dsl_wref);
-    m_basic_set_wref.GetRef().LinkUniformVariables(uv_wrefs);
+    m_basic_set_wref.GetRef().GetAllocatedUniformVariables(uv_wrefs);
 
     //Write descriptor.
     if (m_basic_set_wref.IsNull() == false) {

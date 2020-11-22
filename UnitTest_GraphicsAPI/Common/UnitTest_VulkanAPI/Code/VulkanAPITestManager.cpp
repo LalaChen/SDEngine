@@ -53,9 +53,9 @@ void VulkanAPITestManager::InitializeGraphicsSystem(const EventArg &i_arg)
     InitializeScreenRendering();
 }
 
-void VulkanAPITestManager::Initialize()
+void VulkanAPITestManager::InitializeBasicResource()
 {
-    VulkanManager::Initialize();
+    VulkanManager::InitializeBasicResource();
 
     std::vector<SampleStrongReferenceObject>::iterator iter;
     for (iter = m_samples.begin(); iter != m_samples.end(); ++iter) {
@@ -104,7 +104,7 @@ void VulkanAPITestManager::Initialize()
     }
 }
 
-void VulkanAPITestManager::Release()
+void VulkanAPITestManager::ReleaseBasicResource()
 {
     if (m_red_error_img_mem != VK_NULL_HANDLE) {
         vkFreeMemory(m_device_handle, m_red_error_img_mem, nullptr);
@@ -121,7 +121,7 @@ void VulkanAPITestManager::Release()
         (*iter).GetRef().Destroy();
     }
     //
-    VulkanManager::Release();
+    VulkanManager::ReleaseBasicResource();
 }
 
 void VulkanAPITestManager::ReleaseGraphicsSystem()
