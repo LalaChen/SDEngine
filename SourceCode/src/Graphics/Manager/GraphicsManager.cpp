@@ -23,12 +23,14 @@ SOFTWARE.
 
 */
 
+#include "GraphicsSystem.h"
+#include "ECSManager.h"
 #include "LogManager.h"
 #include "BasicShapeCreator.h"
 #include "AssimpModelLoader.h"
 #include "GraphicsManager.h"
 
-using SDE::Graphics::AssimpModelLoader;
+using SDE::Basic::ECSManager;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -49,7 +51,7 @@ GraphicsManager::~GraphicsManager()
 {
 }
 
-void GraphicsManager::Initialize()
+void GraphicsManager::InitializeBasicResource()
 {
     std::function<void(uint64_t i_count, double i_period_ms)> fps_cbk = 
         std::function<void(uint64_t, double)>(
@@ -58,6 +60,8 @@ void GraphicsManager::Initialize()
             }
     );
     SDLOG("Initialize.");
+    ECSManager::GetRef().RegisterSystem<GraphicsSystem>("GraphicsSystem");
+
     InitializeBasicDescriptorSetLayout();
     InitializeBasicMaterialUniformDescriptors();
     InitializeDefaultRenderPasses();
@@ -67,7 +71,7 @@ void GraphicsManager::Initialize()
     m_fps.Start(1000.0, fps_cbk, false);
 }
 
-void GraphicsManager::Release()
+void GraphicsManager::ReleaseBasicResource()
 {
     SDLOG("Release.");
     ReleaseRenderPasses();

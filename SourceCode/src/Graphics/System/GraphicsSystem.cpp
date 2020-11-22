@@ -107,11 +107,12 @@ void GraphicsSystem::Update()
 void GraphicsSystem::Destroy()
 {
     for (uint32_t tID = 0; tID < m_rec_thread_srefs.size(); ++tID) {
-        m_rec_thread_srefs[tID] = new SecondaryCommandPoolThread(StringFormat("RecordThread_%d", tID));
         m_rec_thread_srefs[tID].Reset();
     }
 
+    SD_SREF(m_graphics_cp_sref).Clear();
     m_graphics_cp_sref.Reset();
+
 }
 
 void GraphicsSystem::Resize()
@@ -124,6 +125,21 @@ void GraphicsSystem::Resize()
 
 void GraphicsSystem::RecordCommand()
 {
+    ClearValue clear_color = { 0.15f, 0.15f, 0.75f, 1.0f };
+    ClearValue clear_dands = { 1.0f, 1 };
+    Resolution current_res = GraphicsManager::GetRef().GetScreenResolution();
+    //Negative viewport.
+    Viewport vp;
+    vp.m_x = 0.0f; vp.m_y = static_cast<float>(current_res.GetHeight());
+    vp.m_width = static_cast<float>(current_res.GetWidth());
+    vp.m_height = -1.0f * static_cast<float>(current_res.GetHeight());
+    vp.m_min_depth = 0.0f;
+    vp.m_max_depth = 1.0f;
+
+    ScissorRegion sr;
+    sr.m_x = 0.0f; sr.m_y = 0.0f;
+    sr.m_width = vp.m_width; sr.m_height = current_res.GetHeight();
+
     std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;
     std::list<EntityWeakReferenceObject> camera_entity_list = SD_WREF(m_camera_eg_wref).GetEntities();
     std::list<EntityWeakReferenceObject> mesh_render_entity_list = SD_WREF(m_mesh_render_eg_wref).GetEntities();
@@ -145,6 +161,9 @@ void GraphicsSystem::RecordCommand()
     }
 
     SD_SREF(m_graphics_cb_wref).Begin();
+    GraphicsManager::GetRef().SetViewport(m_graphics_cb_wref, vp);
+    GraphicsManager::GetRef().SetScissor(m_graphics_cb_wref, sr);
+
     //2. update shadow map.
 
     //3. update stencil buffer. (To Do)

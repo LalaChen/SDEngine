@@ -83,7 +83,7 @@ void CameraComponent::RecordCommand(
     std::list<LightComponentWeakReferenceObject>::const_iterator light_wref_iter;
     std::list<MeshRenderComponentWeakReferenceObject>::const_iterator mr_wref_iter;
 
-    const std::vector<SecondaryCommandPoolThreadStrongReferenceObject> &scp_threads = gs_wref.GetRef().GetSecondaryCommandPool();
+    const std::vector<SecondaryCommandPoolThreadStrongReferenceObject> &scp_threads = SD_WREF(gs_wref).GetSecondaryCommandPool();
     std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;
     Viewport vp;
     vp.m_x = 0.0f; vp.m_y = static_cast<float>(m_screen_size.GetHeight());
@@ -94,7 +94,8 @@ void CameraComponent::RecordCommand(
 
     ScissorRegion sr;
     sr.m_x = 0.0f; sr.m_y = 0.0f;
-    sr.m_width = vp.m_width; sr.m_height = m_screen_size.GetHeight();
+    sr.m_width = vp.m_width;
+    sr.m_height = static_cast<float>(m_screen_size.GetHeight());
 
     if (m_workspace_type == WorkspaceType_Forward) {
         SD_SREF(m_rf_sref).BeginRenderFlow(i_cb_wref);
@@ -118,16 +119,17 @@ void CameraComponent::RecordCommand(
                 SD_WREF(mr_wref).RenderMesh(current_rp, i_cb_wref, m_ds_wref, light_ds_wref, 0);
             };
 
-            scp_threads[tID].GetRef().AddTask(task_func);
+            SD_SREF(scp_threads[tID]).AddTask(task_func);
             tID = (tID + 1) % scp_threads.size();
         }
-        
+
         for (tID = 0; tID < scp_threads.size(); ++tID) {
             SD_SREF(scp_threads[tID]).WaitAndStopRecording(secondary_cb_wrefs);
         }
-        SD_SREF(m_rf_sref).EndRenderFlow(i_cb_wref);
 
         GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(i_cb_wref, secondary_cb_wrefs);
+
+        SD_SREF(m_rf_sref).EndRenderFlow(i_cb_wref);
     }
     else if (m_workspace_type == WorkspaceType_Deferred) {
 
@@ -161,7 +163,7 @@ void CameraComponent::InitializeWorkspaceForForwardPath()
             m_color_buf_sref.Reset();
         }
         m_color_buf_sref = new Texture("CameraColorBuffer");
-        m_color_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
+        SD_SREF(m_color_buf_sref).Initialize2DColorOrDepthBuffer(
             m_screen_size.GetWidth(), m_screen_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
             ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
@@ -170,7 +172,7 @@ void CameraComponent::InitializeWorkspaceForForwardPath()
             m_depth_buf_sref.Reset();
         }
         m_depth_buf_sref = new Texture("CameraDepthBuffer");
-        m_depth_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
+        SD_SREF(m_depth_buf_sref).Initialize2DColorOrDepthBuffer(
             m_screen_size.GetWidth(), m_screen_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
             ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
@@ -193,7 +195,7 @@ void CameraComponent::InitializeWorkspaceForDeferredPath()
             m_color_buf_sref.Reset();
         }
         m_color_buf_sref = new Texture("CameraColorBuffer");
-        m_color_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
+        SD_SREF(m_color_buf_sref).Initialize2DColorOrDepthBuffer(
             current_res.GetWidth(), current_res.GetHeight(),
             GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
             ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
@@ -202,7 +204,7 @@ void CameraComponent::InitializeWorkspaceForDeferredPath()
             m_depth_buf_sref.Reset();
         }
         m_depth_buf_sref = new Texture("CameraDepthBuffer");
-        m_depth_buf_sref.GetRef().Initialize2DColorOrDepthBuffer(
+        SD_SREF(m_depth_buf_sref).Initialize2DColorOrDepthBuffer(
             current_res.GetWidth(), current_res.GetHeight(),
             GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
             ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);

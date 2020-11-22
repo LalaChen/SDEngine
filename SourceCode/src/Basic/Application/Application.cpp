@@ -26,9 +26,11 @@ SOFTWARE.
 #include "LogManager.h"
 #include "Timer.h"
 #include "ECSManager.h"
+#include "ImageLoader.h"
 #include "GraphicsManager.h"
 #include "Application.h"
 
+using SDE::Graphics::ImageLoader;
 using SDE::Graphics::GraphicsManager;
 
 ______________SD_START_BASIC_NAMESPACE_______________
@@ -46,11 +48,23 @@ Application::Application(const std::string &i_win_title, const Resolution &i_win
     SD_SINGLETON_DECLARATION_REGISTER;
     //Initialize events of application.
     m_key_map_manager = new KeyMapManager(i_win_title + "_KeyMapManager");
+    //Initialize ECSManager
+    new ECSManager();
+    ECSManager::GetRef().Initialize();
+    //Initialize Timer.
+    new Timer();
+    Timer::GetRef().Start();
+    //ImageLoader.
+    new ImageLoader();
+    ImageLoader::GetRef().Initialize();
 }
 
 Application::~Application()
 {
-
+    ImageLoader::Destroy();
+    Timer::Destroy();
+    ECSManager::Destroy();
+    m_key_map_manager.Reset();
 }
 
 void Application::Resume()
@@ -63,9 +77,7 @@ void Application::Update()
     //1. Update Timer.
     Timer::GetRef().Update();
     //2. Update System.
-    UpdateSystem();
-    //3. 
-    GraphicsManager::GetRef().Render();
+    ECSManager::GetRef().Update();
 }
 
 void Application::Pause()
@@ -76,12 +88,14 @@ void Application::Pause()
 void Application::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
 {
     GraphicsManager::GetRef().Resize(i_ns_handle, i_w, i_h);
+
+    ECSManager::GetRef().Resize();
 }
 
 void Application::SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed)
 {
     if (m_key_map_manager.IsNull() == false) {
-        m_key_map_manager.GetRef().SetKeyboardStatus(i_key_id, i_is_pressed);
+        SD_SREF(m_key_map_manager).SetKeyboardStatus(i_key_id, i_is_pressed);
     }
     else {
         SDLOGE("No key map manager.");
@@ -91,7 +105,7 @@ void Application::SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed)
 bool Application::RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj)
 {
     if (m_key_map_manager.IsNull() == false) {
-        return m_key_map_manager.GetRef().RegisterSlotFunctionIntoEvent("KeyEvent", i_function_slot_ref_obj);
+        return SD_SREF(m_key_map_manager).RegisterSlotFunctionIntoEvent("KeyEvent", i_function_slot_ref_obj);
     }
     else {
         SDLOGE("No key map manager.");
@@ -102,17 +116,12 @@ bool Application::RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseStrongR
 bool Application::UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj)
 {
     if (m_key_map_manager.IsNull() == false) {
-        return m_key_map_manager.GetRef().UnregisterSlotFunctionFromEvent("KeyEvent", i_function_slot_ref_obj);
+        return SD_SREF(m_key_map_manager).UnregisterSlotFunctionFromEvent("KeyEvent", i_function_slot_ref_obj);
     }
     else {
         SDLOGE("No key map manager.");
         return false;
     }
-}
-
-void Application::UpdateSystem()
-{
-
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

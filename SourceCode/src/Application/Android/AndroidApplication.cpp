@@ -28,24 +28,17 @@ void AndroidApplication::Initialize()
 
     new AndroidLogManager();
     SDLOG("Initialize Android Application!!!");
-
-    new Timer();
-    Timer::GetRef().Start();
+    SDLOG("APP Starting at %lf.", Timer::GetRef().GetProgramStartTime());
 
     new AndroidAssetResourceManger(m_asset_mgr);
 
-    new ImageLoader();
+    //
+    if (m_adopt_library == GraphicsLibrary_OpenGL4) {
 
-    ImageLoader::GetRef().Initialize();
-
-    if (m_adopt_library == SDE::Graphics::GraphicsLibrary_Vulkan) {
+    }
+    else if (m_adopt_library == GraphicsLibrary_Vulkan) {
         new VulkanManager();
     }
-    else {
-    }
-
-    //Initialize ECSManager
-    new ECSManager();
 }
 
 void AndroidApplication::InitializeGraphicsSystem()
@@ -138,7 +131,7 @@ void AndroidApplication::InitializeGraphicsSystem()
         arg.m_instance = instance;
         arg.m_surface = surface;
         GraphicsManager::GetRef().InitializeGraphicsSystem(arg);
-        GraphicsManager::GetRef().Initialize();
+        GraphicsManager::GetRef().InitializeBasicResource();
     }
     else {
     }
@@ -146,9 +139,8 @@ void AndroidApplication::InitializeGraphicsSystem()
 
 void AndroidApplication::ReleaseGraphicsSystem()
 {
-    //Initialize ECSManager
-    ECSManager::Destroy();
 
+    GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
     GraphicsManager::Destroy();
     m_window = nullptr;
@@ -159,14 +151,14 @@ void AndroidApplication::TerminateApplication()
     m_current_state = AppState_TERMINATE;
     m_pause_cv.notify_all();
     m_render_thread.join();
-    //
+    SDLOG("[AppFlow] Terminate ECSManager.");
+    ECSManager::GetRef().Terminate();
     SDLOG("[AppFlow] Destroy GraphicsManager.");
     ReleaseGraphicsSystem();
+    GraphicsManager::Destroy();
     //destroy Timer.
-    SDLOG("[AppFlow] Destroy Timer.");
     Timer::GetRef().End();
     SDLOG("[AppFlow] APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());
-    Timer::Destroy();
     //destroy File Manager
     SDLOG("[AppFlow] Destroy AssetResourceManager.");
     AssetResourceManager::Destroy();

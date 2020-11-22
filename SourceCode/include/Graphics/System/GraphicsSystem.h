@@ -63,7 +63,7 @@ public:
     void Initialize() override;
     void Update() override;
     void Destroy() override;
-    void Resize();
+    void Resize() override;
 public:
     const std::vector<SecondaryCommandPoolThreadStrongReferenceObject>& GetSecondaryCommandPool() const;
 protected:

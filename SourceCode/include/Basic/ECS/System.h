@@ -51,6 +51,7 @@ public:
     virtual void Initialize() = 0;
     virtual void Update() = 0;
     virtual void Destroy() = 0;
+    virtual void Resize() = 0;
 };
 
 _______________SD_END_BASIC_NAMESPACE________________

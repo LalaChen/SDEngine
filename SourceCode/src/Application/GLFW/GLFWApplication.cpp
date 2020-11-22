@@ -85,40 +85,32 @@ void GLFWApplication::Initialize()
     //new LogManager.
     new WindowsLogManager();
     SDLOG("Initialize Application.");
+    SDLOG("APP Starting at %lf.", Timer::GetRef().GetProgramStartTime());
     //new WindowsFileSystemManager.
     new WindowsFileSystemManager();
     FileSystemManager::GetRef().Initialize();
     //new FileResourceRequester
     new FileResourceRequester();
-    //new Timer.
-    new Timer();
-    Timer::GetRef().Start();
-    SDLOG("APP Starting at %lf.", Timer::GetRef().GetProgramStartTime());
-    //new ImageLoader
-    new ImageLoader();
-    ImageLoader::GetRef().Initialize();
-    //new graphics engine.
+    //Initialize KeyBoard Mapping.
+    //new Graphics Manager.
     if (m_adopt_library == GraphicsLibrary_OpenGL4) {
         new OpenGL4Manager();
     }
-    else {
+    else if (m_adopt_library == GraphicsLibrary_Vulkan) {
         new VulkanManager();
     }
-    //Initialize KeyBoard Mapping.
-    
-    //Initialize ECSManager
-    new ECSManager();
 }
 
 void GLFWApplication::InitializeGraphicsSystem()
 {
+    //new graphics engine.
     SDLOG("Initialize Graphics System of Application.");
-    //new Graphics Manager.
+
     //--- iv. make current.
     if (m_adopt_library == GraphicsLibrary_OpenGL4) {
         glfwMakeContextCurrent(m_window);
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
-        GraphicsManager::GetRef().Initialize();
+        GraphicsManager::GetRef().InitializeBasicResource();
         glfwSwapInterval(1);
     }
     else if (m_adopt_library == GraphicsLibrary_Vulkan) {
@@ -203,15 +195,15 @@ void GLFWApplication::InitializeGraphicsSystem()
         VulkanCreationArg arg;
         arg.m_instance = instance;
         arg.m_surface = surface;
-        GraphicsManager::GetRef().InitializeGraphicsSystem(arg);
-        GraphicsManager::GetRef().Initialize();
 
+        GraphicsManager::GetRef().InitializeGraphicsSystem(arg);
+        GraphicsManager::GetRef().InitializeBasicResource();
     }
     else 
     {
         glfwMakeContextCurrent(m_window);
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
-        GraphicsManager::GetRef().Initialize();
+        GraphicsManager::GetRef().InitializeBasicResource();
         glfwSwapInterval(1);
     }
 }
@@ -219,49 +211,31 @@ void GLFWApplication::InitializeGraphicsSystem()
 void GLFWApplication::ReleaseGraphicsSystem()
 {
     SDLOG("Release Graphics System of Application.");
-    ECSManager::Destroy();
-    //
-    GraphicsManager::GetRef().Release();
+    GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
-    //destroy Graphics Manager.
-    GraphicsManager::Destroy();
 }
 
 void GLFWApplication::TerminateApplication()
 {
+    SDLOG("[AppFlow] Terminate ECSManager.");
+    ECSManager::GetRef().Terminate();
+    SDLOG("[AppFlow] Destroy GraphicsManager.");
     ReleaseGraphicsSystem();
-    SDLOG("Terminate Application.");
+    GraphicsManager::Destroy();
+    SDLOG("[AppFlow] Terminate Application.");
     //destroy Timer.
     Timer::GetRef().End();
-    SDLOG("APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());
-    Timer::Destroy();
+    SDLOG("[AppFlow] APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());
     //destroy File Manager
     FileSystemManager::Destroy();
-    //destroy LogManager
-    LogManager::Destroy();
     //destroy FileResourceRequester
     FileResourceRequester::Destroy();
+    //destroy LogManager
+    LogManager::Destroy();
 }
 
 KeyStatusEnum GLFWApplication::GetKeyStateByCode(KeyCodeEnum i_code)
 {
-    /*
-    if (i_code != KEY_MAX_NUMBER) {
-        int status = glfwGetKey(m_window, m_key_code_map[SD_ENUM_TO_UINT(i_code)]);
-        if (status == GLFW_RELEASE) {
-            return KEY_STATUS_RELEASE;
-        }
-        else if (status == GLFW_PRESS) {
-            return KEY_STATUS_PRESS;
-        }
-        else {
-            return KEY_STATUS_NOT_SUPPORT;
-        }
-    }
-    else {
-        return KEY_STATUS_NOT_SUPPORT;
-    }
-    */
     if (i_code != KEY_MAX_NUMBER) {
         SHORT status = GetKeyState(SD_ENUM_TO_INT(i_code));
         if (status < 0) {

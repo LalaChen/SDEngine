@@ -23,11 +23,13 @@ SOFTWARE.
 
 */
 
+#include "GraphicsSystem.h"
 #include "Component.h"
 #include "LogManager.h"
 #include "ECSManager.h"
 
 using SDE::Basic::ECSManager;
+using SDE::Graphics::GraphicsSystem;
 
 SD_SINGLETON_DECLARATION_IMPL(ECSManager);
 
@@ -40,26 +42,6 @@ ECSManager::ECSManager()
 
 ECSManager::~ECSManager()
 {
-    for (std::list<EntityGroupStrongReferenceObject>::iterator group_iter = m_entity_group_list.begin();
-        group_iter != m_entity_group_list.end();) {
-        group_iter = m_entity_group_list.erase(group_iter);
-    }
-
-    for (std::list<EntityStrongReferenceObject>::iterator entity_iter = m_entity_list.begin();
-        entity_iter != m_entity_list.end();) {
-        entity_iter = m_entity_list.erase(entity_iter);
-    }
-    //
-    std::map<std::type_index, ComponentPoolStrongReferenceObject>::iterator comp_pool_iter;
-    for (comp_pool_iter = m_comp_pool_srefs.begin();
-         comp_pool_iter != m_comp_pool_srefs.end();) {
-        comp_pool_iter = m_comp_pool_srefs.erase(comp_pool_iter);
-    }
-
-    std::map<std::type_index, SystemStrongReferenceObject>::iterator system_iter;
-    for (system_iter = m_system_map.begin(); system_iter != m_system_map.end();) {
-        system_iter = m_system_map.erase(system_iter);
-    }
 }
 
 EntityWeakReferenceObject ECSManager::CreateEntity(const ObjectName &i_object_name)
@@ -118,7 +100,7 @@ bool ECSManager::RemoveComponentFromEntity(const EntityWeakReferenceObject &i_en
         result = DeleteComponent(i_type_index, rem_comp_wref);
         //3. Update all entity groups for this entity.
         for (EntityGroupStrongReferenceObject &group_sref : m_entity_group_list) {
-            group_sref.GetRef().RemoveEntity(i_entity_wref);
+            SD_SREF(group_sref).RemoveEntity(i_entity_wref);
         }
     }
     else {
@@ -129,15 +111,15 @@ bool ECSManager::RemoveComponentFromEntity(const EntityWeakReferenceObject &i_en
 
 void ECSManager::LinkComponentAndEntity(const EntityWeakReferenceObject &i_entity_wref, const ComponentBaseWeakReferenceObject &i_comp_wref, const std::type_index &i_type)
 {
-    i_entity_wref.GetRef().RegisterComponent(i_type, i_comp_wref);
-    i_comp_wref.DynamicCastTo<Component>().GetRef().SetEntity(i_entity_wref);
+    SD_WREF(i_entity_wref).RegisterComponent(i_type, i_comp_wref);
+    SD_WREF(i_comp_wref.DynamicCastTo<Component>()).SetEntity(i_entity_wref);
 }
 
 bool ECSManager::DeleteComponent(const std::type_index &i_type_index, const ComponentBaseWeakReferenceObject &i_comp_wref)
 {
     std::map<std::type_index, ComponentPoolStrongReferenceObject>::iterator comp_pool_iter = m_comp_pool_srefs.find(i_type_index);
     if (comp_pool_iter != m_comp_pool_srefs.end()) {
-        return (*comp_pool_iter).second.GetRef().DeleteComponent(i_comp_wref);
+        return SD_SREF((*comp_pool_iter).second).DeleteComponent(i_comp_wref);
     }
     else {
         SDLOGW("Can't find component pool with [%s].", i_type_index.name());
@@ -163,19 +145,100 @@ SystemWeakReferenceObject ECSManager::GetSystem(const std::type_index &i_type_in
     return m_system_map[i_type_index];
 }
 
+
+void ECSManager::AddNewSystemIntoOrder(const std::type_index &i_type_index)
+{
+    std::list<std::type_index>::iterator cur_tid_iter;
+    std::list<std::type_index>::iterator pre_tid_iter;
+
+    for (cur_tid_iter = m_system_updating_orders.begin(); cur_tid_iter != m_system_updating_orders.end(); ++cur_tid_iter) {
+        if ((*cur_tid_iter) == i_type_index) {
+            return;
+        }
+    }
+
+    cur_tid_iter = m_system_updating_orders.begin();
+    pre_tid_iter = cur_tid_iter;
+
+    if ((*cur_tid_iter) == typeid(GraphicsSystem)) {
+        m_system_updating_orders.push_front(i_type_index);
+    }
+    else {
+        for (; cur_tid_iter != m_system_updating_orders.end(); ++cur_tid_iter) {
+            if ((*cur_tid_iter) == typeid(GraphicsSystem)) {
+                m_system_updating_orders.insert(pre_tid_iter, i_type_index);
+                break;
+            }
+            pre_tid_iter = cur_tid_iter;
+        }
+    }
+}
+
+void ECSManager::UpdateSystemOrders()
+{
+    m_system_updating_list.clear();
+    for (std::type_index &tid : m_system_updating_orders) {
+        std::map<std::type_index, SystemStrongReferenceObject>::iterator sys_iter = m_system_map.find(tid);
+        if (sys_iter != m_system_map.end()) {
+            m_system_updating_list.push_back((*sys_iter).second);
+        }
+    }
+}
+
+void ECSManager::OverrideSystemUpdatingOrder(const std::list<std::type_index> &i_orders)
+{
+    m_system_updating_orders = i_orders;
+}
+
 void ECSManager::NotifyEntityChanged(const EntityWeakReferenceObject &i_entity_wref)
 {
     for (EntityGroupStrongReferenceObject &eg_sref : m_entity_group_list) {
-        eg_sref.GetRef().AddEntity(i_entity_wref);
+        SD_SREF(eg_sref).AddEntity(i_entity_wref);
     }
 }
 
 void ECSManager::Initialize()
 {
+    m_system_updating_orders.push_back(typeid(GraphicsSystem));
+}
+
+void ECSManager::Update()
+{
+    for (SystemWeakReferenceObject &sys_wref : m_system_updating_list) {
+        SD_SREF(sys_wref).Update();
+    }
 }
 
 void ECSManager::Terminate()
 {
+    for (std::list<EntityGroupStrongReferenceObject>::iterator group_iter = m_entity_group_list.begin();
+        group_iter != m_entity_group_list.end();) {
+        group_iter = m_entity_group_list.erase(group_iter);
+    }
+
+    for (std::list<EntityStrongReferenceObject>::iterator entity_iter = m_entity_list.begin();
+        entity_iter != m_entity_list.end();) {
+        entity_iter = m_entity_list.erase(entity_iter);
+    }
+    //
+    std::map<std::type_index, ComponentPoolStrongReferenceObject>::iterator comp_pool_iter;
+    for (comp_pool_iter = m_comp_pool_srefs.begin();
+        comp_pool_iter != m_comp_pool_srefs.end();) {
+        comp_pool_iter = m_comp_pool_srefs.erase(comp_pool_iter);
+    }
+
+    std::map<std::type_index, SystemStrongReferenceObject>::iterator system_iter;
+    for (system_iter = m_system_map.begin(); system_iter != m_system_map.end();) {
+        SD_SREF((*system_iter).second).Destroy();
+        system_iter = m_system_map.erase(system_iter);
+    }
+}
+
+void ECSManager::Resize()
+{
+    for (SystemWeakReferenceObject &sys_wref : m_system_updating_list) {
+        SD_SREF(sys_wref).Resize();
+    }
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

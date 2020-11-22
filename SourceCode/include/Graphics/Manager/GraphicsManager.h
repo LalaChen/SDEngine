@@ -99,15 +99,15 @@ public:
      */
     virtual void ReleaseGraphicsSystem() = 0;
 
-    /*! \fn virtual void Initialize();
+    /*! \fn virtual void InitializeBasicResource();
      *  \brief Initialize common necessary components.
      */
-    virtual void Initialize();
+    virtual void InitializeBasicResource();
 
-    /*! \fn void Release();
+    /*! \fn void ReleaseBasicResource();
      *  \brief Release common necessary components.
      */
-    virtual void Release();
+    virtual void ReleaseBasicResource();
 public:
     /*! \fn virtual void PrintSystemInformation() = 0;
      *  \brief Print system information.
