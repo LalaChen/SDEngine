@@ -138,7 +138,7 @@ void GraphicsSystem::RecordCommand()
 
     ScissorRegion sr;
     sr.m_x = 0.0f; sr.m_y = 0.0f;
-    sr.m_width = vp.m_width; sr.m_height = current_res.GetHeight();
+    sr.m_width = vp.m_width; sr.m_height = static_cast<float>(current_res.GetHeight());
 
     std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;
     std::list<EntityWeakReferenceObject> camera_entity_list = SD_WREF(m_camera_eg_wref).GetEntities();

@@ -43,8 +43,9 @@ void VulkanManager::DestroyCommandPool(CommandPoolIdentity &io_identity)
 
 void VulkanManager::AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref)
 {
+    const CommandPoolIdentity& cp_identity = GetIdentity(i_pool_wref);
     VkCommandBuffer &cb_handle = reinterpret_cast<VkCommandBuffer&>(io_identity.m_handle);
-    VkCommandPool cp_handle = reinterpret_cast<VkCommandPool>(i_pool_wref.GetConstRef().GetHandle());
+    VkCommandPool cp_handle = reinterpret_cast<VkCommandPool>(cp_identity.m_pool_handle);
     VkCommandBufferLevel cb_level = CommandBufferLevel_Vulkan::Convert(io_identity.m_cmd_buffer_level);
     AllocateVkCommandBuffer(cb_handle, cp_handle, cb_level);
 }
@@ -55,8 +56,10 @@ void VulkanManager::BeginCommandBuffer(const CommandBufferIdentity &i_identity, 
     VkCommandBufferInheritanceInfo inheritance_info = InitializeVkCommandBufferInheritanceInfo();
     const VkCommandBuffer cb_handle = reinterpret_cast<const VkCommandBuffer>(i_identity.m_handle);
     if (i_inheritance_info.IsValid() == true) {
-        inheritance_info.renderPass = reinterpret_cast<VkRenderPass>(i_inheritance_info.m_rp_wref.GetConstRef().GetHandle());
-        inheritance_info.framebuffer = reinterpret_cast<VkFramebuffer>(i_inheritance_info.m_fb_wref.GetConstRef().GetHandle());
+        const RenderPassIdentity &rp_identity = GetIdentity(i_inheritance_info.m_rp_wref);
+        const FrameBufferIdentity &fb_identity = GetIdentity(i_inheritance_info.m_fb_wref);
+        inheritance_info.renderPass = reinterpret_cast<VkRenderPass>(rp_identity.m_rp_handle);
+        inheritance_info.framebuffer = reinterpret_cast<VkFramebuffer>(fb_identity.m_fb_handle);
         inheritance_info.occlusionQueryEnable = ConvertBoolean(i_inheritance_info.m_occusion_query_enable);
         inheritance_info.queryFlags = QueryControlFlag_Vulkan::Convert(i_inheritance_info.m_ctrl_mask);
         inheritance_info.pipelineStatistics = QueryPipelineStatisticFlag_Vulkan::Convert(i_inheritance_info.m_pipe_stat_mask);
@@ -119,9 +122,8 @@ void VulkanManager::ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWea
         }
     }
 
-    VkCommandBuffer pri_cb_handle = VK_NULL_HANDLE;
     const CommandBufferIdentity &pri_cb_indentity = GetIdentity(i_primary_cb_wref);
-    pri_cb_handle = reinterpret_cast<VkCommandBuffer>(pri_cb_indentity.m_handle);
+    VkCommandBuffer pri_cb_handle = reinterpret_cast<VkCommandBuffer>(pri_cb_indentity.m_handle);
 
     if (sec_cb_handles.size() > 0 && pri_cb_handle != VK_NULL_HANDLE) {
         ExecuteVkSecondaryCommandBuffersToPrimaryVkCommandBuffer(pri_cb_handle, sec_cb_handles);

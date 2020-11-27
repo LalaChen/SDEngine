@@ -240,9 +240,16 @@ void VulkanManager::InitializePhysicalDevice()
 
         exts_support = check_ext_names.empty();
         //Calculate device score.
-        if (dev_score > pickup_dev_score && exts_support == true) {
+        if (dev_property.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && exts_support == true) {
             m_phy_device_handle = phy_device;
             pickup_dev_score = dev_score;
+            break;
+        }
+        else {
+            if (dev_score > pickup_dev_score && exts_support == true) {
+                m_phy_device_handle = phy_device;
+                pickup_dev_score = dev_score;
+            }
         }
     }
 
@@ -618,19 +625,19 @@ void VulkanManager::InitializeSwapChain()
         SDLOGD("Supported present mode : %d", p_mode);
     }
 
-    for (int mode_id = 0; mode_id < VK_PRESENT_MODE_RANGE_SIZE_KHR; mode_id++) {
+    for (uint32_t mode_id = 0; mode_id < m_desired_pre_modes.size(); mode_id++) {
         for (const VkPresentModeKHR &p_mode : supported_p_modes) {
             if (m_desired_pre_modes[mode_id] == p_mode) {
                 m_final_p_mode = m_desired_pre_modes[mode_id];
                 break;
             }
         }
-        if (m_final_p_mode != VK_PRESENT_MODE_RANGE_SIZE_KHR) {
+        if (m_final_p_mode != VK_PRESENT_MODE_MAX_ENUM_KHR) {
             break;
         }
     }
 
-    if (m_final_p_mode == VK_PRESENT_MODE_RANGE_SIZE_KHR) {
+    if (m_final_p_mode == VK_PRESENT_MODE_MAX_ENUM_KHR) {
         throw std::runtime_error("No desired present mode supported!");
     }
     else {

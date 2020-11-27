@@ -41,7 +41,7 @@ const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
 
 std::vector<const char*> VulkanManager::sDesiredValidLayers = {
     "VK_LAYER_LUNARG_standard_validation",
-    "VK_LAYER_RENDERDOC_Capture"//,
+    //"VK_LAYER_RENDERDOC_Capture"//,
     //"VK_LAYER_VALVE_steam_overlay",
     //"VK_LAYER_VALVE_steam_fossilize", // will create a lot of json file.
     //"VK_LAYER_NV_optimus"
@@ -82,7 +82,7 @@ VulkanManager::VulkanManager()
 , m_final_queue_fam_id(-1)
 , m_present_q_handle(VK_NULL_HANDLE)
 // swap chain
-, m_final_p_mode(VK_PRESENT_MODE_RANGE_SIZE_KHR)
+, m_final_p_mode(VK_PRESENT_MODE_MAX_ENUM_KHR)
 , m_sc_handle(VK_NULL_HANDLE)
 , m_acq_img_sema_handle(VK_NULL_HANDLE)
 , m_pre_sema_handle(VK_NULL_HANDLE)

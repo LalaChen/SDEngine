@@ -346,7 +346,7 @@ void Sample4_DrawObjects::CreateCommandBufferAndPool()
     m_main_cb_wref = m_cp_sref.GetRef().AllocateCommandBuffer();
 #if !defined(SINGLE_FLOW)
     uint32_t max_threads = std::thread::hardware_concurrency();
-    //max_threads = 1;
+    max_threads = 1;
     m_rec_threads.resize(max_threads);
 #if defined(RECORD_POOL_V2)
     for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
@@ -671,7 +671,7 @@ void Sample4_DrawObjects::RecordCommandBuffer()
     GraphicsManager::GetRef().SetScissor(m_main_cb_wref, sr);
 
     for (ObjectData& obj : m_scene_objects) {
-        obj.Draw(m_mgr, m_main_cb_wref);
+        obj.Draw(m_forward_rp_sref, m_main_cb_wref, 0);
     }
 
     m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb_wref);
@@ -735,7 +735,7 @@ void Sample4_DrawObjects::RecordCommandBuffer()
             i_cb_wref.GetRef().Begin(cb_inher_info);
             GraphicsManager::GetRef().SetViewport(i_cb_wref, vp);
             GraphicsManager::GetRef().SetScissor(i_cb_wref, sr);
-            obj_ref->Draw(m_mgr, i_cb_wref);
+            obj_ref->Draw(m_forward_rp_sref, i_cb_wref, 0);
             i_cb_wref.GetRef().End();
         };
 

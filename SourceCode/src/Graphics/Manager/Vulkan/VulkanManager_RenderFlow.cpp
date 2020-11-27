@@ -211,8 +211,8 @@ void VulkanManager::GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObj
 
 void VulkanManager::EndRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref)
 {
-    const CommandBufferIdentity& cmd_buf_identity = GetIdentity(i_cb_wref);
-    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
+    const CommandBufferIdentity& cb_identity = GetIdentity(i_cb_wref);
+    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     EndVkRenderPass(cmd_handle);
 }
 
