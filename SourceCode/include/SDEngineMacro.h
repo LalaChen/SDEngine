@@ -302,6 +302,9 @@ namespace App \
 #define SD_GET_COMP_WREF( var , type ) \
    SD_REF(var).GetComponent(typeid(type)).DynamicCastTo<type>()
 
+#define SD_COMP_WREF( var , type ) \
+    SD_GET_COMP_WREF(var, type).GetRef()
+
  /*! \def SD_REF( var )
   *  \brief get object by reference.
   */

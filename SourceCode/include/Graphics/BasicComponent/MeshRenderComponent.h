@@ -38,7 +38,7 @@ SOFTWARE.
 #include "RenderFlow.h"
 #include "Material.h"
 #include "Mesh.h"
-#include "Transform.h"
+#include "TransformComponent.h"
 #include "Component.h"
 
 using SDE::Basic::ObjectName;
@@ -65,6 +65,7 @@ public:
     explicit MeshRenderComponent(const ObjectName &i_object_name);
     virtual ~MeshRenderComponent();
 public:
+    void Initialize();
     bool AppendMesh(const MeshWeakReferenceObject &i_mesh_wref, const MaterialWeakReferenceObject &i_mat_wref);
     void RenderMesh(
         const RenderPassWeakReferenceObject &i_rp_wref,
@@ -72,14 +73,18 @@ public:
         const DescriptorSetWeakReferenceObject &i_camera_ds_wref,
         const DescriptorSetWeakReferenceObject &i_light_ds_wref,
         uint32_t i_sp_id);
+
+    bool OnGeometryChanged(const EventArg &i_arg);
 protected:
     MeshWeakReferenceObject m_mesh_wref;
     MaterialWeakReferenceObject m_mat_wref;
 protected:
     //Create common descriptorset and buffer for meshes.
-    DescriptorPoolStrongReferenceObject m_basic_pool_sref;
-    UniformBufferWeakReferenceObject m_basic_wrefs;
-    DescriptorSetWeakReferenceObject m_basic_set_wref;
+    DescriptorPoolStrongReferenceObject m_geo_pool_sref;
+    UniformBufferWeakReferenceObject m_geo_ub_wrefs;
+    DescriptorSetWeakReferenceObject m_geo_set_wref;
+protected:
+    TransformComponentWeakReferenceObject m_geo_comp_wref;
 };
 
 

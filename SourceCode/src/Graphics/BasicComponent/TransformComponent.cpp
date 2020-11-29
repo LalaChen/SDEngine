@@ -26,14 +26,31 @@ SOFTWARE.
 #include "LogManager.h"
 #include "TransformComponent.h"
 
+using SDE::Basic::Event;
+using SDE::Basic::EventStrongReferenceObject;
+using SDE::Basic::EventWeakReferenceObject;
+
+using SDE::Basic::EventObject;
+using SDE::Basic::EventObjectStrongReferenceObject;
+using SDE::Basic::EventObjectWeakReferenceObject;
+
+using SDE::Basic::EventArg;
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
+
+const std::string TransformComponent::sTransformChangedEventName = "TransformChanged";
 
 TransformComponent::TransformComponent(const ObjectName &i_object_name)
 : Component(i_object_name)
 {
+    RegisterEvent(new Event(sTransformChangedEventName));
 }
 
 TransformComponent::~TransformComponent()
+{
+}
+
+void TransformComponent::Initialize()
 {
 }
 
@@ -71,13 +88,13 @@ void TransformComponent::SetWorldPosition(const Vector3f &i_position)
         //Sp-1 * Rp-1 * Tp-1 * T = (Sp-1 * Sp) * Tx
         //Sp-1 * Rp-1 * Tp-1 * T =  Tx
         m_world_trans.m_position = i_position;
-        m_local_trans.m_position = m_parent_wref.GetRef().m_world_trans.InverseVector3fToLocalSpace(m_world_trans.m_position);
+        m_local_trans.m_position = SD_WREF(m_parent_wref).m_world_trans.InverseVector3fToLocalSpace(m_world_trans.m_position);
     }
     else {
         m_world_trans.m_position = i_position;
         m_local_trans.m_position = m_world_trans.m_position;
     }
-
+    NotifyEvent(sTransformChangedEventName, EventArg());
     UpdateChildrenWorldTransform();
 }
 
@@ -85,13 +102,14 @@ void TransformComponent::SetWorldRotation(const Quaternion &i_rotation)
 {
     if (m_parent_wref.IsNull() == false) {
         m_world_trans.m_rotation = i_rotation;
-        m_local_trans.m_rotation = m_parent_wref.GetRef().m_world_trans.m_rotation.inverse() * m_world_trans.m_rotation;
+        m_local_trans.m_rotation = SD_WREF(m_parent_wref).m_world_trans.m_rotation.inverse() * m_world_trans.m_rotation;
     }
     else {
         m_world_trans.m_rotation = i_rotation;
         m_local_trans.m_rotation = m_world_trans.m_rotation;
     }
 
+    NotifyEvent(sTransformChangedEventName, EventArg());
     UpdateChildrenWorldTransform();
 }
 
@@ -100,19 +118,21 @@ void TransformComponent::SetWorldTransform(const Transform &i_transform)
     if (m_parent_wref.IsNull() == false) {
         m_world_trans = i_transform;
         m_local_trans = Transform::DecomposeMatrixToTransform(
-            m_parent_wref.GetRef().m_world_trans.MakeWorldMatrix().inverse() * m_world_trans.MakeWorldMatrix());
+            SD_WREF(m_parent_wref).m_world_trans.MakeWorldMatrix().inverse() * m_world_trans.MakeWorldMatrix());
     }
     else {
         m_world_trans = i_transform;
         m_local_trans = m_world_trans;
     }
+
+    NotifyEvent(sTransformChangedEventName, EventArg());
     UpdateChildrenWorldTransform();
 }
 
-void TransformComponent::AddChild(TransformComponentWeakReferenceObject&i_target_so_sref)
+void TransformComponent::AddChild(const TransformComponentWeakReferenceObject &i_target_so_wref)
 {
-    if (i_target_so_sref.IsNull() == false) {
-        i_target_so_sref.GetRef().SetParent(GetThisWeakPtrByType<TransformComponent>());
+    if (i_target_so_wref.IsNull() == false) {
+        SD_WREF(i_target_so_wref).SetParent(GetThisWeakPtrByType<TransformComponent>());
     }
     else {
         SDLOGW("Set nullptr child.");
@@ -122,14 +142,14 @@ void TransformComponent::AddChild(TransformComponentWeakReferenceObject&i_target
 bool TransformComponent::RemoveChild(const TransformComponentWeakReferenceObject &i_child_wref)
 {
     if (i_child_wref != GetThisWeakPtrByType<TransformComponent>()) {
-        for (std::list<TransformComponentWeakReferenceObject>::iterator child_iter = m_child_wrefs.begin();
-             child_iter != m_child_wrefs.end();) {
+        std::list<TransformComponentWeakReferenceObject>::iterator child_iter;
+        for (child_iter = m_child_wrefs.begin(); child_iter != m_child_wrefs.end();) {
             if ((*child_iter) == i_child_wref) {
                 child_iter = m_child_wrefs.erase(child_iter);
                 return true;
             }
             else {
-                bool result = (*child_iter).GetRef().RemoveChild(i_child_wref);
+                bool result = SD_WREF((*child_iter)).RemoveChild(i_child_wref);
                 if (result == false) {
                     child_iter++;
                 }
@@ -161,18 +181,19 @@ void TransformComponent::SetParent(const TransformComponentWeakReferenceObject &
 void TransformComponent::UpdateWorldTransform()
 {
     if (m_parent_wref.IsNull() == false) {
-        m_world_trans = m_parent_wref.GetRef().m_world_trans * m_local_trans;
+        m_world_trans = SD_WREF(m_parent_wref).m_world_trans * m_local_trans;
     }
     else {
         m_world_trans = m_local_trans;
     }
+    NotifyEvent(sTransformChangedEventName, EventArg());
     UpdateChildrenWorldTransform();
 }
 
 void TransformComponent::UpdateChildrenWorldTransform()
 {
-    for (TransformComponentWeakReferenceObject so_wref : m_child_wrefs) {
-        so_wref.GetRef().UpdateWorldTransform();
+    for (TransformComponentWeakReferenceObject &so_wref : m_child_wrefs) {
+        SD_WREF(so_wref).UpdateWorldTransform();
     }
 }
 

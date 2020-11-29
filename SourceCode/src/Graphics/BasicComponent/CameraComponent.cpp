@@ -31,6 +31,7 @@ SOFTWARE.
 #include "CameraComponent.h"
 
 using SDE::Basic::ECSManager;
+using SDE::Basic::MemberFunctionSlot;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -40,7 +41,6 @@ CameraComponent::CameraComponent(const ObjectName &i_object_name)
 , m_clear_color{ 0.15f, 0.15f, 0.75f, 1.0f }
 , m_clear_d_and_s{ 1.0f, 1 }
 , m_fov(120.0f)
-, m_aspect(1.0f)
 , m_near(0.01f)
 , m_far(1000.0f)
 {
@@ -55,23 +55,39 @@ CameraComponent::~CameraComponent()
 void CameraComponent::Initialize()
 {
     InitializeDescriptorSetAndPool();
+ 
     if (m_workspace_type == WorkspaceType_Forward) {
         InitializeWorkspaceForForwardPath();
     }
     else if (m_workspace_type == WorkspaceType_Deferred) {
         InitializeWorkspaceForDeferredPath();
     }
+
+    m_geo_comp_wref = SD_GET_COMP_WREF(m_entity_wref, TransformComponent);
+
+    SD_WREF(m_geo_comp_wref).RegisterSlotFunctionIntoEvent(
+        TransformComponent::sTransformChangedEventName,
+        new MemberFunctionSlot<CameraComponent>(
+            "CameraComponent::OnGeometryChanged",
+            GetThisWeakPtrByType<CameraComponent>(),
+            &CameraComponent::OnGeometryChanged));
+
+    OnGeometryChanged(EventArg());
 }
 
 void CameraComponent::Resize()
 {
     ClearWorkspace();
+
     if (m_workspace_type == WorkspaceType_Forward) {
         InitializeWorkspaceForForwardPath();
     }
     else if (m_workspace_type == WorkspaceType_Deferred) {
         InitializeWorkspaceForDeferredPath();
     }
+
+    SetPerspective(m_fov, m_near, m_far);
+    OnGeometryChanged(EventArg());
 }
 
 void CameraComponent::RecordCommand(
@@ -212,6 +228,20 @@ void CameraComponent::InitializeWorkspaceForDeferredPath()
     else {
         SDLOGE("Deferred render pass doesn't exist. Please check!!!");
     }
+}
+
+bool CameraComponent::OnGeometryChanged(const EventArg &i_arg)
+{
+    if (m_buffer_wref.IsNull() == false) {
+        Transform node_trans = SD_WREF(m_geo_comp_wref).GetWorldTransform();
+        SD_WREF(m_buffer_wref).SetMatrix4X4f("view",
+            node_trans.MakeViewMatrix());
+        SD_WREF(m_buffer_wref).SetMatrix4X4f("proj", m_proj_mat);
+        SD_WREF(m_buffer_wref).SetVector3f("viewEye", node_trans.m_position);
+        SD_WREF(m_buffer_wref).Update();
+    }
+
+    return true;
 }
 
 void CameraComponent::ClearWorkspace()

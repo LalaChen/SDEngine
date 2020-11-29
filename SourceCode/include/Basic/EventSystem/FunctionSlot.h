@@ -170,7 +170,7 @@ public:
     /*! \var typedef bool(*MemberSlotFunction)(const EventArg &i_src_arg)
      *  \brief MemberFunctionSlot is the type for stored function pointer and its ref of slot. We type-define it for using conveniently.
      */
-    typedef bool(Type::*MemberSlotFunction)(const EventArg& i_src_arg);
+    typedef bool(Type::*MemberSlotFunction)(const EventArg &i_src_arg);
 public:
     /*! \fn explicit MemberFunctionSlot<Type>(const ObjectName &i_object_name, const WeakReferenceObject<T> &i_sref, MemberSlotFunction i_fp);
      *  \param [in] i_object_name name of this object.

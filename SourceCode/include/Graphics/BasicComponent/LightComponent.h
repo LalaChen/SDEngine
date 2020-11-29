@@ -59,9 +59,10 @@ public:
     explicit LightComponent(const ObjectName &i_object_name);
     virtual ~LightComponent();
 public:
-    virtual void Initialize();
+    void Initialize();
 public:
     const DescriptorSetWeakReferenceObject GetDescriptorSet() const;
+    void SetLightParameter(const LightUniforms &i_light_data);
 protected:
     void InitializeDescriptorSetAndPool();
 protected:
@@ -75,6 +76,11 @@ protected:
 inline const DescriptorSetWeakReferenceObject LightComponent::GetDescriptorSet() const
 {
     return m_ds_wref;
+}
+
+inline void LightComponent::SetLightParameter(const LightUniforms &i_light_data)
+{
+    m_light_params = i_light_data;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

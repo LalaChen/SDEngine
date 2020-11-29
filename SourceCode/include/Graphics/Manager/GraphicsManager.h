@@ -207,7 +207,9 @@ public:
     bool IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) const;
 public:
     virtual DescriptorSetLayoutWeakReferenceObject GetBasicDescriptorSetLayout(const ObjectName &i_dsl_name) const;
-    virtual void GetDefaultMaterialUniformVariableDescriptors(std::vector<UniformVariableDescriptorWeakReferenceObject> &io_uvds) const;
+    virtual void GetBasicDescriptorSetLayouts(std::vector<DescriptorSetLayoutWeakReferenceObject> &io_dsl_wrefs) const;
+    virtual UniformVariableDescriptorStrongReferenceObject GetDefaultMaterialUniformVariableDescriptor(const ObjectName &i_uvd_name) const;
+    virtual ShaderProgramWeakReferenceObject GetShaderProgram(const ObjectName &i_sp_name) const;
 protected:
     void InitializeDefaultPipelineInfos();
     void InitializeBasicDescriptorSetLayout();
@@ -250,7 +252,7 @@ protected:
      */
     std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject> m_basic_dsl_maps;
 
-    std::vector<UniformVariableDescriptorStrongReferenceObject> m_material_basic_uvds;
+    std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject> m_material_basic_uvd_maps;
 
     std::map<ObjectName, ShaderProgramStrongReferenceObject> m_shader_program_maps;
 

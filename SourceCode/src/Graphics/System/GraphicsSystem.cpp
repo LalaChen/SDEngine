@@ -119,7 +119,7 @@ void GraphicsSystem::Resize()
 {
     std::list<EntityWeakReferenceObject> camera_entity_list = m_camera_eg_wref.GetRef().GetEntities();
     for (EntityWeakReferenceObject ce_wref : camera_entity_list) {
-        SD_WREF(SD_GET_COMP_WREF(ce_wref, CameraComponent).DynamicCastTo<CameraComponent>()).Resize();
+        SD_WREF(SD_GET_COMP_WREF(ce_wref, CameraComponent)).Resize();
     }
 }
 

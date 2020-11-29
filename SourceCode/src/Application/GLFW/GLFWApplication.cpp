@@ -99,6 +99,8 @@ void GLFWApplication::Initialize()
     else if (m_adopt_library == GraphicsLibrary_Vulkan) {
         new VulkanManager();
     }
+    //
+    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_INITIALIZED));
 }
 
 void GLFWApplication::InitializeGraphicsSystem()
@@ -206,6 +208,8 @@ void GLFWApplication::InitializeGraphicsSystem()
         GraphicsManager::GetRef().InitializeBasicResource();
         glfwSwapInterval(1);
     }
+
+    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
 }
 
 void GLFWApplication::ReleaseGraphicsSystem()
@@ -213,6 +217,8 @@ void GLFWApplication::ReleaseGraphicsSystem()
     SDLOG("Release Graphics System of Application.");
     GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
+
+    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_GRAPHICS_RELESAED));
 }
 
 void GLFWApplication::TerminateApplication()
@@ -232,6 +238,8 @@ void GLFWApplication::TerminateApplication()
     FileResourceRequester::Destroy();
     //destroy LogManager
     LogManager::Destroy();
+
+    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_TERMINATED));
 }
 
 KeyStatusEnum GLFWApplication::GetKeyStateByCode(KeyCodeEnum i_code)

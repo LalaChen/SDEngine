@@ -60,8 +60,6 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CameraComponent);
 class SDENGINE_CLASS CameraComponent : public Component
 {
 public:
-    friend class GraphicsSystem;
-public:
     SD_COMPONENT_POOL_TYPE_DECLARATION(CameraComponent, CameraComponent);
 public:
     enum WorkspaceType {
@@ -73,9 +71,11 @@ public:
     explicit CameraComponent(const ObjectName &i_object_name);
     virtual ~CameraComponent();
 public:
-    void SetPerspective(float i_fov, float i_aspect, float i_near, float i_far);
+    void SetPerspective(float i_fov, float i_near, float i_far);
     void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
     void SetCameraSize(const Resolution &i_size);
+public:
+    bool OnGeometryChanged(const EventArg &i_arg);
 public:
     virtual void Initialize();
     virtual void Resize();
@@ -101,12 +101,13 @@ protected:
 protected:
     //Extra buffer for defer pass.
 protected:
+    TransformComponentWeakReferenceObject m_geo_comp_wref;
+protected:
     Resolution m_screen_size;
     ClearValue m_clear_color;
     ClearValue m_clear_d_and_s;
     Matrix4X4f m_proj_mat;
     float m_fov;
-    float m_aspect;
     float m_near;
     float m_far;
 };
@@ -117,12 +118,12 @@ inline void CameraComponent::SetClearValues(ClearValue i_color, ClearValue i_d_a
     m_clear_d_and_s = i_d_and_s;
 }
 
-inline void CameraComponent::SetPerspective(float i_fov, float i_aspect, float i_near, float i_far)
+inline void CameraComponent::SetPerspective(float i_fov, float i_near, float i_far)
 {
     m_fov = i_fov;
-    m_aspect = i_aspect;
     m_near = i_near;
     m_far = i_far;
+    m_proj_mat.perspective(m_fov, m_screen_size.GetRatio(), i_near, i_far);
 }
 
 inline void CameraComponent::SetCameraSize(const Resolution &i_screen_size)

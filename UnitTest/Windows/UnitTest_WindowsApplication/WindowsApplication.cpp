@@ -124,6 +124,7 @@ void WindowsApplication::Initialize()
     else {
         new VulkanManager();
     }
+    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_INITIALIZED));
 }
 
 void WindowsApplication::InitializeGraphicsSystem()
@@ -236,6 +237,8 @@ void WindowsApplication::InitializeGraphicsSystem()
         SDLOGE("Error engine type!!!");
         throw std::runtime_error("Error engine type!!!");
     }
+
+    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
 }
 
 void WindowsApplication::ReleaseGraphicsSystem()
@@ -243,6 +246,8 @@ void WindowsApplication::ReleaseGraphicsSystem()
     SDLOG("Release Graphics System of Application.");
     GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
+
+    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_GRAPHICS_RELESAED));
 }
 
 void WindowsApplication::TerminateApplication()
@@ -260,6 +265,8 @@ void WindowsApplication::TerminateApplication()
     FileResourceRequester::Destroy();
     //destroy LogManager
     LogManager::Destroy();
+
+    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_TERMINATED));
 }
 
 KeyStatusEnum WindowsApplication::GetKeyStateByCode(KeyCodeEnum i_code)

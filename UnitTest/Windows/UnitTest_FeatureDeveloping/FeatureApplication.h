@@ -30,15 +30,6 @@ public:
     virtual ~FeatureApplication();
 public:
     void Initialize() override;
-    void InitializeGraphicsSystem() override;
-    void ReleaseGraphicsSystem() override;
-public:
-    void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
-    void Update() override;
-public:
-    void SetSampleIdx(uint32_t i_target_idx);
 protected:
     ApplicationManipulaterStrongReferenceObject m_app_manipulater;
-    std::vector<SampleStrongReferenceObject> m_sample_srefs;
-    uint32_t m_cur_sample_idx;
 };

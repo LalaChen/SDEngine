@@ -50,7 +50,7 @@ VkResult VulkanManager::CreateVKShaderModule(
     return result;
 }
 
-void VulkanManager::DestroyVKShaderModule(VkShaderModule& io_sm_handle)
+void VulkanManager::DestroyVKShaderModule(VkShaderModule &io_sm_handle)
 {
     if (io_sm_handle != VK_NULL_HANDLE) {
         vkDestroyShaderModule(m_device_handle, io_sm_handle, nullptr);

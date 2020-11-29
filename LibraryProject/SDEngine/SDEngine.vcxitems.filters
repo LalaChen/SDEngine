@@ -211,9 +211,6 @@
     <Filter Include="include\Graphics\EmbeddedShaderProgram">
       <UniqueIdentifier>{9e28ec69-3c88-4ad6-81a4-96a32b1abfcb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Graphics\EmbeddedShaderProgram">
-      <UniqueIdentifier>{addf30bc-a639-4b2c-9263-8f7f55f41a2b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Graphics\BasicComponent">
       <UniqueIdentifier>{869a6823-47cd-4143-aaf7-dde48a73cf89}</UniqueIdentifier>
     </Filter>
@@ -806,6 +803,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\System\GraphicsSystem.h">
       <Filter>include\Graphics\System</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\include\Basic\Application\ApplicationEvents.h">
+      <Filter>include\Basic\Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -31,6 +31,8 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#pragma once
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "Component.h"
@@ -55,10 +57,14 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(TransformComponent);
 class SDENGINE_CLASS TransformComponent : public Component
 {
 public:
+    static const std::string sTransformChangedEventName;
+public:
     SD_COMPONENT_POOL_TYPE_DECLARATION(TransformComponent, TransformComponent);
 public:
     explicit TransformComponent(const ObjectName &i_object_name);
     virtual ~TransformComponent();
+public:
+    void Initialize();
 public:
     void SetLocalPosition(const Vector3f &i_position);
     void SetLocalRotation(const Quaternion &i_rotation);
@@ -67,8 +73,10 @@ public:
     void SetWorldPosition(const Vector3f &i_position);
     void SetWorldRotation(const Quaternion &i_rotation);
     void SetWorldTransform(const Transform &i_transform);
+    const Transform& GetWorldTransform() const;
+    const Transform& GetLocalTransform() const;
 public:
-    void AddChild(TransformComponentWeakReferenceObject &i_target_wref);
+    void AddChild(const TransformComponentWeakReferenceObject &i_target_wref);
     bool RemoveChild(const TransformComponentWeakReferenceObject &i_child_wref);
 protected:
     void SetParent(const TransformComponentWeakReferenceObject &i_parent_wref);
@@ -81,5 +89,15 @@ protected:
     Transform m_world_trans;
     Transform m_local_trans;
 };
+
+inline const Transform& TransformComponent::GetWorldTransform() const
+{
+    return m_world_trans;
+}
+
+inline const Transform& TransformComponent::GetLocalTransform() const
+{
+    return m_local_trans;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

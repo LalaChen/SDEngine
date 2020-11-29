@@ -40,6 +40,8 @@ LightComponent::~LightComponent()
 void LightComponent::Initialize()
 {
     InitializeDescriptorSetAndPool();
+
+
 }
 
 void LightComponent::InitializeDescriptorSetAndPool()

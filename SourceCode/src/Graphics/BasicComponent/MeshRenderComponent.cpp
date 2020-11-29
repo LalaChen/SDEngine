@@ -27,10 +27,20 @@ SOFTWARE.
 #include "LogManager.h"
 #include "MeshRenderComponent.h"
 
+using SDE::Basic::MemberFunctionSlot;
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 MeshRenderComponent::MeshRenderComponent(const ObjectName &i_object_name)
 : Component(i_object_name)
+{
+}
+
+MeshRenderComponent::~MeshRenderComponent()
+{
+}
+
+void MeshRenderComponent::Initialize()
 {
     std::map<ObjectName, UniformVariableWeakReferenceObject> uv_wrefs;
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
@@ -40,29 +50,34 @@ MeshRenderComponent::MeshRenderComponent(const ObjectName &i_object_name)
     basic_dsl_wref.GetRef().GetUniformDescriptorCounts(desc_counts);
 
     //2. Allocate descriptor pool and set.
-    m_basic_pool_sref = new DescriptorPool("DescriptorSetPool");
-    m_basic_pool_sref.GetRef().Initialize(desc_counts, 1, false);
-    m_basic_set_wref = m_basic_pool_sref.GetRef().AllocateDescriptorSet(basic_dsl_wref);
-    m_basic_set_wref.GetRef().GetAllocatedUniformVariables(uv_wrefs);
+    m_geo_pool_sref = new DescriptorPool("DescriptorSetPool");
+    SD_SREF(m_geo_pool_sref).Initialize(desc_counts, 1, false);
+    m_geo_set_wref = SD_SREF(m_geo_pool_sref).AllocateDescriptorSet(basic_dsl_wref);
+    SD_WREF(m_geo_set_wref).GetAllocatedUniformVariables(uv_wrefs);
 
     //3. Write descriptor to GPU for this set.
-    if (m_basic_set_wref.IsNull() == false) {
-        m_basic_set_wref.GetRef().WriteDescriptor();
+    if (m_geo_set_wref.IsNull() == false) {
+        SD_WREF(m_geo_set_wref).WriteDescriptor();
     }
 
     //4. Get basic uniform buffer for update MVP.
-    if (uv_wrefs.find("basic") != uv_wrefs.end()) {
-        m_basic_wrefs = uv_wrefs["basic"].DynamicCastTo<UniformBuffer>();
+    if (uv_wrefs.find("geometry") != uv_wrefs.end()) {
+        m_geo_ub_wrefs = uv_wrefs["geometry"].DynamicCastTo<UniformBuffer>();
     }
 
-    if (m_basic_wrefs.IsNull() == true) {
+    if (m_geo_ub_wrefs.IsNull() == true) {
         SDLOGE("We can find basic uniform buffer.");
     }
 
-}
+    m_geo_comp_wref = SD_GET_COMP_WREF(m_entity_wref, TransformComponent);
+    SD_WREF(m_geo_comp_wref).RegisterSlotFunctionIntoEvent(
+        TransformComponent::sTransformChangedEventName,
+        new MemberFunctionSlot<MeshRenderComponent>(
+            "MeshRenderComponent::OnGeometryChanged",
+            GetThisWeakPtrByType<MeshRenderComponent>(),
+            &MeshRenderComponent::OnGeometryChanged));
 
-MeshRenderComponent::~MeshRenderComponent()
-{
+    OnGeometryChanged(EventArg());
 }
 
 bool MeshRenderComponent::AppendMesh(const MeshWeakReferenceObject &i_mesh_wref, const MaterialWeakReferenceObject &i_mat_wref)
@@ -88,22 +103,35 @@ void MeshRenderComponent::RenderMesh(
     if (m_mesh_wref.IsNull() == false) {
         if (m_mat_wref.IsNull() == false) {
             std::vector<DescriptorSetWeakReferenceObject> common_set_wrefs = {
-                m_basic_set_wref,
+                m_geo_set_wref,
                 i_camera_ds_wref,
                 i_light_ds_wref
             };
             //1. use material.
-            m_mat_wref.GetRef().UseMaterial(
+            SD_WREF(m_mat_wref).UseMaterial(
                 i_cb_wref, i_rp_wref,
                 common_set_wrefs,
                 i_sp_id);
             //2. bind mesh vertex attributes.
-            m_mesh_wref.GetRef().BindVertexBuffers(i_cb_wref);
+            SD_WREF(m_mesh_wref).BindVertexBuffers(i_cb_wref);
             //3. draw mesh.
-            m_mesh_wref.GetRef().BindIndexBuffer(i_cb_wref);
-            m_mesh_wref.GetRef().Render(i_cb_wref);
+            SD_WREF(m_mesh_wref).BindIndexBuffer(i_cb_wref);
+            SD_WREF(m_mesh_wref).Render(i_cb_wref);
         }
     }
+}
+
+bool MeshRenderComponent::OnGeometryChanged(const EventArg &i_arg)
+{
+    if (m_geo_ub_wrefs.IsNull() == false) {
+        SD_WREF(m_geo_ub_wrefs).SetMatrix4X4f("world",
+            SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeWorldMatrix());
+        SD_WREF(m_geo_ub_wrefs).SetMatrix4X4f("normal",
+            SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeNormalMatrix());
+        SD_WREF(m_geo_ub_wrefs).Update();
+    }
+
+    return true;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

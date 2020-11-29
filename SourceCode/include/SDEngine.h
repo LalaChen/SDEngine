@@ -108,4 +108,7 @@ SOFTWARE.
 #include "Graphics/CommandBuffer/CommandBuffer.h"
 #include "Graphics/CommandBuffer/SecondaryCommandPoolThread.h"
 #include "Graphics/BasicComponent/TransformComponent.h"
+#include "Graphics/BasicComponent/MeshRenderComponent.h"
+#include "Graphics/BasicComponent/CameraComponent.h"
+#include "Graphics/BasicComponent/LightComponent.h"
 #include "Graphics/ManagerParam/ManagerParam.h"

@@ -29,7 +29,7 @@
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Camera.cpp">
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -46,7 +46,7 @@
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Camera.h">
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

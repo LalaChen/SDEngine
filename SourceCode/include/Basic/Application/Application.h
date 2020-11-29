@@ -32,15 +32,11 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "SDEngineCommonFunction.h"
-
+#include "ApplicationEvents.h"
 #include "GraphicsManager.h"
 #include "KeyMapManager.h"
 #include "Resolution.h"
 #include "KeyEventArg.h"
-#include "Event.h"
 
 using SDE::Graphics::CompHandle;
 using SDE::Graphics::Resolution;
@@ -161,6 +157,10 @@ public:
      */
     void SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed);
 
+    /*! \fn EventObjectWeakReferenceObject GetEventNotifier() const;
+     *  \brief Set event notifier.
+     */
+    EventObjectWeakReferenceObject GetEventNotifier() const;
 protected:
     /*! \var std::string m_win_title;
      *  \brief is full screen or not. [VarGet Attribute]
@@ -182,6 +182,11 @@ protected:
      */
     SD_DECLARE_ATTRIBUTE_VAR_GET(GraphicsLibraryEnum, m_adopt_library, AdoptLibrary);
 
+    /*! \var EventObjectStrongReferenceObject m_app_event_notifier;
+     *  \brief A event object for notify ap event.
+     */
+    EventObjectStrongReferenceObject m_app_event_notifier;
+
     /*! \var KeyMapManagerStrongReferenceObject m_key_map_manager;
      *  \brief A event object for monitior key event.
      */
@@ -196,6 +201,11 @@ protected:
 inline void Application::SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height)
 {
     m_win_res.SetResolution(i_width, i_height);
+}
+
+inline EventObjectWeakReferenceObject Application::GetEventNotifier() const
+{
+    return m_app_event_notifier;
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

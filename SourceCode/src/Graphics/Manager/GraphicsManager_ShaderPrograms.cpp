@@ -46,10 +46,36 @@ DescriptorSetLayoutWeakReferenceObject GraphicsManager::GetBasicDescriptorSetLay
     }
 }
 
-void GraphicsManager::GetDefaultMaterialUniformVariableDescriptors(std::vector<UniformVariableDescriptorWeakReferenceObject> &io_uvds) const
+void GraphicsManager::GetBasicDescriptorSetLayouts(std::vector<DescriptorSetLayoutWeakReferenceObject> &io_dsl_wrefs) const
 {
-    for (const UniformVariableDescriptorStrongReferenceObject &uvd : m_material_basic_uvds) {
-        io_uvds.push_back(uvd);
+    std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject>::const_iterator dsl_iter;
+    for (dsl_iter = m_basic_dsl_maps.begin();
+         dsl_iter != m_basic_dsl_maps.end();
+         dsl_iter++) {
+        io_dsl_wrefs.push_back((*dsl_iter).second);
+    }
+}
+
+UniformVariableDescriptorStrongReferenceObject GraphicsManager::GetDefaultMaterialUniformVariableDescriptor(const ObjectName &i_uvd_name) const
+{
+    UniformVariableDescriptorStrongReferenceObject result;
+    std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject>::const_iterator uvd_iter = m_material_basic_uvd_maps.find(i_uvd_name);
+    if (uvd_iter != m_material_basic_uvd_maps.end()) {
+        return (*uvd_iter).second;
+    }
+    else {
+        return UniformVariableDescriptorStrongReferenceObject();
+    }
+}
+
+ShaderProgramWeakReferenceObject GraphicsManager::GetShaderProgram(const ObjectName &i_sp_name) const
+{
+    std::map<ObjectName, ShaderProgramStrongReferenceObject>::const_iterator sp_iter = m_shader_program_maps.find(i_sp_name);
+    if (sp_iter != m_shader_program_maps.end()) {
+        return (*sp_iter).second;
+    }
+    else {
+        return ShaderProgramStrongReferenceObject();
     }
 }
 
@@ -111,13 +137,14 @@ void GraphicsManager::InitializeBasicMaterialUniformDescriptors()
 
     UniformImagesDescriptorStrongReferenceObject mt_imgd_sref = new UniformImagesDescriptor("mainTexture", 1, 1);
 
-    m_material_basic_uvds = { mat_ubd_sref.StaticCastTo<UniformVariableDescriptor>(), mt_imgd_sref.StaticCastTo<UniformVariableDescriptor>() };
+    m_material_basic_uvd_maps["material"] = mat_ubd_sref.StaticCastTo<UniformVariableDescriptor>();
+    m_material_basic_uvd_maps["mainTexture"] = mt_imgd_sref.StaticCastTo<UniformVariableDescriptor>();
 }
 
 void GraphicsManager::InitializeBasicShaderPrograms()
 {
     ShaderProgramStrongReferenceObject shader_program;
-    {
+    {//BasicShading
         shader_program = new ShaderProgram("BasicShading");
         //1. Create GraphicsPipelines.
         //1.1 create shader module.
@@ -149,7 +176,10 @@ void GraphicsManager::InitializeBasicShaderPrograms()
         GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
 
         //1.3 Create general DescritporSetLayouts.
-        std::vector<UniformVariableDescriptorStrongReferenceObject> final_material_basic_uvds(m_material_basic_uvds);
+        std::vector<UniformVariableDescriptorStrongReferenceObject> final_material_basic_uvds;
+        final_material_basic_uvds.push_back(GetDefaultMaterialUniformVariableDescriptor("material"));
+        final_material_basic_uvds.push_back(GetDefaultMaterialUniformVariableDescriptor("mainTexture"));
+
         DescriptorSetLayoutStrongReferenceObject material_dsl_sref = new DescriptorSetLayout("Material");
         material_dsl_sref.GetRef().AddUniformVariableDescriptors(final_material_basic_uvds);
         material_dsl_sref.GetRef().Initialize();
@@ -185,6 +215,8 @@ void GraphicsManager::InitializeBasicShaderPrograms()
         rp_infos.push_back(forward_rp);
         shader_program.GetRef().RegisterShaderProgramStructure(
             rp_infos, pipe_srefs, common_dsl_wrefs, {material_dsl_sref});
+
+        m_shader_program_maps["BasicShading"] = shader_program;
     }
 }
 

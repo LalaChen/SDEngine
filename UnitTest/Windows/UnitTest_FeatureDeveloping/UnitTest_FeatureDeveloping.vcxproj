@@ -199,16 +199,16 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Camera.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Sample.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FeatureApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Camera.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.h" />
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Sample.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.h" />
     <ClInclude Include="FeatureApplication.h" />
