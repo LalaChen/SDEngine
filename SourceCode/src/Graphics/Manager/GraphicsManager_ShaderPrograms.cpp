@@ -46,14 +46,17 @@ DescriptorSetLayoutWeakReferenceObject GraphicsManager::GetBasicDescriptorSetLay
     }
 }
 
-void GraphicsManager::GetBasicDescriptorSetLayouts(std::vector<DescriptorSetLayoutWeakReferenceObject> &io_dsl_wrefs) const
+void GraphicsManager::GetBasicDescriptorSetLayouts(std::vector<DescriptorSetLayoutWeakReferenceObject> &io_dsl_wrefs)
 {
-    std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject>::const_iterator dsl_iter;
-    for (dsl_iter = m_basic_dsl_maps.begin();
-         dsl_iter != m_basic_dsl_maps.end();
-         dsl_iter++) {
-        io_dsl_wrefs.push_back((*dsl_iter).second);
-    }
+    //std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject>::const_iterator dsl_iter;
+    //for (dsl_iter = m_basic_dsl_maps.begin();
+    //     dsl_iter != m_basic_dsl_maps.end();
+    //     dsl_iter++) {
+    //    io_dsl_wrefs.push_back((*dsl_iter).second);
+    //}
+    io_dsl_wrefs.push_back(m_basic_dsl_maps["Camera"]);
+    io_dsl_wrefs.push_back(m_basic_dsl_maps["MeshRender"]);
+    io_dsl_wrefs.push_back(m_basic_dsl_maps["Light"]);
 }
 
 UniformVariableDescriptorStrongReferenceObject GraphicsManager::GetDefaultMaterialUniformVariableDescriptor(const ObjectName &i_uvd_name) const
@@ -95,7 +98,7 @@ void GraphicsManager::InitializeBasicDescriptorSetLayout()
     //2. For Meshes.
     //Use for MVP matrices at all subpasses at Forward Pass and Defered Pass.
     UniformBufferDescriptorStrongReferenceObject basic_ubd_sref = new UniformBufferDescriptor("geometry", 0);
-    basic_ubd_sref.GetRef().AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_worid));
+    basic_ubd_sref.GetRef().AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_world));
     basic_ubd_sref.GetRef().AddVariable("normal", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_normal));
     basic_ubd_sref.GetRef().AddVariableDone();
     DescriptorSetLayoutStrongReferenceObject basic_dsl_sref = new DescriptorSetLayout("MeshRender");

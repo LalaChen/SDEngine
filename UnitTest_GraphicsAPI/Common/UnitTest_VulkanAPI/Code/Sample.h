@@ -23,7 +23,7 @@ public:
     Matrix4X4f m_clip;
     Matrix4X4f m_proj;
     Matrix4X4f m_view;
-    Matrix4X4f m_worid;
+    Matrix4X4f m_world;
     Matrix4X4f m_normal;
     Vector3f m_view_eye;
 };

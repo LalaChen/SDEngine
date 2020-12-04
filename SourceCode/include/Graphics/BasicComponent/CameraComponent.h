@@ -74,6 +74,8 @@ public:
     void SetPerspective(float i_fov, float i_near, float i_far);
     void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
     void SetCameraSize(const Resolution &i_size);
+    TextureWeakReferenceObject GetColorBuffer() const;
+    TextureWeakReferenceObject GetDepthBuffer() const;
 public:
     bool OnGeometryChanged(const EventArg &i_arg);
 public:
@@ -129,6 +131,16 @@ inline void CameraComponent::SetPerspective(float i_fov, float i_near, float i_f
 inline void CameraComponent::SetCameraSize(const Resolution &i_screen_size)
 {
     m_screen_size = i_screen_size;
+}
+
+inline TextureWeakReferenceObject CameraComponent::GetColorBuffer() const
+{
+    return m_color_buf_sref;
+}
+
+inline TextureWeakReferenceObject CameraComponent::GetDepthBuffer() const
+{
+    return m_depth_buf_sref;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

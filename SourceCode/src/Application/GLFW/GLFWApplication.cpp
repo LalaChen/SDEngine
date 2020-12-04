@@ -295,7 +295,7 @@ void GLFWApplication::RunMainLoop()
     //Destroy App.
     Application::GetRef().TerminateApplication();
 }
-\
+
 //-------------------------------------------
 #define KEY_CODE_CPY(keyCode) \
     m_key_code_map[SD_ENUM_TO_UINT(keyCode)] = GLFW_##keyCode;

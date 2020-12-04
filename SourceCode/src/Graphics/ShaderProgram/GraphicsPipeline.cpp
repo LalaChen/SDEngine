@@ -69,6 +69,7 @@ void GraphicsPipeline::UseAndBindDescriptorSets(const CommandBufferWeakReference
         for (uint32_t dsl_count = 0; dsl_count < m_dsl_wrefs.size(); ++dsl_count) {
             if (ds_wref.GetRef().IsThisLayout(m_dsl_wrefs[dsl_count]) == true) {
                 pipe_ds_wrefs.push_back(ds_wref);
+                break;
             }
         }
     }

@@ -101,8 +101,8 @@ void Sample3_MultiSubpass::Render()
         m_uniform_buffer_datas[0].m_view = view;
         m_uniform_buffer_datas[0].m_view_eye = view_eye;
         //--- world space. 
-        m_uniform_buffer_datas[0].m_worid.rotate(Quaternion(Vector3f::PositiveZ, angle));
-        m_uniform_buffer_datas[0].m_worid.translate(Vector3f(-0.0f, -0.0f, -0.5f, 1.0f));
+        m_uniform_buffer_datas[0].m_world.rotate(Quaternion(Vector3f::PositiveZ, angle));
+        m_uniform_buffer_datas[0].m_world.translate(Vector3f(-0.0f, -0.0f, -0.5f, 1.0f));
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffers[0], m_VK_basic_uniform_buffer_memories[0], &m_uniform_buffer_datas[0], sizeof(BasicUniformBuffer));
 
         //(Object 1)
@@ -115,7 +115,7 @@ void Sample3_MultiSubpass::Render()
         m_uniform_buffer_datas[1].m_view = view;
         m_uniform_buffer_datas[1].m_view_eye = view_eye;
         //--- world space.
-        m_uniform_buffer_datas[1].m_worid.translate(Vector3f(-0.2f, -0.2f, -0.4f, 1.0f));
+        m_uniform_buffer_datas[1].m_world.translate(Vector3f(-0.2f, -0.2f, -0.4f, 1.0f));
 
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffers[1], m_VK_basic_uniform_buffer_memories[1], &m_uniform_buffer_datas[1], sizeof(BasicUniformBuffer));
 
@@ -127,7 +127,7 @@ void Sample3_MultiSubpass::Render()
         m_uniform_buffer_datas[2].m_view = view;
         m_uniform_buffer_datas[2].m_view_eye = view_eye;
         //--- world space. 
-        m_uniform_buffer_datas[2].m_worid.translate(Vector3f(0.3f, 0.3f, -0.49f, 1.0f));
+        m_uniform_buffer_datas[2].m_world.translate(Vector3f(0.3f, 0.3f, -0.49f, 1.0f));
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffers[2], m_VK_basic_uniform_buffer_memories[2], &m_uniform_buffer_datas[2], sizeof(BasicUniformBuffer));
 
         m_uniform_buffer_datas[3].m_clip = Matrix4X4f(clip_mat);
@@ -138,7 +138,7 @@ void Sample3_MultiSubpass::Render()
         m_uniform_buffer_datas[3].m_view = view;
         m_uniform_buffer_datas[3].m_view_eye = view_eye;
         //--- world space. 
-        m_uniform_buffer_datas[3].m_worid.translate(Vector3f(-0.3f, -0.3f, -0.48f, 1.0f));
+        m_uniform_buffer_datas[3].m_world.translate(Vector3f(-0.3f, -0.3f, -0.48f, 1.0f));
         result = m_mgr->RefreshHostDeviceBufferData(m_VK_basic_uniform_buffers[3], m_VK_basic_uniform_buffer_memories[3], &m_uniform_buffer_datas[3], sizeof(BasicUniformBuffer));
 
         //2. begin command buffer.

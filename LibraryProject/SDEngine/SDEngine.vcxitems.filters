@@ -804,9 +804,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\System\GraphicsSystem.h">
       <Filter>include\Graphics\System</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Project\SDEngine\LibraryProject\SDEngine\..\..\SourceCode\include\Basic\Application\ApplicationEvents.h">
-      <Filter>include\Basic\Application</Filter>
-    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Application\ApplicationEvents.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">

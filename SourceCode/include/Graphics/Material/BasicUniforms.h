@@ -93,12 +93,12 @@ public:
      */
     ~WorldUniforms();
 public:
-    /* \var Matrix4X4f m_worid;
+    /* \var Matrix4X4f m_world;
      * \brief Convert vertices in object space to world space.
      */
-    Matrix4X4f m_worid;
+    Matrix4X4f m_world;
 
-    /* \var Matrix4X4f m_worid;
+    /* \var Matrix4X4f m_world;
      * \brief Convert normals in object space to world space.
      */
     Matrix4X4f m_normal;

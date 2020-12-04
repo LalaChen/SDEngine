@@ -444,7 +444,7 @@ void VulkanManager::InitializeSettings()
     }
 
     //Queue abilities.
-    for (VkQueueFlagBits& flag : m_desired_queue_abilities) {
+    for (VkQueueFlagBits &flag : m_desired_queue_abilities) {
         m_final_q_abi_flag |= flag;
     }
 }

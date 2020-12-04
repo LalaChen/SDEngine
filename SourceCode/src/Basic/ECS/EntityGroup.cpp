@@ -50,12 +50,12 @@ bool EntityGroup::AddEntity(const EntityWeakReferenceObject &i_entity_wref)
                 return true;
             }
             else {
-                SDLOGD("Add E(%s) entity to G[%s] repeatly.", i_entity_wref.GetRef().GetObjectName().c_str(), m_object_name.c_str());
+                //SDLOGD("Add E(%s) entity to G[%s] repeatly.", i_entity_wref.GetRef().GetObjectName().c_str(), m_object_name.c_str());
                 return false;
             }
         }
         else {
-            SDLOGD("Add E(%s) entity to G[%s] failure", i_entity_wref.GetRef().GetObjectName().c_str(), m_object_name.c_str());
+            //SDLOGD("Add E(%s) entity to G[%s] failure", i_entity_wref.GetRef().GetObjectName().c_str(), m_object_name.c_str());
             return false;
         }
     }

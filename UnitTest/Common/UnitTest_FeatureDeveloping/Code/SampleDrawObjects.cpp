@@ -76,6 +76,7 @@ void SampleDrawObjects::LoadScene()
         material_dsl_sref = new DescriptorSetLayout("Material");
         material_dsl_sref.GetRef().AddUniformVariableDescriptors(material_uvd_srefs);
         material_dsl_sref.GetRef().Initialize();
+        dsl_wrefs.push_back(material_dsl_sref);
 
         //1.4 register uniform variable descriptor to pipeline.
         RenderPassWeakReferenceObject rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPath");
@@ -138,7 +139,7 @@ void SampleDrawObjects::LoadScene()
             true));
 
     SD_COMP_WREF(m_camera_node, CameraComponent).SetClearValues(
-        { 0.15f, 0.15f, 0.75f, 1.0f },
+        { 0.35f, 0.15f, 0.75f, 1.0f },
         { 1.0f, 1 });
     SD_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(120, 0.01f, 1000.0f);
     SD_COMP_WREF(m_camera_node, CameraComponent).Initialize();
@@ -153,15 +154,17 @@ void SampleDrawObjects::LoadScene()
     SD_COMP_WREF(m_light_node, LightComponent).Initialize();
 
     //5. add axis.
-    m_axis_mesh = BasicShapeCreator::GetRef().CreateAxis();
+    m_axis_mesh = BasicShapeCreator::GetRef().CreateAxis(0.2f, 20.0f);
     m_axis_node = ECSManager::GetRef().CreateEntity("AxisNode");
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_axis_node, "AxisTransform");
     ECSManager::GetRef().AddComponentForEntity<MeshRenderComponent>(m_axis_node, "AxisMeshRender");
     SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_axis_node, TransformComponent));
 
+    SD_COMP_WREF(m_axis_node, TransformComponent).SetWorldPosition(Vector3f(0.0f, 0.0001f, 0.0f));
     SD_COMP_WREF(m_axis_node, MeshRenderComponent).Initialize();
     SD_COMP_WREF(m_axis_node, MeshRenderComponent).AppendMesh(m_axis_mesh, m_axis_material_sref);
 
+    /*
     //7. add floor.
     m_floor_mesh = BasicShapeCreator::GetRef().CreatePlane(
         Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX,
@@ -173,7 +176,8 @@ void SampleDrawObjects::LoadScene()
 
     SD_COMP_WREF(m_floor_node, MeshRenderComponent).Initialize();
     SD_COMP_WREF(m_floor_node, MeshRenderComponent).AppendMesh(m_floor_mesh, m_basic_material_sref);
-
+    */
+    /*
     //8. add cubes.
     m_cube_mesh = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
     
@@ -199,4 +203,5 @@ void SampleDrawObjects::LoadScene()
             }
         }
     }
+    */
 }

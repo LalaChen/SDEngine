@@ -26,6 +26,8 @@ SOFTWARE.
 #include "GraphicsManager.h"
 #include "LightComponent.h"
 
+using SDE::Basic::MemberFunctionSlot;
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 LightComponent::LightComponent(const ObjectName &i_object_name)
@@ -41,7 +43,16 @@ void LightComponent::Initialize()
 {
     InitializeDescriptorSetAndPool();
 
+    m_geo_comp_wref = SD_GET_COMP_WREF(m_entity_wref, TransformComponent);
 
+    SD_WREF(m_geo_comp_wref).RegisterSlotFunctionIntoEvent(
+        TransformComponent::sTransformChangedEventName,
+        new MemberFunctionSlot<LightComponent>(
+            "LightComponent::OnGeometryChanged",
+            GetThisWeakPtrByType<LightComponent>(),
+            &LightComponent::OnGeometryChanged));
+
+    OnGeometryChanged(EventArg());
 }
 
 void LightComponent::InitializeDescriptorSetAndPool()
@@ -58,6 +69,28 @@ void LightComponent::InitializeDescriptorSetAndPool()
     SD_SREF(m_ds_wref).WriteDescriptor();
     SD_SREF(m_ds_wref).GetAllocatedUniformVariables(uv_wrefs);
     m_buffer_wref = uv_wrefs["light"].DynamicCastTo<UniformBuffer>();
+}
+
+bool LightComponent::OnGeometryChanged(const EventArg &i_arg)
+{
+    if (m_buffer_wref.IsNull() == false) {
+        Transform node_trans = SD_WREF(m_geo_comp_wref).GetWorldTransform();
+        if (m_light_params.m_kind == 0) {
+            m_light_params.m_position = node_trans.m_position;
+        }
+        else if (m_light_params.m_kind == 1) {
+            m_light_params.m_direction = node_trans.GetForward();
+        }
+        else if (m_light_params.m_kind == 2) {
+            m_light_params.m_position = node_trans.m_position;
+            m_light_params.m_direction = node_trans.GetForward();
+        }
+
+        SD_WREF(m_buffer_wref).SetBufferData(&m_light_params, sizeof(LightUniforms));
+        SD_WREF(m_buffer_wref).Update();
+    }
+
+    return true;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

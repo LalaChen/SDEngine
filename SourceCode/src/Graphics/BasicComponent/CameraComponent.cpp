@@ -165,8 +165,11 @@ void CameraComponent::InitializeDescriptorSetAndPool()
     SD_SREF(m_dp_sref).Initialize(desc_counts, 1, false);
     //2. Allocate descriptor set.
     m_ds_wref = SD_SREF(m_dp_sref).AllocateDescriptorSet(dsl_wref);
-    SD_SREF(m_ds_wref).WriteDescriptor();
     SD_SREF(m_ds_wref).GetAllocatedUniformVariables(uv_wrefs);
+
+    if (m_ds_wref.IsNull() == false) {
+        SD_SREF(m_ds_wref).WriteDescriptor();
+    }
     m_buffer_wref = uv_wrefs["camera"].DynamicCastTo<UniformBuffer>();
 }
 
@@ -195,6 +198,12 @@ void CameraComponent::InitializeWorkspaceForForwardPath()
 
         m_rf_sref = new RenderFlow("RenderFlow", ImageOffset(0, 0, 0),
             ImageSize(m_screen_size.GetWidth(), m_screen_size.GetHeight(), 1));
+
+        SD_SREF(m_rf_sref).RegisterRenderPass(GraphicsManager::GetRef().GetRenderPass("ForwardPath"));
+        SD_SREF(m_rf_sref).AllocateFrameBuffer();
+        SD_SREF(m_rf_sref).RegisterBufferToFrameBuffer(m_color_buf_sref, 0, m_clear_color);
+        SD_SREF(m_rf_sref).RegisterBufferToFrameBuffer(m_depth_buf_sref, 1, m_clear_d_and_s);
+        SD_SREF(m_rf_sref).Initialize();
     }
     else {
         SDLOGE("Forward render pass doesn't exist. Please check!!!");
@@ -234,10 +243,14 @@ bool CameraComponent::OnGeometryChanged(const EventArg &i_arg)
 {
     if (m_buffer_wref.IsNull() == false) {
         Transform node_trans = SD_WREF(m_geo_comp_wref).GetWorldTransform();
-        SD_WREF(m_buffer_wref).SetMatrix4X4f("view",
-            node_trans.MakeViewMatrix());
-        SD_WREF(m_buffer_wref).SetMatrix4X4f("proj", m_proj_mat);
-        SD_WREF(m_buffer_wref).SetVector3f("viewEye", node_trans.m_position);
+        //SD_WREF(m_buffer_wref).SetMatrix4X4f("view", node_trans.MakeViewMatrix());
+        //SD_WREF(m_buffer_wref).SetMatrix4X4f("proj", m_proj_mat);
+        //SD_WREF(m_buffer_wref).SetVector3f("viewEye", node_trans.m_position);
+        CameraUniforms cu;
+        cu.m_proj = m_proj_mat;
+        cu.m_view = node_trans.MakeViewMatrix();
+        cu.m_view_eye = node_trans.m_position;
+        SD_WREF(m_buffer_wref).SetBufferData(&cu, sizeof(CameraUniforms));
         SD_WREF(m_buffer_wref).Update();
     }
 

@@ -61,4 +61,5 @@ void main()
 	vec4 vertex = vec4(vertices, 1.0);
 	fColor = colors;
     gl_Position = camera.proj * camera.view * geometry.world * vertex;
+	//gl_Position = vertex;
 }

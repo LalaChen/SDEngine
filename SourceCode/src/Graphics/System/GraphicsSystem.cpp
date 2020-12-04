@@ -102,6 +102,14 @@ void GraphicsSystem::Update()
     }
 
     GraphicsManager::GetRef().SubmitCommandBuffersToQueue({ m_graphics_cb_wref });
+
+    std::list<EntityWeakReferenceObject> camera_entity_list = SD_WREF(m_camera_eg_wref).GetEntities();
+    std::list<CameraComponentWeakReferenceObject> camera_list;
+    for (EntityWeakReferenceObject &ce_wref : camera_entity_list) {
+        camera_list.push_back(SD_GET_COMP_WREF(ce_wref, CameraComponent));
+    }
+
+    GraphicsManager::GetRef().RenderTexture2DToScreen(SD_WREF((*camera_list.begin())).GetColorBuffer());
 }
 
 void GraphicsSystem::Destroy()

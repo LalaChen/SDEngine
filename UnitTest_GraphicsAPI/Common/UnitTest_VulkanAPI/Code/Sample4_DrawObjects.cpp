@@ -90,7 +90,7 @@ void ObjectData::UpdateCommonUniformSet(
     ub.m_proj = i_camera.m_proj_mat;
     ub.m_view = i_camera.m_trans.MakeViewMatrix();
     ub.m_view_eye = i_camera.m_trans.m_position;
-    ub.m_worid = m_trans.MakeWorldMatrix();
+    ub.m_world = m_trans.MakeWorldMatrix();
 
     LightUniformBuffer lb = {};
     lb = i_light.m_light_data;
@@ -369,7 +369,7 @@ void Sample4_DrawObjects::CreateCommonUniformVariablesAndLayouts()
     basic_ubd_sref.GetRef().AddVariable("clip", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_clip));
     basic_ubd_sref.GetRef().AddVariable("proj", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_proj));
     basic_ubd_sref.GetRef().AddVariable("view", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_view));
-    basic_ubd_sref.GetRef().AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_worid));
+    basic_ubd_sref.GetRef().AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_world));
     basic_ubd_sref.GetRef().AddVariable("normal", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_normal));
     basic_ubd_sref.GetRef().AddVariable("viewEye", UniformBufferVariableType_VECTOR3F, offsetof(BasicUniformBuffer, m_view_eye));
     basic_ubd_sref.GetRef().AddVariableDone();

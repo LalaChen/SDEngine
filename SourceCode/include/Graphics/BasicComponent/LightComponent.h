@@ -35,6 +35,7 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "LightUniforms.h"
+#include "TransformComponent.h"
 #include "DescriptorPool.h"
 #include "DescriptorSet.h"
 #include "UniformBuffer.h"
@@ -60,6 +61,7 @@ public:
     virtual ~LightComponent();
 public:
     void Initialize();
+    bool OnGeometryChanged(const EventArg &i_arg);
 public:
     const DescriptorSetWeakReferenceObject GetDescriptorSet() const;
     void SetLightParameter(const LightUniforms &i_light_data);
@@ -71,6 +73,8 @@ protected:
     DescriptorSetWeakReferenceObject m_ds_wref;
 protected:
     LightUniforms m_light_params;
+protected:
+    TransformComponentWeakReferenceObject m_geo_comp_wref;
 };
 
 inline const DescriptorSetWeakReferenceObject LightComponent::GetDescriptorSet() const

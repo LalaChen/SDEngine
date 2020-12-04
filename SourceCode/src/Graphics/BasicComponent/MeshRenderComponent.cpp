@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "BasicUniforms.h"
 #include "GraphicsManager.h"
 #include "LogManager.h"
 #include "MeshRenderComponent.h"
@@ -103,8 +104,8 @@ void MeshRenderComponent::RenderMesh(
     if (m_mesh_wref.IsNull() == false) {
         if (m_mat_wref.IsNull() == false) {
             std::vector<DescriptorSetWeakReferenceObject> common_set_wrefs = {
-                m_geo_set_wref,
                 i_camera_ds_wref,
+                m_geo_set_wref,
                 i_light_ds_wref
             };
             //1. use material.
@@ -124,10 +125,15 @@ void MeshRenderComponent::RenderMesh(
 bool MeshRenderComponent::OnGeometryChanged(const EventArg &i_arg)
 {
     if (m_geo_ub_wrefs.IsNull() == false) {
-        SD_WREF(m_geo_ub_wrefs).SetMatrix4X4f("world",
-            SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeWorldMatrix());
-        SD_WREF(m_geo_ub_wrefs).SetMatrix4X4f("normal",
-            SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeNormalMatrix());
+        //SD_WREF(m_geo_ub_wrefs).SetMatrix4X4f("world",
+        //    SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeWorldMatrix());
+        //SD_WREF(m_geo_ub_wrefs).SetMatrix4X4f("normal",
+        //    SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeNormalMatrix());
+
+        WorldUniforms wu;
+        wu.m_normal = SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeNormalMatrix();
+        wu.m_world = SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeWorldMatrix();
+        SD_WREF(m_geo_ub_wrefs).SetBufferData(&wu, sizeof(WorldUniforms));
         SD_WREF(m_geo_ub_wrefs).Update();
     }
 
