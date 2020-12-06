@@ -11,14 +11,13 @@ layout(location = 0) out vec4 fragColor;
 
 //Uniform
 //layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
-//Uniform Camera Buffer.
+//Uniform basic Buffer.
 layout(set = 0, binding = 0) uniform CameraUniforms {
     mat4 proj;
 	mat4 view;
-	vec3 viewEye;
+	vec4 viewEye;
 } camera;
 
-//Uniform Geometry Buffer.
 layout(set = 1, binding = 0) uniform GeometryUniforms {
 	mat4 world;
 	mat4 normal;
@@ -38,15 +37,6 @@ layout(set = 2, binding = 0) uniform LightUniforms {
 	float quadraticAttenuation;
 	uint kind; //0: directional, 1: spot, 2: point
 } light;
-
-//Uniform Material buffer
-layout(set = 3, binding = 0) uniform MaterialUniforms {
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
-	vec4 emission;
-	float shininess;
-} material;
 
 void main()
 {

@@ -48,12 +48,6 @@ DescriptorSetLayoutWeakReferenceObject GraphicsManager::GetBasicDescriptorSetLay
 
 void GraphicsManager::GetBasicDescriptorSetLayouts(std::vector<DescriptorSetLayoutWeakReferenceObject> &io_dsl_wrefs)
 {
-    //std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject>::const_iterator dsl_iter;
-    //for (dsl_iter = m_basic_dsl_maps.begin();
-    //     dsl_iter != m_basic_dsl_maps.end();
-    //     dsl_iter++) {
-    //    io_dsl_wrefs.push_back((*dsl_iter).second);
-    //}
     io_dsl_wrefs.push_back(m_basic_dsl_maps["Camera"]);
     io_dsl_wrefs.push_back(m_basic_dsl_maps["MeshRender"]);
     io_dsl_wrefs.push_back(m_basic_dsl_maps["Light"]);
@@ -84,46 +78,46 @@ ShaderProgramWeakReferenceObject GraphicsManager::GetShaderProgram(const ObjectN
 
 void GraphicsManager::InitializeBasicDescriptorSetLayout()
 {
-    //1. For Cameras.
+    //1. new common descriptor set and its uniform variable descriptors.
     UniformBufferDescriptorStrongReferenceObject camera_ubd_sref = new UniformBufferDescriptor("camera", 0);
-    camera_ubd_sref.GetRef().AddVariable("proj", UniformBufferVariableType_MATRIX4X4F, offsetof(CameraUniforms, m_proj));
-    camera_ubd_sref.GetRef().AddVariable("view", UniformBufferVariableType_MATRIX4X4F, offsetof(CameraUniforms, m_view));
-    camera_ubd_sref.GetRef().AddVariable("viewEye", UniformBufferVariableType_VECTOR3F, offsetof(CameraUniforms, m_view_eye));
-    camera_ubd_sref.GetRef().AddVariableDone();
+    SD_SREF(camera_ubd_sref).AddVariable("proj", UniformBufferVariableType_MATRIX4X4F, offsetof(CameraUniforms, m_proj));
+    SD_SREF(camera_ubd_sref).AddVariable("view", UniformBufferVariableType_MATRIX4X4F, offsetof(CameraUniforms, m_view));
+    SD_SREF(camera_ubd_sref).AddVariable("viewEye", UniformBufferVariableType_VECTOR3F, offsetof(CameraUniforms, m_view_eye));
+    SD_SREF(camera_ubd_sref).AddVariableDone();
     DescriptorSetLayoutStrongReferenceObject camera_dsl_sref = new DescriptorSetLayout("Camera");
-    camera_dsl_sref.GetRef().AddUniformVariableDescriptors({ camera_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
-    camera_dsl_sref.GetRef().Initialize();
+    SD_SREF(camera_dsl_sref).AddUniformVariableDescriptors({ camera_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
+    SD_SREF(camera_dsl_sref).Initialize();
     m_basic_dsl_maps["Camera"] = camera_dsl_sref;
 
     //2. For Meshes.
     //Use for MVP matrices at all subpasses at Forward Pass and Defered Pass.
-    UniformBufferDescriptorStrongReferenceObject basic_ubd_sref = new UniformBufferDescriptor("geometry", 0);
-    basic_ubd_sref.GetRef().AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_world));
-    basic_ubd_sref.GetRef().AddVariable("normal", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_normal));
-    basic_ubd_sref.GetRef().AddVariableDone();
-    DescriptorSetLayoutStrongReferenceObject basic_dsl_sref = new DescriptorSetLayout("MeshRender");
-    basic_dsl_sref.GetRef().AddUniformVariableDescriptors({ basic_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
-    basic_dsl_sref.GetRef().Initialize();
-    m_basic_dsl_maps["MeshRender"] = basic_dsl_sref;
+    UniformBufferDescriptorStrongReferenceObject geometry_ubd_sref = new UniformBufferDescriptor("geometry", 0);
+    SD_SREF(geometry_ubd_sref).AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_world));
+    SD_SREF(geometry_ubd_sref).AddVariable("normal", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_normal));
+    SD_SREF(geometry_ubd_sref).AddVariableDone();
+    DescriptorSetLayoutStrongReferenceObject geometry_dsl_sref = new DescriptorSetLayout("MeshRender");
+    SD_SREF(geometry_dsl_sref).AddUniformVariableDescriptors({ geometry_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
+    SD_SREF(geometry_dsl_sref).Initialize();
+    m_basic_dsl_maps["MeshRender"] = geometry_dsl_sref;
 
     //3. For light.
-    //Use for Record Light Parameter.
     UniformBufferDescriptorStrongReferenceObject light_ubd_sref = new UniformBufferDescriptor("light", 0);
-    light_ubd_sref.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_ambient));
-    light_ubd_sref.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_diffuse));
-    light_ubd_sref.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_specular));
-    light_ubd_sref.GetRef().AddVariable("position", UniformBufferVariableType_VECTOR3F, offsetof(LightUniforms, m_position));
-    light_ubd_sref.GetRef().AddVariable("direction", UniformBufferVariableType_VECTOR3F, offsetof(LightUniforms, m_direction));
-    light_ubd_sref.GetRef().AddVariable("spotExponent", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_spot_exp));
-    light_ubd_sref.GetRef().AddVariable("spotCosCutoff", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_spot_cos_cutoff));
-    light_ubd_sref.GetRef().AddVariable("constantAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_constant_attenuation));
-    light_ubd_sref.GetRef().AddVariable("linearAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_linear_attenuation));
-    light_ubd_sref.GetRef().AddVariable("quadraticAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_quadratic_attenuation));
-    light_ubd_sref.GetRef().AddVariable("kind", UniformBufferVariableType_INT, offsetof(LightUniforms, m_kind));
-    light_ubd_sref.GetRef().AddVariableDone();
+    SD_SREF(light_ubd_sref).AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_ambient));
+    SD_SREF(light_ubd_sref).AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_diffuse));
+    SD_SREF(light_ubd_sref).AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_specular));
+    SD_SREF(light_ubd_sref).AddVariable("position", UniformBufferVariableType_VECTOR3F, offsetof(LightUniforms, m_position));
+    SD_SREF(light_ubd_sref).AddVariable("direction", UniformBufferVariableType_VECTOR3F, offsetof(LightUniforms, m_direction));
+    SD_SREF(light_ubd_sref).AddVariable("spotExponent", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_spot_exp));
+    SD_SREF(light_ubd_sref).AddVariable("spotCosCutoff", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_spot_cos_cutoff));
+    SD_SREF(light_ubd_sref).AddVariable("constantAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_constant_attenuation));
+    SD_SREF(light_ubd_sref).AddVariable("linearAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_linear_attenuation));
+    SD_SREF(light_ubd_sref).AddVariable("quadraticAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniforms, m_quadratic_attenuation));
+    SD_SREF(light_ubd_sref).AddVariable("kind", UniformBufferVariableType_INT, offsetof(LightUniforms, m_kind));
+    SD_SREF(light_ubd_sref).AddVariableDone();
+
     DescriptorSetLayoutStrongReferenceObject light_dsl_sref = new DescriptorSetLayout("Light");
-    light_dsl_sref.GetRef().AddUniformVariableDescriptors({ light_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
-    light_dsl_sref.GetRef().Initialize();
+    SD_SREF(light_dsl_sref).AddUniformVariableDescriptors({ light_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
+    SD_SREF(light_dsl_sref).Initialize();
     m_basic_dsl_maps["Light"] = light_dsl_sref;
 }
 
@@ -131,15 +125,14 @@ void GraphicsManager::InitializeBasicMaterialUniformDescriptors()
 {
     //4. For Material.
     UniformBufferDescriptorStrongReferenceObject mat_ubd_sref = new UniformBufferDescriptor("material", 0);
-    mat_ubd_sref.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_ambient));
-    mat_ubd_sref.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_diffuse));
-    mat_ubd_sref.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_specular));
-    mat_ubd_sref.GetRef().AddVariable("emission", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_emission));
-    mat_ubd_sref.GetRef().AddVariable("shininess", UniformBufferVariableType_FLOAT, offsetof(MaterialUniforms, m_shininess));
-    mat_ubd_sref.GetRef().AddVariableDone();
+    SD_SREF(mat_ubd_sref).AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_ambient));
+    SD_SREF(mat_ubd_sref).AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_diffuse));
+    SD_SREF(mat_ubd_sref).AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_specular));
+    SD_SREF(mat_ubd_sref).AddVariable("emission", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniforms, m_emission));
+    SD_SREF(mat_ubd_sref).AddVariable("shininess", UniformBufferVariableType_FLOAT, offsetof(MaterialUniforms, m_shininess));
+    SD_SREF(mat_ubd_sref).AddVariableDone();
 
     UniformImagesDescriptorStrongReferenceObject mt_imgd_sref = new UniformImagesDescriptor("mainTexture", 1, 1);
-
     m_material_basic_uvd_maps["material"] = mat_ubd_sref.StaticCastTo<UniformVariableDescriptor>();
     m_material_basic_uvd_maps["mainTexture"] = mt_imgd_sref.StaticCastTo<UniformVariableDescriptor>();
 }
@@ -176,7 +169,7 @@ void GraphicsManager::InitializeBasicShaderPrograms()
         params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
         params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
         params.m_dynamic_states.push_back(DynamicState_SCISSOR);
-        GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
+        GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
 
         //1.3 Create general DescritporSetLayouts.
         std::vector<UniformVariableDescriptorStrongReferenceObject> final_material_basic_uvds;
@@ -184,8 +177,8 @@ void GraphicsManager::InitializeBasicShaderPrograms()
         final_material_basic_uvds.push_back(GetDefaultMaterialUniformVariableDescriptor("mainTexture"));
 
         DescriptorSetLayoutStrongReferenceObject material_dsl_sref = new DescriptorSetLayout("Material");
-        material_dsl_sref.GetRef().AddUniformVariableDescriptors(final_material_basic_uvds);
-        material_dsl_sref.GetRef().Initialize();
+        SD_SREF(material_dsl_sref).AddUniformVariableDescriptors(final_material_basic_uvds);
+        SD_SREF(material_dsl_sref).Initialize();
 
         //1.4 prepare descriptor set layouts.
         std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;

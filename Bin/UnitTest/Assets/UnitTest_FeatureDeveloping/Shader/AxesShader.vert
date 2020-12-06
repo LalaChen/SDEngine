@@ -1,5 +1,5 @@
 #version 450
-//#extension GL_KHR_vulkan_glsl : enable
+#extension GL_KHR_vulkan_glsl : enable
 
 //Input attribute.
 //format : layout(location = X) in GenType VarName;
@@ -17,14 +17,13 @@ layout(location = 5) out vec4 fColor;
 
 //Uniform
 //layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
-//Uniform Camera Buffer.
+//Uniform basic Buffer.
 layout(set = 0, binding = 0) uniform CameraUniforms {
     mat4 proj;
 	mat4 view;
-	vec3 viewEye;
+	vec4 viewEye;
 } camera;
 
-//Uniform Geometry Buffer.
 layout(set = 1, binding = 0) uniform GeometryUniforms {
 	mat4 world;
 	mat4 normal;
@@ -45,21 +44,25 @@ layout(set = 2, binding = 0) uniform LightUniforms {
 	uint kind; //0: directional, 1: spot, 2: point
 } light;
 
-//Uniform Material buffer
-layout(set = 3, binding = 0) uniform MaterialUniforms {
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
-	vec4 emission;
-	float shininess;
-} material;
+vec2 positions[3] = vec2[](
+    vec2(0.0, -0.5),
+    vec2(0.5, 0.5),
+    vec2(-0.5, 0.5)
+);
 
-layout(set = 3, binding = 1) uniform sampler2D mainTexture; 
+vec3 ccolors[3] = vec3[](
+    vec3(1.0, 0.0, 0.0),
+    vec3(0.0, 1.0, 0.0),
+    vec3(0.0, 0.0, 1.0)
+);
+
 
 void main()
 {
 	vec4 vertex = vec4(vertices, 1.0);
 	fColor = colors;
     gl_Position = camera.proj * camera.view * geometry.world * vertex;
-	//gl_Position = vertex;
+
+	//gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
+    //fColor = vec4(ccolors[gl_VertexIndex], 1.0);
 }

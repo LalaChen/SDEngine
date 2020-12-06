@@ -60,57 +60,13 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     att_desc.m_stencil_store_op = AttachmentStoreOperator_DONT_CARE;
     att_descs.push_back(att_desc);
 
-    /*
-    //--- Color Attachment for sp1(SecondLight).
-    att_desc.m_format = GetDefaultColorBufferFormat();
-    att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
-    att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
-    att_desc.m_sample_counts = SampleCount_1;
-    att_desc.m_load_op = AttachmentLoadOperator_LOAD;
-    att_desc.m_store_op = AttachmentStoreOperator_STORE;
-    att_desc.m_stencil_load_op = AttachmentLoadOperator_DONT_CARE;
-    att_desc.m_stencil_store_op = AttachmentStoreOperator_DONT_CARE;
-    att_descs.push_back(att_desc);
-    //--- Depth Attachment for sp1(SecondLight).
-    att_desc.m_format = GetDefaultDepthBufferFormat();
-    att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
-    att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
-    att_desc.m_sample_counts = SampleCount_1;
-    att_desc.m_load_op = AttachmentLoadOperator_DONT_CARE;
-    att_desc.m_store_op = AttachmentStoreOperator_DONT_CARE;
-    att_desc.m_stencil_load_op = AttachmentLoadOperator_LOAD;
-    att_desc.m_stencil_store_op = AttachmentStoreOperator_STORE;
-    att_descs.push_back(att_desc);
-
-    //--- Color Attachment for sp2(TransparentObject).
-    att_desc.m_format = GetDefaultColorBufferFormat();
-    att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
-    att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
-    att_desc.m_sample_counts = SampleCount_1;
-    att_desc.m_load_op = AttachmentLoadOperator_LOAD;
-    att_desc.m_store_op = AttachmentStoreOperator_STORE;
-    att_desc.m_stencil_load_op = AttachmentLoadOperator_DONT_CARE;
-    att_desc.m_stencil_store_op = AttachmentStoreOperator_DONT_CARE;
-    att_descs.push_back(att_desc);
-    //--- Depth Attachment for sp2(TransparentObject).
-    att_desc.m_format = GetDefaultDepthBufferFormat();
-    att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
-    att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
-    att_desc.m_sample_counts = SampleCount_1;
-    att_desc.m_load_op = AttachmentLoadOperator_DONT_CARE;
-    att_desc.m_store_op = AttachmentStoreOperator_DONT_CARE;
-    att_desc.m_stencil_load_op = AttachmentLoadOperator_LOAD;
-    att_desc.m_stencil_store_op = AttachmentStoreOperator_STORE;
-    att_descs.push_back(att_desc);
-    */
-
     //1.2. prepare attachment references data.
     std::vector<SubpassDescription> sp_descs;
     SubpassDescription sp_desc;
     AttachmentReference atta_ref;
     //--- sp0 FirstOrNoLight
     sp_desc = SubpassDescription();
-    sp_desc.m_name = "MainLight";
+    sp_desc.m_name = "FirstOrNoLight";
     sp_desc.m_bind_point = PipelineBindPoint_GRAPHICS;
     //--- color attachment reference.
     atta_ref.m_attachment_ID = 0;
@@ -121,38 +77,10 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     sp_desc.m_depth_attachment_ref.m_layout = ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     sp_descs.push_back(sp_desc);
 
-    /*
-    //--- sp1 SecondLight
-    sp_desc = SubpassDescription();
-    sp_desc.m_name = "SecondaryLights";
-    sp_desc.m_bind_point = PipelineBindPoint_GRAPHICS;
-    //--- color attachment reference.
-    atta_ref.m_attachment_ID = 2;
-    atta_ref.m_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
-    sp_desc.m_color_attachment_refs.push_back(atta_ref);
-    //--- depth attachment reference.
-    sp_desc.m_depth_attachment_ref.m_attachment_ID = 3;
-    sp_desc.m_depth_attachment_ref.m_layout = ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-    sp_descs.push_back(sp_desc);
-    
-    //--- sp2 Transparent.
-    sp_desc = SubpassDescription();
-    sp_desc.m_name = "Transparent";
-    sp_desc.m_bind_point = PipelineBindPoint_GRAPHICS;
-    //--- color attachment reference.
-    atta_ref.m_attachment_ID = 4;
-    atta_ref.m_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
-    sp_desc.m_color_attachment_refs.push_back(atta_ref);
-    //--- depth attachment reference.
-    sp_desc.m_depth_attachment_ref.m_attachment_ID = 5;
-    sp_desc.m_depth_attachment_ref.m_layout = ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-    sp_descs.push_back(sp_desc);
-    */
-
     //1.3 SubpassDependency.
     std::vector<SubpassDependency> sp_denps;
     SubpassDependency sp_denp;
-    //sp external to 0
+    //sp external to sp0
     sp_denp = SubpassDependency();
     sp_denp.m_src_spID = SD_SUBPASS_EXTERNAL;
     sp_denp.m_dst_spID = 0;
@@ -162,9 +90,8 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
     sp_denp.m_dependencies.push_back(DependencyScope_REGION);
     sp_denps.push_back(sp_denp);
-
-    //sp0 and external
-    sp_denp = SubpassDependency(); //Test one subpass.
+    //sp0 and sp external
+    sp_denp = SubpassDependency();
     sp_denp.m_src_spID = 0;
     sp_denp.m_dst_spID = SD_SUBPASS_EXTERNAL;
     sp_denp.m_src_pipeline_stages.push_back(PipelineStage_BOTTOM_OF_PIPE);
@@ -173,39 +100,6 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
     sp_denp.m_dependencies.push_back(DependencyScope_REGION);
     sp_denps.push_back(sp_denp);
-
-    /*
-    //sp0 and 1
-    sp_denp = SubpassDependency();
-    sp_denp.m_src_spID = 0;
-    sp_denp.m_dst_spID = 1;
-    sp_denp.m_src_pipeline_stages.push_back(PipelineStage_BOTTOM_OF_PIPE);
-    sp_denp.m_dst_pipeline_stages.push_back(PipelineStage_TOP_OF_PIPE);
-    sp_denp.m_src_mem_masks.push_back(MemoryAccessMask_MEMORY_WRITE);
-    sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
-    sp_denp.m_dependencies.push_back(DependencyScope_REGION);
-    sp_denps.push_back(sp_denp);
-    //sp1 and 2
-    sp_denp = SubpassDependency();
-    sp_denp.m_src_spID = 1;
-    sp_denp.m_dst_spID = 2;
-    sp_denp.m_src_pipeline_stages.push_back(PipelineStage_BOTTOM_OF_PIPE);
-    sp_denp.m_dst_pipeline_stages.push_back(PipelineStage_TOP_OF_PIPE);
-    sp_denp.m_src_mem_masks.push_back(MemoryAccessMask_MEMORY_WRITE);
-    sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
-    sp_denp.m_dependencies.push_back(DependencyScope_REGION);
-    sp_denps.push_back(sp_denp);
-    
-    //sp2 and external
-    sp_denp = SubpassDependency();
-    sp_denp.m_src_spID = 2;
-    sp_denp.m_dst_spID = SD_SUBPASS_EXTERNAL;
-    sp_denp.m_src_pipeline_stages.push_back(PipelineStage_BOTTOM_OF_PIPE);
-    sp_denp.m_dst_pipeline_stages.push_back(PipelineStage_TOP_OF_PIPE);
-    sp_denp.m_src_mem_masks.push_back(MemoryAccessMask_MEMORY_WRITE);
-    sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
-    sp_denp.m_dependencies.push_back(DependencyScope_REGION);
-    */
 
     forward_pass.GetRef().AddRenderPassDescription(att_descs, sp_descs, sp_denps);
     forward_pass.GetRef().Initialize();

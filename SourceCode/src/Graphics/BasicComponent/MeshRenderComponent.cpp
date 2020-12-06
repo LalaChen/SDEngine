@@ -67,7 +67,7 @@ void MeshRenderComponent::Initialize()
     }
 
     if (m_geo_ub_wrefs.IsNull() == true) {
-        SDLOGE("We can find basic uniform buffer.");
+        SDLOGE("We can find geometry uniform buffer.");
     }
 
     m_geo_comp_wref = SD_GET_COMP_WREF(m_entity_wref, TransformComponent);
@@ -133,6 +133,8 @@ bool MeshRenderComponent::OnGeometryChanged(const EventArg &i_arg)
         WorldUniforms wu;
         wu.m_normal = SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeNormalMatrix();
         wu.m_world = SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeWorldMatrix();
+        SDLOG("Normal:%s", wu.m_normal.ToString().c_str());
+        SDLOG("World:%s", wu.m_normal.ToString().c_str());
         SD_WREF(m_geo_ub_wrefs).SetBufferData(&wu, sizeof(WorldUniforms));
         SD_WREF(m_geo_ub_wrefs).Update();
     }

@@ -65,18 +65,24 @@ void SampleDrawObjects::LoadScene()
         GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
 
         //1.3 prepare descriptor set layouts.
-        std::vector<UniformVariableDescriptorStrongReferenceObject> material_uvd_srefs;
         std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
         std::vector<DescriptorSetLayoutWeakReferenceObject> basic_dsl_wrefs;
-        DescriptorSetLayoutStrongReferenceObject material_dsl_sref;
-        GraphicsManager::GetRef().GetBasicDescriptorSetLayouts(basic_dsl_wrefs);
-        dsl_wrefs.insert(dsl_wrefs.begin(), basic_dsl_wrefs.begin(), basic_dsl_wrefs.end());
-        material_uvd_srefs.push_back(GraphicsManager::GetRef().GetDefaultMaterialUniformVariableDescriptor("material"));
+        
+        dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Camera"));
+        dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("MeshRender"));
+        dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light"));
 
-        material_dsl_sref = new DescriptorSetLayout("Material");
-        material_dsl_sref.GetRef().AddUniformVariableDescriptors(material_uvd_srefs);
-        material_dsl_sref.GetRef().Initialize();
-        dsl_wrefs.push_back(material_dsl_sref);
+        basic_dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Camera"));
+        basic_dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("MeshRender"));
+        basic_dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light"));
+
+        //std::vector<UniformVariableDescriptorStrongReferenceObject> material_uvd_srefs;
+        //material_uvd_srefs.push_back(GraphicsManager::GetRef().GetDefaultMaterialUniformVariableDescriptor("material"));
+        //DescriptorSetLayoutStrongReferenceObject material_dsl_sref;
+        //material_dsl_sref = new DescriptorSetLayout("Material");
+        //material_dsl_sref.GetRef().AddUniformVariableDescriptors(material_uvd_srefs);
+        //material_dsl_sref.GetRef().Initialize();
+        //dsl_wrefs.push_back(material_dsl_sref);
 
         //1.4 register uniform variable descriptor to pipeline.
         RenderPassWeakReferenceObject rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPath");
@@ -97,15 +103,15 @@ void SampleDrawObjects::LoadScene()
         forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
         rp_infos.push_back(forward_rp);
         m_axis_shader_sref.GetRef().RegisterShaderProgramStructure(
-            rp_infos, pipe_srefs, basic_dsl_wrefs, { material_dsl_sref });
+            rp_infos, pipe_srefs, basic_dsl_wrefs, {}/*{ material_dsl_sref }*/);
     }
 
     //2. allocate material.
     {
         m_axis_material_sref = new Material("AxesMaterial");
         m_axis_material_sref.GetRef().BindShaderProgram(m_axis_shader_sref);
-        MaterialUniforms mat_ub; //use default color.
-        m_axis_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
+        //MaterialUniforms mat_ub; //use default color.
+        //m_axis_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
         //Set data done. Link with shader program.(Write descirptor)
         m_axis_material_sref.GetRef().LinkWithShaderProgram();
         m_axis_material_sref.GetRef().Update();
@@ -139,7 +145,7 @@ void SampleDrawObjects::LoadScene()
             true));
 
     SD_COMP_WREF(m_camera_node, CameraComponent).SetClearValues(
-        { 0.35f, 0.15f, 0.75f, 1.0f },
+        { 0.35f, 0.35f, 0.75f, 1.0f },
         { 1.0f, 1 });
     SD_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(120, 0.01f, 1000.0f);
     SD_COMP_WREF(m_camera_node, CameraComponent).Initialize();
@@ -164,7 +170,7 @@ void SampleDrawObjects::LoadScene()
     SD_COMP_WREF(m_axis_node, MeshRenderComponent).Initialize();
     SD_COMP_WREF(m_axis_node, MeshRenderComponent).AppendMesh(m_axis_mesh, m_axis_material_sref);
 
-    /*
+    ///*
     //7. add floor.
     m_floor_mesh = BasicShapeCreator::GetRef().CreatePlane(
         Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX,
@@ -176,7 +182,7 @@ void SampleDrawObjects::LoadScene()
 
     SD_COMP_WREF(m_floor_node, MeshRenderComponent).Initialize();
     SD_COMP_WREF(m_floor_node, MeshRenderComponent).AppendMesh(m_floor_mesh, m_basic_material_sref);
-    */
+    //*/
     /*
     //8. add cubes.
     m_cube_mesh = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));

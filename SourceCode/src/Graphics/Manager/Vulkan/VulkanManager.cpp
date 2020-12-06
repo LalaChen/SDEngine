@@ -128,7 +128,7 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializePresentRenderPass();
             InitializeSCImageViewsAndFBs();
             //
-            //PrintSystemInformation();
+            PrintSystemInformation();
         }
         else {
             throw std::runtime_error("VkInstance in arg is nullptr!!!");

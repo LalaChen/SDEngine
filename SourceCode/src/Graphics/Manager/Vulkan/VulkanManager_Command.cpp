@@ -43,7 +43,7 @@ void VulkanManager::DestroyCommandPool(CommandPoolIdentity &io_identity)
 
 void VulkanManager::AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref)
 {
-    const CommandPoolIdentity& cp_identity = GetIdentity(i_pool_wref);
+    const CommandPoolIdentity &cp_identity = GetIdentity(i_pool_wref);
     VkCommandBuffer &cb_handle = reinterpret_cast<VkCommandBuffer&>(io_identity.m_handle);
     VkCommandPool cp_handle = reinterpret_cast<VkCommandPool>(cp_identity.m_pool_handle);
     VkCommandBufferLevel cb_level = CommandBufferLevel_Vulkan::Convert(io_identity.m_cmd_buffer_level);
@@ -88,8 +88,8 @@ void VulkanManager::SubmitCommandBuffersToQueue(const std::vector<CommandBufferW
     std::vector<VkCommandBuffer> cb_handles;
     for (const CommandBufferWeakReferenceObject &cb_wref : i_cb_wrefs) {
         if (cb_wref.IsNull() == false) {
-            const CommandBufferIdentity &cb_indentity = GetIdentity(cb_wref);
-            cb_handles.push_back(reinterpret_cast<VkCommandBuffer>(cb_indentity.m_handle));
+            const CommandBufferIdentity &cb_identity = GetIdentity(cb_wref);
+            cb_handles.push_back(reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle));
         }
     }
 
@@ -103,8 +103,8 @@ void VulkanManager::SubmitCommandBufferToQueue(const CommandBufferWeakReferenceO
     std::vector<VkCommandBuffer> cb_handles;
 
     if (i_cb_wref.IsNull() == false) {
-        const CommandBufferIdentity &cb_indentity = GetIdentity(i_cb_wref);
-        cb_handles.push_back(reinterpret_cast<VkCommandBuffer>(cb_indentity.m_handle));
+        const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
+        cb_handles.push_back(reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle));
     }
 
     if (cb_handles.size() > 0) {
@@ -117,13 +117,13 @@ void VulkanManager::ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWea
     std::vector<VkCommandBuffer> sec_cb_handles;
     for (const CommandBufferWeakReferenceObject &cb_wref : i_secondary_cb_wrefs) {
         if (cb_wref.IsNull() == false) {
-            const CommandBufferIdentity &sec_cb_indentity = GetIdentity(cb_wref);
-            sec_cb_handles.push_back(reinterpret_cast<VkCommandBuffer>(sec_cb_indentity.m_handle));
+            const CommandBufferIdentity &sec_cb_identity = GetIdentity(cb_wref);
+            sec_cb_handles.push_back(reinterpret_cast<VkCommandBuffer>(sec_cb_identity.m_handle));
         }
     }
 
-    const CommandBufferIdentity &pri_cb_indentity = GetIdentity(i_primary_cb_wref);
-    VkCommandBuffer pri_cb_handle = reinterpret_cast<VkCommandBuffer>(pri_cb_indentity.m_handle);
+    const CommandBufferIdentity &pri_cb_identity = GetIdentity(i_primary_cb_wref);
+    VkCommandBuffer pri_cb_handle = reinterpret_cast<VkCommandBuffer>(pri_cb_identity.m_handle);
 
     if (sec_cb_handles.size() > 0 && pri_cb_handle != VK_NULL_HANDLE) {
         ExecuteVkSecondaryCommandBuffersToPrimaryVkCommandBuffer(pri_cb_handle, sec_cb_handles);

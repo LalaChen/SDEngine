@@ -121,6 +121,7 @@ void CameraComponent::RecordCommand(
         GraphicsManager::GetRef().SetViewport(i_cb_wref, vp);
         GraphicsManager::GetRef().SetScissor(i_cb_wref, sr);
 
+#if 0
         uint32_t tID = 0;
         for (tID = 0; tID < scp_threads.size(); ++tID) {
             SD_SREF(scp_threads[tID]).StartRecording(cb_inherit_info, vp, sr);
@@ -144,6 +145,14 @@ void CameraComponent::RecordCommand(
         }
 
         GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(i_cb_wref, secondary_cb_wrefs);
+#else
+        light_wref_iter = i_light_list.begin();
+        for (mr_wref_iter = i_mesh_render_list.begin(); mr_wref_iter != i_mesh_render_list.end(); ++mr_wref_iter) {
+            DescriptorSetWeakReferenceObject light_ds_wref = SD_WREF((*light_wref_iter)).GetDescriptorSet();
+            MeshRenderComponentWeakReferenceObject mr_wref = (*mr_wref_iter);
+            SD_WREF(mr_wref).RenderMesh(current_rp, i_cb_wref, m_ds_wref, light_ds_wref, 0);
+        }
+#endif
 
         SD_SREF(m_rf_sref).EndRenderFlow(i_cb_wref);
     }
@@ -165,12 +174,19 @@ void CameraComponent::InitializeDescriptorSetAndPool()
     SD_SREF(m_dp_sref).Initialize(desc_counts, 1, false);
     //2. Allocate descriptor set.
     m_ds_wref = SD_SREF(m_dp_sref).AllocateDescriptorSet(dsl_wref);
-    SD_SREF(m_ds_wref).GetAllocatedUniformVariables(uv_wrefs);
+    SD_WREF(m_ds_wref).GetAllocatedUniformVariables(uv_wrefs);
 
     if (m_ds_wref.IsNull() == false) {
         SD_SREF(m_ds_wref).WriteDescriptor();
     }
-    m_buffer_wref = uv_wrefs["camera"].DynamicCastTo<UniformBuffer>();
+
+    if (uv_wrefs.find("camera") != uv_wrefs.end()) {
+        m_buffer_wref = uv_wrefs["camera"].DynamicCastTo<UniformBuffer>();
+    }
+
+    if (m_buffer_wref.IsNull() == true) {
+        SDLOGE("We can find camera uniform buffer.");
+    }
 }
 
 void CameraComponent::InitializeWorkspaceForForwardPath()
@@ -199,7 +215,7 @@ void CameraComponent::InitializeWorkspaceForForwardPath()
         m_rf_sref = new RenderFlow("RenderFlow", ImageOffset(0, 0, 0),
             ImageSize(m_screen_size.GetWidth(), m_screen_size.GetHeight(), 1));
 
-        SD_SREF(m_rf_sref).RegisterRenderPass(GraphicsManager::GetRef().GetRenderPass("ForwardPath"));
+        SD_SREF(m_rf_sref).RegisterRenderPass(forward_rp_wref);
         SD_SREF(m_rf_sref).AllocateFrameBuffer();
         SD_SREF(m_rf_sref).RegisterBufferToFrameBuffer(m_color_buf_sref, 0, m_clear_color);
         SD_SREF(m_rf_sref).RegisterBufferToFrameBuffer(m_depth_buf_sref, 1, m_clear_d_and_s);
@@ -250,6 +266,8 @@ bool CameraComponent::OnGeometryChanged(const EventArg &i_arg)
         cu.m_proj = m_proj_mat;
         cu.m_view = node_trans.MakeViewMatrix();
         cu.m_view_eye = node_trans.m_position;
+        SDLOG("Proj:%s", cu.m_proj.ToString().c_str());
+        SDLOG("View:%s", cu.m_view.ToString().c_str());
         SD_WREF(m_buffer_wref).SetBufferData(&cu, sizeof(CameraUniforms));
         SD_WREF(m_buffer_wref).Update();
     }

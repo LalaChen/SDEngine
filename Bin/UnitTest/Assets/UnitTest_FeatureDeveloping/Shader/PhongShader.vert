@@ -23,16 +23,20 @@ layout(location = 4) out vec3 wViewDir;
 //Uniform
 //layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
 //Uniform basic Buffer.
-layout(set = 0, binding = 0) uniform BasicUniforms {
+layout(set = 0, binding = 0) uniform CameraUniforms {
     mat4 proj;
 	mat4 view;
+	vec4 viewEye;
+} camera;
+
+//Uniform Geometry Buffer.
+layout(set = 1, binding = 0) uniform GeometryUniforms {
 	mat4 world;
 	mat4 normal;
-	vec4 viewEye;
-} basic;
+} geometry;
 
 //Uniform Light Buffer.
-layout(set = 1, binding = 0) uniform LightUniforms {
+layout(set = 2, binding = 0) uniform LightUniforms {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
@@ -47,7 +51,7 @@ layout(set = 1, binding = 0) uniform LightUniforms {
 } light;
 
 //Uniform Material buffer
-layout(set = 2, binding = 0) uniform MaterialUniforms {
+layout(set = 3, binding = 0) uniform MaterialUniforms {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
@@ -55,7 +59,7 @@ layout(set = 2, binding = 0) uniform MaterialUniforms {
 	float shininess;
 } material;
 
-layout(set = 2, binding = 1) uniform sampler2D mainTexture; 
+layout(set = 3, binding = 1) uniform sampler2D mainTexture; 
 
 //------- light vertices basic function -------
 vec3 CalculateLightDir(in vec4 iVertex)
@@ -77,16 +81,16 @@ vec3 CalculateLightDir(in vec4 iVertex)
 
 vec3 CalculateViewDir(in vec4 iVertex)
 {
-	return normalize(basic.viewEye.xyz - iVertex.xyz);
+	return normalize(camera.viewEye.xyz - iVertex.xyz);
 }
 
 void main()
 {
 	vec4 vertex = vec4(vertices, 1.0);
-	wNormal = normalize((basic.normal * vec4(normals, 0.0)).xyz);
+	wNormal = normalize((geometry.normal * vec4(normals, 0.0)).xyz);
 	texCoord = texCoords;
 	wLightDir = CalculateLightDir(vertex).xyz;
 	wViewDir = CalculateViewDir(vertex).xyz;
 	wVertex = vertex;
-    gl_Position = basic.proj * basic.view * basic.world * vertex;
+    gl_Position = camera.proj * camera.view * geometry.world * vertex;
 }
