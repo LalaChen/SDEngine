@@ -45,9 +45,9 @@ layout(set = 2, binding = 0) uniform LightUniforms {
 } light;
 
 vec2 positions[3] = vec2[](
-    vec2(0.0, -0.5),
-    vec2(0.5, 0.5),
-    vec2(-0.5, 0.5)
+    vec2(1.0, -1.5),
+    vec2(1.5, 1.5),
+    vec2(-1.5, 1.5)
 );
 
 vec3 ccolors[3] = vec3[](
@@ -63,6 +63,41 @@ void main()
 	fColor = colors;
     gl_Position = camera.proj * camera.view * geometry.world * vertex;
 
-	//gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
+	///*
+	//mat4 tproj = mat4(
+	//	2.083, 0.000,  0.000,  0.000,
+	//	0.000, 3.125,  0.000,  0.000,
+	//	0.000, 0.000, -1.000, -1.000,
+	//	0.000, 0.000, -0.020,  0.000
+	//);
+	////*/
+	///*
+	//mat4 tproj = mat4(
+	//	0.1, 0.0,  0.0, 0.0,
+	//	0.0, 0.1,  0.0, 0.0,
+	//	0.0, 0.0, -0.5, 0.0,
+	//	0.0, 0.0,  0.0, 1.0
+	//);
+	////*/
+	//
+	//mat4 tview = mat4(
+	//	1.0, 0.0,   0.0, 0.0,
+	//	0.0, 1.0,   0.0, 0.0,
+	//	0.0, 0.0,  -1.0, 0.0,
+	//	0.0, 0.0, -10.0, 1.0
+	//);
+	//
+	//fColor = vec4(0.0, 0.0, 0.0, 1.0);
+	//if (abs(camera.proj[0][0] - 2.083) < 0.01f) {
+	//	fColor.r = 1.0;
+	//}
+	//if (abs(camera.proj[1][1] - 3.125) < 0.01f) {
+	//	fColor.g = 1.0;
+	//}
+	//if (abs(camera.proj[2][3] + 0.020) < 0.01f) {
+	//	fColor.b = 1.0;
+	//}
+	//gl_Position = camera.proj * camera.view * vertex;
+	//gl_Position = camera.proj * camera.view * vec4(positions[gl_VertexIndex], 0.5, 1.0);
     //fColor = vec4(ccolors[gl_VertexIndex], 1.0);
 }

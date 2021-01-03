@@ -58,7 +58,7 @@ void SampleDrawObjects::LoadScene()
         GraphicsPipelineParam params;
         params.m_primitive_info.m_primitive = Primitive_TRIANGLE;
         params.m_depth_stencil_info.m_depth_test_enable = true;
-        params.m_rasterization_info.m_face_culling = FaceCulling_NONE;
+        params.m_rasterization_info.m_face_culling = FaceCulling_BACK_FACE;
         params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
         params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
         params.m_dynamic_states.push_back(DynamicState_SCISSOR);
@@ -110,8 +110,8 @@ void SampleDrawObjects::LoadScene()
     {
         m_axis_material_sref = new Material("AxesMaterial");
         m_axis_material_sref.GetRef().BindShaderProgram(m_axis_shader_sref);
-        //MaterialUniforms mat_ub; //use default color.
-        //m_axis_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
+        MaterialUniforms mat_ub; //use default color.
+        m_axis_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
         //Set data done. Link with shader program.(Write descirptor)
         m_axis_material_sref.GetRef().LinkWithShaderProgram();
         m_axis_material_sref.GetRef().Update();
