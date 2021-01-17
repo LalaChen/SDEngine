@@ -86,14 +86,14 @@ bool LightComponent::OnGeometryChanged(const EventArg &i_arg)
     if (m_buffer_wref.IsNull() == false) {
         Transform node_trans = SD_WREF(m_geo_comp_wref).GetWorldTransform();
         if (m_light_params.m_kind == 0) {
-            m_light_params.m_position = node_trans.m_position;
+            m_light_params.m_direction = node_trans.GetForward().negative();
         }
         else if (m_light_params.m_kind == 1) {
-            m_light_params.m_direction = node_trans.GetForward();
+            m_light_params.m_position = node_trans.m_position;
+            m_light_params.m_direction = node_trans.GetForward().negative();
         }
         else if (m_light_params.m_kind == 2) {
             m_light_params.m_position = node_trans.m_position;
-            m_light_params.m_direction = node_trans.GetForward();
         }
 
         SD_WREF(m_buffer_wref).SetBufferData(&m_light_params, sizeof(LightUniforms));

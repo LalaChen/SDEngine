@@ -66,7 +66,7 @@ vec3 CalculateLightDir(in vec4 iVertex)
 {
 	//Directional Light
     if (light.kind == 0) {
-		return normalize(light.position.xyz);
+		return normalize(light.direction.xyz);
 	} 
 	else if (light.kind == 1) {
 		return normalize(light.position.xyz - iVertex.xyz);

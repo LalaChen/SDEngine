@@ -125,17 +125,10 @@ void MeshRenderComponent::RenderMesh(
 bool MeshRenderComponent::OnGeometryChanged(const EventArg &i_arg)
 {
     if (m_geo_ub_wrefs.IsNull() == false) {
-        //SD_WREF(m_geo_ub_wrefs).SetMatrix4X4f("world",
-        //    SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeWorldMatrix());
-        //SD_WREF(m_geo_ub_wrefs).SetMatrix4X4f("normal",
-        //    SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeNormalMatrix());
-
-        WorldUniforms wu;
-        wu.m_normal = SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeNormalMatrix();
-        wu.m_world = SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeWorldMatrix();
-        SDLOG("Normal:%s", wu.m_normal.ToString().c_str());
-        SDLOG("World:%s", wu.m_normal.ToString().c_str());
-        SD_WREF(m_geo_ub_wrefs).SetBufferData(&wu, sizeof(WorldUniforms));
+        SD_WREF(m_geo_ub_wrefs).SetMatrix4X4f("world",
+            SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeWorldMatrix());
+        SD_WREF(m_geo_ub_wrefs).SetMatrix4X4f("normal",
+            SD_WREF(m_geo_comp_wref).GetWorldTransform().MakeNormalMatrix());
         SD_WREF(m_geo_ub_wrefs).Update();
     }
 

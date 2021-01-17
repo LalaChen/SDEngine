@@ -105,8 +105,14 @@ void SampleDrawObjects::LoadScene()
         m_axis_shader_sref.GetRef().RegisterShaderProgramStructure(
             rp_infos, pipe_srefs, basic_dsl_wrefs, {}/*{ material_dsl_sref }*/);
     }
+    //2. add texture.
+    {
+        m_main_tex_sref = new Texture("MainTexture");
+        m_main_tex_sref.GetRef().SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
+        m_main_tex_sref.GetRef().InitializeFromImageResource("Texture/Lenna.png");
+    }
 
-    //2. allocate material.
+    //3. allocate material.
     {
         m_axis_material_sref = new Material("AxesMaterial");
         m_axis_material_sref.GetRef().BindShaderProgram(m_axis_shader_sref);
@@ -122,16 +128,17 @@ void SampleDrawObjects::LoadScene()
         m_basic_material_sref.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("BasicShading"));
         MaterialUniforms mat_ub; //use default color.
         m_basic_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
+        m_basic_material_sref.GetRef().SetTexture("mainTexture", m_main_tex_sref);
         //Set data done. Link with shader program.(Write descirptor)
         m_basic_material_sref.GetRef().LinkWithShaderProgram();
         m_basic_material_sref.GetRef().Update();
     }
 
-    //3. allocate scene root.
+    //4. allocate scene root.
     m_scene_root_node = ECSManager::GetRef().CreateEntity("SceneRoot");
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_scene_root_node, "RootTransform");
 
-    //4. Add camera.
+    //5. Add camera.
     m_camera_node = ECSManager::GetRef().CreateEntity("Camera");
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_camera_node, "CameraTransform");
     ECSManager::GetRef().AddComponentForEntity<CameraComponent>(m_camera_node, "Camera");
@@ -150,16 +157,19 @@ void SampleDrawObjects::LoadScene()
     SD_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(120, 0.01f, 1000.0f);
     SD_COMP_WREF(m_camera_node, CameraComponent).Initialize();
 
-    //5. Add light.
+    //6. Add light.
     m_light_node = ECSManager::GetRef().CreateEntity("Light");
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_light_node, "LightTransform");
     ECSManager::GetRef().AddComponentForEntity<LightComponent>(m_light_node, "Light");
     SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_light_node, TransformComponent));
-
     SD_COMP_WREF(m_light_node, LightComponent).SetLightParameter(LightUniforms());
     SD_COMP_WREF(m_light_node, LightComponent).Initialize();
 
-    //5. add axis.
+    SD_COMP_WREF(m_light_node, TransformComponent).SetWorldTransform(
+        Transform::LookAt(Vector3f(1.0f, 3.0f, 1.0f, 1.0f), Vector3f::Origin, Vector3f::PositiveY)
+    );
+
+    //7. add axis.
     m_axis_mesh = BasicShapeCreator::GetRef().CreateAxis(0.2f, 20.0f);
     m_axis_node = ECSManager::GetRef().CreateEntity("AxisNode");
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_axis_node, "AxisTransform");
@@ -171,7 +181,7 @@ void SampleDrawObjects::LoadScene()
     SD_COMP_WREF(m_axis_node, MeshRenderComponent).AppendMesh(m_axis_mesh, m_axis_material_sref);
 
     ///*
-    //7. add floor.
+    //8. add floor.
     m_floor_mesh = BasicShapeCreator::GetRef().CreatePlane(
         Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX,
         100.0f, 100.0f, 100.0f, 100.0f);
@@ -183,7 +193,7 @@ void SampleDrawObjects::LoadScene()
     SD_COMP_WREF(m_floor_node, MeshRenderComponent).Initialize();
     SD_COMP_WREF(m_floor_node, MeshRenderComponent).AppendMesh(m_floor_mesh, m_basic_material_sref);
     //*/
-    /*
+    ///*
     //8. add cubes.
     m_cube_mesh = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
     
@@ -209,5 +219,5 @@ void SampleDrawObjects::LoadScene()
             }
         }
     }
-    */
+    //*/
 }

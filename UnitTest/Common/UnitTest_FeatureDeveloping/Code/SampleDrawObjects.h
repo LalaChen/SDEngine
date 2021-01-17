@@ -35,6 +35,8 @@ protected:
     ShaderProgramStrongReferenceObject m_axis_shader_sref;
     MaterialStrongReferenceObject m_basic_material_sref;
 protected:
+    TextureStrongReferenceObject m_main_tex_sref;
+protected:
     float m_cube_interval;
     float m_cube_side_length;
     uint32_t m_cube_row;

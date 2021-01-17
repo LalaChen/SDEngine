@@ -259,16 +259,9 @@ bool CameraComponent::OnGeometryChanged(const EventArg &i_arg)
 {
     if (m_buffer_wref.IsNull() == false) {
         Transform node_trans = SD_WREF(m_geo_comp_wref).GetWorldTransform();
-        //SD_WREF(m_buffer_wref).SetMatrix4X4f("view", node_trans.MakeViewMatrix());
-        //SD_WREF(m_buffer_wref).SetMatrix4X4f("proj", m_proj_mat);
-        //SD_WREF(m_buffer_wref).SetVector3f("viewEye", node_trans.m_position);
-        CameraUniforms cu;
-        cu.m_proj = m_proj_mat;
-        cu.m_view = node_trans.MakeViewMatrix();
-        cu.m_view_eye = node_trans.m_position;
-        SDLOG("Proj:%s", cu.m_proj.ToString().c_str());
-        SDLOG("View:%s", cu.m_view.ToString().c_str());
-        SD_WREF(m_buffer_wref).SetBufferData(&cu, sizeof(CameraUniforms));
+        SD_WREF(m_buffer_wref).SetMatrix4X4f("view", node_trans.MakeViewMatrix());
+        SD_WREF(m_buffer_wref).SetMatrix4X4f("proj", m_proj_mat);
+        SD_WREF(m_buffer_wref).SetVector3f("viewEye", node_trans.m_position);
         SD_WREF(m_buffer_wref).Update();
     }
 
