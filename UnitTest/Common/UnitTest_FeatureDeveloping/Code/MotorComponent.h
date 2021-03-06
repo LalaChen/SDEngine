@@ -17,8 +17,8 @@ public:
     explicit MotorComponent(const ObjectName &i_name);
     virtual ~MotorComponent();
 public:
-    void Initialize();
-    void Update();
+    virtual void Initialize();
+    virtual void Update();
 protected:
     TransformComponentWeakReferenceObject m_trans_comp_wref;
     Transform m_current_trans;

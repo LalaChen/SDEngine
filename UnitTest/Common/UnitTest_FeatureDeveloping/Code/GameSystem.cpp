@@ -28,14 +28,14 @@ void GameSystem::Initialize()
 void GameSystem::Update()
 {
     if (m_cur_sample_idx < m_samples.size()) {
-        SD_SREF(m_samples[m_cur_sample_idx]).UpdateScene();
+        SD_WREF(m_samples[m_cur_sample_idx]).UpdateScene();
     }
 }
 
 void GameSystem::Destroy()
 {
     for (uint32_t sid = 0; sid < m_samples.size(); ++sid) {
-        SD_SREF(m_samples[sid]).DestroyScene();
+        SD_WREF(m_samples[sid]).DestroyScene();
     }
     m_samples.clear();
 }
@@ -50,7 +50,7 @@ bool GameSystem::OnAppEventTriggered(const EventArg &i_arg)
         const AppEventArg &arg = dynamic_cast<const AppEventArg&>(i_arg);
         if (arg.m_app_event == AppEvent_GRAPHICS_INITIALIZED) {
             for (uint32_t sid = 0; sid < m_samples.size(); ++sid) {
-                SD_SREF(m_samples[sid]).InitializeScene();
+                SD_WREF(m_samples[sid]).InitializeScene();
             }
         }
         return true;

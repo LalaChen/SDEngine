@@ -78,7 +78,7 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     //1. Prepare vertex attribute information.
     for (uint32_t vaID = 0; vaID < va_input_binding_descs.size(); ++vaID) {
         va_input_binding_descs[vaID] = {};
-        va_input_binding_descs[vaID].binding = io_identity.m_params.m_va_binding_descs[vaID].m_binding_ID;
+        va_input_binding_descs[vaID].binding = io_identity.m_params.m_va_binding_descs[vaID].m_binding_id;
         va_input_binding_descs[vaID].stride = io_identity.m_params.m_va_binding_descs[vaID].m_stride;
         va_input_binding_descs[vaID].inputRate = VertexInputRate_Vulkan::Convert(io_identity.m_params.m_va_binding_descs[vaID].m_input_rate);
     }
@@ -86,7 +86,7 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     for (uint32_t vaID = 0; vaID < va_input_location_descs.size(); ++vaID) {
         va_input_location_descs[vaID] = {};
         va_input_location_descs[vaID].location = io_identity.m_params.m_va_location_descs[vaID].m_location;
-        va_input_location_descs[vaID].binding = io_identity.m_params.m_va_location_descs[vaID].m_binding_ID;
+        va_input_location_descs[vaID].binding = io_identity.m_params.m_va_location_descs[vaID].m_binding_id;
         va_input_location_descs[vaID].format = VertexBufferFormat_Vulkan::Convert(io_identity.m_params.m_va_location_descs[vaID].m_format);
         va_input_location_descs[vaID].offset = io_identity.m_params.m_va_location_descs[vaID].m_offset;
     }

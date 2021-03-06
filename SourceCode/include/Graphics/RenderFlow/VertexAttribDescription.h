@@ -57,17 +57,17 @@ public:
      */
     ~VertexAttribBindingDescription();
 public:
-    /*! \var uint32_t m_binding_ID;
+    /*! \var uint32_t m_binding_id;
      *  \brief Buffer binding channel ID.
      */
-    uint32_t m_binding_ID;
+    uint32_t m_binding_id;
 
-    /*! \var uint32_t m_binding_ID;
+    /*! \var uint32_t m_binding_id;
      *  \brief Bytes of one element for this buffer.
      */
     uint32_t m_stride;
 
-    /*! \var uint32_t m_binding_ID;
+    /*! \var uint32_t m_binding_id;
      *  \brief Using for vertex or instance.
      */
     VertexInputRateEnum m_input_rate;
@@ -92,10 +92,10 @@ public:
      */
     ~VertexAttribLocationDescription();
 public:
-    /*! \var uint32_t m_binding_ID;
+    /*! \var uint32_t m_binding_id;
      *  \brief Buffer binding channel ID.
      */
-    uint32_t m_binding_ID;
+    uint32_t m_binding_id;
 
     /*! \var uint32_t m_location;
      *  \brief Target vertex attribute location.
