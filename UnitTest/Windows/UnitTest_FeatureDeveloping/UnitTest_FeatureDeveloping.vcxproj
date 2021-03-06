@@ -201,6 +201,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\MotorComponent.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Sample.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.cpp" />
     <ClCompile Include="main.cpp" />
@@ -209,6 +210,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.h" />
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\MotorComponent.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Sample.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.h" />
     <ClInclude Include="FeatureApplication.h" />

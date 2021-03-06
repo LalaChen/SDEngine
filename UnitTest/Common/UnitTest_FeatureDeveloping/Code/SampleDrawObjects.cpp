@@ -25,6 +25,22 @@ SampleDrawObjects::~SampleDrawObjects()
 {
 }
 
+void SampleDrawObjects::Initialize()
+{
+}
+
+void SampleDrawObjects::Update()
+{
+}
+
+void SampleDrawObjects::Destroy()
+{
+}
+
+void SampleDrawObjects::Resize()
+{
+}
+
 void SampleDrawObjects::InitializeScene()
 {
     LoadScene();
@@ -32,6 +48,9 @@ void SampleDrawObjects::InitializeScene()
 
 void SampleDrawObjects::UpdateScene()
 {
+    if (m_camera_motor_wref.IsNull() == false) {
+        SD_WREF(m_camera_motor_wref).Update();
+    }
 }
 
 void SampleDrawObjects::DestroyScene()
@@ -156,6 +175,10 @@ void SampleDrawObjects::LoadScene()
         { 1.0f, 1 });
     SD_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(120, 0.01f, 1000.0f);
     SD_COMP_WREF(m_camera_node, CameraComponent).Initialize();
+
+    ECSManager::GetRef().AddComponentForEntity<MotorComponent>(m_camera_node, "CameraMotor");
+    m_camera_motor_wref = SD_GET_COMP_WREF(m_camera_node, MotorComponent);
+    SD_WREF(m_camera_motor_wref).Initialize();
 
     //6. Add light.
     m_light_node = ECSManager::GetRef().CreateEntity("Light");

@@ -105,6 +105,7 @@ protected:
 protected:
     TransformComponentWeakReferenceObject m_geo_comp_wref;
 protected:
+    bool m_follow_resolution;
     Resolution m_screen_size;
     ClearValue m_clear_color;
     ClearValue m_clear_d_and_s;
@@ -131,6 +132,7 @@ inline void CameraComponent::SetPerspective(float i_fov, float i_near, float i_f
 inline void CameraComponent::SetCameraSize(const Resolution &i_screen_size)
 {
     m_screen_size = i_screen_size;
+    m_follow_resolution = false;
 }
 
 inline TextureWeakReferenceObject CameraComponent::GetColorBuffer() const

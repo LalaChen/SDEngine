@@ -4,13 +4,12 @@
 #include "SDEngineCommonFunction.h"
 #include "SDEngine.h"
 
-using SDE::Graphics::Texture;
-using SDE::Graphics::TextureStrongReferenceObject;
-using SDE::Graphics::TextureWeakReferenceObject;
+using SDE::Basic::ObjectName;
+using SDE::Basic::System;
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Sample);
 
-class Sample : public Object
+class Sample : public System
 {
 public:
     explicit Sample(const ObjectName &i_object_name);

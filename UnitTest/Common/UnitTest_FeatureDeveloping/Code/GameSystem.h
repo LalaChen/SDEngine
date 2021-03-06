@@ -3,7 +3,6 @@
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "Sample.h"
-#include "System.h"
 
 using SDE::Basic::ObjectName;
 using SDE::Basic::System;
@@ -24,5 +23,5 @@ public:
     bool OnAppEventTriggered(const EventArg &i_arg);
 protected:
     uint32_t m_cur_sample_idx;
-    std::vector<SampleStrongReferenceObject> m_samples;
+    std::vector<SampleWeakReferenceObject> m_samples;
 };

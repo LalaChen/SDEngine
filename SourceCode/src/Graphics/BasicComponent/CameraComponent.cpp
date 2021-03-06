@@ -38,6 +38,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 CameraComponent::CameraComponent(const ObjectName &i_object_name)
 : Component(i_object_name)
 , m_workspace_type(WorkspaceType_Forward)
+, m_follow_resolution(true)
 , m_clear_color{ 0.15f, 0.15f, 0.75f, 1.0f }
 , m_clear_d_and_s{ 1.0f, 1 }
 , m_fov(120.0f)
@@ -79,11 +80,16 @@ void CameraComponent::Resize()
 {
     ClearWorkspace();
 
-    if (m_workspace_type == WorkspaceType_Forward) {
-        InitializeWorkspaceForForwardPath();
-    }
-    else if (m_workspace_type == WorkspaceType_Deferred) {
-        InitializeWorkspaceForDeferredPath();
+    if (m_follow_resolution == true) {
+
+        m_screen_size = GraphicsManager::GetRef().GetScreenResolution();
+
+        if (m_workspace_type == WorkspaceType_Forward) {
+            InitializeWorkspaceForForwardPath();
+        }
+        else if (m_workspace_type == WorkspaceType_Deferred) {
+            InitializeWorkspaceForDeferredPath();
+        }
     }
 
     SetPerspective(m_fov, m_near, m_far);

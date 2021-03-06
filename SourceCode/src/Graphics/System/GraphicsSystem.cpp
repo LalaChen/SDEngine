@@ -34,6 +34,8 @@ using SDE::Basic::StringFormat;
 using SDE::Basic::Application;
 using SDE::Basic::ECSManager;
 
+using SDE::Basic::MemberFunctionSlot;
+
 using SDE::Basic::Entity;
 using SDE::Basic::EntityStrongReferenceObject;
 using SDE::Basic::EntityWeakReferenceObject;
@@ -129,6 +131,8 @@ void GraphicsSystem::Resize()
     for (EntityWeakReferenceObject ce_wref : camera_entity_list) {
         SD_WREF(SD_GET_COMP_WREF(ce_wref, CameraComponent)).Resize();
     }
+
+    m_scene_changed = true;
 }
 
 void GraphicsSystem::RecordCommand()

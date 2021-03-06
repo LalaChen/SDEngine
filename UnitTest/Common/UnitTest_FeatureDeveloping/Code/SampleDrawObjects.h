@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MotorComponent.h"
 #include "Sample.h"
 
 using namespace SDE::Basic;
@@ -13,6 +14,11 @@ class SampleDrawObjects : public Sample
 public:
     explicit SampleDrawObjects(const ObjectName &i_sample_name);
     virtual ~SampleDrawObjects();
+public:
+    void Initialize() override;
+    void Update() override;
+    void Destroy() override;
+    void Resize() override;
 public:
     void InitializeScene() override;
     void UpdateScene() override;
@@ -36,6 +42,8 @@ protected:
     MaterialStrongReferenceObject m_basic_material_sref;
 protected:
     TextureStrongReferenceObject m_main_tex_sref;
+protected:
+    MotorComponentWeakReferenceObject m_camera_motor_wref;
 protected:
     float m_cube_interval;
     float m_cube_side_length;

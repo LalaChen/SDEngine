@@ -13,10 +13,16 @@ GameSystem::~GameSystem()
 
 void GameSystem::Initialize()
 {
-    m_samples.push_back(new SampleDrawObjects("DrawObjects"));
+    m_samples.push_back(
+        ECSManager::GetRef().RegisterSystem<SampleDrawObjects>("SampleDrawObjects").
+        DynamicCastTo<Sample>());
 
     SD_WREF(Application::GetRef().GetEventNotifier()).RegisterSlotFunctionIntoEvent(
-        "AppEvent", new MemberFunctionSlot<GameSystem>("GameSystem::OnAppEventTriggered", GetThisWeakPtrByType<GameSystem>(), &GameSystem::OnAppEventTriggered));
+        "AppEvent", 
+        new MemberFunctionSlot<GameSystem>(
+            "GameSystem::OnAppEventTriggered",
+            GetThisWeakPtrByType<GameSystem>(),
+            &GameSystem::OnAppEventTriggered));
 }
 
 void GameSystem::Update()
