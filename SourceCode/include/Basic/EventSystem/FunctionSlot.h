@@ -197,7 +197,7 @@ public:
      *  \param [in] i_src_arg The event arg we want to send out.
      *  \brief We will deliver params by arg to target member slot function.
      */
-    bool NotifyFunction(const EventArg& i_src_arg) override
+    bool NotifyFunction(const EventArg & i_src_arg) override
     {
         if (m_wref.IsNull() == false) {
             if (m_fp != nullptr) {
@@ -226,7 +226,7 @@ public:
      *  \brief Return the result about i_src.m_fp and i_src.m_wref \n
      *         are equal to this.m_fp and this->m_wref or not.
      */
-    bool IsEqualTo(const Object &i_src) const
+    bool IsEqualTo(const Object &i_src) const override
     {
         const MemberFunctionSlot<Type> *src_ptr = dynamic_cast<const MemberFunctionSlot<Type>* >(&i_src);
         //Compare owner and function pointer of two current slot .

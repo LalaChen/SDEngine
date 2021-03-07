@@ -95,14 +95,6 @@ void SampleDrawObjects::LoadScene()
         basic_dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("MeshRender"));
         basic_dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light"));
 
-        //std::vector<UniformVariableDescriptorStrongReferenceObject> material_uvd_srefs;
-        //material_uvd_srefs.push_back(GraphicsManager::GetRef().GetDefaultMaterialUniformVariableDescriptor("material"));
-        //DescriptorSetLayoutStrongReferenceObject material_dsl_sref;
-        //material_dsl_sref = new DescriptorSetLayout("Material");
-        //material_dsl_sref.GetRef().AddUniformVariableDescriptors(material_uvd_srefs);
-        //material_dsl_sref.GetRef().Initialize();
-        //dsl_wrefs.push_back(material_dsl_sref);
-
         //1.4 register uniform variable descriptor to pipeline.
         RenderPassWeakReferenceObject rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPath");
         GraphicsPipelineStrongReferenceObject pipeline_sref = new GraphicsPipeline("AxesShader_Forward");
@@ -135,21 +127,21 @@ void SampleDrawObjects::LoadScene()
     {
         m_axis_material_sref = new Material("AxesMaterial");
         m_axis_material_sref.GetRef().BindShaderProgram(m_axis_shader_sref);
-        MaterialUniforms mat_ub; //use default color.
-        m_axis_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
         //Set data done. Link with shader program.(Write descirptor)
         m_axis_material_sref.GetRef().LinkWithShaderProgram();
+        MaterialUniforms mat_ub; //use default color.
+        m_axis_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
         m_axis_material_sref.GetRef().Update();
     }
 
     {
         m_basic_material_sref = new Material("BasicMaterial");
         m_basic_material_sref.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("BasicShading"));
+        //Set data done. Link with shader program.(Write descirptor)
+        m_basic_material_sref.GetRef().LinkWithShaderProgram();
         MaterialUniforms mat_ub; //use default color.
         m_basic_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
         m_basic_material_sref.GetRef().SetTexture("mainTexture", m_main_tex_sref);
-        //Set data done. Link with shader program.(Write descirptor)
-        m_basic_material_sref.GetRef().LinkWithShaderProgram();
         m_basic_material_sref.GetRef().Update();
     }
 
@@ -203,7 +195,6 @@ void SampleDrawObjects::LoadScene()
     SD_COMP_WREF(m_axis_node, MeshRenderComponent).Initialize();
     SD_COMP_WREF(m_axis_node, MeshRenderComponent).AppendMesh(m_axis_mesh, m_axis_material_sref);
 
-    ///*
     //8. add floor.
     m_floor_mesh = BasicShapeCreator::GetRef().CreatePlane(
         Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX,
@@ -215,8 +206,7 @@ void SampleDrawObjects::LoadScene()
 
     SD_COMP_WREF(m_floor_node, MeshRenderComponent).Initialize();
     SD_COMP_WREF(m_floor_node, MeshRenderComponent).AppendMesh(m_floor_mesh, m_basic_material_sref);
-    //*/
-    ///*
+
     //8. add cubes.
     m_cube_mesh = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
     
@@ -242,5 +232,4 @@ void SampleDrawObjects::LoadScene()
             }
         }
     }
-    //*/
 }

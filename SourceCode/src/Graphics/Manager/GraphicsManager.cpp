@@ -55,7 +55,7 @@ void GraphicsManager::InitializeBasicResource()
 {
     std::function<void(uint64_t i_count, double i_period_ms)> fps_cbk = 
         std::function<void(uint64_t, double)>(
-            [this](uint64_t i_count, double i_period_ms) {
+            [](uint64_t i_count, double i_period_ms) {
                 SDLOG("FPS : %lf.", (static_cast<double>(i_count) / i_period_ms) * 1000.0);
             }
     );

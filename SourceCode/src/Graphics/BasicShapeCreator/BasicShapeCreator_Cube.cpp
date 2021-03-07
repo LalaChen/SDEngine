@@ -126,7 +126,6 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCube(const Vector3f &i_center
 		for (uint32_t triangle = 0; triangle < 2; ++triangle) {
 			for (uint32_t order = 0; order < 3; ++order) {
 				uint32_t rv_order = face * 6 + triangle * 3 + order;
-				uint32_t rt_order = triangle * 3 + order;
 				f_vertices[order] = vertices[v_indices[rv_order]].scale(scale) + center;
 				f_normals[order] = vec3::normalize(normals[n_indices[rv_order]].scale(scale));
 				if (face == 2 || face == 4) {
