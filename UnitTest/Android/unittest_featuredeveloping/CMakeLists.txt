@@ -34,6 +34,7 @@ set (SD_ENGINE_INC_DIRS
         ${SD_ENGINE_INC_DIR}/Basic/Application
         ${SD_ENGINE_INC_DIR}/Basic/Object
         ${SD_ENGINE_INC_DIR}/Basic/KeyMap
+		${SD_ENGINE_INC_DIR}/Basic/ECS
         ${SD_ENGINE_INC_DIR}/Graphics
         ${SD_ENGINE_INC_DIR}/Graphics/BasicShapeCreator
         ${SD_ENGINE_INC_DIR}/Graphics/Resolution
@@ -56,6 +57,7 @@ set (SD_ENGINE_INC_DIRS
         ${SD_ENGINE_INC_DIR}/Graphics/ShaderProgram
         ${SD_ENGINE_INC_DIR}/Graphics/RenderFlow
         ${SD_ENGINE_INC_DIR}/Graphics/CommandBuffer
+		${SD_ENGINE_INC_DIR}/Graphics/BasicComponent
         ${SD_ENGINE_INC_DIR}/Graphics/EmbeddedShaderProgramSource)
 
 message(STATUS "SDEngineRootDir: ${SD_ENGINE_DIR}")
@@ -129,6 +131,8 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              src/main/cpp/android_jni_main.cpp
              src/main/cpp/FeatureApplication.cpp
+             ../../Common/UnitTest_FeatureDeveloping/Code/MotorComponent.cpp
+             ../../Common/UnitTest_FeatureDeveloping/Code/GameSystem.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/Sample.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/SampleDrawObjects.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/CommandRecordingThread.cpp

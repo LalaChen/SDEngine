@@ -34,26 +34,13 @@ SOFTWARE.
 
 #include <Application/Android/AndroidApplication.h>
 
-#include "../../../../../Common/UnitTest_FeatureDeveloping/Code/Sample.h"
-
 using SDE::App::AndroidApplication;
 
 class FeatureApplication : public AndroidApplication
 {
 public:
     explicit FeatureApplication(const std::string &i_win_title, AAssetManager *i_asset_mgr, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv);
-
     ~FeatureApplication();
 public:
     void Initialize() override;
-    void InitializeGraphicsSystem() override;
-    void ReleaseGraphicsSystem() override;
-public:
-    void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
-    void Update() override;
-public:
-    void SetSampleIdx(uint32_t i_target_idx);
-protected:
-    std::vector<SampleStrongReferenceObject> m_sample_srefs;
-    uint32_t m_cur_sample_idx;
 };
