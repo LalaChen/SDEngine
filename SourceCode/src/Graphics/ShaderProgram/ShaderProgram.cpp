@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include <nlohmann/json.hpp>
 #include "LogManager.h"
 #include "ShaderProgram.h"
 
