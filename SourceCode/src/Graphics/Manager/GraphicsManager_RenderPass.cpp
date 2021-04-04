@@ -35,7 +35,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     SDLOG("Create default render pass");
 
     //1. Initialize Forward render pass.
-    RenderPassStrongReferenceObject forward_pass = new RenderPass("ForwardPath");
+    RenderPassStrongReferenceObject forward_pass = new RenderPass("ForwardPass");
     //1.1. prepare attachment references data.
     std::vector<AttachmentDescription> att_descs;
     AttachmentDescription att_desc;

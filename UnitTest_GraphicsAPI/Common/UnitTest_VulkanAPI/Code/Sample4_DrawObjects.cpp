@@ -122,24 +122,28 @@ void ObjectData::Draw(
     uint32_t i_sp_id)
 {
     if (m_mesh.IsNull() == false) {
+        MaterialWeakReferenceObject used_material_wref;
         //1. use material.
         if (m_shared_mat_wref.IsNull() == false) {
+            used_material_wref = m_shared_mat_wref;
+        }
+        else {
+            used_material_wref = m_mat_sref;
+        }
+
+        uint32_t step_amount = SD_WREF(m_shared_mat_wref).GetStepAmount(i_rp_wref, i_sp_id);
+
+        for (uint32_t step_id = 0; step_id < step_amount; ++step_id) {
             m_shared_mat_wref.GetRef().UseMaterial(
                 i_cb_wref, i_rp_wref,
                 m_common_set_wrefs,
-                i_sp_id);
+                i_sp_id, step_id);
+            //2. bind mesh vertex attributes.
+            m_mesh.GetRef().BindVertexBuffers(i_cb_wref);
+            //3. draw mesh.
+            m_mesh.GetRef().BindIndexBuffer(i_cb_wref);
+            m_mesh.GetRef().Render(i_cb_wref);
         }
-        else {
-            m_mat_sref.GetRef().UseMaterial(
-                i_cb_wref, i_rp_wref,
-                m_common_set_wrefs,
-                i_sp_id);
-        }
-        //2. bind mesh vertex attributes.
-        m_mesh.GetRef().BindVertexBuffers(i_cb_wref);
-        //3. draw mesh.
-        m_mesh.GetRef().BindIndexBuffer(i_cb_wref);
-        m_mesh.GetRef().Render(i_cb_wref);
     }
 }
 
@@ -328,7 +332,7 @@ void Sample4_DrawObjects::CreateFramebuffer()
     ClearValue clear_color = { 0.15f, 0.15f, 0.75f, 1.0f };
     ClearValue clear_dands = { 1.0f, 1 };
 
-    m_camera.m_forward_rf = new RenderFlow("ForwardPathRF", ImageOffset(0, 0, 0),
+    m_camera.m_forward_rf = new RenderFlow("ForwardPassRF", ImageOffset(0, 0, 0),
         ImageSize(m_current_res.GetWidth(), m_current_res.GetHeight(), 1));
     m_camera.m_forward_rf.GetRef().RegisterRenderPass(m_forward_rp_sref);
     m_camera.m_forward_rf.GetRef().AllocateFrameBuffer();
@@ -465,19 +469,18 @@ void Sample4_DrawObjects::CreateShaderProgram()
         pipeline_sref.GetRef().Initialize(shader_modules);
 
         //2.4 prepare datas and then initalize shader structure.
-        std::vector<GraphicsPipelineStrongReferenceObject> pipe_srefs;
-        pipe_srefs.push_back(pipeline_sref);
-
         ShaderProgram::RenderPassInfos rp_infos;
         RenderPassInfo forward_rp;
         forward_rp.m_rp_wref = m_forward_rp_sref;
         RenderSubPassPipelineInfo rsp_info;
-        rsp_info.m_dsl_wrefs = dsl_wrefs;
-        rsp_info.m_pipe_id = 0;
+        RenderStepInfo rs_info;
+        rs_info.m_dsl_wrefs = dsl_wrefs;
+        rs_info.m_pipe_sref = pipeline_sref;
+        rsp_info.m_step_infos.push_back(rs_info);
         forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
         rp_infos.push_back(forward_rp);
         m_phong_shader_sref.GetRef().RegisterShaderProgramStructure(
-            rp_infos, pipe_srefs, common_dsl_wrefs, m_general_dsl_srefs);
+            rp_infos, common_dsl_wrefs, m_general_dsl_srefs);
     }
     //-------------------- AxesShaderWithTexture ---------------------------
     {
@@ -519,19 +522,18 @@ void Sample4_DrawObjects::CreateShaderProgram()
         pipeline_sref.GetRef().Initialize(shader_modules);
 
         //2.4 prepare datas and then initalize shader structure.
-        std::vector<GraphicsPipelineStrongReferenceObject> pipe_srefs;
-        pipe_srefs.push_back(pipeline_sref);
-
         ShaderProgram::RenderPassInfos rp_infos;
         RenderPassInfo forward_rp;
         forward_rp.m_rp_wref = m_forward_rp_sref;
         RenderSubPassPipelineInfo rsp_info;
-        rsp_info.m_dsl_wrefs = dsl_wrefs;
-        rsp_info.m_pipe_id = 0;
+        RenderStepInfo rs_info;
+        rs_info.m_dsl_wrefs = dsl_wrefs;
+        rs_info.m_pipe_sref = pipeline_sref;
+        rsp_info.m_step_infos.push_back(rs_info);
         forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
         rp_infos.push_back(forward_rp);
         m_axes_shader_sref.GetRef().RegisterShaderProgramStructure(
-            rp_infos, pipe_srefs, common_dsl_wrefs, m_general_dsl_srefs);
+            rp_infos, common_dsl_wrefs, m_general_dsl_srefs);
     }
 }
 

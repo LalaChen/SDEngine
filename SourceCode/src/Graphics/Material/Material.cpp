@@ -346,12 +346,17 @@ bool Material::SetTexture(const ObjectName &i_uv_name, const TextureWeakReferenc
     }
 }
 
-void Material::UseMaterial(const CommandBufferWeakReferenceObject &i_cb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_common_ds_wrefs, uint32_t i_sp_id)
+void Material::UseMaterial(
+    const CommandBufferWeakReferenceObject &i_cb_wref,
+    const RenderPassWeakReferenceObject &i_rp_wref,
+    const std::vector<DescriptorSetWeakReferenceObject> &i_common_ds_wrefs,
+    uint32_t i_sp_id,
+    uint32_t i_step_id)
 {
     std::vector<DescriptorSetWeakReferenceObject> ds_wrefs = i_common_ds_wrefs;
     ds_wrefs.insert(std::end(ds_wrefs), std::begin(m_ds_wrefs), std::end(m_ds_wrefs));
     if (m_sp_wref.IsNull() == false) {
-        m_sp_wref.GetRef().UseProgramWithTargetDescriptorSet(i_cb_wref, i_rp_wref, i_sp_id, ds_wrefs);
+        m_sp_wref.GetRef().UseProgramWithTargetDescriptorSet(i_cb_wref, i_rp_wref, i_sp_id, i_step_id, ds_wrefs);
     }
 }
 
@@ -361,6 +366,11 @@ void Material::Update()
     for (uv_iter = m_uv_wrefs.begin(); uv_iter != m_uv_wrefs.end(); ++uv_iter) {
         (*uv_iter).second.GetRef().Update();
     }
+}
+
+uint32_t Material::GetStepAmount(const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id) const
+{
+    return SD_WREF(m_sp_wref).GetStepAmount(i_rp_wref, i_sp_id);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

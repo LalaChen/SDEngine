@@ -286,8 +286,8 @@ void Sample2_DrawScene::CreateFramebuffer()
     ClearValue clear_dands;
     clear_dands.depth_stencil.depth = 1.0f; clear_dands.depth_stencil.stencil = 1;
 
-    RenderPassWeakReferenceObject rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPath");
-    m_render_flow_sref = new RenderFlow("ForwardPathFlow", ImageOffset(0, 0, 0), ImageSize(res_size.GetWidth(), res_size.GetHeight(), 1));//1 is means layer 1.
+    RenderPassWeakReferenceObject rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
+    m_render_flow_sref = new RenderFlow("ForwardPassFlow", ImageOffset(0, 0, 0), ImageSize(res_size.GetWidth(), res_size.GetHeight(), 1));//1 is means layer 1.
     m_render_flow_sref.GetRef().RegisterRenderPass(rp_wref);
     m_render_flow_sref.GetRef().AllocateFrameBuffer();
     m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buffer_sref, 0, clear_color);

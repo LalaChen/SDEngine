@@ -51,7 +51,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 class SDENGINE_CLASS ShaderModules
 {
 public:
-    ShaderModuleWeakReferenceObject m_shaders[ShaderKind_GRAPHICS_SHADER_NUMBER];
+    ShaderModuleStrongReferenceObject m_shaders[ShaderKind_GRAPHICS_SHADER_NUMBER];
 };
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GraphicsPipeline);
@@ -138,11 +138,6 @@ protected:
      *         The order in array is the order of set.
      */
     std::vector<DescriptorSetLayoutWeakReferenceObject> m_dsl_wrefs;
-
-    /*! \var uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
-     *  \brief Count for descriptors.
-     */
-    uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
 
     /*! \var bool m_initialized;
      *  \brief Return this pipeline is initialized.

@@ -210,6 +210,8 @@ public:
     virtual void GetBasicDescriptorSetLayouts(std::vector<DescriptorSetLayoutWeakReferenceObject> &io_dsl_wrefs);
     virtual UniformVariableDescriptorStrongReferenceObject GetDefaultMaterialUniformVariableDescriptor(const ObjectName &i_uvd_name) const;
     virtual ShaderProgramWeakReferenceObject GetShaderProgram(const ObjectName &i_sp_name) const;
+    virtual void RegisterShaderProgram(const ShaderProgramStrongReferenceObject &i_sp_sref);
+    virtual void RegisterShaderProgram(const ObjectName &i_sp_name, const FilePathString &i_path);
 protected:
     void InitializeDefaultPipelineInfos();
     void InitializeBasicDescriptorSetLayout();

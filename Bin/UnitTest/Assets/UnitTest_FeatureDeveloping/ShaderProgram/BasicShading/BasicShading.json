@@ -173,31 +173,11 @@
             "Pipelines": [
               {
                 "Name": "ForwardBasicShading_P0",
-                "VertShader": "str:///./shader/ForwardBasicShading_P0.vert.spv",
+                "VertShader": "file:///./ForwardBasicShader_SP0.vert.spv",
                 "TessCtrlShader": "",
                 "TessEstShader": "",
                 "GeoShader": "",
-                "FragShader": "str:///./shader/ForwardBasicShading_P0.frag.spv",
-                "GraphicsParam": {},
-                "UsedDescriptorSetIDs": [
-                  0,
-                  1,
-                  2,
-                  3
-                ]
-              }
-            ]
-          },
-          {
-            "Name": "SecondaryLight",
-            "Pipelines": [
-              {
-                "Name": "ForwardBasicShading_P1",
-                "VertShader": "str:///./shader/ForwardBasicShading_P1.vert.spv",
-                "TessCtrlShader": "",
-                "TessEstShader": "",
-                "GeoShader": "",
-                "FragShader": "str:///./shader/ForwardBasicShading_P1.frag.spv",
+                "FragShader": "file:///./ForwardBasicShader_SP0.frag.spv",
                 "GraphicsParam": {},
                 "UsedDescriptorSetIDs": [
                   0,

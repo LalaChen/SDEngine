@@ -216,8 +216,16 @@
     <ClInclude Include="FeatureApplication.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\AxesShading.json" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_SP0.frag" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_SP0.vert" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\BasicShading.json" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_SP0.frag" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_SP0.vert" />
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.frag" />
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.vert" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxisShadowShader.frag" />
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxisShadowShader.vert" />
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\PhongShader.frag" />
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\PhongShader.vert" />
   </ItemGroup>

@@ -58,10 +58,10 @@ void CameraComponent::Initialize()
     InitializeDescriptorSetAndPool();
  
     if (m_workspace_type == WorkspaceType_Forward) {
-        InitializeWorkspaceForForwardPath();
+        InitializeWorkspaceForForwardPass();
     }
     else if (m_workspace_type == WorkspaceType_Deferred) {
-        InitializeWorkspaceForDeferredPath();
+        InitializeWorkspaceForDeferredPass();
     }
 
     m_geo_comp_wref = SD_GET_COMP_WREF(m_entity_wref, TransformComponent);
@@ -85,10 +85,10 @@ void CameraComponent::Resize()
         m_screen_size = GraphicsManager::GetRef().GetScreenResolution();
 
         if (m_workspace_type == WorkspaceType_Forward) {
-            InitializeWorkspaceForForwardPath();
+            InitializeWorkspaceForForwardPass();
         }
         else if (m_workspace_type == WorkspaceType_Deferred) {
-            InitializeWorkspaceForDeferredPath();
+            InitializeWorkspaceForDeferredPass();
         }
     }
 
@@ -185,9 +185,9 @@ void CameraComponent::InitializeDescriptorSetAndPool()
     }
 }
 
-void CameraComponent::InitializeWorkspaceForForwardPath()
+void CameraComponent::InitializeWorkspaceForForwardPass()
 {
-    RenderPassWeakReferenceObject forward_rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPath");
+    RenderPassWeakReferenceObject forward_rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
 
     if (forward_rp_wref.IsNull() == false) {
         if (m_color_buf_sref.IsNull() == false) {
@@ -222,9 +222,9 @@ void CameraComponent::InitializeWorkspaceForForwardPath()
     }
 }
 
-void CameraComponent::InitializeWorkspaceForDeferredPath()
+void CameraComponent::InitializeWorkspaceForDeferredPass()
 {
-    RenderPassWeakReferenceObject deferred_rp_wref = GraphicsManager::GetRef().GetRenderPass("DeferredPath");
+    RenderPassWeakReferenceObject deferred_rp_wref = GraphicsManager::GetRef().GetRenderPass("DeferredPass");
 
     if (deferred_rp_wref.IsNull() == false) {
         Resolution current_res = GraphicsManager::GetRef().GetScreenResolution();

@@ -119,49 +119,6 @@
             "Number": 4
           }
         ]
-      },
-      {
-        "Name": "Material",
-        "CommonDSL": false,
-        "UniformDescriptors": [
-          {
-            "Name": "material",
-            "Type": "buffer",
-            "Number": 1,
-            "Member": [
-              {
-                "Name": "ambient",
-                "Type": "color",
-                "Number": 1
-              },
-              {
-                "Name": "diffuse",
-                "Type": "color",
-                "Number": 1
-              },
-              {
-                "Name": "specular",
-                "Type": "color",
-                "Number": 1
-              },
-              {
-                "Name": "emission",
-                "Type": "color",
-                "Number": 1
-              },
-              {
-                "Name": "shininess",
-                "Type": "float",
-                "Number": 1
-              }
-            ]
-          },
-          {
-            "Name": "textures",
-            "Type": "images",
-            "Number": 11
-          }
-        ]
       }
     ],
     "RenderPassInfos": [
@@ -172,38 +129,17 @@
             "Name": "FirstLight",
             "Pipelines": [
               {
-                "Name": "ForwardBasicShading_P0",
-                "VertShader": "str:///./shader/ForwardBasicShading_P0.vert.spv",
+                "Name": "ForwardAxesShading_P0",
+                "VertShader": "file:///./ForwardAxesShader_SP0.vert.spv",
                 "TessCtrlShader": "",
                 "TessEstShader": "",
                 "GeoShader": "",
-                "FragShader": "str:///./shader/ForwardBasicShading_P0.frag.spv",
+                "FragShader": "file:///./ForwardAxesShader_SP0.frag.spv",
                 "GraphicsParam": {},
                 "UsedDescriptorSetIDs": [
                   0,
                   1,
-                  2,
-                  3
-                ]
-              }
-            ]
-          },
-          {
-            "Name": "SecondaryLight",
-            "Pipelines": [
-              {
-                "Name": "ForwardBasicShading_P1",
-                "VertShader": "str:///./shader/ForwardBasicShading_P1.vert.spv",
-                "TessCtrlShader": "",
-                "TessEstShader": "",
-                "GeoShader": "",
-                "FragShader": "str:///./shader/ForwardBasicShading_P1.frag.spv",
-                "GraphicsParam": {},
-                "UsedDescriptorSetIDs": [
-                  0,
-                  1,
-                  2,
-                  3
+                  2
                 ]
               }
             ]

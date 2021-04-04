@@ -57,9 +57,12 @@ void SampleDrawObjects::DestroyScene()
 {
 }
 
+
+//#define INITIAL_BY_CODE
 void SampleDrawObjects::LoadScene()
 {
     //1. allocate shader programs.
+#if defined(INITIAL_BY_CODE)
     //-------------------- AxesShaderWithTexture ---------------------------
     {
         //1.1 axis_shader.
@@ -96,7 +99,7 @@ void SampleDrawObjects::LoadScene()
         basic_dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light"));
 
         //1.4 register uniform variable descriptor to pipeline.
-        RenderPassWeakReferenceObject rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPath");
+        RenderPassWeakReferenceObject rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
         GraphicsPipelineStrongReferenceObject pipeline_sref = new GraphicsPipeline("AxesShader_Forward");
         pipeline_sref.GetRef().SetGraphicsPipelineParams(params, rp_wref, dsl_wrefs, 0);
         pipeline_sref.GetRef().Initialize(shader_modules);
@@ -109,12 +112,14 @@ void SampleDrawObjects::LoadScene()
         RenderPassInfo forward_rp;
         forward_rp.m_rp_wref = rp_wref;
         RenderSubPassPipelineInfo rsp_info;
-        rsp_info.m_dsl_wrefs = dsl_wrefs;
-        rsp_info.m_pipe_id = 0;
+        RenderStepInfo rs_info;
+        rs_info.m_dsl_wrefs = dsl_wrefs;
+        rs_info.m_pipe_sref = pipeline_sref;
+        rsp_info.m_step_infos.push_back(rs_info);
         forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
         rp_infos.push_back(forward_rp);
         m_axis_shader_sref.GetRef().RegisterShaderProgramStructure(
-            rp_infos, pipe_srefs, basic_dsl_wrefs, {}/*{ material_dsl_sref }*/);
+            rp_infos, basic_dsl_wrefs, {}/*{ material_dsl_sref }*/);
     }
     //2. add texture.
     {
@@ -144,6 +149,36 @@ void SampleDrawObjects::LoadScene()
         m_basic_material_sref.GetRef().SetTexture("mainTexture", m_main_tex_sref);
         m_basic_material_sref.GetRef().Update();
     }
+#else
+    {
+        GraphicsManager::GetRef().RegisterShaderProgram("AxesShader", "ShaderProgram/AxesShading/AxesShading.json");
+        GraphicsManager::GetRef().RegisterShaderProgram("BasicShader", "ShaderProgram/BasicShading/BasicShading.json");
+    }
+    {
+        m_main_tex_sref = new Texture("MainTexture");
+        m_main_tex_sref.GetRef().SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
+        m_main_tex_sref.GetRef().InitializeFromImageResource("Texture/Lenna.png");
+    }
+    {
+        m_axis_material_sref = new Material("AxesMaterial");
+        m_axis_material_sref.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("AxesShader"));
+        //Set data done. Link with shader program.(Write descirptor)
+        m_axis_material_sref.GetRef().LinkWithShaderProgram();
+        MaterialUniforms mat_ub; //use default color.
+        m_axis_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
+        m_axis_material_sref.GetRef().Update();
+    }
+    {
+        m_basic_material_sref = new Material("BasicMaterial");
+        m_basic_material_sref.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("BasicShader"));
+        //Set data done. Link with shader program.(Write descirptor)
+        m_basic_material_sref.GetRef().LinkWithShaderProgram();
+        MaterialUniforms mat_ub; //use default color.
+        m_basic_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
+        m_basic_material_sref.GetRef().SetTexture("textures", m_main_tex_sref, 0);
+        m_basic_material_sref.GetRef().Update();
+    }
+#endif
 
     //4. allocate scene root.
     m_scene_root_node = ECSManager::GetRef().CreateEntity("SceneRoot");

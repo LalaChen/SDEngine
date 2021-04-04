@@ -103,8 +103,14 @@ public:
 public:
 //bind shader to command buffer.
     void Update();
-    //To do : Input common descriptor set.
-    void UseMaterial(const CommandBufferWeakReferenceObject &i_cb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_common_ds_wrefs, uint32_t i_sp_id);
+    void UseMaterial(
+        const CommandBufferWeakReferenceObject &i_cb_wref,
+        const RenderPassWeakReferenceObject &i_rp_wref,
+        const std::vector<DescriptorSetWeakReferenceObject> &i_common_ds_wrefs,
+        uint32_t i_sp_id,
+        uint32_t i_step_id);
+public:
+    uint32_t GetStepAmount(const RenderPassWeakReferenceObject& i_rp_wref, uint32_t i_sp_id) const;
 protected:
     std::map<ObjectName, UniformVariableWeakReferenceObject> m_uv_wrefs;
     ShaderProgramWeakReferenceObject m_sp_wref;

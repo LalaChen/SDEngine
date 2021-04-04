@@ -76,6 +76,35 @@ ShaderProgramWeakReferenceObject GraphicsManager::GetShaderProgram(const ObjectN
     }
 }
 
+void GraphicsManager::RegisterShaderProgram(const ShaderProgramStrongReferenceObject &i_sp_sref)
+{
+    std::map<ObjectName, ShaderProgramStrongReferenceObject>::const_iterator sp_iter = 
+        m_shader_program_maps.find(SD_SREF(i_sp_sref).GetObjectName());
+    if (sp_iter == m_shader_program_maps.end()) {
+        m_shader_program_maps[SD_SREF(i_sp_sref).GetObjectName()] = i_sp_sref;
+    }
+    else {
+        SDLOGE("SP[%s] is existed.", SD_SREF(i_sp_sref).GetObjectName().c_str());
+    }
+}
+
+void GraphicsManager::RegisterShaderProgram(const ObjectName &i_sp_name, const FilePathString &i_path)
+{
+    std::map<ObjectName, ShaderProgramStrongReferenceObject>::const_iterator sp_iter = m_shader_program_maps.find(i_sp_name);
+    if (sp_iter == m_shader_program_maps.end()) {
+        ShaderProgramStrongReferenceObject new_shader_sref = new ShaderProgram(i_sp_name);
+        if (SD_SREF(new_shader_sref).LoadFromFile(i_path) == true) {
+            m_shader_program_maps[i_sp_name] = new_shader_sref;
+        }
+        else {
+            SDLOGE("SP[%s] can't be created.", i_sp_name.c_str());
+        }
+    }
+    else {
+        SDLOGE("SP[%s] is existed.", i_sp_name.c_str());
+    }
+}
+
 void GraphicsManager::InitializeBasicDescriptorSetLayout()
 {
     //1. new common descriptor set and its uniform variable descriptors.
@@ -100,7 +129,7 @@ void GraphicsManager::InitializeBasicDescriptorSetLayout()
     SD_SREF(geometry_dsl_sref).Initialize();
     m_basic_dsl_maps["MeshRender"] = geometry_dsl_sref;
 
-    //3. For light.
+    //3. For main light about forward rendering.
     UniformBufferDescriptorStrongReferenceObject light_ubd_sref = new UniformBufferDescriptor("light", 0);
     SD_SREF(light_ubd_sref).AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_ambient));
     SD_SREF(light_ubd_sref).AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_diffuse));
@@ -115,8 +144,12 @@ void GraphicsManager::InitializeBasicDescriptorSetLayout()
     SD_SREF(light_ubd_sref).AddVariable("kind", UniformBufferVariableType_INT, offsetof(LightUniforms, m_kind));
     SD_SREF(light_ubd_sref).AddVariableDone();
 
+    UniformImagesDescriptorStrongReferenceObject cascade_shadow_map_ui_sref = new UniformImagesDescriptor("shadowMaps", 1, 4);
+
     DescriptorSetLayoutStrongReferenceObject light_dsl_sref = new DescriptorSetLayout("Light");
-    SD_SREF(light_dsl_sref).AddUniformVariableDescriptors({ light_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
+    SD_SREF(light_dsl_sref).AddUniformVariableDescriptors({
+        light_ubd_sref.StaticCastTo<UniformVariableDescriptor>(),
+        cascade_shadow_map_ui_sref.StaticCastTo<UniformVariableDescriptor>()});
     SD_SREF(light_dsl_sref).Initialize();
     m_basic_dsl_maps["Light"] = light_dsl_sref;
 }
@@ -194,23 +227,22 @@ void GraphicsManager::InitializeBasicShaderPrograms()
 
         //1.5 create pipelines.
         GraphicsPipelineStrongReferenceObject pipeline_sp0_sref = new GraphicsPipeline("BasicShaderSPO");
-        pipeline_sp0_sref.GetRef().SetGraphicsPipelineParams(params, GetRenderPass("ForwardPath"), dsl_wrefs, 0);
+        pipeline_sp0_sref.GetRef().SetGraphicsPipelineParams(params, GetRenderPass("ForwardPass"), dsl_wrefs, 0);
         pipeline_sp0_sref.GetRef().Initialize(shader_modules);
 
         //1.6 prepare datas and then initalize shader structure.
-        std::vector<GraphicsPipelineStrongReferenceObject> pipe_srefs;
-        pipe_srefs.push_back(pipeline_sp0_sref);
-
         ShaderProgram::RenderPassInfos rp_infos;
         RenderPassInfo forward_rp;
-        forward_rp.m_rp_wref = GetRenderPass("ForwardPath");
+        forward_rp.m_rp_wref = GetRenderPass("ForwardPass");
         RenderSubPassPipelineInfo rsp_info;
-        rsp_info.m_dsl_wrefs = dsl_wrefs;
-        rsp_info.m_pipe_id = 0;
+        RenderStepInfo rs_info;
+        rs_info.m_dsl_wrefs = dsl_wrefs;
+        rs_info.m_pipe_sref = pipeline_sp0_sref;
+        rsp_info.m_step_infos.push_back(rs_info);
         forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
         rp_infos.push_back(forward_rp);
         shader_program.GetRef().RegisterShaderProgramStructure(
-            rp_infos, pipe_srefs, common_dsl_wrefs, {material_dsl_sref});
+            rp_infos, common_dsl_wrefs, {material_dsl_sref});
 
         m_shader_program_maps["BasicShading"] = shader_program;
     }

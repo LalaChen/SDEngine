@@ -44,6 +44,19 @@ layout(set = 2, binding = 0) uniform LightUniforms {
 	uint kind; //0: directional, 1: spot, 2: point
 } light;
 
+layout(set = 2, binding = 1) uniform sampler2D shadowMaps[4]; 
+
+//Uniform Material buffer
+layout(set = 3, binding = 0) uniform MaterialUniforms {
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
+	vec4 emission;
+	float shininess;
+} material;
+
+layout(set = 3, binding = 1) uniform sampler2D textures[11]; 
+
 /*
 vec2 positions[3] = vec2[](
     vec2(1.0, -1.5),

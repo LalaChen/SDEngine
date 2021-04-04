@@ -22,11 +22,11 @@ layout(location = 4) out vec3 wViewDir;
 
 //Uniform
 //layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
-//Uniform basic Buffer.
+//Uniform Camera Buffer.
 layout(set = 0, binding = 0) uniform CameraUniforms {
     mat4 proj;
 	mat4 view;
-	vec4 viewEye;
+	vec3 viewEye;
 } camera;
 
 //Uniform Geometry Buffer.
@@ -61,14 +61,14 @@ layout(set = 3, binding = 0) uniform MaterialUniforms {
 	float shininess;
 } material;
 
-layout(set = 3, binding = 1) uniform sampler2D mainTexture; 
+layout(set = 3, binding = 1) uniform sampler2D textures[11]; 
 
 //------- light vertices basic function -------
 vec3 CalculateLightDir(in vec4 iVertex)
 {
 	//Directional Light
     if (light.kind == 0) {
-		return normalize(light.position.xyz);
+		return normalize(light.direction.xyz);
 	} 
 	else if (light.kind == 1) {
 		return normalize(light.position.xyz - iVertex.xyz);

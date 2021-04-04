@@ -108,16 +108,19 @@ void MeshRenderComponent::RenderMesh(
                 m_geo_set_wref,
                 i_light_ds_wref
             };
-            //1. use material.
-            SD_WREF(m_mat_wref).UseMaterial(
-                i_cb_wref, i_rp_wref,
-                common_set_wrefs,
-                i_sp_id);
-            //2. bind mesh vertex attributes.
-            SD_WREF(m_mesh_wref).BindVertexBuffers(i_cb_wref);
-            //3. draw mesh.
-            SD_WREF(m_mesh_wref).BindIndexBuffer(i_cb_wref);
-            SD_WREF(m_mesh_wref).Render(i_cb_wref);
+            uint32_t step_amount = SD_WREF(m_mat_wref).GetStepAmount(i_rp_wref, i_sp_id);
+            for (uint32_t step_id = 0; step_id < step_amount; ++step_id) {
+                //1. use material.
+                SD_WREF(m_mat_wref).UseMaterial(
+                    i_cb_wref, i_rp_wref,
+                    common_set_wrefs,
+                    i_sp_id, step_id);
+                //2. bind mesh vertex attributes.
+                SD_WREF(m_mesh_wref).BindVertexBuffers(i_cb_wref);
+                //3. draw mesh.
+                SD_WREF(m_mesh_wref).BindIndexBuffer(i_cb_wref);
+                SD_WREF(m_mesh_wref).Render(i_cb_wref);
+            }
         }
     }
 }

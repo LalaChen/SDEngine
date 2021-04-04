@@ -67,10 +67,16 @@ public:
     void SetLightParameter(const LightUniforms &i_light_data);
 protected:
     void InitializeDescriptorSetAndPool();
+    void InitializeShadowMappingWorkspace();
 protected:
     DescriptorPoolStrongReferenceObject m_dp_sref;
     UniformBufferWeakReferenceObject m_buffer_wref;
     DescriptorSetWeakReferenceObject m_ds_wref;
+protected:
+    std::vector<TextureStrongReferenceObject> m_cascade_map_srefs;
+protected:
+    DescriptorSetWeakReferenceObject m_sp_ds_wref;
+    UniformImagesWeakReferenceObject m_cascade_map_ui_wref;
 protected:
     LightUniforms m_light_params;
 protected:

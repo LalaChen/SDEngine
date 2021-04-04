@@ -41,8 +41,17 @@ SOFTWARE.
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
+enum FilePathTypeEnum
+{
+    FilePathType_LOCAL_FILE = 0,
+    FilePathType_ASSET,
+    FilePathType_MAX_DEFINE_VALUE
+};
+
 class SDENGINE_CLASS FileResourceRequester
 {
+public:
+    static const std::string sFilePathTypeStrings[FilePathType_MAX_DEFINE_VALUE];
 public:
     SD_SINGLETON_DECLARATION(FileResourceRequester);
 public:
@@ -63,6 +72,10 @@ public:
      *         and then put loading result at io_file.
      */
     bool AskFile(const FilePathString &i_location, FileData &io_file);
+
+    FilePathString CatenateFilePath(const FilePathString& i_location, const FilePathString& i_target_dir);
+protected:
+    FilePathTypeEnum ConvertFilePath(const FilePathString &i_location, FilePathString &io_final_path);
 };
 
 _______________SD_END_BASIC_NAMESPACE________________

@@ -31,7 +31,6 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 GraphicsPipeline::GraphicsPipeline(const ObjectName &i_object_name)
 : Object(i_object_name)
-, m_descriptor_counts{0}
 , m_initialized(false)
 {
 }
@@ -61,7 +60,7 @@ void GraphicsPipeline::Initialize(const ShaderModules &i_shaders)
     m_initialized = true;
 }
 
-void GraphicsPipeline::UseAndBindDescriptorSets(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject>& i_ds_wrefs) const
+void GraphicsPipeline::UseAndBindDescriptorSets(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs) const
 {
     //1. collect necessary descriptor sets for binding.
     std::vector<DescriptorSetWeakReferenceObject> pipe_ds_wrefs;

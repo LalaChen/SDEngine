@@ -87,8 +87,8 @@ public:
         const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list);
 protected:
     void InitializeDescriptorSetAndPool();
-    void InitializeWorkspaceForForwardPath();
-    void InitializeWorkspaceForDeferredPath();
+    void InitializeWorkspaceForForwardPass();
+    void InitializeWorkspaceForDeferredPass();
 protected:
     virtual void ClearWorkspace();
 protected:
