@@ -40,11 +40,11 @@ bool FileResourceRequester::AskFile(const FilePathString &i_location, FileData &
             }
         }
         else {
-            SDLOG("filepath[%s] isn't local file.", i_location);
+            SDLOG("filepath[%s] isn't local file.", i_location.c_str());
         }
     }
     else {
-        SDLOGW("FileSystemManager isn't launched!!! Ask this file to AssetResourceManager.", i_location.c_str());
+        SDLOGW("FileSystemManager isn't launched!!! Ask this file[%s] to AssetResourceManager.", i_location.c_str());
     }
 
     if (result == false) {
@@ -56,11 +56,11 @@ bool FileResourceRequester::AskFile(const FilePathString &i_location, FileData &
                 }
             }
             else {
-                SDLOG("filepath[%s] isn't asset.", i_location);
+                SDLOG("filepath[%s] isn't asset.", i_location.c_str());
             }
         }
         else {
-            SDLOGW("AssetResourceManager isn't launched!!! Please check.", i_location.c_str());
+            SDLOGW("AssetResourceManager isn't launched!!! Ask File[%s] failure. Please check.", i_location.c_str());
         }
     }
 
@@ -83,7 +83,11 @@ FilePathTypeEnum FileResourceRequester::ConvertFilePath(const FilePathString &i_
 
 FilePathString FileResourceRequester::CatenateFilePath(const FilePathString &i_location, const FilePathString &i_target_dir)
 {
-    size_t tag_pos = i_location.find("///") + 3;
+    size_t tag_pos = i_location.find("///");
+    if (tag_pos != std::string::npos) {
+        tag_pos += 3;
+    }
+
     FilePathString final_dir = i_target_dir;
     FilePathString fp;
     if (final_dir[final_dir.size() - 1] != '/') {

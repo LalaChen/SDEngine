@@ -173,11 +173,11 @@
             "Pipelines": [
               {
                 "Name": "ForwardBasicShading_P0",
-                "VertShader": "file:///ForwardAxesShader_SP0.vert.spv",
+                "VertShader": "ForwardAxesShader_SP0.vert.spv",
                 "TessCtrlShader": "",
                 "TessEstShader": "",
                 "GeoShader": "",
-                "FragShader": "file:///ForwardAxesShader_SP0.frag.spv",
+                "FragShader": "ForwardAxesShader_SP0.frag.spv",
                 "GraphicsParam": {
                   "BindPoint": 0,
                   "TexCoordDim": 2,
