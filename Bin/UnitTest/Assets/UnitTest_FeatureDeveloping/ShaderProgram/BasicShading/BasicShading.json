@@ -178,7 +178,59 @@
                 "TessEstShader": "",
                 "GeoShader": "",
                 "FragShader": "file:///./ForwardBasicShader_SP0.frag.spv",
-                "GraphicsParam": {},
+                "GraphicsParam": {
+                  "BindPoint": 0,
+                  "TexCoordDim": 2,
+                  "PrimitiveInfo": {
+                    "Type": 3,
+                    "RestartEnable": false
+                  },
+                  "PatchCtrlPoints": 3,
+                  "RasterziationInfo": {
+                    "DiscardEnable": false,
+                    "PolygonMode": 0,
+                    "FrontFace": 0,
+                    "FaceCulling": 2,
+                    "DepthBias": false,
+                    "DepthBiasConstantFactor": 0,
+                    "DepthBiasSlopeFactor": 1,
+                    "DepthBiasClamp": 1,
+                    "LineWidth": 1
+                  },
+                  "DepthStencilInfo": {
+                    "DepthTest": true,
+                    "DepthWrite": true,
+                    "CompareOp": 3,
+                    "StencilTest": false
+                  },
+                  "ColorBlendState": {
+                    "LogicOutput": false,
+                    "LogicOp": 0,
+                    "BlendConstantR": 0,
+                    "BlendConstantG": 0,
+                    "BlendConstantB": 0,
+                    "BlendConstantA": 0,
+                    "ColorBlendAttachmentInfo": [
+                      {
+                        "ColorMaskR": true,
+                        "ColorMaskG": true,
+                        "ColorMaskB": true,
+                        "ColorMaskA": true,
+                        "Blending": false,
+                        "BlendingSrcColorFactor": 6,
+                        "BlendingDstColorFactor": 7,
+                        "BlendingColorOp": 0,
+                        "BlendingSrcAlphaFactor": 6,
+                        "BlendingDstAlphaFactor": 7,
+                        "BlendingAlphaOp": 0
+                      }
+                    ]
+                  },
+                  "DynamicState": [
+                    0,
+                    1
+                  ]
+                },
                 "UsedDescriptorSetIDs": [
                   0,
                   1,

@@ -119,6 +119,49 @@
             "Number": 4
           }
         ]
+      },
+      {
+        "Name": "Material",
+        "CommonDSL": false,
+        "UniformDescriptors": [
+          {
+            "Name": "material",
+            "Type": "buffer",
+            "Number": 1,
+            "Member": [
+              {
+                "Name": "ambient",
+                "Type": "color",
+                "Number": 1
+              },
+              {
+                "Name": "diffuse",
+                "Type": "color",
+                "Number": 1
+              },
+              {
+                "Name": "specular",
+                "Type": "color",
+                "Number": 1
+              },
+              {
+                "Name": "emission",
+                "Type": "color",
+                "Number": 1
+              },
+              {
+                "Name": "shininess",
+                "Type": "float",
+                "Number": 1
+              }
+            ]
+          },
+          {
+            "Name": "textures",
+            "Type": "images",
+            "Number": 11
+          }
+        ]
       }
     ],
     "RenderPassInfos": [
@@ -129,17 +172,70 @@
             "Name": "FirstLight",
             "Pipelines": [
               {
-                "Name": "ForwardAxesShading_P0",
-                "VertShader": "file:///./ForwardAxesShader_SP0.vert.spv",
+                "Name": "ForwardBasicShading_P0",
+                "VertShader": "file:///ForwardAxesShader_SP0.vert.spv",
                 "TessCtrlShader": "",
                 "TessEstShader": "",
                 "GeoShader": "",
-                "FragShader": "file:///./ForwardAxesShader_SP0.frag.spv",
-                "GraphicsParam": {},
+                "FragShader": "file:///ForwardAxesShader_SP0.frag.spv",
+                "GraphicsParam": {
+                  "BindPoint": 0,
+                  "TexCoordDim": 2,
+                  "PrimitiveInfo": {
+                    "Type": 3,
+                    "RestartEnable": false
+                  },
+                  "PatchCtrlPoints": 3,
+                  "RasterziationInfo": {
+                    "DiscardEnable": false,
+                    "PolygonMode": 0,
+                    "FrontFace": 0,
+                    "FaceCulling": 2,
+                    "DepthBias": false,
+                    "DepthBiasConstantFactor": 0,
+                    "DepthBiasSlopeFactor": 1,
+                    "DepthBiasClamp": 1,
+                    "LineWidth": 1
+                  },
+                  "DepthStencilInfo": {
+                    "DepthTest": true,
+                    "DepthWrite": true,
+                    "CompareOp": 3,
+                    "StencilTest": false
+                  },
+                  "ColorBlendState": {
+                    "LogicOutput": false,
+                    "LogicOp": 0,
+                    "BlendConstantR": 0,
+                    "BlendConstantG": 0,
+                    "BlendConstantB": 0,
+                    "BlendConstantA": 0,
+                    "ColorBlendAttachmentInfo": [
+                      {
+                        "ColorMaskR": true,
+                        "ColorMaskG": true,
+                        "ColorMaskB": true,
+                        "ColorMaskA": true,
+                        "Blending": false,
+                        "BlendingSrcColorFactor": 6,
+                        "BlendingDstColorFactor": 7,
+                        "BlendingColorOp": 0,
+                        "BlendingSrcAlphaFactor": 6,
+                        "BlendingDstAlphaFactor": 7,
+                        "BlendingAlphaOp": 0
+                      }
+                    ]
+                  },
+                  "DynamicState": [
+                    0,
+                    1
+                  ]
+                },
                 "UsedDescriptorSetIDs": [
                   0,
                   1,
-                  2
+                  2,
+                  3
                 ]
               }
             ]

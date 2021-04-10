@@ -34,6 +34,11 @@ SOFTWARE.
 using SDE::Basic::FileData;
 using SDE::Basic::FileResourceRequester;
 
+#define SD_GET_JSON_ATTRIBUTE(nodeRoot, varName, varType, dst, dstType) \
+if (nodeRoot.at(varName).is_null() == false) { \
+    dst = static_cast<dstType>(nodeRoot.at(varName).get<varType>()); \
+} \
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 ShaderProgram::ShaderProgram(const ObjectName &i_name)
@@ -181,7 +186,16 @@ bool ShaderProgram::LoadFromSource(const std::string &i_sp_proj_str)
             ObjectName rp_name = rpi.at("Name").get<ObjectName>();
             rp_info.m_rp_wref = GraphicsManager::GetRef().GetRenderPass(rp_name);
             nlohmann::json &spis = rpi.at("SubpassInfos");
+            const std::vector<SubpassDescription> &sp_descs = SD_WREF(rp_info.m_rp_wref).GetSubpassDescriptions();
+            if (spis.size() != sp_descs.size()) {
+                SDLOGE("SubPasses size(%d) in SP[%s] isn't equal with RenderPass[%s]'s(%d)",
+                    spis.size(), m_object_name.c_str(),
+                    sp_descs.size(), SD_WREF(rp_info.m_rp_wref).GetObjectName().c_str());
+                return false;
+            }
+
             for (uint32_t sp_id = 0; sp_id < spis.size(); ++sp_id) {
+                uint32_t target_sp_ca_size = static_cast<uint32_t>(sp_descs[sp_id].m_color_attachment_refs.size());
                 RenderSubPassPipelineInfo sp_pipe_info;
                 nlohmann::json &spi = spis.at(sp_id);
                 ObjectName sp_name = spi.at("Name").get<ObjectName>();
@@ -258,13 +272,96 @@ bool ShaderProgram::LoadFromSource(const std::string &i_sp_proj_str)
                     }
                     GraphicsPipelineParam gpp;
 
-                    gpp.m_primitive_info.m_primitive = Primitive_TRIANGLE;
-                    gpp.m_depth_stencil_info.m_depth_test_enable = true;
-                    gpp.m_rasterization_info.m_face_culling = FaceCulling_BACK_FACE;
-                    gpp.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
-                    gpp.m_dynamic_states.push_back(DynamicState_VIEWPORT);
-                    gpp.m_dynamic_states.push_back(DynamicState_SCISSOR);
-                    GraphicsManager::GetRef().GetBasicVertexAttribInfos(gpp.m_va_binding_descs, gpp.m_va_location_descs, 2);
+                    nlohmann::json &gpp_root = pipe.at("GraphicsParam");
+                    if (gpp_root.is_null() == false) {
+                        //
+                        SD_GET_JSON_ATTRIBUTE(gpp_root, "BindPoint", uint32_t, gpp.m_pipe_bind_point, PipelineBindPointEnum);
+                        SD_GET_JSON_ATTRIBUTE(gpp_root, "PatchCtrlPoints", uint32_t, gpp.m_patch_ctrl_points, uint32_t);
+                        uint32_t tex_coord_dim = 2;
+                        SD_GET_JSON_ATTRIBUTE(gpp_root, "TexCoordDim", uint32_t, tex_coord_dim, uint32_t);
+                        GraphicsManager::GetRef().GetBasicVertexAttribInfos(gpp.m_va_binding_descs, gpp.m_va_location_descs, tex_coord_dim);
+                        // PrimitiveInfo
+                        nlohmann::json &primitive_root = gpp_root.at("PrimitiveInfo");
+                        if (primitive_root.is_null() == false) {
+                            SD_GET_JSON_ATTRIBUTE(primitive_root, "Type", uint32_t, gpp.m_primitive_info.m_primitive, PrimitiveEnum);
+                            SD_GET_JSON_ATTRIBUTE(primitive_root, "RestartEnable", bool, gpp.m_primitive_info.m_restart_enable, bool);
+                        }
+                        else {
+                            SDLOG("PrimitiveInfo isn't existed in SP[%s].", pipe_name.c_str());
+                        }
+                        // RasterziationInfo
+                        nlohmann::json &rasterziation_root = gpp_root.at("RasterziationInfo");
+                        if (rasterziation_root.is_null() == false) {
+                            SD_GET_JSON_ATTRIBUTE(rasterziation_root, "DiscardEnable", bool, gpp.m_rasterization_info.m_discard_enable, bool);
+                            SD_GET_JSON_ATTRIBUTE(rasterziation_root, "PolygonMode", uint32_t, gpp.m_rasterization_info.m_polygon_mode, PolygonModeEnum);
+                            SD_GET_JSON_ATTRIBUTE(rasterziation_root, "FrontFace", uint32_t, gpp.m_rasterization_info.m_front_face, FrontFaceModeEnum);
+                            SD_GET_JSON_ATTRIBUTE(rasterziation_root, "FaceCulling", uint32_t, gpp.m_rasterization_info.m_face_culling, FaceCullingEnum);
+                            SD_GET_JSON_ATTRIBUTE(rasterziation_root, "DepthBias", bool, gpp.m_rasterization_info.m_depth_bias_enable, bool);
+                            SD_GET_JSON_ATTRIBUTE(rasterziation_root, "DepthBiasConstantFactor", float, gpp.m_rasterization_info.m_depth_bias_constant_factor, bool);
+                            SD_GET_JSON_ATTRIBUTE(rasterziation_root, "DepthBiasSlopeFactor", float, gpp.m_rasterization_info.m_depth_bias_slope_factor, bool);
+                            SD_GET_JSON_ATTRIBUTE(rasterziation_root, "DepthBiasClamp", float, gpp.m_rasterization_info.m_depth_bias_clamp, float);
+                            SD_GET_JSON_ATTRIBUTE(rasterziation_root, "LineWidth", float, gpp.m_rasterization_info.m_line_width, float);
+                        }
+                        else {
+                            SDLOG("RasterziationInfo isn't existed in SP[%s].", pipe_name.c_str());
+                        }
+                        // DepthStencilInfo
+                        nlohmann::json &depth_stencil_root = gpp_root.at("DepthStencilInfo");
+                        if (depth_stencil_root.is_null() == false) {
+                            SD_GET_JSON_ATTRIBUTE(depth_stencil_root, "DepthTest", bool, gpp.m_depth_stencil_info.m_depth_test_enable, bool);
+                            SD_GET_JSON_ATTRIBUTE(depth_stencil_root, "DepthWrite", bool, gpp.m_depth_stencil_info.m_depth_write_enable, bool);
+                            SD_GET_JSON_ATTRIBUTE(depth_stencil_root, "CompareOp", uint32_t, gpp.m_depth_stencil_info.m_comp_op, CompareOperatorEnum);
+                            SD_GET_JSON_ATTRIBUTE(depth_stencil_root, "StencilTest", bool, gpp.m_depth_stencil_info.m_stencil_test_enable, bool);
+                        }
+                        else {
+                            SDLOG("DepthStencilInfo isn't existed in SP[%s].", pipe_name.c_str());
+                        }
+                        // ColorBlendState
+                        nlohmann::json &color_bs_root = gpp_root.at("ColorBlendState");
+                        if (color_bs_root.is_null() == false) {
+                            SD_GET_JSON_ATTRIBUTE(color_bs_root, "BlendConstantR", float, gpp.m_attachment_blend_state.m_blend_constants[0], float);
+                            SD_GET_JSON_ATTRIBUTE(color_bs_root, "BlendConstantG", float, gpp.m_attachment_blend_state.m_blend_constants[1], float);
+                            SD_GET_JSON_ATTRIBUTE(color_bs_root, "BlendConstantB", float, gpp.m_attachment_blend_state.m_blend_constants[2], float);
+                            SD_GET_JSON_ATTRIBUTE(color_bs_root, "BlendConstantA", float, gpp.m_attachment_blend_state.m_blend_constants[3], float);
+                            SD_GET_JSON_ATTRIBUTE(color_bs_root, "LogicOutput", bool, gpp.m_attachment_blend_state.m_logic_op_enable, bool);
+                            SD_GET_JSON_ATTRIBUTE(color_bs_root, "LogicOp", uint32_t, gpp.m_attachment_blend_state.m_logic_op, LogicOperatorEnum);
+                            nlohmann::json &ca_blend_infos_root = color_bs_root.at("ColorBlendAttachmentInfo");
+                            for (uint32_t attachment_cid = 0; attachment_cid < ca_blend_infos_root.size() && attachment_cid < target_sp_ca_size; ++attachment_cid) {
+                                nlohmann::json &ca_blend_info_root = ca_blend_infos_root.at(attachment_cid);
+                                ColorBlendAttachmentInfo cb_info;
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "ColorMaskR", bool, cb_info.m_color_mask[0], bool);
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "ColorMaskG", bool, cb_info.m_color_mask[1], bool);
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "ColorMaskB", bool, cb_info.m_color_mask[2], bool);
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "ColorMaskA", bool, cb_info.m_color_mask[3], bool);
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "Blending", bool, cb_info.m_blend_enable, bool);
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "BlendingSrcColorFactor", uint32_t, cb_info.m_src_color_factor, BlendFactorEnum);
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "BlendingDstColorFactor", uint32_t, cb_info.m_dst_color_factor, BlendFactorEnum);
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "BlendingColorOp", uint32_t, cb_info.m_color_op, BlendOperatorEnum);
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "BlendingSrcAlphaFactor", uint32_t, cb_info.m_src_alpha_factor, BlendFactorEnum);
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "BlendingDstAlphaFactor", uint32_t, cb_info.m_dst_alpha_factor, BlendFactorEnum);
+                                SD_GET_JSON_ATTRIBUTE(ca_blend_info_root, "BlendingAlphaOp", uint32_t, cb_info.m_alpha_op, BlendOperatorEnum);
+                                gpp.m_attachment_blend_state.m_blend_infos.push_back(cb_info);
+                            }
+                        }
+                        else {
+                            SDLOG("ColorBlendState isn't existed in SP[%s]. Allocated for the target sp in RP[%s]."
+                                , pipe_name.c_str()
+                                , SD_WREF(rp_info.m_rp_wref).GetObjectName().c_str());
+                            gpp.m_attachment_blend_state.m_blend_infos.resize(target_sp_ca_size);
+                        }
+                        // DynamicState
+                        nlohmann::json &dynamic_states_root = gpp_root.at("DynamicState");
+                        for (uint32_t dynamic_sid = 0; dynamic_sid < dynamic_states_root.size(); ++dynamic_sid) {
+                            gpp.m_dynamic_states.push_back(dynamic_states_root.at(dynamic_sid));
+                        }
+                    }
+                    else {
+                        GraphicsManager::GetRef().GetBasicVertexAttribInfos(gpp.m_va_binding_descs, gpp.m_va_location_descs, 2);
+                        gpp.m_primitive_info.m_primitive = Primitive_TRIANGLE;
+                        gpp.m_attachment_blend_state.m_blend_infos.resize(target_sp_ca_size); //blend default false.
+                        gpp.m_dynamic_states.push_back(DynamicState_VIEWPORT);
+                        gpp.m_dynamic_states.push_back(DynamicState_SCISSOR);
+                    }
 
                     SD_SREF(pipeline_sref).SetGraphicsPipelineParams(gpp, rp_info.m_rp_wref, necessary_dsls, sp_id);
                     SD_SREF(pipeline_sref).Initialize(shader_modules);
