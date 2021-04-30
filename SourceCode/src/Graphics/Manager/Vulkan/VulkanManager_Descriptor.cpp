@@ -98,11 +98,28 @@ void VulkanManager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, co
     a_info.descriptorPool = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
     a_info.pSetLayouts = reinterpret_cast<const VkDescriptorSetLayout*>(&layout_identity.m_handle);
     a_info.descriptorSetCount = 1;
-    AllocateVkDescriptorSet(ds_handle, a_info);
+    VkResult result = AllocateVkDescriptorSet(ds_handle, a_info);
+    if (result != VK_SUCCESS) {
+        SDLOGE("result = %d. PoolHandle : %p(%d, %d, %d), layoutHandle : %p, SetHandle : %p ", 
+            result,
+            pool_identity.m_handle, pool_identity.m_descriptor_counts[0], pool_identity.m_descriptor_counts[1], pool_identity.m_max_set,
+            layout_identity.m_handle,
+            io_identity.m_handle);
+    }
 }
 
 void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs)
 {
+    if (i_identity.m_handle == SD_NULL_HANDLE) {
+        SDLOGE("Try to write uniform veriable into null descriptor set.");
+        return;
+    }
+
+    if (i_uv_wrefs.size() == 0) {
+        SDLOGE("no uniform variable need to write into this descriptor set.");
+        return;
+    }
+
     std::vector<VkWriteDescriptorSet> write_infos;
     std::vector<VkCopyDescriptorSet> copy_infos;
     std::list<std::vector<VkDescriptorImageInfo>> decriptor_img_infos;

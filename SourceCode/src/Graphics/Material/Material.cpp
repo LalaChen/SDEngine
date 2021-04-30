@@ -44,6 +44,13 @@ Material::~Material()
 
 void Material::BindShaderProgram(const ShaderProgramWeakReferenceObject &i_sp_wref)
 {
+    if (i_sp_wref.IsNull() == true) {
+        SDLOGE("Bind null sp into material[%s]", m_object_name.c_str());
+        return;
+    }
+
+    SDLOG("Bind SP[%s] into Mat[%s]", SD_WREF(i_sp_wref).GetObjectName().c_str(), m_object_name.c_str());
+
     m_is_linked = false;
     m_sp_wref = i_sp_wref;
     //1. prepare descriptor pool.
@@ -53,8 +60,8 @@ void Material::BindShaderProgram(const ShaderProgramWeakReferenceObject &i_sp_wr
     m_sp_wref.GetRef().GetDescriptorCount(descriptor_counts);
     m_dsp_sref.GetRef().Initialize(descriptor_counts, max_set, false);
     //2. allocate uniform variables for uniform descriptors and descriptor sets.
-    DescriptorPoolWeakReferenceObject dp_wref = m_dsp_sref.StaticCastToWeakPtr<DescriptorPool>();
-    m_sp_wref.GetRef().AllocateEssentialObjects(m_uv_wrefs, m_ds_wrefs, dp_wref);
+    DescriptorPoolWeakReferenceObject dsp_wref = m_dsp_sref.StaticCastToWeakPtr<DescriptorPool>();
+    m_sp_wref.GetRef().AllocateEssentialObjects(m_uv_wrefs, m_ds_wrefs, dsp_wref);
 }
 
 void Material::LinkWithShaderProgram()

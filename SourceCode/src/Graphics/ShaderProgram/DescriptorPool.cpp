@@ -65,7 +65,7 @@ DescriptorSetWeakReferenceObject DescriptorPool::AllocateDescriptorSet(const Des
         ds_wref = new_set_sref;
     }
     else {
-        SDLOGE("Descriptor Pool(%s) is full.", m_object_name.c_str());
+        SDLOGE("Descriptor Pool(%s)'s ds are allocated.", m_object_name.c_str());
     }
     return ds_wref;
 }

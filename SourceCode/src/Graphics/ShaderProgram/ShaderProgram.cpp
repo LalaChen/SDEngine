@@ -455,7 +455,11 @@ void ShaderProgram::AllocateEssentialObjects(
     std::vector<DescriptorSetWeakReferenceObject> &io_desc_set_wrefs,
     DescriptorPoolWeakReferenceObject &io_pool_wref)
 {
-    //1. allocate descriptor for each pipeline.
+    if (m_material_dsl_srefs.size() == 0) {
+        SDLOGE("material dsl is 0 of this sp[%s]", m_object_name.c_str());
+        return;
+    }
+    //1. allocate descriptor set for each pipeline.
     io_desc_set_wrefs.resize(m_material_dsl_srefs.size());
     for (uint32_t dsl_count = 0; dsl_count < m_material_dsl_srefs.size(); ++dsl_count) {
         io_desc_set_wrefs[dsl_count] = io_pool_wref.GetRef().AllocateDescriptorSet(m_material_dsl_srefs[dsl_count]);

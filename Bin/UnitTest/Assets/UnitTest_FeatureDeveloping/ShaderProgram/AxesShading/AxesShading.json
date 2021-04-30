@@ -172,7 +172,7 @@
             "Name": "FirstLight",
             "Pipelines": [
               {
-                "Name": "ForwardBasicShading_P0",
+                "Name": "ForwardAxesShading_P0",
                 "VertShader": "ForwardAxesShader_SP0.vert.spv",
                 "TessCtrlShader": "",
                 "TessEstShader": "",

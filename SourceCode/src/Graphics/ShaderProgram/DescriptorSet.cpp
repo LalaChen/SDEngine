@@ -44,17 +44,29 @@ void DescriptorSet::Initialize(
     const WeakReferenceObject<Object> &i_pool_wref,
     const DescriptorSetLayoutWeakReferenceObject &i_layout_wref)
 {
+    if (i_pool_wref.IsNull() == true) {
+        SDLOGE("Initialize null pool in ds[%s].", m_object_name.c_str());
+    }
+
     DescriptorPoolWeakReferenceObject pool_wref = i_pool_wref.DynamicCastTo<DescriptorPool>();
 
-    if (pool_wref.IsNull() == false && i_layout_wref.IsNull() == false) {
-        //1. set data.
-        m_layout_wref = i_layout_wref;
-        m_pool_wref = i_pool_wref;
-        //2. allocate identity.
-        GraphicsManager::GetRef().AllocateDescriptorSet(m_identity, pool_wref, m_layout_wref);
-        //3. allocate uniform variables.
-        m_layout_wref.GetRef().AllocateUniformVariables(m_uv_srefs);
+    if (pool_wref.IsNull() == true) {
+        SDLOGE("cast pool object[%s] failure in ds[%s].", SD_WREF(i_pool_wref).GetObjectName().c_str(), m_object_name.c_str());
+        return;
     }
+
+    if (i_layout_wref.IsNull() == true) {
+        SDLOGE("input null layout into ds[%s].", m_object_name.c_str());
+        return;
+    }
+
+    //1. set data.
+    m_layout_wref = i_layout_wref;
+    m_pool_wref = i_pool_wref;
+    //2. allocate identity.
+    GraphicsManager::GetRef().AllocateDescriptorSet(m_identity, pool_wref, m_layout_wref);
+    //3. allocate uniform variables.
+    m_layout_wref.GetRef().AllocateUniformVariables(m_uv_srefs);
 }
 
 void DescriptorSet::WriteDescriptor()
