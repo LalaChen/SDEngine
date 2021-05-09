@@ -44,9 +44,9 @@ void LightComponent::Initialize()
 {
     InitializeDescriptorSetAndPool();
 
-    m_geo_comp_wref = SD_GET_COMP_WREF(m_entity_wref, TransformComponent);
+    m_geo_comp = SD_GET_COMP_WREF(m_entity, TransformComponent);
 
-    SD_WREF(m_geo_comp_wref).RegisterSlotFunctionIntoEvent(
+    SD_WREF(m_geo_comp).RegisterSlotFunctionIntoEvent(
         TransformComponent::sTransformChangedEventName,
         new MemberFunctionSlot<LightComponent>(
             "LightComponent::OnGeometryChanged",
@@ -58,33 +58,33 @@ void LightComponent::Initialize()
 
 void LightComponent::InitializeDescriptorSetAndPool()
 {
-    m_dp_sref = new DescriptorPool("LightPool");
-    std::map<ObjectName, UniformVariableWeakReferenceObject> uv_wrefs;
+    m_dp = new DescriptorPool("LightPool");
+    std::map<ObjectName, UniformVariableWeakReferenceObject> uvs;
     //1. Allocated descriptor set for .
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
-    DescriptorSetLayoutWeakReferenceObject dsl_wref = GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light");
-    SD_SREF(dsl_wref).GetUniformDescriptorCounts(desc_counts);
-    SD_SREF(m_dp_sref).Initialize(desc_counts, 1, false);
+    DescriptorSetLayoutWeakReferenceObject light_dsl = GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light");
+    SD_SREF(light_dsl).GetUniformDescriptorCounts(desc_counts);
+    SD_SREF(m_dp).Initialize(desc_counts, 1, false);
 
-    m_ds_wref = SD_SREF(m_dp_sref).AllocateDescriptorSet(dsl_wref);
-    SD_SREF(m_ds_wref).GetAllocatedUniformVariables(uv_wrefs);
-    if (m_ds_wref.IsNull() == false) {
-        SD_SREF(m_ds_wref).WriteDescriptor();
+    m_ds = SD_SREF(m_dp).AllocateDescriptorSet(light_dsl);
+    SD_SREF(m_ds).GetAllocatedUniformVariables(uvs);
+    if (m_ds.IsNull() == false) {
+        SD_SREF(m_ds).WriteDescriptor();
     }
 
-    if (uv_wrefs.find("light") != uv_wrefs.end()) {
-        m_buffer_wref = uv_wrefs["light"].DynamicCastTo<UniformBuffer>();
+    if (uvs.find("light") != uvs.end()) {
+        m_ub = uvs["light"].DynamicCastTo<UniformBuffer>();
     }
 
-    if (m_buffer_wref.IsNull() == true) {
+    if (m_ub.IsNull() == true) {
         SDLOGE("We can't find light uniform buffer.");
     }
 }
 
 bool LightComponent::OnGeometryChanged(const EventArg &i_arg)
 {
-    if (m_buffer_wref.IsNull() == false) {
-        Transform node_trans = SD_WREF(m_geo_comp_wref).GetWorldTransform();
+    if (m_ub.IsNull() == false) {
+        Transform node_trans = SD_WREF(m_geo_comp).GetWorldTransform();
         if (m_light_params.m_kind == 0) {
             m_light_params.m_direction = node_trans.GetForward().negative();
         }
@@ -96,8 +96,8 @@ bool LightComponent::OnGeometryChanged(const EventArg &i_arg)
             m_light_params.m_position = node_trans.m_position;
         }
 
-        SD_WREF(m_buffer_wref).SetBufferData(&m_light_params, sizeof(LightUniforms));
-        SD_WREF(m_buffer_wref).Update();
+        SD_WREF(m_ub).SetBufferData(&m_light_params, sizeof(LightUniforms));
+        SD_WREF(m_ub).Update();
     }
 
     return true;

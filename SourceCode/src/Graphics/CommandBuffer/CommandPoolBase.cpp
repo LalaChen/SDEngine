@@ -23,18 +23,21 @@ SOFTWARE.
 
 */
 
-#include "ShaderModuleIdentity.h"
+#include "GraphicsManager.h"
+#include "LogManager.h"
+#include "CommandBuffer.h"
+#include "CommandPool.h"
+
+using SDE::Basic::StringFormat;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-ShaderModuleIdentity::ShaderModuleIdentity()
-: m_handle(SD_NULL_HANDLE)
-, m_shader_kind(ShaderKind_MAX_DEFINE_VALUE)
-, m_entry_name("")
+CommandPoolBase::CommandPoolBase(const ObjectName &i_object_name)
+: Object(i_object_name)
 {
 }
 
-ShaderModuleIdentity::~ShaderModuleIdentity()
+CommandPoolBase::~CommandPoolBase()
 {
 }
 

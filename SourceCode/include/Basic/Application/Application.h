@@ -136,19 +136,19 @@ public:
     void SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height);
 
 public:
-    /*! \fn bool RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseReferenceObject &i_function_slot_ref_obj)
-     *  \param [in] i_function_slot_ref_obj The slot we want to register into this event.
+    /*! \fn bool RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseReferenceObject &i_function_slot)
+     *  \param [in] i_function_slot The slot we want to register into this event.
      *  \brief Adding slot into key event. If we register successful, we will return true.
      *         Otherwise, we will return false for slot existed.
      */
-    bool RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj);
+    bool RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot);
     
-    /*! \fn bool UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseReferenceObject &i_function_slot_ref_obj)
-     *  \param [in] i_function_slot_ref_obj The slot we want to register into this event.
+    /*! \fn bool UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseReferenceObject &i_function_slot)
+     *  \param [in] i_function_slot The slot we want to register into this event.
      *  \brief Deleting slot in key event. If we delete successful, we will return true.
      *         Otherwise, we will return false that slot doesn't exist.
      */
-    bool UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj);
+    bool UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot);
 
     /*! \fn void SetKeyboardStatus(uint32_t i_key_id, bool i_is_pressed);
      *  \param [in] i_key_id KeyID.

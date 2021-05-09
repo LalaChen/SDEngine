@@ -40,22 +40,22 @@ EntityGroup::~EntityGroup()
 {
 }
 
-bool EntityGroup::AddEntity(const EntityWeakReferenceObject &i_entity_wref)
+bool EntityGroup::AddEntity(const EntityWeakReferenceObject &i_entity)
 {
-    if (i_entity_wref.IsNull() == false) {
-        if (i_entity_wref.GetRef().IsMatch(m_conditions) == true) {
-            if (std::find(m_entity_wrefs.begin(), m_entity_wrefs.end(), i_entity_wref) == m_entity_wrefs.end()) {
-                m_entity_wrefs.push_back(i_entity_wref);
+    if (i_entity.IsNull() == false) {
+        if (i_entity.GetRef().IsMatch(m_conditions) == true) {
+            if (std::find(m_entities.begin(), m_entities.end(), i_entity) == m_entities.end()) {
+                m_entities.push_back(i_entity);
                 NotifyEvent("ChangedEvent", EventArg());
                 return true;
             }
             else {
-                //SDLOGD("Add E(%s) entity to G[%s] repeatly.", i_entity_wref.GetRef().GetObjectName().c_str(), m_object_name.c_str());
+                //SDLOGD("Add E(%s) entity to G[%s] repeatly.", i_entity.GetRef().GetObjectName().c_str(), m_object_name.c_str());
                 return false;
             }
         }
         else {
-            //SDLOGD("Add E(%s) entity to G[%s] failure", i_entity_wref.GetRef().GetObjectName().c_str(), m_object_name.c_str());
+            //SDLOGD("Add E(%s) entity to G[%s] failure", i_entity.GetRef().GetObjectName().c_str(), m_object_name.c_str());
             return false;
         }
     }
@@ -65,12 +65,12 @@ bool EntityGroup::AddEntity(const EntityWeakReferenceObject &i_entity_wref)
     }
 }
 
-bool EntityGroup::RemoveEntity(const EntityWeakReferenceObject &i_entity_wref)
+bool EntityGroup::RemoveEntity(const EntityWeakReferenceObject &i_entity)
 {
     std::list<EntityWeakReferenceObject>::iterator iter;
-    for (iter = m_entity_wrefs.begin(); iter != m_entity_wrefs.end(); ) {
-        if ((*iter) == i_entity_wref) {
-            iter = m_entity_wrefs.erase(iter);
+    for (iter = m_entities.begin(); iter != m_entities.end(); ) {
+        if ((*iter) == i_entity) {
+            iter = m_entities.erase(iter);
             return true;
         }
         else {

@@ -58,7 +58,7 @@ void VulkanManager::BeginCommandBuffer(const CommandBufferIdentity &i_identity, 
     if (i_inheritance_info.IsValid() == true) {
         const RenderPassIdentity &rp_identity = GetIdentity(i_inheritance_info.m_rp_wref);
         const FrameBufferIdentity &fb_identity = GetIdentity(i_inheritance_info.m_fb_wref);
-        inheritance_info.renderPass = reinterpret_cast<VkRenderPass>(rp_identity.m_rp_handle);
+        inheritance_info.renderPass = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
         inheritance_info.framebuffer = reinterpret_cast<VkFramebuffer>(fb_identity.m_fb_handle);
         inheritance_info.occlusionQueryEnable = ConvertBoolean(i_inheritance_info.m_occusion_query_enable);
         inheritance_info.queryFlags = QueryControlFlag_Vulkan::Convert(i_inheritance_info.m_ctrl_mask);

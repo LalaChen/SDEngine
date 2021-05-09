@@ -807,6 +807,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Application\ApplicationEvents.h">
       <Filter>include\Basic\Application</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandPoolBase.h">
+      <Filter>include\Graphics\CommandBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1342,6 +1345,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\LightComponent.cpp">
       <Filter>src\Graphics\BasicComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\CommandBuffer\CommandPoolBase.cpp">
+      <Filter>src\Graphics\CommandBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

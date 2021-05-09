@@ -32,7 +32,7 @@ KeyMapManager::KeyMapManager(const ObjectName &i_object_name)
 : EventObject(i_object_name)
 {
     EventStrongReferenceObject key_event = new Event("KeyEvent");
-    m_key_event_wref = key_event.StaticCastToWeakPtr<Event>();
+    m_key_event = key_event;
     RegisterEvent(key_event);
 }
 
@@ -53,7 +53,7 @@ void KeyMapManager::SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed)
             event_arg.m_key_state = 0;
         }
 
-        m_key_event_wref.GetRef().NotifyEvent(event_arg);
+        SD_WREF(m_key_event).NotifyEvent(event_arg);
     }
 }
 

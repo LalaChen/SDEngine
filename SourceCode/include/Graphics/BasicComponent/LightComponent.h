@@ -69,23 +69,20 @@ protected:
     void InitializeDescriptorSetAndPool();
     void InitializeShadowMappingWorkspace();
 protected:
-    DescriptorPoolStrongReferenceObject m_dp_sref;
-    UniformBufferWeakReferenceObject m_buffer_wref;
-    DescriptorSetWeakReferenceObject m_ds_wref;
+    DescriptorPoolStrongReferenceObject m_dp;
+    UniformBufferWeakReferenceObject m_ub;
+    DescriptorSetWeakReferenceObject m_ds;
 protected:
-    std::vector<TextureStrongReferenceObject> m_cascade_map_srefs;
-protected:
-    DescriptorSetWeakReferenceObject m_sp_ds_wref;
-    UniformImagesWeakReferenceObject m_cascade_map_ui_wref;
+    std::vector<TextureStrongReferenceObject> m_cascade_maps;
 protected:
     LightUniforms m_light_params;
 protected:
-    TransformComponentWeakReferenceObject m_geo_comp_wref;
+    TransformComponentWeakReferenceObject m_geo_comp;
 };
 
 inline const DescriptorSetWeakReferenceObject LightComponent::GetDescriptorSet() const
 {
-    return m_ds_wref;
+    return m_ds;
 }
 
 inline void LightComponent::SetLightParameter(const LightUniforms &i_light_data)

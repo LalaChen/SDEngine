@@ -106,10 +106,10 @@ void Application::SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed)
     }
 }
 
-bool Application::RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj)
+bool Application::RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot)
 {
     if (m_key_map_manager.IsNull() == false) {
-        return SD_SREF(m_key_map_manager).RegisterSlotFunctionIntoEvent("KeyEvent", i_function_slot_ref_obj);
+        return SD_SREF(m_key_map_manager).RegisterSlotFunctionIntoEvent("KeyEvent", i_function_slot);
     }
     else {
         SDLOGE("No key map manager.");
@@ -117,10 +117,10 @@ bool Application::RegisterSlotFunctionIntoKeyEvent(const FunctionSlotBaseStrongR
     }
 }
 
-bool Application::UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj)
+bool Application::UnregisterSlotFunctionFromKeyEvent(const FunctionSlotBaseStrongReferenceObject &i_function_slot)
 {
     if (m_key_map_manager.IsNull() == false) {
-        return SD_SREF(m_key_map_manager).UnregisterSlotFunctionFromEvent("KeyEvent", i_function_slot_ref_obj);
+        return SD_SREF(m_key_map_manager).UnregisterSlotFunctionFromEvent("KeyEvent", i_function_slot);
     }
     else {
         SDLOGE("No key map manager.");

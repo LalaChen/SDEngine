@@ -219,6 +219,7 @@ protected:
     void InitializeBasicShaderPrograms();
     void InitializeDefaultRenderPasses();
 protected:
+    const ShaderModuleIdentity &GetIdentity(const ShaderModuleWeakReferenceObject &i_module_wref) const;
     const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex_wref) const;
     const SamplerIdentity& GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex_wref) const;
     const FrameBufferIdentity& GetIdentity(const FrameBufferWeakReferenceObject &i_fb_wref) const;

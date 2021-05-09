@@ -40,7 +40,7 @@ ShaderModule::ShaderModule(const ObjectName i_shader_name)
 
 ShaderModule::~ShaderModule()
 {
-    if (m_identity.m_prog_handle != SD_NULL_HANDLE) {
+    if (m_identity.m_handle != SD_NULL_HANDLE) {
         GraphicsManager::GetRef().DeleteShaderModule(m_identity);
     }
 }
@@ -64,7 +64,7 @@ int32_t ShaderModule::LoadBinaryShader(ShaderKindEnum i_kind, const std::vector<
 
         GraphicsManager::GetRef().CreateShaderModule(m_identity, i_content);
 
-        if (m_identity.m_prog_handle != SD_NULL_HANDLE) {
+        if (m_identity.m_handle != SD_NULL_HANDLE) {
             m_identity.m_shader_kind = i_kind;
             m_identity.m_entry_name = i_entry_name;
             return 1;

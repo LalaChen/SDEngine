@@ -38,6 +38,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "CommandPoolIdentity.h"
 #include "CommandBuffer.h"
+#include "CommandPoolBase.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
@@ -50,7 +51,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandPool);
 /*! \class CommandPool
  *  \brief In Vulkan graphics system, CommandPool is used to allocate command buffer and manage the one's handle.
  */
-class SDENGINE_CLASS CommandPool : public Object
+class SDENGINE_CLASS CommandPool : public CommandPoolBase
 {
 public:
     friend class GraphicsManager;
@@ -66,43 +67,37 @@ public:
      */
     virtual ~CommandPool();
 public:
-    /*! \fn void Initialize();
+    /*! \fn void Initialize() override;
      *  \brief Initialize command pool for vulkan.
      */
-    void Initialize();
+    void Initialize() override;
 
-    /*! \fn void Clear();
+    /*! \fn void Clear() override;
      *  \brief Free allocated command buffers.
      */
-    void Clear();
-public:
-    const CompHandle GetHandle() const;
+    void Clear() override;
+
 public:
     /*! \fn CommandBufferWeakReferenceObject  AllocateCommandBuffer(const ObjectName &i_buffer_name = "CommandBuffer", const CommandBufferLevelEnum &i_level = CommandBufferLevel_PRIMARY);
      *  \brief Allocate command buffer.
      */
     CommandBufferWeakReferenceObject AllocateCommandBuffer(const ObjectName &i_buffer_name = "CommandBuffer", const CommandBufferLevelEnum &i_level = CommandBufferLevel_PRIMARY);
 
-    /*! \fn void RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src_wref);
+    /*! \fn void RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src);
      *  \param [in] i_src_wref Target command buffer.
      *  \brief Free allocated command buffer.
      */
-    void RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src_wref);
+    void RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src);
 protected:
     /*! \var CommandPoolIdentity m_identity;
      *  \brief Identity of command pool.
      */
     CommandPoolIdentity m_identity;
 
-    /*! \fn var std::list<CommandBufferStrongReferenceObject> m_cmd_buf_srefs;
-     *  \brief  Allocated command buffers.
+    /*! \fn var std::list<CommandBufferStrongReferenceObject> m_cmd_bufs;
+     *  \brief Allocated command buffers.
      */
-    std::list<CommandBufferStrongReferenceObject> m_cmd_buf_srefs;
+    std::list<CommandBufferStrongReferenceObject> m_cmd_bufs;
 };
-
-inline const CompHandle CommandPool::GetHandle() const
-{
-    return m_identity.m_pool_handle;
-}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

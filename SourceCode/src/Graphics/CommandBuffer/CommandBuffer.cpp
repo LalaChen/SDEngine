@@ -29,7 +29,7 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-CommandBuffer::CommandBuffer(const ObjectName &i_object_name, const WeakReferenceObject<Object> &i_cmd_pool, const CommandBufferLevelEnum &i_level)
+CommandBuffer::CommandBuffer(const ObjectName &i_object_name, const CommandPoolBaseWeakReferenceObject &i_cmd_pool, const CommandBufferLevelEnum &i_level)
 : Object(i_object_name)
 , m_origin_pool(i_cmd_pool)
 {

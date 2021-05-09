@@ -54,10 +54,10 @@ public:
      */
     ~ShaderModuleIdentity();
 public:
-    /*! \var CompHandle m_prog_handle;
+    /*! \var CompHandle m_handle;
      *  \brief The shader handle. It is valid while the value is not equal 0.
      */
-    CompHandle m_prog_handle;
+    CompHandle m_handle;
 
     /*! \var ShaderKindEnum m_shader_kind;
      *  \brief kind of shader.

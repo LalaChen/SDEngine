@@ -41,7 +41,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 void VulkanManager::CreateRenderPass(RenderPassIdentity &io_identity)
 {
     VkResult result = VK_SUCCESS;
-    VkRenderPass &rp_handle = reinterpret_cast<VkRenderPass&>(io_identity.m_rp_handle);
+    VkRenderPass &rp_handle = reinterpret_cast<VkRenderPass&>(io_identity.m_handle);
     std::vector<VkAttachmentDescription> vk_attachment_descs;
     std::vector<VkSubpassDescription> vk_subpass_descs;
     std::vector<VkSubpassDependency> vk_subpass_dependecies;
@@ -163,7 +163,7 @@ void VulkanManager::CreateRenderPass(RenderPassIdentity &io_identity)
 
 void VulkanManager::DestroyRenderPass(RenderPassIdentity &io_identity)
 {
-    VkRenderPass &rp_handle = reinterpret_cast<VkRenderPass&>(io_identity.m_rp_handle);
+    VkRenderPass &rp_handle = reinterpret_cast<VkRenderPass&>(io_identity.m_handle);
     DestroyVKRenderPass(rp_handle);
 }
 
@@ -173,7 +173,7 @@ void VulkanManager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb
     const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cb_wref);
     const RenderPassIdentity &rp_identity = GetIdentity(i_rp_wref);
     VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
-    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_rp_handle);
+    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
     VkFramebuffer fb_handle = reinterpret_cast<VkFramebuffer>(fb_identity.m_fb_handle);
     VkRect2D render_area = {};
     Size_ui32 final_w = i_render_size.m_width, final_h = i_render_size.m_height;
@@ -231,7 +231,7 @@ void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const Re
     //2. create framebuffer.
     const RenderPassIdentity &rp_identity = GetIdentity(i_rp_wref);
     VkFramebuffer &fb_handle = reinterpret_cast<VkFramebuffer&>(io_identity.m_fb_handle);
-    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_rp_handle);
+    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
     result = CreateVKFrameBuffer(fb_handle, rp_handle, ivs, io_identity.m_size.m_width, io_identity.m_size.m_height, io_identity.m_size.m_length);
     if (result != VK_SUCCESS) {
         SDLOGE("Create Framebuffer failure(%d)!!!.",  result);

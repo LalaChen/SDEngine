@@ -47,22 +47,23 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 //-------- ShaderModule --------
 void VulkanManager::CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content)
 {
-    VkShaderModule &shader_module = reinterpret_cast<VkShaderModule&>(io_identity.m_prog_handle);
+    VkShaderModule &shader_module = reinterpret_cast<VkShaderModule&>(io_identity.m_handle);
     CreateVKShaderModule(shader_module, i_content.data(), i_content.size());
 }
 
 void VulkanManager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
 {
-    VkShaderModule &shader_module = reinterpret_cast<VkShaderModule&>(io_identity.m_prog_handle);
+    VkShaderModule &shader_module = reinterpret_cast<VkShaderModule&>(io_identity.m_handle);
     DestroyVKShaderModule(shader_module);
 }
 
 //-------- GraphicsPipeline --------
 void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs)
 {
+    const RenderPassIdentity &rp_identity = GetIdentity(i_rp_wref);
     VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
     VkPipelineLayout &pipeline_layout_handle = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout_handle);
-    VkRenderPass render_pass_handle = reinterpret_cast<VkRenderPass>(i_rp_wref.GetConstRef().GetHandle());
+    VkRenderPass render_pass_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
     std::vector<VkVertexInputBindingDescription> va_input_binding_descs;
     std::vector<VkVertexInputAttributeDescription> va_input_location_descs;
 
@@ -117,13 +118,14 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     std::vector<VkPipelineShaderStageCreateInfo> stage_c_infos;
     for (uint32_t sID = 0; sID < ShaderKind_GRAPHICS_SHADER_NUMBER; ++sID) {
         if (i_shaders.m_shaders[sID].IsNull() == false) {
+            const ShaderModuleIdentity &module_identity = GetIdentity(i_shaders.m_shaders[sID]);
             VkPipelineShaderStageCreateInfo stage_c_info = {};
             stage_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
             stage_c_info.pNext = nullptr;
             stage_c_info.flags = 0;
-            stage_c_info.stage = ShaderKind_Vulkan::Convert(i_shaders.m_shaders[sID].GetConstRef().GetShaderKind());
-            stage_c_info.pName = i_shaders.m_shaders[sID].GetConstRef().GetEntryNameCStr();
-            stage_c_info.module = reinterpret_cast<VkShaderModule>(i_shaders.m_shaders[sID].GetConstRef().GetHandle());
+            stage_c_info.stage = ShaderKind_Vulkan::Convert(SD_CONST_SREF(i_shaders.m_shaders[sID]).GetShaderKind());
+            stage_c_info.pName = SD_CONST_SREF(i_shaders.m_shaders[sID]).GetEntryNameCStr();
+            stage_c_info.module = reinterpret_cast<VkShaderModule>(module_identity.m_handle);
             stage_c_infos.push_back(stage_c_info);
         }
     }
@@ -287,7 +289,10 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     graphics_pipeline_c_info.basePipelineIndex = -1;
     graphics_pipeline_c_info.renderPass = render_pass_handle;
     graphics_pipeline_c_info.subpass = io_identity.m_subpass_id;
-    if (CreateVKPipeline(pipeline_handle, graphics_pipeline_c_info) != VK_SUCCESS) {
+
+    VkResult result = CreateVKPipeline(pipeline_handle, graphics_pipeline_c_info);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create pipeline failure")
         return;
     }
 }

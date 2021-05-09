@@ -38,17 +38,17 @@ Entity::Entity(const ObjectName &i_object_name)
 Entity::~Entity()
 {
     std::map<std::type_index, ComponentBaseWeakReferenceObject>::iterator comp_iter;
-    for (comp_iter = m_comp_wrefs.begin(); comp_iter != m_comp_wrefs.end();) {
-        comp_iter = m_comp_wrefs.erase(comp_iter);
+    for (comp_iter = m_comps.begin(); comp_iter != m_comps.end();) {
+        comp_iter = m_comps.erase(comp_iter);
     }
 }
 
-bool Entity::RegisterComponent(const std::type_index &i_type, const ComponentBaseWeakReferenceObject &i_comp_wref)
+bool Entity::RegisterComponent(const std::type_index &i_type, const ComponentBaseWeakReferenceObject &i_comp)
 {
-    if (i_comp_wref.IsNull() == false) {
-        std::map<std::type_index, ComponentBaseWeakReferenceObject>::iterator comp_iter = m_comp_wrefs.find(i_type);
-        if (comp_iter == m_comp_wrefs.end()) {
-            m_comp_wrefs[i_type] = i_comp_wref;
+    if (i_comp.IsNull() == false) {
+        std::map<std::type_index, ComponentBaseWeakReferenceObject>::iterator comp_iter = m_comps.find(i_type);
+        if (comp_iter == m_comps.end()) {
+            m_comps[i_type] = i_comp;
             return true;
         }
         else {
@@ -65,10 +65,10 @@ bool Entity::RegisterComponent(const std::type_index &i_type, const ComponentBas
 ComponentBaseWeakReferenceObject Entity::UnregisterComponent(const std::type_index &i_target_type)
 {
     ComponentBaseWeakReferenceObject del_comp_wref;
-    std::map<std::type_index, ComponentBaseWeakReferenceObject>::iterator comp_iter = m_comp_wrefs.find(i_target_type);
-    if (comp_iter != m_comp_wrefs.end()) {
+    std::map<std::type_index, ComponentBaseWeakReferenceObject>::iterator comp_iter = m_comps.find(i_target_type);
+    if (comp_iter != m_comps.end()) {
         del_comp_wref = (*comp_iter).second;
-        comp_iter = m_comp_wrefs.erase(comp_iter);
+        comp_iter = m_comps.erase(comp_iter);
     }
     else {
         SDLOGW("we can't find any component with type[%s]", i_target_type.name());
@@ -78,8 +78,8 @@ ComponentBaseWeakReferenceObject Entity::UnregisterComponent(const std::type_ind
 
 ComponentBaseWeakReferenceObject Entity::GetComponent(const std::type_index &i_target_type) const
 {
-    std::map<std::type_index, ComponentBaseWeakReferenceObject>::const_iterator comp_iter = m_comp_wrefs.find(i_target_type);
-    if (comp_iter != m_comp_wrefs.end()) {
+    std::map<std::type_index, ComponentBaseWeakReferenceObject>::const_iterator comp_iter = m_comps.find(i_target_type);
+    if (comp_iter != m_comps.end()) {
         return (*comp_iter).second;
     }
     else {
@@ -91,8 +91,8 @@ bool Entity::IsMatch(const std::vector<std::type_index> &i_condition) const
 {
     std::map<std::type_index, ComponentBaseWeakReferenceObject>::const_iterator comp_iter;
     for (const std::type_index &type : i_condition) {
-        comp_iter = m_comp_wrefs.find(type);
-        if (comp_iter == m_comp_wrefs.end()) {
+        comp_iter = m_comps.find(type);
+        if (comp_iter == m_comps.end()) {
             return false;
         }
     }
@@ -101,15 +101,15 @@ bool Entity::IsMatch(const std::vector<std::type_index> &i_condition) const
 
 bool Entity::IsComponentExisted(const std::type_index &i_target_type) const
 {
-    return (m_comp_wrefs.find(i_target_type) != m_comp_wrefs.end());
+    return (m_comps.find(i_target_type) != m_comps.end());
 }
 
 std::string Entity::ToString() const
 {
     std::string result;
     result += "Entity Name : " + m_object_name + "\n";
-    for (std::map<std::type_index, ComponentBaseWeakReferenceObject>::const_iterator comp_iter = m_comp_wrefs.begin();
-        comp_iter != m_comp_wrefs.end();
+    for (std::map<std::type_index, ComponentBaseWeakReferenceObject>::const_iterator comp_iter = m_comps.begin();
+        comp_iter != m_comps.end();
         ++comp_iter)
     {
         result += "\tComp : " + m_object_name + " with type : " + (*comp_iter).first.name() + "\n";

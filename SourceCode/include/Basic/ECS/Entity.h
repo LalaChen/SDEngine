@@ -54,14 +54,14 @@ public:
 public:
     bool IsMatch(const std::vector<std::type_index> &i_condition) const;
     bool IsComponentExisted(const std::type_index &i_target_type) const;
-    ComponentBaseWeakReferenceObject GetComponent(const std::type_index& i_target_type) const;
+    ComponentBaseWeakReferenceObject GetComponent(const std::type_index &i_target_type) const;
 public:
     std::string ToString() const override;
 protected:
-    bool RegisterComponent(const std::type_index &i_type, const ComponentBaseWeakReferenceObject &i_comp_wref);
+    bool RegisterComponent(const std::type_index &i_type, const ComponentBaseWeakReferenceObject &i_comp);
     ComponentBaseWeakReferenceObject UnregisterComponent(const std::type_index &i_target_type);
 protected:
-    std::map<std::type_index, ComponentBaseWeakReferenceObject> m_comp_wrefs; //std::type_index is component pool type.
+    std::map<std::type_index, ComponentBaseWeakReferenceObject> m_comps; //std::type_index is component pool type.
 };
 
 _______________SD_END_BASIC_NAMESPACE________________

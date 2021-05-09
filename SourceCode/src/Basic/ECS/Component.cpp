@@ -38,14 +38,14 @@ Component::~Component()
 {
 }
 
-void Component::SetEntity(const EntityWeakReferenceObject& i_entity_wref)
+void Component::SetEntity(const EntityWeakReferenceObject &i_entity)
 {
-    m_entity_wref = i_entity_wref;
+    m_entity = i_entity;
 }
 
 EntityWeakReferenceObject Component::GetEntity() const
 {
-    return m_entity_wref;
+    return m_entity;
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

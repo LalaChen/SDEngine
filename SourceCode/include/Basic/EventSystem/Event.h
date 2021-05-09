@@ -68,25 +68,25 @@ public:
      */
     virtual ~Event();
 public:
-    /*! \fn bool RegisterSlotFunction(const FunctionSlotBaseReferenceObject &i_function_slot_ref_obj)
-     *  \param [in] i_function_slot_ref_obj The slot we want to register into this event.
+    /*! \fn bool RegisterSlotFunction(const FunctionSlotBaseReferenceObject &i_function_slot)
+     *  \param [in] i_function_slot The slot we want to register into this event.
      *  \brief Adding slot into this event. If we register successful, we will return true.
      *         Otherwise, we will return false for slot existed.
      */
-    bool RegisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj);
+    bool RegisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &i_function_slot);
     
-    /*! \fn bool UnregisterSlotFunction(const FunctionSlotBaseReferenceObject &i_function_slot_ref_obj)
-     *  \param [in] i_function_slot_ref_obj The slot we want to register into this event.
+    /*! \fn bool UnregisterSlotFunction(const FunctionSlotBaseReferenceObject &i_function_slot)
+     *  \param [in] i_function_slot The slot we want to register into this event.
      *  \brief Deleting slot in this event. If we delete successful, we will return true.
      *         Otherwise, we will return false that slot doesn't exist.
      */
-    bool UnregisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &i_function_slot_ref_obj);
+    bool UnregisterSlotFunction(const FunctionSlotBaseStrongReferenceObject &i_function_slot);
     
     /*! \fn bool NotifyEvent(const EventArg& i_arg)
      *  \param [in] i_arg The event arg we want to delivery to slots registered into this event.
      *  \brief Delivery params to all slots and remove slots returning false.
      */
-    bool NotifyEvent(const EventArg& i_arg);
+    bool NotifyEvent(const EventArg &i_arg);
 private:
     /*! \var SlotFunctionContainer m_function_slot_container;
      *  \brief container of function slot.

@@ -52,7 +52,7 @@ SecondaryCommandPoolThread::~SecondaryCommandPoolThread()
         m_thread.join();
     }
 
-    m_cp_sref.GetRef().Clear();
+    SD_SREF(m_cp_sref).Clear();
 
     SDLOG("SecondaryCommandPoolThread(%s) dtor end !!!", m_object_name.c_str());
 }
@@ -60,8 +60,8 @@ SecondaryCommandPoolThread::~SecondaryCommandPoolThread()
 void SecondaryCommandPoolThread::Initialize()
 {
     m_cp_sref = new CommandPool(StringFormat("%s_cp", m_object_name.c_str()));
-    m_cp_sref.GetRef().Initialize();
-    m_cb_wref = m_cp_sref.GetRef().AllocateCommandBuffer(StringFormat("secondary_cb"), CommandBufferLevel_SECONDARY);
+    SD_SREF(m_cp_sref).Initialize();
+    m_cb_wref = SD_SREF(m_cp_sref).AllocateCommandBuffer(StringFormat("secondary_cb"), CommandBufferLevel_SECONDARY);
     m_thread = std::thread(std::bind(&SecondaryCommandPoolThread::Record, this));
 }
 
@@ -115,7 +115,7 @@ void SecondaryCommandPoolThread::WaitAndStopRecording(std::list<CommandBufferWea
     std::unique_lock<std::mutex> lck(m_mutex); //Delivery to task cv for ensuring ppol size and stop.
     m_task_cv.wait(lck, [this]() {return (m_task_pool.empty() == true); });
 
-    m_cb_wref.GetRef().End();
+    SD_WREF(m_cb_wref).End();
     m_recording = false;
     io_submitted_sc_list.push_back(m_cb_wref);
 }

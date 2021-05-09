@@ -36,12 +36,11 @@ SOFTWARE.
 #include "CommandBufferIdentity.h"
 #include "CommandBufferInheritanceInfo.h"
 #include "FrameBuffer.h"
+#include "CommandPoolBase.h"
 #include "Object.h"
 
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
-
-using SDE::Basic::WeakReferenceObject;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -55,13 +54,13 @@ class SDENGINE_CLASS CommandBuffer : public Object
 public:
     friend class GraphicsManager;
 public:
-    /*! \fn explicit CommandBuffer(const ObjectName &i_object_name, WeakReferenceObject<Object> &i_cmd_pool, const CommandPoolWeakReferenceObject &i_cmd_pool);
+    /*! \fn explicit CommandBuffer(const ObjectName &i_object_name, CommandPoolBaseWeakReferenceObject &i_cmd_pool, const CommandPoolWeakReferenceObject &i_cmd_pool);
      *  \param [in] i_object_name Name of this object.
      *  \param [in] i_cmd_pool Pool that create this buffer.
      *  \param [in] i_level Level of this command buffer.
      *  \brief Constructor of CommandBuffer
      */
-    explicit CommandBuffer(const ObjectName &i_object_name, const WeakReferenceObject<Object> &i_cmd_pool, const CommandBufferLevelEnum &i_level);
+    explicit CommandBuffer(const ObjectName &i_object_name, const CommandPoolBaseWeakReferenceObject &i_cmd_pool, const CommandBufferLevelEnum &i_level);
 
     /*! \fn virtual ~CommandBuffer();
      *  \brief Destructor of CommandBuffer.
@@ -88,10 +87,10 @@ protected:
      */
     CommandBufferIdentity m_identity;
 
-    /*! \var WeakReferenceObject<Object> m_origin_pool;
+    /*! \var CommandPoolBaseWeakReferenceObject m_origin_pool;
      *  \brief The pool which allocate this command buffer.
      */
-    WeakReferenceObject<Object> m_origin_pool;
+    CommandPoolBaseWeakReferenceObject m_origin_pool;
 };
 
 inline const CompHandle CommandBuffer::GetHandle() const

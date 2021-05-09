@@ -54,10 +54,10 @@ public:
     explicit Component(const ObjectName &i_object_name);
     virtual ~Component();
 protected:
-    void SetEntity(const EntityWeakReferenceObject &i_entity_wref);
+    void SetEntity(const EntityWeakReferenceObject &i_entity);
     EntityWeakReferenceObject GetEntity() const;
 protected:
-    EntityWeakReferenceObject m_entity_wref;
+    EntityWeakReferenceObject m_entity;
 };
 
 _______________SD_END_BASIC_NAMESPACE________________

@@ -45,11 +45,11 @@ public:
     FrameBufferGroupIdentity();
     ~FrameBufferGroupIdentity();
 public:
-    /* \var CompHandle m_fbg_handle;
+    /* \var CompHandle m_handle;
      * \brief FrameBufferGroup handle. In Vulkan, it always is NULL. In openGL(GLES),
      *        it's framebufferobject id.
      */
-    CompHandle m_fbg_handle;
+    CompHandle m_handle;
 
     /* \var std::vector<TextureWeakReferenceObject> m_input_buf_wrefs;
      * \brief Keep buffer weak references for input in this group.

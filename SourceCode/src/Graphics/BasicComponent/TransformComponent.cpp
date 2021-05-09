@@ -80,7 +80,7 @@ void TransformComponent::SetLocalTransform(const Transform &i_transform)
 
 void TransformComponent::SetWorldPosition(const Vector3f &i_position)
 {
-    if (m_parent_wref.IsNull() == false) {
+    if (m_parent.IsNull() == false) {
         //T = Tp * Rp * Sp * Tx.
         //Tp-1 * T = Tp-1 * Tp * Rp * Sp * Tx
         //Rp-1 * Tp-1 * T = Rp-1 * (Tp-1 * Tp) * Rp * Sp * Tx
@@ -88,7 +88,7 @@ void TransformComponent::SetWorldPosition(const Vector3f &i_position)
         //Sp-1 * Rp-1 * Tp-1 * T = (Sp-1 * Sp) * Tx
         //Sp-1 * Rp-1 * Tp-1 * T =  Tx
         m_world_trans.m_position = i_position;
-        m_local_trans.m_position = SD_WREF(m_parent_wref).m_world_trans.InverseVector3fToLocalSpace(m_world_trans.m_position);
+        m_local_trans.m_position = SD_WREF(m_parent).m_world_trans.InverseVector3fToLocalSpace(m_world_trans.m_position);
     }
     else {
         m_world_trans.m_position = i_position;
@@ -100,9 +100,9 @@ void TransformComponent::SetWorldPosition(const Vector3f &i_position)
 
 void TransformComponent::SetWorldRotation(const Quaternion &i_rotation)
 {
-    if (m_parent_wref.IsNull() == false) {
+    if (m_parent.IsNull() == false) {
         m_world_trans.m_rotation = i_rotation;
-        m_local_trans.m_rotation = SD_WREF(m_parent_wref).m_world_trans.m_rotation.inverse() * m_world_trans.m_rotation;
+        m_local_trans.m_rotation = SD_WREF(m_parent).m_world_trans.m_rotation.inverse() * m_world_trans.m_rotation;
     }
     else {
         m_world_trans.m_rotation = i_rotation;
@@ -115,10 +115,10 @@ void TransformComponent::SetWorldRotation(const Quaternion &i_rotation)
 
 void TransformComponent::SetWorldTransform(const Transform &i_transform)
 {
-    if (m_parent_wref.IsNull() == false) {
+    if (m_parent.IsNull() == false) {
         m_world_trans = i_transform;
         m_local_trans = Transform::DecomposeMatrixToTransform(
-            SD_WREF(m_parent_wref).m_world_trans.MakeWorldMatrix().inverse() * m_world_trans.MakeWorldMatrix());
+            SD_WREF(m_parent).m_world_trans.MakeWorldMatrix().inverse() * m_world_trans.MakeWorldMatrix());
     }
     else {
         m_world_trans = i_transform;
@@ -143,9 +143,9 @@ bool TransformComponent::RemoveChild(const TransformComponentWeakReferenceObject
 {
     if (i_child_wref != GetThisWeakPtrByType<TransformComponent>()) {
         std::list<TransformComponentWeakReferenceObject>::iterator child_iter;
-        for (child_iter = m_child_wrefs.begin(); child_iter != m_child_wrefs.end();) {
+        for (child_iter = m_childs.begin(); child_iter != m_childs.end();) {
             if ((*child_iter) == i_child_wref) {
-                child_iter = m_child_wrefs.erase(child_iter);
+                child_iter = m_childs.erase(child_iter);
                 return true;
             }
             else {
@@ -167,10 +167,10 @@ bool TransformComponent::RemoveChild(const TransformComponentWeakReferenceObject
 }
 
 //------------- protected function --------------
-void TransformComponent::SetParent(const TransformComponentWeakReferenceObject &i_parent_wref)
+void TransformComponent::SetParent(const TransformComponentWeakReferenceObject &i_parent)
 {
-    if (i_parent_wref.IsNull() == false) {
-        m_parent_wref = i_parent_wref;
+    if (i_parent.IsNull() == false) {
+        m_parent = i_parent;
         UpdateWorldTransform();
     }
     else {
@@ -180,8 +180,8 @@ void TransformComponent::SetParent(const TransformComponentWeakReferenceObject &
 
 void TransformComponent::UpdateWorldTransform()
 {
-    if (m_parent_wref.IsNull() == false) {
-        m_world_trans = SD_WREF(m_parent_wref).m_world_trans * m_local_trans;
+    if (m_parent.IsNull() == false) {
+        m_world_trans = SD_WREF(m_parent).m_world_trans * m_local_trans;
     }
     else {
         m_world_trans = m_local_trans;
@@ -192,7 +192,7 @@ void TransformComponent::UpdateWorldTransform()
 
 void TransformComponent::UpdateChildrenWorldTransform()
 {
-    for (TransformComponentWeakReferenceObject &so_wref : m_child_wrefs) {
+    for (TransformComponentWeakReferenceObject &so_wref : m_childs) {
         SD_WREF(so_wref).UpdateWorldTransform();
     }
 }

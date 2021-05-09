@@ -64,9 +64,9 @@ void CameraComponent::Initialize()
         InitializeWorkspaceForDeferredPass();
     }
 
-    m_geo_comp_wref = SD_GET_COMP_WREF(m_entity_wref, TransformComponent);
+    m_geo_comp = SD_GET_COMP_WREF(m_entity, TransformComponent);
 
-    SD_WREF(m_geo_comp_wref).RegisterSlotFunctionIntoEvent(
+    SD_WREF(m_geo_comp).RegisterSlotFunctionIntoEvent(
         TransformComponent::sTransformChangedEventName,
         new MemberFunctionSlot<CameraComponent>(
             "CameraComponent::OnGeometryChanged",
@@ -97,9 +97,9 @@ void CameraComponent::Resize()
 }
 
 void CameraComponent::RecordCommand(
-    const CommandBufferWeakReferenceObject &i_cb_wref,
-    const std::list<LightComponentWeakReferenceObject> &i_light_list,
-    const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list)
+    const CommandBufferWeakReferenceObject &i_cb,
+    const std::list<LightComponentWeakReferenceObject> &i_light_comps,
+    const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_comps)
 {
     GraphicsSystemWeakReferenceObject gs_wref = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
     std::list<LightComponentWeakReferenceObject>::const_iterator light_wref_iter;
@@ -120,25 +120,25 @@ void CameraComponent::RecordCommand(
     sr.m_height = static_cast<float>(m_screen_size.GetHeight());
 
     if (m_workspace_type == WorkspaceType_Forward) {
-        SD_SREF(m_rf_sref).BeginRenderFlow(i_cb_wref);
-        CommandBufferInheritanceInfo cb_inherit_info = SD_SREF(m_rf_sref).GetCurrentInheritanceInfo();
+        SD_SREF(m_render_flow).BeginRenderFlow(i_cb);
+        CommandBufferInheritanceInfo cb_inherit_info = SD_SREF(m_render_flow).GetCurrentInheritanceInfo();
         RenderPassWeakReferenceObject current_rp = cb_inherit_info.m_rp_wref;
 
-        GraphicsManager::GetRef().SetViewport(i_cb_wref, vp);
-        GraphicsManager::GetRef().SetScissor(i_cb_wref, sr);
+        GraphicsManager::GetRef().SetViewport(i_cb, vp);
+        GraphicsManager::GetRef().SetScissor(i_cb, sr);
 
         uint32_t tID = 0;
         for (tID = 0; tID < scp_threads.size(); ++tID) {
             SD_SREF(scp_threads[tID]).StartRecording(cb_inherit_info, vp, sr);
         }
 
-        light_wref_iter = i_light_list.begin();
+        light_wref_iter = i_light_comps.begin();
         tID = 0;
-        for (mr_wref_iter = i_mesh_render_list.begin(); mr_wref_iter != i_mesh_render_list.end(); ++mr_wref_iter) {
+        for (mr_wref_iter = i_mesh_render_comps.begin(); mr_wref_iter != i_mesh_render_comps.end(); ++mr_wref_iter) {
             DescriptorSetWeakReferenceObject light_ds_wref = SD_WREF((*light_wref_iter)).GetDescriptorSet();
             MeshRenderComponentWeakReferenceObject mr_wref = (*mr_wref_iter);
             std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, current_rp, light_ds_wref, mr_wref](const CommandBufferWeakReferenceObject &i_cb_wref) {
-                SD_WREF(mr_wref).RenderMesh(current_rp, i_cb_wref, m_ds_wref, light_ds_wref, 0);
+                SD_WREF(mr_wref).RenderMesh(current_rp, i_cb_wref, m_ds, light_ds_wref, 0);
             };
 
             SD_SREF(scp_threads[tID]).AddTask(task_func);
@@ -149,8 +149,8 @@ void CameraComponent::RecordCommand(
             SD_SREF(scp_threads[tID]).WaitAndStopRecording(secondary_cb_wrefs);
         }
 
-        GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(i_cb_wref, secondary_cb_wrefs);
-        SD_SREF(m_rf_sref).EndRenderFlow(i_cb_wref);
+        GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(i_cb, secondary_cb_wrefs);
+        SD_SREF(m_render_flow).EndRenderFlow(i_cb);
     }
     else if (m_workspace_type == WorkspaceType_Deferred) {
 
@@ -161,26 +161,26 @@ void CameraComponent::RecordCommand(
 //------------------ Private Part ---------------
 void CameraComponent::InitializeDescriptorSetAndPool()
 {
-    m_dp_sref = new DescriptorPool("CameraPool");
-    std::map<ObjectName, UniformVariableWeakReferenceObject> uv_wrefs;
+    m_dp = new DescriptorPool("CameraPool");
+    std::map<ObjectName, UniformVariableWeakReferenceObject> uvs;
     //1. Collect all descriptor set layouts used at this component.
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
-    DescriptorSetLayoutWeakReferenceObject dsl_wref = GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Camera");
-    SD_SREF(dsl_wref).GetUniformDescriptorCounts(desc_counts);
-    SD_SREF(m_dp_sref).Initialize(desc_counts, 1, false);
+    DescriptorSetLayoutWeakReferenceObject camera_dsl = GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Camera");
+    SD_SREF(camera_dsl).GetUniformDescriptorCounts(desc_counts);
+    SD_SREF(m_dp).Initialize(desc_counts, 1, false);
     //2. Allocate descriptor set.
-    m_ds_wref = SD_SREF(m_dp_sref).AllocateDescriptorSet(dsl_wref);
-    SD_WREF(m_ds_wref).GetAllocatedUniformVariables(uv_wrefs);
+    m_ds = SD_SREF(m_dp).AllocateDescriptorSet(camera_dsl);
+    SD_WREF(m_ds).GetAllocatedUniformVariables(uvs);
 
-    if (m_ds_wref.IsNull() == false) {
-        SD_SREF(m_ds_wref).WriteDescriptor();
+    if (m_ds.IsNull() == false) {
+        SD_SREF(m_ds).WriteDescriptor();
     }
 
-    if (uv_wrefs.find("camera") != uv_wrefs.end()) {
-        m_buffer_wref = uv_wrefs["camera"].DynamicCastTo<UniformBuffer>();
+    if (uvs.find("camera") != uvs.end()) {
+        m_ub = uvs["camera"].DynamicCastTo<UniformBuffer>();
     }
 
-    if (m_buffer_wref.IsNull() == true) {
+    if (m_ub.IsNull() == true) {
         SDLOGE("We can find camera uniform buffer.");
     }
 }
@@ -190,32 +190,32 @@ void CameraComponent::InitializeWorkspaceForForwardPass()
     RenderPassWeakReferenceObject forward_rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
 
     if (forward_rp_wref.IsNull() == false) {
-        if (m_color_buf_sref.IsNull() == false) {
-            m_color_buf_sref.Reset();
+        if (m_color_buffer.IsNull() == false) {
+            m_color_buffer.Reset();
         }
-        m_color_buf_sref = new Texture("CameraColorBuffer");
-        SD_SREF(m_color_buf_sref).Initialize2DColorOrDepthBuffer(
+        m_color_buffer = new Texture("CameraColorBuffer");
+        SD_SREF(m_color_buffer).Initialize2DColorOrDepthBuffer(
             m_screen_size.GetWidth(), m_screen_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
             ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
 
-        if (m_depth_buf_sref.IsNull() == false) {
-            m_depth_buf_sref.Reset();
+        if (m_depth_buffer.IsNull() == false) {
+            m_depth_buffer.Reset();
         }
-        m_depth_buf_sref = new Texture("CameraDepthBuffer");
-        SD_SREF(m_depth_buf_sref).Initialize2DColorOrDepthBuffer(
+        m_depth_buffer = new Texture("CameraDepthBuffer");
+        SD_SREF(m_depth_buffer).Initialize2DColorOrDepthBuffer(
             m_screen_size.GetWidth(), m_screen_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
             ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
-        m_rf_sref = new RenderFlow("RenderFlow", ImageOffset(0, 0, 0),
+        m_render_flow = new RenderFlow("RenderFlow", ImageOffset(0, 0, 0),
             ImageSize(m_screen_size.GetWidth(), m_screen_size.GetHeight(), 1));
 
-        SD_SREF(m_rf_sref).RegisterRenderPass(forward_rp_wref);
-        SD_SREF(m_rf_sref).AllocateFrameBuffer();
-        SD_SREF(m_rf_sref).RegisterBufferToFrameBuffer(m_color_buf_sref, 0, m_clear_color);
-        SD_SREF(m_rf_sref).RegisterBufferToFrameBuffer(m_depth_buf_sref, 1, m_clear_d_and_s);
-        SD_SREF(m_rf_sref).Initialize();
+        SD_SREF(m_render_flow).RegisterRenderPass(forward_rp_wref);
+        SD_SREF(m_render_flow).AllocateFrameBuffer();
+        SD_SREF(m_render_flow).RegisterBufferToFrameBuffer(m_color_buffer, 0, m_clear_color);
+        SD_SREF(m_render_flow).RegisterBufferToFrameBuffer(m_depth_buffer, 1, m_clear_d_and_s);
+        SD_SREF(m_render_flow).Initialize();
     }
     else {
         SDLOGE("Forward render pass doesn't exist. Please check!!!");
@@ -228,20 +228,20 @@ void CameraComponent::InitializeWorkspaceForDeferredPass()
 
     if (deferred_rp_wref.IsNull() == false) {
         Resolution current_res = GraphicsManager::GetRef().GetScreenResolution();
-        if (m_color_buf_sref.IsNull() == false) {
-            m_color_buf_sref.Reset();
+        if (m_color_buffer.IsNull() == false) {
+            m_color_buffer.Reset();
         }
-        m_color_buf_sref = new Texture("CameraColorBuffer");
-        SD_SREF(m_color_buf_sref).Initialize2DColorOrDepthBuffer(
+        m_color_buffer = new Texture("CameraColorBuffer");
+        SD_SREF(m_color_buffer).Initialize2DColorOrDepthBuffer(
             current_res.GetWidth(), current_res.GetHeight(),
             GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
             ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
 
-        if (m_depth_buf_sref.IsNull() == false) {
-            m_depth_buf_sref.Reset();
+        if (m_depth_buffer.IsNull() == false) {
+            m_depth_buffer.Reset();
         }
-        m_depth_buf_sref = new Texture("CameraDepthBuffer");
-        SD_SREF(m_depth_buf_sref).Initialize2DColorOrDepthBuffer(
+        m_depth_buffer = new Texture("CameraDepthBuffer");
+        SD_SREF(m_depth_buffer).Initialize2DColorOrDepthBuffer(
             current_res.GetWidth(), current_res.GetHeight(),
             GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
             ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
@@ -253,12 +253,12 @@ void CameraComponent::InitializeWorkspaceForDeferredPass()
 
 bool CameraComponent::OnGeometryChanged(const EventArg &i_arg)
 {
-    if (m_buffer_wref.IsNull() == false) {
-        Transform node_trans = SD_WREF(m_geo_comp_wref).GetWorldTransform();
-        SD_WREF(m_buffer_wref).SetMatrix4X4f("view", node_trans.MakeViewMatrix());
-        SD_WREF(m_buffer_wref).SetMatrix4X4f("proj", m_proj_mat);
-        SD_WREF(m_buffer_wref).SetVector3f("viewEye", node_trans.m_position);
-        SD_WREF(m_buffer_wref).Update();
+    if (m_ub.IsNull() == false) {
+        Transform node_trans = SD_WREF(m_geo_comp).GetWorldTransform();
+        SD_WREF(m_ub).SetMatrix4X4f("view", node_trans.MakeViewMatrix());
+        SD_WREF(m_ub).SetMatrix4X4f("proj", m_proj_mat);
+        SD_WREF(m_ub).SetVector3f("viewEye", node_trans.m_position);
+        SD_WREF(m_ub).Update();
     }
 
     return true;
@@ -266,9 +266,9 @@ bool CameraComponent::OnGeometryChanged(const EventArg &i_arg)
 
 void CameraComponent::ClearWorkspace()
 {
-    m_color_buf_sref.Reset();
-    m_depth_buf_sref.Reset();
-    m_rf_sref.Reset();
+    m_color_buffer.Reset();
+    m_depth_buffer.Reset();
+    m_render_flow.Reset();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

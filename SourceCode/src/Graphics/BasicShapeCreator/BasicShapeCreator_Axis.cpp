@@ -136,16 +136,16 @@ MeshStrongReferenceObject BasicShapeCreator::CreateAxis(float i_width, float i_l
 
 	mesh = new Mesh("Axis");
 
-	StaticVertexBufferStrongReferenceObject vbuf_sref = new StaticVertexBuffer("AxisVBuffer", VertexBufferUsage_VERTEX_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
-	vbuf_sref.GetRef().RefreshBufferData(v_data.data(), v_data.size() * sizeof(vec3));
-	StaticVertexBufferStrongReferenceObject cbuf_sref = new StaticVertexBuffer("AxisCBuffer", VertexBufferUsage_COLOR_BUFFER, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
-	cbuf_sref.GetRef().RefreshBufferData(c_data.data(), c_data.size() * sizeof(Color4f));
-	StaticIndexBufferStrongReferenceObject ibuf_sref = new StaticIndexBuffer("AxisIBuffer", IndexBufferFormat_X32_UINT);
-	ibuf_sref.GetRef().RefreshBufferData(i_data.data(), i_data.size() * sizeof(uint32_t));
+	StaticVertexBufferStrongReferenceObject vbuf = new StaticVertexBuffer("AxisVBuffer", VertexBufferUsage_VERTEX_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
+	SD_SREF(vbuf).RefreshBufferData(v_data.data(), v_data.size() * sizeof(vec3));
+	StaticVertexBufferStrongReferenceObject cbuf = new StaticVertexBuffer("AxisCBuffer", VertexBufferUsage_COLOR_BUFFER, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
+	SD_SREF(cbuf).RefreshBufferData(c_data.data(), c_data.size() * sizeof(Color4f));
+	StaticIndexBufferStrongReferenceObject ibuf = new StaticIndexBuffer("AxisIBuffer", IndexBufferFormat_X32_UINT);
+	SD_SREF(ibuf).RefreshBufferData(i_data.data(), i_data.size() * sizeof(uint32_t));
 
-	mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, vbuf_sref.StaticCastTo<VertexBuffer>());
-	mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_COLOR_BUFFER, cbuf_sref.StaticCastTo<VertexBuffer>());
-	mesh.GetRef().RegisterIndexBuffer(ibuf_sref.StaticCastTo<IndexBuffer>());
+	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, vbuf.StaticCastTo<VertexBuffer>());
+	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_COLOR_BUFFER, cbuf.StaticCastTo<VertexBuffer>());
+	SD_SREF(mesh).RegisterIndexBuffer(ibuf.StaticCastTo<IndexBuffer>());
 
 	return mesh;
 }

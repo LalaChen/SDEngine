@@ -28,7 +28,7 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 RenderPassIdentity::RenderPassIdentity()
-: m_rp_handle(SD_NULL_HANDLE)
+: m_handle(SD_NULL_HANDLE)
 {
 }
 

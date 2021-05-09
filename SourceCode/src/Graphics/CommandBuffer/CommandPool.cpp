@@ -32,8 +32,8 @@ using SDE::Basic::StringFormat;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-CommandPool::CommandPool(const ObjectName& i_object_name)
-: Object(i_object_name)
+CommandPool::CommandPool(const ObjectName &i_object_name)
+: CommandPoolBase(i_object_name)
 {
 }
 
@@ -48,31 +48,30 @@ void CommandPool::Initialize()
 
 void CommandPool::Clear()
 {
-    for (std::list<CommandBufferStrongReferenceObject>::iterator iter = m_cmd_buf_srefs.begin(); iter != m_cmd_buf_srefs.end(); ) {
-        iter = m_cmd_buf_srefs.erase(iter);
+    for (std::list<CommandBufferStrongReferenceObject>::iterator iter = m_cmd_bufs.begin(); iter != m_cmd_bufs.end(); ) {
+        iter = m_cmd_bufs.erase(iter);
     }
 }
 
 CommandBufferWeakReferenceObject CommandPool::AllocateCommandBuffer(const ObjectName &i_buffer_name, const CommandBufferLevelEnum &i_level)
 {
-    CommandPoolStrongReferenceObject this_sref = GetThisSharedPtrByType<CommandPool>();
-    CommandBufferStrongReferenceObject alloc_buf_sref = new CommandBuffer(StringFormat("%s_%s", m_object_name.c_str(), i_buffer_name.c_str()), this_sref.StaticCastToWeakPtr<Object>(), i_level);
-    m_cmd_buf_srefs.push_back(alloc_buf_sref);
+    CommandBufferStrongReferenceObject alloc_buf_sref = new CommandBuffer(StringFormat("%s_%s", m_object_name.c_str(), i_buffer_name.c_str()), GetThisSharedPtrByType<CommandPoolBase>(), i_level);
+    m_cmd_bufs.push_back(alloc_buf_sref);
     return alloc_buf_sref;
 }
 
 void CommandPool::RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src_wref)
 {
-    for (std::list<CommandBufferStrongReferenceObject>::iterator iter = m_cmd_buf_srefs.begin(); iter != m_cmd_buf_srefs.end(); ) {
+    for (std::list<CommandBufferStrongReferenceObject>::iterator iter = m_cmd_bufs.begin(); iter != m_cmd_bufs.end(); ) {
         if ((*iter) == i_src_wref) {
-            iter = m_cmd_buf_srefs.erase(iter);
+            iter = m_cmd_bufs.erase(iter);
             return;
         }
         else {
             iter++;
         }
     }
-    SDLOGW("Command Buffer [%s] isn't in Pool[%s].", i_src_wref.GetRef().GetObjectName().c_str(), m_object_name.c_str());
+    SDLOGW("Command Buffer [%s] isn't in Pool[%s].", SD_WREF(i_src_wref).GetObjectName().c_str(), m_object_name.c_str());
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

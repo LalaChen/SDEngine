@@ -52,18 +52,18 @@ public:
     virtual ~EntityGroup();
 public:
     const std::list<EntityWeakReferenceObject>& GetEntities() const;
-    bool AddEntity(const EntityWeakReferenceObject &i_entity_wref);
+    bool AddEntity(const EntityWeakReferenceObject &i_entity);
 protected:
-    bool RemoveEntity(const EntityWeakReferenceObject &i_entity_wref);
+    bool RemoveEntity(const EntityWeakReferenceObject &i_entity);
     bool IsCorresponded(const std::vector<std::type_index> &i_conditions) const;
 protected:
-    std::list<EntityWeakReferenceObject> m_entity_wrefs;
+    std::list<EntityWeakReferenceObject> m_entities;
     std::vector<std::type_index> m_conditions;
 };
 
 inline const std::list<EntityWeakReferenceObject>& EntityGroup::GetEntities() const
 {
-    return m_entity_wrefs;
+    return m_entities;
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

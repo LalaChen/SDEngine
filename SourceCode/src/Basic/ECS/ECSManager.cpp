@@ -46,20 +46,20 @@ ECSManager::~ECSManager()
 
 EntityWeakReferenceObject ECSManager::CreateEntity(const ObjectName &i_object_name)
 {
-    EntityStrongReferenceObject entity_sref = new Entity(i_object_name);
-    m_entity_list.push_back(entity_sref);
-    return entity_sref.DynamicCastToPtr<Entity>();
+    EntityStrongReferenceObject entity = new Entity(i_object_name);
+    m_entity_list.push_back(entity);
+    return entity.DynamicCastToPtr<Entity>();
 }
 
-bool ECSManager::DeleteEntity(const EntityWeakReferenceObject &i_entity_wref)
+bool ECSManager::DeleteEntity(const EntityWeakReferenceObject &i_entity)
 {
     //1. Find out entity.
     std::list<EntityStrongReferenceObject>::iterator entity_iter;
     for (entity_iter = m_entity_list.begin(); entity_iter != m_entity_list.end(); ) {
-        if ((*entity_iter) == i_entity_wref) {
+        if ((*entity_iter) == i_entity) {
             //2. Remove its weak reference at all groups.
-            for (EntityGroupStrongReferenceObject &group_sref : m_entity_group_list) {
-                group_sref.GetRef().RemoveEntity(i_entity_wref);
+            for (EntityGroupStrongReferenceObject &group : m_entity_group_list) {
+                SD_SREF(group).RemoveEntity(i_entity);
             }
             //3. Remove it form entity list.
             entity_iter = m_entity_list.erase(entity_iter);
@@ -75,32 +75,32 @@ bool ECSManager::DeleteEntity(const EntityWeakReferenceObject &i_entity_wref)
 EntityGroupWeakReferenceObject ECSManager::AddEntityGroup(const ObjectName &i_group_name, const std::vector<std::type_index> &i_conditions)
 {
     //1. Change entity groups is exist or not.
-    for (EntityGroupStrongReferenceObject &eg_sref : m_entity_group_list) {
-        if (SD_SREF(eg_sref).IsCorresponded(i_conditions) == true) {
-            return eg_sref;
+    for (EntityGroupStrongReferenceObject &entity_group : m_entity_group_list) {
+        if (SD_SREF(entity_group).IsCorresponded(i_conditions) == true) {
+            return entity_group;
         }
     }
 
     //2. Collect all entities belog this group.
-    EntityGroupStrongReferenceObject group_sref = new EntityGroup(i_group_name, i_conditions);
-    m_entity_group_list.push_back(group_sref);    
-    for (EntityStrongReferenceObject &entity_sref : m_entity_list) {
-        SD_SREF(group_sref).AddEntity(entity_sref);
+    EntityGroupStrongReferenceObject group = new EntityGroup(i_group_name, i_conditions);
+    m_entity_group_list.push_back(group);    
+    for (EntityStrongReferenceObject &entity : m_entity_list) {
+        SD_SREF(group).AddEntity(entity);
     }
-    return group_sref;
+    return group;
 }
 
-bool ECSManager::RemoveComponentFromEntity(const EntityWeakReferenceObject &i_entity_wref, const std::type_index &i_type_index)
+bool ECSManager::RemoveComponentFromEntity(const EntityWeakReferenceObject &i_entity, const std::type_index &i_type_index)
 {
     bool result = false;
-    if (i_entity_wref.IsNull() == false) {
+    if (i_entity.IsNull() == false) {
         //1. Unregister component at entity.
-        ComponentBaseWeakReferenceObject rem_comp_wref = i_entity_wref.GetRef().UnregisterComponent(i_type_index);
+        ComponentBaseWeakReferenceObject rem_comp_wref = SD_WREF(i_entity).UnregisterComponent(i_type_index);
         //2. Delete component at entity.
         result = DeleteComponent(i_type_index, rem_comp_wref);
         //3. Update all entity groups for this entity.
-        for (EntityGroupStrongReferenceObject &group_sref : m_entity_group_list) {
-            SD_SREF(group_sref).RemoveEntity(i_entity_wref);
+        for (EntityGroupStrongReferenceObject &group : m_entity_group_list) {
+            SD_SREF(group).RemoveEntity(i_entity);
         }
     }
     else {
@@ -109,10 +109,10 @@ bool ECSManager::RemoveComponentFromEntity(const EntityWeakReferenceObject &i_en
     return false;
 }
 
-void ECSManager::LinkComponentAndEntity(const EntityWeakReferenceObject &i_entity_wref, const ComponentBaseWeakReferenceObject &i_comp_wref, const std::type_index &i_type)
+void ECSManager::LinkComponentAndEntity(const EntityWeakReferenceObject &i_entity, const ComponentBaseWeakReferenceObject &i_comp_wref, const std::type_index &i_type)
 {
-    SD_WREF(i_entity_wref).RegisterComponent(i_type, i_comp_wref);
-    SD_WREF(i_comp_wref.DynamicCastTo<Component>()).SetEntity(i_entity_wref);
+    SD_WREF(i_entity).RegisterComponent(i_type, i_comp_wref);
+    SD_WREF(i_comp_wref.DynamicCastTo<Component>()).SetEntity(i_entity);
 }
 
 bool ECSManager::DeleteComponent(const std::type_index &i_type_index, const ComponentBaseWeakReferenceObject &i_comp_wref)
@@ -190,10 +190,10 @@ void ECSManager::OverrideSystemUpdatingOrder(const std::list<std::type_index> &i
     m_system_updating_orders = i_orders;
 }
 
-void ECSManager::NotifyEntityChanged(const EntityWeakReferenceObject &i_entity_wref)
+void ECSManager::NotifyEntityChanged(const EntityWeakReferenceObject &i_entity)
 {
-    for (EntityGroupStrongReferenceObject &eg_sref : m_entity_group_list) {
-        SD_SREF(eg_sref).AddEntity(i_entity_wref);
+    for (EntityGroupStrongReferenceObject &entity_group : m_entity_group_list) {
+        SD_SREF(entity_group).AddEntity(i_entity);
     }
 }
 
@@ -204,8 +204,8 @@ void ECSManager::Initialize()
 
 void ECSManager::Update()
 {
-    for (SystemWeakReferenceObject &sys_wref : m_system_updating_list) {
-        SD_SREF(sys_wref).Update();
+    for (SystemWeakReferenceObject &system : m_system_updating_list) {
+        SD_WREF(system).Update();
     }
 }
 
@@ -236,8 +236,8 @@ void ECSManager::Terminate()
 
 void ECSManager::Resize()
 {
-    for (SystemWeakReferenceObject &sys_wref : m_system_updating_list) {
-        SD_SREF(sys_wref).Resize();
+    for (SystemWeakReferenceObject &system : m_system_updating_list) {
+        SD_WREF(system).Resize();
     }
 }
 

@@ -93,17 +93,17 @@ protected:
     virtual void ClearWorkspace();
 protected:
     WorkspaceType m_workspace_type;
-    RenderFlowStrongReferenceObject m_rf_sref;
-    TextureStrongReferenceObject m_color_buf_sref;
-    TextureStrongReferenceObject m_depth_buf_sref;
+    RenderFlowStrongReferenceObject m_render_flow;
+    TextureStrongReferenceObject m_color_buffer;
+    TextureStrongReferenceObject m_depth_buffer;
 protected:
-    DescriptorPoolStrongReferenceObject m_dp_sref;
-    UniformBufferWeakReferenceObject m_buffer_wref;
-    DescriptorSetWeakReferenceObject m_ds_wref;
+    DescriptorPoolStrongReferenceObject m_dp;
+    UniformBufferWeakReferenceObject m_ub;
+    DescriptorSetWeakReferenceObject m_ds;
 protected:
     //Extra buffer for defer pass.
 protected:
-    TransformComponentWeakReferenceObject m_geo_comp_wref;
+    TransformComponentWeakReferenceObject m_geo_comp;
 protected:
     bool m_follow_resolution;
     Resolution m_screen_size;
@@ -137,12 +137,12 @@ inline void CameraComponent::SetCameraSize(const Resolution &i_screen_size)
 
 inline TextureWeakReferenceObject CameraComponent::GetColorBuffer() const
 {
-    return m_color_buf_sref;
+    return m_color_buffer;
 }
 
 inline TextureWeakReferenceObject CameraComponent::GetDepthBuffer() const
 {
-    return m_depth_buf_sref;
+    return m_depth_buffer;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

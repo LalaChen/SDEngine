@@ -23,59 +23,57 @@ SOFTWARE.
 
 */
 
-/*! \file      RenderPassIdentity.h
- *  \brief     Introduce of class RenderPassIdentity.
+/*! \file      CommandPoolBase.h
+ *  \brief     Introduce of class CommandPoolBase.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/11/26
+ *  \date      2021/05/02
  *  \copyright MIT License.
  */
 
 #pragma once
 
+#include <list>
+
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "AttachmentDescription.h"
-#include "SubpassDescription.h"
-#include "SubpassDependency.h"
+#include "CommandPoolIdentity.h"
+#include "Object.h"
+
+using SDE::Basic::ObjectName;
+using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class RenderPassIdentity
- *  \brief In our system, class RenderPassIdentity is used to record information
- *         about render pass.
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandPoolBase);
+
+/*! \class CommandPoolBase
+ *  \brief In Vulkan graphics system, CommandPoolBase is interface of CommandPool.
  */
-class SDENGINE_CLASS RenderPassIdentity
+class SDENGINE_CLASS CommandPoolBase : public Object
 {
 public:
-    /*! \fn explicit RenderPassIdentity();
-     *  \brief Constructor of RenderPassIdentity
-     */
-    RenderPassIdentity();
-
-    /*! \fn ~RenderPassIdentity();
-     *  \brief Destructor of RenderPassIdentity
-     */
-    ~RenderPassIdentity();
+    friend class GraphicsManager;
 public:
-    /*! \var CompHandle m_handle;
-     *  \brief handle about render pass.
+    /*! \fn explicit CommandPoolBase(const ObjectName &i_object_name);
+     *  \param [in] i_object_name Name of this object.
+     *  \brief Constructor of CommandPoolBase
      */
-    CompHandle m_handle;
+    explicit CommandPoolBase(const ObjectName &i_object_name);
 
-    /*! \var std::vector<AttachmentDescription> m_attachment_descs;
-     *  \brief Description about each attachment.
+    /*! \fn virtual ~CommandPoolBase();
+     *  \brief Destructor of CommandPoolBase.
      */
-    std::vector<AttachmentDescription> m_attachment_descs;
+    virtual ~CommandPoolBase();
+public:
+    /*! \fn virtual void Initialize() = 0;
+     *  \brief Initialize command pool for vulkan.
+     */
+    virtual void Initialize() = 0;
 
-    /*! \var std::vector<SubpassDescription> m_subpasses_descs;
-     *  \brief Subpass information.
+    /*! \fn virtual void Clear() = 0;
+     *  \brief Free allocated command buffers.
      */
-    std::vector<SubpassDescription> m_subpasses_descs;
-
-    /*! \var std::vector<SubpassDependency> m_sp_dependencies;
-     *  \brief describing relation between two subpasses.
-     */
-    std::vector<SubpassDependency> m_sp_dependencies;
+    virtual void Clear() = 0;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

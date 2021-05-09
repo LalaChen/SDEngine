@@ -66,25 +66,25 @@ public:
     virtual ~MeshRenderComponent();
 public:
     void Initialize();
-    bool AppendMesh(const MeshWeakReferenceObject &i_mesh_wref, const MaterialWeakReferenceObject &i_mat_wref);
+    bool AppendMesh(const MeshWeakReferenceObject &i_mesh, const MaterialWeakReferenceObject &i_material);
     void RenderMesh(
-        const RenderPassWeakReferenceObject &i_rp_wref,
-        const CommandBufferWeakReferenceObject &i_cb_wref,
-        const DescriptorSetWeakReferenceObject &i_camera_ds_wref,
-        const DescriptorSetWeakReferenceObject &i_light_ds_wref,
+        const RenderPassWeakReferenceObject &i_rp,
+        const CommandBufferWeakReferenceObject &i_cb,
+        const DescriptorSetWeakReferenceObject &i_camera_ds,
+        const DescriptorSetWeakReferenceObject &i_light_ds,
         uint32_t i_sp_id);
 
     bool OnGeometryChanged(const EventArg &i_arg);
 protected:
-    MeshWeakReferenceObject m_mesh_wref;
-    MaterialWeakReferenceObject m_mat_wref;
+    MeshWeakReferenceObject m_mesh;
+    MaterialWeakReferenceObject m_material;
 protected:
     //Create common descriptorset and buffer for meshes.
-    DescriptorPoolStrongReferenceObject m_geo_pool_sref;
-    UniformBufferWeakReferenceObject m_geo_ub_wrefs;
-    DescriptorSetWeakReferenceObject m_geo_set_wref;
+    DescriptorPoolStrongReferenceObject m_geo_dp;
+    UniformBufferWeakReferenceObject m_geo_ub;
+    DescriptorSetWeakReferenceObject m_geo_ds;
 protected:
-    TransformComponentWeakReferenceObject m_geo_comp_wref;
+    TransformComponentWeakReferenceObject m_geo_comp;
 };
 
 

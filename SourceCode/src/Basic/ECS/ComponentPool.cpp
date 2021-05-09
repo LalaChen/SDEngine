@@ -36,12 +36,12 @@ ComponentPool::~ComponentPool()
 {
 }
 
-bool ComponentPool::DeleteComponent(const ComponentBaseWeakReferenceObject &i_del_comp_wref)
+bool ComponentPool::DeleteComponent(const ComponentBaseWeakReferenceObject &i_del_comp)
 {
     std::list<ComponentBaseStrongReferenceObject>::iterator comp_iter;
-    for (comp_iter = m_comp_srefs.begin(); comp_iter != m_comp_srefs.end(); ++comp_iter) {
-        if ((*comp_iter) == i_del_comp_wref) {
-            comp_iter = m_comp_srefs.erase(comp_iter);
+    for (comp_iter = m_components.begin(); comp_iter != m_components.end(); ++comp_iter) {
+        if ((*comp_iter) == i_del_comp) {
+            comp_iter = m_components.erase(comp_iter);
             return true;
         }
         else {

@@ -179,13 +179,13 @@ void GraphicsManager::InitializeBasicShaderPrograms()
         //1.1 create shader module.
         ShaderModules shader_modules;
         ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("PhongShaderVert");
-        vert_shader_sref.GetRef().LoadBinaryShader(
+        SD_SREF(vert_shader_sref).LoadBinaryShader(
             ShaderKind_VERTEX, std::vector<UByte>(
                 gVulkan_BasicShader_SP0_vert_spv,
                 gVulkan_BasicShader_SP0_vert_spv + (sizeof(gVulkan_BasicShader_SP0_vert_spv) / sizeof(UByte))),
             "main");
         ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("PhongShaderFrag");
-        frag_shader_sref.GetRef().LoadBinaryShader(
+        SD_SREF(frag_shader_sref).LoadBinaryShader(
             ShaderKind_FRAGMENT, std::vector<UByte>(
                 gVulkan_BasicShader_SP0_frag_spv,
                 gVulkan_BasicShader_SP0_frag_spv + (sizeof(gVulkan_BasicShader_SP0_frag_spv) / sizeof(UByte))),
@@ -227,8 +227,8 @@ void GraphicsManager::InitializeBasicShaderPrograms()
 
         //1.5 create pipelines.
         GraphicsPipelineStrongReferenceObject pipeline_sp0_sref = new GraphicsPipeline("BasicShaderSPO");
-        pipeline_sp0_sref.GetRef().SetGraphicsPipelineParams(params, GetRenderPass("ForwardPass"), dsl_wrefs, 0);
-        pipeline_sp0_sref.GetRef().Initialize(shader_modules);
+        SD_SREF(pipeline_sp0_sref).SetGraphicsPipelineParams(params, GetRenderPass("ForwardPass"), dsl_wrefs, 0);
+        SD_SREF(pipeline_sp0_sref).Initialize(shader_modules);
 
         //1.6 prepare datas and then initalize shader structure.
         ShaderProgram::RenderPassInfos rp_infos;
@@ -241,7 +241,7 @@ void GraphicsManager::InitializeBasicShaderPrograms()
         rsp_info.m_step_infos.push_back(rs_info);
         forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
         rp_infos.push_back(forward_rp);
-        shader_program.GetRef().RegisterShaderProgramStructure(
+        SD_SREF(shader_program).RegisterShaderProgramStructure(
             rp_infos, common_dsl_wrefs, {material_dsl_sref});
 
         m_shader_program_maps["BasicShading"] = shader_program;

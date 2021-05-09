@@ -79,12 +79,12 @@ public:
     void AddChild(const TransformComponentWeakReferenceObject &i_target_wref);
     bool RemoveChild(const TransformComponentWeakReferenceObject &i_child_wref);
 protected:
-    void SetParent(const TransformComponentWeakReferenceObject &i_parent_wref);
+    void SetParent(const TransformComponentWeakReferenceObject &i_parent);
     void UpdateChildrenWorldTransform();
     void UpdateWorldTransform();
 protected:
-    TransformComponentWeakReferenceObject m_parent_wref;
-    std::list<TransformComponentWeakReferenceObject> m_child_wrefs;
+    TransformComponentWeakReferenceObject m_parent;
+    std::list<TransformComponentWeakReferenceObject> m_childs;
 protected:
     Transform m_world_trans;
     Transform m_local_trans;

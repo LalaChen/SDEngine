@@ -38,7 +38,7 @@ void VulkanManager::CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_id
     VkDescriptorSetLayout &dsl_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_handle);
     std::vector<VkDescriptorSetLayoutBinding> vk_dsl_bindings;
     for (const UniformVariableDescriptorWeakReferenceObject &uvd_wref : i_uvd_wrefs) {
-        UniformBinding ub = uvd_wref.GetConstRef().CreateUniformBinding();
+        UniformBinding ub = SD_WREF(uvd_wref).CreateUniformBinding();
         VkDescriptorSetLayoutBinding vk_dsl_binding = {};
         vk_dsl_binding.binding = ub.m_binding_id;
         vk_dsl_binding.descriptorCount = ub.m_element_number;
@@ -127,8 +127,8 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
 
     for (const UniformVariableWeakReferenceObject &uv_wref : i_uv_wrefs) {
         if (uv_wref.IsNull() == false) {
-            UniformBindingTypeEnum binding_type = uv_wref.GetRef().GetType();
-            uint32_t binding_id = uv_wref.GetRef().GetBindingID();
+            UniformBindingTypeEnum binding_type = SD_WREF(uv_wref).GetType();
+            uint32_t binding_id = SD_WREF(uv_wref).GetBindingID();
 
             if (binding_type == UniformBindingType_UNIFORM_BUFFER) {
                 UniformBufferWeakReferenceObject buffer_wref = uv_wref.DynamicCastTo<UniformBuffer>();
@@ -151,7 +151,7 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
             }
             else if (binding_type == UniformBindingType_COMBINED_IMAGE_SAMPLER) {
                 UniformImagesWeakReferenceObject image_wref = uv_wref.DynamicCastTo<UniformImages>();
-                const std::vector<TextureWeakReferenceObject> tex_wrefs = image_wref.GetRef().GetTextures();
+                const std::vector<TextureWeakReferenceObject> tex_wrefs = SD_WREF(image_wref).GetTextures();
                 decriptor_img_infos.push_back(std::vector<VkDescriptorImageInfo>());
                 std::vector<VkDescriptorImageInfo>& uv_image_infos = decriptor_img_infos.back();
 

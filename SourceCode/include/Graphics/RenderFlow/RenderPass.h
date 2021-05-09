@@ -115,7 +115,7 @@ protected:
 
 inline const CompHandle RenderPass::GetHandle() const
 {
-    return m_identity.m_rp_handle;
+    return m_identity.m_handle;
 }
 
 inline const std::vector<SubpassDescription>& RenderPass::GetSubpassDescriptions() const

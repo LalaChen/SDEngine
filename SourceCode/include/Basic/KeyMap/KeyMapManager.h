@@ -189,7 +189,7 @@ protected:
     /*! \var EventWeakReferenceObject m_key_event_wref;
      *  \brief weak reference of key event.
      */
-    EventWeakReferenceObject m_key_event_wref;
+    EventWeakReferenceObject m_key_event;
 };
 
 _______________SD_END_BASIC_NAMESPACE________________

@@ -52,9 +52,9 @@ bool EventObject::RegisterEvent(const EventStrongReferenceObject &i_src_event)
     for (event_iter = m_event_container.begin() ;
          event_iter != m_event_container.end() ; 
          event_iter++) {
-        if( (*event_iter).GetRef().GetObjectName().compare(i_src_event.GetRef().GetObjectName()) == 0) {
+        if( (*event_iter).GetRef().GetObjectName().compare(SD_SREF(i_src_event).GetObjectName()) == 0) {
             //this event is already register.
-            SDLOGW("Event(%s) is exist.", (*event_iter).GetRef().GetObjectName().c_str());
+            SDLOGW("Event(%s) is exist.", SD_SREF((*event_iter)).GetObjectName().c_str());
             return false;
         }
     }
@@ -71,24 +71,24 @@ bool EventObject::RegisterSlotFunctionIntoEvent(const std::string &i_event_name,
          event_iter != m_event_container.end() ;
          event_iter++) {
         //this event is already register.
-        if( (*event_iter).GetRef().GetObjectName().compare(i_event_name) == 0) {
-            return (*event_iter).GetRef().RegisterSlotFunction(i_src_event_slot_func);
+        if (SD_SREF((*event_iter)).GetObjectName().compare(i_event_name) == 0) {
+            return SD_SREF((*event_iter)).RegisterSlotFunction(i_src_event_slot_func);
         }
     }
 
     return false;
 }
 
-bool EventObject::UnregisterSlotFunctionFromEvent(const std::string& i_event_name, const FunctionSlotBaseStrongReferenceObject& i_src_event_slot_func)
+bool EventObject::UnregisterSlotFunctionFromEvent(const std::string &i_event_name, const FunctionSlotBaseStrongReferenceObject &i_src_event_slot_func)
 {
     EventContainer::iterator event_iter;
 
-    for (event_iter = m_event_container.begin();
-        event_iter != m_event_container.end();
+    for (event_iter = m_event_container.begin() ;
+        event_iter != m_event_container.end() ;
         event_iter++) {
         //this event is already register.
-        if ((*event_iter).GetRef().GetObjectName().compare(i_event_name) == 0) {
-            return (*event_iter).GetRef().UnregisterSlotFunction(i_src_event_slot_func);
+        if (SD_SREF((*event_iter)).GetObjectName().compare(i_event_name) == 0) {
+            return SD_SREF((*event_iter)).UnregisterSlotFunction(i_src_event_slot_func);
         }
     }
 
@@ -99,14 +99,12 @@ bool EventObject::NotifyEvent(const std::string &i_event_name,const EventArg &i_
 {
     EventContainer::iterator event_iter;
     
-    for(event_iter = m_event_container.begin() ;
+    for (event_iter = m_event_container.begin() ;
         event_iter != m_event_container.end() ; 
-        event_iter++)
-    {
+        event_iter++) {
         //this event is already register.
-        if( (*event_iter).GetRef().GetObjectName().compare(i_event_name) == 0)
-        {
-            return (*event_iter).GetRef().NotifyEvent(i_arg);
+        if (SD_SREF((*event_iter)).GetObjectName().compare(i_event_name) == 0) {
+            return SD_SREF((*event_iter)).NotifyEvent(i_arg);
         }
     }
 
