@@ -100,13 +100,13 @@ public:
      */
     virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
 public:
-    /*! \fn void Bind(const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset); 
-     *  \param [in] i_cb_wref Target began command buffer.
+    /*! \fn void Bind(const CommandBufferWeakReferenceObject &i_cb, uint32_t i_binding_id, Size_ui64 i_offset); 
+     *  \param [in] i_cb Target began command buffer.
      *  \param [in] i_binding_id Binding channel we want.
      *  \param [in] i_offset. Binding start address.
      *  \brief Specify binding channel for this vertex buffer and then bind.
      */
-    void Bind(const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset);
+    void Bind(const CommandBufferWeakReferenceObject &i_cb, uint32_t i_binding_id, Size_ui64 i_offset);
 protected:
 	/*! \var VertexBufferIdentity m_identity;
      *  \brief The identity. We keep all handles or ids from graphics API.

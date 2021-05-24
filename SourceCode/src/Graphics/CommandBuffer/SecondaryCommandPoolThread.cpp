@@ -52,16 +52,16 @@ SecondaryCommandPoolThread::~SecondaryCommandPoolThread()
         m_thread.join();
     }
 
-    SD_SREF(m_cp_sref).Clear();
+    SD_SREF(m_cp).Clear();
 
     SDLOG("SecondaryCommandPoolThread(%s) dtor end !!!", m_object_name.c_str());
 }
 
 void SecondaryCommandPoolThread::Initialize()
 {
-    m_cp_sref = new CommandPool(StringFormat("%s_cp", m_object_name.c_str()));
-    SD_SREF(m_cp_sref).Initialize();
-    m_cb_wref = SD_SREF(m_cp_sref).AllocateCommandBuffer(StringFormat("secondary_cb"), CommandBufferLevel_SECONDARY);
+    m_cp = new CommandPool(StringFormat("%s_cp", m_object_name.c_str()));
+    SD_SREF(m_cp).Initialize();
+    m_cb = SD_SREF(m_cp).AllocateCommandBuffer(StringFormat("secondary_cb"), CommandBufferLevel_SECONDARY);
     m_thread = std::thread(std::bind(&SecondaryCommandPoolThread::Record, this));
 }
 
@@ -77,12 +77,12 @@ void SecondaryCommandPoolThread::AddTask(const CommandFunction &i_task)
 void SecondaryCommandPoolThread::StartRecording(const CommandBufferInheritanceInfo &i_info, const Viewport &i_vp, const ScissorRegion &i_sr)
 {
     std::lock_guard<std::mutex> lck(m_mutex);
-    m_cb_wref.GetRef().Begin(i_info);
+    SD_WREF(m_cb).Begin(i_info);
     m_recording = true;
     m_viewport = i_vp;
     m_scissor_region = i_sr;
-    GraphicsManager::GetRef().SetViewport(m_cb_wref, m_viewport);
-    GraphicsManager::GetRef().SetScissor(m_cb_wref, m_scissor_region);
+    GraphicsManager::GetRef().SetViewport(m_cb, m_viewport);
+    GraphicsManager::GetRef().SetScissor(m_cb, m_scissor_region);
     m_task_cv.notify_one();
 }
 
@@ -100,7 +100,7 @@ void SecondaryCommandPoolThread::Record()
             task = m_task_pool.front();
         }
 
-        task(m_cb_wref);
+        task(m_cb);
 
         {
             std::lock_guard<std::mutex> lck(m_mutex);
@@ -115,9 +115,9 @@ void SecondaryCommandPoolThread::WaitAndStopRecording(std::list<CommandBufferWea
     std::unique_lock<std::mutex> lck(m_mutex); //Delivery to task cv for ensuring ppol size and stop.
     m_task_cv.wait(lck, [this]() {return (m_task_pool.empty() == true); });
 
-    SD_WREF(m_cb_wref).End();
+    SD_WREF(m_cb).End();
     m_recording = false;
-    io_submitted_sc_list.push_back(m_cb_wref);
+    io_submitted_sc_list.push_back(m_cb);
 }
 
 

@@ -43,19 +43,19 @@ EntityGroup::~EntityGroup()
 bool EntityGroup::AddEntity(const EntityWeakReferenceObject &i_entity)
 {
     if (i_entity.IsNull() == false) {
-        if (i_entity.GetRef().IsMatch(m_conditions) == true) {
+        if (SD_WREF(i_entity).IsMatch(m_conditions) == true) {
             if (std::find(m_entities.begin(), m_entities.end(), i_entity) == m_entities.end()) {
                 m_entities.push_back(i_entity);
                 NotifyEvent("ChangedEvent", EventArg());
                 return true;
             }
             else {
-                //SDLOGD("Add E(%s) entity to G[%s] repeatly.", i_entity.GetRef().GetObjectName().c_str(), m_object_name.c_str());
+                //SDLOGD("Add E(%s) entity to G[%s] repeatly.", SD_WREF(i_entity).GetObjectName().c_str(), m_object_name.c_str());
                 return false;
             }
         }
         else {
-            //SDLOGD("Add E(%s) entity to G[%s] failure", i_entity.GetRef().GetObjectName().c_str(), m_object_name.c_str());
+            //SDLOGD("Add E(%s) entity to G[%s] failure", SD_WREF(i_entity).GetObjectName().c_str(), m_object_name.c_str());
             return false;
         }
     }

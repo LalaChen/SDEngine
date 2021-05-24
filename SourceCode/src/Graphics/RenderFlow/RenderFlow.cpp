@@ -41,26 +41,26 @@ RenderFlow::~RenderFlow()
 {
 }
 
-void RenderFlow::RegisterRenderPass(const RenderPassWeakReferenceObject &i_rp_wref)
+void RenderFlow::RegisterRenderPass(const RenderPassWeakReferenceObject &i_rp)
 {
-    m_rp_wref = i_rp_wref;
+    m_rp = i_rp;
 }
 
 void RenderFlow::AllocateFrameBuffer()
 {
-    if (m_rp_wref.IsNull() == false) {
-        m_fb_sref = new FrameBuffer(m_object_name + "_FrameBuffer", m_size);
-        m_fb_sref.GetRef().RegisterTargetRenderPass(m_rp_wref);
+    if (m_rp.IsNull() == false) {
+        m_fb = new FrameBuffer(m_object_name + "_FrameBuffer", m_size);
+        m_fb.GetRef().RegisterTargetRenderPass(m_rp);
     }
     else {
         SDLOGE("No target render pass in RenderFlow(%s).", m_object_name.c_str());
     }
 }
 
-void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value)
+void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex, uint32_t i_idx, const ClearValue &i_clear_value)
 {
-    if (m_fb_sref.IsNull() == false) {
-        m_fb_sref.GetRef().RegisterBuffer(i_tex_wref, i_idx, i_clear_value);
+    if (m_fb.IsNull() == false) {
+        m_fb.GetRef().RegisterBuffer(i_tex, i_idx, i_clear_value);
     }
     else {
         SDLOGE("No target frame buffe in RenderFlow(%s).", m_object_name.c_str());
@@ -69,37 +69,37 @@ void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i
 
 void RenderFlow::Initialize()
 {
-    if (m_fb_sref.IsNull() == false && m_rp_wref.IsNull() == false) {
-        m_fb_sref.GetRef().Initialize();
+    if (m_fb.IsNull() == false && m_rp.IsNull() == false) {
+        m_fb.GetRef().Initialize();
     }
     else {
         SDLOGE("One or both of render pass or frame buffer are null. RP null(%d). FB null(%d)."
-            , !m_rp_wref.IsNull() ,!m_fb_sref.IsNull());
+            , !m_rp.IsNull() ,!m_fb.IsNull());
     }
 }
 
-void RenderFlow::BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref)
+void RenderFlow::BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cb)
 {
     m_current_step = 0;
-    GraphicsManager::GetRef().BeginRenderPass(i_cb_wref, m_fb_sref, m_rp_wref, m_position, m_size);
+    GraphicsManager::GetRef().BeginRenderPass(i_cb, m_fb, m_rp, m_position, m_size);
 }
 
-void RenderFlow::GoToNextStep(const CommandBufferWeakReferenceObject &i_cb_wref)
+void RenderFlow::GoToNextStep(const CommandBufferWeakReferenceObject &i_cb)
 {
     m_current_step++;
-    GraphicsManager::GetRef().GoToNextStepOfRenderPass(i_cb_wref, m_fb_sref, m_current_step);
+    GraphicsManager::GetRef().GoToNextStepOfRenderPass(i_cb, m_fb, m_current_step);
 }
 
-void RenderFlow::EndRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref)
+void RenderFlow::EndRenderFlow(const CommandBufferWeakReferenceObject &i_cb)
 {
-    GraphicsManager::GetRef().EndRenderPass(i_cb_wref);
+    GraphicsManager::GetRef().EndRenderPass(i_cb);
 }
 
 CommandBufferInheritanceInfo RenderFlow::GetCurrentInheritanceInfo() const
 {
     CommandBufferInheritanceInfo info;
-    info.m_fb_wref = m_fb_sref;
-    info.m_rp_wref = m_rp_wref;
+    info.m_fb = m_fb;
+    info.m_rp = m_rp;
     info.m_sp_id = m_current_step;
     return info;
 }

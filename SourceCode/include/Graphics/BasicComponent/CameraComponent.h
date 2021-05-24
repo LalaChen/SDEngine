@@ -82,7 +82,7 @@ public:
     virtual void Initialize();
     virtual void Resize();
     virtual void RecordCommand(
-        const CommandBufferWeakReferenceObject &i_cb_wref,
+        const CommandBufferWeakReferenceObject &i_cb,
         const std::list<LightComponentWeakReferenceObject> &i_light_list,
         const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list);
 protected:

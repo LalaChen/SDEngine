@@ -36,7 +36,7 @@ void OpenGL4Manager::DestroyCommandPool(CommandPoolIdentity &io_identity)
 {
 }
 
-void OpenGL4Manager::AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref)
+void OpenGL4Manager::AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool)
 {
 }
 
@@ -48,19 +48,19 @@ void OpenGL4Manager::EndCommandBuffer(const CommandBufferIdentity &i_identity)
 {
 }
 
-void OpenGL4Manager::FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref)
+void OpenGL4Manager::FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool)
 {
 }
 
-void OpenGL4Manager::SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cb_wrefs)
+void OpenGL4Manager::SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cbs)
 {
 }
 
-void OpenGL4Manager::SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject& i_cb_wref)
+void OpenGL4Manager::SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject& i_cb)
 {
 }
 
-void OpenGL4Manager::ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs)
+void OpenGL4Manager::ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cbs)
 {
 }
 

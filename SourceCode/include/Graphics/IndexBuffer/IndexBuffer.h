@@ -66,12 +66,12 @@ public:
 	 */
 	virtual ~IndexBuffer();
 public:
-    /*! \fn void Bind(const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset);
-     *  \param [in] i_cb_wref Target began command buffer.
+    /*! \fn void Bind(const CommandBufferWeakReferenceObject &i_cb, Size_ui64 i_offset);
+     *  \param [in] i_cb Target began command buffer.
      *  \param [in] i_offset. Binding start address.
      *  \brief Specify binding channel for this vertex buffer and then bind.
      */
-    void Bind(const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset);
+    void Bind(const CommandBufferWeakReferenceObject &i_cb, Size_ui64 i_offset);
 public:
     /*! \fn virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
      *  \param [in] i_data_ptr Data pointer.

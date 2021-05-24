@@ -16,9 +16,9 @@ MotorComponent::~MotorComponent()
 
 void MotorComponent::Initialize()
 {
-    m_trans_comp_wref = SD_GET_COMP_WREF(m_entity_wref, TransformComponent);
-    if (m_trans_comp_wref.IsNull() == false) {
-        m_current_trans = SD_WREF(m_trans_comp_wref).GetWorldTransform();
+    m_trans_comp = SD_GET_COMP_WREF(m_entity, TransformComponent);
+    if (m_trans_comp.IsNull() == false) {
+        m_current_trans = SD_WREF(m_trans_comp).GetWorldTransform();
     }
 }
 
@@ -63,7 +63,7 @@ void MotorComponent::Update()
         m_current_trans.AddTranslation(offset);
     }
 
-    if (m_trans_comp_wref.IsNull() == false) {
-        SD_WREF(m_trans_comp_wref).SetWorldTransform(m_current_trans);
+    if (m_trans_comp.IsNull() == false) {
+        SD_WREF(m_trans_comp).SetWorldTransform(m_current_trans);
     }
 }

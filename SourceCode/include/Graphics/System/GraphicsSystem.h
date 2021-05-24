@@ -69,12 +69,12 @@ public:
 protected:
     virtual void RecordCommand();
 protected:
-    EntityGroupWeakReferenceObject m_camera_eg_wref;
-    EntityGroupWeakReferenceObject m_light_eg_wref;
-    EntityGroupWeakReferenceObject m_mesh_render_eg_wref;
-    CommandPoolStrongReferenceObject m_graphics_cp_sref;
-    CommandBufferWeakReferenceObject m_graphics_cb_wref;
-    std::vector<SecondaryCommandPoolThreadStrongReferenceObject> m_rec_thread_srefs;
+    EntityGroupWeakReferenceObject m_camera_eg;
+    EntityGroupWeakReferenceObject m_light_eg;
+    EntityGroupWeakReferenceObject m_mesh_render_eg;
+    CommandPoolStrongReferenceObject m_graphics_cp;
+    CommandBufferWeakReferenceObject m_graphics_cb;
+    std::vector<SecondaryCommandPoolThreadStrongReferenceObject> m_rec_threads;
     bool m_scene_changed;
     bool m_update_every_frame;
 };

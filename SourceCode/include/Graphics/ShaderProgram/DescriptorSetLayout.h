@@ -53,7 +53,7 @@ public:
     explicit DescriptorSetLayout(const ObjectName &i_object_name);
     virtual ~DescriptorSetLayout();
 public:
-    void AddUniformVariableDescriptors(const std::vector<UniformVariableDescriptorStrongReferenceObject> &i_uvd_srefs);
+    void AddUniformVariableDescriptors(const std::vector<UniformVariableDescriptorStrongReferenceObject> &i_uvds);
 public:
     void Initialize();
 public:
@@ -66,22 +66,22 @@ public:
 
     Size_ui32 GetUniformBindingAmount() const;
 
-    /*! \fn void AllocateUniformVariables(std::vector<UniformVariableStrongReferenceObject> &io_uv_srefs);
-     *  \var [inout] io_uv_srefs container for returning allocated uniform variable.
+    /*! \fn void AllocateUniformVariables(std::vector<UniformVariableStrongReferenceObject> &io_uvs);
+     *  \var [inout] io_uvs container for returning allocated uniform variable.
      *  \brief allocate uniform variables for this descriptor set layout. 
      */
-    void AllocateUniformVariables(std::vector<UniformVariableStrongReferenceObject> &io_uv_srefs);
+    void AllocateUniformVariables(std::vector<UniformVariableStrongReferenceObject> &io_uvs);
 protected:
     /*! \var DescriptorSetLayoutIdentity m_identity;
      *  \brief identity this descriptor set layout.
      */
     DescriptorSetLayoutIdentity m_identity;
 
-    /*! \var std::vector<UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
+    /*! \var std::vector<UniformVariableDescriptorStrongReferenceObject> m_uvds;
      *  \brief all uniform descriptors about this set layout.
      *         Note : one uvd shouldn't in two or more layouts. 
      */
-    std::vector<UniformVariableDescriptorStrongReferenceObject> m_uvd_srefs;
+    std::vector<UniformVariableDescriptorStrongReferenceObject> m_uvds;
     
     uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
 };
@@ -95,13 +95,13 @@ inline void DescriptorSetLayout::GetUniformDescriptorCounts(uint32_t io_counts[U
 
 inline Size_ui32 DescriptorSetLayout::GetUniformBindingAmount() const
 {
-    return static_cast<uint32_t>(m_uvd_srefs.size());
+    return static_cast<uint32_t>(m_uvds.size());
 }
 
 inline int32_t DescriptorSetLayout::GetUniformVariableIDByName(const std::string &i_uv_name) const
 {
-    for (uint32_t uvd_count = 0; uvd_count < m_uvd_srefs.size(); ++uvd_count) {
-        if (m_uvd_srefs[uvd_count].GetConstRef().GetObjectName().compare(i_uv_name) == 0) {
+    for (uint32_t uvd_count = 0; uvd_count < m_uvds.size(); ++uvd_count) {
+        if (m_uvds[uvd_count].GetConstRef().GetObjectName().compare(i_uv_name) == 0) {
             return uvd_count;
         }
     }

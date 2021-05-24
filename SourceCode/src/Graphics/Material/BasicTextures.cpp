@@ -35,10 +35,10 @@ BasicTextures::~BasicTextures()
 {
 }
 
-void BasicTextures::RegisterTexture(MaterialTextureTypeEnum i_tex_type, TextureWeakReferenceObject &i_tex_sref)
+void BasicTextures::RegisterTexture(MaterialTextureTypeEnum i_tex_type, TextureWeakReferenceObject &i_tex)
 {
     if (i_tex_type != MaterialTextureType_MAX_DEFINE_VALUE) {
-        m_tex_wrefs[i_tex_type] = i_tex_sref;
+        m_texs[i_tex_type] = i_tex;
     }
 }
 

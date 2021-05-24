@@ -54,20 +54,20 @@ void DescriptorPool::Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DEFIN
     GraphicsManager::GetRef().CreateDescriptorPool(m_identity);
 }
 
-DescriptorSetWeakReferenceObject DescriptorPool::AllocateDescriptorSet(const DescriptorSetLayoutWeakReferenceObject &i_dsl_wref)
+DescriptorSetWeakReferenceObject DescriptorPool::AllocateDescriptorSet(const DescriptorSetLayoutWeakReferenceObject &i_dsl)
 {
-    DescriptorSetWeakReferenceObject ds_wref;
+    DescriptorSetWeakReferenceObject ds;
     if (m_current_set < m_identity.m_max_set) {
-        DescriptorPoolWeakReferenceObject this_dp_wref = GetThisWeakPtrByType<DescriptorPool>();
-        DescriptorSetStrongReferenceObject new_set_sref = new DescriptorSet(StringFormat("%s_dset_%d", m_object_name.c_str(), m_current_set));
-        new_set_sref.GetRef().Initialize(this_dp_wref.StaticCastTo<Object>(), i_dsl_wref);
-        m_set_srefs.push_back(new_set_sref);
-        ds_wref = new_set_sref;
+        DescriptorPoolWeakReferenceObject this_dp = GetThisWeakPtrByType<DescriptorPool>();
+        DescriptorSetStrongReferenceObject new_set = new DescriptorSet(StringFormat("%s_dset_%d", m_object_name.c_str(), m_current_set));
+        new_set.GetRef().Initialize(this_dp.StaticCastTo<Object>(), i_dsl);
+        m_sets.push_back(new_set);
+        ds = new_set;
     }
     else {
         SDLOGE("Descriptor Pool(%s)'s ds are allocated.", m_object_name.c_str());
     }
-    return ds_wref;
+    return ds;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

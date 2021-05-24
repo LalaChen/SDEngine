@@ -186,7 +186,7 @@ public:
      */
     virtual void SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed);
 protected:
-    /*! \var EventWeakReferenceObject m_key_event_wref;
+    /*! \var EventWeakReferenceObject m_key_event;
      *  \brief weak reference of key event.
      */
     EventWeakReferenceObject m_key_event;

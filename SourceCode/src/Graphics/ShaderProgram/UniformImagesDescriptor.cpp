@@ -39,10 +39,10 @@ UniformImagesDescriptor::~UniformImagesDescriptor()
 
 UniformVariableStrongReferenceObject UniformImagesDescriptor::AllocateUniformVariable()
 {
-    UniformImagesStrongReferenceObject ub_sref = new UniformImages(m_object_name, m_binding_id);
-    UniformImagesDescriptorWeakReferenceObject this_wref = GetThisWeakPtrByType<UniformImagesDescriptor>();
-    ub_sref.GetRef().Initialize(this_wref);
-    return ub_sref.StaticCastTo<UniformVariable>();
+    UniformImagesStrongReferenceObject ub = new UniformImages(m_object_name, m_binding_id);
+    UniformImagesDescriptorWeakReferenceObject this_obj = GetThisWeakPtrByType<UniformImagesDescriptor>();
+    ub.GetRef().Initialize(this_obj);
+    return ub.StaticCastTo<UniformVariable>();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

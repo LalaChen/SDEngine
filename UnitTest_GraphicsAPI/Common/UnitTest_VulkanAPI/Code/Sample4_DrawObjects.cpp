@@ -41,42 +41,42 @@ ObjectData::ObjectData()
 
 ObjectData::~ObjectData()
 {
-    m_common_pool_sref.Reset();
+    m_common_pool.Reset();
 }
 
-void ObjectData::InitializeCommonUniformSet(const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_common_dsl_wrefs)
+void ObjectData::InitializeCommonUniformSet(const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_common_dsls)
 {
-    std::map<ObjectName, UniformVariableWeakReferenceObject> uv_wrefs;
+    std::map<ObjectName, UniformVariableWeakReferenceObject> uvs;
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
-    for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : i_common_dsl_wrefs) {
-        dsl_wref.GetRef().GetUniformDescriptorCounts(desc_counts);
+    for (const DescriptorSetLayoutWeakReferenceObject &dsl : i_common_dsls) {
+        dsl.GetRef().GetUniformDescriptorCounts(desc_counts);
     }
-    m_common_pool_sref = new DescriptorPool("CommonPool");
-    m_common_pool_sref.GetRef().Initialize(desc_counts, 1, false);
+    m_common_pool = new DescriptorPool("CommonPool");
+    m_common_pool.GetRef().Initialize(desc_counts, 1, false);
 
-    for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : i_common_dsl_wrefs) {
-        m_common_set_wrefs.push_back(m_common_pool_sref.GetRef().AllocateDescriptorSet(dsl_wref));
-        m_common_set_wrefs[m_common_set_wrefs.size() - 1].GetRef().GetAllocatedUniformVariables(uv_wrefs);
+    for (const DescriptorSetLayoutWeakReferenceObject &dsl : i_common_dsls) {
+        m_common_sets.push_back(m_common_pool.GetRef().AllocateDescriptorSet(dsl));
+        m_common_sets[m_common_sets.size() - 1].GetRef().GetAllocatedUniformVariables(uvs);
     }
 
-    for (DescriptorSetWeakReferenceObject &ds_wref : m_common_set_wrefs) {
-        if (ds_wref.IsNull() == false) {
-            ds_wref.GetRef().WriteDescriptor();
+    for (DescriptorSetWeakReferenceObject &ds : m_common_sets) {
+        if (ds.IsNull() == false) {
+            ds.GetRef().WriteDescriptor();
         }
     }
 
-    if (uv_wrefs.find("basic") != uv_wrefs.end()) {
-        m_basic_wrefs = uv_wrefs["basic"].DynamicCastTo<UniformBuffer>();
+    if (uvs.find("basic") != uvs.end()) {
+        m_basics = uvs["basic"].DynamicCastTo<UniformBuffer>();
     }
-    if (uv_wrefs.find("light") != uv_wrefs.end()) {
-        m_light_wrefs = uv_wrefs["light"].DynamicCastTo<UniformBuffer>();
+    if (uvs.find("light") != uvs.end()) {
+        m_lights = uvs["light"].DynamicCastTo<UniformBuffer>();
     }
 
-    if (m_basic_wrefs.IsNull() == true) {
+    if (m_basics.IsNull() == true) {
         SDLOGE("We can find basic uniform buffer.");
     }
 
-    if (m_light_wrefs.IsNull() == true) {
+    if (m_lights.IsNull() == true) {
         SDLOGE("We can find light uniform buffer.");
     }
 }
@@ -108,41 +108,41 @@ void ObjectData::UpdateCommonUniformSet(
         lb.m_position = i_light.m_trans.GetForward();
     }
 
-    if (m_basic_wrefs.IsNull() == false && m_light_wrefs.IsNull() == false) {
-        m_basic_wrefs.GetRef().SetBufferData(&ub, sizeof(BasicUniformBuffer));
-        m_basic_wrefs.GetRef().Update();
-        m_light_wrefs.GetRef().SetBufferData(&lb, sizeof(LightUniformBuffer));
-        m_light_wrefs.GetRef().Update();
+    if (m_basics.IsNull() == false && m_lights.IsNull() == false) {
+        m_basics.GetRef().SetBufferData(&ub, sizeof(BasicUniformBuffer));
+        m_basics.GetRef().Update();
+        m_lights.GetRef().SetBufferData(&lb, sizeof(LightUniformBuffer));
+        m_lights.GetRef().Update();
     }
 }
 
 void ObjectData::Draw(
-    const RenderPassWeakReferenceObject &i_rp_wref,
-    const CommandBufferWeakReferenceObject &i_cb_wref,
+    const RenderPassWeakReferenceObject &i_rp,
+    const CommandBufferWeakReferenceObject &i_cb,
     uint32_t i_sp_id)
 {
     if (m_mesh.IsNull() == false) {
-        MaterialWeakReferenceObject used_material_wref;
+        MaterialWeakReferenceObject used_material;
         //1. use material.
-        if (m_shared_mat_wref.IsNull() == false) {
-            used_material_wref = m_shared_mat_wref;
+        if (m_shared_mat.IsNull() == false) {
+            used_material = m_shared_mat;
         }
         else {
-            used_material_wref = m_mat_sref;
+            used_material = m_mat;
         }
 
-        uint32_t step_amount = SD_WREF(m_shared_mat_wref).GetStepAmount(i_rp_wref, i_sp_id);
+        uint32_t step_amount = SD_WREF(m_shared_mat).GetStepAmount(i_rp, i_sp_id);
 
         for (uint32_t step_id = 0; step_id < step_amount; ++step_id) {
-            m_shared_mat_wref.GetRef().UseMaterial(
-                i_cb_wref, i_rp_wref,
-                m_common_set_wrefs,
+            m_shared_mat.GetRef().UseMaterial(
+                i_cb, i_rp,
+                m_common_sets,
                 i_sp_id, step_id);
             //2. bind mesh vertex attributes.
-            m_mesh.GetRef().BindVertexBuffers(i_cb_wref);
+            m_mesh.GetRef().BindVertexBuffers(i_cb);
             //3. draw mesh.
-            m_mesh.GetRef().BindIndexBuffer(i_cb_wref);
-            m_mesh.GetRef().Render(i_cb_wref);
+            m_mesh.GetRef().BindIndexBuffer(i_cb);
+            m_mesh.GetRef().Render(i_cb);
         }
     }
 }
@@ -197,7 +197,7 @@ void Sample4_DrawObjects::Render()
     RecordCommandBuffer();
 #endif
 
-    GraphicsManager::GetRef().SubmitCommandBufferToQueue(m_main_cb_wref);
+    GraphicsManager::GetRef().SubmitCommandBufferToQueue(m_main_cb);
 }
 
 void Sample4_DrawObjects::Resize(Size_ui32 i_width, Size_ui32 i_height)
@@ -221,33 +221,33 @@ void Sample4_DrawObjects::Destroy()
     m_camera.m_color_buffer.Reset();
     m_camera.m_depth_buffer.Reset();
     m_camera.m_forward_rf.Reset();
-    m_tex_sref.Reset();
-    m_forward_rp_sref.Reset();
+    m_tex.Reset();
+    m_forward_rp.Reset();
 #if !defined(SINGLE_FLOW)
     for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
         m_rec_threads[tID].Reset();
     }
 #endif
-    m_cp_sref.GetRef().RecycleCommandBuffer(m_main_cb_wref);
-    m_cp_sref.GetRef().Clear(); //should do nothing.
-    m_cp_sref.Reset();
+    m_cp.GetRef().RecycleCommandBuffer(m_main_cb);
+    m_cp.GetRef().Clear(); //should do nothing.
+    m_cp.Reset();
 
-    m_cube_sref.Reset();
-    m_floor_sref.Reset();
-    m_axes_sref.Reset();
+    m_cube.Reset();
+    m_floor.Reset();
+    m_axes.Reset();
 
-    m_shared_material_sref.Reset();
-    m_axes_shared_material_sref.Reset();
+    m_shared_material.Reset();
+    m_axes_shared_material.Reset();
 
-    m_phong_shader_sref.Reset();
-    m_axes_shader_sref.Reset();
+    m_phong_shader.Reset();
+    m_axes_shader.Reset();
 
-    for (DescriptorSetLayoutStrongReferenceObject &dsl_sref : m_common_dsl_srefs) {
-        dsl_sref.Reset();
+    for (DescriptorSetLayoutStrongReferenceObject &dsl : m_common_dsls) {
+        dsl.Reset();
     }
 
-    for (DescriptorSetLayoutStrongReferenceObject &gen_sref : m_general_dsl_srefs) {
-        gen_sref.Reset();
+    for (DescriptorSetLayoutStrongReferenceObject &gen : m_general_dsls) {
+        gen.Reset();
     }
 }
 
@@ -256,7 +256,7 @@ void Sample4_DrawObjects::CreateRenderPass()
     //
     SDLOG("Create render pass");
     //1. Initialize Forward render pass.
-    m_forward_rp_sref = new RenderPass("ForwardPass");
+    m_forward_rp = new RenderPass("ForwardPass");
     //1.1. prepare attachment references data.
     std::vector<AttachmentDescription> att_descs;
     AttachmentDescription att_desc;
@@ -321,8 +321,8 @@ void Sample4_DrawObjects::CreateRenderPass()
     sp_denp.m_dependencies.push_back(DependencyScope_REGION);
     sp_denps.push_back(sp_denp);
 
-    m_forward_rp_sref.GetRef().AddRenderPassDescription(att_descs, sp_descs, sp_denps);
-    m_forward_rp_sref.GetRef().Initialize();
+    m_forward_rp.GetRef().AddRenderPassDescription(att_descs, sp_descs, sp_denps);
+    m_forward_rp.GetRef().Initialize();
 }
 
 void Sample4_DrawObjects::CreateFramebuffer()
@@ -334,7 +334,7 @@ void Sample4_DrawObjects::CreateFramebuffer()
 
     m_camera.m_forward_rf = new RenderFlow("ForwardPassRF", ImageOffset(0, 0, 0),
         ImageSize(m_current_res.GetWidth(), m_current_res.GetHeight(), 1));
-    m_camera.m_forward_rf.GetRef().RegisterRenderPass(m_forward_rp_sref);
+    m_camera.m_forward_rf.GetRef().RegisterRenderPass(m_forward_rp);
     m_camera.m_forward_rf.GetRef().AllocateFrameBuffer();
     m_camera.m_forward_rf.GetRef().RegisterBufferToFrameBuffer(m_camera.m_color_buffer, 0, clear_color);
     m_camera.m_forward_rf.GetRef().RegisterBufferToFrameBuffer(m_camera.m_depth_buffer, 1, clear_dands);
@@ -345,9 +345,9 @@ void Sample4_DrawObjects::CreateCommandBufferAndPool()
 {
     SDLOG("Create CommandBuffer and Pool.");
 
-    m_cp_sref = new CommandPool("Sample4_SinglePool");
-    m_cp_sref.GetRef().Initialize();
-    m_main_cb_wref = m_cp_sref.GetRef().AllocateCommandBuffer();
+    m_cp = new CommandPool("Sample4_SinglePool");
+    m_cp.GetRef().Initialize();
+    m_main_cb = m_cp.GetRef().AllocateCommandBuffer();
 #if !defined(SINGLE_FLOW)
     uint32_t max_threads = std::thread::hardware_concurrency();
     max_threads = 1;
@@ -369,77 +369,77 @@ void Sample4_DrawObjects::CreateCommandBufferAndPool()
 void Sample4_DrawObjects::CreateCommonUniformVariablesAndLayouts()
 {
     //1. new common descriptor set and its uniform variable descriptors.
-    UniformBufferDescriptorStrongReferenceObject basic_ubd_sref = new UniformBufferDescriptor("basic", 0);
-    basic_ubd_sref.GetRef().AddVariable("clip", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_clip));
-    basic_ubd_sref.GetRef().AddVariable("proj", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_proj));
-    basic_ubd_sref.GetRef().AddVariable("view", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_view));
-    basic_ubd_sref.GetRef().AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_world));
-    basic_ubd_sref.GetRef().AddVariable("normal", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_normal));
-    basic_ubd_sref.GetRef().AddVariable("viewEye", UniformBufferVariableType_VECTOR3F, offsetof(BasicUniformBuffer, m_view_eye));
-    basic_ubd_sref.GetRef().AddVariableDone();
+    UniformBufferDescriptorStrongReferenceObject basic_ubd = new UniformBufferDescriptor("basic", 0);
+    basic_ubd.GetRef().AddVariable("clip", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_clip));
+    basic_ubd.GetRef().AddVariable("proj", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_proj));
+    basic_ubd.GetRef().AddVariable("view", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_view));
+    basic_ubd.GetRef().AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_world));
+    basic_ubd.GetRef().AddVariable("normal", UniformBufferVariableType_MATRIX4X4F, offsetof(BasicUniformBuffer, m_normal));
+    basic_ubd.GetRef().AddVariable("viewEye", UniformBufferVariableType_VECTOR3F, offsetof(BasicUniformBuffer, m_view_eye));
+    basic_ubd.GetRef().AddVariableDone();
 
-    UniformBufferDescriptorStrongReferenceObject light_ubd_sref = new UniformBufferDescriptor("light", 1);
-    light_ubd_sref.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(LightUniformBuffer, m_ambient));
-    light_ubd_sref.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(LightUniformBuffer, m_diffuse));
-    light_ubd_sref.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(LightUniformBuffer, m_specular));
-    light_ubd_sref.GetRef().AddVariable("position", UniformBufferVariableType_VECTOR3F, offsetof(LightUniformBuffer, m_position));
-    light_ubd_sref.GetRef().AddVariable("direction", UniformBufferVariableType_VECTOR3F, offsetof(LightUniformBuffer, m_direction));
-    light_ubd_sref.GetRef().AddVariable("spotExponent", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_spot_exp));
-    light_ubd_sref.GetRef().AddVariable("spotCosCutoff", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_spot_cos_cutoff));
-    light_ubd_sref.GetRef().AddVariable("constantAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_constant_attenuation));
-    light_ubd_sref.GetRef().AddVariable("linearAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_linear_attenuation));
-    light_ubd_sref.GetRef().AddVariable("quadraticAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_quadratic_attenuation));
-    light_ubd_sref.GetRef().AddVariable("kind", UniformBufferVariableType_INT, offsetof(LightUniformBuffer, m_kind));
-    light_ubd_sref.GetRef().AddVariableDone();
+    UniformBufferDescriptorStrongReferenceObject light_ubd = new UniformBufferDescriptor("light", 1);
+    light_ubd.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(LightUniformBuffer, m_ambient));
+    light_ubd.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(LightUniformBuffer, m_diffuse));
+    light_ubd.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(LightUniformBuffer, m_specular));
+    light_ubd.GetRef().AddVariable("position", UniformBufferVariableType_VECTOR3F, offsetof(LightUniformBuffer, m_position));
+    light_ubd.GetRef().AddVariable("direction", UniformBufferVariableType_VECTOR3F, offsetof(LightUniformBuffer, m_direction));
+    light_ubd.GetRef().AddVariable("spotExponent", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_spot_exp));
+    light_ubd.GetRef().AddVariable("spotCosCutoff", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_spot_cos_cutoff));
+    light_ubd.GetRef().AddVariable("constantAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_constant_attenuation));
+    light_ubd.GetRef().AddVariable("linearAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_linear_attenuation));
+    light_ubd.GetRef().AddVariable("quadraticAttenuation", UniformBufferVariableType_FLOAT, offsetof(LightUniformBuffer, m_quadratic_attenuation));
+    light_ubd.GetRef().AddVariable("kind", UniformBufferVariableType_INT, offsetof(LightUniformBuffer, m_kind));
+    light_ubd.GetRef().AddVariableDone();
 
     //To do : modify binding number.
-    DescriptorSetLayoutStrongReferenceObject basic_dsl_sref = new DescriptorSetLayout("RenderDescriptorSetLayout");
-    basic_dsl_sref.GetRef().AddUniformVariableDescriptors({ basic_ubd_sref.StaticCastTo<UniformVariableDescriptor>(), light_ubd_sref.StaticCastTo<UniformVariableDescriptor>() });
-    basic_dsl_sref.GetRef().Initialize();
-    m_common_dsl_srefs.push_back(basic_dsl_sref);
+    DescriptorSetLayoutStrongReferenceObject basic_dsl = new DescriptorSetLayout("RenderDescriptorSetLayout");
+    basic_dsl.GetRef().AddUniformVariableDescriptors({ basic_ubd.StaticCastTo<UniformVariableDescriptor>(), light_ubd.StaticCastTo<UniformVariableDescriptor>() });
+    basic_dsl.GetRef().Initialize();
+    m_common_dsls.push_back(basic_dsl);
 }
 
 void Sample4_DrawObjects::CreateGeneralUniformVariablesAndLayouts()
 {
     //1 material ub.
-    UniformBufferDescriptorStrongReferenceObject mat_ubd_sref = new UniformBufferDescriptor("material", 0);
-    mat_ubd_sref.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_ambient));
-    mat_ubd_sref.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_diffuse));
-    mat_ubd_sref.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_specular));
-    mat_ubd_sref.GetRef().AddVariable("position", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_emission));
-    mat_ubd_sref.GetRef().AddVariable("direction", UniformBufferVariableType_FLOAT, offsetof(MaterialUniformBuffer, m_shineness));
-    mat_ubd_sref.GetRef().AddVariableDone();
+    UniformBufferDescriptorStrongReferenceObject mat_ubd = new UniformBufferDescriptor("material", 0);
+    mat_ubd.GetRef().AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_ambient));
+    mat_ubd.GetRef().AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_diffuse));
+    mat_ubd.GetRef().AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_specular));
+    mat_ubd.GetRef().AddVariable("position", UniformBufferVariableType_COLOR4F, offsetof(MaterialUniformBuffer, m_emission));
+    mat_ubd.GetRef().AddVariable("direction", UniformBufferVariableType_FLOAT, offsetof(MaterialUniformBuffer, m_shineness));
+    mat_ubd.GetRef().AddVariableDone();
     //2 material uis.
-    UniformImagesDescriptorStrongReferenceObject mt_imgd_sref = new UniformImagesDescriptor("mainTexture", 1);
+    UniformImagesDescriptorStrongReferenceObject mt_imgd = new UniformImagesDescriptor("mainTexture", 1);
     //------- custom data.
     //
-    DescriptorSetLayoutStrongReferenceObject gen_dsl_sref = new DescriptorSetLayout("GeneralMaterialDescriptorSetLayout");
-    gen_dsl_sref.GetRef().AddUniformVariableDescriptors({ mat_ubd_sref.StaticCastTo<UniformVariableDescriptor>(), mt_imgd_sref.StaticCastTo<UniformVariableDescriptor>()});
-    gen_dsl_sref.GetRef().Initialize();
-    m_general_dsl_srefs.push_back(gen_dsl_sref);
+    DescriptorSetLayoutStrongReferenceObject gen_dsl = new DescriptorSetLayout("GeneralMaterialDescriptorSetLayout");
+    gen_dsl.GetRef().AddUniformVariableDescriptors({ mat_ubd.StaticCastTo<UniformVariableDescriptor>(), mt_imgd.StaticCastTo<UniformVariableDescriptor>()});
+    gen_dsl.GetRef().Initialize();
+    m_general_dsls.push_back(gen_dsl);
 }
 
 void Sample4_DrawObjects::CreateTexture()
 {
-    m_tex_sref = new Texture("MainTexture");
-    m_tex_sref.GetRef().SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
-    m_tex_sref.GetRef().InitializeFromImageResource("Texture/Lenna.png");
+    m_tex = new Texture("MainTexture");
+    m_tex.GetRef().SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
+    m_tex.GetRef().InitializeFromImageResource("Texture/Lenna.png");
 }
 
 void Sample4_DrawObjects::CreateShaderProgram()
 {
     //-------------------- PhongShaderWithTexture ---------------------------
     {
-        m_phong_shader_sref = new ShaderProgram("PhongShaderWithTexture");
+        m_phong_shader = new ShaderProgram("PhongShaderWithTexture");
         //1. Create GraphicsPipeline.
         //1.1 create shader module.
         ShaderModules shader_modules;
-        ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("PhongShaderVert");
-        vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/PhongShader.vert.spv", "main");
-        ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("PhongShaderFrag");
-        frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/PhongShader.frag.spv", "main");
-        shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader_sref;
-        shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
+        ShaderModuleStrongReferenceObject vert_shader = new ShaderModule("PhongShaderVert");
+        vert_shader.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/PhongShader.vert.spv", "main");
+        ShaderModuleStrongReferenceObject frag_shader = new ShaderModule("PhongShaderFrag");
+        frag_shader.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/PhongShader.frag.spv", "main");
+        shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader;
+        shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader;
 
         //1.2 write pipeline parames.
         GraphicsPipelineParam params;
@@ -453,47 +453,47 @@ void Sample4_DrawObjects::CreateShaderProgram()
         GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
 
         //1.3 prepare descriptor set layouts.
-        std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
-        std::vector<DescriptorSetLayoutWeakReferenceObject> common_dsl_wrefs;
-        for (uint32_t layout_count = 0; layout_count < m_common_dsl_srefs.size(); ++layout_count) {
-            dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
-            common_dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
+        std::vector<DescriptorSetLayoutWeakReferenceObject> dsls;
+        std::vector<DescriptorSetLayoutWeakReferenceObject> common_dsls;
+        for (uint32_t layout_count = 0; layout_count < m_common_dsls.size(); ++layout_count) {
+            dsls.push_back(m_common_dsls[layout_count]);
+            common_dsls.push_back(m_common_dsls[layout_count]);
         }
-        for (uint32_t layout_count = 0; layout_count < m_general_dsl_srefs.size(); ++layout_count) {
-            dsl_wrefs.push_back(m_general_dsl_srefs[layout_count]);
+        for (uint32_t layout_count = 0; layout_count < m_general_dsls.size(); ++layout_count) {
+            dsls.push_back(m_general_dsls[layout_count]);
         }
 
         //2.3 register uniform variable descriptor to pipeline.
-        GraphicsPipelineStrongReferenceObject pipeline_sref = new GraphicsPipeline("PhongShader_Forward");
-        pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, dsl_wrefs, 0);
-        pipeline_sref.GetRef().Initialize(shader_modules);
+        GraphicsPipelineStrongReferenceObject pipeline = new GraphicsPipeline("PhongShader_Forward");
+        pipeline.GetRef().SetGraphicsPipelineParams(params, m_forward_rp, dsls, 0);
+        pipeline.GetRef().Initialize(shader_modules);
 
         //2.4 prepare datas and then initalize shader structure.
         ShaderProgram::RenderPassInfos rp_infos;
         RenderPassInfo forward_rp;
-        forward_rp.m_rp_wref = m_forward_rp_sref;
+        forward_rp.m_rp = m_forward_rp;
         RenderSubPassPipelineInfo rsp_info;
         RenderStepInfo rs_info;
-        rs_info.m_dsl_wrefs = dsl_wrefs;
-        rs_info.m_pipe_sref = pipeline_sref;
+        rs_info.m_dsls = dsls;
+        rs_info.m_pipe = pipeline;
         rsp_info.m_step_infos.push_back(rs_info);
         forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
         rp_infos.push_back(forward_rp);
-        m_phong_shader_sref.GetRef().RegisterShaderProgramStructure(
-            rp_infos, common_dsl_wrefs, m_general_dsl_srefs);
+        m_phong_shader.GetRef().RegisterShaderProgramStructure(
+            rp_infos, common_dsls, m_general_dsls);
     }
     //-------------------- AxesShaderWithTexture ---------------------------
     {
-        m_axes_shader_sref = new ShaderProgram("AxesShaderWithTexture");
+        m_axes_shader = new ShaderProgram("AxesShaderWithTexture");
         //1. Create GraphicsPipeline.
         //1.1 create shader module.
         ShaderModules shader_modules;
-        ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("AxesShaderVert");
-        vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/AxesShader.vert.spv", "main");
-        ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("AxesShaderFrag");
-        frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/AxesShader.frag.spv", "main");
-        shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader_sref;
-        shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
+        ShaderModuleStrongReferenceObject vert_shader = new ShaderModule("AxesShaderVert");
+        vert_shader.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/AxesShader.vert.spv", "main");
+        ShaderModuleStrongReferenceObject frag_shader = new ShaderModule("AxesShaderFrag");
+        frag_shader.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/AxesShader.frag.spv", "main");
+        shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader;
+        shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader;
 
         //1.2 write pipeline parames.
         GraphicsPipelineParam params;
@@ -506,107 +506,107 @@ void Sample4_DrawObjects::CreateShaderProgram()
         GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
 
         //1.3 prepare descriptor set layouts.
-        std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
-        std::vector<DescriptorSetLayoutWeakReferenceObject> common_dsl_wrefs;
-        for (uint32_t layout_count = 0; layout_count < m_common_dsl_srefs.size(); ++layout_count) {
-            dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
-            common_dsl_wrefs.push_back(m_common_dsl_srefs[layout_count]);
+        std::vector<DescriptorSetLayoutWeakReferenceObject> dsls;
+        std::vector<DescriptorSetLayoutWeakReferenceObject> common_dsls;
+        for (uint32_t layout_count = 0; layout_count < m_common_dsls.size(); ++layout_count) {
+            dsls.push_back(m_common_dsls[layout_count]);
+            common_dsls.push_back(m_common_dsls[layout_count]);
         }
-        for (uint32_t layout_count = 0; layout_count < m_general_dsl_srefs.size(); ++layout_count) {
-            dsl_wrefs.push_back(m_general_dsl_srefs[layout_count]);
+        for (uint32_t layout_count = 0; layout_count < m_general_dsls.size(); ++layout_count) {
+            dsls.push_back(m_general_dsls[layout_count]);
         }
 
         //2.3 register uniform variable descriptor to pipeline.
-        GraphicsPipelineStrongReferenceObject pipeline_sref = new GraphicsPipeline("AxesShader_Forward");
-        pipeline_sref.GetRef().SetGraphicsPipelineParams(params, m_forward_rp_sref, dsl_wrefs, 0);
-        pipeline_sref.GetRef().Initialize(shader_modules);
+        GraphicsPipelineStrongReferenceObject pipeline = new GraphicsPipeline("AxesShader_Forward");
+        pipeline.GetRef().SetGraphicsPipelineParams(params, m_forward_rp, dsls, 0);
+        pipeline.GetRef().Initialize(shader_modules);
 
         //2.4 prepare datas and then initalize shader structure.
         ShaderProgram::RenderPassInfos rp_infos;
         RenderPassInfo forward_rp;
-        forward_rp.m_rp_wref = m_forward_rp_sref;
+        forward_rp.m_rp = m_forward_rp;
         RenderSubPassPipelineInfo rsp_info;
         RenderStepInfo rs_info;
-        rs_info.m_dsl_wrefs = dsl_wrefs;
-        rs_info.m_pipe_sref = pipeline_sref;
+        rs_info.m_dsls = dsls;
+        rs_info.m_pipe = pipeline;
         rsp_info.m_step_infos.push_back(rs_info);
         forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
         rp_infos.push_back(forward_rp);
-        m_axes_shader_sref.GetRef().RegisterShaderProgramStructure(
-            rp_infos, common_dsl_wrefs, m_general_dsl_srefs);
+        m_axes_shader.GetRef().RegisterShaderProgramStructure(
+            rp_infos, common_dsls, m_general_dsls);
     }
 }
 
 void Sample4_DrawObjects::CreateSharedMaterial()
 {
     {
-        m_shared_material_sref = new Material("Material");
-        m_shared_material_sref.GetRef().BindShaderProgram(m_phong_shader_sref);
+        m_shared_material = new Material("Material");
+        m_shared_material.GetRef().BindShaderProgram(m_phong_shader);
         MaterialUniformBuffer mat_ub; //use default color.
-        m_shared_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniformBuffer));
-        m_shared_material_sref.GetRef().SetTexture("mainTexture", m_tex_sref);
+        m_shared_material.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniformBuffer));
+        m_shared_material.GetRef().SetTexture("mainTexture", m_tex);
         //Set data done. Link with shader program.(Write descirptor)
-        m_shared_material_sref.GetRef().LinkWithShaderProgram();
-        m_shared_material_sref.GetRef().Update();
+        m_shared_material.GetRef().LinkWithShaderProgram();
+        m_shared_material.GetRef().Update();
     }
 
     {
-        m_axes_shared_material_sref = new Material("AxesMaterial");
-        m_axes_shared_material_sref.GetRef().BindShaderProgram(m_axes_shader_sref);
+        m_axes_shared_material = new Material("AxesMaterial");
+        m_axes_shared_material.GetRef().BindShaderProgram(m_axes_shader);
         MaterialUniformBuffer mat_ub; //use default color.
-        m_axes_shared_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniformBuffer));
+        m_axes_shared_material.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniformBuffer));
         //Set data done. Link with shader program.(Write descirptor)
-        m_axes_shared_material_sref.GetRef().LinkWithShaderProgram();
-        m_axes_shared_material_sref.GetRef().Update();
+        m_axes_shared_material.GetRef().LinkWithShaderProgram();
+        m_axes_shared_material.GetRef().Update();
     }
 }
 
 void Sample4_DrawObjects::CreateObjects()
 {
     SDLOG("Create Objects.");
-    std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
-    for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : m_common_dsl_srefs) {
-        dsl_wrefs.push_back(dsl_wref);
+    std::vector<DescriptorSetLayoutWeakReferenceObject> dsls;
+    for (const DescriptorSetLayoutWeakReferenceObject &dsl : m_common_dsls) {
+        dsls.push_back(dsl);
     }
     std::list<ObjectData>::reverse_iterator last_obj_iter;
     //Scene ---- Plane.
-    m_floor_sref = BasicShapeCreator::GetRef().CreatePlane(
+    m_floor = BasicShapeCreator::GetRef().CreatePlane(
         Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX, 100.0f, 100.0f, 100.0f, 100.0f);
     m_scene_objects.push_back(ObjectData());
     last_obj_iter = m_scene_objects.rbegin();
-    (*last_obj_iter).m_mesh = m_floor_sref;
-    (*last_obj_iter).InitializeCommonUniformSet(dsl_wrefs);
+    (*last_obj_iter).m_mesh = m_floor;
+    (*last_obj_iter).InitializeCommonUniformSet(dsls);
     (*last_obj_iter).UpdateCommonUniformSet(m_camera, m_light);
-    (*last_obj_iter).m_shared_mat_wref = m_shared_material_sref;
+    (*last_obj_iter).m_shared_mat = m_shared_material;
 
     //Scene ---- Axes.
-    m_axes_sref = BasicShapeCreator::GetRef().CreateAxis(0.2f, 20.0f);
+    m_axes = BasicShapeCreator::GetRef().CreateAxis(0.2f, 20.0f);
     m_scene_objects.push_back(ObjectData());
     last_obj_iter = m_scene_objects.rbegin();
     (*last_obj_iter).m_trans.m_position = Vector3f(0.0f, 0.0001f, 0.0f);
-    (*last_obj_iter).m_mesh = m_axes_sref;
-    (*last_obj_iter).InitializeCommonUniformSet(dsl_wrefs);
+    (*last_obj_iter).m_mesh = m_axes;
+    (*last_obj_iter).InitializeCommonUniformSet(dsls);
     (*last_obj_iter).UpdateCommonUniformSet(m_camera, m_light);
-    (*last_obj_iter).m_shared_mat_wref = m_axes_shared_material_sref;
+    (*last_obj_iter).m_shared_mat = m_axes_shared_material;
 
     //Scene ---- Cubes
     Vector3f start_pos = Vector3f(m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, 1.0f).scale(
         -1.0f * static_cast<float>(m_cube_row) / 2.0f,
         0.25f,
         -1.0f * static_cast<float>(m_cube_depth) / 2.0f);
-    m_cube_sref = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
+    m_cube = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
     for (uint32_t row = 0; row < m_cube_row; ++row) {
         for (uint32_t col = 0; col < m_cube_col; ++col) {
             for (uint32_t depth = 0; depth < m_cube_depth; ++depth) {
                 m_scene_objects.push_back(ObjectData());
                 last_obj_iter = m_scene_objects.rbegin();
-                (*last_obj_iter).m_mesh = m_cube_sref;
+                (*last_obj_iter).m_mesh = m_cube;
                 (*last_obj_iter).m_trans.m_position = start_pos + 
                     Vector3f((m_cube_side_length + m_cube_interval) * row, (m_cube_side_length + m_cube_interval) * col, (m_cube_side_length + m_cube_interval) * depth);
                 //
-                (*last_obj_iter).InitializeCommonUniformSet(dsl_wrefs);
+                (*last_obj_iter).InitializeCommonUniformSet(dsls);
                 (*last_obj_iter).UpdateCommonUniformSet(m_camera, m_light);
-                (*last_obj_iter).m_shared_mat_wref = m_shared_material_sref;
+                (*last_obj_iter).m_shared_mat = m_shared_material;
             }
         }
     }
@@ -667,17 +667,17 @@ void Sample4_DrawObjects::RecordCommandBuffer()
     tm.Start();
 #endif
     //1. Begin Command Buffer
-    m_main_cb_wref.GetRef().Begin();
-    m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb_wref);
-    GraphicsManager::GetRef().SetViewport(m_main_cb_wref, vp);
-    GraphicsManager::GetRef().SetScissor(m_main_cb_wref, sr);
+    m_main_cb.GetRef().Begin();
+    m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb);
+    GraphicsManager::GetRef().SetViewport(m_main_cb, vp);
+    GraphicsManager::GetRef().SetScissor(m_main_cb, sr);
 
     for (ObjectData& obj : m_scene_objects) {
-        obj.Draw(m_forward_rp_sref, m_main_cb_wref, 0);
+        obj.Draw(m_forward_rp, m_main_cb, 0);
     }
 
-    m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb_wref);
-    m_main_cb_wref.GetRef().End();
+    m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb);
+    m_main_cb.GetRef().End();
 #if defined(TIME_MEASURE)
     tm.Stop();
     SDLOG("%s", tm.ToString().c_str());
@@ -690,17 +690,17 @@ void Sample4_DrawObjects::RecordCommandBuffer()
     TimerMeasurer tm("RecordCommandBufferMulti");
     tm.Start();
 #endif
-    m_main_cb_wref.GetRef().Begin();
-    m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb_wref);
-    GraphicsManager::GetRef().SetViewport(m_main_cb_wref, vp);
-    GraphicsManager::GetRef().SetScissor(m_main_cb_wref, sr);
+    m_main_cb.GetRef().Begin();
+    m_camera.m_forward_rf.GetRef().BeginRenderFlow(m_main_cb);
+    GraphicsManager::GetRef().SetViewport(m_main_cb, vp);
+    GraphicsManager::GetRef().SetScissor(m_main_cb, sr);
     uint32_t oID = 0u;
     uint32_t tID = 0u;
-    std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;
+    std::list<CommandBufferWeakReferenceObject> secondary_cbs;
     CommandBufferInheritanceInfo cb_inher_info = m_camera.m_forward_rf.GetRef().GetCurrentInheritanceInfo();
 #if defined(RECORD_POOL_V2)
-    for (SecondaryCommandPoolThreadStrongReferenceObject &rt_sref : m_rec_threads) {
-        rt_sref.GetRef().StartRecording(cb_inher_info, vp, sr);
+    for (SecondaryCommandPoolThreadStrongReferenceObject &rt : m_rec_threads) {
+        rt.GetRef().StartRecording(cb_inher_info, vp, sr);
     }
 
     for (std::list<ObjectData>::iterator obj_iter = m_scene_objects.begin();
@@ -708,8 +708,8 @@ void Sample4_DrawObjects::RecordCommandBuffer()
         ++obj_iter, ++oID) {
         ObjectData* obj_ref = &(*obj_iter);
 
-        std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, obj_ref](const CommandBufferWeakReferenceObject &i_cb_wref) {
-            obj_ref->Draw(m_forward_rp_sref, i_cb_wref, 0);
+        std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, obj_ref](const CommandBufferWeakReferenceObject &i_cb) {
+            obj_ref->Draw(m_forward_rp, i_cb, 0);
         };
 
         m_rec_threads[tID].GetRef().AddTask(task_func);
@@ -722,7 +722,7 @@ void Sample4_DrawObjects::RecordCommandBuffer()
 #endif
 
     for (tID = 0; tID < m_rec_threads.size(); ++tID) {
-        m_rec_threads[tID].GetRef().WaitAndStopRecording(secondary_cb_wrefs);
+        m_rec_threads[tID].GetRef().WaitAndStopRecording(secondary_cbs);
     }
 #if defined(TIME_MEASURE)
     tm.Record();
@@ -733,12 +733,12 @@ void Sample4_DrawObjects::RecordCommandBuffer()
         ++obj_iter, ++oID) {
         ObjectData* obj_ref = &(*obj_iter);
 
-        std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, cb_inher_info, vp, sr, obj_ref](const CommandBufferWeakReferenceObject &i_cb_wref) {
-            i_cb_wref.GetRef().Begin(cb_inher_info);
-            GraphicsManager::GetRef().SetViewport(i_cb_wref, vp);
-            GraphicsManager::GetRef().SetScissor(i_cb_wref, sr);
-            obj_ref->Draw(m_forward_rp_sref, i_cb_wref, 0);
-            i_cb_wref.GetRef().End();
+        std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, cb_inher_info, vp, sr, obj_ref](const CommandBufferWeakReferenceObject &i_cb) {
+            i_cb.GetRef().Begin(cb_inher_info);
+            GraphicsManager::GetRef().SetViewport(i_cb, vp);
+            GraphicsManager::GetRef().SetScissor(i_cb, sr);
+            obj_ref->Draw(m_forward_rp, i_cb, 0);
+            i_cb.GetRef().End();
         };
 
         m_rec_threads[tID].GetRef().AddTask(task_func);
@@ -751,7 +751,7 @@ void Sample4_DrawObjects::RecordCommandBuffer()
 #endif
 
     for (tID = 0; tID < m_rec_threads.size(); ++tID) {
-        m_rec_threads[tID].GetRef().Wait(secondary_cb_wrefs);
+        m_rec_threads[tID].GetRef().Wait(secondary_cbs);
     }
 #if defined(TIME_MEASURE)
     tm.Record();
@@ -759,13 +759,13 @@ void Sample4_DrawObjects::RecordCommandBuffer()
 
 #endif
     
-    GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(m_main_cb_wref, secondary_cb_wrefs);
+    GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(m_main_cb, secondary_cbs);
 
 #if defined(TIME_MEASURE)
     tm.Record();
 #endif
-    m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb_wref);
-    m_main_cb_wref.GetRef().End();
+    m_camera.m_forward_rf.GetRef().EndRenderFlow(m_main_cb);
+    m_main_cb.GetRef().End();
 #if defined(TIME_MEASURE)
     tm.Stop();
     SDLOG("%s", tm.ToString().c_str());

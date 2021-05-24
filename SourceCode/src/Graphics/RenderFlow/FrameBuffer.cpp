@@ -45,8 +45,8 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::Initialize()
 {
-    const std::vector<SubpassDescription>& sp_descs = m_target_rp_wref.GetConstRef().GetSubpassDescriptions();
-    const std::vector<AttachmentDescription> &att_descs = m_target_rp_wref.GetConstRef().GetAttachmentDescriptions();
+    const std::vector<SubpassDescription>& sp_descs = m_target_rp.GetConstRef().GetSubpassDescriptions();
+    const std::vector<AttachmentDescription> &att_descs = m_target_rp.GetConstRef().GetAttachmentDescriptions();
 
     //1. resize fbg groups for following subpasses.
     m_fbg_identities.resize(sp_descs.size());
@@ -54,13 +54,13 @@ void FrameBuffer::Initialize()
     for (uint32_t spID = 0; spID < sp_descs.size(); ++spID) {
         //2.1 color attachment.
         if (sp_descs[spID].m_color_attachment_refs.size() > 0) {
-            m_fbg_identities[spID].m_color_buf_wrefs.resize(sp_descs[spID].m_color_attachment_refs.size());
+            m_fbg_identities[spID].m_color_bufs.resize(sp_descs[spID].m_color_attachment_refs.size());
             m_fbg_identities[spID].m_clear_color_flags.resize(sp_descs[spID].m_color_attachment_refs.size());
             m_fbg_identities[spID].m_clear_colors.resize(sp_descs[spID].m_color_attachment_refs.size());
 
             for (uint32_t attrID = 0; attrID < sp_descs[spID].m_color_attachment_refs.size(); ++attrID) {
                 uint32_t bufID = sp_descs[spID].m_color_attachment_refs[attrID].m_attachment_ID;
-                if (bufID < m_buf_wrefs.size()) {
+                if (bufID < m_bufs.size()) {
                     //2.1.1 record clear flag and values.
                     m_fbg_identities[spID].m_clear_colors[attrID] = m_identity.m_clear_values[bufID].ToColor4f();
                     if (att_descs[bufID].m_load_op == AttachmentLoadOperator_CLEAR) {
@@ -70,8 +70,8 @@ void FrameBuffer::Initialize()
                         m_fbg_identities[spID].m_clear_color_flags[attrID] = false;
                     }
                     //2.1.2 record target buffer.
-                    if (m_buf_wrefs[bufID].IsNull() == false) {
-                        m_fbg_identities[spID].m_color_buf_wrefs[attrID] = m_buf_wrefs[bufID];
+                    if (m_bufs[bufID].IsNull() == false) {
+                        m_fbg_identities[spID].m_color_bufs[attrID] = m_bufs[bufID];
                     }
                     else {
                         SDLOGE("Color BufferID[%d] of FrameBuffer[%s] is null.", bufID, m_object_name.c_str());
@@ -85,12 +85,12 @@ void FrameBuffer::Initialize()
 
         //2.2 input attachment.
         if (sp_descs[spID].m_input_attachment_refs.size() > 0) {
-            m_fbg_identities[spID].m_input_buf_wrefs.resize(sp_descs[spID].m_input_attachment_refs.size());
+            m_fbg_identities[spID].m_input_bufs.resize(sp_descs[spID].m_input_attachment_refs.size());
             for (uint32_t attrID = 0; attrID < sp_descs[spID].m_input_attachment_refs.size(); ++attrID) {
                 uint32_t bufID = sp_descs[spID].m_input_attachment_refs[attrID].m_attachment_ID;
-                if (bufID < m_buf_wrefs.size()) {
-                    if (m_buf_wrefs[bufID].IsNull() == false) {
-                        m_fbg_identities[spID].m_input_buf_wrefs[attrID] = m_buf_wrefs[bufID];
+                if (bufID < m_bufs.size()) {
+                    if (m_bufs[bufID].IsNull() == false) {
+                        m_fbg_identities[spID].m_input_bufs[attrID] = m_bufs[bufID];
                     }
                     else {
                         SDLOGE("Input BufferID[%d] of FrameBuffer[%s] is null.", bufID, m_object_name.c_str());
@@ -104,12 +104,12 @@ void FrameBuffer::Initialize()
 
         //2.3 res attachment.
         if (sp_descs[spID].m_res_attachment_refs.size() > 0) {
-            m_fbg_identities[spID].m_ref_buf_wrefs.resize(sp_descs[spID].m_res_attachment_refs.size());
+            m_fbg_identities[spID].m_ref_bufs.resize(sp_descs[spID].m_res_attachment_refs.size());
             for (uint32_t attrID = 0; attrID < sp_descs[spID].m_res_attachment_refs.size(); ++attrID) {
                 uint32_t bufID = sp_descs[spID].m_res_attachment_refs[attrID].m_attachment_ID;
-                if (bufID < m_buf_wrefs.size()) {
-                    if (m_buf_wrefs[bufID].IsNull() == false) {
-                        m_fbg_identities[spID].m_ref_buf_wrefs[attrID] = m_buf_wrefs[bufID];
+                if (bufID < m_bufs.size()) {
+                    if (m_bufs[bufID].IsNull() == false) {
+                        m_fbg_identities[spID].m_ref_bufs[attrID] = m_bufs[bufID];
                     }
                     else {
                         SDLOGE("Res BufferID[%d] of FrameBuffer[%s] is null.", bufID, m_object_name.c_str());
@@ -129,7 +129,7 @@ void FrameBuffer::Initialize()
         //2.5 depth_fbID.
         uint32_t depth_fbID = sp_descs[spID].m_depth_attachment_ref.m_attachment_ID;
         if (depth_fbID != SD_ERROR_ATTACHMENT_REF) {
-            if (depth_fbID < m_buf_wrefs.size()) {
+            if (depth_fbID < m_bufs.size()) {
                 //2.5.1 record clear flag and values.
                 m_fbg_identities[spID].m_clear_depth   = m_identity.m_clear_values[depth_fbID].ToDepth();
                 m_fbg_identities[spID].m_clear_stencil = m_identity.m_clear_values[depth_fbID].ToStencil();
@@ -140,8 +140,8 @@ void FrameBuffer::Initialize()
                     m_fbg_identities[spID].m_clear_depth_or_stencil_flag = false;
                 }
                 //2.5.2 record depth buffer.
-                if (m_buf_wrefs[depth_fbID].IsNull() == false) {
-                    m_fbg_identities[spID].m_depth_buf_wref = m_buf_wrefs[depth_fbID];
+                if (m_bufs[depth_fbID].IsNull() == false) {
+                    m_fbg_identities[spID].m_depth_buf = m_bufs[depth_fbID];
                 }
                 else {
                     SDLOGE("Depth BufferID[%d] of FrameBuffer[%s] is null.", depth_fbID, m_object_name.c_str());
@@ -153,33 +153,33 @@ void FrameBuffer::Initialize()
         } 
     }
     //3. Call manager to allocate FrameBuffer comp handle.
-    GraphicsManager::GetRef().CreateFrameBuffer(m_identity, m_target_rp_wref, m_buf_wrefs);
+    GraphicsManager::GetRef().CreateFrameBuffer(m_identity, m_target_rp, m_bufs);
     //4. for each FrameBufferGroup, allocate FrameBufferGroup comp handle.
     for (uint32_t fbg_ID = 0; fbg_ID < m_fbg_identities.size(); ++fbg_ID) {
         GraphicsManager::GetRef().CreateFrameBufferGroup(m_fbg_identities[fbg_ID]);
     }
 }
 
-void FrameBuffer::RegisterTargetRenderPass(const RenderPassWeakReferenceObject &i_rp_wref)
+void FrameBuffer::RegisterTargetRenderPass(const RenderPassWeakReferenceObject &i_rp)
 {
-    m_target_rp_wref = i_rp_wref;
-    m_identity.m_buffer_formats = i_rp_wref.GetConstRef().CreateImageViewFormats();
+    m_target_rp = i_rp;
+    m_identity.m_buffer_formats = i_rp.GetConstRef().CreateImageViewFormats();
     m_identity.m_clear_values.resize(m_identity.m_buffer_formats.size());
-    m_buf_wrefs.resize(m_identity.m_buffer_formats.size());
+    m_bufs.resize(m_identity.m_buffer_formats.size());
 }
 
-void FrameBuffer::RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value)
+void FrameBuffer::RegisterBuffer(const TextureWeakReferenceObject &i_tex, uint32_t i_idx, const ClearValue &i_clear_value)
 {
-    if (i_idx < m_buf_wrefs.size()) {
-        if (i_tex_wref.IsNull() == false) {
-            TextureFormatEnum tex_format = i_tex_wref.GetConstRef().GetTextureFormat();
+    if (i_idx < m_bufs.size()) {
+        if (i_tex.IsNull() == false) {
+            TextureFormatEnum tex_format = i_tex.GetConstRef().GetTextureFormat();
             if (tex_format == m_identity.m_buffer_formats[i_idx]) {
-                m_buf_wrefs[i_idx] = i_tex_wref;
+                m_bufs[i_idx] = i_tex;
                 m_identity.m_clear_values[i_idx] = i_clear_value;
             }
             else {
                 SDLOGE("Register wrong type[%d] tex[%s] to this FB[%s]. CorrectType is [%d]", tex_format,
-                    i_tex_wref.GetRef().GetObjectName().c_str(), m_object_name.c_str(),
+                    i_tex.GetRef().GetObjectName().c_str(), m_object_name.c_str(),
                     m_identity.m_buffer_formats[i_idx]);
             }
         }

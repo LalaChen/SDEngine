@@ -94,8 +94,8 @@ public:
      */
     template<class T> std::weak_ptr<T> GetThisWeakPtrByType()
     {
-        std::weak_ptr<T> this_wref(std::dynamic_pointer_cast<T>(shared_from_this()));
-        return this_wref;
+        std::weak_ptr<T> this_obj(std::dynamic_pointer_cast<T>(shared_from_this()));
+        return this_obj;
     }
 
 protected:

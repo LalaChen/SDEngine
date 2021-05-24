@@ -63,7 +63,7 @@ public:
     explicit Material(const ObjectName &i_object_name);
     virtual ~Material();
 public:
-    void BindShaderProgram(const ShaderProgramWeakReferenceObject &i_sp_wref);
+    void BindShaderProgram(const ShaderProgramWeakReferenceObject &i_sp);
 public:
 //uniform variable setter
     bool SetInt(const ObjectName &i_ub_name, const ObjectName &i_var_name, int32_t i_value, Size_ui32 i_idx = 0);
@@ -95,7 +95,7 @@ public:
     bool SetDataToUniformBuffer(const ObjectName &i_ub_name, const void *i_data, Size_ui32 i_data_size);
 public:
     //Need to refresh write descriptor. So it maybe has extra cost.
-    bool SetTexture(const ObjectName &i_uv_name, const TextureWeakReferenceObject &i_tex_wref, int32_t i_idx = 0);//Need to visit
+    bool SetTexture(const ObjectName &i_uv_name, const TextureWeakReferenceObject &i_tex, int32_t i_idx = 0);//Need to visit
 public:
     void LinkWithShaderProgram();
 
@@ -104,21 +104,21 @@ public:
 //bind shader to command buffer.
     void Update();
     void UseMaterial(
-        const CommandBufferWeakReferenceObject &i_cb_wref,
-        const RenderPassWeakReferenceObject &i_rp_wref,
-        const std::vector<DescriptorSetWeakReferenceObject> &i_common_ds_wrefs,
+        const CommandBufferWeakReferenceObject &i_cb,
+        const RenderPassWeakReferenceObject &i_rp,
+        const std::vector<DescriptorSetWeakReferenceObject> &i_common_dss,
         uint32_t i_sp_id,
         uint32_t i_step_id);
 public:
-    uint32_t GetStepAmount(const RenderPassWeakReferenceObject& i_rp_wref, uint32_t i_sp_id) const;
+    uint32_t GetStepAmount(const RenderPassWeakReferenceObject& i_rp, uint32_t i_sp_id) const;
 protected:
-    std::map<ObjectName, UniformVariableWeakReferenceObject> m_uv_wrefs;
-    ShaderProgramWeakReferenceObject m_sp_wref;
-    DescriptorPoolStrongReferenceObject m_dsp_sref;
-    /*! \var std::vector<DescriptorSetWeakReferenceObject> m_ds_wrefs;
+    std::map<ObjectName, UniformVariableWeakReferenceObject> m_uvs;
+    ShaderProgramWeakReferenceObject m_sp;
+    DescriptorPoolStrongReferenceObject m_dsp;
+    /*! \var std::vector<DescriptorSetWeakReferenceObject> m_dsets;
      *  \brief DescriptorSets of all pipelines in target shader program. The order is same with pipelines in shader program.
      */
-    std::vector<DescriptorSetWeakReferenceObject> m_ds_wrefs;
+    std::vector<DescriptorSetWeakReferenceObject> m_dsets;
     bool m_is_linked;
 };
 

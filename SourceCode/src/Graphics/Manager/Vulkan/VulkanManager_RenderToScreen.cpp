@@ -28,9 +28,9 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex_wref)
+void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex)
 {
-    const TextureIdentity &tex_identity = GetIdentity(i_tex_wref);
+    const TextureIdentity &tex_identity = GetIdentity(i_tex);
     //Get swapchain image.
     uint32_t image_index;
 

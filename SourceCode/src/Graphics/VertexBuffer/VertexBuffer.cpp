@@ -43,9 +43,9 @@ VertexBuffer::~VertexBuffer()
     }
 }
 
-void VertexBuffer::Bind(const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset)
+void VertexBuffer::Bind(const CommandBufferWeakReferenceObject &i_cb, uint32_t i_binding_id, Size_ui64 i_offset)
 {
-    GraphicsManager::GetRef().BindVertexBuffer(m_identity, i_cb_wref, i_binding_id, i_offset);
+    GraphicsManager::GetRef().BindVertexBuffer(m_identity, i_cb, i_binding_id, i_offset);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

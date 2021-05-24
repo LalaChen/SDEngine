@@ -95,9 +95,9 @@ bool ECSManager::RemoveComponentFromEntity(const EntityWeakReferenceObject &i_en
     bool result = false;
     if (i_entity.IsNull() == false) {
         //1. Unregister component at entity.
-        ComponentBaseWeakReferenceObject rem_comp_wref = SD_WREF(i_entity).UnregisterComponent(i_type_index);
+        ComponentBaseWeakReferenceObject rem_comp = SD_WREF(i_entity).UnregisterComponent(i_type_index);
         //2. Delete component at entity.
-        result = DeleteComponent(i_type_index, rem_comp_wref);
+        result = DeleteComponent(i_type_index, rem_comp);
         //3. Update all entity groups for this entity.
         for (EntityGroupStrongReferenceObject &group : m_entity_group_list) {
             SD_SREF(group).RemoveEntity(i_entity);
@@ -109,17 +109,17 @@ bool ECSManager::RemoveComponentFromEntity(const EntityWeakReferenceObject &i_en
     return false;
 }
 
-void ECSManager::LinkComponentAndEntity(const EntityWeakReferenceObject &i_entity, const ComponentBaseWeakReferenceObject &i_comp_wref, const std::type_index &i_type)
+void ECSManager::LinkComponentAndEntity(const EntityWeakReferenceObject &i_entity, const ComponentBaseWeakReferenceObject &i_comp, const std::type_index &i_type)
 {
-    SD_WREF(i_entity).RegisterComponent(i_type, i_comp_wref);
-    SD_WREF(i_comp_wref.DynamicCastTo<Component>()).SetEntity(i_entity);
+    SD_WREF(i_entity).RegisterComponent(i_type, i_comp);
+    SD_WREF(i_comp.DynamicCastTo<Component>()).SetEntity(i_entity);
 }
 
-bool ECSManager::DeleteComponent(const std::type_index &i_type_index, const ComponentBaseWeakReferenceObject &i_comp_wref)
+bool ECSManager::DeleteComponent(const std::type_index &i_type_index, const ComponentBaseWeakReferenceObject &i_comp)
 {
-    std::map<std::type_index, ComponentPoolStrongReferenceObject>::iterator comp_pool_iter = m_comp_pool_srefs.find(i_type_index);
-    if (comp_pool_iter != m_comp_pool_srefs.end()) {
-        return SD_SREF((*comp_pool_iter).second).DeleteComponent(i_comp_wref);
+    std::map<std::type_index, ComponentPoolStrongReferenceObject>::iterator comp_pool_iter = m_comp_pools.find(i_type_index);
+    if (comp_pool_iter != m_comp_pools.end()) {
+        return SD_SREF((*comp_pool_iter).second).DeleteComponent(i_comp);
     }
     else {
         SDLOGW("Can't find component pool with [%s].", i_type_index.name());
@@ -222,9 +222,9 @@ void ECSManager::Terminate()
     }
     //
     std::map<std::type_index, ComponentPoolStrongReferenceObject>::iterator comp_pool_iter;
-    for (comp_pool_iter = m_comp_pool_srefs.begin();
-        comp_pool_iter != m_comp_pool_srefs.end();) {
-        comp_pool_iter = m_comp_pool_srefs.erase(comp_pool_iter);
+    for (comp_pool_iter = m_comp_pools.begin();
+        comp_pool_iter != m_comp_pools.end();) {
+        comp_pool_iter = m_comp_pools.erase(comp_pool_iter);
     }
 
     std::map<std::type_index, SystemStrongReferenceObject>::iterator system_iter;

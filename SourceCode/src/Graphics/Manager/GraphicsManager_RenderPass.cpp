@@ -35,7 +35,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     SDLOG("Create default render pass");
 
     //1. Initialize Forward render pass.
-    RenderPassStrongReferenceObject forward_pass_sref = new RenderPass("ForwardPass");
+    RenderPassStrongReferenceObject forward_pass = new RenderPass("ForwardPass");
     //1.1. prepare attachment references data.
     std::vector<AttachmentDescription> att_descs;
     AttachmentDescription att_desc;
@@ -101,23 +101,23 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     sp_denp.m_dependencies.push_back(DependencyScope_REGION);
     sp_denps.push_back(sp_denp);
 
-    SD_SREF(forward_pass_sref).AddRenderPassDescription(att_descs, sp_descs, sp_denps);
-    SD_SREF(forward_pass_sref).Initialize();
+    SD_SREF(forward_pass).AddRenderPassDescription(att_descs, sp_descs, sp_denps);
+    SD_SREF(forward_pass).Initialize();
 
-    RegisterRenderPass(forward_pass_sref);
+    RegisterRenderPass(forward_pass);
 }
 
-void GraphicsManager::RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp_sref)
+void GraphicsManager::RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp)
 {
-    if (i_rp_sref.IsNull() == false) {
-        std::map<ObjectName, RenderPassStrongReferenceObject>::iterator rp_iter = m_rp_map.find(SD_SREF(i_rp_sref).GetObjectName());
+    if (i_rp.IsNull() == false) {
+        std::map<ObjectName, RenderPassStrongReferenceObject>::iterator rp_iter = m_rp_map.find(SD_SREF(i_rp).GetObjectName());
           
         if (rp_iter == m_rp_map.end()) {
-            SDLOG("Register render pass[%s] to renderpass list.", SD_SREF(i_rp_sref).GetObjectName().c_str());
-            m_rp_map[SD_SREF(i_rp_sref).GetObjectName()] = i_rp_sref;
+            SDLOG("Register render pass[%s] to renderpass list.", SD_SREF(i_rp).GetObjectName().c_str());
+            m_rp_map[SD_SREF(i_rp).GetObjectName()] = i_rp;
         }
         else {
-            SDLOGE("Register render pass[%s] to renderpass map failure. It already exist.", SD_SREF(i_rp_sref).GetObjectName().c_str());
+            SDLOGE("Register render pass[%s] to renderpass map failure. It already exist.", SD_SREF(i_rp).GetObjectName().c_str());
         }
     }
     else {
@@ -139,24 +139,24 @@ void GraphicsManager::UnregisterRenderPass(const ObjectName &i_target_rp_name)
 void GraphicsManager::ReleaseRenderPasses()
 {
     SDLOG("Release render passes");
-    for (std::map<ObjectName, RenderPassStrongReferenceObject>::iterator rp_sref_iter = m_rp_map.begin(); rp_sref_iter != m_rp_map.end(); ) {
-        rp_sref_iter = m_rp_map.erase(rp_sref_iter);
+    for (std::map<ObjectName, RenderPassStrongReferenceObject>::iterator rp_iter = m_rp_map.begin(); rp_iter != m_rp_map.end(); ) {
+        rp_iter = m_rp_map.erase(rp_iter);
     }
 }
 
 RenderPassWeakReferenceObject GraphicsManager::GetRenderPass(const ObjectName &i_target_rp_name) const
 {
-    RenderPassWeakReferenceObject target_rp_wref;
-    for (std::map<ObjectName, RenderPassStrongReferenceObject>::const_iterator rp_sref_iter = m_rp_map.begin(); rp_sref_iter != m_rp_map.end(); ) {
-        if (SD_SREF((*rp_sref_iter).second).GetObjectName().compare(i_target_rp_name) == 0) {
-            target_rp_wref = (*rp_sref_iter).second;
+    RenderPassWeakReferenceObject target_rp;
+    for (std::map<ObjectName, RenderPassStrongReferenceObject>::const_iterator rp_iter = m_rp_map.begin(); rp_iter != m_rp_map.end(); ) {
+        if (SD_SREF((*rp_iter).second).GetObjectName().compare(i_target_rp_name) == 0) {
+            target_rp = (*rp_iter).second;
             break;
         }
         else {
-            rp_sref_iter++;
+            rp_iter++;
         }
     }
-    return target_rp_wref;
+    return target_rp;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

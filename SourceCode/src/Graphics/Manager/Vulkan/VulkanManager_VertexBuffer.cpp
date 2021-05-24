@@ -150,9 +150,9 @@ void VulkanManager::UnmapVertexBuffer(const VertexBufferIdentity &i_identity)
     UnmapVkDeviceMemory(memory_handle);
 }
 
-void VulkanManager::BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset)
+void VulkanManager::BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, uint32_t i_binding_id, Size_ui64 i_offset)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
+    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
     VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     VkBuffer vertex_buffer = reinterpret_cast<VkBuffer>(i_identity.m_buffer_handle);
     BindVkVertexBuffer(cmd_buffer, vertex_buffer, i_binding_id, static_cast<VkDeviceSize>(i_offset));
@@ -279,9 +279,9 @@ void VulkanManager::UnmapIndexBuffer(const IndexBufferIdentity &i_identity)
     UnmapVkDeviceMemory(memory_handle);
 }
 
-void VulkanManager::BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset)
+void VulkanManager::BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, Size_ui64 i_offset)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
+    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
     VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     VkBuffer ib_handle = reinterpret_cast<VkBuffer>(i_identity.m_buffer_handle);
     VkIndexType index_type = IndexBufferFormat_Vulkan::ConvertIndexType(i_identity.m_format);

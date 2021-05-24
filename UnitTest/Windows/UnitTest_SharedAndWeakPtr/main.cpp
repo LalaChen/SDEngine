@@ -381,34 +381,34 @@ int main(int argc, char **argv)
     {
         SDLOG("***** series test");
         L2ClassStrongReferenceObject L2_ref = L2;
-        L2ClassWeakReferenceObject L2_wref = L2_ref;
-        SDLOG("* Assign L2_ref to L2_wref. L2_wref info : %s. use_count %d.(should be 2)", L2_wref.GetRef().ToString().c_str(), L2_wref.UseCount());
-        L1ClassWeakReferenceObject L2_L1_wref = L2_ref.StaticCastTo<L1Class>();
-        SDLOG("* Assign L2_ref to L2_L1_wref by static cast. L2_L1_wref info : %s. use_count %d.(should be 2)", 
-            L2_L1_wref.GetRef().ToString().c_str(), L2_L1_wref.UseCount());
+        L2ClassWeakReferenceObject L2 = L2_ref;
+        SDLOG("* Assign L2_ref to L2. L2 info : %s. use_count %d.(should be 2)", L2.GetRef().ToString().c_str(), L2.UseCount());
+        L1ClassWeakReferenceObject L2_L1 = L2_ref.StaticCastTo<L1Class>();
+        SDLOG("* Assign L2_ref to L2_L1 by static cast. L2_L1 info : %s. use_count %d.(should be 2)", 
+            L2_L1.GetRef().ToString().c_str(), L2_L1.UseCount());
     }
 
     {
         SDLOG("***** dynamic cast test");
         L3_1ClassStrongReferenceObject L3_1_ref = L3_1;
         L2ClassStrongReferenceObject L3_1_in_L2_ref = L3_1_ref.StaticCastTo<L2Class>();
-        L3_1ClassWeakReferenceObject L2_L3_1_wref = L3_1_in_L2_ref.DynamicCastTo<L3_1Class>();
-        SDLOG("* Assign L2_ref to L2_L3_1_wref by dynamic cast. L2_L3_1_wref info : %s. use_count %d.(should be 3)",
-            L2_L3_1_wref.GetRef().ToString().c_str(), L2_L3_1_wref.UseCount());
+        L3_1ClassWeakReferenceObject L2_L3_1 = L3_1_in_L2_ref.DynamicCastTo<L3_1Class>();
+        SDLOG("* Assign L2_ref to L2_L3_1 by dynamic cast. L2_L3_1 info : %s. use_count %d.(should be 3)",
+            L2_L3_1.GetRef().ToString().c_str(), L2_L3_1.UseCount());
 
-        L1ClassWeakReferenceObject L3_1_in_L1_wref;
-        L3_1_in_L1_wref = L3_1_in_L2_ref.StaticCastTo<L1Class>();
-        SDLOG("* Assign L3_1_in_L2_ref to L3_1_in_L1_wref by static cast. L3_1_in_L1_wref info : %s. use_count %d.(should be 3)",
-            L3_1_in_L1_wref.GetRef().ToString().c_str(), L3_1_in_L1_wref.UseCount());
+        L1ClassWeakReferenceObject L3_1_in_L1;
+        L3_1_in_L1 = L3_1_in_L2_ref.StaticCastTo<L1Class>();
+        SDLOG("* Assign L3_1_in_L2_ref to L3_1_in_L1 by static cast. L3_1_in_L1 info : %s. use_count %d.(should be 3)",
+            L3_1_in_L1.GetRef().ToString().c_str(), L3_1_in_L1.UseCount());
 
-        L3_1ClassWeakReferenceObject L3_1_wref;
-        L3_1_wref = L3_1_in_L1_wref.DynamicCastTo<L3_1Class>();
-        SDLOG("* Assign L3_1_in_L1_wref to L3_1_wref by dynamic cast. L3_1_wref info : %s. use_count %d.(should be 3)",
-            L3_1_wref.GetRef().ToString().c_str(), L3_1_wref.UseCount());
+        L3_1ClassWeakReferenceObject L3_1;
+        L3_1 = L3_1_in_L1.DynamicCastTo<L3_1Class>();
+        SDLOG("* Assign L3_1_in_L1 to L3_1 by dynamic cast. L3_1 info : %s. use_count %d.(should be 3)",
+            L3_1.GetRef().ToString().c_str(), L3_1.UseCount());
 
-        bool is_equal = L3_1_in_L1_wref.IsEqualTo(L3_1_wref.StaticCastTo<L1Class>());
+        bool is_equal = L3_1_in_L1.IsEqualTo(L3_1.StaticCastTo<L1Class>());
         if (is_equal == true) {
-            SDLOG("* L3_1_in_L1_wref is equal to L3_1_wref. (O)");
+            SDLOG("* L3_1_in_L1 is equal to L3_1. (O)");
         }
     }
 }

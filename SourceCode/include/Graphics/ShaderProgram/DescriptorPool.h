@@ -65,14 +65,14 @@ public:
 
     void Initialize(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE], uint32_t i_max_set, bool i_individual_flag = false);
 
-    DescriptorSetWeakReferenceObject AllocateDescriptorSet(const DescriptorSetLayoutWeakReferenceObject &i_dsl_wref);
+    DescriptorSetWeakReferenceObject AllocateDescriptorSet(const DescriptorSetLayoutWeakReferenceObject &i_dsl);
 protected:
 
     uint32_t m_current_set;
 
     DescriptorPoolIdentity m_identity;
 
-    std::list<DescriptorSetStrongReferenceObject> m_set_srefs;
+    std::list<DescriptorSetStrongReferenceObject> m_sets;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

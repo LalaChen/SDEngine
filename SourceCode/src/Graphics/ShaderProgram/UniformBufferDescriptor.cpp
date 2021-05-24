@@ -78,10 +78,10 @@ UniformBufferVariableInfo UniformBufferDescriptor::GetVariableInfo(const std::st
 
 UniformVariableStrongReferenceObject UniformBufferDescriptor::AllocateUniformVariable()
 {
-    UniformBufferStrongReferenceObject ub_sref = new UniformBuffer(m_object_name, m_binding_id);
-    UniformBufferDescriptorWeakReferenceObject this_wref = GetThisWeakPtrByType<UniformBufferDescriptor>();
-    ub_sref.GetRef().Initialize(this_wref);
-    return ub_sref.StaticCastTo<UniformVariable>();
+    UniformBufferStrongReferenceObject ub = new UniformBuffer(m_object_name, m_binding_id);
+    UniformBufferDescriptorWeakReferenceObject this_obj = GetThisWeakPtrByType<UniformBufferDescriptor>();
+    ub.GetRef().Initialize(this_obj);
+    return ub.StaticCastTo<UniformVariable>();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -33,8 +33,8 @@ public:
 protected:
     void Run();
 protected:
-    CommandPoolStrongReferenceObject m_cp_sref;
-    std::list<CommandBufferWeakReferenceObject> m_cb_wrefs;
+    CommandPoolStrongReferenceObject m_cp;
+    std::list<CommandBufferWeakReferenceObject> m_cbs;
     std::list<CommandBufferWeakReferenceObject>::iterator m_current_cb_iter;
 protected:
     std::thread m_thread;

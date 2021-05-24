@@ -40,13 +40,13 @@ UniformBuffer::~UniformBuffer()
 }
 
 //Initialize part. 
-void UniformBuffer::Initialize(const UniformBufferDescriptorWeakReferenceObject &i_desc_wref)
+void UniformBuffer::Initialize(const UniformBufferDescriptorWeakReferenceObject &i_desc)
 {
-    if (m_ub_desc_wref.IsNull() == false) {
+    if (m_ub_desc.IsNull() == false) {
         SDLOGE("UniformBuffer[%s] is initialized.", m_object_name.c_str());
     }
-    m_ub_desc_wref = i_desc_wref;
-    m_identity.m_data_size = i_desc_wref.GetConstRef().GetBufferSize();
+    m_ub_desc = i_desc;
+    m_identity.m_data_size = i_desc.GetConstRef().GetBufferSize();
     m_buffer.resize(m_identity.m_data_size);
     m_buffer.shrink_to_fit();
     //create uniform buffer.
@@ -56,12 +56,12 @@ void UniformBuffer::Initialize(const UniformBufferDescriptorWeakReferenceObject 
 //Set uniform variable part.
 bool UniformBuffer::SetInt(const std::string &i_var_name, int32_t i_data, Size_ui32 i_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -87,12 +87,12 @@ bool UniformBuffer::SetInt(const std::string &i_var_name, int32_t i_data, Size_u
 
 bool UniformBuffer::SetUint(const std::string &i_var_name, uint32_t i_data, Size_ui32 i_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -118,12 +118,12 @@ bool UniformBuffer::SetUint(const std::string &i_var_name, uint32_t i_data, Size
 
 bool UniformBuffer::SetFloat(const std::string &i_var_name, float i_data, Size_ui32 i_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -149,12 +149,12 @@ bool UniformBuffer::SetFloat(const std::string &i_var_name, float i_data, Size_u
 
 bool UniformBuffer::SetVector3f(const std::string &i_var_name, const Vector3f &i_data, Size_ui32 i_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -180,12 +180,12 @@ bool UniformBuffer::SetVector3f(const std::string &i_var_name, const Vector3f &i
 
 bool UniformBuffer::SetColor4f(const std::string &i_var_name, const Color4f &i_data, Size_ui32 i_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -211,12 +211,12 @@ bool UniformBuffer::SetColor4f(const std::string &i_var_name, const Color4f &i_d
 
 bool UniformBuffer::SetMatrix4X4f(const std::string &i_var_name, const Matrix4X4f &i_data, Size_ui32 i_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -243,12 +243,12 @@ bool UniformBuffer::SetMatrix4X4f(const std::string &i_var_name, const Matrix4X4
 //Set uniform variable with array
 bool UniformBuffer::SetIntArray(const std::string &i_var_name, const std::vector<int32_t> &i_datas, Size_ui32 i_start_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -279,12 +279,12 @@ bool UniformBuffer::SetIntArray(const std::string &i_var_name, const std::vector
 
 bool UniformBuffer::SetUintArray(const std::string &i_var_name, const std::vector<uint32_t> &i_datas, Size_ui32 i_start_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -315,12 +315,12 @@ bool UniformBuffer::SetUintArray(const std::string &i_var_name, const std::vecto
 
 bool UniformBuffer::SetFloatArray(const std::string &i_var_name, const std::vector<float> &i_datas, Size_ui32 i_start_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -351,12 +351,12 @@ bool UniformBuffer::SetFloatArray(const std::string &i_var_name, const std::vect
 
 bool UniformBuffer::SetVector3fArray(const std::string &i_var_name, const std::vector<Vector3f> &i_datas, Size_ui32 i_start_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -388,12 +388,12 @@ bool UniformBuffer::SetVector3fArray(const std::string &i_var_name, const std::v
 
 bool UniformBuffer::SetColor4fArray(const std::string &i_var_name, const std::vector<Color4f> &i_datas, Size_ui32 i_start_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -425,12 +425,12 @@ bool UniformBuffer::SetColor4fArray(const std::string &i_var_name, const std::ve
 
 bool UniformBuffer::SetMatrix4X4fArray(const std::string &i_var_name, const std::vector<Matrix4X4f> &i_datas, Size_ui32 i_start_idx)
 {
-    if (m_ub_desc_wref.IsNull() == true) {
+    if (m_ub_desc.IsNull() == true) {
         SDLOGW("UniformBuffer[%s]'s is invalid. Please check!!!", m_object_name.c_str());
         return false;
     }
 
-    UniformBufferVariableInfo ub_var_info = m_ub_desc_wref.GetConstRef().GetVariableInfo(i_var_name);
+    UniformBufferVariableInfo ub_var_info = m_ub_desc.GetConstRef().GetVariableInfo(i_var_name);
     if (ub_var_info.IsValid() == false) {
         SDLOGW("Variable[%s] is not in UniformBuffer(%s). Please check!!!", i_var_name.c_str(), m_object_name.c_str());
         return false;
@@ -477,10 +477,10 @@ void UniformBuffer::Update()
 {
     if (m_modified == true) {
         void* mem_ptr = nullptr;
-        UniformBufferWeakReferenceObject this_wref = GetThisWeakPtrByType<UniformBuffer>();
-        GraphicsManager::GetRef().MapUniformBuffer(this_wref, mem_ptr);
+        UniformBufferWeakReferenceObject this_obj = GetThisWeakPtrByType<UniformBuffer>();
+        GraphicsManager::GetRef().MapUniformBuffer(this_obj, mem_ptr);
         std::memcpy(mem_ptr, m_buffer.data(), m_buffer.size());
-        GraphicsManager::GetRef().UnmapUniformBuffer(this_wref);
+        GraphicsManager::GetRef().UnmapUniformBuffer(this_obj);
         m_modified = false;
     }
 }

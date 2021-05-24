@@ -167,11 +167,11 @@ void VulkanManager::DestroyRenderPass(RenderPassIdentity &io_identity)
     DestroyVKRenderPass(rp_handle);
 }
 
-void VulkanManager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size)
+void VulkanManager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb, const FrameBufferWeakReferenceObject &i_fb, const RenderPassWeakReferenceObject &i_rp, const ImageOffset &i_start_pos, const ImageSize &i_render_size)
 {
-    const FrameBufferIdentity &fb_identity = GetIdentity(i_fb_wref);
-    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cb_wref);
-    const RenderPassIdentity &rp_identity = GetIdentity(i_rp_wref);
+    const FrameBufferIdentity &fb_identity = GetIdentity(i_fb);
+    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cb);
+    const RenderPassIdentity &rp_identity = GetIdentity(i_rp);
     VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
     VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
     VkFramebuffer fb_handle = reinterpret_cast<VkFramebuffer>(fb_identity.m_fb_handle);
@@ -202,34 +202,34 @@ void VulkanManager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb
     BeginVkRenderPass(cmd_handle, rp_handle, fb_handle, render_area, clear_values);
 }
 
-void VulkanManager::GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id)
+void VulkanManager::GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cb, const FrameBufferWeakReferenceObject &i_fb, uint32_t i_sp_id)
 {
-    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cb_wref);
+    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cb);
     VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
     GotoNextStepInVKRenderPass(cmd_handle);
 }
 
-void VulkanManager::EndRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref)
+void VulkanManager::EndRenderPass(const CommandBufferWeakReferenceObject &i_cb)
 {
-    const CommandBufferIdentity& cb_identity = GetIdentity(i_cb_wref);
+    const CommandBufferIdentity& cb_identity = GetIdentity(i_cb);
     VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     EndVkRenderPass(cmd_handle);
 }
 
 //-------- FrameBuffer --------
-void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs)
+void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const RenderPassWeakReferenceObject &i_rp, const std::vector<TextureWeakReferenceObject> &i_bufs)
 {
     VkResult result = VK_SUCCESS;
     //1. get all image views of this framebuffer
     std::vector<VkImageView> ivs;
 
-    for (const TextureWeakReferenceObject &buf_wref : i_buf_wrefs) {
-        const TextureIdentity &tex_identity = GetIdentity(buf_wref);
+    for (const TextureWeakReferenceObject &buf : i_bufs) {
+        const TextureIdentity &tex_identity = GetIdentity(buf);
         ivs.push_back(reinterpret_cast<VkImageView>(tex_identity.m_view_handle));
     }
 
     //2. create framebuffer.
-    const RenderPassIdentity &rp_identity = GetIdentity(i_rp_wref);
+    const RenderPassIdentity &rp_identity = GetIdentity(i_rp);
     VkFramebuffer &fb_handle = reinterpret_cast<VkFramebuffer&>(io_identity.m_fb_handle);
     VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
     result = CreateVKFrameBuffer(fb_handle, rp_handle, ivs, io_identity.m_size.m_width, io_identity.m_size.m_height, io_identity.m_size.m_length);

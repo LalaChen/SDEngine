@@ -20,6 +20,6 @@ public:
     virtual void Initialize();
     virtual void Update();
 protected:
-    TransformComponentWeakReferenceObject m_trans_comp_wref;
+    TransformComponentWeakReferenceObject m_trans_comp;
     Transform m_current_trans;
 };

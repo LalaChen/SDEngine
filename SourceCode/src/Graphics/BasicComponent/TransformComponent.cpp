@@ -129,27 +129,27 @@ void TransformComponent::SetWorldTransform(const Transform &i_transform)
     UpdateChildrenWorldTransform();
 }
 
-void TransformComponent::AddChild(const TransformComponentWeakReferenceObject &i_target_so_wref)
+void TransformComponent::AddChild(const TransformComponentWeakReferenceObject &i_target_so)
 {
-    if (i_target_so_wref.IsNull() == false) {
-        SD_WREF(i_target_so_wref).SetParent(GetThisWeakPtrByType<TransformComponent>());
+    if (i_target_so.IsNull() == false) {
+        SD_WREF(i_target_so).SetParent(GetThisWeakPtrByType<TransformComponent>());
     }
     else {
         SDLOGW("Set nullptr child.");
     }
 }
 
-bool TransformComponent::RemoveChild(const TransformComponentWeakReferenceObject &i_child_wref)
+bool TransformComponent::RemoveChild(const TransformComponentWeakReferenceObject &i_child)
 {
-    if (i_child_wref != GetThisWeakPtrByType<TransformComponent>()) {
+    if (i_child != GetThisWeakPtrByType<TransformComponent>()) {
         std::list<TransformComponentWeakReferenceObject>::iterator child_iter;
         for (child_iter = m_childs.begin(); child_iter != m_childs.end();) {
-            if ((*child_iter) == i_child_wref) {
+            if ((*child_iter) == i_child) {
                 child_iter = m_childs.erase(child_iter);
                 return true;
             }
             else {
-                bool result = SD_WREF((*child_iter)).RemoveChild(i_child_wref);
+                bool result = SD_WREF((*child_iter)).RemoveChild(i_child);
                 if (result == false) {
                     child_iter++;
                 }
@@ -192,8 +192,8 @@ void TransformComponent::UpdateWorldTransform()
 
 void TransformComponent::UpdateChildrenWorldTransform()
 {
-    for (TransformComponentWeakReferenceObject &so_wref : m_childs) {
-        SD_WREF(so_wref).UpdateWorldTransform();
+    for (TransformComponentWeakReferenceObject &so : m_childs) {
+        SD_WREF(so).UpdateWorldTransform();
     }
 }
 

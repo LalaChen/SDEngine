@@ -51,15 +51,15 @@ public:
      */
     CompHandle m_handle;
 
-    /* \var std::vector<TextureWeakReferenceObject> m_input_buf_wrefs;
+    /* \var std::vector<TextureWeakReferenceObject> m_input_bufs;
      * \brief Keep buffer weak references for input in this group.
      */
-    std::vector<TextureWeakReferenceObject> m_input_buf_wrefs;
+    std::vector<TextureWeakReferenceObject> m_input_bufs;
 
-    /* \var std::vector<TextureWeakReferenceObject> m_color_buf_wrefs;
+    /* \var std::vector<TextureWeakReferenceObject> m_color_bufs;
      * \brief Keep color buffer weak references in this group.
      */
-    std::vector<TextureWeakReferenceObject> m_color_buf_wrefs;
+    std::vector<TextureWeakReferenceObject> m_color_bufs;
 
     /* \var std::vector<bool> m_clear_color_flags;
      * \brief Record clear flag for each color buffer in this group.
@@ -71,20 +71,20 @@ public:
      */
     std::vector<Color4f> m_clear_colors;
 
-    /* \var std::vector<TextureWeakReferenceObject> m_ref_buf_wrefs;
+    /* \var std::vector<TextureWeakReferenceObject> m_ref_bufs;
      * \brief Record resolution buffer in this group.
      */
-    std::vector<TextureWeakReferenceObject> m_ref_buf_wrefs;
+    std::vector<TextureWeakReferenceObject> m_ref_bufs;
 
     /* \var std::vector<uint32_t> m_pre_buf_ids;
      * \brief Record preserve buffer id in this group.
      */
     std::vector<uint32_t> m_pre_buf_ids;
 
-    /* \var std::vector<TextureWeakReferenceObject> m_depth_buf_wref;
+    /* \var std::vector<TextureWeakReferenceObject> m_depth_buf;
      * \brief Record depth buffer id in this group.
      */
-    TextureWeakReferenceObject m_depth_buf_wref;
+    TextureWeakReferenceObject m_depth_buf;
 
     /* \var bool m_clear_depth_or_stencil_flag;
      * \brief Record clear flag of this depth buffer.

@@ -72,16 +72,16 @@ void VulkanManager::DeleteUnifromBuffer(UniformBufferIdentity &io_identity)
 }
 
 
-void VulkanManager::MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref, VoidPtr &io_buffer_handle)
+void VulkanManager::MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub, VoidPtr &io_buffer_handle)
 {
-    const UniformBufferIdentity &identity = GetIdentity(i_ub_wref);
+    const UniformBufferIdentity &identity = GetIdentity(i_ub);
     VkDeviceMemory memory_handle = reinterpret_cast<VkDeviceMemory>(identity.m_memory_handle);
     MapVkDeviceMemory(memory_handle, identity.m_memory_size, io_buffer_handle);
 }
 
-void VulkanManager::UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref)
+void VulkanManager::UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub)
 {
-    const UniformBufferIdentity &identity = GetIdentity(i_ub_wref);
+    const UniformBufferIdentity &identity = GetIdentity(i_ub);
     VkDeviceMemory memory_handle = reinterpret_cast<VkDeviceMemory>(identity.m_memory_handle);
     UnmapVkDeviceMemory(memory_handle);
 }

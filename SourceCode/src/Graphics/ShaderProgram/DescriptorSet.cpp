@@ -41,53 +41,53 @@ DescriptorSet::~DescriptorSet()
 }
 
 void DescriptorSet::Initialize(
-    const WeakReferenceObject<Object> &i_pool_wref,
-    const DescriptorSetLayoutWeakReferenceObject &i_layout_wref)
+    const WeakReferenceObject<Object> &i_pool,
+    const DescriptorSetLayoutWeakReferenceObject &i_layout)
 {
-    if (i_pool_wref.IsNull() == true) {
+    if (i_pool.IsNull() == true) {
         SDLOGE("Initialize null pool in ds[%s].", m_object_name.c_str());
     }
 
-    DescriptorPoolWeakReferenceObject pool_wref = i_pool_wref.DynamicCastTo<DescriptorPool>();
+    DescriptorPoolWeakReferenceObject pool = i_pool.DynamicCastTo<DescriptorPool>();
 
-    if (pool_wref.IsNull() == true) {
-        SDLOGE("cast pool object[%s] failure in ds[%s].", SD_WREF(i_pool_wref).GetObjectName().c_str(), m_object_name.c_str());
+    if (pool.IsNull() == true) {
+        SDLOGE("cast pool object[%s] failure in ds[%s].", SD_WREF(i_pool).GetObjectName().c_str(), m_object_name.c_str());
         return;
     }
 
-    if (i_layout_wref.IsNull() == true) {
+    if (i_layout.IsNull() == true) {
         SDLOGE("input null layout into ds[%s].", m_object_name.c_str());
         return;
     }
 
     //1. set data.
-    m_layout_wref = i_layout_wref;
-    m_pool_wref = i_pool_wref;
+    m_layout = i_layout;
+    m_pool = i_pool;
     //2. allocate identity.
-    GraphicsManager::GetRef().AllocateDescriptorSet(m_identity, pool_wref, m_layout_wref);
+    GraphicsManager::GetRef().AllocateDescriptorSet(m_identity, pool, m_layout);
     //3. allocate uniform variables.
-    m_layout_wref.GetRef().AllocateUniformVariables(m_uv_srefs);
+    m_layout.GetRef().AllocateUniformVariables(m_uvs);
 }
 
 void DescriptorSet::WriteDescriptor()
 {
-    std::vector<UniformVariableWeakReferenceObject> uv_wrefs;
-    uv_wrefs.resize(m_uv_srefs.size());
-    for (uint32_t uv_count = 0; uv_count < uv_wrefs.size(); ++uv_count) {
-        uv_wrefs[uv_count] = m_uv_srefs[uv_count];
+    std::vector<UniformVariableWeakReferenceObject> uvs;
+    uvs.resize(m_uvs.size());
+    for (uint32_t uv_count = 0; uv_count < uvs.size(); ++uv_count) {
+        uvs[uv_count] = m_uvs[uv_count];
     }
-    GraphicsManager::GetRef().WriteUniformVariablesToDescriptorSet(m_identity, uv_wrefs);
+    GraphicsManager::GetRef().WriteUniformVariablesToDescriptorSet(m_identity, uvs);
 }
 
 void DescriptorSet::GetAllocatedUniformVariables(
-    std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs) const
+    std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uvs) const
 {
-    for (const UniformVariableStrongReferenceObject &uv_sref : m_uv_srefs) {
-        std::string uv_name = uv_sref.GetRef().GetObjectName();
+    for (const UniformVariableStrongReferenceObject &uv : m_uvs) {
+        std::string uv_name = uv.GetRef().GetObjectName();
         std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator iter;
-        iter = io_uv_wrefs.find(uv_name);
-        if (iter == io_uv_wrefs.end()) {
-            io_uv_wrefs[uv_name] = uv_sref;
+        iter = io_uvs.find(uv_name);
+        if (iter == io_uvs.end()) {
+            io_uvs[uv_name] = uv;
         }
     }
 }

@@ -114,23 +114,23 @@ public:
      */
     virtual void PrintSystemInformation() = 0;
 public:
-    virtual void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvd_wrefs) = 0;
+    virtual void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvds) = 0;
     virtual void DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity) = 0;
     virtual void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
     virtual void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) = 0;
-    virtual void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const DescriptorSetLayoutWeakReferenceObject &i_layout_wref) = 0;
-    virtual void WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs) = 0;
-    virtual void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) = 0;
+    virtual void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool, const DescriptorSetLayoutWeakReferenceObject &i_layout) = 0;
+    virtual void WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uvs) = 0;
+    virtual void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool) = 0;
 public:
     virtual void CreateCommandPool(CommandPoolIdentity &io_identity) = 0;
     virtual void DestroyCommandPool(CommandPoolIdentity &io_identity) = 0;
-    virtual void AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) = 0;
+    virtual void AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool) = 0;
     virtual void BeginCommandBuffer(const CommandBufferIdentity &i_identity, const CommandBufferInheritanceInfo &i_inheritance_info) = 0;
     virtual void EndCommandBuffer(const CommandBufferIdentity &i_identity) = 0;
-    virtual void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) = 0;
-    virtual void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cb_wrefs) = 0;
-    virtual void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb_wref) = 0;
-    virtual void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs) = 0;
+    virtual void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool) = 0;
+    virtual void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cbs) = 0;
+    virtual void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb) = 0;
+    virtual void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cbs) = 0;
 public:
 //----------- Vertex Buffer Function ------------
     virtual void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size) = 0;
@@ -150,53 +150,53 @@ public:
 public:
 //----------- Uniform Buffer Interface Function ------------
     virtual void CreateUniformBuffer(UniformBufferIdentity &io_identity) = 0;
-    virtual void MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref, VoidPtr &io_buffer_handle) = 0;
-    virtual void UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref) = 0;
+    virtual void MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub, VoidPtr &io_buffer_handle) = 0;
+    virtual void UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub) = 0;
     virtual void DeleteUnifromBuffer(UniformBufferIdentity &io_identity) = 0;
 public:
     virtual void CreateTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity) = 0;
     virtual void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) = 0;
     virtual void DeleteTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) = 0;
 public:
-    virtual void BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset) = 0;
-    virtual void BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset) = 0;
+    virtual void BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, uint32_t i_binding_id, Size_ui64 i_offset) = 0;
+    virtual void BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, Size_ui64 i_offset) = 0;
 public:
     virtual void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) = 0;
     virtual void DeleteShaderModule(ShaderModuleIdentity &io_identity) = 0;
 public:
-    virtual void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs) = 0;
-    virtual void BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs) = 0;
+    virtual void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsls) = 0;
+    virtual void BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, const std::vector<DescriptorSetWeakReferenceObject> &i_dss) = 0;
     virtual void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) = 0;
 public:
     virtual void CreateRenderPass(RenderPassIdentity &io_identity) = 0;
-    virtual void BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size) = 0;
-    virtual void GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id) = 0;
-    virtual void EndRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref) = 0;
+    virtual void BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb, const FrameBufferWeakReferenceObject &i_fb, const RenderPassWeakReferenceObject &i_rp, const ImageOffset &i_start_pos, const ImageSize &i_render_size) = 0;
+    virtual void GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cb, const FrameBufferWeakReferenceObject &i_fb, uint32_t i_sp_id) = 0;
+    virtual void EndRenderPass(const CommandBufferWeakReferenceObject &i_cb) = 0;
     virtual void DestroyRenderPass(RenderPassIdentity &io_identity) = 0;
 public:
-    virtual void CreateFrameBuffer(FrameBufferIdentity &io_identity, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs) = 0;
+    virtual void CreateFrameBuffer(FrameBufferIdentity &io_identity, const RenderPassWeakReferenceObject &i_rp, const std::vector<TextureWeakReferenceObject> &i_bufs) = 0;
     virtual void CreateFrameBufferGroup(FrameBufferGroupIdentity &io_identity)  = 0;
     virtual void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) = 0;
     virtual void DestroyFrameBuffer(FrameBufferIdentity &io_identity) = 0;
 public:
-    virtual void SetViewport(const CommandBufferWeakReferenceObject &i_cb_wref, const Viewport &i_vp) = 0;
-    virtual void SetViewports(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<Viewport> &i_vps) = 0;
-    virtual void SetScissor(const CommandBufferWeakReferenceObject &i_cb_wref, const ScissorRegion &i_region) = 0;
-    virtual void SetScissors(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<ScissorRegion> &i_regions) = 0;
-    virtual void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb_wref, const IndexBufferWeakReferenceObject& i_ib_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) = 0;
+    virtual void SetViewport(const CommandBufferWeakReferenceObject &i_cb, const Viewport &i_vp) = 0;
+    virtual void SetViewports(const CommandBufferWeakReferenceObject &i_cb, const std::vector<Viewport> &i_vps) = 0;
+    virtual void SetScissor(const CommandBufferWeakReferenceObject &i_cb, const ScissorRegion &i_region) = 0;
+    virtual void SetScissors(const CommandBufferWeakReferenceObject &i_cb, const std::vector<ScissorRegion> &i_regions) = 0;
+    virtual void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb, const IndexBufferWeakReferenceObject& i_ib, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) = 0;
 public:
 //------------- Resize Function -----------------
     virtual void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:
 //------------- Render Function -----------------
-    virtual void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex_wref) = 0;
+    virtual void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex) = 0;
 public:
 //------------- Render Function -----------------
     void Render();
 public:
     void GetBasicVertexAttribInfos(std::vector<VertexAttribBindingDescription> &io_binds, std::vector<VertexAttribLocationDescription> &io_locations, uint32_t i_tex_dimension = 2) const;
 //-------- Managing RenderPass Function ---------
-    void RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp_sref);
+    void RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp);
     void UnregisterRenderPass(const ObjectName &i_target_rp_name);
     void ReleaseRenderPasses();
     RenderPassWeakReferenceObject GetRenderPass(const ObjectName &i_target_rp_name) const;
@@ -207,10 +207,10 @@ public:
     bool IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) const;
 public:
     virtual DescriptorSetLayoutWeakReferenceObject GetBasicDescriptorSetLayout(const ObjectName &i_dsl_name) const;
-    virtual void GetBasicDescriptorSetLayouts(std::vector<DescriptorSetLayoutWeakReferenceObject> &io_dsl_wrefs);
+    virtual void GetBasicDescriptorSetLayouts(std::vector<DescriptorSetLayoutWeakReferenceObject> &io_dsls);
     virtual UniformVariableDescriptorStrongReferenceObject GetDefaultMaterialUniformVariableDescriptor(const ObjectName &i_uvd_name) const;
     virtual ShaderProgramWeakReferenceObject GetShaderProgram(const ObjectName &i_sp_name) const;
-    virtual void RegisterShaderProgram(const ShaderProgramStrongReferenceObject &i_sp_sref);
+    virtual void RegisterShaderProgram(const ShaderProgramStrongReferenceObject &i_sp);
     virtual void RegisterShaderProgram(const ObjectName &i_sp_name, const FilePathString &i_path);
 protected:
     void InitializeDefaultPipelineInfos();
@@ -219,20 +219,20 @@ protected:
     void InitializeBasicShaderPrograms();
     void InitializeDefaultRenderPasses();
 protected:
-    const ShaderModuleIdentity &GetIdentity(const ShaderModuleWeakReferenceObject &i_module_wref) const;
-    const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex_wref) const;
-    const SamplerIdentity& GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex_wref) const;
-    const FrameBufferIdentity& GetIdentity(const FrameBufferWeakReferenceObject &i_fb_wref) const;
-    const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject &i_cb_wref) const;
-    const CommandPoolIdentity& GetIdentity(const CommandPoolWeakReferenceObject &i_cp_wref) const;
-    const RenderPassIdentity& GetIdentity(const RenderPassWeakReferenceObject &i_rp_wref) const;
-    const VertexBufferIdentity& GetIdentity(const VertexBufferWeakReferenceObject &i_vb_wref) const;
-    const IndexBufferIdentity& GetIdentity(const IndexBufferWeakReferenceObject &i_ib_wref) const;
-    const UniformBufferIdentity& GetIdentity(const UniformBufferWeakReferenceObject &i_ub_wref) const;
-    const GraphicsPipelineIdentity& GetIdentity(const GraphicsPipelineWeakReferenceObject &i_pipe_wref) const;
-    const DescriptorPoolIdentity& GetIdentity(const DescriptorPoolWeakReferenceObject &i_pool_wref) const;
-    const DescriptorSetIdentity& GetIdentity(const DescriptorSetWeakReferenceObject &i_desc_wref) const;
-    const DescriptorSetLayoutIdentity& GetIdentity(const DescriptorSetLayoutWeakReferenceObject &i_ds_layout_wref) const;
+    const ShaderModuleIdentity &GetIdentity(const ShaderModuleWeakReferenceObject &i_module) const;
+    const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex) const;
+    const SamplerIdentity& GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex) const;
+    const FrameBufferIdentity& GetIdentity(const FrameBufferWeakReferenceObject &i_fb) const;
+    const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject &i_cb) const;
+    const CommandPoolIdentity& GetIdentity(const CommandPoolWeakReferenceObject &i_cp) const;
+    const RenderPassIdentity& GetIdentity(const RenderPassWeakReferenceObject &i_rp) const;
+    const VertexBufferIdentity& GetIdentity(const VertexBufferWeakReferenceObject &i_vb) const;
+    const IndexBufferIdentity& GetIdentity(const IndexBufferWeakReferenceObject &i_ib) const;
+    const UniformBufferIdentity& GetIdentity(const UniformBufferWeakReferenceObject &i_ub) const;
+    const GraphicsPipelineIdentity& GetIdentity(const GraphicsPipelineWeakReferenceObject &i_pipe) const;
+    const DescriptorPoolIdentity& GetIdentity(const DescriptorPoolWeakReferenceObject &i_pool) const;
+    const DescriptorSetIdentity& GetIdentity(const DescriptorSetWeakReferenceObject &i_desc) const;
+    const DescriptorSetLayoutIdentity& GetIdentity(const DescriptorSetLayoutWeakReferenceObject &i_ds_layout) const;
 protected:
 //------------ Render Flow Function -------------
     virtual void RenderBegin() = 0;

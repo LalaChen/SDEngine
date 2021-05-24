@@ -52,7 +52,7 @@ bool EventObject::RegisterEvent(const EventStrongReferenceObject &i_src_event)
     for (event_iter = m_event_container.begin() ;
          event_iter != m_event_container.end() ; 
          event_iter++) {
-        if( (*event_iter).GetRef().GetObjectName().compare(SD_SREF(i_src_event).GetObjectName()) == 0) {
+        if (SD_SREF((*event_iter)).GetObjectName().compare(SD_SREF(i_src_event).GetObjectName()) == 0) {
             //this event is already register.
             SDLOGW("Event(%s) is exist.", SD_SREF((*event_iter)).GetObjectName().c_str());
             return false;

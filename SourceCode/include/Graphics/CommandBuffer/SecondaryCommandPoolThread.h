@@ -110,15 +110,15 @@ protected:
      */
     void Record();
 protected:
-    /*! \fn CommandPoolStrongReferenceObject m_cp_sref;
+    /*! \fn CommandPoolStrongReferenceObject m_cp;
      *  \brief Pool for manager secondary buffer for this poot thread.
      */
-    CommandPoolStrongReferenceObject m_cp_sref;
+    CommandPoolStrongReferenceObject m_cp;
 
-    /*! \fn CommandBufferWeakReferenceObject m_cb_wref;
+    /*! \fn CommandBufferWeakReferenceObject m_cb;
      *  \brief Pool for manager secondary buffer for this poot thread.
      */
-    CommandBufferWeakReferenceObject m_cb_wref;
+    CommandBufferWeakReferenceObject m_cb;
 protected:
     /*! \fn std::thread m_thread;
      *  \brief Thread for launching recording task.

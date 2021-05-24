@@ -65,7 +65,7 @@ public:
     virtual ~UniformBuffer();
 
 public:
-    void Initialize(const UniformBufferDescriptorWeakReferenceObject &i_desc_wref);
+    void Initialize(const UniformBufferDescriptorWeakReferenceObject &i_desc);
 public:
     inline UniformBindingTypeEnum GetType() const override;
 
@@ -104,7 +104,7 @@ protected:
 
     UniformBufferIdentity m_identity;
 
-    UniformBufferDescriptorWeakReferenceObject m_ub_desc_wref;
+    UniformBufferDescriptorWeakReferenceObject m_ub_desc;
 
     std::vector<uint8_t> m_buffer;
 

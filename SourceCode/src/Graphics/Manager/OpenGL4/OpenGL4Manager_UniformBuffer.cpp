@@ -37,11 +37,11 @@ void OpenGL4Manager::DeleteUnifromBuffer(UniformBufferIdentity &io_identity)
 {
 }
 
-void OpenGL4Manager::MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref, VoidPtr &io_buffer_handle)
+void OpenGL4Manager::MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub, VoidPtr &io_buffer_handle)
 {
 }
 
-void OpenGL4Manager::UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref)
+void OpenGL4Manager::UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub)
 {
 }
 

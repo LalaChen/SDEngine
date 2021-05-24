@@ -71,45 +71,45 @@ public:
      */
     void Initialize();
 public:
-    /*! \fn void RegisterRenderPass(const RenderPassWeakReferenceObject &i_rp_wref);
-     *  \param [in] i_rp_wref Target render pass.
+    /*! \fn void RegisterRenderPass(const RenderPassWeakReferenceObject &i_rp);
+     *  \param [in] i_rp Target render pass.
      *  \brief Create frame buffer for this render flow.
      */
-    void RegisterRenderPass(const RenderPassWeakReferenceObject &i_rp_wref);
+    void RegisterRenderPass(const RenderPassWeakReferenceObject &i_rp);
 
     /*! \fn void AllocateFrameBuffer();
      *  \brief Allocate frame buffer for this render flow. Please use this function after RegisterRenderPass.
      */
     void AllocateFrameBuffer();
 
-    /* \fn void RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx);
-     * \param [in] i_tex_wref Texture we want to register its to image view.
+    /* \fn void RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex, uint32_t i_idx);
+     * \param [in] i_tex Texture we want to register its to image view.
      * \param [in] i_idx we want to register buffer for which image view.
      * \param [in] i_clear_value Clear value.
      * \brief Register buffer to frame buffer. Please register color or depth buffer one by one with the order following 
      *        attachment description in render pass after AllocateFrameBuffer.
      */
-    void RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value);
+    void RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex, uint32_t i_idx, const ClearValue &i_clear_value);
 public:
-    /* \fn void BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref);
-     * \param [in] i_cb_wref Command buffer weak reference.
+    /* \fn void BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cb);
+     * \param [in] i_cb Command buffer weak reference.
      * \param [in] i_start_pos Start Position.
      * \param [in] i_render_size Render Size.
      * \brief Start this render flow. We will start first step.
      */
-    void BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref);
+    void BeginRenderFlow(const CommandBufferWeakReferenceObject &i_cb);
 
-    /* \fn void GoToNextStep(const CommandBufferWeakReferenceObject &i_cb_wref);
-     * \param [in] i_cb_wref Command buffer weak reference.
+    /* \fn void GoToNextStep(const CommandBufferWeakReferenceObject &i_cb);
+     * \param [in] i_cb Command buffer weak reference.
      * \brief Go to next step of this render flow.
      */
-    void GoToNextStep(const CommandBufferWeakReferenceObject &i_cb_wref);
+    void GoToNextStep(const CommandBufferWeakReferenceObject &i_cb);
 
-    /* \fn void EndRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref);
-     * \param [in] i_cb_wref Command buffer weak reference.
+    /* \fn void EndRenderFlow(const CommandBufferWeakReferenceObject &i_cb);
+     * \param [in] i_cb Command buffer weak reference.
      * \brief End this render flow.
      */
-    void EndRenderFlow(const CommandBufferWeakReferenceObject &i_cb_wref);
+    void EndRenderFlow(const CommandBufferWeakReferenceObject &i_cb);
    
     /* \fn CommandBufferInheritanceInfo GetCurrentInheritanceInfo() const;
      *
@@ -117,15 +117,15 @@ public:
     CommandBufferInheritanceInfo GetCurrentInheritanceInfo() const;
 
 protected:
-    /*! \var RenderPassWeakReferenceObject m_rp_wref;
+    /*! \var RenderPassWeakReferenceObject m_rp;
      *  \brief Target render pass.
      */
-    RenderPassWeakReferenceObject m_rp_wref;
+    RenderPassWeakReferenceObject m_rp;
 
-    /*! \var FrameBufferStrongReferenceObject m_fb_sref;
+    /*! \var FrameBufferStrongReferenceObject m_fb;
      *  \brief Target frame buffer.
      */
-    FrameBufferStrongReferenceObject m_fb_sref;
+    FrameBufferStrongReferenceObject m_fb;
 
     /*! \var ImageOffset m_position;
      *  \brief Tell the start position of render area.

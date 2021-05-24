@@ -40,34 +40,34 @@ DescriptorSetLayout::~DescriptorSetLayout()
 {
 }
 
-void DescriptorSetLayout::AddUniformVariableDescriptors(const std::vector<UniformVariableDescriptorStrongReferenceObject> &i_uvd_srefs)
+void DescriptorSetLayout::AddUniformVariableDescriptors(const std::vector<UniformVariableDescriptorStrongReferenceObject> &i_uvds)
 {
-    m_uvd_srefs = i_uvd_srefs;
-    for (UniformVariableDescriptorStrongReferenceObject &uvd_sref : m_uvd_srefs) {
-        UniformBindingTypeEnum ub_type = uvd_sref.GetRef().GetBindingType();
-        uint32_t bindingNumber = SD_SREF(uvd_sref).GetNumber();
+    m_uvds = i_uvds;
+    for (UniformVariableDescriptorStrongReferenceObject &uvd : m_uvds) {
+        UniformBindingTypeEnum ub_type = uvd.GetRef().GetBindingType();
+        uint32_t bindingNumber = SD_SREF(uvd).GetNumber();
         if (ub_type != UniformBindingType_MAX_DEFINE_VALUE) {
             m_descriptor_counts[SD_ENUM_TO_UINT(ub_type)] += bindingNumber;
         }
         else {
-            SDLOGE("Error Uniform Binding in uniform variable descriptor(%s).", uvd_sref.GetRef().GetObjectName().c_str());
+            SDLOGE("Error Uniform Binding in uniform variable descriptor(%s).", uvd.GetRef().GetObjectName().c_str());
         }
     }
 }
 
 void DescriptorSetLayout::Initialize()
 {
-    std::vector<UniformVariableDescriptorWeakReferenceObject> uvd_wrefs;
-    for (UniformVariableDescriptorStrongReferenceObject &uvd_sref : m_uvd_srefs) {
-        uvd_wrefs.push_back(uvd_sref);
+    std::vector<UniformVariableDescriptorWeakReferenceObject> uvds;
+    for (UniformVariableDescriptorStrongReferenceObject &uvd : m_uvds) {
+        uvds.push_back(uvd);
     }
-    GraphicsManager::GetRef().CreateDescriptorSetLayout(m_identity, uvd_wrefs);
+    GraphicsManager::GetRef().CreateDescriptorSetLayout(m_identity, uvds);
 }
 
-void DescriptorSetLayout::AllocateUniformVariables(std::vector<UniformVariableStrongReferenceObject> &io_uv_srefs)
+void DescriptorSetLayout::AllocateUniformVariables(std::vector<UniformVariableStrongReferenceObject> &io_uvs)
 {
-    for (uint32_t uvd_count = 0; uvd_count < m_uvd_srefs.size(); ++uvd_count) {
-        io_uv_srefs.push_back(m_uvd_srefs[uvd_count].GetRef().AllocateUniformVariable());
+    for (uint32_t uvd_count = 0; uvd_count < m_uvds.size(); ++uvd_count) {
+        io_uvs.push_back(m_uvds[uvd_count].GetRef().AllocateUniformVariable());
     }
 }
 

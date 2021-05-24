@@ -33,12 +33,12 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void VulkanManager::CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity, const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvd_wrefs)
+void VulkanManager::CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity, const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvds)
 {
     VkDescriptorSetLayout &dsl_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_handle);
     std::vector<VkDescriptorSetLayoutBinding> vk_dsl_bindings;
-    for (const UniformVariableDescriptorWeakReferenceObject &uvd_wref : i_uvd_wrefs) {
-        UniformBinding ub = SD_WREF(uvd_wref).CreateUniformBinding();
+    for (const UniformVariableDescriptorWeakReferenceObject &uvd : i_uvds) {
+        UniformBinding ub = SD_WREF(uvd).CreateUniformBinding();
         VkDescriptorSetLayoutBinding vk_dsl_binding = {};
         vk_dsl_binding.binding = ub.m_binding_id;
         vk_dsl_binding.descriptorCount = ub.m_element_number;
@@ -89,11 +89,11 @@ void VulkanManager::DestroyDescriptorPool(DescriptorPoolIdentity &io_identity)
 }
 
 
-void VulkanManager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const DescriptorSetLayoutWeakReferenceObject &i_layout_wref)
+void VulkanManager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool, const DescriptorSetLayoutWeakReferenceObject &i_layout)
 {
     VkDescriptorSet &ds_handle = reinterpret_cast<VkDescriptorSet&>(io_identity.m_handle);
-    const DescriptorPoolIdentity &pool_identity = GetIdentity(i_pool_wref);
-    const DescriptorSetLayoutIdentity &layout_identity = GetIdentity(i_layout_wref);
+    const DescriptorPoolIdentity &pool_identity = GetIdentity(i_pool);
+    const DescriptorSetLayoutIdentity &layout_identity = GetIdentity(i_layout);
     VkDescriptorSetAllocateInfo a_info = InitializeVkDescriptorSetAllocateInfo();
     a_info.descriptorPool = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
     a_info.pSetLayouts = reinterpret_cast<const VkDescriptorSetLayout*>(&layout_identity.m_handle);
@@ -108,14 +108,14 @@ void VulkanManager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, co
     }
 }
 
-void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs)
+void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uvs)
 {
     if (i_identity.m_handle == SD_NULL_HANDLE) {
         SDLOGE("Try to write uniform veriable into null descriptor set.");
         return;
     }
 
-    if (i_uv_wrefs.size() == 0) {
+    if (i_uvs.size() == 0) {
         SDLOGE("no uniform variable need to write into this descriptor set.");
         return;
     }
@@ -125,14 +125,14 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
     std::list<std::vector<VkDescriptorImageInfo>> decriptor_img_infos;
     std::list<VkDescriptorBufferInfo> decriptor_buffer_infos;
 
-    for (const UniformVariableWeakReferenceObject &uv_wref : i_uv_wrefs) {
-        if (uv_wref.IsNull() == false) {
-            UniformBindingTypeEnum binding_type = SD_WREF(uv_wref).GetType();
-            uint32_t binding_id = SD_WREF(uv_wref).GetBindingID();
+    for (const UniformVariableWeakReferenceObject &uv : i_uvs) {
+        if (uv.IsNull() == false) {
+            UniformBindingTypeEnum binding_type = SD_WREF(uv).GetType();
+            uint32_t binding_id = SD_WREF(uv).GetBindingID();
 
             if (binding_type == UniformBindingType_UNIFORM_BUFFER) {
-                UniformBufferWeakReferenceObject buffer_wref = uv_wref.DynamicCastTo<UniformBuffer>();
-                UniformBufferIdentity ub_identity = GetIdentity(buffer_wref);
+                UniformBufferWeakReferenceObject buffer = uv.DynamicCastTo<UniformBuffer>();
+                UniformBufferIdentity ub_identity = GetIdentity(buffer);
 
                 VkDescriptorBufferInfo basic_uniform_b_info = {};
                 basic_uniform_b_info.buffer = reinterpret_cast<VkBuffer>(ub_identity.m_buffer_handle);
@@ -150,15 +150,15 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
                 write_infos.push_back(buffer_set_info);
             }
             else if (binding_type == UniformBindingType_COMBINED_IMAGE_SAMPLER) {
-                UniformImagesWeakReferenceObject image_wref = uv_wref.DynamicCastTo<UniformImages>();
-                const std::vector<TextureWeakReferenceObject> tex_wrefs = SD_WREF(image_wref).GetTextures();
+                UniformImagesWeakReferenceObject image = uv.DynamicCastTo<UniformImages>();
+                const std::vector<TextureWeakReferenceObject> texs = SD_WREF(image).GetTextures();
                 decriptor_img_infos.push_back(std::vector<VkDescriptorImageInfo>());
                 std::vector<VkDescriptorImageInfo>& uv_image_infos = decriptor_img_infos.back();
 
-                for (const TextureWeakReferenceObject &tex_wref : tex_wrefs) {
-                    if (tex_wref.IsNull() == false) {
-                        TextureIdentity tex_identity = GetIdentity(tex_wref);
-                        SamplerIdentity sampler_identity = GetIdentityFromTexture(tex_wref);
+                for (const TextureWeakReferenceObject &tex : texs) {
+                    if (tex.IsNull() == false) {
+                        TextureIdentity tex_identity = GetIdentity(tex);
+                        SamplerIdentity sampler_identity = GetIdentityFromTexture(tex);
                         VkDescriptorImageInfo tex_i_info = {};
                         tex_i_info.sampler = reinterpret_cast<VkSampler>(sampler_identity.m_handle);
                         tex_i_info.imageView = reinterpret_cast<VkImageView>(tex_identity.m_view_handle);
@@ -183,10 +183,10 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
     UpdateVkDescriptorSet(write_infos, copy_infos);
 }
 
-void VulkanManager::FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref)
+void VulkanManager::FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool)
 {
     VkDescriptorSet &ds_handle = reinterpret_cast<VkDescriptorSet&>(io_identity.m_handle);
-    const DescriptorPoolIdentity &pool_identity = GetIdentity(i_pool_wref);
+    const DescriptorPoolIdentity &pool_identity = GetIdentity(i_pool);
     VkDescriptorPool dp_handle = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
     FreeVkDescriptorSet(ds_handle, dp_handle);
 }

@@ -50,8 +50,8 @@ public:
 public:
     bool IsValid() const;
 public:
-    RenderPassWeakReferenceObject m_rp_wref;
-    FrameBufferWeakReferenceObject m_fb_wref;
+    RenderPassWeakReferenceObject m_rp;
+    FrameBufferWeakReferenceObject m_fb;
     uint32_t m_sp_id;
     bool m_occusion_query_enable;
     QueryControlFlagMask m_ctrl_mask;
@@ -60,7 +60,7 @@ public:
 
 inline bool CommandBufferInheritanceInfo::IsValid() const
 {
-    return (m_rp_wref.IsNull() == false && m_fb_wref.IsNull() == false);
+    return (m_rp.IsNull() == false && m_fb.IsNull() == false);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

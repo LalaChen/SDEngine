@@ -38,48 +38,48 @@ Mesh::~Mesh()
 {
 }
 
-void Mesh::RegisterVertexBuffer(VertexBufferUsageEnum i_usage, const VertexBufferStrongReferenceObject &i_va_sref)
+void Mesh::RegisterVertexBuffer(VertexBufferUsageEnum i_usage, const VertexBufferStrongReferenceObject &i_va)
 {
     if (i_usage != VertexBufferUsage_MAX_DEFINE_VALUE) {
         if (m_vertex_attribs[i_usage].IsNull() == false) {
             SDLOG("Vertex Attribute[%d] isn't null. Reset it.", i_usage);
             m_vertex_attribs[i_usage].Reset();
         }
-        m_vertex_attribs[i_usage] = i_va_sref;
+        m_vertex_attribs[i_usage] = i_va;
     }
     else {
         SDLOGE("Vertex Attribute[%d] channel is not exist.", i_usage);
     }
 }
 
-void Mesh::RegisterIndexBuffer(const IndexBufferStrongReferenceObject &i_idx_sref)
+void Mesh::RegisterIndexBuffer(const IndexBufferStrongReferenceObject &i_idx)
 {
     if (m_index_buffer.IsNull() == false) {
         SDLOG("Index Attribute isn't null. Reset it.");
         m_index_buffer.Reset();
     }
-    m_index_buffer = i_idx_sref;
+    m_index_buffer = i_idx;
 }
 
-void Mesh::BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb_wref)
+void Mesh::BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb)
 {
     for (uint32_t va_idx = 0; va_idx < VertexBufferUsage_MAX_DEFINE_VALUE; ++va_idx) {
         if (m_vertex_attribs[va_idx].IsNull() == false) {
-            m_vertex_attribs[va_idx].GetRef().Bind(i_cb_wref, va_idx, 0);
+            m_vertex_attribs[va_idx].GetRef().Bind(i_cb, va_idx, 0);
         }
     }
 }
 
-void Mesh::BindIndexBuffer(const CommandBufferWeakReferenceObject &i_cb_wref)
+void Mesh::BindIndexBuffer(const CommandBufferWeakReferenceObject &i_cb)
 {
     if (m_index_buffer.IsNull() == false) {
-        m_index_buffer.GetRef().Bind(i_cb_wref, 0);
+        m_index_buffer.GetRef().Bind(i_cb, 0);
     }
 }
 
-void Mesh::Render(const CommandBufferWeakReferenceObject &i_cb_wref)
+void Mesh::Render(const CommandBufferWeakReferenceObject &i_cb)
 {
-    GraphicsManager::GetRef().DrawByIndices(i_cb_wref, m_index_buffer, 0, 0, 0, 1);
+    GraphicsManager::GetRef().DrawByIndices(i_cb, m_index_buffer, 0, 0, 0, 1);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

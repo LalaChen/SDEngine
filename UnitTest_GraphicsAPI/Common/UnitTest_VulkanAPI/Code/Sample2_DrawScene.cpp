@@ -44,9 +44,9 @@ void Sample2_DrawScene::Resize(Size_ui32 i_width, Size_ui32 i_height)
 void Sample2_DrawScene::Destroy()
 {
     m_meshes.clear();
-    m_render_flow_sref.Reset();
-    m_color_buffer_sref.Reset();
-    m_depth_buffer_sref.Reset();
+    m_render_flow.Reset();
+    m_color_buffer.Reset();
+    m_depth_buffer.Reset();
 }
 
 void Sample2_DrawScene::ImportAssimpModel(ModelData &io_model)
@@ -63,84 +63,84 @@ void Sample2_DrawScene::CreateModel()
     ImportAssimpModel(model);
     //1. Load meshes.
     for (uint32_t meshID = 0; meshID < model.m_mesh_datas.size(); ++meshID) {
-        MeshStrongReferenceObject mesh_sref = new Mesh(model.m_mesh_datas[meshID].m_name);
+        MeshStrongReferenceObject mesh = new Mesh(model.m_mesh_datas[meshID].m_name);
         uint32_t vaID;
         //--- Vertex Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].size() > 0) {
             vaID = static_cast<uint32_t>(VertexBufferUsage_VERTEX_BUFFER);
-            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+            StaticVertexBufferStrongReferenceObject va = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32Z32_SFLOAT);
-            va_sref.GetRef().RefreshBufferData(
+            va.GetRef().RefreshBufferData(
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].data(),
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_VERTEX_BUFFER].size());
-            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+            mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, va.StaticCastTo<VertexBuffer>());
         }
         //--- Normal Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].size() > 0) {
             vaID = static_cast<uint32_t>(VertexBufferUsage_NORMAL_BUFFER);
-            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+            StaticVertexBufferStrongReferenceObject va = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32Z32_SFLOAT);
-            va_sref.GetRef().RefreshBufferData(
+            va.GetRef().RefreshBufferData(
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].data(),
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_NORMAL_BUFFER].size());
-            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_NORMAL_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+            mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_NORMAL_BUFFER, va.StaticCastTo<VertexBuffer>());
         }
         //--- Tangent Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].size() > 0) {
             vaID = static_cast<uint32_t>(VertexBufferUsage_TANGENT_BUFFER);
-            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+            StaticVertexBufferStrongReferenceObject va = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32_SFLOAT);
-            va_sref.GetRef().RefreshBufferData(
+            va.GetRef().RefreshBufferData(
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].data(),
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TANGENT_BUFFER].size());
-            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_TANGENT_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+            mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_TANGENT_BUFFER, va.StaticCastTo<VertexBuffer>());
         }
         //--- Binormal Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].size() > 0) {
             vaID = static_cast<uint32_t>(VertexBufferUsage_BINORMAL_BUFFER);
-            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+            StaticVertexBufferStrongReferenceObject va = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32Z32_SFLOAT);
-            va_sref.GetRef().RefreshBufferData(
+            va.GetRef().RefreshBufferData(
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].data(),
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_BINORMAL_BUFFER].size());
-            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_BINORMAL_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+            mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_BINORMAL_BUFFER, va.StaticCastTo<VertexBuffer>());
         }
         //--- Tex Coord Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TEX_COORD_BUFFER].size() > 0) {
             vaID = static_cast<uint32_t>(VertexBufferUsage_TEX_COORD_BUFFER);
-            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+            StaticVertexBufferStrongReferenceObject va = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32_SFLOAT);
-            va_sref.GetRef().RefreshBufferData(
+            va.GetRef().RefreshBufferData(
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TEX_COORD_BUFFER].data(),
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_TEX_COORD_BUFFER].size());
-            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_TEX_COORD_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+            mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_TEX_COORD_BUFFER, va.StaticCastTo<VertexBuffer>());
         }
         //--- Color Buffer
         if (model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].size() > 0) {
             vaID = static_cast<uint32_t>(VertexBufferUsage_COLOR_BUFFER);
-            StaticVertexBufferStrongReferenceObject va_sref = new StaticVertexBuffer(
+            StaticVertexBufferStrongReferenceObject va = new StaticVertexBuffer(
                 StringFormat("%s_%s", model.m_mesh_datas[meshID].m_name.c_str(), VertexBufferUsageEnumNames[vaID].c_str()),
                 vaID, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
-            va_sref.GetRef().RefreshBufferData(
+            va.GetRef().RefreshBufferData(
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].data(),
                 model.m_mesh_datas[meshID].m_vertex_attribs[VertexBufferUsage_COLOR_BUFFER].size());
-            mesh_sref.GetRef().RegisterVertexBuffer(VertexBufferUsage_COLOR_BUFFER, va_sref.StaticCastTo<VertexBuffer>());
+            mesh.GetRef().RegisterVertexBuffer(VertexBufferUsage_COLOR_BUFFER, va.StaticCastTo<VertexBuffer>());
         }
         //--- Indice Buffer
         if (model.m_mesh_datas[meshID].m_face_indices.size() > 0) {
-            StaticIndexBufferStrongReferenceObject va_sref = new StaticIndexBuffer(
+            StaticIndexBufferStrongReferenceObject va = new StaticIndexBuffer(
                 StringFormat("%s_Indice", model.m_mesh_datas[meshID].m_name.c_str()),IndexBufferFormat_X32_UINT);
-            va_sref.GetRef().RefreshBufferData(
+            va.GetRef().RefreshBufferData(
                 model.m_mesh_datas[meshID].m_face_indices.data(),
                 model.m_mesh_datas[meshID].m_face_indices.size());
-            mesh_sref.GetRef().RegisterIndexBuffer(va_sref.StaticCastTo<IndexBuffer>());
+            mesh.GetRef().RegisterIndexBuffer(va.StaticCastTo<IndexBuffer>());
         }
-        m_meshes.push_back(mesh_sref);
+        m_meshes.push_back(mesh);
     }
     //2. Load texture.
     for (TextureMap::const_iterator tex_iter = model.m_textures.begin();
@@ -148,8 +148,8 @@ void Sample2_DrawScene::CreateModel()
         tex_iter++) {
         TextureResourceMap::iterator res_iter = m_textures.find((*tex_iter).first);
         if (res_iter == m_textures.end()) {
-            TextureStrongReferenceObject tex_sref = new Texture(StringFormat("%s_%s", model.m_name.c_str(), (*tex_iter).first.c_str()));
-            tex_sref.GetRef().InitializeFromBitmap((*tex_iter).second);
+            TextureStrongReferenceObject tex = new Texture(StringFormat("%s_%s", model.m_name.c_str(), (*tex_iter).first.c_str()));
+            tex.GetRef().InitializeFromBitmap((*tex_iter).second);
         }
     }
 }
@@ -222,11 +222,11 @@ void Sample2_DrawScene::CreateShaderProgram()
 
     //2. create shader module.
     //2.1 create vert shader module.
-    ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("PhongShaderVert");
-    vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/PhongShader.vert.spv", "main");
+    ShaderModuleStrongReferenceObject vert_shader = new ShaderModule("PhongShaderVert");
+    vert_shader.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/PhongShader.vert.spv", "main");
     //2.2 create frag shader module.
-    ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("PhongShaderFrag");
-    frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/PhongShader.frag.spv", "main");
+    ShaderModuleStrongReferenceObject frag_shader = new ShaderModule("PhongShaderFrag");
+    frag_shader.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/PhongShader.frag.spv", "main");
 
     //3. Create RenderFlow
 
@@ -270,14 +270,14 @@ void Sample2_DrawScene::CreateFramebuffer()
 {
     SDLOG("--- Vulkan initialize sample 2 render flow.");
     Resolution res_size = GraphicsManager::GetRef().GetScreenResolution();
-    m_color_buffer_sref = new Texture("Sample2_ColorBuffer");
-    m_color_buffer_sref.GetRef().Initialize2DColorOrDepthBuffer(
+    m_color_buffer = new Texture("Sample2_ColorBuffer");
+    m_color_buffer.GetRef().Initialize2DColorOrDepthBuffer(
         res_size.GetWidth(), res_size.GetHeight(),
         GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
         ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
 
-    m_depth_buffer_sref = new Texture("Sample2_DepthBuffer");
-    m_depth_buffer_sref.GetRef().Initialize2DColorOrDepthBuffer(
+    m_depth_buffer = new Texture("Sample2_DepthBuffer");
+    m_depth_buffer.GetRef().Initialize2DColorOrDepthBuffer(
         res_size.GetWidth(), res_size.GetHeight(),
         GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
         ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
@@ -286,15 +286,15 @@ void Sample2_DrawScene::CreateFramebuffer()
     ClearValue clear_dands;
     clear_dands.depth_stencil.depth = 1.0f; clear_dands.depth_stencil.stencil = 1;
 
-    RenderPassWeakReferenceObject rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
-    m_render_flow_sref = new RenderFlow("ForwardPassFlow", ImageOffset(0, 0, 0), ImageSize(res_size.GetWidth(), res_size.GetHeight(), 1));//1 is means layer 1.
-    m_render_flow_sref.GetRef().RegisterRenderPass(rp_wref);
-    m_render_flow_sref.GetRef().AllocateFrameBuffer();
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buffer_sref, 0, clear_color);
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer_sref, 1, clear_dands);
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buffer_sref, 2, clear_color);
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer_sref, 3, clear_dands);
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_color_buffer_sref, 4, clear_color);
-    m_render_flow_sref.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer_sref, 5, clear_dands);
-    m_render_flow_sref.GetRef().Initialize();
+    RenderPassWeakReferenceObject rp = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
+    m_render_flow = new RenderFlow("ForwardPassFlow", ImageOffset(0, 0, 0), ImageSize(res_size.GetWidth(), res_size.GetHeight(), 1));//1 is means layer 1.
+    m_render_flow.GetRef().RegisterRenderPass(rp);
+    m_render_flow.GetRef().AllocateFrameBuffer();
+    m_render_flow.GetRef().RegisterBufferToFrameBuffer(m_color_buffer, 0, clear_color);
+    m_render_flow.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer, 1, clear_dands);
+    m_render_flow.GetRef().RegisterBufferToFrameBuffer(m_color_buffer, 2, clear_color);
+    m_render_flow.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer, 3, clear_dands);
+    m_render_flow.GetRef().RegisterBufferToFrameBuffer(m_color_buffer, 4, clear_color);
+    m_render_flow.GetRef().RegisterBufferToFrameBuffer(m_depth_buffer, 5, clear_dands);
+    m_render_flow.GetRef().Initialize();
 }

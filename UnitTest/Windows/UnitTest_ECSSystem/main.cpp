@@ -49,12 +49,12 @@ public:
 public:
     void PrintEntities();
 protected:
-    EntityGroupWeakReferenceObject m_target_eg_wref;
+    EntityGroupWeakReferenceObject m_target_eg;
 };
 
 void GameSystem::Initialize()
 {
-    m_target_eg_wref = ECSManager::GetRef().AddEntityGroup(
+    m_target_eg = ECSManager::GetRef().AddEntityGroup(
         "GameSystem",
         {
             std::type_index(typeid(ComponentA)),
@@ -62,10 +62,10 @@ void GameSystem::Initialize()
         }
     );
 
-    EntityWeakReferenceObject eab_wref = ECSManager::GetRef().CreateEntity("EAB_1");
-    ECSManager::GetRef().AddComponentForEntity<ComponentA>(eab_wref, "EAB_1_CA", 1, 2, 3);
+    EntityWeakReferenceObject eab = ECSManager::GetRef().CreateEntity("EAB_1");
+    ECSManager::GetRef().AddComponentForEntity<ComponentA>(eab, "EAB_1_CA", 1, 2, 3);
     PrintEntities();
-    ECSManager::GetRef().AddComponentForEntity<ComponentB>(eab_wref, "EAB_1_CA", "ComponentBTest1!!!", "ComponentBTest2!!!");
+    ECSManager::GetRef().AddComponentForEntity<ComponentB>(eab, "EAB_1_CA", "ComponentBTest1!!!", "ComponentBTest2!!!");
     PrintEntities();
 }
 
@@ -84,7 +84,7 @@ void GameSystem::Resize()
 
 void GameSystem::PrintEntities()
 {
-    const std::list<EntityWeakReferenceObject> &entities = m_target_eg_wref.GetRef().GetEntities();
+    const std::list<EntityWeakReferenceObject> &entities = m_target_eg.GetRef().GetEntities();
     SDLOG("---------- Print Group ------------");
     for (const EntityWeakReferenceObject &entity : entities) {
         SDLOG("%s", entity.GetRef().ToString().c_str());

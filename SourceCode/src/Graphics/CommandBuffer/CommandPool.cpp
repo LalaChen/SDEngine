@@ -55,15 +55,15 @@ void CommandPool::Clear()
 
 CommandBufferWeakReferenceObject CommandPool::AllocateCommandBuffer(const ObjectName &i_buffer_name, const CommandBufferLevelEnum &i_level)
 {
-    CommandBufferStrongReferenceObject alloc_buf_sref = new CommandBuffer(StringFormat("%s_%s", m_object_name.c_str(), i_buffer_name.c_str()), GetThisSharedPtrByType<CommandPoolBase>(), i_level);
-    m_cmd_bufs.push_back(alloc_buf_sref);
-    return alloc_buf_sref;
+    CommandBufferStrongReferenceObject alloc_buf = new CommandBuffer(StringFormat("%s_%s", m_object_name.c_str(), i_buffer_name.c_str()), GetThisSharedPtrByType<CommandPoolBase>(), i_level);
+    m_cmd_bufs.push_back(alloc_buf);
+    return alloc_buf;
 }
 
-void CommandPool::RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src_wref)
+void CommandPool::RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src)
 {
     for (std::list<CommandBufferStrongReferenceObject>::iterator iter = m_cmd_bufs.begin(); iter != m_cmd_bufs.end(); ) {
-        if ((*iter) == i_src_wref) {
+        if ((*iter) == i_src) {
             iter = m_cmd_bufs.erase(iter);
             return;
         }
@@ -71,7 +71,7 @@ void CommandPool::RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i
             iter++;
         }
     }
-    SDLOGW("Command Buffer [%s] isn't in Pool[%s].", SD_WREF(i_src_wref).GetObjectName().c_str(), m_object_name.c_str());
+    SDLOGW("Command Buffer [%s] isn't in Pool[%s].", SD_WREF(i_src).GetObjectName().c_str(), m_object_name.c_str());
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

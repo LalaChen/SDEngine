@@ -66,35 +66,35 @@ public:
 public:
     /*! \fn void RegisterVertexBuffer(VertexBufferUsageEnum i_usage, const VertexBufferStrongReferenceObject &i_va);
      *  \param [in] i_usage Register buffer to channels.
-     *  \param [in] i_va_sref Register target buffer. Please note that we will keep strong reference.
+     *  \param [in] i_va Register target buffer. Please note that we will keep strong reference.
      *  \brief Register vertex buffer reference object to target channel. Please note that we will keep strong reference in
      *         mesh. If we want to update data, we need get weak reference at fitst.
      */
-    void RegisterVertexBuffer(VertexBufferUsageEnum i_usage, const VertexBufferStrongReferenceObject &i_va_sref);
+    void RegisterVertexBuffer(VertexBufferUsageEnum i_usage, const VertexBufferStrongReferenceObject &i_va);
 
-    /*! \fn void RegisterIndexBuffer(const IndexBufferStrongReferenceObject &i_idx_sref);
-     *  \param [in] i_idx_sref Register target buffer. Please note that we will keep strong reference.
+    /*! \fn void RegisterIndexBuffer(const IndexBufferStrongReferenceObject &i_idx);
+     *  \param [in] i_idx Register target buffer. Please note that we will keep strong reference.
      *  \brief Register index buffer reference object. Please note that we will keep strong reference in
      *         mesh. If we want to update data, we need get weak reference at fitst.
      */
-    void RegisterIndexBuffer(const IndexBufferStrongReferenceObject &i_idx_sref);
+    void RegisterIndexBuffer(const IndexBufferStrongReferenceObject &i_idx);
 
-    /*! \fn void BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb_wref);
-     *  \param [in] i_cb_wref Target recording buffer.
+    /*! \fn void BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb);
+     *  \param [in] i_cb Target recording buffer.
      *  \brief Bind vertex attributes for this command buffer.
      */
-    void BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb_wref);
+    void BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb);
 
-    /*! \fn void BindIndexBuffer(const CommandBufferWeakReferenceObject &i_cb_wref);
-     *  \param [in] i_cb_wref Target recording buffer.
+    /*! \fn void BindIndexBuffer(const CommandBufferWeakReferenceObject &i_cb);
+     *  \param [in] i_cb Target recording buffer.
      *  \brief Bind index buffer for this command buffer.
      */
-    void BindIndexBuffer(const CommandBufferWeakReferenceObject &i_cb_wref);
+    void BindIndexBuffer(const CommandBufferWeakReferenceObject &i_cb);
 
-    /*! \fn void Render(const CommandBufferWeakReferenceObject &i_cb_wref);
-     *  \param [in] i_cb_wref Target recording buffer.
+    /*! \fn void Render(const CommandBufferWeakReferenceObject &i_cb);
+     *  \param [in] i_cb Target recording buffer.
      */
-    void Render(const CommandBufferWeakReferenceObject &i_cb_wref);
+    void Render(const CommandBufferWeakReferenceObject &i_cb);
 protected:
     /*! \var VertexBufferStrongReferenceObject m_vertex_attribs[VertexBufferUsage_MAX_DEFINE_VALUE];
      *  \brief Vertex attributes.

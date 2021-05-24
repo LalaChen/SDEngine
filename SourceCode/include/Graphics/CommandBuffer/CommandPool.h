@@ -84,7 +84,7 @@ public:
     CommandBufferWeakReferenceObject AllocateCommandBuffer(const ObjectName &i_buffer_name = "CommandBuffer", const CommandBufferLevelEnum &i_level = CommandBufferLevel_PRIMARY);
 
     /*! \fn void RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src);
-     *  \param [in] i_src_wref Target command buffer.
+     *  \param [in] i_src Target command buffer.
      *  \brief Free allocated command buffer.
      */
     void RecycleCommandBuffer(const CommandBufferWeakReferenceObject &i_src);

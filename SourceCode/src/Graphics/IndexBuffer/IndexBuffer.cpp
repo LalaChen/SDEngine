@@ -40,9 +40,9 @@ IndexBuffer::~IndexBuffer()
 {
 }
 
-void IndexBuffer::Bind(const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset)
+void IndexBuffer::Bind(const CommandBufferWeakReferenceObject &i_cb, Size_ui64 i_offset)
 {
-    GraphicsManager::GetRef().BindIndexBuffer(m_identity, i_cb_wref, i_offset);
+    GraphicsManager::GetRef().BindIndexBuffer(m_identity, i_cb, i_offset);
 }
 
 void IndexBuffer::CalculateIndexArraySize()

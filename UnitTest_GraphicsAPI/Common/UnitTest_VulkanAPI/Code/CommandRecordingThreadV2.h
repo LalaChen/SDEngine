@@ -40,8 +40,8 @@ public:
 protected:
     void Record();
 protected:
-    CommandPoolStrongReferenceObject m_cp_sref;
-    CommandBufferWeakReferenceObject m_cb_wref;
+    CommandPoolStrongReferenceObject m_cp;
+    CommandBufferWeakReferenceObject m_cb;
 protected:
     std::thread m_thread;
     std::mutex m_mutex;

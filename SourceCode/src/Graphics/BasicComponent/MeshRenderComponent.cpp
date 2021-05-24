@@ -48,7 +48,7 @@ void MeshRenderComponent::Initialize()
 
     //1. Get DescriptorSet for MeshRenderer and count number of uniforms.
     DescriptorSetLayoutWeakReferenceObject basic_ds_layouts = GraphicsManager::GetRef().GetBasicDescriptorSetLayout("MeshRender");
-    basic_ds_layouts.GetRef().GetUniformDescriptorCounts(desc_counts);
+    SD_WREF(basic_ds_layouts).GetUniformDescriptorCounts(desc_counts);
 
     //2. Allocate descriptor pool and set.
     m_geo_dp = new DescriptorPool("DescriptorSetPool");

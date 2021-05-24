@@ -77,12 +77,12 @@ public:
      */
     void InitializeFromImageResource(const FilePathString &i_filename, Size_ui32 i_mipmap_levels = 1);
     
-    /*! \fn void InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_levels = 1);
-     *  \param [in] i_bitmap_wref Target bitmap.
+    /*! \fn void InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap, Size_ui32 i_mipmap_levels = 1);
+     *  \param [in] i_bitmap Target bitmap.
      *  \param [in] i_mipmap_levels Mipmap level.
      *  \brief This function is used to create texture that is used to input to shader.
      */
-    void InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_levels = 1); //Input 2D texture.
+    void InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap, Size_ui32 i_mipmap_levels = 1); //Input 2D texture.
     
     /*! \fn void Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, const ImageLayoutEnum &i_layout, Size_ui32 i_mipmap_levels = 1);
      *  \param [in] i_width Width of buffer.

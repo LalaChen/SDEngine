@@ -64,16 +64,16 @@ bool Entity::RegisterComponent(const std::type_index &i_type, const ComponentBas
 
 ComponentBaseWeakReferenceObject Entity::UnregisterComponent(const std::type_index &i_target_type)
 {
-    ComponentBaseWeakReferenceObject del_comp_wref;
+    ComponentBaseWeakReferenceObject del_comp;
     std::map<std::type_index, ComponentBaseWeakReferenceObject>::iterator comp_iter = m_comps.find(i_target_type);
     if (comp_iter != m_comps.end()) {
-        del_comp_wref = (*comp_iter).second;
+        del_comp = (*comp_iter).second;
         comp_iter = m_comps.erase(comp_iter);
     }
     else {
         SDLOGW("we can't find any component with type[%s]", i_target_type.name());
     }
-    return del_comp_wref;
+    return del_comp;
 }
 
 ComponentBaseWeakReferenceObject Entity::GetComponent(const std::type_index &i_target_type) const

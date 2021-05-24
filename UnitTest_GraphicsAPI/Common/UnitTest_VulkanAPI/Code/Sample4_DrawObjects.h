@@ -46,18 +46,18 @@ public:
     ObjectData();
     ~ObjectData();
 public:
-    void InitializeCommonUniformSet(const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_common_dsl_wrefs);
+    void InitializeCommonUniformSet(const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_common_dsls);
     void UpdateCommonUniformSet(const SampleCameraData &i_camera, const LightData &i_light);
-    void Draw(const RenderPassWeakReferenceObject &i_rp_wref, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_sp_id);
+    void Draw(const RenderPassWeakReferenceObject &i_rp, const CommandBufferWeakReferenceObject &i_cb, uint32_t i_sp_id);
 public:
-    UniformBufferWeakReferenceObject m_basic_wrefs;
-    UniformBufferWeakReferenceObject m_light_wrefs;
-    DescriptorPoolStrongReferenceObject m_common_pool_sref;
-    std::vector<DescriptorSetWeakReferenceObject> m_common_set_wrefs;
+    UniformBufferWeakReferenceObject m_basics;
+    UniformBufferWeakReferenceObject m_lights;
+    DescriptorPoolStrongReferenceObject m_common_pool;
+    std::vector<DescriptorSetWeakReferenceObject> m_common_sets;
 public:
     MeshWeakReferenceObject m_mesh;
-    MaterialWeakReferenceObject m_shared_mat_wref;
-    MaterialStrongReferenceObject m_mat_sref;
+    MaterialWeakReferenceObject m_shared_mat;
+    MaterialStrongReferenceObject m_mat;
 public:
     Transform m_trans;
 };
@@ -91,21 +91,21 @@ private:
     void CreateObjects();
     void UpdateCamera();
 protected:
-    std::vector<DescriptorSetLayoutStrongReferenceObject> m_common_dsl_srefs;
+    std::vector<DescriptorSetLayoutStrongReferenceObject> m_common_dsls;
 protected:
-    std::vector<DescriptorSetLayoutStrongReferenceObject> m_general_dsl_srefs;
+    std::vector<DescriptorSetLayoutStrongReferenceObject> m_general_dsls;
 protected:
     SampleCameraData m_camera;
     LightData m_light;
-    RenderPassStrongReferenceObject m_forward_rp_sref;
-    TextureStrongReferenceObject m_tex_sref;
-    ShaderProgramStrongReferenceObject m_phong_shader_sref;
-    ShaderProgramStrongReferenceObject m_axes_shader_sref;
-    MaterialStrongReferenceObject m_shared_material_sref;
-    MaterialStrongReferenceObject m_axes_shared_material_sref;
-    MeshStrongReferenceObject m_cube_sref;
-    MeshStrongReferenceObject m_floor_sref;
-    MeshStrongReferenceObject m_axes_sref;
+    RenderPassStrongReferenceObject m_forward_rp;
+    TextureStrongReferenceObject m_tex;
+    ShaderProgramStrongReferenceObject m_phong_shader;
+    ShaderProgramStrongReferenceObject m_axes_shader;
+    MaterialStrongReferenceObject m_shared_material;
+    MaterialStrongReferenceObject m_axes_shared_material;
+    MeshStrongReferenceObject m_cube;
+    MeshStrongReferenceObject m_floor;
+    MeshStrongReferenceObject m_axes;
 protected:
 #if !defined(SINGLE_FLOW)
 #if defined(RECORD_POOL_V2)
@@ -114,8 +114,8 @@ protected:
     std::vector<CommandRecordingThreadStrongReferenceObject> m_rec_threads;
 #endif
 #endif
-    CommandBufferWeakReferenceObject m_main_cb_wref;
-    CommandPoolStrongReferenceObject m_cp_sref;
+    CommandBufferWeakReferenceObject m_main_cb;
+    CommandPoolStrongReferenceObject m_cp;
 protected:
     std::list<ObjectData> m_scene_objects;
     float m_cube_interval;

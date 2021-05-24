@@ -56,26 +56,26 @@ GraphicsSystem::~GraphicsSystem()
 void GraphicsSystem::Initialize()
 {
     //1. Initialize command buffer and pools.
-    m_graphics_cp_sref = new CommandPool("GSCmdPool");
-    SD_REF(m_graphics_cp_sref).Initialize();
-    m_graphics_cb_wref = SD_REF(m_graphics_cp_sref).AllocateCommandBuffer("GSCmdBuffer");
+    m_graphics_cp = new CommandPool("GSCmdPool");
+    SD_REF(m_graphics_cp).Initialize();
+    m_graphics_cb = SD_REF(m_graphics_cp).AllocateCommandBuffer("GSCmdBuffer");
 
     //2. Initialize necessary group.
-    m_camera_eg_wref = ECSManager::GetRef().AddEntityGroup(
+    m_camera_eg = ECSManager::GetRef().AddEntityGroup(
         "CameraGroup",
         {
             std::type_index(typeid(CameraComponent))
         }
     );
 
-    m_mesh_render_eg_wref = ECSManager::GetRef().AddEntityGroup(
+    m_mesh_render_eg = ECSManager::GetRef().AddEntityGroup(
         "MeshRenderGroup",
         {
             std::type_index(typeid(MeshRenderComponent))
         }
     );
 
-    m_light_eg_wref = ECSManager::GetRef().AddEntityGroup(
+    m_light_eg = ECSManager::GetRef().AddEntityGroup(
         "LightGroup",
         {
             std::type_index(typeid(LightComponent))
@@ -84,10 +84,10 @@ void GraphicsSystem::Initialize()
 
     //3. initialize rec_thread.
     uint32_t max_threads = std::thread::hardware_concurrency();
-    m_rec_thread_srefs.resize(max_threads);
-    for (uint32_t tID = 0; tID < m_rec_thread_srefs.size(); ++tID) {
-        m_rec_thread_srefs[tID] = new SecondaryCommandPoolThread(StringFormat("RecordThread_%d", tID));
-        m_rec_thread_srefs[tID].GetRef().Initialize();
+    m_rec_threads.resize(max_threads);
+    for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
+        m_rec_threads[tID] = new SecondaryCommandPoolThread(StringFormat("RecordThread_%d", tID));
+        m_rec_threads[tID].GetRef().Initialize();
     }
 
     //4. decide update every frame or not.
@@ -103,12 +103,12 @@ void GraphicsSystem::Update()
         m_scene_changed = false;
     }
 
-    GraphicsManager::GetRef().SubmitCommandBuffersToQueue({ m_graphics_cb_wref });
+    GraphicsManager::GetRef().SubmitCommandBuffersToQueue({ m_graphics_cb });
 
-    std::list<EntityWeakReferenceObject> camera_entity_list = SD_WREF(m_camera_eg_wref).GetEntities();
+    std::list<EntityWeakReferenceObject> camera_entity_list = SD_WREF(m_camera_eg).GetEntities();
     std::list<CameraComponentWeakReferenceObject> camera_list;
-    for (EntityWeakReferenceObject &ce_wref : camera_entity_list) {
-        camera_list.push_back(SD_GET_COMP_WREF(ce_wref, CameraComponent));
+    for (EntityWeakReferenceObject &ce : camera_entity_list) {
+        camera_list.push_back(SD_GET_COMP_WREF(ce, CameraComponent));
     }
 
     GraphicsManager::GetRef().RenderTexture2DToScreen(SD_WREF((*camera_list.begin())).GetColorBuffer());
@@ -116,20 +116,20 @@ void GraphicsSystem::Update()
 
 void GraphicsSystem::Destroy()
 {
-    for (uint32_t tID = 0; tID < m_rec_thread_srefs.size(); ++tID) {
-        m_rec_thread_srefs[tID].Reset();
+    for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
+        m_rec_threads[tID].Reset();
     }
 
-    SD_SREF(m_graphics_cp_sref).Clear();
-    m_graphics_cp_sref.Reset();
+    SD_SREF(m_graphics_cp).Clear();
+    m_graphics_cp.Reset();
 
 }
 
 void GraphicsSystem::Resize()
 {
-    std::list<EntityWeakReferenceObject> camera_entity_list = m_camera_eg_wref.GetRef().GetEntities();
-    for (EntityWeakReferenceObject ce_wref : camera_entity_list) {
-        SD_WREF(SD_GET_COMP_WREF(ce_wref, CameraComponent)).Resize();
+    std::list<EntityWeakReferenceObject> camera_entity_list = m_camera_eg.GetRef().GetEntities();
+    for (EntityWeakReferenceObject ce : camera_entity_list) {
+        SD_WREF(SD_GET_COMP_WREF(ce, CameraComponent)).Resize();
     }
 
     m_scene_changed = true;
@@ -152,45 +152,45 @@ void GraphicsSystem::RecordCommand()
     sr.m_x = 0.0f; sr.m_y = 0.0f;
     sr.m_width = vp.m_width; sr.m_height = static_cast<float>(current_res.GetHeight());
 
-    std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;
-    std::list<EntityWeakReferenceObject> camera_entity_list = SD_WREF(m_camera_eg_wref).GetEntities();
-    std::list<EntityWeakReferenceObject> mesh_render_entity_list = SD_WREF(m_mesh_render_eg_wref).GetEntities();
-    std::list<EntityWeakReferenceObject> light_entity_list = SD_WREF(m_light_eg_wref).GetEntities();
+    std::list<CommandBufferWeakReferenceObject> secondary_cbs;
+    std::list<EntityWeakReferenceObject> camera_entity_list = SD_WREF(m_camera_eg).GetEntities();
+    std::list<EntityWeakReferenceObject> mesh_render_entity_list = SD_WREF(m_mesh_render_eg).GetEntities();
+    std::list<EntityWeakReferenceObject> light_entity_list = SD_WREF(m_light_eg).GetEntities();
     std::list<LightComponentWeakReferenceObject> light_list;
     std::list<MeshRenderComponentWeakReferenceObject> mesh_render_list;
     std::list<CameraComponentWeakReferenceObject> camera_list;
     //1. collect necessary components.
-    for (EntityWeakReferenceObject &le_wref : light_entity_list) {
-        light_list.push_back(SD_GET_COMP_WREF(le_wref, LightComponent));
+    for (EntityWeakReferenceObject &le : light_entity_list) {
+        light_list.push_back(SD_GET_COMP_WREF(le, LightComponent));
     }
 
-    for (EntityWeakReferenceObject &ce_wref : camera_entity_list) {
-        camera_list.push_back(SD_GET_COMP_WREF(ce_wref, CameraComponent));
+    for (EntityWeakReferenceObject &ce : camera_entity_list) {
+        camera_list.push_back(SD_GET_COMP_WREF(ce, CameraComponent));
     }
 
-    for (EntityWeakReferenceObject &mre_wref : mesh_render_entity_list) {
-        mesh_render_list.push_back(SD_GET_COMP_WREF(mre_wref, MeshRenderComponent));
+    for (EntityWeakReferenceObject &mre : mesh_render_entity_list) {
+        mesh_render_list.push_back(SD_GET_COMP_WREF(mre, MeshRenderComponent));
     }
 
-    SD_SREF(m_graphics_cb_wref).Begin();
-    GraphicsManager::GetRef().SetViewport(m_graphics_cb_wref, vp);
-    GraphicsManager::GetRef().SetScissor(m_graphics_cb_wref, sr);
+    SD_SREF(m_graphics_cb).Begin();
+    GraphicsManager::GetRef().SetViewport(m_graphics_cb, vp);
+    GraphicsManager::GetRef().SetScissor(m_graphics_cb, sr);
 
     //2. update shadow map.
 
     //3. update stencil buffer. (To Do)
 
     //4. record command for camera.
-    for (CameraComponentWeakReferenceObject &camera_wref : camera_list) {
-        SD_WREF(camera_wref).RecordCommand(m_graphics_cb_wref, light_list, mesh_render_list);
+    for (CameraComponentWeakReferenceObject &camera : camera_list) {
+        SD_WREF(camera).RecordCommand(m_graphics_cb, light_list, mesh_render_list);
     }
     
-    SD_SREF(m_graphics_cb_wref).End();
+    SD_SREF(m_graphics_cb).End();
 }
 
 const std::vector<SecondaryCommandPoolThreadStrongReferenceObject>& GraphicsSystem::GetSecondaryCommandPool() const
 {
-    return m_rec_thread_srefs;
+    return m_rec_threads;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

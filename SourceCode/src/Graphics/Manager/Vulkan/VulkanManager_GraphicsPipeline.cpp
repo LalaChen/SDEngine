@@ -58,9 +58,9 @@ void VulkanManager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
 }
 
 //-------- GraphicsPipeline --------
-void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs)
+void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsls)
 {
-    const RenderPassIdentity &rp_identity = GetIdentity(i_rp_wref);
+    const RenderPassIdentity &rp_identity = GetIdentity(i_rp);
     VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
     VkPipelineLayout &pipeline_layout_handle = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout_handle);
     VkRenderPass render_pass_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
@@ -68,8 +68,8 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     std::vector<VkVertexInputAttributeDescription> va_input_location_descs;
 
     std::vector<VkDescriptorSetLayout> vk_ds_layouts;
-    for (const DescriptorSetLayoutWeakReferenceObject &dsl_wref : i_dsl_wrefs) {
-        const DescriptorSetLayoutIdentity& dsl_identity = GetIdentity(dsl_wref);
+    for (const DescriptorSetLayoutWeakReferenceObject &dsl : i_dsls) {
+        const DescriptorSetLayoutIdentity& dsl_identity = GetIdentity(dsl);
         vk_ds_layouts.push_back(reinterpret_cast<VkDescriptorSetLayout>(dsl_identity.m_handle));
     }
 
@@ -297,16 +297,16 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     }
 }
 
-void VulkanManager::BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs)
+void VulkanManager::BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, const std::vector<DescriptorSetWeakReferenceObject> &i_dss)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb_wref);
+    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
     VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     VkPipeline pipe_handle = reinterpret_cast<VkPipeline>(i_identity.m_handle);
     VkPipelineLayout pipe_layout_handle = reinterpret_cast<VkPipelineLayout>(i_identity.m_pipeline_layout_handle);
     VkPipelineBindPoint pipe_bp = PipelineBindPoint_Vulkan::Convert(i_identity.m_params.m_pipe_bind_point);
     std::vector<VkDescriptorSet> ds_handles;
-    for (const DescriptorSetWeakReferenceObject &ds_wref : i_ds_wrefs) {
-        const DescriptorSetIdentity &ds_identity = GetIdentity(ds_wref);
+    for (const DescriptorSetWeakReferenceObject &ds : i_dss) {
+        const DescriptorSetIdentity &ds_identity = GetIdentity(ds);
         ds_handles.push_back(reinterpret_cast<VkDescriptorSet>(ds_identity.m_handle));
     }
     BindVkPipeline(cb_handle, pipe_handle, pipe_bp);

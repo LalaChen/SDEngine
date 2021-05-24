@@ -56,9 +56,9 @@ public:
     virtual ~UniformImages();
 public:
 
-    void Initialize(const UniformImagesDescriptorWeakReferenceObject &i_uid_wref);
+    void Initialize(const UniformImagesDescriptorWeakReferenceObject &i_uid);
 
-    bool SetTexture(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx);
+    bool SetTexture(const TextureWeakReferenceObject &i_tex, uint32_t i_idx);
 public:
 
     UniformBindingTypeEnum GetType() const override;
@@ -71,7 +71,7 @@ public:
     const std::vector<TextureWeakReferenceObject>& GetTextures() const;
 
 protected:
-    std::vector<TextureWeakReferenceObject> m_tex_wrefs;
+    std::vector<TextureWeakReferenceObject> m_texs;
 };
 
 inline UniformBindingTypeEnum UniformImages::GetType() const
@@ -81,12 +81,12 @@ inline UniformBindingTypeEnum UniformImages::GetType() const
 
 inline Size_ui32 UniformImages::GetAmount() const
 {
-    return static_cast<Size_ui32>(m_tex_wrefs.size());
+    return static_cast<Size_ui32>(m_texs.size());
 }
 
 inline const std::vector<TextureWeakReferenceObject>& UniformImages::GetTextures() const
 {
-    return m_tex_wrefs;
+    return m_texs;
 }
 
 inline void UniformImages::Update()

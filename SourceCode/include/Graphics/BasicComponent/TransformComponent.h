@@ -76,8 +76,8 @@ public:
     const Transform& GetWorldTransform() const;
     const Transform& GetLocalTransform() const;
 public:
-    void AddChild(const TransformComponentWeakReferenceObject &i_target_wref);
-    bool RemoveChild(const TransformComponentWeakReferenceObject &i_child_wref);
+    void AddChild(const TransformComponentWeakReferenceObject &i_target);
+    bool RemoveChild(const TransformComponentWeakReferenceObject &i_child);
 protected:
     void SetParent(const TransformComponentWeakReferenceObject &i_parent);
     void UpdateChildrenWorldTransform();

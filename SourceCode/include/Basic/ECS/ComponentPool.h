@@ -49,7 +49,7 @@ public:
     virtual ~ComponentPool();
 public:
     template<typename T, typename... TArgs> ComponentBaseWeakReferenceObject NewComponent(TArgs&&... i_args);
-    bool DeleteComponent(const ComponentBaseWeakReferenceObject &i_del_comp_wref);
+    bool DeleteComponent(const ComponentBaseWeakReferenceObject &i_del_comp);
 protected:
     std::list<ComponentBaseStrongReferenceObject> m_components;
 };
@@ -57,9 +57,9 @@ protected:
 template<typename T, typename... TArgs>
 inline ComponentBaseWeakReferenceObject ComponentPool::NewComponent(TArgs &&...i_args)
 {
-    ComponentBaseStrongReferenceObject comp_sref = new T(std::forward<TArgs>(i_args)...);
-    m_components.push_back(comp_sref);
-    return comp_sref;
+    ComponentBaseStrongReferenceObject comp = new T(std::forward<TArgs>(i_args)...);
+    m_components.push_back(comp);
+    return comp;
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

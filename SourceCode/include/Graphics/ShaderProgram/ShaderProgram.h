@@ -55,8 +55,8 @@ public:
     RenderStepInfo() {}
     ~RenderStepInfo() {}
 public:
-    GraphicsPipelineStrongReferenceObject m_pipe_sref;
-    std::vector<DescriptorSetLayoutWeakReferenceObject> m_dsl_wrefs; //order is set number.
+    GraphicsPipelineStrongReferenceObject m_pipe;
+    std::vector<DescriptorSetLayoutWeakReferenceObject> m_dsls; //order is set number.
 };
 
 class SDENGINE_CLASS RenderSubPassPipelineInfo
@@ -83,7 +83,7 @@ public:
 public:
     uint32_t GetPipelineAmount() const;
 public:
-    RenderPassWeakReferenceObject m_rp_wref;
+    RenderPassWeakReferenceObject m_rp;
     std::vector<RenderSubPassPipelineInfo> m_sp_pipe_infos;
 };
 
@@ -114,27 +114,27 @@ public:
     //Input prepared data.
     void RegisterShaderProgramStructure(
         const RenderPassInfos &i_rp_infos,
-        const CommonDescriptorSetLayouts &i_common_dsl_wrefs, /*Uniform variable datas won't be cached at material.*/
-        const DescriptorSetLayouts &i_material_dsl_srefs); /*Uniform variable datas will be cached at material.*/
+        const CommonDescriptorSetLayouts &i_common_dsls, /*Uniform variable datas won't be cached at material.*/
+        const DescriptorSetLayouts &i_material_dsls); /*Uniform variable datas will be cached at material.*/
 public:
     void GetDescriptorCount(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
-    uint32_t GetStepAmount(const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id) const;
+    uint32_t GetStepAmount(const RenderPassWeakReferenceObject &i_rp, uint32_t i_sp_id) const;
     uint32_t GetPipelineAmount() const;
 public: //Material Use.
     void AllocateEssentialObjects(
-        std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs,
-        std::vector<DescriptorSetWeakReferenceObject> &io_desc_set_wrefs,
-        DescriptorPoolWeakReferenceObject &io_pool_wref);
+        std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uvs,
+        std::vector<DescriptorSetWeakReferenceObject> &io_desc_sets,
+        DescriptorPoolWeakReferenceObject &io_pool);
 public:
     void UseProgramWithTargetDescriptorSet(
-        const CommandBufferWeakReferenceObject &i_cb_wref,
-        const RenderPassWeakReferenceObject &i_rp_wref,
+        const CommandBufferWeakReferenceObject &i_cb,
+        const RenderPassWeakReferenceObject &i_rp,
         uint32_t i_sp_idx,
         uint32_t i_step_idx,
-        const std::vector<DescriptorSetWeakReferenceObject> &i_desc_set_wrefs);
+        const std::vector<DescriptorSetWeakReferenceObject> &i_desc_sets);
 protected:
-    CommonDescriptorSetLayouts m_common_dsl_wrefs;
-    DescriptorSetLayouts m_material_dsl_srefs;
+    CommonDescriptorSetLayouts m_common_dsls;
+    DescriptorSetLayouts m_material_dsls;
     RenderPassInfos m_rp_infos;
     uint32_t m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE]; //only calculate non-common number.
     uint32_t m_pipe_amount;

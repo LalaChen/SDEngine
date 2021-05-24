@@ -66,40 +66,40 @@ public:
      */
     ~DescriptorSet();
 public:
-    /*! \fn void Initialize(const WeakReferenceObject<Object> &i_pool_wref, const DescriptorSetLayoutWeakReferenceObject &i_layout_wref);
-     *  \param [in] i_pool_wref Pool owner this descriptor set.
-     *  \param [in] i_layout_wref Layout of this descriptor set.
+    /*! \fn void Initialize(const WeakReferenceObject<Object> &i_pool, const DescriptorSetLayoutWeakReferenceObject &i_layout);
+     *  \param [in] i_pool Pool owner this descriptor set.
+     *  \param [in] i_layout Layout of this descriptor set.
      *  \brief Destructor of DescriptorSet.
      */
-    void Initialize(const WeakReferenceObject<Object> &i_pool_wref, const DescriptorSetLayoutWeakReferenceObject &i_layout_wref);
+    void Initialize(const WeakReferenceObject<Object> &i_pool, const DescriptorSetLayoutWeakReferenceObject &i_layout);
 
     /*! \fn void WriteDescriptor();
      *  \brief Bind uniform variables of DescriptorSet. Please call this after data setted into variables.
      */
     void WriteDescriptor();
 
-    /*! \fn void GetAllocatedUniformVariables(std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs) const;
-     *  \param [inout] io_uv_wrefs Container for storing link variables.
+    /*! \fn void GetAllocatedUniformVariables(std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uvs) const;
+     *  \param [inout] io_uvs Container for storing link variables.
      *  \brief Get weak reference links.
      */
-    void GetAllocatedUniformVariables(std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uv_wrefs) const;
+    void GetAllocatedUniformVariables(std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uvs) const;
 
-    bool IsThisLayout(const DescriptorSetLayoutWeakReferenceObject &i_layout_wref) const;
+    bool IsThisLayout(const DescriptorSetLayoutWeakReferenceObject &i_layout) const;
 protected:
-    /*! \var WeakReferenceObject<Object> m_pool_wref;
+    /*! \var WeakReferenceObject<Object> m_pool;
      *  \brief pool weak reference of this descriptor set.
      */
-    WeakReferenceObject<Object> m_pool_wref;
+    WeakReferenceObject<Object> m_pool;
 
-    /*! \var std::vector<UniformVariableStrongReferenceObject> m_uv_srefs;
+    /*! \var std::vector<UniformVariableStrongReferenceObject> m_uvs;
      *  \brief uniform objects of this descriptor set.
      */
-    std::vector<UniformVariableStrongReferenceObject> m_uv_srefs;
+    std::vector<UniformVariableStrongReferenceObject> m_uvs;
 
-    /*! \var DescriptorSetLayoutWeakReferenceObject m_layout_wref;
+    /*! \var DescriptorSetLayoutWeakReferenceObject m_layout;
      *  \brief Layout weak reference of this descriptor set.
      */
-    DescriptorSetLayoutWeakReferenceObject m_layout_wref;
+    DescriptorSetLayoutWeakReferenceObject m_layout;
 
     /*! \var DescriptorSetIdentity m_identity;
      *  \brief Identity of descriptor set.
@@ -107,9 +107,9 @@ protected:
     DescriptorSetIdentity m_identity;
 };
 
-inline bool DescriptorSet::IsThisLayout(const DescriptorSetLayoutWeakReferenceObject &i_layout_wref) const
+inline bool DescriptorSet::IsThisLayout(const DescriptorSetLayoutWeakReferenceObject &i_layout) const
 {
-    return (m_layout_wref == i_layout_wref);
+    return (m_layout == i_layout);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

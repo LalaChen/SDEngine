@@ -82,18 +82,18 @@ public:
      */
     void Initialize(const ShaderModules &i_shaders);
 public:
-    /*! \fn void SetGraphicsPipelineParams(const GraphicsPipelineParam &i_params, const RenderPassWeakReferenceObject &i_rp_wref, uint32_t i_sp_id);
+    /*! \fn void SetGraphicsPipelineParams(const GraphicsPipelineParam &i_params, const RenderPassWeakReferenceObject &i_rp, uint32_t i_sp_id);
      *  \param [in] i_params Description about this pipeline.
-     *  \param [in] i_rp_wref Weak reference of render pass which is the reference of this pipeline.
-     *  \param [in] i_dsl_wrefs Weak reference of Descriptors Set Layout for recording uniform variables using in this pipeline.
+     *  \param [in] i_rp Weak reference of render pass which is the reference of this pipeline.
+     *  \param [in] i_dsls Weak reference of Descriptors Set Layout for recording uniform variables using in this pipeline.
      *  \param [in] i_sp_id Target step that we can use this shader.
      *  \brief Set parameters for creating graphics pipeline and allocate uniform variable descriptor 
      *         weak references for let use registing.
      */
     void SetGraphicsPipelineParams(
         const GraphicsPipelineParam &i_params,
-        const RenderPassWeakReferenceObject &i_rp_wref,
-        const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs,
+        const RenderPassWeakReferenceObject &i_rp,
+        const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsls,
         uint32_t i_sp_id);
 
 public:
@@ -117,27 +117,27 @@ public:
      */
     uint32_t GetSubpassID() const;
 public:
-    /*! \fn void UseAndBindDescriptorSets(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs) const;
-     *  \param [in] i_cb_wref Target command buffer.
+    /*! \fn void UseAndBindDescriptorSets(const CommandBufferWeakReferenceObject &i_cb, const std::vector<DescriptorSetWeakReferenceObject> &i_dss) const;
+     *  \param [in] i_cb Target command buffer.
      *  \brief return pipeline parameters.
      */
-    void UseAndBindDescriptorSets(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs) const;
+    void UseAndBindDescriptorSets(const CommandBufferWeakReferenceObject &i_cb, const std::vector<DescriptorSetWeakReferenceObject> &i_dss) const;
 protected:
     /*! \var GraphicsPipelineIdentity m_identity;
      *  \brief Record basic identity
      */
     GraphicsPipelineIdentity m_identity;
     
-    /*! \var RenderPassWeakReferenceObject m_target_rp_wref;
+    /*! \var RenderPassWeakReferenceObject m_target_rp;
      *  \brief The render pass we want to use this in pipeline.
      */
-    RenderPassWeakReferenceObject m_target_rp_wref;
+    RenderPassWeakReferenceObject m_target_rp;
 
-    /*! \var std::vector<DescriptorSetLayoutWeakReferenceObject> m_dsl_wrefs;
+    /*! \var std::vector<DescriptorSetLayoutWeakReferenceObject> m_dsls;
      *  \brief The descriptor set weak references. The real dsl are kept at ShaderProgram and other object.
      *         The order in array is the order of set.
      */
-    std::vector<DescriptorSetLayoutWeakReferenceObject> m_dsl_wrefs;
+    std::vector<DescriptorSetLayoutWeakReferenceObject> m_dsls;
 
     /*! \var bool m_initialized;
      *  \brief Return this pipeline is initialized.

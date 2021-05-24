@@ -80,7 +80,7 @@ void OpenGL4Manager::RenderEnd()
 }
 
 
-void OpenGL4Manager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex_wref)
+void OpenGL4Manager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //render quad to screen.

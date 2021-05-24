@@ -59,18 +59,18 @@ public:
      */
     ~BasicTextures();
 public:
-    /*! \fn void RegisterTexture(MaterialTextureTypeEnum i_tex_type, const TextureWeakReferenceObject &i_tex_sref);
+    /*! \fn void RegisterTexture(MaterialTextureTypeEnum i_tex_type, const TextureWeakReferenceObject &i_tex);
      *  \param [in] i_tex_type Texture type.
-     *  \param [in] i_tex_sref target reference.
+     *  \param [in] i_tex target reference.
      *  \brief register texture to this BasicTextures.
      */
-    void RegisterTexture(MaterialTextureTypeEnum i_tex_type, TextureWeakReferenceObject &i_tex_sref);
+    void RegisterTexture(MaterialTextureTypeEnum i_tex_type, TextureWeakReferenceObject &i_tex);
 protected:
-    /*! \var TextureWeakReferenceObject m_tex_wrefs[MaterialTextureType_MAX_DEFINE_VALUE];
+    /*! \var TextureWeakReferenceObject m_texs[MaterialTextureType_MAX_DEFINE_VALUE];
      *  \brief Weak references of texture datas. We should keep texture strong reference object at
      *         other objects(like Asset).
      */
-    TextureWeakReferenceObject m_tex_wrefs[MaterialTextureType_MAX_DEFINE_VALUE];
+    TextureWeakReferenceObject m_texs[MaterialTextureType_MAX_DEFINE_VALUE];
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

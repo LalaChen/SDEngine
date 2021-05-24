@@ -145,9 +145,9 @@ void AssimpModelLoader::ParseMaterialsAndTheirTextures(const aiScene *i_scene, c
                     FilePathString tex_full_fn = i_model_dir + std::string("\\") + tex_fn;
                     TextureMap::iterator tex_iter = io_model.m_textures.find(tex_fn);
                     if (tex_iter == io_model.m_textures.end()) {
-                        BitmapStrongReferenceObject tex_bitmap_sref = ImageLoader::GetRef().ReadBitmap(tex_full_fn);
-                        if (tex_bitmap_sref.IsNull() == false) {
-                            io_model.m_textures[tex_fn] = tex_bitmap_sref;
+                        BitmapStrongReferenceObject tex_bitmap = ImageLoader::GetRef().ReadBitmap(tex_full_fn);
+                        if (tex_bitmap.IsNull() == false) {
+                            io_model.m_textures[tex_fn] = tex_bitmap;
                         }
                         else {
                             SDLOGE("texture [%s] isn't exist!!!", tex_full_fn.c_str());

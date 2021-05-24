@@ -51,9 +51,9 @@ private:
     void ImportAssimpModel(ModelData &io_model);
     void CreateShaderProgram();
 protected:
-    TextureStrongReferenceObject m_color_buffer_sref;
-    TextureStrongReferenceObject m_depth_buffer_sref;
-    RenderFlowStrongReferenceObject m_render_flow_sref;
+    TextureStrongReferenceObject m_color_buffer;
+    TextureStrongReferenceObject m_depth_buffer;
+    RenderFlowStrongReferenceObject m_render_flow;
 protected:
     //prepare for work thread or camera.
     VkCommandPool m_VK_cmd_pool;

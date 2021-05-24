@@ -18,27 +18,27 @@ ApplicationManipulater::~ApplicationManipulater()
 
 void ApplicationManipulater::Initalize()
 {
-    ApplicationManipulaterWeakReferenceObject this_wref = GetThisWeakPtrByType<ApplicationManipulater>();
-    FunctionSlotBaseStrongReferenceObject func_slot_sref =
+    ApplicationManipulaterWeakReferenceObject this_obj = GetThisWeakPtrByType<ApplicationManipulater>();
+    FunctionSlotBaseStrongReferenceObject func_slot =
         new MemberFunctionSlot<ApplicationManipulater>(
             "ApplicationManipulater::OnReceiveKeyStateChanged",
-            this_wref,
+            this_obj,
             &ApplicationManipulater::OnReceiveKeyStateChanged);
 
-    Application::GetRef().RegisterSlotFunctionIntoKeyEvent(func_slot_sref);
+    Application::GetRef().RegisterSlotFunctionIntoKeyEvent(func_slot);
 }
 
 void ApplicationManipulater::Release()
 {
-    ApplicationManipulaterWeakReferenceObject this_wref = GetThisWeakPtrByType<ApplicationManipulater>();
+    ApplicationManipulaterWeakReferenceObject this_obj = GetThisWeakPtrByType<ApplicationManipulater>();
 
-    FunctionSlotBaseStrongReferenceObject func_slot_sref =
+    FunctionSlotBaseStrongReferenceObject func_slot =
         new MemberFunctionSlot<ApplicationManipulater>(
             "ApplicationManipulater::OnReceiveKeyStateChanged",
-            this_wref,
+            this_obj,
             &ApplicationManipulater::OnReceiveKeyStateChanged);
 
-    Application::GetRef().UnregisterSlotFunctionFromKeyEvent(func_slot_sref);
+    Application::GetRef().UnregisterSlotFunctionFromKeyEvent(func_slot);
 }
 
 bool ApplicationManipulater::OnReceiveKeyStateChanged(const EventArg &i_arg)

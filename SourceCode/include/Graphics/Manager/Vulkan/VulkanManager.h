@@ -85,24 +85,24 @@ public:
     void PrintSystemInformation() override;
 //----------- Descriptor Set and Pool Function.
 public:
-    void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvd_wrefs) override;
+    void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvds) override;
     void DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity) override;
     void CreateDescriptorPool(DescriptorPoolIdentity &io_identity) override;
     void DestroyDescriptorPool(DescriptorPoolIdentity &io_identity) override;
-    void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref, const DescriptorSetLayoutWeakReferenceObject &i_layout_wref) override;
-    void WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uv_wrefs) override;
-    void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool_wref) override;
+    void AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool, const DescriptorSetLayoutWeakReferenceObject &i_layout) override;
+    void WriteUniformVariablesToDescriptorSet(const DescriptorSetIdentity &i_identity, const std::vector<UniformVariableWeakReferenceObject> &i_uvs) override;
+    void FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool) override;
 //----------- Command Buffer and Pool Function
 public:
     void CreateCommandPool(CommandPoolIdentity &io_identity) override;
     void DestroyCommandPool(CommandPoolIdentity &io_identity) override;
-    void AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) override;
+    void AllocateCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool) override;
     void BeginCommandBuffer(const CommandBufferIdentity &i_identity, const CommandBufferInheritanceInfo &i_inheritance_info) override;
     void EndCommandBuffer(const CommandBufferIdentity &i_identity) override;
-    void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool_wref) override;
-    void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cb_wrefs) override;
-    void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb_wref) override;
-    void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb_wref, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cb_wrefs) override;
+    void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool) override;
+    void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cbs) override;
+    void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb) override;
+    void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cbs) override;
 public:
 //----------- Vertex Buffer Interface Function ------------
     /*
@@ -125,44 +125,44 @@ public:
 public:
 //----------- Uniform Buffer Interface Function ------------
     void CreateUniformBuffer(UniformBufferIdentity &io_identity) override;
-    void MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref, VoidPtr &io_buffer_handle) override;
-    void UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub_wref) override;
+    void MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub, VoidPtr &io_buffer_handle) override;
+    void UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub) override;
     void DeleteUnifromBuffer(UniformBufferIdentity &io_identity) override;
 public:
     void CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;
     void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) override;
     void DeleteTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;
 public:
-    void BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset) override;
-    void BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset) override;
+    void BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, uint32_t i_binding_id, Size_ui64 i_offset) override;
+    void BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, Size_ui64 i_offset) override;
 public:
     void CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content) override;
     void DeleteShaderModule(ShaderModuleIdentity &io_identity) override;
 public:
-    void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsl_wrefs) override;
-    void BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<DescriptorSetWeakReferenceObject> &i_ds_wrefs) override;
+    void CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsls) override;
+    void BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, const std::vector<DescriptorSetWeakReferenceObject> &i_dss) override;
     void DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity) override;
 public:
     void CreateRenderPass(RenderPassIdentity &io_identity) override;
-    void BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, const RenderPassWeakReferenceObject &i_rp_wref, const ImageOffset &i_start_pos, const ImageSize &i_render_size) override;
-    void GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref, const FrameBufferWeakReferenceObject &i_fb_wref, uint32_t i_sp_id) override;
-    void EndRenderPass(const CommandBufferWeakReferenceObject &i_cb_wref) override;
+    void BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb, const FrameBufferWeakReferenceObject &i_fb, const RenderPassWeakReferenceObject &i_rp, const ImageOffset &i_start_pos, const ImageSize &i_render_size) override;
+    void GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cb, const FrameBufferWeakReferenceObject &i_fb, uint32_t i_sp_id) override;
+    void EndRenderPass(const CommandBufferWeakReferenceObject &i_cb) override;
     void DestroyRenderPass(RenderPassIdentity &io_identity) override;
 public:
-    void CreateFrameBuffer(FrameBufferIdentity &io_identity, const RenderPassWeakReferenceObject &i_rp_wref, const std::vector<TextureWeakReferenceObject> &i_buf_wrefs) override;
+    void CreateFrameBuffer(FrameBufferIdentity &io_identity, const RenderPassWeakReferenceObject &i_rp, const std::vector<TextureWeakReferenceObject> &i_bufs) override;
     void CreateFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
     void DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identity) override;
     void DestroyFrameBuffer(FrameBufferIdentity &io_identity) override;
 public:
-    void SetViewport(const CommandBufferWeakReferenceObject &i_cb_wref, const Viewport &i_vp) override;
-    void SetViewports(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<Viewport> &i_vps) override;
-    void SetScissor(const CommandBufferWeakReferenceObject &i_cb_wref, const ScissorRegion &i_region) override;
-    void SetScissors(const CommandBufferWeakReferenceObject &i_cb_wref, const std::vector<ScissorRegion> &i_regions) override;
-    void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb_wref, const IndexBufferWeakReferenceObject &i_ib_wref, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) override;
+    void SetViewport(const CommandBufferWeakReferenceObject &i_cb, const Viewport &i_vp) override;
+    void SetViewports(const CommandBufferWeakReferenceObject &i_cb, const std::vector<Viewport> &i_vps) override;
+    void SetScissor(const CommandBufferWeakReferenceObject &i_cb, const ScissorRegion &i_region) override;
+    void SetScissors(const CommandBufferWeakReferenceObject &i_cb, const std::vector<ScissorRegion> &i_regions) override;
+    void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb, const IndexBufferWeakReferenceObject &i_ib, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) override;
 public:
     void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
 public:
-    void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex_wref) override;
+    void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex) override;
 protected:
 //------- Vulkan descriptor set and pool private Function ------
     VkResult CreateVkDescriptorSetLayout(

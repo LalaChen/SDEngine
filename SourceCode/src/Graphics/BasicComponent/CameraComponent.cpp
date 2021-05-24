@@ -101,12 +101,12 @@ void CameraComponent::RecordCommand(
     const std::list<LightComponentWeakReferenceObject> &i_light_comps,
     const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_comps)
 {
-    GraphicsSystemWeakReferenceObject gs_wref = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
-    std::list<LightComponentWeakReferenceObject>::const_iterator light_wref_iter;
-    std::list<MeshRenderComponentWeakReferenceObject>::const_iterator mr_wref_iter;
+    GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
+    std::list<LightComponentWeakReferenceObject>::const_iterator light_iter;
+    std::list<MeshRenderComponentWeakReferenceObject>::const_iterator mr_iter;
 
-    const std::vector<SecondaryCommandPoolThreadStrongReferenceObject> &scp_threads = SD_WREF(gs_wref).GetSecondaryCommandPool();
-    std::list<CommandBufferWeakReferenceObject> secondary_cb_wrefs;
+    const std::vector<SecondaryCommandPoolThreadStrongReferenceObject> &scp_threads = SD_WREF(gs).GetSecondaryCommandPool();
+    std::list<CommandBufferWeakReferenceObject> secondary_cbs;
     Viewport vp;
     vp.m_x = 0.0f; vp.m_y = static_cast<float>(m_screen_size.GetHeight());
     vp.m_width = static_cast<float>(m_screen_size.GetWidth());
@@ -122,7 +122,7 @@ void CameraComponent::RecordCommand(
     if (m_workspace_type == WorkspaceType_Forward) {
         SD_SREF(m_render_flow).BeginRenderFlow(i_cb);
         CommandBufferInheritanceInfo cb_inherit_info = SD_SREF(m_render_flow).GetCurrentInheritanceInfo();
-        RenderPassWeakReferenceObject current_rp = cb_inherit_info.m_rp_wref;
+        RenderPassWeakReferenceObject current_rp = cb_inherit_info.m_rp;
 
         GraphicsManager::GetRef().SetViewport(i_cb, vp);
         GraphicsManager::GetRef().SetScissor(i_cb, sr);
@@ -132,13 +132,13 @@ void CameraComponent::RecordCommand(
             SD_SREF(scp_threads[tID]).StartRecording(cb_inherit_info, vp, sr);
         }
 
-        light_wref_iter = i_light_comps.begin();
+        light_iter = i_light_comps.begin();
         tID = 0;
-        for (mr_wref_iter = i_mesh_render_comps.begin(); mr_wref_iter != i_mesh_render_comps.end(); ++mr_wref_iter) {
-            DescriptorSetWeakReferenceObject light_ds_wref = SD_WREF((*light_wref_iter)).GetDescriptorSet();
-            MeshRenderComponentWeakReferenceObject mr_wref = (*mr_wref_iter);
-            std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, current_rp, light_ds_wref, mr_wref](const CommandBufferWeakReferenceObject &i_cb_wref) {
-                SD_WREF(mr_wref).RenderMesh(current_rp, i_cb_wref, m_ds, light_ds_wref, 0);
+        for (mr_iter = i_mesh_render_comps.begin(); mr_iter != i_mesh_render_comps.end(); ++mr_iter) {
+            DescriptorSetWeakReferenceObject light_ds = SD_WREF((*light_iter)).GetDescriptorSet();
+            MeshRenderComponentWeakReferenceObject mr = (*mr_iter);
+            std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, current_rp, light_ds, mr](const CommandBufferWeakReferenceObject &i_cb) {
+                SD_WREF(mr).RenderMesh(current_rp, i_cb, m_ds, light_ds, 0);
             };
 
             SD_SREF(scp_threads[tID]).AddTask(task_func);
@@ -146,10 +146,10 @@ void CameraComponent::RecordCommand(
         }
 
         for (tID = 0; tID < scp_threads.size(); ++tID) {
-            SD_SREF(scp_threads[tID]).WaitAndStopRecording(secondary_cb_wrefs);
+            SD_SREF(scp_threads[tID]).WaitAndStopRecording(secondary_cbs);
         }
 
-        GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(i_cb, secondary_cb_wrefs);
+        GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(i_cb, secondary_cbs);
         SD_SREF(m_render_flow).EndRenderFlow(i_cb);
     }
     else if (m_workspace_type == WorkspaceType_Deferred) {
@@ -187,9 +187,9 @@ void CameraComponent::InitializeDescriptorSetAndPool()
 
 void CameraComponent::InitializeWorkspaceForForwardPass()
 {
-    RenderPassWeakReferenceObject forward_rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
+    RenderPassWeakReferenceObject forward_rp = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
 
-    if (forward_rp_wref.IsNull() == false) {
+    if (forward_rp.IsNull() == false) {
         if (m_color_buffer.IsNull() == false) {
             m_color_buffer.Reset();
         }
@@ -211,7 +211,7 @@ void CameraComponent::InitializeWorkspaceForForwardPass()
         m_render_flow = new RenderFlow("RenderFlow", ImageOffset(0, 0, 0),
             ImageSize(m_screen_size.GetWidth(), m_screen_size.GetHeight(), 1));
 
-        SD_SREF(m_render_flow).RegisterRenderPass(forward_rp_wref);
+        SD_SREF(m_render_flow).RegisterRenderPass(forward_rp);
         SD_SREF(m_render_flow).AllocateFrameBuffer();
         SD_SREF(m_render_flow).RegisterBufferToFrameBuffer(m_color_buffer, 0, m_clear_color);
         SD_SREF(m_render_flow).RegisterBufferToFrameBuffer(m_depth_buffer, 1, m_clear_d_and_s);
@@ -224,9 +224,9 @@ void CameraComponent::InitializeWorkspaceForForwardPass()
 
 void CameraComponent::InitializeWorkspaceForDeferredPass()
 {
-    RenderPassWeakReferenceObject deferred_rp_wref = GraphicsManager::GetRef().GetRenderPass("DeferredPass");
+    RenderPassWeakReferenceObject deferred_rp = GraphicsManager::GetRef().GetRenderPass("DeferredPass");
 
-    if (deferred_rp_wref.IsNull() == false) {
+    if (deferred_rp.IsNull() == false) {
         Resolution current_res = GraphicsManager::GetRef().GetScreenResolution();
         if (m_color_buffer.IsNull() == false) {
             m_color_buffer.Reset();

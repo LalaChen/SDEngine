@@ -53,11 +53,11 @@ void OpenGL4Manager::UnmapVertexBuffer(const VertexBufferIdentity &i_identity)
 {
 }
 
-void OpenGL4Manager::BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, uint32_t i_binding_id, Size_ui64 i_offset)
+void OpenGL4Manager::BindVertexBuffer(const VertexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, uint32_t i_binding_id, Size_ui64 i_offset)
 {
 }
 
-void OpenGL4Manager::BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb_wref, Size_ui64 i_offset)
+void OpenGL4Manager::BindIndexBuffer(const IndexBufferIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, Size_ui64 i_offset)
 {
 }
 

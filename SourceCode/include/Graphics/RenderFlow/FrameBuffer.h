@@ -74,18 +74,18 @@ public:
      */
     void Initialize();
 public:
-    /*! \fn void RegisterTargetRenderPass(const RenderPassWeakReferenceObject &i_rp_wref);
-     *  \param [in] i_rp_wref Target RenderPass.
+    /*! \fn void RegisterTargetRenderPass(const RenderPassWeakReferenceObject &i_rp);
+     *  \param [in] i_rp Target RenderPass.
      *  \brief Register target RenderPass for specifying formats between buffers and this Framebuffer.
      */
-    void RegisterTargetRenderPass(const RenderPassWeakReferenceObject &i_rp_wref);
+    void RegisterTargetRenderPass(const RenderPassWeakReferenceObject &i_rp);
 
-    /* \fn void RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value);
-     * \param [in] i_tex_wref Texture we want to register its to image view.
+    /* \fn void RegisterBuffer(const TextureWeakReferenceObject &i_tex, uint32_t i_idx, const ClearValue &i_clear_value);
+     * \param [in] i_tex Texture we want to register its to image view.
      * \param [in] i_idx we want to register buffer for which image view.
      * \param [in] i_clear_value Clear value.
      */
-    void RegisterBuffer(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx, const ClearValue &i_clear_value);
+    void RegisterBuffer(const TextureWeakReferenceObject &i_tex, uint32_t i_idx, const ClearValue &i_clear_value);
 public:
     CompHandle GetHandle() const;
 protected:
@@ -95,20 +95,20 @@ protected:
      */
     FrameBufferIdentity m_identity;
 
-    /*! \var RenderPassWeakReferenceObject m_target_rp_wref;
+    /*! \var RenderPassWeakReferenceObject m_target_rp;
      *  \brief Identity about render pass.
      */
-    RenderPassWeakReferenceObject m_target_rp_wref;
+    RenderPassWeakReferenceObject m_target_rp;
 
     /*! \var std::vector<FrameBufferGroupIdentity> m_fbg_identities;
      *  \brief Indicate which framebuffer using for each step.
      */
     std::vector<FrameBufferGroupIdentity> m_fbg_identities;
 
-    /*! \var std::vector<TextureWeakReferenceObject> m_buf_wrefs;
+    /*! \var std::vector<TextureWeakReferenceObject> m_bufs;
      *  \brief Buffers for this render pass. The number should be equal to image view identity.
      */
-    std::vector<TextureWeakReferenceObject> m_buf_wrefs;
+    std::vector<TextureWeakReferenceObject> m_bufs;
 };
 
 inline CompHandle FrameBuffer::GetHandle() const

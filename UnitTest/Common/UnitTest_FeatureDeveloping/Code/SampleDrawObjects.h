@@ -37,13 +37,13 @@ protected:
     MeshStrongReferenceObject m_floor_mesh;
     MeshStrongReferenceObject m_cube_mesh;
 protected:
-    MaterialStrongReferenceObject m_axis_material_sref;
-    ShaderProgramStrongReferenceObject m_axis_shader_sref;
-    MaterialStrongReferenceObject m_basic_material_sref;
+    MaterialStrongReferenceObject m_axis_material;
+    ShaderProgramStrongReferenceObject m_axis_shader;
+    MaterialStrongReferenceObject m_basic_material;
 protected:
-    TextureStrongReferenceObject m_main_tex_sref;
+    TextureStrongReferenceObject m_main_tex;
 protected:
-    MotorComponentWeakReferenceObject m_camera_motor_wref;
+    MotorComponentWeakReferenceObject m_camera_motor;
 protected:
     float m_cube_interval;
     float m_cube_side_length;

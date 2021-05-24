@@ -172,17 +172,17 @@ public:
      */
     typedef bool(Type::*MemberSlotFunction)(const EventArg &i_src_arg);
 public:
-    /*! \fn explicit MemberFunctionSlot<Type>(const ObjectName &i_object_name, const WeakReferenceObject<T> &i_sref, MemberSlotFunction i_fp);
+    /*! \fn explicit MemberFunctionSlot<Type>(const ObjectName &i_object_name, const WeakReferenceObject<T> &i, MemberSlotFunction i_fp);
      *  \param [in] i_object_name name of this object.
-     *  \param [in] i_wref the weak reference of receiver.
+     *  \param [in] i the weak reference of receiver.
      *  \param [in] i_fp the receiving function.
      *  \tparam Type Target Type.
      *  \brief The constructor of MemberFunctionSlot Class.
      */
-    explicit MemberFunctionSlot<Type>(const ObjectName &i_object_name, const WeakReferenceObject<Type> &i_wref, MemberSlotFunction i_fp)
+    explicit MemberFunctionSlot<Type>(const ObjectName &i_object_name, const WeakReferenceObject<Type> &i_target_obj, MemberSlotFunction i_fp)
     : FunctionSlotBase(i_object_name)
     , m_fp(i_fp)
-    , m_wref(i_wref)
+    , m_target_obj(i_target_obj)
     {
     }
 
@@ -199,9 +199,9 @@ public:
      */
     bool NotifyFunction(const EventArg & i_src_arg) override
     {
-        if (m_wref.IsNull() == false) {
+        if (m_target_obj.IsNull() == false) {
             if (m_fp != nullptr) {
-                (m_wref.GetRef().*m_fp)(i_src_arg);
+                (SD_WREF(m_target_obj).*m_fp)(i_src_arg);
                 return true;
             }
             else {
@@ -214,17 +214,17 @@ public:
     }
     
     /*! \fn bool IsInvalid() override;
-     *  \brief Return the result about that this slot is invalid or not. Condition of invalid member slot is one of m_fp or m_sref is nullptr.
+     *  \brief Return the result about that this slot is invalid or not. Condition of invalid member slot is one of m_fp or m is nullptr.
      */
     bool IsInvalid() const override
     {
-        return (m_wref.IsNull() == true);
+        return (m_target_obj.IsNull() == true);
     }
 
     /*! \fn bool IsEqualTo(const Object &i_src) const;
      *  \param [in] i_src The another slot instance.
-     *  \brief Return the result about i_src.m_fp and i_src.m_wref \n
-     *         are equal to this.m_fp and this->m_wref or not.
+     *  \brief Return the result about i_src.m_fp and i_src.m \n
+     *         are equal to this.m_fp and this->m or not.
      */
     bool IsEqualTo(const Object &i_src) const override
     {
@@ -232,7 +232,7 @@ public:
         //Compare owner and function pointer of two current slot .
         if (src_ptr != nullptr) {
             //----- both same.
-            return (m_fp == src_ptr->m_fp && m_wref.GetPtr() == src_ptr->m_wref.GetPtr());
+            return (m_fp == src_ptr->m_fp && m_target_obj.GetPtr() == src_ptr->m_target_obj.GetPtr());
         }
         else {
             //error : Is different type.
@@ -240,15 +240,15 @@ public:
         }
     }
 public:
-    /*! \fn void RegisterFunction(const WeakReferenceObject<Type> &i_wref, MemberSlotFunction m_fp);
-     *  \param [in] i_wref The target slot object.
+    /*! \fn void RegisterFunction(const WeakReferenceObject<Type> &i, MemberSlotFunction m_fp);
+     *  \param [in] i_target_obj The target slot object.
      *  \param [in] i_fp The target slot function.
      *  \tparam Type Target Type.
      *  \brief  Register the i_fp and i_src as the slot object and function.
      */
-    void RegisterFunction(const WeakReferenceObject<Type> &i_wref, MemberSlotFunction i_fp)
+    void RegisterFunction(const WeakReferenceObject<Type> &i_target_obj, MemberSlotFunction i_fp)
     {
-        m_wref = i_wref;
+        m_target_obj = i_target_obj;
         m_fp = i_fp;
     }
 public:
@@ -257,10 +257,10 @@ public:
      */
     MemberSlotFunction m_fp;
 
-    /*! \var WeakReferenceObject<Type> m_wref;
+    /*! \var WeakReferenceObject<Type> m_target_obj;
      *  \brief Slot object. Default is null shared reference.
      */
-    WeakReferenceObject<Type> m_wref;
+    WeakReferenceObject<Type> m_target_obj;
 };
 
 _______________SD_END_BASIC_NAMESPACE________________

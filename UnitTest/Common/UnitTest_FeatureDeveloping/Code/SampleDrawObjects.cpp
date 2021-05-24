@@ -48,8 +48,8 @@ void SampleDrawObjects::InitializeScene()
 
 void SampleDrawObjects::UpdateScene()
 {
-    if (m_camera_motor_wref.IsNull() == false) {
-        SD_WREF(m_camera_motor_wref).Update();
+    if (m_camera_motor.IsNull() == false) {
+        SD_WREF(m_camera_motor).Update();
     }
 }
 
@@ -66,15 +66,15 @@ void SampleDrawObjects::LoadScene()
     //-------------------- AxesShaderWithTexture ---------------------------
     {
         //1.1 axis_shader.
-        m_axis_shader_sref = new ShaderProgram("Axis");
+        m_axis_shader = new ShaderProgram("Axis");
 
         ShaderModules shader_modules;
-        ShaderModuleStrongReferenceObject vert_shader_sref = new ShaderModule("AxesShaderVert");
-        vert_shader_sref.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/AxesShader.vert.spv", "main");
-        ShaderModuleStrongReferenceObject frag_shader_sref = new ShaderModule("AxesShaderFrag");
-        frag_shader_sref.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/AxesShader.frag.spv", "main");
-        shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader_sref;
-        shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader_sref;
+        ShaderModuleStrongReferenceObject vert_shader = new ShaderModule("AxesShaderVert");
+        vert_shader.GetRef().LoadBinaryShader(ShaderKind_VERTEX, "Shader/AxesShader.vert.spv", "main");
+        ShaderModuleStrongReferenceObject frag_shader = new ShaderModule("AxesShaderFrag");
+        frag_shader.GetRef().LoadBinaryShader(ShaderKind_FRAGMENT, "Shader/AxesShader.frag.spv", "main");
+        shader_modules.m_shaders[ShaderKind_VERTEX] = vert_shader;
+        shader_modules.m_shaders[ShaderKind_FRAGMENT] = frag_shader;
 
         //1.2 write pipeline parames.
         GraphicsPipelineParam params;
@@ -87,67 +87,67 @@ void SampleDrawObjects::LoadScene()
         GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
 
         //1.3 prepare descriptor set layouts.
-        std::vector<DescriptorSetLayoutWeakReferenceObject> dsl_wrefs;
-        std::vector<DescriptorSetLayoutWeakReferenceObject> basic_dsl_wrefs;
+        std::vector<DescriptorSetLayoutWeakReferenceObject> dsls;
+        std::vector<DescriptorSetLayoutWeakReferenceObject> basic_dsls;
         
-        dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Camera"));
-        dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("MeshRender"));
-        dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light"));
+        dsls.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Camera"));
+        dsls.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("MeshRender"));
+        dsls.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light"));
 
-        basic_dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Camera"));
-        basic_dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("MeshRender"));
-        basic_dsl_wrefs.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light"));
+        basic_dsls.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Camera"));
+        basic_dsls.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("MeshRender"));
+        basic_dsls.push_back(GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light"));
 
         //1.4 register uniform variable descriptor to pipeline.
-        RenderPassWeakReferenceObject rp_wref = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
-        GraphicsPipelineStrongReferenceObject pipeline_sref = new GraphicsPipeline("AxesShader_Forward");
-        pipeline_sref.GetRef().SetGraphicsPipelineParams(params, rp_wref, dsl_wrefs, 0);
-        pipeline_sref.GetRef().Initialize(shader_modules);
+        RenderPassWeakReferenceObject rp = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
+        GraphicsPipelineStrongReferenceObject pipeline = new GraphicsPipeline("AxesShader_Forward");
+        pipeline.GetRef().SetGraphicsPipelineParams(params, rp, dsls, 0);
+        pipeline.GetRef().Initialize(shader_modules);
 
         //1.5 prepare datas and then initalize shader structure.
-        std::vector<GraphicsPipelineStrongReferenceObject> pipe_srefs;
-        pipe_srefs.push_back(pipeline_sref);
+        std::vector<GraphicsPipelineStrongReferenceObject> pipes;
+        pipes.push_back(pipeline);
 
         ShaderProgram::RenderPassInfos rp_infos;
         RenderPassInfo forward_rp;
-        forward_rp.m_rp_wref = rp_wref;
+        forward_rp.m_rp = rp;
         RenderSubPassPipelineInfo rsp_info;
         RenderStepInfo rs_info;
-        rs_info.m_dsl_wrefs = dsl_wrefs;
-        rs_info.m_pipe_sref = pipeline_sref;
+        rs_info.m_dsls = dsls;
+        rs_info.m_pipe = pipeline;
         rsp_info.m_step_infos.push_back(rs_info);
         forward_rp.m_sp_pipe_infos.push_back(rsp_info); //use pipeline 0 at sp0.
         rp_infos.push_back(forward_rp);
-        m_axis_shader_sref.GetRef().RegisterShaderProgramStructure(
-            rp_infos, basic_dsl_wrefs, {}/*{ material_dsl_sref }*/);
+        m_axis_shader.GetRef().RegisterShaderProgramStructure(
+            rp_infos, basic_dsls, {}/*{ material_dsl }*/);
     }
     //2. add texture.
     {
-        m_main_tex_sref = new Texture("MainTexture");
-        m_main_tex_sref.GetRef().SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
-        m_main_tex_sref.GetRef().InitializeFromImageResource("Texture/Lenna.png");
+        m_main_tex = new Texture("MainTexture");
+        m_main_tex.GetRef().SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
+        m_main_tex.GetRef().InitializeFromImageResource("Texture/Lenna.png");
     }
 
     //3. allocate material.
     {
-        m_axis_material_sref = new Material("AxesMaterial");
-        m_axis_material_sref.GetRef().BindShaderProgram(m_axis_shader_sref);
+        m_axis_material = new Material("AxesMaterial");
+        m_axis_material.GetRef().BindShaderProgram(m_axis_shader);
         //Set data done. Link with shader program.(Write descirptor)
-        m_axis_material_sref.GetRef().LinkWithShaderProgram();
+        m_axis_material.GetRef().LinkWithShaderProgram();
         MaterialUniforms mat_ub; //use default color.
-        m_axis_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
-        m_axis_material_sref.GetRef().Update();
+        m_axis_material.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
+        m_axis_material.GetRef().Update();
     }
 
     {
-        m_basic_material_sref = new Material("BasicMaterial");
-        m_basic_material_sref.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("BasicShading"));
+        m_basic_material = new Material("BasicMaterial");
+        m_basic_material.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("BasicShading"));
         //Set data done. Link with shader program.(Write descirptor)
-        m_basic_material_sref.GetRef().LinkWithShaderProgram();
+        m_basic_material.GetRef().LinkWithShaderProgram();
         MaterialUniforms mat_ub; //use default color.
-        m_basic_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
-        m_basic_material_sref.GetRef().SetTexture("mainTexture", m_main_tex_sref);
-        m_basic_material_sref.GetRef().Update();
+        m_basic_material.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
+        m_basic_material.GetRef().SetTexture("mainTexture", m_main_tex);
+        m_basic_material.GetRef().Update();
     }
 #else
     {
@@ -155,28 +155,28 @@ void SampleDrawObjects::LoadScene()
         GraphicsManager::GetRef().RegisterShaderProgram("BasicShader", "ShaderProgram/BasicShading/BasicShading.json");
     }
     {
-        m_main_tex_sref = new Texture("MainTexture");
-        m_main_tex_sref.GetRef().SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
-        m_main_tex_sref.GetRef().InitializeFromImageResource("Texture/Lenna.png");
+        m_main_tex = new Texture("MainTexture");
+        m_main_tex.GetRef().SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
+        m_main_tex.GetRef().InitializeFromImageResource("Texture/Lenna.png");
     }
     {
-        m_axis_material_sref = new Material("AxesMaterial");
-        m_axis_material_sref.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("AxesShader"));
+        m_axis_material = new Material("AxesMaterial");
+        m_axis_material.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("AxesShader"));
         //Set data done. Link with shader program.(Write descirptor)
-        m_axis_material_sref.GetRef().LinkWithShaderProgram();
+        m_axis_material.GetRef().LinkWithShaderProgram();
         MaterialUniforms mat_ub; //use default color.
-        m_axis_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
-        m_axis_material_sref.GetRef().Update();
+        m_axis_material.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
+        m_axis_material.GetRef().Update();
     }
     {
-        m_basic_material_sref = new Material("BasicMaterial");
-        m_basic_material_sref.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("BasicShader"));
+        m_basic_material = new Material("BasicMaterial");
+        m_basic_material.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("BasicShader"));
         //Set data done. Link with shader program.(Write descirptor)
-        m_basic_material_sref.GetRef().LinkWithShaderProgram();
+        m_basic_material.GetRef().LinkWithShaderProgram();
         MaterialUniforms mat_ub; //use default color.
-        m_basic_material_sref.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
-        m_basic_material_sref.GetRef().SetTexture("textures", m_main_tex_sref, 0);
-        m_basic_material_sref.GetRef().Update();
+        m_basic_material.GetRef().SetDataToUniformBuffer("material", &mat_ub, sizeof(MaterialUniforms));
+        m_basic_material.GetRef().SetTexture("textures", m_main_tex, 0);
+        m_basic_material.GetRef().Update();
     }
 #endif
 
@@ -204,8 +204,8 @@ void SampleDrawObjects::LoadScene()
     SD_COMP_WREF(m_camera_node, CameraComponent).Initialize();
 
     ECSManager::GetRef().AddComponentForEntity<MotorComponent>(m_camera_node, "CameraMotor");
-    m_camera_motor_wref = SD_GET_COMP_WREF(m_camera_node, MotorComponent);
-    SD_WREF(m_camera_motor_wref).Initialize();
+    m_camera_motor = SD_GET_COMP_WREF(m_camera_node, MotorComponent);
+    SD_WREF(m_camera_motor).Initialize();
 
     //6. Add light.
     m_light_node = ECSManager::GetRef().CreateEntity("Light");
@@ -228,7 +228,7 @@ void SampleDrawObjects::LoadScene()
 
     SD_COMP_WREF(m_axis_node, TransformComponent).SetWorldPosition(Vector3f(0.0f, 0.0001f, 0.0f));
     SD_COMP_WREF(m_axis_node, MeshRenderComponent).Initialize();
-    SD_COMP_WREF(m_axis_node, MeshRenderComponent).AppendMesh(m_axis_mesh, m_axis_material_sref);
+    SD_COMP_WREF(m_axis_node, MeshRenderComponent).AppendMesh(m_axis_mesh, m_axis_material);
 
     //8. add floor.
     m_floor_mesh = BasicShapeCreator::GetRef().CreatePlane(
@@ -240,7 +240,7 @@ void SampleDrawObjects::LoadScene()
     SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_floor_node, TransformComponent));
 
     SD_COMP_WREF(m_floor_node, MeshRenderComponent).Initialize();
-    SD_COMP_WREF(m_floor_node, MeshRenderComponent).AppendMesh(m_floor_mesh, m_basic_material_sref);
+    SD_COMP_WREF(m_floor_node, MeshRenderComponent).AppendMesh(m_floor_mesh, m_basic_material);
 
     //8. add cubes.
     m_cube_mesh = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
@@ -259,7 +259,7 @@ void SampleDrawObjects::LoadScene()
                 SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(cube_node, TransformComponent));
 
                 SD_COMP_WREF(cube_node, MeshRenderComponent).Initialize();
-                SD_COMP_WREF(cube_node, MeshRenderComponent).AppendMesh(m_cube_mesh, m_basic_material_sref);
+                SD_COMP_WREF(cube_node, MeshRenderComponent).AppendMesh(m_cube_mesh, m_basic_material);
                 SD_COMP_WREF(cube_node, TransformComponent).SetWorldPosition(start_pos +
                     Vector3f((m_cube_side_length + m_cube_interval) * row,
                              (m_cube_side_length + m_cube_interval) * col,

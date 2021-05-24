@@ -45,9 +45,9 @@ Texture::~Texture()
 void Texture::InitializeFromImageResource(const FilePathString &i_filename, Size_ui32 i_mipmap_levels)
 {
     if (ImageLoader::IsNull() == false) {
-        BitmapStrongReferenceObject target_sref = ImageLoader::GetRef().ReadBitmap(i_filename);
-        if (target_sref.IsNull() == false) {
-            InitializeFromBitmap(target_sref, i_mipmap_levels);
+        BitmapStrongReferenceObject target = ImageLoader::GetRef().ReadBitmap(i_filename);
+        if (target.IsNull() == false) {
+            InitializeFromBitmap(target, i_mipmap_levels);
         }
         else {
             SDLOGW("We can't find texture(%s)", i_filename.c_str());
@@ -58,17 +58,17 @@ void Texture::InitializeFromImageResource(const FilePathString &i_filename, Size
     }
 }
 
-void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap_wref, Size_ui32 i_mipmap_level)
+void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap, Size_ui32 i_mipmap_level)
 {
-    if (i_bitmap_wref.IsNull() == false) {
+    if (i_bitmap.IsNull() == false) {
         if (m_tex_identity.m_image_handle == SD_NULL_HANDLE) {
             //1. collect necessary datas.
-            Size_ui32 img_w = i_bitmap_wref.GetRef().GetWidth();
-            Size_ui32 img_h = i_bitmap_wref.GetRef().GetHeight();
-            Size_ui32 img_n_of_c = i_bitmap_wref.GetRef().GetNumOfChannel();
-            Size_ui32 img_buf_size = static_cast<Size_ui32>(i_bitmap_wref.GetRef().GetBufferSize());
-            BitmapPixelValueType bitmap_p_type = i_bitmap_wref.GetRef().GetPixelValueType();
-            const VoidPtr img_ptr = reinterpret_cast<const VoidPtr>(i_bitmap_wref.GetRef().GetBitmap());
+            Size_ui32 img_w = i_bitmap.GetRef().GetWidth();
+            Size_ui32 img_h = i_bitmap.GetRef().GetHeight();
+            Size_ui32 img_n_of_c = i_bitmap.GetRef().GetNumOfChannel();
+            Size_ui32 img_buf_size = static_cast<Size_ui32>(i_bitmap.GetRef().GetBufferSize());
+            BitmapPixelValueType bitmap_p_type = i_bitmap.GetRef().GetPixelValueType();
+            const VoidPtr img_ptr = reinterpret_cast<const VoidPtr>(i_bitmap.GetRef().GetBitmap());
 
             //2. write down texture data.
             m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;

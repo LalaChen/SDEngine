@@ -37,24 +37,24 @@ UniformImages::~UniformImages()
 {
 }
 
-void UniformImages::Initialize(const UniformImagesDescriptorWeakReferenceObject &i_uid_wref)
+void UniformImages::Initialize(const UniformImagesDescriptorWeakReferenceObject &i_uid)
 {
-    m_tex_wrefs.resize(i_uid_wref.GetRef().GetNumber());
+    m_texs.resize(i_uid.GetRef().GetNumber());
 }
 
-bool UniformImages::SetTexture(const TextureWeakReferenceObject &i_tex_wref, uint32_t i_idx)
+bool UniformImages::SetTexture(const TextureWeakReferenceObject &i_tex, uint32_t i_idx)
 {
-    if (i_tex_wref.IsNull() == true) {
+    if (i_tex.IsNull() == true) {
         SDLOGW("Input null texture for UImages[%d].", i_idx);
         return false;
     }
 
-    if (i_idx < m_tex_wrefs.size()) {
-        m_tex_wrefs[i_idx] = i_tex_wref;
+    if (i_idx < m_texs.size()) {
+        m_texs[i_idx] = i_tex;
         return true;
     }
     else {
-        SDLOGW("Out of range. Idx(%d). Size(%u)", i_idx, static_cast<uint32_t>(m_tex_wrefs.size()));
+        SDLOGW("Out of range. Idx(%d). Size(%u)", i_idx, static_cast<uint32_t>(m_texs.size()));
         return false;
     }
 }
