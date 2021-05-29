@@ -33,40 +33,17 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "RenderFlow.h"
-#include "Transform.h"
-#include "Resolution.h"
-#include "LightComponent.h"
-#include "MeshRenderComponent.h"
-
-using SDE::Basic::ObjectName;
-using SDE::Basic::Object;
-
-using SDE::Basic::Component;
-using SDE::Basic::ComponentStrongReferenceObject;
-using SDE::Basic::ComponentWeakReferenceObject;
-
-using SDE::Math::Transform;
-using SDE::Math::Vector3f;
-using SDE::Math::Quaternion;
-using SDE::Math::Matrix4X4f;
+#include "CameraComponentBase.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CameraComponent);
 
-class SDENGINE_CLASS CameraComponent : public Component
+class SDENGINE_CLASS CameraComponent : public CameraComponentBase
 {
 public:
-    SD_COMPONENT_POOL_TYPE_DECLARATION(CameraComponent, CameraComponent);
-public:
-    enum WorkspaceType {
-        WorkspaceType_Forward = 0,
-        WorkspaceType_Deferred,
-        WorkspaceType_Other
-    };
+    SD_COMPONENT_POOL_TYPE_DECLARATION(CameraComponent, CameraComponentBase);
+
 public:
     explicit CameraComponent(const ObjectName &i_object_name);
     virtual ~CameraComponent();
@@ -77,14 +54,14 @@ public:
     TextureWeakReferenceObject GetColorBuffer() const;
     TextureWeakReferenceObject GetDepthBuffer() const;
 public:
-    bool OnGeometryChanged(const EventArg &i_arg);
+    bool OnGeometryChanged(const EventArg &i_arg) override;
 public:
-    virtual void Initialize();
-    virtual void Resize();
-    virtual void RecordCommand(
+    void Initialize() override;
+    void Resize() override;
+    void RecordCommand(
         const CommandBufferWeakReferenceObject &i_cb,
         const std::list<LightComponentWeakReferenceObject> &i_light_list,
-        const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list);
+        const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list) override;
 protected:
     void InitializeDescriptorSetAndPool();
     void InitializeWorkspaceForForwardPass();
@@ -92,7 +69,7 @@ protected:
 protected:
     virtual void ClearWorkspace();
 protected:
-    WorkspaceType m_workspace_type;
+    CameraWorkspaceType m_workspace_type;
     RenderFlowStrongReferenceObject m_render_flow;
     TextureStrongReferenceObject m_color_buffer;
     TextureStrongReferenceObject m_depth_buffer;
@@ -105,8 +82,9 @@ protected:
 protected:
     TransformComponentWeakReferenceObject m_geo_comp;
 protected:
+    bool m_initialized;
     bool m_follow_resolution;
-    Resolution m_screen_size;
+    Resolution m_buffer_size;
     ClearValue m_clear_color;
     ClearValue m_clear_d_and_s;
     Matrix4X4f m_proj_mat;
@@ -126,13 +104,7 @@ inline void CameraComponent::SetPerspective(float i_fov, float i_near, float i_f
     m_fov = i_fov;
     m_near = i_near;
     m_far = i_far;
-    m_proj_mat.perspective(m_fov, m_screen_size.GetRatio(), i_near, i_far);
-}
-
-inline void CameraComponent::SetCameraSize(const Resolution &i_screen_size)
-{
-    m_screen_size = i_screen_size;
-    m_follow_resolution = false;
+    m_proj_mat.perspective(m_fov, m_buffer_size.GetRatio(), i_near, i_far);
 }
 
 inline TextureWeakReferenceObject CameraComponent::GetColorBuffer() const

@@ -36,16 +36,17 @@ using SDE::Basic::MemberFunctionSlot;
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 CameraComponent::CameraComponent(const ObjectName &i_object_name)
-: Component(i_object_name)
-, m_workspace_type(WorkspaceType_Forward)
+: CameraComponentBase(i_object_name)
+, m_workspace_type(CameraWorkspaceType_Forward)
 , m_follow_resolution(true)
+, m_initialized(false)
 , m_clear_color{ 0.15f, 0.15f, 0.75f, 1.0f }
 , m_clear_d_and_s{ 1.0f, 1 }
 , m_fov(120.0f)
 , m_near(0.01f)
 , m_far(1000.0f)
 {
-    m_screen_size = GraphicsManager::GetRef().GetScreenResolution();
+    m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
 }
 
 CameraComponent::~CameraComponent()
@@ -57,10 +58,10 @@ void CameraComponent::Initialize()
 {
     InitializeDescriptorSetAndPool();
  
-    if (m_workspace_type == WorkspaceType_Forward) {
+    if (m_workspace_type == CameraWorkspaceType_Forward) {
         InitializeWorkspaceForForwardPass();
     }
-    else if (m_workspace_type == WorkspaceType_Deferred) {
+    else if (m_workspace_type == CameraWorkspaceType_Deferred) {
         InitializeWorkspaceForDeferredPass();
     }
 
@@ -82,18 +83,29 @@ void CameraComponent::Resize()
 
     if (m_follow_resolution == true) {
 
-        m_screen_size = GraphicsManager::GetRef().GetScreenResolution();
+        m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
 
-        if (m_workspace_type == WorkspaceType_Forward) {
+        if (m_workspace_type == CameraWorkspaceType_Forward) {
             InitializeWorkspaceForForwardPass();
         }
-        else if (m_workspace_type == WorkspaceType_Deferred) {
+        else if (m_workspace_type == CameraWorkspaceType_Deferred) {
             InitializeWorkspaceForDeferredPass();
         }
     }
 
     SetPerspective(m_fov, m_near, m_far);
     OnGeometryChanged(EventArg());
+
+    m_initialized = true;
+}
+
+void CameraComponent::SetCameraSize(const Resolution &i_size)
+{
+    m_buffer_size = i_size;
+    m_follow_resolution = false;
+    if (m_initialized == true) {
+        Resize();
+    }
 }
 
 void CameraComponent::RecordCommand(
@@ -108,18 +120,18 @@ void CameraComponent::RecordCommand(
     const std::vector<SecondaryCommandPoolThreadStrongReferenceObject> &scp_threads = SD_WREF(gs).GetSecondaryCommandPool();
     std::list<CommandBufferWeakReferenceObject> secondary_cbs;
     Viewport vp;
-    vp.m_x = 0.0f; vp.m_y = static_cast<float>(m_screen_size.GetHeight());
-    vp.m_width = static_cast<float>(m_screen_size.GetWidth());
-    vp.m_height = -1.0f * static_cast<float>(m_screen_size.GetHeight());
+    vp.m_x = 0.0f; vp.m_y = static_cast<float>(m_buffer_size.GetHeight());
+    vp.m_width = static_cast<float>(m_buffer_size.GetWidth());
+    vp.m_height = -1.0f * static_cast<float>(m_buffer_size.GetHeight());
     vp.m_min_depth = 0.0f;
     vp.m_max_depth = 1.0f;
 
     ScissorRegion sr;
     sr.m_x = 0.0f; sr.m_y = 0.0f;
     sr.m_width = vp.m_width;
-    sr.m_height = static_cast<float>(m_screen_size.GetHeight());
+    sr.m_height = static_cast<float>(m_buffer_size.GetHeight());
 
-    if (m_workspace_type == WorkspaceType_Forward) {
+    if (m_workspace_type == CameraWorkspaceType_Forward) {
         SD_SREF(m_render_flow).BeginRenderFlow(i_cb);
         CommandBufferInheritanceInfo cb_inherit_info = SD_SREF(m_render_flow).GetCurrentInheritanceInfo();
         RenderPassWeakReferenceObject current_rp = cb_inherit_info.m_rp;
@@ -152,7 +164,7 @@ void CameraComponent::RecordCommand(
         GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(i_cb, secondary_cbs);
         SD_SREF(m_render_flow).EndRenderFlow(i_cb);
     }
-    else if (m_workspace_type == WorkspaceType_Deferred) {
+    else if (m_workspace_type == CameraWorkspaceType_Deferred) {
 
     }
 }
@@ -195,7 +207,7 @@ void CameraComponent::InitializeWorkspaceForForwardPass()
         }
         m_color_buffer = new Texture("CameraColorBuffer");
         SD_SREF(m_color_buffer).Initialize2DColorOrDepthBuffer(
-            m_screen_size.GetWidth(), m_screen_size.GetHeight(),
+            m_buffer_size.GetWidth(), m_buffer_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
             ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
 
@@ -204,12 +216,12 @@ void CameraComponent::InitializeWorkspaceForForwardPass()
         }
         m_depth_buffer = new Texture("CameraDepthBuffer");
         SD_SREF(m_depth_buffer).Initialize2DColorOrDepthBuffer(
-            m_screen_size.GetWidth(), m_screen_size.GetHeight(),
+            m_buffer_size.GetWidth(), m_buffer_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
             ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
         m_render_flow = new RenderFlow("RenderFlow", ImageOffset(0, 0, 0),
-            ImageSize(m_screen_size.GetWidth(), m_screen_size.GetHeight(), 1));
+            ImageSize(m_buffer_size.GetWidth(), m_buffer_size.GetHeight(), 1));
 
         SD_SREF(m_render_flow).RegisterRenderPass(forward_rp);
         SD_SREF(m_render_flow).AllocateFrameBuffer();

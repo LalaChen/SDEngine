@@ -23,10 +23,11 @@ SOFTWARE.
 
 */
 
-/*! \file      LightComponent.h
- *  \brief     The class LightComponent is used to keep light data.
+/*! \file      CameraComponentBase.h
+ *  \brief     The class CameraComponentBase is the interface.
+ *             We will register it to Entity for performing application logic.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/10/18
+ *  \date      2020/10/10
  *  \copyright MIT License.
  */
 
@@ -34,64 +35,48 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
-#include "LightUniforms.h"
-#include "TransformComponent.h"
-#include "DescriptorPool.h"
-#include "DescriptorSet.h"
-#include "UniformBuffer.h"
-#include "Event.h"
-#include "Component.h"
+#include "RenderFlow.h"
+#include "Transform.h"
+#include "Resolution.h"
+#include "LightComponent.h"
+#include "MeshRenderComponent.h"
 
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
-
-using SDE::Basic::Event;
-using SDE::Basic::EventArg;
 
 using SDE::Basic::Component;
 using SDE::Basic::ComponentStrongReferenceObject;
 using SDE::Basic::ComponentWeakReferenceObject;
 
+using SDE::Math::Transform;
+using SDE::Math::Vector3f;
+using SDE::Math::Quaternion;
+using SDE::Math::Matrix4X4f;
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(LightComponent);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CameraComponentBase);
 
-class SDENGINE_CLASS LightComponent : public Component
-{
-public:
-    SD_COMPONENT_POOL_TYPE_DECLARATION(LightComponent, LightComponent);
-public:
-    explicit LightComponent(const ObjectName &i_object_name);
-    virtual ~LightComponent();
-public:
-    void Initialize();
-    bool OnGeometryChanged(const EventArg &i_arg);
-public:
-    const DescriptorSetWeakReferenceObject GetDescriptorSet() const;
-    void SetLightParameter(const LightUniforms &i_light_data);
-protected:
-    void InitializeDescriptorSetAndPool();
-    void InitializeShadowMappingWorkspace();
-protected:
-    DescriptorPoolStrongReferenceObject m_dp;
-    UniformBufferWeakReferenceObject m_ub;
-    DescriptorSetWeakReferenceObject m_ds;
-protected:
-    std::vector<TextureStrongReferenceObject> m_cascade_maps;
-protected:
-    LightUniforms m_light_params;
-protected:
-    TransformComponentWeakReferenceObject m_geo_comp;
+enum CameraWorkspaceType {
+    CameraWorkspaceType_Forward = 0,
+    CameraWorkspaceType_Deferred,
+    CameraWorkspaceType_Other
 };
 
-inline const DescriptorSetWeakReferenceObject LightComponent::GetDescriptorSet() const
+class SDENGINE_CLASS CameraComponentBase : public Component
 {
-    return m_ds;
-}
-
-inline void LightComponent::SetLightParameter(const LightUniforms &i_light_data)
-{
-    m_light_params = i_light_data;
-}
+public:
+    explicit CameraComponentBase(const ObjectName &i_object_name);
+    virtual ~CameraComponentBase();
+public:
+    virtual bool OnGeometryChanged(const EventArg &i_arg) = 0;
+public:
+    virtual void Initialize() = 0;
+    virtual void Resize() = 0;
+    virtual void RecordCommand(
+        const CommandBufferWeakReferenceObject &i_cb,
+        const std::list<LightComponentWeakReferenceObject> &i_light_list,
+        const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list) = 0;
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

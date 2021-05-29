@@ -44,6 +44,9 @@ SOFTWARE.
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
 
+using SDE::Basic::Event;
+using SDE::Basic::EventArg;
+
 using SDE::Basic::Component;
 using SDE::Basic::ComponentStrongReferenceObject;
 using SDE::Basic::ComponentWeakReferenceObject;
