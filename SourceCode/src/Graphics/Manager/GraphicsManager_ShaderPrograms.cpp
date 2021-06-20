@@ -118,6 +118,16 @@ void GraphicsManager::InitializeBasicDescriptorSetLayout()
     SD_SREF(camera_dsl).Initialize();
     m_basic_dsl_maps["Camera"] = camera_dsl;
 
+    UniformBufferDescriptorStrongReferenceObject vr_camera_ubd = new UniformBufferDescriptor("vrcamera", 0);
+    SD_SREF(vr_camera_ubd).AddVariable("projs", UniformBufferVariableType_MATRIX4X4F, offsetof(VRCameraUniforms, m_projs));
+    SD_SREF(vr_camera_ubd).AddVariable("views", UniformBufferVariableType_MATRIX4X4F, offsetof(VRCameraUniforms, m_views));
+    SD_SREF(vr_camera_ubd).AddVariable("viewEyes", UniformBufferVariableType_VECTOR3F, offsetof(VRCameraUniforms, m_view_eyes));
+    SD_SREF(vr_camera_ubd).AddVariableDone();
+    DescriptorSetLayoutStrongReferenceObject vr_camera_dsl = new DescriptorSetLayout("VRCamera");
+    SD_SREF(vr_camera_dsl).AddUniformVariableDescriptors({ vr_camera_ubd.StaticCastTo<UniformVariableDescriptor>() });
+    SD_SREF(vr_camera_dsl).Initialize();
+    m_basic_dsl_maps["VRCamera"] = vr_camera_dsl;
+
     //2. For Meshes.
     //Use for MVP matrices at all subpasses at Forward Pass and Defered Pass.
     UniformBufferDescriptorStrongReferenceObject geometry_ubd = new UniformBufferDescriptor("geometry", 0);

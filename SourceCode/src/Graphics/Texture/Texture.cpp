@@ -72,6 +72,7 @@ void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap, Si
 
             //2. write down texture data.
             m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;
+            m_tex_identity.m_texture_view_type = TextureViewType_TEXTURE_2D;
             m_tex_identity.m_mipmap_levels = i_mipmap_level;
             m_tex_identity.m_image_size.m_width = img_w;
             m_tex_identity.m_image_size.m_height = img_h;
@@ -149,14 +150,64 @@ void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap, Si
     }
 }
 
-void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, const ImageLayoutEnum &i_layout, Size_ui32 i_mipmap_levels)
+void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, ImageLayoutEnum i_layout, Size_ui32 i_mipmap_levels)
 {
     if (m_tex_identity.m_image_handle == SD_NULL_HANDLE) {
         m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;
+        m_tex_identity.m_texture_view_type = TextureViewType_TEXTURE_2D;
         m_tex_identity.m_mipmap_levels = i_mipmap_levels;
         m_tex_identity.m_image_size.m_width = i_width;
         m_tex_identity.m_image_size.m_height = i_height;
         m_tex_identity.m_image_size.m_length = 1;
+        if (i_layout == ImageLayout_COLOR_ATTACHMENT_OPTIMAL) {
+            if (GraphicsManager::GetRef().IsSupportedColorBufferFormat(i_format) == true) {
+                m_tex_identity.m_texture_format = i_format;
+            }
+            else {
+                SDLOGW("Depth TextureFormat(%d) isn't supported in this device. Use default.", i_format);
+                m_tex_identity.m_texture_format = GraphicsManager::GetRef().GetDefaultColorBufferFormat();
+            }
+            m_tex_identity.m_init_layout = i_layout;
+            m_tex_identity.m_aspect = ImageAspect_ASPECT_COLOR;
+            m_tex_identity.m_image_usages.push_back(ImageUsage_COLOR_ATTACHMENT);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_SAMPLED);
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
+        }
+        else if (i_layout == ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+            if (GraphicsManager::GetRef().IsSupportedDepthBufferFormat(i_format) == true) {
+                m_tex_identity.m_texture_format = i_format;
+            }
+            else {
+                SDLOGW("Depth TextureFormat(%d) isn't supported in this device. Use default.", i_format);
+                m_tex_identity.m_texture_format = GraphicsManager::GetRef().GetDefaultDepthBufferFormat();
+            }
+            m_tex_identity.m_init_layout = i_layout;
+            m_tex_identity.m_aspect = ImageAspect_ASPECT_DEPTH;
+            m_tex_identity.m_image_usages.push_back(ImageUsage_DEPTH_ATTACHMENT);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
+            m_tex_identity.m_image_usages.push_back(ImageUsage_SAMPLED);
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
+        }
+        else {
+            m_tex_identity = TextureIdentity();
+            SDLOGW("We cannot initialize texture[%s] whose layout isn't color attachment or depth attachment.", m_object_name.c_str());
+        }
+    }
+}
+
+void Texture::InitializeVRColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, ImageLayoutEnum i_layout, Size_ui32 i_mipmap_levels)
+{
+    if (m_tex_identity.m_image_handle == SD_NULL_HANDLE) {
+        m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;
+        m_tex_identity.m_texture_view_type = TextureViewType_TEXTURE_2D_ARRAY;
+        m_tex_identity.m_mipmap_levels = i_mipmap_levels;
+        m_tex_identity.m_image_size.m_width = i_width;
+        m_tex_identity.m_image_size.m_height = i_height;
+        m_tex_identity.m_image_size.m_length = 1;
+        m_tex_identity.m_array_layers = 2;
         if (i_layout == ImageLayout_COLOR_ATTACHMENT_OPTIMAL) {
             if (GraphicsManager::GetRef().IsSupportedColorBufferFormat(i_format) == true) {
                 m_tex_identity.m_texture_format = i_format;

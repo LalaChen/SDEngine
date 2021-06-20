@@ -30,6 +30,8 @@ SOFTWARE.
  *  \copyright MIT License.
  */
 
+#include <vector>
+
 #include "VulkanWrapper.h"
 #include "SDEngineMacro.h"
 
@@ -46,6 +48,18 @@ VkDescriptorPoolCreateInfo InitializeVkDescriptorPoolCreateInfo();
 VkDescriptorSetAllocateInfo InitializeVkDescriptorSetAllocateInfo();
 
 VkWriteDescriptorSet InitializeVkWriteDescriptorSetInfo();
+
+VkRenderPassCreateInfo InitializeVkRenderPassCreateInfo(
+    const std::vector<VkAttachmentDescription>& i_vk_att_descs,
+    const std::vector<VkSubpassDescription>& i_vk_sps,
+    const std::vector<VkSubpassDependency>& i_vk_sp_dependencies
+);
+
+VkRenderPassMultiviewCreateInfo InitializeVkRenderPassMultiviewCreateInfo(
+    const std::vector<uint32_t> &i_view_masks,
+    const std::vector<int32_t> &i_view_offsets,
+    const std::vector<uint32_t> &i_correlation_masks
+);
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
 

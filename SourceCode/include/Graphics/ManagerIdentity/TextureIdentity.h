@@ -78,6 +78,11 @@ public://Raw Data Part.
      */
     TextureTypeEnum m_texture_type;
 
+    /*! \var TextureViewTypeEnum m_texture_view_type;
+     *  \brief The texture view type.
+     */
+    TextureViewTypeEnum m_texture_view_type;
+
     /*! \var TextureFormatEnum m_texture_format;
      *  \brief The texture format.
      */

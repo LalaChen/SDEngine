@@ -47,7 +47,7 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
     VkImageView &view_handle = reinterpret_cast<VkImageView&>(io_tex_identity.m_view_handle);
     VkDeviceSize &allocated_size = reinterpret_cast<VkDeviceSize&>(io_tex_identity.m_allocated_size);
     VkImageType image_type = TextureType_Vulkan::Convert(io_tex_identity.m_texture_type);
-    VkImageViewType view_type = TextureType_Vulkan::ConvertView(io_tex_identity.m_texture_type);
+    VkImageViewType view_type = TextureViewType_Vulkan::Convert(io_tex_identity.m_texture_view_type);
     VkFormat image_format = TextureFormat_Vulkan::Convert(io_tex_identity.m_texture_format);
     VkImageLayout init_layout = ImageLayout_Vulkan::Convert(io_tex_identity.m_init_layout);
     VkImageUsageFlags init_usages = ImageUsage_Vulkan::Convert(io_tex_identity.m_image_usages);

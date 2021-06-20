@@ -34,6 +34,7 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "MultiviewInfo.h"
 #include "AttachmentDescription.h"
 #include "SubpassDescription.h"
 #include "SubpassDependency.h"
@@ -76,6 +77,11 @@ public:
      *  \brief describing relation between two subpasses.
      */
     std::vector<SubpassDependency> m_sp_dependencies;
+
+    /*! \var MultiviewInfo m_multiview_info;
+     *  \brief describing multiview information.
+     */
+    MultiviewInfo m_multiview_info;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

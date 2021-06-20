@@ -34,7 +34,8 @@ void GraphicsManager::InitializeDefaultRenderPasses()
 {
     SDLOG("Create default render pass");
 
-    //1. Initialize Forward render pass.
+    //1. Initialize render pass.
+    //--- ForwardPass
     RenderPassStrongReferenceObject forward_pass = new RenderPass("ForwardPass");
     //1.1. prepare attachment references data.
     std::vector<AttachmentDescription> att_descs;
@@ -105,6 +106,24 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     SD_SREF(forward_pass).Initialize();
 
     RegisterRenderPass(forward_pass);
+
+    //--- ForwardPass (VR Version)
+    RenderPassStrongReferenceObject vr_forward_pass = new RenderPass("VRForwardPass");
+    MultiviewInfo mv_info;
+    mv_info.m_view_masks.resize(sp_descs.size());
+    for (uint32_t count = 0; count < mv_info.m_view_masks.size(); ++count) {
+        mv_info.m_view_masks[count] = 0b00000011;
+    }
+    mv_info.m_correlation_masks.resize(sp_descs.size());
+    for (uint32_t count = 0; count < mv_info.m_correlation_masks.size(); ++count) {
+        mv_info.m_correlation_masks[count] = 0b00000011;
+    }
+
+    SD_SREF(vr_forward_pass).AddRenderPassDescription(att_descs, sp_descs, sp_denps);
+    SD_SREF(vr_forward_pass).SetMultiviewInfo(mv_info);
+    SD_SREF(vr_forward_pass).Initialize();
+
+    RegisterRenderPass(vr_forward_pass);
 }
 
 void GraphicsManager::RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp)

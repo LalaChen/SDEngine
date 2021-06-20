@@ -89,8 +89,6 @@ void GLFWApplication::Initialize()
     //new WindowsFileSystemManager.
     new WindowsFileSystemManager();
     FileSystemManager::GetRef().Initialize();
-    //new FileResourceRequester
-    new FileResourceRequester();
     //Initialize KeyBoard Mapping.
     //new Graphics Manager.
     if (m_adopt_library == GraphicsLibrary_OpenGL4) {
@@ -234,8 +232,6 @@ void GLFWApplication::TerminateApplication()
     SDLOG("[AppFlow] APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());
     //destroy File Manager
     FileSystemManager::Destroy();
-    //destroy FileResourceRequester
-    FileResourceRequester::Destroy();
     //destroy LogManager
     LogManager::Destroy();
 
@@ -293,7 +289,7 @@ void GLFWApplication::RunMainLoop()
     }
   
     //Destroy App.
-    Application::GetRef().TerminateApplication();
+    TerminateApplication();
 }
 
 //-------------------------------------------

@@ -49,4 +49,14 @@ enum TextureTypeEnum
     TextureType_MAX_DEFINE_VALUE /*!< Bound of enum.*/
 };
 
+enum TextureViewTypeEnum
+{
+    TextureViewType_TEXTURE_1D = 0, /*!< One dimension texture. It can be used to make lookuptable.*/
+    TextureViewType_TEXTURE_2D, /*!< Two dimension texture. It can be used to make general texture, color or depth buffer, ...etc.*/
+    TextureViewType_TEXTURE_2D_ARRAY, /*!< Two dimension texture array.*/
+    TextureViewType_TEXTURE_CUBE_MAP, /*!< Cube map. It will be used to simulate reflection of an object.*/
+    TextureViewType_TEXTURE_3D, /*!< Three dimension texture. It will be used to make volume rendering.*/
+    TextureViewType_MAX_DEFINE_VALUE /*!< Bound of enum.*/
+};
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

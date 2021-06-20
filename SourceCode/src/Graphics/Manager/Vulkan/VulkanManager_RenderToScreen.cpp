@@ -39,7 +39,7 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
         m_acq_img_sema_handle, VK_NULL_HANDLE, &image_index);
 
     if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-        SDLOGW("We can't get nxt swapchain image.");
+        SDLOGW("We can't get nxt swapchain image. error(%d)", result);
         return;
     }
     //Begin command buffer
@@ -49,8 +49,9 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
     cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     cmd_buf_c_info.pInheritanceInfo = nullptr;
 
-    if (vkBeginCommandBuffer(m_main_cb_handle, &cmd_buf_c_info) != VK_SUCCESS) {
-        SDLOGW("We can't begin command buffer(%x)!!!", m_main_cb_handle);
+    result = vkBeginCommandBuffer(m_main_cb_handle, &cmd_buf_c_info);
+    if (result != VK_SUCCESS) {
+        SDLOGW("We can't begin command buffer(%x)!!! error(%d)", m_main_cb_handle, result);
         return;
     }
 
@@ -91,8 +92,9 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
     }
 
     //End command buffer
-    if (vkEndCommandBuffer(m_main_cb_handle) != VK_SUCCESS) {
-        SDLOGW("We can't end command buffer(%x)!!!", m_main_cb_handle);
+    result = vkEndCommandBuffer(m_main_cb_handle);
+    if (result != VK_SUCCESS) {
+        SDLOGW("We can't end command buffer(%x)!!! error(%d)", m_main_cb_handle, result);
         return;
     }
 
@@ -110,8 +112,9 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &m_main_cb_handle;
 
-    if (vkQueueSubmit(m_present_q_handle, 1, &submit_info, m_main_cb_fence_handle) != VK_SUCCESS) {
-        SDLOGW("Submit command buffer to PresentQueue(%p) failure!!!", m_present_q_handle);
+    result = vkQueueSubmit(m_present_q_handle, 1, &submit_info, m_main_cb_fence_handle);
+    if (result != VK_SUCCESS) {
+        SDLOGW("Submit command buffer to PresentQueue(%p) failure(%d)!!!", m_present_q_handle, result);
     }
 
     do {
@@ -123,8 +126,9 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
     }
 
     //Reset main command buffer sync.
-    if (vkResetFences(m_device_handle, 1, &m_main_cb_fence_handle) != VK_SUCCESS) {
-        SDLOGW("reset main command buffer fence failure!!!");
+    result = vkResetFences(m_device_handle, 1, &m_main_cb_fence_handle);
+    if (result != VK_SUCCESS) {
+        SDLOGW("reset main command buffer fence failure!!! error(%d).", result);
     }
 
     //Present to screen
@@ -138,9 +142,9 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
     p_info.pImageIndices = &image_index;
     p_info.pResults = nullptr;
 
-    if (vkQueuePresentKHR(m_present_q_handle, &p_info) != VK_SUCCESS) {
-        SDLOGW("We can't present image by queue.");
-        return;
+    result = vkQueuePresentKHR(m_present_q_handle, &p_info);
+    if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+        SDLOGW("We can't present image by queue. error(%d).", result);
     }
 
     m_fps.AddCount();

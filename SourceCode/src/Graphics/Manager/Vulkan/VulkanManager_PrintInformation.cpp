@@ -207,19 +207,23 @@ void VulkanManager::PrintSystemInformation()
     SD_VK_SHOW_LIMIT_DEV_SIZE(nonCoherentAtomSize);
     
     //----------------- surface information.
-    SDLOG("--- Surface Capabilities ---");
-    VkSurfaceCapabilitiesKHR sur_caps;
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_phy_device_handle, m_sur_handle, &sur_caps);
-    SDLOG("ImageCount Min:%d Max:%d", sur_caps.minImageCount, sur_caps.maxImageCount);
-    SDLOG("ImageExtents Min:(%d,%d) Cur:(%d,%d) Max:(%d,%d)",
-        sur_caps.minImageExtent.width, sur_caps.minImageExtent.height,
-        sur_caps.currentExtent.width, sur_caps.currentExtent.height,
-        sur_caps.maxImageExtent.width, sur_caps.maxImageExtent.height);
-    SDLOG("maxImageArrayLayers:%d", sur_caps.maxImageArrayLayers);
-    SDLOG("supportedTransforms:%d", sur_caps.supportedTransforms);
-    SDLOG("currentTransform:%x (VkSurfaceTransformFlagBitsKHR)", sur_caps.currentTransform);
-    SDLOG("supportedCompositeAlpha:%d", sur_caps.supportedCompositeAlpha);
-    SDLOG("supportedUsageFlags:%d", sur_caps.supportedUsageFlags);
+    if (m_sur_handle != VK_NULL_HANDLE) {
+        SDLOG("--- Surface Capabilities ---");
+        VkSurfaceCapabilitiesKHR sur_caps;
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_phy_device_handle, m_sur_handle, &sur_caps);
+        SDLOG("ImageCount Min:%d Max:%d", sur_caps.minImageCount, sur_caps.maxImageCount);
+        SDLOG("ImageExtents Min:(%d,%d) Cur:(%d,%d) Max:(%d,%d)",
+            sur_caps.minImageExtent.width, sur_caps.minImageExtent.height,
+            sur_caps.currentExtent.width, sur_caps.currentExtent.height,
+            sur_caps.maxImageExtent.width, sur_caps.maxImageExtent.height);
+        SDLOG("maxImageArrayLayers:%d", sur_caps.maxImageArrayLayers);
+        SDLOG("supportedTransforms:%d", sur_caps.supportedTransforms);
+        SDLOG("currentTransform:%x (VkSurfaceTransformFlagBitsKHR)", sur_caps.currentTransform);
+        SDLOG("supportedCompositeAlpha:%d", sur_caps.supportedCompositeAlpha);
+        SDLOG("supportedUsageFlags:%d", sur_caps.supportedUsageFlags);
+    }
+    else {
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

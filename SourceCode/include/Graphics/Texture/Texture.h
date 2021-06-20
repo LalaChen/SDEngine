@@ -94,7 +94,19 @@ public:
      *         depth attachment and set its aspect as depth. Please note that this function only can used for creating color 
      *         or depth buffer.
      */
-    void Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, const ImageLayoutEnum &i_layout, Size_ui32 i_mipmap_levels = 1);
+    void Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, ImageLayoutEnum i_layout, Size_ui32 i_mipmap_levels = 1);
+
+    /*! \fn void InitializeVRColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, const ImageLayoutEnum &i_layout, Size_ui32 i_mipmap_levels = 1);
+     *  \param [in] i_width Width of buffer.
+     *  \param [in] i_height Height of buffer.
+     *  \param [in] i_format Format about this buffer.
+     *  \param [in] i_layout Set target for this buffer.
+     *  \brief This function is used to create texture that is used to input to shader. If i_layout is color attachment,
+     *         we will create color attachment and set its aspect as color. Else if i_layout is depth attachment, we will create
+     *         depth attachment and set its aspect as depth. Please note that this function only can used for creating color
+     *         or depth buffer for VR.
+     */
+    void InitializeVRColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, ImageLayoutEnum i_layout, Size_ui32 i_mipmap_levels = 1);
 public:
     /*! \fn void SetTextureMemoryTilingMode(const ImageTilingEnum &i_tiling_mode);
      *  \param [in] i_tiling_mode Target tiling mode.

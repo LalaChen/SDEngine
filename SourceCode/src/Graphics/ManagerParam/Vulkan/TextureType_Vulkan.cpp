@@ -36,7 +36,7 @@ VkImageType TextureType_Vulkan::TextureTypes[TextureType_MAX_DEFINE_VALUE] =
     VK_IMAGE_TYPE_3D
 };
 
-VkImageViewType TextureType_Vulkan::TextureViewTypes[TextureType_MAX_DEFINE_VALUE] = {
+VkImageViewType TextureViewType_Vulkan::TextureViewTypes[TextureViewType_MAX_DEFINE_VALUE] = {
     VK_IMAGE_VIEW_TYPE_1D,
     VK_IMAGE_VIEW_TYPE_2D,
     VK_IMAGE_VIEW_TYPE_2D_ARRAY,
@@ -54,9 +54,9 @@ VkImageType TextureType_Vulkan::Convert(const TextureTypeEnum &i_src)
     }
 }
 
-VkImageViewType TextureType_Vulkan::ConvertView(const TextureTypeEnum &i_src)
+VkImageViewType TextureViewType_Vulkan::Convert(const TextureViewTypeEnum &i_src)
 {
-    if (i_src != TextureType_MAX_DEFINE_VALUE) {
+    if (i_src != TextureViewType_MAX_DEFINE_VALUE) {
         return TextureViewTypes[static_cast<uint32_t>(i_src)];
     }
     else {

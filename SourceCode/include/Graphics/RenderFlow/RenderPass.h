@@ -106,6 +106,8 @@ public:
      */
     const std::vector<AttachmentDescription>& GetAttachmentDescriptions() const;
 
+    void SetMultiviewInfo(const MultiviewInfo &i_multiview_info);
+
 protected:
     /*! \var RenderPassIdentity m_identity;
      *  \brief Identity about render pass.

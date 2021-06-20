@@ -63,14 +63,25 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     const RenderPassIdentity &rp_identity = GetIdentity(i_rp);
     VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
     VkPipelineLayout &pipeline_layout_handle = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout_handle);
-    VkRenderPass render_pass_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
+    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
     std::vector<VkVertexInputBindingDescription> va_input_binding_descs;
     std::vector<VkVertexInputAttributeDescription> va_input_location_descs;
+
+    if (rp_handle == VK_NULL_HANDLE) {
+        SDLOG("rp_handle is nullptr.");
+        throw std::runtime_error("rp_handle is nullptr.");
+    }
 
     std::vector<VkDescriptorSetLayout> vk_ds_layouts;
     for (const DescriptorSetLayoutWeakReferenceObject &dsl : i_dsls) {
         const DescriptorSetLayoutIdentity& dsl_identity = GetIdentity(dsl);
-        vk_ds_layouts.push_back(reinterpret_cast<VkDescriptorSetLayout>(dsl_identity.m_handle));
+        if (dsl_identity.m_handle == VK_NULL_HANDLE) {
+            SDLOG("dsl_identity.m_handle is nullptr.");
+            throw std::runtime_error("m_handle is nullptr.");
+        }
+        else {
+            vk_ds_layouts.push_back(reinterpret_cast<VkDescriptorSetLayout>(dsl_identity.m_handle));
+        }
     }
 
     va_input_binding_descs.resize(io_identity.m_params.m_va_binding_descs.size());
@@ -265,7 +276,8 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     pipeline_layout_c_info.pPushConstantRanges = nullptr;
 
     if (CreateVKPipelineLayout(pipeline_layout_handle, pipeline_layout_c_info) != VK_SUCCESS) {
-        return;
+        SDLOGE("create pipeline layout failure.");
+        throw std::runtime_error("create pipeline layout failure.");
     }
 
     //6. Create pipeline.
@@ -287,7 +299,7 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     graphics_pipeline_c_info.layout = pipeline_layout_handle;
     graphics_pipeline_c_info.basePipelineHandle = VK_NULL_HANDLE;
     graphics_pipeline_c_info.basePipelineIndex = -1;
-    graphics_pipeline_c_info.renderPass = render_pass_handle;
+    graphics_pipeline_c_info.renderPass = rp_handle;
     graphics_pipeline_c_info.subpass = io_identity.m_subpass_id;
 
     VkResult result = CreateVKPipeline(pipeline_handle, graphics_pipeline_c_info);

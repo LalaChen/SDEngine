@@ -155,7 +155,20 @@ void VulkanManager::CreateRenderPass(RenderPassIdentity &io_identity)
         vk_subpass_dependecies.push_back(vk_sp_dep);
     }
 
-    result = CreateVKRenderPass(rp_handle, vk_attachment_descs, vk_subpass_descs, vk_subpass_dependecies);
+    VkRenderPassCreateInfo rp_c_info = InitializeVkRenderPassCreateInfo(
+        vk_attachment_descs, vk_subpass_descs, vk_subpass_dependecies
+    );
+
+    if (io_identity.m_multiview_info.m_view_masks.size() > 0) {
+        VkRenderPassMultiviewCreateInfo rpm_c_info = InitializeVkRenderPassMultiviewCreateInfo(
+            io_identity.m_multiview_info.m_view_masks,
+            io_identity.m_multiview_info.m_view_offsets,
+            io_identity.m_multiview_info.m_correlation_masks
+        );
+        rp_c_info.pNext = &rpm_c_info;
+    }
+
+    result = CreateVKRenderPass(rp_handle, rp_c_info);
     if (result != VK_SUCCESS) {
         SDLOGE("Create render pass failure(%d).", result);
     }

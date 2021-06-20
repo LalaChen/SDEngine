@@ -44,6 +44,11 @@ void RenderPass::AddRenderPassDescription(const std::vector<AttachmentDescriptio
     m_identity.m_sp_dependencies = i_sp_deps;
 }
 
+void RenderPass::SetMultiviewInfo(const MultiviewInfo &i_multiview_info)
+{
+    m_identity.m_multiview_info = i_multiview_info;
+}
+
 void RenderPass::Initialize()
 {
     GraphicsManager::GetRef().CreateRenderPass(m_identity);

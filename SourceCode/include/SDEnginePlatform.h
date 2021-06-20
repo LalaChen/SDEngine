@@ -36,10 +36,12 @@ SOFTWARE.
 #include "Basic/FileSystem/Windows/WindowsFileSystemManager.h"
 #include "Graphics/Manager/OpenGL4/OpenGL4Manager.h"
 #include "Graphics/Manager/Vulkan/VulkanManager.h"
+#include "Graphics/Manager/Vulkan/VulkanWrapper.h"
 #include "Graphics/Manager/Vulkan/VulkanCreationArg.h"
 #elif defined(__ANDROID__)
 #include "Basic/LogManager/Android/AndroidLogManager.h"
 #include "Basic/FileSystem/Android/AndroidAssetResourceManager.h"
 #include "Graphics/Manager/Vulkan/VulkanManager.h"
+#include "Graphics/Manager/Vulkan/VulkanWrapper.h"
 #include "Graphics/Manager/Vulkan/VulkanCreationArg.h"
 #endif

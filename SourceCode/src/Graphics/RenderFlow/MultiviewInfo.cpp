@@ -23,31 +23,15 @@ SOFTWARE.
 
 */
 
-#include "BasicUniforms.h"
+#include "MultiviewInfo.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VRCameraUniforms::VRCameraUniforms()
+MultiviewInfo::MultiviewInfo()
 {
 }
 
-VRCameraUniforms::~VRCameraUniforms()
-{
-}
-
-CameraUniforms::CameraUniforms()
-{
-}
-
-CameraUniforms::~CameraUniforms()
-{
-}
-
-WorldUniforms::WorldUniforms()
-{
-}
-
-WorldUniforms::~WorldUniforms()
+MultiviewInfo::~MultiviewInfo()
 {
 }
 

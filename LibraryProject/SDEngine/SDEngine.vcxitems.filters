@@ -813,6 +813,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\CameraComponentBase.h">
       <Filter>include\Graphics\BasicComponent</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\VRCameraComponent.h">
+      <Filter>include\Graphics\BasicComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\MultiviewInfo.h">
+      <Filter>include\Graphics\RenderFlow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1354,6 +1360,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\CameraComponentBase.cpp">
       <Filter>src\Graphics\BasicComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\VRCameraComponent.cpp">
+      <Filter>src\Graphics\BasicComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\MultiviewInfo.cpp">
+      <Filter>src\Graphics\RenderFlow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -45,6 +45,38 @@ using SDE::Math::Vector3f;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+/*! \class VRCameraUniforms
+ *    In our system, we use class CameraUniforms to keeping uniform variables about vrcamera.
+ */
+class SDENGINE_CLASS VRCameraUniforms
+{
+public:
+    /* \fn VRCameraUniforms();
+     * \brief Ctor of VRCameraUniforms.
+     */
+    VRCameraUniforms();
+
+    /* \fn ~VRCameraUniforms();
+     * \brief Dtor of VRCameraUniforms.
+     */
+    ~VRCameraUniforms();
+public:
+    /* \var Matrix4X4f m_proj;
+     * \brief Convert vertices in view space to projection space(-1,1,-1,1,-1,1).
+     */
+    Matrix4X4f m_projs[2];
+
+    /* \var Matrix4X4f m_view;
+     * \brief Convert vertices in world space to view space.
+     */
+    Matrix4X4f m_views[2];
+
+    /* \var Vector3f m_view_eye;
+     * \brief Eye position.
+     */
+    Vector3f m_view_eyes[2];
+};
+
 /*! \class CameraUniforms
  *    In our system, we use class CameraUniforms to keeping uniform variables about camera.
  */

@@ -28,8 +28,10 @@ SOFTWARE.
 #include "ECSManager.h"
 #include "ImageLoader.h"
 #include "GraphicsManager.h"
+#include "FileResourceRequester.h"
 #include "Application.h"
 
+using SDE::Basic::FileResourceRequester;
 using SDE::Graphics::ImageLoader;
 using SDE::Graphics::GraphicsManager;
 
@@ -60,10 +62,13 @@ Application::Application(const std::string &i_win_title, const Resolution &i_win
     //ImageLoader.
     new ImageLoader();
     ImageLoader::GetRef().Initialize();
+    //new FileResourceRequester
+    new FileResourceRequester();
 }
 
 Application::~Application()
-{
+{ 
+    FileResourceRequester::Destroy();
     ImageLoader::Destroy();
     Timer::Destroy();
     ECSManager::Destroy();

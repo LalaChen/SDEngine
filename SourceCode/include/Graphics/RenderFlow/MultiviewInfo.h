@@ -23,32 +23,34 @@ SOFTWARE.
 
 */
 
-#include "BasicUniforms.h"
+/*! \file      MultiviewInfo.h
+ *  \brief     Introduce of class MultiviewInfo.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2021/06/06
+ *  \copyright MIT License.
+ */
+
+#pragma once
+
+#include <vector>
+
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VRCameraUniforms::VRCameraUniforms()
+/*! \class MultiviewInfo
+ *  MultiviewInfo is used to describing multiview information of this render pass.
+ */
+class SDENGINE_CLASS MultiviewInfo
 {
-}
-
-VRCameraUniforms::~VRCameraUniforms()
-{
-}
-
-CameraUniforms::CameraUniforms()
-{
-}
-
-CameraUniforms::~CameraUniforms()
-{
-}
-
-WorldUniforms::WorldUniforms()
-{
-}
-
-WorldUniforms::~WorldUniforms()
-{
-}
+public:
+    MultiviewInfo();
+    ~MultiviewInfo();
+public:
+    std::vector<uint32_t> m_view_masks;
+    std::vector<int32_t> m_view_offsets;
+    std::vector<uint32_t> m_correlation_masks;
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

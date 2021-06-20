@@ -40,10 +40,16 @@ class TextureType_Vulkan
 {
 public:
     static VkImageType Convert(const TextureTypeEnum &i_src);
-    static VkImageViewType ConvertView(const TextureTypeEnum &i_src);
 public:
     static VkImageType TextureTypes[TextureType_MAX_DEFINE_VALUE];
-    static VkImageViewType TextureViewTypes[TextureType_MAX_DEFINE_VALUE];
+};
+
+class TextureViewType_Vulkan
+{
+public:
+    static VkImageViewType Convert(const TextureViewTypeEnum &i_src);
+public:
+    static VkImageViewType TextureViewTypes[TextureViewType_MAX_DEFINE_VALUE];
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

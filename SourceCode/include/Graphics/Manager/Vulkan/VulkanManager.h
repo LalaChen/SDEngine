@@ -422,9 +422,7 @@ protected:
 //----------- Vulkan RenderPass Function ------------
     VkResult CreateVKRenderPass(
         VkRenderPass &io_rp_handle,
-        const std::vector<VkAttachmentDescription> &i_vk_att_descs,
-        const std::vector<VkSubpassDescription> &i_vk_sps,
-        const std::vector<VkSubpassDependency> &i_vk_sp_dependencies);
+        const VkRenderPassCreateInfo &i_rp_c_info);
 
     void BeginVkRenderPass(
         VkCommandBuffer i_cb_handle,

@@ -99,4 +99,41 @@ VkWriteDescriptorSet InitializeVkWriteDescriptorSetInfo()
     return info;
 }
 
+VkRenderPassCreateInfo InitializeVkRenderPassCreateInfo(
+    const std::vector<VkAttachmentDescription>& i_vk_att_descs,
+    const std::vector<VkSubpassDescription>& i_vk_sps,
+    const std::vector<VkSubpassDependency>& i_vk_sp_dependencies
+)
+{
+    VkRenderPassCreateInfo rp_c_info = {};
+    rp_c_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    rp_c_info.flags = 0;
+    rp_c_info.pNext = nullptr;
+    rp_c_info.attachmentCount = static_cast<uint32_t>(i_vk_att_descs.size());
+    rp_c_info.pAttachments = i_vk_att_descs.data();
+    rp_c_info.dependencyCount = static_cast<uint32_t>(i_vk_sp_dependencies.size());
+    rp_c_info.pDependencies = i_vk_sp_dependencies.data();
+    rp_c_info.subpassCount = static_cast<uint32_t>(i_vk_sps.size());
+    rp_c_info.pSubpasses = i_vk_sps.data();
+    return rp_c_info;
+}
+
+VkRenderPassMultiviewCreateInfo InitializeVkRenderPassMultiviewCreateInfo(
+    const std::vector<uint32_t> &i_view_masks,
+    const std::vector<int32_t> &i_view_offsets,
+    const std::vector<uint32_t> &i_correlation_masks
+)
+{
+    VkRenderPassMultiviewCreateInfo rpm_c_info = {};
+    rpm_c_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO;
+    rpm_c_info.pNext = nullptr;
+    rpm_c_info.subpassCount = static_cast<uint32_t>(i_view_masks.size());
+    rpm_c_info.pViewMasks = i_view_masks.data();
+    rpm_c_info.dependencyCount = static_cast<uint32_t>(i_view_offsets.size());
+    rpm_c_info.pViewOffsets = i_view_offsets.data();
+    rpm_c_info.correlationMaskCount = static_cast<uint32_t>(i_correlation_masks.size());
+    rpm_c_info.pCorrelationMasks = i_correlation_masks.data();
+    return rpm_c_info;
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________
