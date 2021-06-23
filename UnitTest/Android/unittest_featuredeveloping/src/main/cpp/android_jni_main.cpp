@@ -10,10 +10,6 @@
 
 #include "FeatureApplication.h"
 #include "android_log.h"
-#include <jni.h>
-#include <jni.h>
-#include <jni.h>
-#include <jni.h>
 
 FeatureApplication *g_app = nullptr;
 

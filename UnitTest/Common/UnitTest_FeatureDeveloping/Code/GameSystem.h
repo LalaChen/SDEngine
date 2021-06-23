@@ -1,11 +1,9 @@
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "Sample.h"
-
 using SDE::Basic::ObjectName;
 using SDE::Basic::System;
+using SDE::Basic::EntityGroup;
+using SDE::Basic::EntityGroupWeakReferenceObject;
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GameSystem);
 
@@ -23,5 +21,6 @@ public:
     bool OnAppEventTriggered(const EventArg &i_arg);
 protected:
     uint32_t m_cur_sample_idx;
-    std::vector<SampleWeakReferenceObject> m_samples;
+    std::vector<ObjectName> m_scene_names;
+    EntityGroupWeakReferenceObject m_camera_motor_group;
 };

@@ -221,6 +221,8 @@ void GLFWApplication::ReleaseGraphicsSystem()
 
 void GLFWApplication::TerminateApplication()
 {
+    SDLOG("[AppFlow] Terminate SceneManager.");
+    SceneManager::GetRef().Terminate();
     SDLOG("[AppFlow] Terminate ECSManager.");
     ECSManager::GetRef().Terminate();
     SDLOG("[AppFlow] Destroy GraphicsManager.");

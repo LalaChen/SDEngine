@@ -1,5 +1,5 @@
 #version 450
-//#extension GL_KHR_vulkan_glsl : enable
+#extension GL_KHR_vulkan_glsl : enable
 
 //Input attribute.
 //format : layout(location = X) in GenType VarName;
@@ -26,7 +26,7 @@ layout(location = 4) out vec3 wViewDir;
 layout(set = 0, binding = 0) uniform CameraUniforms {
     mat4 proj;
 	mat4 view;
-	vec3 viewEye;
+	vec4 viewEye;
 } camera;
 
 //Uniform Geometry Buffer.

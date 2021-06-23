@@ -48,6 +48,13 @@ TransformComponent::TransformComponent(const ObjectName &i_object_name)
 
 TransformComponent::~TransformComponent()
 {
+    for (std::list<TransformComponentWeakReferenceObject>::iterator t_iter = m_children.begin(); t_iter != m_children.end();) {
+        SD_WREF((*t_iter)).SetParent(m_parent);
+        t_iter = m_children.erase(t_iter);
+    }
+    if (m_parent.IsNull() == false) {
+        SD_WREF(m_parent).EraseChild(GetThisWeakPtrByType<TransformComponent>());
+    }
 }
 
 void TransformComponent::Initialize()
@@ -143,9 +150,9 @@ bool TransformComponent::RemoveChild(const TransformComponentWeakReferenceObject
 {
     if (i_child != GetThisWeakPtrByType<TransformComponent>()) {
         std::list<TransformComponentWeakReferenceObject>::iterator child_iter;
-        for (child_iter = m_childs.begin(); child_iter != m_childs.end();) {
+        for (child_iter = m_children.begin(); child_iter != m_children.end();) {
             if ((*child_iter) == i_child) {
-                child_iter = m_childs.erase(child_iter);
+                child_iter = m_children.erase(child_iter);
                 return true;
             }
             else {
@@ -178,6 +185,19 @@ void TransformComponent::SetParent(const TransformComponentWeakReferenceObject &
     }
 }
 
+void TransformComponent::EraseChild(const TransformComponentWeakReferenceObject &i_child)
+{
+    for (std::list<TransformComponentWeakReferenceObject>::iterator iter = m_children.begin(); iter != m_children.end();) {
+        if ((*iter) != i_child) {
+            iter++;
+        }
+        else {
+            iter = m_children.erase(iter);
+            break;
+        }
+    }
+}
+
 void TransformComponent::UpdateWorldTransform()
 {
     if (m_parent.IsNull() == false) {
@@ -192,7 +212,7 @@ void TransformComponent::UpdateWorldTransform()
 
 void TransformComponent::UpdateChildrenWorldTransform()
 {
-    for (TransformComponentWeakReferenceObject &so : m_childs) {
+    for (TransformComponentWeakReferenceObject &so : m_children) {
         SD_WREF(so).UpdateWorldTransform();
     }
 }

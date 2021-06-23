@@ -80,11 +80,12 @@ public:
     bool RemoveChild(const TransformComponentWeakReferenceObject &i_child);
 protected:
     void SetParent(const TransformComponentWeakReferenceObject &i_parent);
+    void EraseChild(const TransformComponentWeakReferenceObject &i_child);
     void UpdateChildrenWorldTransform();
     void UpdateWorldTransform();
 protected:
     TransformComponentWeakReferenceObject m_parent;
-    std::list<TransformComponentWeakReferenceObject> m_childs;
+    std::list<TransformComponentWeakReferenceObject> m_children;
 protected:
     Transform m_world_trans;
     Transform m_local_trans;

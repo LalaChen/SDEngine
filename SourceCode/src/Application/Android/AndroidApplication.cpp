@@ -154,11 +154,12 @@ void AndroidApplication::TerminateApplication()
     m_current_state = AppState_TERMINATE;
     m_pause_cv.notify_all();
     m_render_thread.join();
+    SDLOG("[AppFlow] Terminate SceneManager.");
+    SceneManager::GetRef().Terminate();
     SDLOG("[AppFlow] Terminate ECSManager.");
     ECSManager::GetRef().Terminate();
     SDLOG("[AppFlow] Destroy GraphicsManager.");
     ReleaseGraphicsSystem();
-    GraphicsManager::Destroy();
     //destroy Timer.
     Timer::GetRef().End();
     SDLOG("[AppFlow] APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());

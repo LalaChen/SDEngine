@@ -3,7 +3,6 @@
 #include "SDEngine.h"
 #include "FunctionSlot.h"
 #include "GLFWApplication.h"
-#include "Sample.h"
 
 using SDE::Basic::EventObject;
 using SDE::Basic::EventObjectStrongReferenceObject;

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-#include "Sample.h"
+#include <SDEngineMacro.h>
+#include <SDEngineCommonType.h>
+#include <SDEngineCommonFunction.h>
+#include <SDEngine.h>
 
 using SDE::Basic::ObjectName;
 using SDE::Graphics::TransformComponentWeakReferenceObject;

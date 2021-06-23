@@ -1,5 +1,5 @@
 #version 450
-//#extension GL_KHR_vulkan_glsl : enable
+#extension GL_KHR_vulkan_glsl : enable
 
 //input varing.
 //format : layout(location = X) out GenType VarName;
@@ -19,7 +19,7 @@ layout(location = 0) out vec4 fragColor;
 layout(set = 0, binding = 0) uniform CameraUniforms {
     mat4 proj;
 	mat4 view;
-	vec3 viewEye;
+	vec4 viewEye;
 } camera;
 
 //Uniform Geometry Buffer.

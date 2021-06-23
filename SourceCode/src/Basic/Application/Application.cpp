@@ -28,12 +28,14 @@ SOFTWARE.
 #include "ECSManager.h"
 #include "ImageLoader.h"
 #include "GraphicsManager.h"
+#include "SceneManager.h"
 #include "FileResourceRequester.h"
 #include "Application.h"
 
 using SDE::Basic::FileResourceRequester;
 using SDE::Graphics::ImageLoader;
 using SDE::Graphics::GraphicsManager;
+using SDE::Graphics::SceneManager;
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
@@ -64,6 +66,9 @@ Application::Application(const std::string &i_win_title, const Resolution &i_win
     ImageLoader::GetRef().Initialize();
     //new FileResourceRequester
     new FileResourceRequester();
+    //
+    new SceneManager();
+    SceneManager::GetRef().Initialize();
 }
 
 Application::~Application()
@@ -72,6 +77,7 @@ Application::~Application()
     ImageLoader::Destroy();
     Timer::Destroy();
     ECSManager::Destroy();
+    SceneManager::Destroy();
     m_key_map_manager.Reset();
 }
 

@@ -5,6 +5,7 @@ GameSystem::GameSystem(const ObjectName &i_object_name)
 : System(i_object_name)
 , m_cur_sample_idx(0)
 {
+    m_scene_names.push_back("SampleDrawObjects");
 }
 
 GameSystem::~GameSystem()
@@ -13,9 +14,6 @@ GameSystem::~GameSystem()
 
 void GameSystem::Initialize()
 {
-    m_samples.push_back(
-        ECSManager::GetRef().RegisterSystem<SampleDrawObjects>("SampleDrawObjects").
-        DynamicCastTo<Sample>());
 
     SD_WREF(Application::GetRef().GetEventNotifier()).RegisterSlotFunctionIntoEvent(
         "AppEvent", 
@@ -23,21 +21,31 @@ void GameSystem::Initialize()
             "GameSystem::OnAppEventTriggered",
             GetThisWeakPtrByType<GameSystem>(),
             &GameSystem::OnAppEventTriggered));
+
+    m_camera_motor_group = ECSManager::GetRef().AddEntityGroup(
+        "GameSystem",
+        {
+            std::type_index(typeid(MotorComponent))
+        }
+    );
 }
 
 void GameSystem::Update()
 {
-    if (m_cur_sample_idx < m_samples.size()) {
-        SD_WREF(m_samples[m_cur_sample_idx]).UpdateScene();
+    std::list<EntityWeakReferenceObject> entities = SD_WREF(m_camera_motor_group).GetEntities();
+    for (EntityWeakReferenceObject &entity : entities) {
+        MotorComponentWeakReferenceObject motor = SD_WREF(entity).GetComponent(typeid(MotorComponent)).DynamicCastTo<MotorComponent>();
+        if (motor.IsNull() == false) {
+            SD_WREF(motor).Update();
+        }
     }
 }
 
 void GameSystem::Destroy()
 {
-    for (uint32_t sid = 0; sid < m_samples.size(); ++sid) {
-        SD_WREF(m_samples[sid]).DestroyScene();
+    for (std::string &scene_name : m_scene_names) {
+        SceneManager::GetRef().UnloadScene(m_scene_names[0]);
     }
-    m_samples.clear();
 }
 
 void GameSystem::Resize()
@@ -49,9 +57,8 @@ bool GameSystem::OnAppEventTriggered(const EventArg &i_arg)
     if (typeid(i_arg).hash_code() == typeid(AppEventArg).hash_code()) {
         const AppEventArg &arg = dynamic_cast<const AppEventArg&>(i_arg);
         if (arg.m_app_event == AppEvent_GRAPHICS_INITIALIZED) {
-            for (uint32_t sid = 0; sid < m_samples.size(); ++sid) {
-                SD_WREF(m_samples[sid]).InitializeScene();
-            }
+            SceneManager::GetRef().RegisterScene(new SampleDrawObjects(m_scene_names[0]));
+            SceneManager::GetRef().LoadScene(m_scene_names[0]);
         }
         return true;
     }

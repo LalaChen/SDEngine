@@ -87,8 +87,6 @@ void VulkanTestGLFWApplication::Initialize()
     //new WindowsFileSystemManager.
     new WindowsFileSystemManager();
     FileSystemManager::GetRef().Initialize();
-    //new FileResourceRequester
-    new FileResourceRequester();
     //Initialize KeyBoard Mapping.
 
     //new Graphics Manager.

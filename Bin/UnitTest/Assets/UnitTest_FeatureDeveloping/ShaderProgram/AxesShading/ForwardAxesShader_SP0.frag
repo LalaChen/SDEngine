@@ -1,5 +1,5 @@
 #version 450
-//#extension GL_KHR_vulkan_glsl : enable
+#extension GL_KHR_vulkan_glsl : enable
 
 //input varing.
 //format : layout(location = X) out GenType VarName;

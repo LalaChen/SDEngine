@@ -5,8 +5,8 @@ using namespace SDE::Math;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
-SampleDrawObjects::SampleDrawObjects(const ObjectName &i_sample_name)
-: Sample(i_sample_name)
+SampleDrawObjects::SampleDrawObjects(const ObjectName &i_scene_name)
+: Scene(i_scene_name, "SampleDrawObjects")
 , m_cube_interval(0.05f)
 , m_cube_side_length(0.25f)
 #if defined(_WIN32) || defined(_WIN64)
@@ -25,42 +25,14 @@ SampleDrawObjects::~SampleDrawObjects()
 {
 }
 
-void SampleDrawObjects::Initialize()
-{
-}
-
-void SampleDrawObjects::Update()
-{
-}
-
-void SampleDrawObjects::Destroy()
-{
-}
-
-void SampleDrawObjects::Resize()
-{
-}
-
-void SampleDrawObjects::InitializeScene()
-{
-    LoadScene();
-}
-
-void SampleDrawObjects::UpdateScene()
-{
-    if (m_camera_motor.IsNull() == false) {
-        SD_WREF(m_camera_motor).Update();
-    }
-}
-
-void SampleDrawObjects::DestroyScene()
-{
-}
-
-
 //#define INITIAL_BY_CODE
-void SampleDrawObjects::LoadScene()
+bool SampleDrawObjects::Load()
 {
+    bool result = Scene::Load();
+    if (result == false) {
+        SDLOGW("Load scene failure.");
+        return result;
+    }
     //1. allocate shader programs.
 #if defined(INITIAL_BY_CODE)
     //-------------------- AxesShaderWithTexture ---------------------------
@@ -181,11 +153,12 @@ void SampleDrawObjects::LoadScene()
 #endif
 
     //4. allocate scene root.
-    m_scene_root_node = ECSManager::GetRef().CreateEntity("SceneRoot");
-    ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_scene_root_node, "RootTransform");
-
+    //m_scene_root_node = ECSManager::GetRef().CreateEntity("SceneRoot");
+    //ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_scene_root_node, "RootTransform");
+    m_scene_root_node = (*m_entities.begin());
     //5. Add camera.
     m_camera_node = ECSManager::GetRef().CreateEntity("Camera");
+    m_entities.push_back(m_camera_node);
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_camera_node, "CameraTransform");
     ECSManager::GetRef().AddComponentForEntity<CameraComponent>(m_camera_node, "Camera");
     SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_camera_node, TransformComponent));
@@ -209,6 +182,7 @@ void SampleDrawObjects::LoadScene()
 
     //6. Add light.
     m_light_node = ECSManager::GetRef().CreateEntity("Light");
+    m_entities.push_back(m_light_node);
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_light_node, "LightTransform");
     ECSManager::GetRef().AddComponentForEntity<LightComponent>(m_light_node, "Light");
     SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_light_node, TransformComponent));
@@ -221,7 +195,10 @@ void SampleDrawObjects::LoadScene()
 
     //7. add axis.
     m_axis_mesh = BasicShapeCreator::GetRef().CreateAxis(0.2f, 20.0f);
+
     m_axis_node = ECSManager::GetRef().CreateEntity("AxisNode");
+    m_entities.push_back(m_axis_node);
+
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_axis_node, "AxisTransform");
     ECSManager::GetRef().AddComponentForEntity<MeshRenderComponent>(m_axis_node, "AxisMeshRender");
     SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_axis_node, TransformComponent));
@@ -234,7 +211,10 @@ void SampleDrawObjects::LoadScene()
     m_floor_mesh = BasicShapeCreator::GetRef().CreatePlane(
         Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX,
         100.0f, 100.0f, 100.0f, 100.0f);
+
     m_floor_node = ECSManager::GetRef().CreateEntity("FloorNode");
+    m_entities.push_back(m_axis_node);
+
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_floor_node, "FloorTransform");
     ECSManager::GetRef().AddComponentForEntity<MeshRenderComponent>(m_floor_node, "FloorMeshRender");
     SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_floor_node, TransformComponent));
@@ -254,6 +234,7 @@ void SampleDrawObjects::LoadScene()
         for (uint32_t col = 0; col < m_cube_col; ++col) {
             for (uint32_t depth = 0; depth < m_cube_depth; ++depth) {
                 EntityWeakReferenceObject cube_node = ECSManager::GetRef().CreateEntity(StringFormat("cube_%d_%d_%d", row, col, depth));
+                m_entities.push_back(cube_node);
                 ECSManager::GetRef().AddComponentForEntity<TransformComponent>(cube_node, StringFormat("cube_%d_%d_%d_Transform", row, col, depth));
                 ECSManager::GetRef().AddComponentForEntity<MeshRenderComponent>(cube_node, StringFormat("cube_%d_%d_%d_MeshRender", row, col, depth));
                 SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(cube_node, TransformComponent));
@@ -267,4 +248,20 @@ void SampleDrawObjects::LoadScene()
             }
         }
     }
+
+    return result;
+}
+
+bool SampleDrawObjects::Unload()
+{
+    bool result = Scene::Unload();
+    if (result == false) {
+        return false;
+    }
+    m_axis_shader.Reset();
+    m_axis_mesh.Reset();
+    m_axis_material.Reset();
+    m_basic_material.Reset();
+    m_main_tex.Reset();
+    return true;
 }

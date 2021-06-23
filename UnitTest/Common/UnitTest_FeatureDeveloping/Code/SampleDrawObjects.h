@@ -1,7 +1,11 @@
 #pragma once
 
+#include <SDEngineMacro.h>
+#include <SDEngineCommonType.h>
+#include <SDEngineCommonFunction.h>
+#include <SDEngine.h>
+
 #include "MotorComponent.h"
-#include "Sample.h"
 
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
@@ -9,22 +13,14 @@ using namespace SDE::Math;
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(SampleDrawObjects);
 
-class SampleDrawObjects : public Sample
+class SampleDrawObjects : public Scene
 {
 public:
-    explicit SampleDrawObjects(const ObjectName &i_sample_name);
+    explicit SampleDrawObjects(const ObjectName &i_scene_name);
     virtual ~SampleDrawObjects();
 public:
-    void Initialize() override;
-    void Update() override;
-    void Destroy() override;
-    void Resize() override;
-public:
-    void InitializeScene() override;
-    void UpdateScene() override;
-    void DestroyScene() override;
-protected:
-    void LoadScene();
+    bool Load() override;
+    bool Unload() override;
 protected:
     EntityWeakReferenceObject m_scene_root_node;
     EntityWeakReferenceObject m_camera_node;

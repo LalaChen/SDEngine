@@ -229,6 +229,12 @@
     <Filter Include="include\Graphics\System">
       <UniqueIdentifier>{908802d3-4287-4b15-bf0b-6436cc1a4680}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\Scene">
+      <UniqueIdentifier>{b42ecfd8-24cc-480d-b488-86ea82e7cbeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\Scene">
+      <UniqueIdentifier>{37b04ab3-9137-4fd2-9044-b246fb67a25c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -819,6 +825,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\RenderFlow\MultiviewInfo.h">
       <Filter>include\Graphics\RenderFlow</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Scene\SceneManager.h">
+      <Filter>include\Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Scene\Scene.h">
+      <Filter>include\Graphics\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1366,6 +1378,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\RenderFlow\MultiviewInfo.cpp">
       <Filter>src\Graphics\RenderFlow</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Scene\SceneManager.cpp">
+      <Filter>src\Graphics\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Scene\Scene.cpp">
+      <Filter>src\Graphics\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

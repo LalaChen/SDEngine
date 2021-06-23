@@ -29,9 +29,6 @@
     <ClCompile Include="FeatureApplication.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Sample.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -47,9 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FeatureApplication.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\Sample.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.h">
@@ -100,6 +94,18 @@
       <Filter>shaderProgram\AxesShading</Filter>
     </None>
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\AxesShading.json">
+      <Filter>shaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.frag">
+      <Filter>shaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.vert">
+      <Filter>shaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag">
+      <Filter>shaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.vert">
       <Filter>shaderProgram\AxesShading</Filter>
     </None>
   </ItemGroup>

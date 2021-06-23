@@ -47,6 +47,7 @@ set (SD_ENGINE_INC_DIRS
         ${SD_ENGINE_INC_DIR}/Graphics/ManagerParam/GLES3
         ${SD_ENGINE_INC_DIR}/Graphics/ManagerParam/Vulkan
         ${SD_ENGINE_INC_DIR}/Graphics/ImageLoader
+        ${SD_ENGINE_INC_DIR}/Graphics/Scene
         ${SD_ENGINE_INC_DIR}/Graphics/Vec
         ${SD_ENGINE_INC_DIR}/Graphics/VertexBuffer
         ${SD_ENGINE_INC_DIR}/Graphics/IndexBuffer
@@ -133,7 +134,6 @@ add_library( # Sets the name of the library.
              src/main/cpp/FeatureApplication.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/MotorComponent.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/GameSystem.cpp
-             ../../Common/UnitTest_FeatureDeveloping/Code/Sample.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/SampleDrawObjects.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/CommandRecordingThread.cpp
         )
