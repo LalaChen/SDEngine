@@ -56,8 +56,14 @@ void GraphicsPipeline::SetGraphicsPipelineParams(
 void GraphicsPipeline::Initialize(const ShaderModules &i_shaders)
 {
     SDLOG("Initialize graphics pipeline (%s).", m_object_name.c_str());
-    GraphicsManager::GetRef().CreateGraphicsPipeline(m_identity, i_shaders, m_target_rp, m_dsls);
-    m_initialized = true;
+    if (m_target_rp.IsNull() == false) {
+        GraphicsManager::GetRef().CreateGraphicsPipeline(m_identity, i_shaders, m_target_rp, m_dsls);
+        m_initialized = true;
+    }
+    else {
+        SDLOGE("RenderPass is null. We can't initialize graphics pipeline (%s).", m_object_name.c_str());
+        m_initialized = false;
+    }
 }
 
 void GraphicsPipeline::UseAndBindDescriptorSets(const CommandBufferWeakReferenceObject &i_cb, const std::vector<DescriptorSetWeakReferenceObject> &i_dss) const

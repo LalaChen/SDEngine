@@ -53,16 +53,26 @@ VRCameraComponent::~VRCameraComponent()
 
 void VRCameraComponent::SetEyeCenters(Vector3f i_eye_centers[VREye_Both])
 {
+    SDLOG("SetEyeCenters L:%s, R:%s"
+        , i_eye_centers[VREye_Left].ToString().c_str()
+        , i_eye_centers[VREye_Right].ToString().c_str());
+
     for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
         m_eye_centers[eid] = i_eye_centers[eid];
     }
+    OnGeometryChanged(EventArg());
 }
 
 void VRCameraComponent::SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both])
 {
+    SDLOG("Set Proj L:%s, R:%s"
+        , i_proj_mats[VREye_Left].ToString().c_str()
+        , i_proj_mats[VREye_Right].ToString().c_str());
+
     for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
         m_proj_mats[eid] = i_proj_mats[eid];
     }
+    OnGeometryChanged(EventArg());
 }
 
 void VRCameraComponent::Initialize()
@@ -118,7 +128,7 @@ void VRCameraComponent::RecordCommand(
     std::list<LightComponentWeakReferenceObject>::const_iterator light_iter;
     std::list<MeshRenderComponentWeakReferenceObject>::const_iterator mr_iter;
 
-    const std::vector<SecondaryCommandPoolThreadStrongReferenceObject>& scp_threads = SD_WREF(gs).GetSecondaryCommandPool();
+    const std::vector<SecondaryCommandPoolThreadStrongReferenceObject> &scp_threads = SD_WREF(gs).GetSecondaryCommandPool();
     std::list<CommandBufferWeakReferenceObject> secondary_cbs;
     Viewport vp;
     vp.m_x = 0.0f; vp.m_y = static_cast<float>(m_buffer_size.GetHeight());
@@ -206,7 +216,7 @@ void VRCameraComponent::InitializeWorkspaceForForwardPass()
             m_color_buffer.Reset();
         }
         m_color_buffer = new Texture("VRCameraColorBuffer");
-        SD_SREF(m_color_buffer).Initialize2DColorOrDepthBuffer(
+        SD_SREF(m_color_buffer).InitializeVRColorOrDepthBuffer(
             m_buffer_size.GetWidth(), m_buffer_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
             ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
@@ -215,7 +225,7 @@ void VRCameraComponent::InitializeWorkspaceForForwardPass()
             m_depth_buffer.Reset();
         }
         m_depth_buffer = new Texture("VRCameraDepthBuffer");
-        SD_SREF(m_depth_buffer).Initialize2DColorOrDepthBuffer(
+        SD_SREF(m_depth_buffer).InitializeVRColorOrDepthBuffer(
             m_buffer_size.GetWidth(), m_buffer_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
             ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);

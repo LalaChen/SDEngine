@@ -71,6 +71,9 @@ public:
 public:
     virtual bool OnGeometryChanged(const EventArg &i_arg) = 0;
 public:
+    virtual TextureWeakReferenceObject GetColorBuffer() const = 0;
+    virtual TextureWeakReferenceObject GetDepthBuffer() const = 0;
+public:
     virtual void Initialize() = 0;
     virtual void Resize() = 0;
     virtual void RecordCommand(

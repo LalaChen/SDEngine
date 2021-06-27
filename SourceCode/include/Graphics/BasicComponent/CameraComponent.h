@@ -51,8 +51,8 @@ public:
     void SetPerspective(float i_fov, float i_near, float i_far);
     void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
     void SetCameraSize(const Resolution &i_size);
-    TextureWeakReferenceObject GetColorBuffer() const;
-    TextureWeakReferenceObject GetDepthBuffer() const;
+    TextureWeakReferenceObject GetColorBuffer() const override;
+    TextureWeakReferenceObject GetDepthBuffer() const override;
 public:
     bool OnGeometryChanged(const EventArg &i_arg) override;
 public:

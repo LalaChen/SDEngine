@@ -109,7 +109,7 @@ ComponentBaseWeakReferenceObject ECSManager::AddComponentForEntity(const EntityW
                 m_comp_pools[target_type] = new ComponentPool(StringFormat("%sComponentPool", target_type.name()));
                 comp = SD_SREF(m_comp_pools[target_type]).NewComponent<T>(std::forward<TArgs>(i_args)...);
             }
-            LinkComponentAndEntity(i_entity, comp, typeid(T));
+            LinkComponentAndEntity(i_entity, comp, target_type);
             NotifyEntityChanged(i_entity);
         }
         else {

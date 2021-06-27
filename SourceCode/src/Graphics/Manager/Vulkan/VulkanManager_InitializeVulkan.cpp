@@ -320,19 +320,19 @@ void VulkanManager::InitializeDevice()
         }
     }
 
-    if (m_final_queue_fam_id >= 0) {
-        SDLOGD("Final Present Queue Family[%d] : TimeStamp[%d] Flag(%x) Count:%d Extent3D(%d,%d,%d) ",
-            m_final_queue_fam_id,
-            queue_families[m_final_queue_fam_id].timestampValidBits,
-            queue_families[m_final_queue_fam_id].queueFlags,
-            queue_families[m_final_queue_fam_id].queueCount,
-            queue_families[m_final_queue_fam_id].minImageTransferGranularity.width,
-            queue_families[m_final_queue_fam_id].minImageTransferGranularity.height,
-            queue_families[m_final_queue_fam_id].minImageTransferGranularity.depth);
+    if (m_final_queue_fam_id < 0) {
+        SDLOGW("Can't find desired queue family. use family [0]");
+        m_final_queue_fam_id = 0;
     }
-    else {
-        throw std::runtime_error("Can't find desired queue family.");
-    }
+
+    SDLOGD("Final Present Queue Family[%d] : TimeStamp[%d] Flag(%x) Count:%d Extent3D(%d,%d,%d) ",
+        m_final_queue_fam_id,
+        queue_families[m_final_queue_fam_id].timestampValidBits,
+        queue_families[m_final_queue_fam_id].queueFlags,
+        queue_families[m_final_queue_fam_id].queueCount,
+        queue_families[m_final_queue_fam_id].minImageTransferGranularity.width,
+        queue_families[m_final_queue_fam_id].minImageTransferGranularity.height,
+        queue_families[m_final_queue_fam_id].minImageTransferGranularity.depth);
 
     //Create queues.
     float quene_priorities[1] = { 1.0f };

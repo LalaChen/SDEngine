@@ -55,6 +55,7 @@ public:
     bool IsMatch(const std::vector<std::type_index> &i_condition) const;
     bool IsComponentExisted(const std::type_index &i_target_type) const;
     ComponentBaseWeakReferenceObject GetComponent(const std::type_index &i_target_type) const;
+    template<typename T> WeakReferenceObject<T> GetComponentByType() const;
 public:
     std::string ToString() const override;
 protected:
@@ -63,5 +64,20 @@ protected:
 protected:
     std::map<std::type_index, ComponentBaseWeakReferenceObject> m_comps; //std::type_index is component pool type.
 };
+
+template<typename T>
+inline WeakReferenceObject<T> Entity::GetComponentByType() const
+{
+    std::map<std::type_index, ComponentBaseWeakReferenceObject>::const_iterator comp_iter = m_comps.begin();
+
+    for (; comp_iter != m_comps.end(); ++comp_iter) {
+        WeakReferenceObject<T> comp = (*comp_iter).second.DynamicCastTo<T>();
+        if (comp.IsNull() == false) {
+            return comp;
+        }
+    }
+
+    return WeakReferenceObject<T>();
+}
 
 _______________SD_END_BASIC_NAMESPACE________________

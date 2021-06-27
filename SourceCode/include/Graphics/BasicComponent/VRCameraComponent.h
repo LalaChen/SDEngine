@@ -56,9 +56,10 @@ public:
 public:
     void SetEyeCenters(Vector3f i_eye_centers[VREye_Both]);
     void SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both]);
+    void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
 public:
-    TextureWeakReferenceObject GetColorBuffer() const;
-    TextureWeakReferenceObject GetDepthBuffer() const;
+    TextureWeakReferenceObject GetColorBuffer() const override;
+    TextureWeakReferenceObject GetDepthBuffer() const override;
 public:
     bool OnGeometryChanged(const EventArg &i_arg) override;
 public:
@@ -97,5 +98,20 @@ protected:
     Matrix4X4f m_proj_mats[VREye_Both];
 };
 
+inline TextureWeakReferenceObject VRCameraComponent::GetColorBuffer() const
+{
+    return m_color_buffer;
+}
+
+inline TextureWeakReferenceObject VRCameraComponent::GetDepthBuffer() const
+{
+    return m_depth_buffer;
+}
+
+inline void VRCameraComponent::SetClearValues(ClearValue i_color, ClearValue i_d_and_s)
+{
+    m_clear_color = i_color;
+    m_clear_d_and_s = i_d_and_s;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

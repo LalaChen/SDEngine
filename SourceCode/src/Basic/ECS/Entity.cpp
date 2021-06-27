@@ -92,11 +92,11 @@ bool Entity::IsMatch(const std::vector<std::type_index> &i_condition) const
     std::map<std::type_index, ComponentBaseWeakReferenceObject>::const_iterator comp_iter;
     for (const std::type_index &type : i_condition) {
         comp_iter = m_comps.find(type);
-        if (comp_iter == m_comps.end()) {
-            return false;
+        if (comp_iter != m_comps.end()) {
+            return true;
         }
     }
-    return true;
+    return false;
 }
 
 bool Entity::IsComponentExisted(const std::type_index &i_target_type) const

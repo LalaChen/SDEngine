@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include "Application.h"
 #include "ECSManager.h"
+#include "VRCameraComponent.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
 #include "MeshRenderComponent.h"
@@ -62,9 +63,9 @@ void GraphicsSystem::Initialize()
 
     //2. Initialize necessary group.
     m_camera_eg = ECSManager::GetRef().AddEntityGroup(
-        "CameraGroup",
+        "CameraBaseGroup",
         {
-            std::type_index(typeid(CameraComponent))
+            std::type_index(typeid(CameraComponentBase))
         }
     );
 
@@ -106,9 +107,9 @@ void GraphicsSystem::Update()
     GraphicsManager::GetRef().SubmitCommandBuffersToQueue({ m_graphics_cb });
 
     std::list<EntityWeakReferenceObject> camera_entity_list = SD_WREF(m_camera_eg).GetEntities();
-    std::list<CameraComponentWeakReferenceObject> camera_list;
+    std::list<CameraComponentBaseWeakReferenceObject> camera_list;
     for (EntityWeakReferenceObject &ce : camera_entity_list) {
-        camera_list.push_back(SD_GET_COMP_WREF(ce, CameraComponent));
+        camera_list.push_back(SD_GET_COMP_WREF(ce, CameraComponentBase));
     }
 
     GraphicsManager::GetRef().RenderTexture2DToScreen(SD_WREF((*camera_list.begin())).GetColorBuffer());
@@ -129,7 +130,7 @@ void GraphicsSystem::Resize()
 {
     std::list<EntityWeakReferenceObject> camera_entity_list = m_camera_eg.GetRef().GetEntities();
     for (EntityWeakReferenceObject ce : camera_entity_list) {
-        SD_WREF(SD_GET_COMP_WREF(ce, CameraComponent)).Resize();
+        SD_WREF(SD_GET_COMP_WREF(ce, CameraComponentBase)).Resize();
     }
 
     m_scene_changed = true;
@@ -158,14 +159,14 @@ void GraphicsSystem::RecordCommand()
     std::list<EntityWeakReferenceObject> light_entity_list = SD_WREF(m_light_eg).GetEntities();
     std::list<LightComponentWeakReferenceObject> light_list;
     std::list<MeshRenderComponentWeakReferenceObject> mesh_render_list;
-    std::list<CameraComponentWeakReferenceObject> camera_list;
+    std::list<CameraComponentBaseWeakReferenceObject> camera_list;
     //1. collect necessary components.
     for (EntityWeakReferenceObject &le : light_entity_list) {
         light_list.push_back(SD_GET_COMP_WREF(le, LightComponent));
     }
 
     for (EntityWeakReferenceObject &ce : camera_entity_list) {
-        camera_list.push_back(SD_GET_COMP_WREF(ce, CameraComponent));
+        camera_list.push_back(SD_GET_COMP_WREF(ce, CameraComponentBase));
     }
 
     for (EntityWeakReferenceObject &mre : mesh_render_entity_list) {
@@ -181,7 +182,7 @@ void GraphicsSystem::RecordCommand()
     //3. update stencil buffer. (To Do)
 
     //4. record command for camera.
-    for (CameraComponentWeakReferenceObject &camera : camera_list) {
+    for (CameraComponentBaseWeakReferenceObject &camera : camera_list) {
         SD_WREF(camera).RecordCommand(m_graphics_cb, light_list, mesh_render_list);
     }
     

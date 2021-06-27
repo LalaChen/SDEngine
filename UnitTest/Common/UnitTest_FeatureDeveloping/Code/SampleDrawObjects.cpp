@@ -153,31 +153,43 @@ bool SampleDrawObjects::Load()
 #endif
 
     //4. allocate scene root.
-    //m_scene_root_node = ECSManager::GetRef().CreateEntity("SceneRoot");
-    //ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_scene_root_node, "RootTransform");
     m_scene_root_node = (*m_entities.begin());
     //5. Add camera.
     m_camera_node = ECSManager::GetRef().CreateEntity("Camera");
     m_entities.push_back(m_camera_node);
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_camera_node, "CameraTransform");
+#if defined(VR_MODE)
+    ECSManager::GetRef().AddComponentForEntity<VRCameraComponent>(m_camera_node, "Camera");
+#else
     ECSManager::GetRef().AddComponentForEntity<CameraComponent>(m_camera_node, "Camera");
-    SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_camera_node, TransformComponent));
+#endif
+    SD_TYPE_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(m_camera_node, TransformComponent));
 
-    SD_COMP_WREF(m_camera_node, TransformComponent).SetWorldTransform(
+    SD_TYPE_COMP_WREF(m_camera_node, TransformComponent).SetWorldTransform(
         Transform::LookAt(
             Vector3f(1.0f, 1.5f, 7.0f, 1.0f),
             Vector3f(0.0f, 1.5f, 0.0f, 1.0f),
             Vector3f::PositiveY,
             true));
-
-    SD_COMP_WREF(m_camera_node, CameraComponent).SetClearValues(
+#if defined(SD_VR_MODE)
+    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetClearValues(
+        { 0.1725f, 0.1725f, 0.375f, 1.0f },
+        { 1.0f, 1 });
+    Matrix4X4f projs[VREye_Both];
+    projs[VREye_Left].perspective(90.0f, 1.0f, 0.01f, 1000.0f);
+    projs[VREye_Right].perspective(90.0f, 1.0f, 0.01f, 1000.0f);
+    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionMatrices(projs);
+    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).Initialize();
+#else
+    SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetClearValues(
         { 0.35f, 0.35f, 0.75f, 1.0f },
         { 1.0f, 1 });
-    SD_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(120, 0.01f, 1000.0f);
-    SD_COMP_WREF(m_camera_node, CameraComponent).Initialize();
+    SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(120, 0.01f, 1000.0f);
+    SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).Initialize();
+#endif
 
     ECSManager::GetRef().AddComponentForEntity<MotorComponent>(m_camera_node, "CameraMotor");
-    m_camera_motor = SD_GET_COMP_WREF(m_camera_node, MotorComponent);
+    m_camera_motor = SD_GET_TYPE_COMP_WREF(m_camera_node, MotorComponent);
     SD_WREF(m_camera_motor).Initialize();
 
     //6. Add light.
@@ -185,9 +197,9 @@ bool SampleDrawObjects::Load()
     m_entities.push_back(m_light_node);
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_light_node, "LightTransform");
     ECSManager::GetRef().AddComponentForEntity<LightComponent>(m_light_node, "Light");
-    SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_light_node, TransformComponent));
-    SD_COMP_WREF(m_light_node, LightComponent).SetLightParameter(LightUniforms());
-    SD_COMP_WREF(m_light_node, LightComponent).Initialize();
+    SD_TYPE_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(m_light_node, TransformComponent));
+    SD_TYPE_COMP_WREF(m_light_node, LightComponent).SetLightParameter(LightUniforms());
+    SD_TYPE_COMP_WREF(m_light_node, LightComponent).Initialize();
 
     SD_COMP_WREF(m_light_node, TransformComponent).SetWorldTransform(
         Transform::LookAt(Vector3f(1.0f, 3.0f, 1.0f, 1.0f), Vector3f::Origin, Vector3f::PositiveY)
@@ -201,11 +213,11 @@ bool SampleDrawObjects::Load()
 
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_axis_node, "AxisTransform");
     ECSManager::GetRef().AddComponentForEntity<MeshRenderComponent>(m_axis_node, "AxisMeshRender");
-    SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_axis_node, TransformComponent));
+    SD_TYPE_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(m_axis_node, TransformComponent));
 
-    SD_COMP_WREF(m_axis_node, TransformComponent).SetWorldPosition(Vector3f(0.0f, 0.0001f, 0.0f));
-    SD_COMP_WREF(m_axis_node, MeshRenderComponent).Initialize();
-    SD_COMP_WREF(m_axis_node, MeshRenderComponent).AppendMesh(m_axis_mesh, m_axis_material);
+    SD_TYPE_COMP_WREF(m_axis_node, TransformComponent).SetWorldPosition(Vector3f(0.0f, 0.0001f, 0.0f));
+    SD_TYPE_COMP_WREF(m_axis_node, MeshRenderComponent).Initialize();
+    SD_TYPE_COMP_WREF(m_axis_node, MeshRenderComponent).AppendMesh(m_axis_mesh, m_axis_material);
 
     //8. add floor.
     m_floor_mesh = BasicShapeCreator::GetRef().CreatePlane(
@@ -217,10 +229,10 @@ bool SampleDrawObjects::Load()
 
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_floor_node, "FloorTransform");
     ECSManager::GetRef().AddComponentForEntity<MeshRenderComponent>(m_floor_node, "FloorMeshRender");
-    SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(m_floor_node, TransformComponent));
+    SD_TYPE_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(m_floor_node, TransformComponent));
 
-    SD_COMP_WREF(m_floor_node, MeshRenderComponent).Initialize();
-    SD_COMP_WREF(m_floor_node, MeshRenderComponent).AppendMesh(m_floor_mesh, m_basic_material);
+    SD_TYPE_COMP_WREF(m_floor_node, MeshRenderComponent).Initialize();
+    SD_TYPE_COMP_WREF(m_floor_node, MeshRenderComponent).AppendMesh(m_floor_mesh, m_basic_material);
 
     //8. add cubes.
     m_cube_mesh = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
@@ -237,11 +249,11 @@ bool SampleDrawObjects::Load()
                 m_entities.push_back(cube_node);
                 ECSManager::GetRef().AddComponentForEntity<TransformComponent>(cube_node, StringFormat("cube_%d_%d_%d_Transform", row, col, depth));
                 ECSManager::GetRef().AddComponentForEntity<MeshRenderComponent>(cube_node, StringFormat("cube_%d_%d_%d_MeshRender", row, col, depth));
-                SD_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_COMP_WREF(cube_node, TransformComponent));
+                SD_TYPE_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(cube_node, TransformComponent));
 
-                SD_COMP_WREF(cube_node, MeshRenderComponent).Initialize();
-                SD_COMP_WREF(cube_node, MeshRenderComponent).AppendMesh(m_cube_mesh, m_basic_material);
-                SD_COMP_WREF(cube_node, TransformComponent).SetWorldPosition(start_pos +
+                SD_TYPE_COMP_WREF(cube_node, MeshRenderComponent).Initialize();
+                SD_TYPE_COMP_WREF(cube_node, MeshRenderComponent).AppendMesh(m_cube_mesh, m_basic_material);
+                SD_TYPE_COMP_WREF(cube_node, TransformComponent).SetWorldPosition(start_pos +
                     Vector3f((m_cube_side_length + m_cube_interval) * row,
                              (m_cube_side_length + m_cube_interval) * col,
                              (m_cube_side_length + m_cube_interval) * depth));

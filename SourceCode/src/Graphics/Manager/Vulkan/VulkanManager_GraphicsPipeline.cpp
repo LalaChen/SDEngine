@@ -74,10 +74,10 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
 
     std::vector<VkDescriptorSetLayout> vk_ds_layouts;
     for (const DescriptorSetLayoutWeakReferenceObject &dsl : i_dsls) {
-        const DescriptorSetLayoutIdentity& dsl_identity = GetIdentity(dsl);
+        const DescriptorSetLayoutIdentity &dsl_identity = GetIdentity(dsl);
         if (dsl_identity.m_handle == VK_NULL_HANDLE) {
             SDLOG("dsl_identity.m_handle is nullptr.");
-            throw std::runtime_error("m_handle is nullptr.");
+            throw std::runtime_error("dsl_identity.m_handle is nullptr.");
         }
         else {
             vk_ds_layouts.push_back(reinterpret_cast<VkDescriptorSetLayout>(dsl_identity.m_handle));

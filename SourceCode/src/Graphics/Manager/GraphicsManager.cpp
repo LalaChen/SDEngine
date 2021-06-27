@@ -59,7 +59,7 @@ void GraphicsManager::InitializeBasicResource()
                 SDLOG("FPS : %lf.", (static_cast<double>(i_count) / i_period_ms) * 1000.0);
             }
     );
-    SDLOG("Initialize.");
+    SDLOG("Initialize Basic Resource Start!!!");
     ECSManager::GetRef().RegisterSystem<GraphicsSystem>("GraphicsSystem");
 
     InitializeBasicDescriptorSetLayout();
@@ -69,6 +69,7 @@ void GraphicsManager::InitializeBasicResource()
     InitializeBasicShaderPrograms();
 
     m_fps.Start(1000.0, fps_cbk, false);
+    SDLOG("Initialize Basic Resource End!!!");
 }
 
 void GraphicsManager::ReleaseBasicResource()
