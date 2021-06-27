@@ -158,11 +158,6 @@ bool SampleDrawObjects::Load()
     m_camera_node = ECSManager::GetRef().CreateEntity("Camera");
     m_entities.push_back(m_camera_node);
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_camera_node, "CameraTransform");
-#if defined(VR_MODE)
-    ECSManager::GetRef().AddComponentForEntity<VRCameraComponent>(m_camera_node, "Camera");
-#else
-    ECSManager::GetRef().AddComponentForEntity<CameraComponent>(m_camera_node, "Camera");
-#endif
     SD_TYPE_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(m_camera_node, TransformComponent));
 
     SD_TYPE_COMP_WREF(m_camera_node, TransformComponent).SetWorldTransform(
@@ -172,25 +167,26 @@ bool SampleDrawObjects::Load()
             Vector3f::PositiveY,
             true));
 #if defined(SD_VR_MODE)
+    SDLOG("Initialize VRCamera");
+    ECSManager::GetRef().AddComponentForEntity<VRCameraComponent>(m_camera_node, "Camera");
     SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetClearValues(
-        { 0.1725f, 0.1725f, 0.375f, 1.0f },
+        { 0.1f, 0.1f, 0.1f, 1.0f },
         { 1.0f, 1 });
     Matrix4X4f projs[VREye_Both];
-    projs[VREye_Left].perspective(90.0f, 1.0f, 0.01f, 1000.0f);
-    projs[VREye_Right].perspective(90.0f, 1.0f, 0.01f, 1000.0f);
-    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionMatrices(projs);
     SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).Initialize();
 #else
+    SDLOG("Initialize Camera");
+    ECSManager::GetRef().AddComponentForEntity<CameraComponent>(m_camera_node, "Camera");
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetClearValues(
         { 0.35f, 0.35f, 0.75f, 1.0f },
         { 1.0f, 1 });
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(120, 0.01f, 1000.0f);
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).Initialize();
-#endif
 
     ECSManager::GetRef().AddComponentForEntity<MotorComponent>(m_camera_node, "CameraMotor");
     m_camera_motor = SD_GET_TYPE_COMP_WREF(m_camera_node, MotorComponent);
     SD_WREF(m_camera_motor).Initialize();
+#endif
 
     //6. Add light.
     m_light_node = ECSManager::GetRef().CreateEntity("Light");

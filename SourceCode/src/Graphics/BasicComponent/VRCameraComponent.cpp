@@ -280,8 +280,8 @@ bool VRCameraComponent::OnGeometryChanged(const EventArg &i_arg)
         Transform eye_xforms[2];
         eye_xforms[VREye_Left] = node_xform; eye_xforms[VREye_Left].AddTranslation(m_eye_centers[VREye_Left]);
         eye_xforms[VREye_Right] = node_xform; eye_xforms[VREye_Right].AddTranslation(m_eye_centers[VREye_Right]);
-        SD_WREF(m_ub).SetMatrix4X4f("views", eye_xforms[VREye_Left].MakeViewMatrix());
-        SD_WREF(m_ub).SetMatrix4X4f("views", eye_xforms[VREye_Right].MakeViewMatrix());
+        SD_WREF(m_ub).SetMatrix4X4f("views", eye_xforms[VREye_Left].MakeViewMatrix(), VREye_Left);
+        SD_WREF(m_ub).SetMatrix4X4f("views", eye_xforms[VREye_Right].MakeViewMatrix(), VREye_Right);
         SD_WREF(m_ub).SetMatrix4X4f("projs", m_proj_mats[VREye_Left], VREye_Left);
         SD_WREF(m_ub).SetMatrix4X4f("projs", m_proj_mats[VREye_Right], VREye_Right);
         SD_WREF(m_ub).SetVector3f("viewEyes", eye_xforms[VREye_Left].m_position, VREye_Left);

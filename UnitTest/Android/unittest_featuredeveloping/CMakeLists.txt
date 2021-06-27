@@ -115,7 +115,7 @@ set_target_properties( SDEngine_AndroidApplication PROPERTIES IMPORTED_LOCATION
 # Gradle automatically packages shared libraries with your APK.
 
 set(COMMON_INC_DIR
-        ../../Common/UnitTest_VulkanAPI/Code)
+        ../../Common/UnitTest_FeatureDeveloping/Code)
 
 include_directories(
         ${SD_TP_ASSIMP_INC_DIR}
