@@ -53,9 +53,6 @@ VRCameraComponent::~VRCameraComponent()
 
 void VRCameraComponent::SetEyeCenters(Vector3f i_eye_centers[VREye_Both])
 {
-    SDLOG("SetEyeCenters L:%s, R:%s"
-        , i_eye_centers[VREye_Left].ToString().c_str()
-        , i_eye_centers[VREye_Right].ToString().c_str());
 
     for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
         m_eye_centers[eid] = i_eye_centers[eid];
@@ -65,9 +62,6 @@ void VRCameraComponent::SetEyeCenters(Vector3f i_eye_centers[VREye_Both])
 
 void VRCameraComponent::SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both])
 {
-    SDLOG("Set Proj L:%s, R:%s"
-        , i_proj_mats[VREye_Left].ToString().c_str()
-        , i_proj_mats[VREye_Right].ToString().c_str());
 
     for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
         m_proj_mats[eid] = i_proj_mats[eid];
@@ -277,15 +271,21 @@ bool VRCameraComponent::OnGeometryChanged(const EventArg &i_arg)
 {
     if (m_ub.IsNull() == false) {
         Transform node_xform = SD_WREF(m_geo_comp).GetWorldTransform();
-        Transform eye_xforms[2];
-        eye_xforms[VREye_Left] = node_xform; eye_xforms[VREye_Left].AddTranslation(m_eye_centers[VREye_Left]);
-        eye_xforms[VREye_Right] = node_xform; eye_xforms[VREye_Right].AddTranslation(m_eye_centers[VREye_Right]);
-        SD_WREF(m_ub).SetMatrix4X4f("views", eye_xforms[VREye_Left].MakeViewMatrix(), VREye_Left);
-        SD_WREF(m_ub).SetMatrix4X4f("views", eye_xforms[VREye_Right].MakeViewMatrix(), VREye_Right);
-        SD_WREF(m_ub).SetMatrix4X4f("projs", m_proj_mats[VREye_Left], VREye_Left);
-        SD_WREF(m_ub).SetMatrix4X4f("projs", m_proj_mats[VREye_Right], VREye_Right);
-        SD_WREF(m_ub).SetVector3f("viewEyes", eye_xforms[VREye_Left].m_position, VREye_Left);
-        SD_WREF(m_ub).SetVector3f("viewEyes", eye_xforms[VREye_Right].m_position, VREye_Right);
+        
+        for (uint32_t eyeID = 0; eyeID < VREye_Both; ++eyeID) {
+            Vector3f eye_position;
+            Transform eye_xform;
+            eye_position =
+                node_xform.GetRight().scale(m_eye_centers[eyeID].m_vec.x) +
+                node_xform.GetTop().scale(m_eye_centers[eyeID].m_vec.y) +
+                node_xform.GetForward().scale(m_eye_centers[eyeID].m_vec.z);
+            eye_xform = node_xform;
+            eye_xform.AddTranslation(eye_position);
+
+            SD_WREF(m_ub).SetMatrix4X4f("views", eye_xform.MakeViewMatrix(), eyeID);
+            SD_WREF(m_ub).SetMatrix4X4f("projs", m_proj_mats[eyeID], eyeID);
+            SD_WREF(m_ub).SetVector3f("viewEyes", eye_xform.m_position, eyeID);
+        }
         SD_WREF(m_ub).Update();
     }
 
