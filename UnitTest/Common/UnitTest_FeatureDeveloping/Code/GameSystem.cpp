@@ -16,7 +16,7 @@ void GameSystem::Initialize()
 {
 
     SD_WREF(Application::GetRef().GetEventNotifier()).RegisterSlotFunctionIntoEvent(
-        "AppEvent", 
+        sAppEventName, 
         new MemberFunctionSlot<GameSystem>(
             "GameSystem::OnAppEventTriggered",
             GetThisWeakPtrByType<GameSystem>(),

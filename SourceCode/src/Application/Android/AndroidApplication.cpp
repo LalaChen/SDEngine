@@ -39,7 +39,7 @@ void AndroidApplication::Initialize()
     else if (m_adopt_library == GraphicsLibrary_Vulkan) {
         new VulkanManager();
     }
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_INITIALIZED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_INITIALIZED));
 }
 
 void AndroidApplication::InitializeGraphicsSystem()
@@ -137,7 +137,7 @@ void AndroidApplication::InitializeGraphicsSystem()
     else {
     }
 
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
 }
 
 void AndroidApplication::ReleaseGraphicsSystem()
@@ -146,7 +146,7 @@ void AndroidApplication::ReleaseGraphicsSystem()
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
     GraphicsManager::Destroy();
     m_window = nullptr;
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_GRAPHICS_RELESAED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
 }
 
 void AndroidApplication::TerminateApplication()
@@ -172,7 +172,7 @@ void AndroidApplication::TerminateApplication()
     //
     m_asset_mgr = nullptr;
 
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_TERMINATED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_TERMINATED));
 }
 
 void AndroidApplication::InitializeNativeWindow(ANativeWindow *i_window)

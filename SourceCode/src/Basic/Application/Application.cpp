@@ -54,7 +54,7 @@ Application::Application(const std::string &i_win_title, const Resolution &i_win
     m_key_map_manager = new KeyMapManager(i_win_title + "_KeyMapManager");
     //Initialize events.
     m_app_event_notifier = new EventObject("AppEventNotifier");
-    SD_WREF(m_app_event_notifier).RegisterEvent(new Event("AppEvent"));
+    SD_WREF(m_app_event_notifier).RegisterEvent(new Event(sAppEventName));
     //Initialize ECSManager
     new ECSManager();
     ECSManager::GetRef().Initialize();
@@ -104,7 +104,7 @@ void Application::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
 
     ECSManager::GetRef().Resize();
 
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_SCREEN_RESIZED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_SCREEN_RESIZED));
 }
 
 void Application::SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed)

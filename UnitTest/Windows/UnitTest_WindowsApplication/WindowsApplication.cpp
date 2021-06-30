@@ -122,7 +122,7 @@ void WindowsApplication::Initialize()
     else {
         new VulkanManager();
     }
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_INITIALIZED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_INITIALIZED));
 }
 
 void WindowsApplication::InitializeGraphicsSystem()
@@ -236,7 +236,7 @@ void WindowsApplication::InitializeGraphicsSystem()
         throw std::runtime_error("Error engine type!!!");
     }
 
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
 }
 
 void WindowsApplication::ReleaseGraphicsSystem()
@@ -245,7 +245,7 @@ void WindowsApplication::ReleaseGraphicsSystem()
     GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
 
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_GRAPHICS_RELESAED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
 }
 
 void WindowsApplication::TerminateApplication()
@@ -264,7 +264,7 @@ void WindowsApplication::TerminateApplication()
     //destroy LogManager
     LogManager::Destroy();
 
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_TERMINATED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_TERMINATED));
 }
 
 KeyStatusEnum WindowsApplication::GetKeyStateByCode(KeyCodeEnum i_code)

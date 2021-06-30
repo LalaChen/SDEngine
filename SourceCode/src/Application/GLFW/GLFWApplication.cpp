@@ -98,7 +98,7 @@ void GLFWApplication::Initialize()
         new VulkanManager();
     }
     //
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_INITIALIZED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_INITIALIZED));
 }
 
 void GLFWApplication::InitializeGraphicsSystem()
@@ -207,7 +207,7 @@ void GLFWApplication::InitializeGraphicsSystem()
         glfwSwapInterval(1);
     }
 
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
 }
 
 void GLFWApplication::ReleaseGraphicsSystem()
@@ -216,7 +216,7 @@ void GLFWApplication::ReleaseGraphicsSystem()
     GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
 
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_GRAPHICS_RELESAED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
 }
 
 void GLFWApplication::TerminateApplication()
@@ -237,7 +237,7 @@ void GLFWApplication::TerminateApplication()
     //destroy LogManager
     LogManager::Destroy();
 
-    SD_WREF(m_app_event_notifier).NotifyEvent("AppEvent", AppEventArg(AppEvent_TERMINATED));
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_TERMINATED));
 }
 
 KeyStatusEnum GLFWApplication::GetKeyStateByCode(KeyCodeEnum i_code)

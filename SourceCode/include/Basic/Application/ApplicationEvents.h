@@ -49,6 +49,8 @@ enum AppEventEnum {
     AppEvent_NONE
 };
 
+static const std::string sAppEventName = "AppEvent";
+
 class SDENGINE_CLASS AppEventArg : public EventArg
 {
 public:
