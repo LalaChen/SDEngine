@@ -36,7 +36,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
 
     //1. Initialize render pass.
     //--- ForwardPass
-    RenderPassStrongReferenceObject forward_pass = new RenderPass("ForwardPass");
+    RenderPassStrongReferenceObject forward_pass = new RenderPass(sRenderPass_Forward);
     //1.1. prepare attachment references data.
     std::vector<AttachmentDescription> att_descs;
     AttachmentDescription att_desc;
@@ -108,7 +108,7 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     RegisterRenderPass(forward_pass);
 
     //--- ForwardPass (VR Version)
-    RenderPassStrongReferenceObject vr_forward_pass = new RenderPass("VRForwardPass");
+    RenderPassStrongReferenceObject vr_forward_pass = new RenderPass(sRenderPass_VRForward);
     MultiviewInfo mv_info;
     mv_info.m_view_masks.resize(sp_descs.size());
     for (uint32_t count = 0; count < mv_info.m_view_masks.size(); ++count) {
@@ -124,6 +124,70 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     SD_SREF(vr_forward_pass).Initialize();
 
     RegisterRenderPass(vr_forward_pass);
+
+    att_descs.clear();
+    sp_descs.clear();
+    sp_denps.clear();
+    //--- GUIRenderPass
+    RenderPassStrongReferenceObject gui_pass = new RenderPass(sRenderPass_GUI);
+    //--- Color Attachment for sp0(GUI).
+    att_desc.m_format = GetDefaultColorBufferFormat();
+    att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
+    att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
+    att_desc.m_sample_counts = SampleCount_1;
+    att_desc.m_load_op = AttachmentLoadOperator_CLEAR;
+    att_desc.m_store_op = AttachmentStoreOperator_STORE;
+    att_desc.m_stencil_load_op = AttachmentLoadOperator_DONT_CARE;
+    att_desc.m_stencil_store_op = AttachmentStoreOperator_DONT_CARE;
+    att_descs.push_back(att_desc);
+    //--- Depth Attachment for sp0(GUI).
+    att_desc.m_format = GetDefaultDepthBufferFormat();
+    att_desc.m_initial_layout = ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    att_desc.m_final_layout = ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    att_desc.m_sample_counts = SampleCount_1;
+    att_desc.m_load_op = AttachmentLoadOperator_CLEAR;
+    att_desc.m_store_op = AttachmentStoreOperator_STORE;
+    att_desc.m_stencil_load_op = AttachmentLoadOperator_CLEAR;
+    att_desc.m_stencil_store_op = AttachmentStoreOperator_DONT_CARE;
+    att_descs.push_back(att_desc);
+    //1.2. prepare attachment references data.
+    //--- sp0 FirstOrNoLight
+    sp_desc = SubpassDescription();
+    sp_desc.m_name = "GUI";
+    sp_desc.m_bind_point = PipelineBindPoint_GRAPHICS;
+    //--- color attachment reference.
+    atta_ref.m_attachment_ID = 0;
+    atta_ref.m_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
+    sp_desc.m_color_attachment_refs.push_back(atta_ref);
+    //--- depth attachment reference.
+    sp_desc.m_depth_attachment_ref.m_attachment_ID = 1;
+    sp_desc.m_depth_attachment_ref.m_layout = ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    sp_descs.push_back(sp_desc);
+    //1.3 SubpassDependency.
+    //sp external to sp0
+    sp_denp = SubpassDependency();
+    sp_denp.m_src_spID = SD_SUBPASS_EXTERNAL;
+    sp_denp.m_dst_spID = 0;
+    sp_denp.m_src_pipeline_stages.push_back(PipelineStage_BOTTOM_OF_PIPE);
+    sp_denp.m_dst_pipeline_stages.push_back(PipelineStage_TOP_OF_PIPE);
+    sp_denp.m_src_mem_masks.push_back(MemoryAccessMask_MEMORY_WRITE);
+    sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
+    sp_denp.m_dependencies.push_back(DependencyScope_REGION);
+    sp_denps.push_back(sp_denp);
+    //sp0 and sp external
+    sp_denp = SubpassDependency();
+    sp_denp.m_src_spID = 0;
+    sp_denp.m_dst_spID = SD_SUBPASS_EXTERNAL;
+    sp_denp.m_src_pipeline_stages.push_back(PipelineStage_BOTTOM_OF_PIPE);
+    sp_denp.m_dst_pipeline_stages.push_back(PipelineStage_TOP_OF_PIPE);
+    sp_denp.m_src_mem_masks.push_back(MemoryAccessMask_MEMORY_WRITE);
+    sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
+    sp_denp.m_dependencies.push_back(DependencyScope_REGION);
+    sp_denps.push_back(sp_denp);
+
+    SD_SREF(gui_pass).AddRenderPassDescription(att_descs, sp_descs, sp_denps);
+    SD_SREF(gui_pass).Initialize();
+    RegisterRenderPass(gui_pass);
 }
 
 void GraphicsManager::RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp)

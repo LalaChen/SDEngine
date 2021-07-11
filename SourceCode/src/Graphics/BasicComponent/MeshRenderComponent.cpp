@@ -47,7 +47,7 @@ void MeshRenderComponent::Initialize()
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
 
     //1. Get DescriptorSet for MeshRenderer and count number of uniforms.
-    DescriptorSetLayoutWeakReferenceObject basic_ds_layouts = GraphicsManager::GetRef().GetBasicDescriptorSetLayout("MeshRender");
+    DescriptorSetLayoutWeakReferenceObject basic_ds_layouts = GraphicsManager::GetRef().GetBasicDescriptorSetLayout(sUniformDescriptorSetLayout_MeshRender);
     SD_WREF(basic_ds_layouts).GetUniformDescriptorCounts(desc_counts);
 
     //2. Allocate descriptor pool and set.
@@ -62,8 +62,8 @@ void MeshRenderComponent::Initialize()
     }
 
     //4. Get basic uniform buffer for update MVP.
-    if (uvs.find("geometry") != uvs.end()) {
-        m_geo_ub = uvs["geometry"].DynamicCastTo<UniformBuffer>();
+    if (uvs.find(sUniformBuffer_MeshRender_Geometry) != uvs.end()) {
+        m_geo_ub = uvs[sUniformBuffer_MeshRender_Geometry].DynamicCastTo<UniformBuffer>();
     }
 
     if (m_geo_ub.IsNull() == true) {

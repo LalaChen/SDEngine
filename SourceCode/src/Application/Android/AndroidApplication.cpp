@@ -6,6 +6,7 @@
 using namespace SDE;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
+using namespace SDE::GUI;
 
 ________________SD_START_APP_NAMESPACE_______________
 
@@ -39,6 +40,9 @@ void AndroidApplication::Initialize()
     else if (m_adopt_library == GraphicsLibrary_Vulkan) {
         new VulkanManager();
     }
+
+    new IMGUIRenderer();
+
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_INITIALIZED));
 }
 
@@ -137,16 +141,20 @@ void AndroidApplication::InitializeGraphicsSystem()
     else {
     }
 
+    IMGUIRenderer::GetRef().InitializeGraphicsSystem();
+
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
 }
 
 void AndroidApplication::ReleaseGraphicsSystem()
 {
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
+    IMGUIRenderer::GetRef().ReleaseGraphicsSystem();
+
     GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
-    GraphicsManager::Destroy();
+    
     m_window = nullptr;
-    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
 }
 
 void AndroidApplication::TerminateApplication()
@@ -160,6 +168,7 @@ void AndroidApplication::TerminateApplication()
     ECSManager::GetRef().Terminate();
     SDLOG("[AppFlow] Destroy GraphicsManager.");
     ReleaseGraphicsSystem();
+    GraphicsManager::Destroy();
     //destroy Timer.
     Timer::GetRef().End();
     SDLOG("[AppFlow] APP Ending at %lf.", Timer::GetRef().GetProgramEndTime());

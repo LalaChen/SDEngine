@@ -72,6 +72,8 @@ public:
 
     MeshStrongReferenceObject CreateAxis(float i_width = 0.2f, float i_length = 2.0f);
 
+    MeshStrongReferenceObject CreateWorldGUI(float i_width = 0.5f, float i_height = 0.5f);
+
     MeshStrongReferenceObject CreateCone(
         const Vector3f &i_center = Vector3f::Zero,
         const Vector3f &i_u = Vector3f::PositiveX,

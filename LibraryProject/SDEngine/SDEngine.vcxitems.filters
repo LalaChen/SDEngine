@@ -235,6 +235,30 @@
     <Filter Include="src\Graphics\Scene">
       <UniqueIdentifier>{37b04ab3-9137-4fd2-9044-b246fb67a25c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\GUI">
+      <UniqueIdentifier>{ec684af9-f903-4b00-9837-0fefb4ad0caa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GUI">
+      <UniqueIdentifier>{59ef991c-c001-4846-a9b7-d0df88b28a75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{f026acd1-c960-4a57-aa9a-6d4f18077698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\ShaderProgram">
+      <UniqueIdentifier>{4d296f9e-5356-48cc-8e3f-9d5babf49256}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\ShaderProgram\AxesShading">
+      <UniqueIdentifier>{053458f5-3d99-4248-a43c-9bb2cd2b5d28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\ShaderProgram\BasicShading">
+      <UniqueIdentifier>{662601d7-aa9a-4ffb-b0f9-ca318a991aee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\ShaderProgram\GUIShading">
+      <UniqueIdentifier>{e77c22d5-9cbc-4e77-bbce-fa0fb4bca045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\ShaderProgram\NoLighting">
+      <UniqueIdentifier>{32220f24-89b1-47c2-896a-86c92a5af6ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -831,6 +855,24 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Scene\Scene.h">
       <Filter>include\Graphics\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIRenderer.h">
+      <Filter>include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUINode.h">
+      <Filter>include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIBatch.h">
+      <Filter>include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIWindow.h">
+      <Filter>include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\WorldGUIComponent.h">
+      <Filter>include\Graphics\BasicComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\System\WorldGUISystem.h">
+      <Filter>include\Graphics\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1388,6 +1430,27 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\Application\ApplicationEvents.cpp">
       <Filter>src\Basic\Application</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIRenderer.cpp">
+      <Filter>src\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUINode.cpp">
+      <Filter>src\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIWindow.cpp">
+      <Filter>src\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIBatch.cpp">
+      <Filter>src\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\WorldGUIComponent.cpp">
+      <Filter>src\Graphics\BasicComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\System\WorldGUISystem.cpp">
+      <Filter>src\Graphics\System</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_WorldGUI.cpp">
+      <Filter>src\Graphics\BasicShapeCreator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.frag">
@@ -1395,6 +1458,102 @@
     </None>
     <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.vert">
       <Filter>include\Graphics\EmbeddedShaderProgram</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\AxesShading.json">
+      <Filter>common\ShaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag">
+      <Filter>common\ShaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag.spv">
+      <Filter>common\ShaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.vert">
+      <Filter>common\ShaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.vert.spv">
+      <Filter>common\ShaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_SP0.frag">
+      <Filter>common\ShaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_SP0.frag.spv">
+      <Filter>common\ShaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_SP0.vert">
+      <Filter>common\ShaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_SP0.vert.spv">
+      <Filter>common\ShaderProgram\AxesShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\BasicShading.json">
+      <Filter>common\ShaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.frag">
+      <Filter>common\ShaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.frag.spv">
+      <Filter>common\ShaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.vert">
+      <Filter>common\ShaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.vert.spv">
+      <Filter>common\ShaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_SP0.frag">
+      <Filter>common\ShaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_SP0.frag.spv">
+      <Filter>common\ShaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_SP0.vert">
+      <Filter>common\ShaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_SP0.vert.spv">
+      <Filter>common\ShaderProgram\BasicShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.vert.spv">
+      <Filter>common\ShaderProgram\GUIShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShading.json">
+      <Filter>common\ShaderProgram\GUIShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.frag">
+      <Filter>common\ShaderProgram\GUIShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.frag.spv">
+      <Filter>common\ShaderProgram\GUIShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.vert">
+      <Filter>common\ShaderProgram\GUIShading</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_SP0.frag">
+      <Filter>common\ShaderProgram\NoLighting</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_SP0.frag.spv">
+      <Filter>common\ShaderProgram\NoLighting</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_SP0.vert">
+      <Filter>common\ShaderProgram\NoLighting</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_SP0.vert.spv">
+      <Filter>common\ShaderProgram\NoLighting</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShading.json">
+      <Filter>common\ShaderProgram\NoLighting</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.frag">
+      <Filter>common\ShaderProgram\NoLighting</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.frag.spv">
+      <Filter>common\ShaderProgram\NoLighting</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.vert">
+      <Filter>common\ShaderProgram\NoLighting</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.vert.spv">
+      <Filter>common\ShaderProgram\NoLighting</Filter>
     </None>
   </ItemGroup>
 </Project>

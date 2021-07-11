@@ -33,11 +33,11 @@ void OpenGL4Manager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_
 {
 }
 
-void OpenGL4Manager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+void OpenGL4Manager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size)
 {
 }
 
-void OpenGL4Manager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+void OpenGL4Manager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size)
 {
 }
 
@@ -66,11 +66,11 @@ void OpenGL4Manager::CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui
 {
 }
 
-void OpenGL4Manager::RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+void OpenGL4Manager::RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size)
 {
 }
 
-void OpenGL4Manager::RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+void OpenGL4Manager::RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size)
 {
 }
 

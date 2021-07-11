@@ -57,12 +57,12 @@ public:
      */
     virtual ~StaticVertexBuffer();
 public:
-    /* \fn void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) override;
+    /* \fn void RefreshBufferData(const void *i_data_ptr, Size_ui64 i_data_size) override;
      * \param [in] i_data_ptr Data pointer.
      * \param [in] i_data_size Data size.
      * \brief Refresh data into buffer.
      */
-    void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) override;
+    void RefreshBufferData(const void *i_data_ptr, Size_ui64 i_data_size) override;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

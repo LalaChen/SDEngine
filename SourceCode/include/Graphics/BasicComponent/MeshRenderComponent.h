@@ -68,7 +68,8 @@ public:
     explicit MeshRenderComponent(const ObjectName &i_object_name);
     virtual ~MeshRenderComponent();
 public:
-    void Initialize();
+    void Initialize() override;
+public:
     bool AppendMesh(const MeshWeakReferenceObject &i_mesh, const MaterialWeakReferenceObject &i_material);
     void RenderMesh(
         const RenderPassWeakReferenceObject &i_rp,

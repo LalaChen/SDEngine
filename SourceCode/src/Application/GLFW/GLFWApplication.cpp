@@ -6,6 +6,7 @@
 using namespace SDE;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
+using namespace SDE::GUI;
 
 ________________SD_START_APP_NAMESPACE_______________
 
@@ -89,7 +90,7 @@ void GLFWApplication::Initialize()
     //new WindowsFileSystemManager.
     new WindowsFileSystemManager();
     FileSystemManager::GetRef().Initialize();
-    //Initialize KeyBoard Mapping.
+
     //new Graphics Manager.
     if (m_adopt_library == GraphicsLibrary_OpenGL4) {
         new OpenGL4Manager();
@@ -97,6 +98,8 @@ void GLFWApplication::Initialize()
     else if (m_adopt_library == GraphicsLibrary_Vulkan) {
         new VulkanManager();
     }
+
+    new IMGUIRenderer();
     //
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_INITIALIZED));
 }
@@ -207,16 +210,20 @@ void GLFWApplication::InitializeGraphicsSystem()
         glfwSwapInterval(1);
     }
 
+    IMGUIRenderer::GetRef().InitializeGraphicsSystem();
+
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
 }
 
 void GLFWApplication::ReleaseGraphicsSystem()
 {
-    SDLOG("Release Graphics System of Application.");
+    SDLOG("Release Graphics System of Application.")
+       
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
+    IMGUIRenderer::GetRef().ReleaseGraphicsSystem();
+
     GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
-
-    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
 }
 
 void GLFWApplication::TerminateApplication()

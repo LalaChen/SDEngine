@@ -113,48 +113,56 @@
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

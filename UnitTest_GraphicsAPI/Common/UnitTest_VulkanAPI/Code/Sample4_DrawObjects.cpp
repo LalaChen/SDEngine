@@ -450,7 +450,7 @@ void Sample4_DrawObjects::CreateShaderProgram()
         params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
         params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
         params.m_dynamic_states.push_back(DynamicState_SCISSOR);
-        GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
+        GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, VertexLocationKind_GENERAL);
 
         //1.3 prepare descriptor set layouts.
         std::vector<DescriptorSetLayoutWeakReferenceObject> dsls;
@@ -503,7 +503,7 @@ void Sample4_DrawObjects::CreateShaderProgram()
         params.m_attachment_blend_state.m_blend_infos.resize(1); //blend default false.
         params.m_dynamic_states.push_back(DynamicState_VIEWPORT);
         params.m_dynamic_states.push_back(DynamicState_SCISSOR);
-        GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, 2);
+        GraphicsManager::GetRef().GetBasicVertexAttribInfos(params.m_va_binding_descs, params.m_va_location_descs, VertexLocationKind_GENERAL);
 
         //1.3 prepare descriptor set layouts.
         std::vector<DescriptorSetLayoutWeakReferenceObject> dsls;

@@ -140,6 +140,7 @@ void TransformComponent::AddChild(const TransformComponentWeakReferenceObject &i
 {
     if (i_target_so.IsNull() == false) {
         SD_WREF(i_target_so).SetParent(GetThisWeakPtrByType<TransformComponent>());
+        m_children.push_back(i_target_so);
     }
     else {
         SDLOGW("Set nullptr child.");

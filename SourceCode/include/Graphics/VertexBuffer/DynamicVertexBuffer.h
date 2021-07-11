@@ -57,13 +57,18 @@ public:
      */
     virtual ~DynamicVertexBuffer();
 public:
-    /*! \fn void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) override;
+    /*! \fn void RefreshBufferData(const void *i_data_ptr, Size_ui64 i_data_size) override;
      *  \param [in] i_data_ptr Data pointer.
      *  \param [in] i_data_size Data size.
      *  \brief Refresh data into buffer.
      */
-    void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) override;
+    void RefreshBufferData(const void *i_data_ptr, Size_ui64 i_data_size) override;
 
+    /*! \fn void Resize(Size_ui64 i_data_size);
+     *  \param [in] i_data_size Data size.
+     *  \brief Resize buffer.
+     */
+    void Resize(Size_ui64 i_data_size);
 public:
     /*! \fn VoidPtr MapMemory();
      *  \brief Return map buffer memory.
@@ -74,6 +79,16 @@ public:
      *  \brief Unmap buffer memory.
      */
     void UnmapMemory();
+
+    /*! \fn Size_ui64 GetMemorySize() const
+     *  \brief Get memory size of this buffer.
+     */
+    Size_ui64 GetMemorySize() const;
 };
+
+inline Size_ui64 DynamicVertexBuffer::GetMemorySize() const
+{
+    return m_identity.m_memory_size;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

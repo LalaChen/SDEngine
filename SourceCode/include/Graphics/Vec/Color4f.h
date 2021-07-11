@@ -67,6 +67,8 @@ public:
      *  \brief Constructor of Color4B.
      */
 	Color4B(uint8_t i_r, uint8_t i_g, uint8_t i_b, uint8_t i_a):r(i_r),g(i_g),b(i_b),a(i_a){}
+
+    Color4B(uint8_t data[4]) :r(data[0]), g(data[1]), b(data[2]), a(data[3]) {}
 	
     /*! \fn ~Color4B();
      *  \brief Destructor of Color4B.

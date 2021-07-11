@@ -181,7 +181,7 @@ void VRCameraComponent::InitializeDescriptorSetAndPool()
     std::map<ObjectName, UniformVariableWeakReferenceObject> uvs;
     //1. Collect all descriptor set layouts used at this component.
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
-    DescriptorSetLayoutWeakReferenceObject vrcamera_dsl = GraphicsManager::GetRef().GetBasicDescriptorSetLayout("VRCamera");
+    DescriptorSetLayoutWeakReferenceObject vrcamera_dsl = GraphicsManager::GetRef().GetBasicDescriptorSetLayout(sUniformDescriptorSetLayout_VRCamera);
     SD_SREF(vrcamera_dsl).GetUniformDescriptorCounts(desc_counts);
     SD_SREF(m_dp).Initialize(desc_counts, 1, false);
     //2. Allocate descriptor set.
@@ -192,8 +192,8 @@ void VRCameraComponent::InitializeDescriptorSetAndPool()
         SD_SREF(m_ds).WriteDescriptor();
     }
 
-    if (uvs.find("vrcamera") != uvs.end()) {
-        m_ub = uvs["vrcamera"].DynamicCastTo<UniformBuffer>();
+    if (uvs.find(sUniformBuffer_VRCamera) != uvs.end()) {
+        m_ub = uvs[sUniformBuffer_VRCamera].DynamicCastTo<UniformBuffer>();
     }
 
     if (m_ub.IsNull() == true) {
@@ -203,7 +203,7 @@ void VRCameraComponent::InitializeDescriptorSetAndPool()
 
 void VRCameraComponent::InitializeWorkspaceForForwardPass()
 {
-    RenderPassWeakReferenceObject forward_rp = GraphicsManager::GetRef().GetRenderPass("VRForwardPass");
+    RenderPassWeakReferenceObject forward_rp = GraphicsManager::GetRef().GetRenderPass(sRenderPass_VRForward);
 
     if (forward_rp.IsNull() == false) {
         if (m_color_buffer.IsNull() == false) {

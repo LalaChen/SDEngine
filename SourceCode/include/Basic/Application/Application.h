@@ -45,6 +45,47 @@ using SDE::Graphics::Size_ui32;
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
+enum TouchButtonEnum
+{
+    TOUCH_BUTTON_0 = 0,
+    TOUCH_BUTTON_1,
+    TOUCH_BUTTON_2,
+    TOUCH_BUTTON_3,
+    TOUCH_BUTTON_4,
+    TOUCH_BUTTON_5,
+    TOUCH_BUTTON_6,
+    TOUCH_BUTTON_7,
+    TOUCH_BUTTON_8,
+    TOUCH_BUTTON_9,
+    TOUCH_BUTTON_MAX_DEFINE_VALUE,
+    TOUCH_BUTTON_RIGHT = TOUCH_BUTTON_0,
+    TOUCH_BUTTON_LEFT = TOUCH_BUTTON_1,
+    TOUCH_BUTTON_MIDDLE = TOUCH_BUTTON_2,
+};
+
+enum TouchButtonStateEnum
+{
+    TOUCH_BUTTON_STATE_RELEASED = 0,
+    TOUCH_BUTTON_STATE_PRESSED,
+    TOUCH_BUTTON_STATE_MAX_DEFINE_VALUE
+};
+
+class SDENGINE_CLASS TouchButton
+{
+public:
+    TouchButton()
+    : m_x(-1.0f)
+    , m_y(-1.0f)
+    , m_state(TOUCH_BUTTON_STATE_RELEASED)
+    {
+    }
+    ~TouchButton(){}
+public:
+    float m_x;
+    float m_y;
+    TouchButtonStateEnum m_state;
+};
+
 /*! \class Application
  *  \brief In our system, Application is used to manager application lifecycle. We also record
  *  the resolution in this class.
@@ -104,6 +145,13 @@ public:
      *  \brief Get key status by key code. Return not support if the key isn't supported.
      */
     virtual KeyStatusEnum GetKeyStateByCode(KeyCodeEnum i_code) = 0;
+
+    /*! \fn TouchButton GetTouchButton(TouchButtonEnum i_button_id) const;
+     *  \param [in] i_button_id Target touch id.
+     *  \brief Get button data by touch id.
+     */
+    TouchButton GetTouchButton(TouchButtonEnum i_button_id) const;
+
 public:
     /*! \fn virtual void Update();
      *  \brief Update app. Please call this function each frame.
@@ -157,6 +205,21 @@ public:
      */
     void SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed);
 
+    /*! \fn void SetTouchStatus(TouchButtonEnum i_touch_id, TouchButtonStateEnum i_touch_state);
+     *  \param [in] i_touch_id KeyID.
+     *  \param [in] i_touch_state TouchState.
+     *  \brief Set touch state.
+     */
+    void SetTouchStatus(TouchButtonEnum i_touch_id, TouchButtonStateEnum i_touch_state);
+
+    /*! \fn void SetTouchPosition(TouchButtonEnum i_touch_id, float i_x, float i_y);
+     *  \param [in] i_touch_id KeyID.
+     *  \param [in] i_x pos x.
+     *  \param [in] i_y pos y.
+     *  \brief Set touch position.
+     */
+    void SetTouchPosition(TouchButtonEnum i_touch_id, float i_x, float i_y);
+
     /*! \fn EventObjectWeakReferenceObject GetEventNotifier() const;
      *  \brief Set event notifier.
      */
@@ -196,6 +259,11 @@ protected:
      *  \brief grahics app instance. It's VkInstance if we adopt Vulkan graphics library.
      */
     CompHandle m_graphics_app_instance;
+
+    /*! \var TouchButton m_buttons[TOUCH_BUTTON_MAX_DEFINE_VALUE];
+     *  \brief Button data.
+     */
+    TouchButton m_buttons[TOUCH_BUTTON_MAX_DEFINE_VALUE];
 };
 
 inline void Application::SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height)

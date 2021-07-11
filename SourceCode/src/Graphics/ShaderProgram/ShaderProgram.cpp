@@ -98,7 +98,7 @@ bool ShaderProgram::LoadFromSource(const std::string &i_sp_proj_str)
                 }
             }
             else {
-                if (dsl_name.compare("Material") == 0) {
+                if (dsl_name.compare(sUniformDescriptorSetLayout_Material) == 0) {
                     std::vector<UniformVariableDescriptorStrongReferenceObject> final_material_basic_uvds;
                     nlohmann::json &uvds = dsl_root.at("UniformDescriptors");
                     for (uint32_t uvd_id = 0; uvd_id < uvds.size(); ++uvd_id) {
@@ -277,9 +277,9 @@ bool ShaderProgram::LoadFromSource(const std::string &i_sp_proj_str)
                         //
                         SD_GET_JSON_ATTRIBUTE(gpp_root, "BindPoint", uint32_t, gpp.m_pipe_bind_point, PipelineBindPointEnum);
                         SD_GET_JSON_ATTRIBUTE(gpp_root, "PatchCtrlPoints", uint32_t, gpp.m_patch_ctrl_points, uint32_t);
-                        uint32_t tex_coord_dim = 2;
-                        SD_GET_JSON_ATTRIBUTE(gpp_root, "TexCoordDim", uint32_t, tex_coord_dim, uint32_t);
-                        GraphicsManager::GetRef().GetBasicVertexAttribInfos(gpp.m_va_binding_descs, gpp.m_va_location_descs, tex_coord_dim);
+                        VertexLocationKindEnum vl_kind = VertexLocationKind_GENERAL;
+                        SD_GET_JSON_ATTRIBUTE(gpp_root, "VertexLocationKind", uint32_t, vl_kind, VertexLocationKindEnum);
+                        GraphicsManager::GetRef().GetBasicVertexAttribInfos(gpp.m_va_binding_descs, gpp.m_va_location_descs, vl_kind);
                         // PrimitiveInfo
                         nlohmann::json &primitive_root = gpp_root.at("PrimitiveInfo");
                         if (primitive_root.is_null() == false) {
@@ -356,7 +356,7 @@ bool ShaderProgram::LoadFromSource(const std::string &i_sp_proj_str)
                         }
                     }
                     else {
-                        GraphicsManager::GetRef().GetBasicVertexAttribInfos(gpp.m_va_binding_descs, gpp.m_va_location_descs, 2);
+                        GraphicsManager::GetRef().GetBasicVertexAttribInfos(gpp.m_va_binding_descs, gpp.m_va_location_descs, VertexLocationKind_GENERAL);
                         gpp.m_primitive_info.m_primitive = Primitive_TRIANGLE;
                         gpp.m_attachment_blend_state.m_blend_infos.resize(target_sp_ca_size); //blend default false.
                         gpp.m_dynamic_states.push_back(DynamicState_VIEWPORT);

@@ -64,6 +64,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -72,6 +73,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -80,6 +82,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -88,6 +91,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_GLEW.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThridParty_Vulkan.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,7 +135,9 @@
       <AdditionalDependencies>$(SDGLFWAppLib);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(SDEngineRootDir)Bin\UnitTest\Assets\$(ProjectName)\Common"
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -151,7 +157,9 @@
       <AdditionalDependencies>$(SDGLFWAppLib);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(SDEngineRootDir)Bin\UnitTest\Assets\$(ProjectName)\Common"
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -171,7 +179,9 @@
       <AdditionalDependencies>$(SDGLFWAppLib);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(SDEngineRootDir)Bin\UnitTest\Assets\$(ProjectName)\Common"
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -195,7 +205,9 @@
       <AdditionalDependencies>$(SDGLFWAppLib);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(SDEngineRootDir)Bin\UnitTest\Assets\$(ProjectName)\Common"
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -214,16 +226,6 @@
     <ClInclude Include="FeatureApplication.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\AxesShading.json" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.vert" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_SP0.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_SP0.vert" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\BasicShading.json" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.vert" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_SP0.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_SP0.vert" />
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.frag" />
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.vert" />
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxisShadowShader.frag" />

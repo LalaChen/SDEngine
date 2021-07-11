@@ -11,7 +11,17 @@ xcopy /i /y %SDEngineRootDir%\Bin\UnitTest\Android\ARM\Release\*.so %SDEngineRoo
 xcopy /i /y %SDEngineRootDir%\Bin\UnitTest\Android\ARM64\Debug\*.so %SDEngineRootDir%\UnitTest\Android\unittest_featuredeveloping\libs\Debug\arm64-v8a
 xcopy /i /y %SDEngineRootDir%\Bin\UnitTest\Android\ARM64\Release\*.so %SDEngineRootDir%\UnitTest\Android\unittest_featuredeveloping\libs\Release\arm64-v8a
 
+xcopy /i /y /s %SDEngineRootDir%\Bin\Common\*.* %SDEngineRootDir%\UnitTest\Android\unittest_featuredeveloping\src\main\assets\Common
 xcopy /i /y /s %SDEngineRootDir%\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\*.* %SDEngineRootDir%\UnitTest\Android\unittest_featuredeveloping\src\main\assets
+
+xcopy /i /y %SDEngineRootDir%\Bin\UnitTest\Android\ARM\Debug\*.so %SDEngineRootDir%\UnitTest\Android\wavevrapp\libs\Debug\armeabi-v7a
+xcopy /i /y %SDEngineRootDir%\Bin\UnitTest\Android\ARM\Release\*.so %SDEngineRootDir%\UnitTest\Android\wavevrapp\libs\Release\armeabi-v7a
+
+xcopy /i /y %SDEngineRootDir%\Bin\UnitTest\Android\ARM64\Debug\*.so %SDEngineRootDir%\UnitTest\Android\wavevrapp\libs\Debug\arm64-v8a
+xcopy /i /y %SDEngineRootDir%\Bin\UnitTest\Android\ARM64\Release\*.so %SDEngineRootDir%\UnitTest\Android\wavevrapp\libs\Release\arm64-v8a
+
+xcopy /i /y /s %SDEngineRootDir%\Bin\Common\*.* %SDEngineRootDir%\UnitTest\Android\wavevrapp\src\main\assets\Common
+xcopy /i /y /s %SDEngineRootDir%\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\*.* %SDEngineRootDir%\UnitTest\Android\wavevrapp\src\main\assets
 
 rem ----------------------------------- AndroidUnitTest_GraphicsAPI
 xcopy /i /y %SDEngineRootDir%\Bin\UnitTest\Android\ARM\Debug\*.so %SDEngineRootDir%\UnitTest_GraphicsAPI\Android\unittest_graphicsapi\libs\Debug\armeabi-v7a

@@ -74,7 +74,7 @@ void VulkanManager::CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_u
     }
 }
 
-void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size)
 {
     VkResult result = VK_SUCCESS;
     const VkBuffer &buffer_handle = reinterpret_cast<const VkBuffer&>(i_identity.m_buffer_handle);
@@ -117,7 +117,7 @@ void VulkanManager::RefreshStaticVertexBuffer(const VertexBufferIdentity &i_iden
     DestroyVkBuffer(staging_buffer_handle);
 }
 
-void VulkanManager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+void VulkanManager::RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size)
 {
     VkResult result;
     const VkDeviceMemory &memory_handle = reinterpret_cast<const VkDeviceMemory&>(i_identity.m_memory_handle);
@@ -204,7 +204,7 @@ void VulkanManager::CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui6
     }
 }
 
-void VulkanManager::RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+void VulkanManager::RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size)
 {
     VkResult result = VK_SUCCESS;
     const VkBuffer &buffer_handle = reinterpret_cast<const VkBuffer&>(i_identity.m_buffer_handle);
@@ -247,7 +247,7 @@ void VulkanManager::RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identi
     DestroyVkBuffer(staging_buffer_handle);
 }
 
-void VulkanManager::RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size)
+void VulkanManager::RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size)
 {
     VkResult result;
     const VkDeviceMemory &memory_handle = reinterpret_cast<const VkDeviceMemory&>(i_identity.m_memory_handle);

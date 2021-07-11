@@ -54,7 +54,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GraphicsSystem)
 
-class GraphicsSystem : public System
+class SDENGINE_CLASS GraphicsSystem : public System
 {
 public:
     explicit GraphicsSystem(const ObjectName &i_object_name);

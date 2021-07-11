@@ -39,14 +39,14 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class vec3
- *  In our system, vec3 and vec2 is used to calculate and store some data such like vertex, normal, \n
- *  and texture coordinate. Class vec3 and vec2 are not only storing data but also offering some operator \n
- *  of vector. Programmer can calculate some necessary graphics data by those vector operators. I make a \n
- *  rule that all vertexs used to input to graphics API(vertices will be the parameter such like \n
- *  glVertex(x,y,z)) need to be composed by vec3 or vec2. Please note that vec classes can only \n
- *  used in graphics part. I don't allow program use it in general physical calculation and \n
- *  representation of position.It will make programmer confuse. I will use class (such like Vector3f) \n
- *  for these situations rather than vec. \n
+ *  \brief In our system, vec3 and vec2 is used to calculate and store some data such like vertex, normal,
+ *  and texture coordinate. Class vec3 and vec2 are not only storing data but also offering some operator
+ *  of vector. Programmer can calculate some necessary graphics data by those vector operators. I make a
+ *  rule that all vertexs used to input to graphics API(vertices will be the parameter such like
+ *  glVertex(x,y,z)) need to be composed by vec3 or vec2. Please note that vec classes can only
+ *  used in graphics part. I don't allow program use it in general physical calculation and
+ *  representation of position.It will make programmer confuse. I will use class (such like Vector3f)
+ *  for these situations rather than vec.
  */
 class SDENGINE_CLASS vec3
 {
@@ -174,16 +174,16 @@ public:
 };
 
 /*! \class vec2
-    In our system, vec3 and vec2 is used to calculate and store some data such like vertex, normal, \n
-    and texture coordinate. Class vec3 and vec2 are not only storing data but also offering some operator \n
-    of vector. Programmer can calculate some necessary graphics data by those vector operators. I make a \n
-    rule that all vertexs used to input to graphics API(vertices will be the parameter such like \n
-    glVertex(x,y,z)) need to be composed by vec3 or vec2. Please note that vec classes can only \n
-    used in graphics part. I don't allow program use it in general physical calculation and \n
-    representation of position.It will make programmer confuse. I will use class (such like Vector3f) \n
-    for these situations rather than vec. \n
-*/
-class vec2
+ *  In our system, vec3 and vec2 is used to calculate and store some data such like vertex, normal,
+ *  and texture coordinate. Class vec3 and vec2 are not only storing data but also offering some operator
+ *  of vector. Programmer can calculate some necessary graphics data by those vector operators. I make a
+ *  rule that all vertexs used to input to graphics API(vertices will be the parameter such like
+ *  glVertex(x,y,z)) need to be composed by vec3 or vec2. Please note that vec classes can only
+ *  used in graphics part. I don't allow program use it in general physical calculation and
+ *  representation of position.It will make programmer confuse. I will use class (such like Vector3f)
+ *  for these situations rather than vec.
+ */
+class SDENGINE_CLASS vec2
 {
 public:
     /*! \fn static vec2 normalize(const vec2 &i_v);

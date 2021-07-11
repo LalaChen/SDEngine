@@ -208,7 +208,7 @@
                 "FragShader": "./ForwardAxesShader_SP0.frag.spv",
                 "GraphicsParam": {
                   "BindPoint": 0,
-                  "TexCoordDim": 2,
+                  "VertexLocationKind": 0,
                   "PrimitiveInfo": {
                     "Type": 3,
                     "RestartEnable": false
@@ -277,7 +277,7 @@
             "Name": "FirstLight",
             "Pipelines": [
               {
-                "Name": "ForwardBasicShading_MV_P0",
+                "Name": "ForwardAxesShading_MV_P0",
                 "VertShader": "./ForwardAxesShader_Multiview_SP0.vert.spv",
                 "TessCtrlShader": "",
                 "TessEstShader": "",
@@ -285,7 +285,7 @@
                 "FragShader": "./ForwardAxesShader_Multiview_SP0.frag.spv",
                 "GraphicsParam": {
                   "BindPoint": 0,
-                  "TexCoordDim": 2,
+                  "VertexLocationKind": 0,
                   "PrimitiveInfo": {
                     "Type": 3,
                     "RestartEnable": false

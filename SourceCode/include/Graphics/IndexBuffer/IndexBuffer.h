@@ -73,12 +73,12 @@ public:
      */
     void Bind(const CommandBufferWeakReferenceObject &i_cb, Size_ui64 i_offset);
 public:
-    /*! \fn virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
+    /*! \fn virtual void RefreshBufferData(const void *i_data_ptr, Size_ui64 i_data_size) = 0;
      *  \param [in] i_data_ptr Data pointer.
      *  \param [in] i_data_size Data size.
      *  \brief Refresh data into buffer.
      */
-    virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
+    virtual void RefreshBufferData(const void *i_data_ptr, Size_ui64 i_data_size) = 0;
 public:
     /*! \fn Size_ui64 GetBufferSize() const;
      *  \brief return data size of vertex buffer.

@@ -38,12 +38,15 @@ DynamicIndexBuffer::~DynamicIndexBuffer()
 {
 }
 
-void DynamicIndexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size)
+void DynamicIndexBuffer::RefreshBufferData(const void *i_data_ptr, Size_ui64 i_data_size)
 {
+    if (i_data_ptr == nullptr || i_data_size == 0) {
+        return;
+    }
     //1. Ckeck CompHandle is null handle or not.
     if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
         //--- No, compare current buffer size with new one.
-        if (m_identity.m_data_size < i_data_size) {
+        if (m_identity.m_memory_size < i_data_size) {
             SDLOG("Dynamic buffer size is small than input datas. Delete old and allocate new one!!!");
             //----- Smaller than new one, delete old buffer.
             GraphicsManager::GetRef().DeleteIndexBuffer(m_identity);
@@ -66,6 +69,39 @@ void DynamicIndexBuffer::RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_si
     }
     //3. calculate index array number.
     CalculateIndexArraySize();
+}
+
+
+void DynamicIndexBuffer::Resize(Size_ui64 i_data_size)
+{
+    if (i_data_size == 0) {
+        return;
+    }
+    //1. Ckeck CompHandle is null handle or not.
+    if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
+        //--- No, compare current buffer size with new one.
+        if (m_identity.m_memory_size < i_data_size) {
+            SDLOG("Dynamic buffer size is small than input datas. Delete old and allocate new one!!!");
+            //----- Cache old data.
+            std::vector<uint8_t> tmp_data;
+            tmp_data.resize(m_identity.m_memory_size);
+            VoidPtr old_data = MapMemory();
+            std::memcpy(tmp_data.data(), old_data, tmp_data.size());
+            UnmapMemory();
+            //----- Smaller than new one, delete old buffer.
+            GraphicsManager::GetRef().DeleteIndexBuffer(m_identity);
+            //----- Create new one.
+            GraphicsManager::GetRef().CreateIndexBuffer(m_identity, i_data_size);
+            //----- Copy old data to new buffer.
+            RefreshBufferData(tmp_data.data(), tmp_data.size());
+        }
+    }
+    else {
+        //----- Create new one.
+        SDLOG("Dynamic buffer is initialized first time. Allocate new one!!!");
+        GraphicsManager::GetRef().CreateIndexBuffer(m_identity, i_data_size);
+        CalculateIndexArraySize();
+    }
 }
 
 VoidPtr DynamicIndexBuffer::MapMemory()

@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "WorldGUISystem.h"
 #include "GraphicsSystem.h"
 #include "ECSManager.h"
 #include "LogManager.h"
@@ -60,6 +61,7 @@ void GraphicsManager::InitializeBasicResource()
             }
     );
     SDLOG("Initialize Basic Resource Start!!!");
+    ECSManager::GetRef().RegisterSystem<WorldGUISystem>("WorldGUISystem");
     ECSManager::GetRef().RegisterSystem<GraphicsSystem>("GraphicsSystem");
 
     InitializeBasicDescriptorSetLayout();

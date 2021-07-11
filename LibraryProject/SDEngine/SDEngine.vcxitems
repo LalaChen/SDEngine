@@ -51,6 +51,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\MeshRenderComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\TransformComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\VRCameraComponent.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\WorldGUIComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicShapeCreator\BasicShapeCreator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandBufferInheritanceInfo.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\UniformVariable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\UniformVariableDescriptor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\System\GraphicsSystem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\System\WorldGUISystem.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Texture\ImageParam.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Texture\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Vec\Color4f.h" />
@@ -202,6 +204,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\VertexBuffer\DynamicVertexBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\VertexBuffer\StaticVertexBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\VertexBuffer\VertexBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUINode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIBatch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIWindow.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\MathConstant.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\Matrix4X4f.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\Quaternion.h" />
@@ -246,11 +252,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\MeshRenderComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\TransformComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\VRCameraComponent.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\WorldGUIComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Axis.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Cone.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Cube.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Plane.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_WorldGUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\CommandBuffer\CommandBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\CommandBuffer\CommandBufferInheritanceInfo.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\CommandBuffer\CommandPool.cpp" />
@@ -388,12 +396,17 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\UniformVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\UniformVariableDescriptor.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\System\GraphicsSystem.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\System\WorldGUISystem.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Vec\Color4f.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Vec\Vec.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\VertexBuffer\DynamicVertexBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\VertexBuffer\StaticVertexBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\VertexBuffer\VertexBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIBatch.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUINode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIRenderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIWindow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Matrix4X4f.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Quaternion.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Transform.cpp" />
@@ -401,6 +414,38 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\AxesShading.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.vert" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.vert.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_SP0.frag" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_SP0.frag.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_SP0.vert" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_SP0.vert.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\BasicShading.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.frag" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.frag.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.vert" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.vert.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_SP0.frag" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_SP0.frag.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_SP0.vert" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\BasicShading\ForwardBasicShader_SP0.vert.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.frag" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.frag.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.vert" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.vert.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShading.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.frag" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.frag.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.vert" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.vert.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_SP0.frag" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_SP0.frag.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_SP0.vert" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_SP0.vert.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShading.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.frag" />
     <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.vert" />
   </ItemGroup>

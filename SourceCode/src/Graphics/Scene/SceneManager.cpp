@@ -65,7 +65,7 @@ bool SceneManager::LoadScene(const ObjectName &i_scene_name)
     std::map<ObjectName, SceneStrongReferenceObject>::iterator scene_iter =
         m_scene_maps.find(i_scene_name);
     if (scene_iter == m_scene_maps.end()) {
-        SDLOGE("We can't find scene[%d].", i_scene_name.c_str());
+        SDLOGE("We can't find scene[%s].", i_scene_name.c_str());
         return false;
     }
     bool result = SD_SREF((*scene_iter).second).Load();
@@ -74,7 +74,7 @@ bool SceneManager::LoadScene(const ObjectName &i_scene_name)
         SD_COMP_WREF(m_global_root, TransformComponent).AddChild(SD_GET_COMP_WREF(scene_root, TransformComponent));
     }
     else {
-        SDLOGE("Load scene[%d] failure.", i_scene_name.c_str());
+        SDLOGE("Load scene[%s] failure.", i_scene_name.c_str());
     }
     return result;
 }
@@ -84,7 +84,7 @@ bool SceneManager::UnloadScene(const ObjectName &i_scene_name)
     std::map<ObjectName, SceneStrongReferenceObject>::iterator scene_iter =
         m_scene_maps.find(i_scene_name);
     if (scene_iter == m_scene_maps.end()) {
-        SDLOGE("We can't find scene[%d].", i_scene_name.c_str());
+        SDLOGE("We can't find scene[%s].", i_scene_name.c_str());
         return false;
     }
     return SD_SREF((*scene_iter).second).Unload();

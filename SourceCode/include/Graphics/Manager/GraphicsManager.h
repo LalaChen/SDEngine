@@ -68,6 +68,35 @@ enum GraphicsLibraryEnum {
     GraphicsLibrary_Unknown = GraphicsLibrary_MaxEnum
 };
 
+enum VertexLocationKindEnum {
+    VertexLocationKind_GENERAL = 0,
+    VertexLocationKind_LOOKUP_TABLE,
+    VertexLocationKind_VOL_DATA,
+    VertexLocationKind_GUI,
+    VertexLocationKind_MAX_DEFINE_VALUE
+};
+
+static const std::string sRenderPass_Forward = "ForwardPass";
+static const std::string sRenderPass_VRForward = "VRForwardPass";
+static const std::string sRenderPass_GUI = "GUIPass";
+
+static const std::string sUniformDescriptorSetLayout_Camera = "Camera";
+static const std::string sUniformBuffer_Camera = "camera";
+static const std::string sUniformDescriptorSetLayout_VRCamera = "VRCamera";
+static const std::string sUniformBuffer_VRCamera = "vrcamera";
+static const std::string sUniformDescriptorSetLayout_MeshRender = "MeshRender";
+static const std::string sUniformBuffer_MeshRender_Geometry = "geometry";
+static const std::string sUniformDescriptorSetLayout_Light = "Light";
+static const std::string sUniformBuffer_Light = "light";
+static const std::string sUniformImages_Light_ShadowMaps = "shadowMaps";
+static const std::string sUniformDescriptorSetLayout_Material = "Material";
+static const std::string sUniformBuffer_Material = "material";
+static const std::string sUniformImages_Material_Textures = "textures";
+
+static const std::string sUniformDescriptorSetLayout_GUI = "GUI";
+static const std::string sUniformBuffer_GUI_Offset = "offsets";
+static const std::string sUniformImages_GUI_Font = "font";
+
 /*! \class GraphicsManager
  *  \brief In our system, GraphicsManager is a interface for all graphics API(opengl, gles, vulkan) and manage \n
  *  graphics resource those need to be managed.
@@ -134,16 +163,16 @@ public:
 public:
 //----------- Vertex Buffer Function ------------
     virtual void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size) = 0;
-    virtual void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
-    virtual void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
+    virtual void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size) = 0;
+    virtual void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size) = 0;
     virtual void DeleteVertexBuffer(VertexBufferIdentity &io_identity) = 0;
     virtual void MapVertexBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) = 0;
     virtual void UnmapVertexBuffer(const VertexBufferIdentity &i_identity) = 0;
 public:
 //----------- Index Buffer Interface Function ------------
     virtual void CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui64 i_data_size) = 0;
-    virtual void RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
-    virtual void RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) = 0;
+    virtual void RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size) = 0;
+    virtual void RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size) = 0;
     virtual void DeleteIndexBuffer(IndexBufferIdentity &io_identity) = 0;
     virtual void MapIndexBuffer(const IndexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) = 0;
     virtual void UnmapIndexBuffer(const IndexBufferIdentity &i_identity) = 0;
@@ -194,7 +223,10 @@ public:
 //------------- Render Function -----------------
     void Render();
 public:
-    void GetBasicVertexAttribInfos(std::vector<VertexAttribBindingDescription> &io_binds, std::vector<VertexAttribLocationDescription> &io_locations, uint32_t i_tex_dimension = 2) const;
+    void GetBasicVertexAttribInfos(
+        std::vector<VertexAttribBindingDescription> &io_binds,
+        std::vector<VertexAttribLocationDescription> &io_locations,
+        VertexLocationKindEnum i_vl_kind = VertexLocationKind_GENERAL) const;
 //-------- Managing RenderPass Function ---------
     void RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp);
     void UnregisterRenderPass(const ObjectName &i_target_rp_name);
@@ -207,7 +239,6 @@ public:
     bool IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) const;
 public:
     virtual DescriptorSetLayoutWeakReferenceObject GetBasicDescriptorSetLayout(const ObjectName &i_dsl_name) const;
-    virtual void GetBasicDescriptorSetLayouts(std::vector<DescriptorSetLayoutWeakReferenceObject> &io_dsls);
     virtual UniformVariableDescriptorStrongReferenceObject GetDefaultMaterialUniformVariableDescriptor(const ObjectName &i_uvd_name) const;
     virtual ShaderProgramWeakReferenceObject GetShaderProgram(const ObjectName &i_sp_name) const;
     virtual void RegisterShaderProgram(const ShaderProgramStrongReferenceObject &i_sp);

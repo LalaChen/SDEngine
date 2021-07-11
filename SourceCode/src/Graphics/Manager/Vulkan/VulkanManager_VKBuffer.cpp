@@ -54,7 +54,7 @@ VkResult VulkanManager::CreateVkBuffer(
     return vkCreateBuffer(m_device_handle, &vec_buf_c_info, nullptr, &io_handle);
 }
 
-VkResult VulkanManager::RefreshDataToHostVisibleVKDeviceMemory(VkDeviceMemory i_memory_handle, VkDeviceSize i_allocated_size, VoidPtr i_data_ptr, Size_ui64 i_data_size)
+VkResult VulkanManager::RefreshDataToHostVisibleVKDeviceMemory(VkDeviceMemory i_memory_handle, VkDeviceSize i_allocated_size, const void *i_data_ptr, Size_ui64 i_data_size)
 {
     VkResult result = VK_SUCCESS;
     void *local_ptr = nullptr;

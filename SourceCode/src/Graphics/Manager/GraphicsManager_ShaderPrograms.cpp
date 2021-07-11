@@ -46,13 +46,6 @@ DescriptorSetLayoutWeakReferenceObject GraphicsManager::GetBasicDescriptorSetLay
     }
 }
 
-void GraphicsManager::GetBasicDescriptorSetLayouts(std::vector<DescriptorSetLayoutWeakReferenceObject> &io_dsls)
-{
-    io_dsls.push_back(m_basic_dsl_maps["Camera"]);
-    io_dsls.push_back(m_basic_dsl_maps["MeshRender"]);
-    io_dsls.push_back(m_basic_dsl_maps["Light"]);
-}
-
 UniformVariableDescriptorStrongReferenceObject GraphicsManager::GetDefaultMaterialUniformVariableDescriptor(const ObjectName &i_uvd_name) const
 {
     UniformVariableDescriptorStrongReferenceObject result;
@@ -95,6 +88,7 @@ void GraphicsManager::RegisterShaderProgram(const ObjectName &i_sp_name, const F
         ShaderProgramStrongReferenceObject new_shader = new ShaderProgram(i_sp_name);
         if (SD_SREF(new_shader).LoadFromFile(i_path) == true) {
             m_shader_program_maps[i_sp_name] = new_shader;
+            SDLOGE("SP[%s] registered.", i_sp_name.c_str());
         }
         else {
             SDLOGE("SP[%s] can't be created.", i_sp_name.c_str());
@@ -108,39 +102,39 @@ void GraphicsManager::RegisterShaderProgram(const ObjectName &i_sp_name, const F
 void GraphicsManager::InitializeBasicDescriptorSetLayout()
 {
     //1. new common descriptor set and its uniform variable descriptors.
-    UniformBufferDescriptorStrongReferenceObject camera_ubd = new UniformBufferDescriptor("camera", 0);
+    UniformBufferDescriptorStrongReferenceObject camera_ubd = new UniformBufferDescriptor(sUniformBuffer_Camera, 0);
     SD_SREF(camera_ubd).AddVariable("proj", UniformBufferVariableType_MATRIX4X4F, offsetof(CameraUniforms, m_proj));
     SD_SREF(camera_ubd).AddVariable("view", UniformBufferVariableType_MATRIX4X4F, offsetof(CameraUniforms, m_view));
     SD_SREF(camera_ubd).AddVariable("viewEye", UniformBufferVariableType_VECTOR3F, offsetof(CameraUniforms, m_view_eye));
     SD_SREF(camera_ubd).AddVariableDone();
-    DescriptorSetLayoutStrongReferenceObject camera_dsl = new DescriptorSetLayout("Camera");
+    DescriptorSetLayoutStrongReferenceObject camera_dsl = new DescriptorSetLayout(sUniformDescriptorSetLayout_Camera);
     SD_SREF(camera_dsl).AddUniformVariableDescriptors({ camera_ubd.StaticCastTo<UniformVariableDescriptor>() });
     SD_SREF(camera_dsl).Initialize();
-    m_basic_dsl_maps["Camera"] = camera_dsl;
+    m_basic_dsl_maps[sUniformDescriptorSetLayout_Camera] = camera_dsl;
 
-    UniformBufferDescriptorStrongReferenceObject vr_camera_ubd = new UniformBufferDescriptor("vrcamera", 0);
+    UniformBufferDescriptorStrongReferenceObject vr_camera_ubd = new UniformBufferDescriptor(sUniformBuffer_VRCamera, 0);
     SD_SREF(vr_camera_ubd).AddVariable("projs", UniformBufferVariableType_MATRIX4X4F, offsetof(VRCameraUniforms, m_projs), 2);
     SD_SREF(vr_camera_ubd).AddVariable("views", UniformBufferVariableType_MATRIX4X4F, offsetof(VRCameraUniforms, m_views), 2);
     SD_SREF(vr_camera_ubd).AddVariable("viewEyes", UniformBufferVariableType_VECTOR3F, offsetof(VRCameraUniforms, m_view_eyes), 2);
     SD_SREF(vr_camera_ubd).AddVariableDone();
-    DescriptorSetLayoutStrongReferenceObject vr_camera_dsl = new DescriptorSetLayout("VRCamera");
+    DescriptorSetLayoutStrongReferenceObject vr_camera_dsl = new DescriptorSetLayout(sUniformDescriptorSetLayout_VRCamera);
     SD_SREF(vr_camera_dsl).AddUniformVariableDescriptors({ vr_camera_ubd.StaticCastTo<UniformVariableDescriptor>() });
     SD_SREF(vr_camera_dsl).Initialize();
-    m_basic_dsl_maps["VRCamera"] = vr_camera_dsl;
+    m_basic_dsl_maps[sUniformDescriptorSetLayout_VRCamera] = vr_camera_dsl;
 
     //2. For Meshes.
     //Use for MVP matrices at all subpasses at Forward Pass and Defered Pass.
-    UniformBufferDescriptorStrongReferenceObject geometry_ubd = new UniformBufferDescriptor("geometry", 0);
+    UniformBufferDescriptorStrongReferenceObject geometry_ubd = new UniformBufferDescriptor(sUniformBuffer_MeshRender_Geometry, 0);
     SD_SREF(geometry_ubd).AddVariable("world", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_world));
     SD_SREF(geometry_ubd).AddVariable("normal", UniformBufferVariableType_MATRIX4X4F, offsetof(WorldUniforms, m_normal));
     SD_SREF(geometry_ubd).AddVariableDone();
-    DescriptorSetLayoutStrongReferenceObject geometry_dsl = new DescriptorSetLayout("MeshRender");
+    DescriptorSetLayoutStrongReferenceObject geometry_dsl = new DescriptorSetLayout(sUniformDescriptorSetLayout_MeshRender);
     SD_SREF(geometry_dsl).AddUniformVariableDescriptors({ geometry_ubd.StaticCastTo<UniformVariableDescriptor>() });
     SD_SREF(geometry_dsl).Initialize();
-    m_basic_dsl_maps["MeshRender"] = geometry_dsl;
+    m_basic_dsl_maps[sUniformDescriptorSetLayout_MeshRender] = geometry_dsl;
 
     //3. For main light about forward rendering.
-    UniformBufferDescriptorStrongReferenceObject light_ubd = new UniformBufferDescriptor("light", 0);
+    UniformBufferDescriptorStrongReferenceObject light_ubd = new UniformBufferDescriptor(sUniformBuffer_Light, 0);
     SD_SREF(light_ubd).AddVariable("ambient", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_ambient));
     SD_SREF(light_ubd).AddVariable("diffuse", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_diffuse));
     SD_SREF(light_ubd).AddVariable("specular", UniformBufferVariableType_COLOR4F, offsetof(LightUniforms, m_specular));
@@ -154,14 +148,26 @@ void GraphicsManager::InitializeBasicDescriptorSetLayout()
     SD_SREF(light_ubd).AddVariable("kind", UniformBufferVariableType_INT, offsetof(LightUniforms, m_kind));
     SD_SREF(light_ubd).AddVariableDone();
 
-    UniformImagesDescriptorStrongReferenceObject cascade_shadow_map_ui = new UniformImagesDescriptor("shadowMaps", 1, 4);
+    UniformImagesDescriptorStrongReferenceObject cascade_shadow_map_ui = new UniformImagesDescriptor(sUniformImages_Light_ShadowMaps, 1, 4);
 
-    DescriptorSetLayoutStrongReferenceObject light_dsl = new DescriptorSetLayout("Light");
+    DescriptorSetLayoutStrongReferenceObject light_dsl = new DescriptorSetLayout(sUniformDescriptorSetLayout_Light);
     SD_SREF(light_dsl).AddUniformVariableDescriptors({
         light_ubd.StaticCastTo<UniformVariableDescriptor>(),
         cascade_shadow_map_ui.StaticCastTo<UniformVariableDescriptor>()});
     SD_SREF(light_dsl).Initialize();
-    m_basic_dsl_maps["Light"] = light_dsl;
+    m_basic_dsl_maps[sUniformDescriptorSetLayout_Light] = light_dsl;
+
+    UniformBufferDescriptorStrongReferenceObject gui_ubd = new UniformBufferDescriptor(sUniformBuffer_GUI_Offset, 0);
+    SD_SREF(gui_ubd).AddVariable("offsets", UniformBufferVariableType_VECTOR3F, 0);
+    SD_SREF(gui_ubd).AddVariableDone();
+    UniformImagesDescriptorStrongReferenceObject gui_font_ui = new UniformImagesDescriptor(sUniformImages_GUI_Font, 1);
+
+    DescriptorSetLayoutStrongReferenceObject gui_dsl = new DescriptorSetLayout(sUniformDescriptorSetLayout_GUI);
+    SD_SREF(gui_dsl).AddUniformVariableDescriptors({
+        gui_ubd.StaticCastTo<UniformVariableDescriptor>(),
+        gui_font_ui.StaticCastTo<UniformVariableDescriptor>()});
+    SD_SREF(gui_dsl).Initialize();
+    m_basic_dsl_maps[sUniformDescriptorSetLayout_GUI] = gui_dsl;
 }
 
 void GraphicsManager::InitializeBasicMaterialUniformDescriptors()
@@ -175,11 +181,20 @@ void GraphicsManager::InitializeBasicMaterialUniformDescriptors()
     SD_SREF(mat_ubd).AddVariable("shininess", UniformBufferVariableType_FLOAT, offsetof(MaterialUniforms, m_shininess));
     SD_SREF(mat_ubd).AddVariableDone();
 
-    UniformImagesDescriptorStrongReferenceObject mt_imgd = new UniformImagesDescriptor("mainTexture", 1, 1);
-    m_material_basic_uvd_maps["material"] = mat_ubd.StaticCastTo<UniformVariableDescriptor>();
-    m_material_basic_uvd_maps["mainTexture"] = mt_imgd.StaticCastTo<UniformVariableDescriptor>();
+    UniformImagesDescriptorStrongReferenceObject mt_imgd = new UniformImagesDescriptor("textures", 1, 11);
+    m_material_basic_uvd_maps[sUniformBuffer_Material] = mat_ubd.StaticCastTo<UniformVariableDescriptor>();
+    m_material_basic_uvd_maps[sUniformImages_Material_Textures] = mt_imgd.StaticCastTo<UniformVariableDescriptor>();
 }
 
+void GraphicsManager::InitializeBasicShaderPrograms()
+{
+    RegisterShaderProgram("AxesShader", "Common/ShaderProgram/AxesShading/AxesShading.json");
+    RegisterShaderProgram("BasicShader", "Common/ShaderProgram/BasicShading/BasicShading.json");
+    RegisterShaderProgram("NoLightShader", "Common/ShaderProgram/NoLightShading/NoLightShading.json");
+    RegisterShaderProgram("GUIShader", "Common/ShaderProgram/GUIShading/GUIShading.json");
+}
+
+/*
 void GraphicsManager::InitializeBasicShaderPrograms()
 {
     ShaderProgramStrongReferenceObject shader_program;
@@ -225,25 +240,25 @@ void GraphicsManager::InitializeBasicShaderPrograms()
 
         //1.4 prepare descriptor set layouts.
         std::vector<DescriptorSetLayoutWeakReferenceObject> dsls;
-        dsls.push_back(m_basic_dsl_maps["Camera"]);
-        dsls.push_back(m_basic_dsl_maps["MeshRender"]);
-        dsls.push_back(m_basic_dsl_maps["Light"]);
+        dsls.push_back(m_basic_dsl_maps[sUniformDescriptorSetLayout_Camera]);
+        dsls.push_back(m_basic_dsl_maps[sUniformDescriptorSetLayout_MeshRender]);
+        dsls.push_back(m_basic_dsl_maps[sUniformDescriptorSetLayout_Light]);
         dsls.push_back(material_dsl);
 
         std::vector<DescriptorSetLayoutWeakReferenceObject> common_dsls;
-        common_dsls.push_back(m_basic_dsl_maps["Camera"]);
-        common_dsls.push_back(m_basic_dsl_maps["MeshRender"]);
-        common_dsls.push_back(m_basic_dsl_maps["Light"]);
+        common_dsls.push_back(m_basic_dsl_maps[sUniformDescriptorSetLayout_Camera]);
+        common_dsls.push_back(m_basic_dsl_maps[sUniformDescriptorSetLayout_MeshRender]);
+        common_dsls.push_back(m_basic_dsl_maps[sUniformDescriptorSetLayout_Light]);
 
         //1.5 create pipelines.
         GraphicsPipelineStrongReferenceObject pipeline_sp0 = new GraphicsPipeline("BasicShaderSPO");
-        SD_SREF(pipeline_sp0).SetGraphicsPipelineParams(params, GetRenderPass("ForwardPass"), dsls, 0);
+        SD_SREF(pipeline_sp0).SetGraphicsPipelineParams(params, GetRenderPass(sRenderPass_Forward), dsls, 0);
         SD_SREF(pipeline_sp0).Initialize(shader_modules);
 
         //1.6 prepare datas and then initalize shader structure.
         ShaderProgram::RenderPassInfos rp_infos;
         RenderPassInfo forward_rp;
-        forward_rp.m_rp = GetRenderPass("ForwardPass");
+        forward_rp.m_rp = GetRenderPass(sRenderPass_Forward);
         RenderSubPassPipelineInfo rsp_info;
         RenderStepInfo rs_info;
         rs_info.m_dsls = dsls;
@@ -257,6 +272,6 @@ void GraphicsManager::InitializeBasicShaderPrograms()
         m_shader_program_maps["BasicShading"] = shader_program;
     }
 }
-
+*/
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -64,7 +64,7 @@ public:
     explicit LightComponent(const ObjectName &i_object_name);
     virtual ~LightComponent();
 public:
-    void Initialize();
+    void Initialize() override;
     bool OnGeometryChanged(const EventArg &i_arg);
 public:
     const DescriptorSetWeakReferenceObject GetDescriptorSet() const;

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <IMGUIRoot>$(SDEngineRootDir)ThirdParty\ImGui\</IMGUIRoot>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LibraryPath>$(IMGUIRoot)bin\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(IMGUIRoot)include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="IMGUIRoot">
+      <Value>$(IMGUIRoot)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

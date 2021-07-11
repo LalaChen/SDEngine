@@ -6,6 +6,7 @@
 using namespace SDE;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
+using namespace SDE::GUI;
 
 enum UserMessage {
     USER_MESSAGE_RESIZE = WM_USER + 1,
@@ -114,7 +115,7 @@ void WindowsApplication::Initialize()
     //new WindowsFileSystemManager.
     new WindowsFileSystemManager();
     FileSystemManager::GetRef().Initialize();
-    //Initialize KeyBoard Mapping.
+    
     //
     if (m_adopt_library == GraphicsLibrary_OpenGL4) {
         new OpenGL4Manager();
@@ -122,6 +123,8 @@ void WindowsApplication::Initialize()
     else {
         new VulkanManager();
     }
+
+    new IMGUIRenderer();
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_INITIALIZED));
 }
 
@@ -236,16 +239,19 @@ void WindowsApplication::InitializeGraphicsSystem()
         throw std::runtime_error("Error engine type!!!");
     }
 
+    IMGUIRenderer::GetRef().InitializeGraphicsSystem();
+
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
 }
 
 void WindowsApplication::ReleaseGraphicsSystem()
 {
     SDLOG("Release Graphics System of Application.");
+    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
+    IMGUIRenderer::GetRef().ReleaseGraphicsSystem();
+
     GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
-
-    SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
 }
 
 void WindowsApplication::TerminateApplication()

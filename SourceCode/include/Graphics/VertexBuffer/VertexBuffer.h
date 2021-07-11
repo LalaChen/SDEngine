@@ -93,12 +93,12 @@ public:
      */
     VertexBufferFormatEnum GetFormat() const;
 public:
-    /*! \fn virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
+    /*! \fn virtual void RefreshBufferData(const void *i_data_ptr, Size_ui64 i_data_size) = 0;
      *  \param [in] i_data_ptr Data pointer.
      *  \param [in] i_data_size Data size.
      *  \brief Refresh data into buffer.
      */
-    virtual void RefreshBufferData(void *i_data_ptr, Size_ui64 i_data_size) = 0;
+    virtual void RefreshBufferData(const void *i_data_ptr, Size_ui64 i_data_size) = 0;
 public:
     /*! \fn void Bind(const CommandBufferWeakReferenceObject &i_cb, uint32_t i_binding_id, Size_ui64 i_offset); 
      *  \param [in] i_cb Target began command buffer.

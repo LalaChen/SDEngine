@@ -38,6 +38,8 @@ SOFTWARE.
 using SDE::Basic::Application;
 using SDE::Basic::KeyCodeEnum;
 using SDE::Basic::KeyStatusEnum;
+using SDE::Basic::TouchButtonEnum;
+using SDE::Basic::TouchButtonStateEnum;
 
 ________________SD_START_APP_NAMESPACE_______________
 

@@ -24,6 +24,7 @@ public:
 protected:
     EntityWeakReferenceObject m_scene_root_node;
     EntityWeakReferenceObject m_camera_node;
+    EntityWeakReferenceObject m_WGUI_node;
     EntityWeakReferenceObject m_light_node;
     EntityWeakReferenceObject m_axis_node;
     EntityWeakReferenceObject m_floor_node;

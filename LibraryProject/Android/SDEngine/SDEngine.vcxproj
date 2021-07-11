@@ -110,6 +110,7 @@
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -117,6 +118,7 @@
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -124,6 +126,7 @@
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -131,6 +134,7 @@
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -138,6 +142,7 @@
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -145,6 +150,7 @@
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -152,6 +158,7 @@
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -159,6 +166,7 @@
     <Import Project="..\..\..\PropSheet\SDThridParty_Assimp.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -205,8 +213,8 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\x86_64-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\x86_64-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -229,8 +237,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -253,8 +261,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -277,8 +285,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -301,8 +309,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -325,8 +333,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -349,8 +357,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -373,8 +381,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName)\$(PlatformShortName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName)\$(PlatformShortName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\

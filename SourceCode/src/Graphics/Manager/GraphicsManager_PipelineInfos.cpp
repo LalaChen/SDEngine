@@ -100,41 +100,58 @@ void GraphicsManager::InitializeDefaultPipelineInfos()
 void GraphicsManager::GetBasicVertexAttribInfos(
     std::vector<VertexAttribBindingDescription> &io_binds,
     std::vector<VertexAttribLocationDescription> &io_locations,
-    uint32_t i_tex_dimension) const
+    VertexLocationKindEnum i_vl_kind) const
 {
     io_binds = m_default_va_binding_descs;
     io_locations = m_default_va_location_descs;
 
-    uint32_t va_id = SD_ENUM_TO_UINT(VertexBufferUsage_TEX_COORD_BUFFER);
-    if (i_tex_dimension == 1) {
+    if (i_vl_kind == VertexLocationKind_GENERAL) {
+        uint32_t va_id = SD_ENUM_TO_UINT(VertexBufferUsage_TEX_COORD_BUFFER);
+        io_binds[va_id].m_binding_id = va_id;
+        io_binds[va_id].m_input_rate = VertexInputRate_VERTEX;
+        io_binds[va_id].m_stride = sizeof(vec2);
+        io_locations[va_id].m_binding_id = va_id;
+        io_locations[va_id].m_location = va_id;
+        io_locations[va_id].m_format = VertexBufferFormat_X32Y32_SFLOAT;
+        io_locations[va_id].m_offset = 0;
+    }
+    else if (i_vl_kind == VertexLocationKind_LOOKUP_TABLE) {
+        uint32_t va_id = SD_ENUM_TO_UINT(VertexBufferUsage_TEX_COORD_BUFFER);
         io_binds[va_id].m_binding_id = va_id;
         io_binds[va_id].m_input_rate = VertexInputRate_VERTEX;
         io_binds[va_id].m_stride = sizeof(float);
-
         io_locations[va_id].m_binding_id = va_id;
         io_locations[va_id].m_location = va_id;
         io_locations[va_id].m_format = VertexBufferFormat_X32_SFLOAT;
         io_locations[va_id].m_offset = 0;
     }
-    else if (i_tex_dimension == 2) {
+    else if (i_vl_kind == VertexLocationKind_VOL_DATA) {
+        uint32_t va_id = SD_ENUM_TO_UINT(VertexBufferUsage_TEX_COORD_BUFFER);
+        io_binds[va_id].m_binding_id = va_id;
+        io_binds[va_id].m_input_rate = VertexInputRate_VERTEX;
+        io_binds[va_id].m_stride = sizeof(vec3);
+        io_locations[va_id].m_binding_id = va_id;
+        io_locations[va_id].m_location = va_id;
+        io_locations[va_id].m_format = VertexBufferFormat_X32Y32Z32_SFLOAT;
+        io_locations[va_id].m_offset = 0;
+    }
+    else if (i_vl_kind == VertexLocationKind_GUI) {
+        uint32_t va_id;
+        va_id = SD_ENUM_TO_UINT(VertexBufferUsage_TEX_COORD_BUFFER);
         io_binds[va_id].m_binding_id = va_id;
         io_binds[va_id].m_input_rate = VertexInputRate_VERTEX;
         io_binds[va_id].m_stride = sizeof(vec2);
-
         io_locations[va_id].m_binding_id = va_id;
         io_locations[va_id].m_location = va_id;
         io_locations[va_id].m_format = VertexBufferFormat_X32Y32_SFLOAT;
         io_locations[va_id].m_offset = 0;
-
-    }
-    else {
+        va_id = SD_ENUM_TO_UINT(VertexBufferUsage_VERTEX_BUFFER);
         io_binds[va_id].m_binding_id = va_id;
         io_binds[va_id].m_input_rate = VertexInputRate_VERTEX;
-        io_binds[va_id].m_stride = sizeof(vec3);
-
+        io_binds[va_id].m_stride = sizeof(vec2);
         io_locations[va_id].m_binding_id = va_id;
         io_locations[va_id].m_location = va_id;
-        io_locations[va_id].m_format = VertexBufferFormat_X32Y32Z32_SFLOAT;
+        io_locations[va_id].m_format = VertexBufferFormat_X32Y32_SFLOAT;
         io_locations[va_id].m_offset = 0;
     }
 }

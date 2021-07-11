@@ -10,6 +10,7 @@ set(SD_THIRD_PARTY_DIR ${SD_ENGINE_DIR}/ThirdParty)
 set(SD_ENGINE_INC_DIR ${SD_ENGINE_DIR}/SourceCode/include)
 set(SD_TP_ASSIMP_INC_DIR ${SD_THIRD_PARTY_DIR}/Assimp/include)
 set(SD_TP_GLM_INC_DIR ${SD_THIRD_PARTY_DIR}/GLM)
+set(SD_TP_IMGUI_INC_DIR ${SD_THIRD_PARTY_DIR}/ImGui/include)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(Configuration "Debug")
@@ -59,7 +60,8 @@ set (SD_ENGINE_INC_DIRS
         ${SD_ENGINE_INC_DIR}/Graphics/RenderFlow
         ${SD_ENGINE_INC_DIR}/Graphics/CommandBuffer
 		${SD_ENGINE_INC_DIR}/Graphics/BasicComponent
-        ${SD_ENGINE_INC_DIR}/Graphics/EmbeddedShaderProgramSource)
+        ${SD_ENGINE_INC_DIR}/Graphics/EmbeddedShaderProgramSource
+        ${SD_ENGINE_INC_DIR}/GUI)
 
 message(STATUS "SDEngineRootDir: ${SD_ENGINE_DIR}")
 message(STATUS "SDThirdPartyRootDir: ${SD_THIRD_PARTY_DIR}")
@@ -120,6 +122,7 @@ set(COMMON_INC_DIR
 include_directories(
         ${SD_TP_ASSIMP_INC_DIR}
         ${SD_TP_GLM_INC_DIR}
+        ${SD_TP_IMGUI_INC_DIR}
         ${SD_ENGINE_INC_DIRS}
         ${COMMON_INC_DIR})
 

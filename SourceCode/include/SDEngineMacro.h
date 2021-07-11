@@ -136,6 +136,16 @@ namespace App \
 } \
 }
 
+#define ________________SD_START_GUI_NAMESPACE_______________ \
+namespace SDE \
+{ \
+namespace GUI \
+{
+
+#define _________________SD_END_GUI_NAMESPACE________________ \
+} \
+}
+
 //Strong And Weak Reference.
 #define SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Type) \
     class Type; \

@@ -32,7 +32,22 @@ void GLFWApplication::ErrorCallback(int i_error, const char* i_error_str)
 //----- Mouse ------
 void GLFWApplication::CursorMouseButtonCallback(GLFWwindow *i_window, int i_button, int i_action, int i_mod_keys)
 {
+    TouchButtonEnum button;
+    TouchButtonStateEnum state;
 
+    button = static_cast<TouchButtonEnum>(i_button);
+
+    switch (i_action) {
+        case GLFW_PRESS:
+            state = SDE::Basic::TOUCH_BUTTON_STATE_PRESSED;
+            break;
+        case GLFW_RELEASE:
+            state = SDE::Basic::TOUCH_BUTTON_STATE_RELEASED;
+            break;
+        default:
+            state = SDE::Basic::TOUCH_BUTTON_STATE_MAX_DEFINE_VALUE;
+            break;
+    }
 }
 
 void GLFWApplication::CursorEnterCallback(GLFWwindow *i_window, int entered)
@@ -44,6 +59,8 @@ void GLFWApplication::CursorPositionCallback(GLFWwindow *i_window, double i_x, d
 {
     //Motion
     //SDLOGD("Mouse Motion (%lf,%lf)", i_x, i_y);
+    Application::GetRef().SetTouchPosition(SDE::Basic::TOUCH_BUTTON_LEFT, i_x, i_y);
+    Application::GetRef().SetTouchPosition(SDE::Basic::TOUCH_BUTTON_RIGHT, i_x, i_y);
 }
 
 //----- JoyStick ------

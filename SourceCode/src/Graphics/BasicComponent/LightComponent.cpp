@@ -62,7 +62,7 @@ void LightComponent::InitializeDescriptorSetAndPool()
     std::map<ObjectName, UniformVariableWeakReferenceObject> uvs;
     //1. Allocated descriptor set for .
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
-    DescriptorSetLayoutWeakReferenceObject light_dsl = GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Light");
+    DescriptorSetLayoutWeakReferenceObject light_dsl = GraphicsManager::GetRef().GetBasicDescriptorSetLayout(sUniformDescriptorSetLayout_Light);
     SD_SREF(light_dsl).GetUniformDescriptorCounts(desc_counts);
     SD_SREF(m_dp).Initialize(desc_counts, 1, false);
 
@@ -72,8 +72,8 @@ void LightComponent::InitializeDescriptorSetAndPool()
         SD_SREF(m_ds).WriteDescriptor();
     }
 
-    if (uvs.find("light") != uvs.end()) {
-        m_ub = uvs["light"].DynamicCastTo<UniformBuffer>();
+    if (uvs.find(sUniformBuffer_Light) != uvs.end()) {
+        m_ub = uvs[sUniformBuffer_Light].DynamicCastTo<UniformBuffer>();
     }
 
     if (m_ub.IsNull() == true) {

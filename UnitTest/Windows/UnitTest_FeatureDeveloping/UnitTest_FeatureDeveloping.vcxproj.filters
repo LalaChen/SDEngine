@@ -12,15 +12,6 @@
     <Filter Include="shader">
       <UniqueIdentifier>{ac346555-2097-4ceb-a848-4891e8f59b95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaderProgram">
-      <UniqueIdentifier>{be09b728-d24d-4039-9e27-31d6e64edeab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="shaderProgram\BasicShading">
-      <UniqueIdentifier>{d96efdd0-2828-41b8-9c3d-3c8e762f6e0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="shaderProgram\AxesShading">
-      <UniqueIdentifier>{644d8510-ed5b-4863-b6f7-e2e2360647cd}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -77,36 +68,6 @@
     </None>
     <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxisShadowShader.vert">
       <Filter>shader</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\BasicShading.json">
-      <Filter>shaderProgram\BasicShading</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_SP0.frag">
-      <Filter>shaderProgram\BasicShading</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_SP0.vert">
-      <Filter>shaderProgram\BasicShading</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_SP0.frag">
-      <Filter>shaderProgram\AxesShading</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_SP0.vert">
-      <Filter>shaderProgram\AxesShading</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\AxesShading.json">
-      <Filter>shaderProgram\AxesShading</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.frag">
-      <Filter>shaderProgram\BasicShading</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\BasicShading\ForwardBasicShader_Multiview_SP0.vert">
-      <Filter>shaderProgram\BasicShading</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag">
-      <Filter>shaderProgram\AxesShading</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.vert">
-      <Filter>shaderProgram\AxesShading</Filter>
     </None>
   </ItemGroup>
 </Project>

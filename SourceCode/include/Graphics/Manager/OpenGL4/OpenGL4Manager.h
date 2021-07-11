@@ -91,16 +91,16 @@ public:
 public:
 //----------- Vertex Buffer Function ------------
     void CreateVertexBuffer(VertexBufferIdentity &io_identity, Size_ui64 i_data_size) override;
-    void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
-    void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
+    void RefreshStaticVertexBuffer(const VertexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size) override;
+    void RefreshDynamicVertexBuffer(const VertexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size) override;
     void DeleteVertexBuffer(VertexBufferIdentity &io_identity) override;
     void MapVertexBuffer(const VertexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) override;
     void UnmapVertexBuffer(const VertexBufferIdentity &i_identity) override;
 public:
 //----------- Index Buffer Function ------------   
     void CreateIndexBuffer(IndexBufferIdentity &io_identity, Size_ui64 i_data_size) override;
-    void RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
-    void RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, void *i_data_ptr, Size_ui64 i_data_size) override;
+    void RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size) override;
+    void RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size) override;
     void DeleteIndexBuffer(IndexBufferIdentity &io_identity) override;
     void MapIndexBuffer(const IndexBufferIdentity &i_identity, VoidPtr &io_buffer_handle)override;
     void UnmapIndexBuffer(const IndexBufferIdentity &i_identity) override;

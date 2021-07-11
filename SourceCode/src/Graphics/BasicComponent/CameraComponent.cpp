@@ -177,7 +177,7 @@ void CameraComponent::InitializeDescriptorSetAndPool()
     std::map<ObjectName, UniformVariableWeakReferenceObject> uvs;
     //1. Collect all descriptor set layouts used at this component.
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
-    DescriptorSetLayoutWeakReferenceObject camera_dsl = GraphicsManager::GetRef().GetBasicDescriptorSetLayout("Camera");
+    DescriptorSetLayoutWeakReferenceObject camera_dsl = GraphicsManager::GetRef().GetBasicDescriptorSetLayout(sUniformDescriptorSetLayout_Camera);
     SD_SREF(camera_dsl).GetUniformDescriptorCounts(desc_counts);
     SD_SREF(m_dp).Initialize(desc_counts, 1, false);
     //2. Allocate descriptor set.
@@ -188,8 +188,8 @@ void CameraComponent::InitializeDescriptorSetAndPool()
         SD_SREF(m_ds).WriteDescriptor();
     }
 
-    if (uvs.find("camera") != uvs.end()) {
-        m_ub = uvs["camera"].DynamicCastTo<UniformBuffer>();
+    if (uvs.find(sUniformBuffer_Camera) != uvs.end()) {
+        m_ub = uvs[sUniformBuffer_Camera].DynamicCastTo<UniformBuffer>();
     }
 
     if (m_ub.IsNull() == true) {
@@ -199,7 +199,7 @@ void CameraComponent::InitializeDescriptorSetAndPool()
 
 void CameraComponent::InitializeWorkspaceForForwardPass()
 {
-    RenderPassWeakReferenceObject forward_rp = GraphicsManager::GetRef().GetRenderPass("ForwardPass");
+    RenderPassWeakReferenceObject forward_rp = GraphicsManager::GetRef().GetRenderPass(sRenderPass_Forward);
 
     if (forward_rp.IsNull() == false) {
         if (m_color_buffer.IsNull() == false) {

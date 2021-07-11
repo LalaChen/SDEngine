@@ -37,6 +37,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 Scene::Scene(const ObjectName & i_object_name, const FilePathString &i_fp)
 : Object(i_object_name)
 , m_scene_fp(i_fp)
+, m_is_loading(false)
 {
 }
 

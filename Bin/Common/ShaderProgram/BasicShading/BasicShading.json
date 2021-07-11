@@ -208,7 +208,7 @@
                 "FragShader": "./ForwardBasicShader_SP0.frag.spv",
                 "GraphicsParam": {
                   "BindPoint": 0,
-                  "TexCoordDim": 2,
+                  "VertexLocationKind": 0,
                   "PrimitiveInfo": {
                     "Type": 3,
                     "RestartEnable": false
@@ -285,7 +285,7 @@
                 "FragShader": "./ForwardBasicShader_Multiview_SP0.frag.spv",
                 "GraphicsParam": {
                   "BindPoint": 0,
-                  "TexCoordDim": 2,
+                  "VertexLocationKind": 0,
                   "PrimitiveInfo": {
                     "Type": 3,
                     "RestartEnable": false
