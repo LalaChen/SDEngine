@@ -49,6 +49,24 @@ using SDE::Basic::Object;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+enum RenderOrderEnum
+{
+    RenderOrder_OPAQUE = 0,
+    RenderOrder_ALPHA_BLEND,
+    RenderOrder_VOLUME_RENDERING,
+    RenderOrder_MAX_DEFINE_VALUE
+};
+
+class SDENGINE_CLASS RenderOrder
+{
+public:
+    RenderOrder() :m_order(0) {}
+    RenderOrder(const std::string &i_desc);
+    ~RenderOrder() {}
+public:
+    uint32_t m_order;
+};
+
 class SDENGINE_CLASS RenderStepInfo
 {
 public:
@@ -120,6 +138,7 @@ public:
     void GetDescriptorCount(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
     uint32_t GetStepAmount(const RenderPassWeakReferenceObject &i_rp, uint32_t i_sp_id) const;
     uint32_t GetPipelineAmount() const;
+    const RenderOrder& GetRenderOrder() const;
 public: //Material Use.
     void AllocateEssentialObjects(
         std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uvs,
@@ -141,11 +160,17 @@ protected:
     bool m_registered;
     FilePathString m_proj_dir_fp;
     FilePathString m_proj_fn;
+    RenderOrder m_render_order;
 };
 
 inline uint32_t ShaderProgram::GetPipelineAmount() const
 {
     return m_pipe_amount;
+}
+
+inline const RenderOrder& ShaderProgram::GetRenderOrder() const
+{
+    return m_render_order;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

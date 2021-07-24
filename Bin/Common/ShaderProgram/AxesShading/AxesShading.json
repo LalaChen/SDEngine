@@ -1,5 +1,6 @@
 {
   "ShaderProgram": {
+    "RenderOrder": "Opaque",
     "DescriptorSetLayouts": [
       {
         "Name": "Camera",

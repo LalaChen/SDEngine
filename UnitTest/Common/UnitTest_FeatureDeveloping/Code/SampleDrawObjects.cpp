@@ -122,6 +122,9 @@ bool SampleDrawObjects::Load()
             rect.m_size.x = 360;
             rect.m_size.y = 360;
             SD_SREF(window).SetUIVertices(rect);
+            //
+            IMGUITextLabelStrongReferenceObject text_label = new IMGUITextLabel("TextLabel", "Demo Window .");
+            SD_SREF(window).Append(text_label.StaticCastTo<IMGUINode>());
             SD_WREF(i_batch).AddWindow(window);
             return true;
         }

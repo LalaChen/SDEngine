@@ -61,7 +61,7 @@ public:
     void RecordCommand(
         const CommandBufferWeakReferenceObject &i_cb,
         const std::list<LightComponentWeakReferenceObject> &i_light_list,
-        const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list) override;
+        const std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> > &i_mesh_render_list) override;
 protected:
     void InitializeDescriptorSetAndPool();
     void InitializeWorkspaceForForwardPass();

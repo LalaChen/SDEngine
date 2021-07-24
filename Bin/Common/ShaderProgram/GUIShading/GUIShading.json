@@ -1,5 +1,6 @@
 {
   "ShaderProgram": {
+    "RenderOrder": "AlphaBlend",
     "DescriptorSetLayouts": [
       {
         "Name": "GUI",
@@ -77,7 +78,7 @@
                         "ColorMaskG": true,
                         "ColorMaskB": true,
                         "ColorMaskA": true,
-                        "Blending": false,
+                        "Blending": true,
                         "BlendingSrcColorFactor": 6,
                         "BlendingDstColorFactor": 7,
                         "BlendingColorOp": 0,

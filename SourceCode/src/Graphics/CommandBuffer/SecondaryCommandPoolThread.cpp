@@ -36,6 +36,7 @@ SecondaryCommandPoolThread::SecondaryCommandPoolThread(const ObjectName &i_objec
 : Object(i_object_name)
 , m_stop(false)
 , m_recording(false)
+, m_current_used_cb(0)
 {
 }
 
@@ -61,8 +62,23 @@ void SecondaryCommandPoolThread::Initialize()
 {
     m_cp = new CommandPool(StringFormat("%s_cp", m_object_name.c_str()));
     SD_SREF(m_cp).Initialize();
-    m_cb = SD_SREF(m_cp).AllocateCommandBuffer(StringFormat("secondary_cb"), CommandBufferLevel_SECONDARY);
     m_thread = std::thread(std::bind(&SecondaryCommandPoolThread::Record, this));
+}
+
+void SecondaryCommandPoolThread::BeginCommandBuffer()
+{
+    if (m_current_used_cb >= m_cbs.size()) {
+        CommandBufferWeakReferenceObject cb = SD_SREF(m_cp).AllocateCommandBuffer(StringFormat("secondary_cb_(%d)", m_current_used_cb), CommandBufferLevel_SECONDARY);
+        m_cbs.push_back(cb);
+    }
+    SD_WREF(m_cbs[m_current_used_cb]).Begin();
+}
+
+void SecondaryCommandPoolThread::EndCommandBuffer(std::list<CommandBufferWeakReferenceObject> &io_submitted_sc_list)
+{
+    SD_WREF(m_cbs[m_current_used_cb]).End();
+    io_submitted_sc_list.push_back(m_cbs[m_current_used_cb]);
+    m_current_used_cb++;
 }
 
 void SecondaryCommandPoolThread::AddTask(const CommandFunction &i_task)
@@ -74,17 +90,22 @@ void SecondaryCommandPoolThread::AddTask(const CommandFunction &i_task)
     }
 }
 
+void SecondaryCommandPoolThread::Reset()
+{
+    m_current_used_cb = 0;
+}
+
 void SecondaryCommandPoolThread::StartRecording(const CommandBufferInheritanceInfo &i_info, const Viewport &i_vp, const ScissorRegion &i_sr)
 {
     std::lock_guard<std::mutex> lck(m_mutex);
-    SD_WREF(m_cb).Begin(i_info);
+    BeginCommandBuffer();
     m_recording = true;
     m_viewport = i_vp;
     m_scissor_region = i_sr;
-    GraphicsManager::GetRef().SetViewport(m_cb, m_viewport);
-    GraphicsManager::GetRef().SetScissor(m_cb, m_scissor_region);
+    GraphicsManager::GetRef().SetViewport(m_cbs[m_current_used_cb], m_viewport);
+    GraphicsManager::GetRef().SetScissor(m_cbs[m_current_used_cb], m_scissor_region);
     m_task_cv.notify_one();
-}
+} 
 
 void SecondaryCommandPoolThread::Record()
 {
@@ -100,7 +121,7 @@ void SecondaryCommandPoolThread::Record()
             task = m_task_pool.front();
         }
 
-        task(m_cb);
+        task(m_cbs[m_current_used_cb]);
 
         {
             std::lock_guard<std::mutex> lck(m_mutex);
@@ -112,12 +133,11 @@ void SecondaryCommandPoolThread::Record()
 
 void SecondaryCommandPoolThread::WaitAndStopRecording(std::list<CommandBufferWeakReferenceObject> &io_submitted_sc_list)
 {
-    std::unique_lock<std::mutex> lck(m_mutex); //Delivery to task cv for ensuring ppol size and stop.
+    std::unique_lock<std::mutex> lck(m_mutex); //Delivery to task cv for ensuring pool size and stop.
     m_task_cv.wait(lck, [this]() {return (m_task_pool.empty() == true); });
 
-    SD_WREF(m_cb).End();
+    EndCommandBuffer(io_submitted_sc_list);
     m_recording = false;
-    io_submitted_sc_list.push_back(m_cb);
 }
 
 

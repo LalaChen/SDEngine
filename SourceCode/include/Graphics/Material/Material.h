@@ -111,6 +111,8 @@ public:
         uint32_t i_step_id);
 public:
     uint32_t GetStepAmount(const RenderPassWeakReferenceObject& i_rp, uint32_t i_sp_id) const;
+
+    const RenderOrder& GetRenderOrder() const;
 protected:
     std::map<ObjectName, UniformVariableWeakReferenceObject> m_uvs;
     ShaderProgramWeakReferenceObject m_sp;
@@ -121,5 +123,10 @@ protected:
     std::vector<DescriptorSetWeakReferenceObject> m_dsets;
     bool m_is_linked;
 };
+
+inline const RenderOrder& Material::GetRenderOrder() const
+{
+    return SD_WREF(m_sp).GetRenderOrder();
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

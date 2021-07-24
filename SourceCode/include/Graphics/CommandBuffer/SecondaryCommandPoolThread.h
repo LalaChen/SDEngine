@@ -51,7 +51,6 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(SecondaryCommandPoolThread);
 
-
 /*! \class SecondaryCommandPoolThread
  *  \brief In Vulkan graphics system, SecondaryCommandPoolThread is used to record command to SECONDARY command buffer at
  *         another thread(multiple thread rendering) in one frame. We should start recording at frame begin. And then we
@@ -91,6 +90,11 @@ public:
      */
     void AddTask(const CommandFunction &i_task);
 
+    /*! \fn void Reset();
+     *  \brief Reset pool at beginning.
+     */
+    void Reset();
+
     /*! \fn void StartRecording(const CommandBufferInheritanceInfo &i_info, const Viewport &i_vp, const ScissorRegion &i_sr);
      *  \param [in] i_info Notify target renderpass, framebuffer and other infos for this secondary buffer.
      *  \param [in] i_vp Viewport data.
@@ -109,16 +113,22 @@ protected:
      *  \brief Recording command function.
      */
     void Record();
+
+    void BeginCommandBuffer();
+
+    void EndCommandBuffer(std::list<CommandBufferWeakReferenceObject>& io_submitted_sc_list);
 protected:
     /*! \fn CommandPoolStrongReferenceObject m_cp;
      *  \brief Pool for manager secondary buffer for this poot thread.
      */
     CommandPoolStrongReferenceObject m_cp;
 
-    /*! \fn CommandBufferWeakReferenceObject m_cb;
-     *  \brief Pool for manager secondary buffer for this poot thread.
+    /*! \fn CommandBufferData m_cbs;
+     *  \brief command buffers for manager secondary buffer for this poot thread.
      */
-    CommandBufferWeakReferenceObject m_cb;
+    std::vector<CommandBufferWeakReferenceObject> m_cbs;
+
+    uint32_t m_current_used_cb;
 protected:
     /*! \fn std::thread m_thread;
      *  \brief Thread for launching recording task.

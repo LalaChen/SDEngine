@@ -49,6 +49,14 @@ IMGUIRenderer::~IMGUIRenderer()
 
 void IMGUIRenderer::InitializeGraphicsSystem()
 {
+    // Color scheme
+    ImGuiStyle &style = ImGui::GetStyle();
+    style.Colors[ImGuiCol_TitleBg] = ImVec4(1.0f, 0.0f, 0.0f, 0.6f);
+    style.Colors[ImGuiCol_TitleBgActive] = ImVec4(1.0f, 0.0f, 0.0f, 0.8f);
+    style.Colors[ImGuiCol_MenuBarBg] = ImVec4(1.0f, 0.0f, 0.0f, 0.4f);
+    style.Colors[ImGuiCol_Header] = ImVec4(1.0f, 0.0f, 0.0f, 0.4f);
+    style.Colors[ImGuiCol_CheckMark] = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
+
     ImGuiIO &io = ImGui::GetIO();
     unsigned char* font = nullptr;
     int tex_width, tex_height;

@@ -78,7 +78,7 @@ public:
     virtual void RecordCommand(
         const CommandBufferWeakReferenceObject &i_cb,
         const std::list<LightComponentWeakReferenceObject> &i_light_list,
-        const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_list) = 0;
+        const std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> > &i_mesh_render_list) = 0;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

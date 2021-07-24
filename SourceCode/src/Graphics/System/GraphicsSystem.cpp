@@ -85,7 +85,7 @@ void GraphicsSystem::Initialize()
 
     //3. initialize rec_thread.
     uint32_t max_threads = std::thread::hardware_concurrency();
-    m_rec_threads.resize(max_threads);
+    m_rec_threads.resize(1);
     for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
         m_rec_threads[tID] = new SecondaryCommandPoolThread(StringFormat("RecordThread_%d", tID));
         m_rec_threads[tID].GetRef().Initialize();
@@ -158,7 +158,7 @@ void GraphicsSystem::RecordCommand()
     std::list<EntityWeakReferenceObject> mesh_render_entity_list = SD_WREF(m_mesh_render_eg).GetEntities();
     std::list<EntityWeakReferenceObject> light_entity_list = SD_WREF(m_light_eg).GetEntities();
     std::list<LightComponentWeakReferenceObject> light_list;
-    std::list<MeshRenderComponentWeakReferenceObject> mesh_render_list;
+    std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> > mr_group_map;
     std::list<CameraComponentBaseWeakReferenceObject> camera_list;
     //1. collect necessary components.
     for (EntityWeakReferenceObject &le : light_entity_list) {
@@ -170,7 +170,15 @@ void GraphicsSystem::RecordCommand()
     }
 
     for (EntityWeakReferenceObject &mre : mesh_render_entity_list) {
-        mesh_render_list.push_back(SD_GET_COMP_WREF(mre, MeshRenderComponent));
+        MeshRenderComponentWeakReferenceObject mr_comp = SD_GET_COMP_WREF(mre, MeshRenderComponent);
+        uint32_t mr_order = SD_WREF(mr_comp).GetRenderOrder().m_order;
+        std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> >::iterator mr_iter = mr_group_map.find(mr_order);
+        if (mr_iter != mr_group_map.end()) {
+            (*mr_iter).second.push_back(mr_comp);
+        }
+        else {
+            mr_group_map[mr_order].push_back(mr_comp);
+        }
     }
 
     SD_SREF(m_graphics_cb).Begin();
@@ -183,7 +191,7 @@ void GraphicsSystem::RecordCommand()
 
     //4. record command for camera.
     for (CameraComponentBaseWeakReferenceObject &camera : camera_list) {
-        SD_WREF(camera).RecordCommand(m_graphics_cb, light_list, mesh_render_list);
+        SD_WREF(camera).RecordCommand(m_graphics_cb, light_list, mr_group_map);
     }
     
     SD_SREF(m_graphics_cb).End();

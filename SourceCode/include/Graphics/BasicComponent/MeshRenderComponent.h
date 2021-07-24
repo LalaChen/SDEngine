@@ -79,6 +79,8 @@ public:
         uint32_t i_sp_id);
 
     bool OnGeometryChanged(const EventArg &i_arg);
+public:
+    const RenderOrder& GetRenderOrder() const;
 protected:
     MeshWeakReferenceObject m_mesh;
     MaterialWeakReferenceObject m_material;
@@ -91,5 +93,9 @@ protected:
     TransformComponentWeakReferenceObject m_geo_comp;
 };
 
+inline const RenderOrder& MeshRenderComponent::GetRenderOrder() const
+{
+    return SD_WREF(m_material).GetRenderOrder();
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
