@@ -147,7 +147,7 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
         SDLOGW("We can't present image by queue. error(%d).", result);
     }
 
-    m_fps.AddCount();
+    m_fps_counter.AddCount();
 }
 
 

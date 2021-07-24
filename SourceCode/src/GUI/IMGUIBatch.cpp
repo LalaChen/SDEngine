@@ -81,7 +81,6 @@ void IMGUIBatch::Initialize()
 
 void IMGUIBatch::RecordBatchCommand(const TouchButton &i_touch)
 {
-
     ImGuiIO &io = ImGui::GetIO();
     io.DeltaTime = static_cast<float>(Timer::GetRef().GetProgramDeltaTime());
     io.DisplaySize = m_buffer_size;

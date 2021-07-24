@@ -41,6 +41,9 @@ SOFTWARE.
 
 using SDE::Basic::ObjectName;
 
+using SDE::Basic::WeakReferenceObject;
+using SDE::Basic::StrongReferenceObject;
+
 using SDE::Basic::EventObject;
 using SDE::Basic::EventObjectWeakReferenceObject;
 using SDE::Basic::EventObjectStrongReferenceObject;
@@ -83,8 +86,31 @@ public:
     void SetUIVertices(const IMGUIRect &i_rect);
 public:
     virtual void RecordCommand() = 0;
+    virtual void Append(const IMGUINodeStrongReferenceObject &i_child) = 0;
+public:
+    template<typename T> WeakReferenceObject<T> GetGUINode(const ObjectName &i_name);
 protected:
     IMGUIRect m_region;
+protected:
+    std::list<IMGUINodeStrongReferenceObject> m_children;
 };
+
+template<typename T>
+WeakReferenceObject<T> IMGUINode::GetGUINode(const ObjectName &i_name)
+{
+    if (m_object_name.compare(i_name) == 0) {
+        return GetThisWeakPtrByType<T>();
+    }
+    else {
+        WeakReferenceObject<T> target;
+        for (IMGUINodeStrongReferenceObject &node : m_children) {
+            target = SD_SREF(node).GetGUINode<T>(i_name);
+            if (target.IsNull() == false) {
+                return target;
+            }
+        }
+        return target;
+    }
+}
 
 _________________SD_END_GUI_NAMESPACE________________

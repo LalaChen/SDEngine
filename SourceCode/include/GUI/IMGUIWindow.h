@@ -50,11 +50,10 @@ public:
     explicit IMGUIWindow(const ObjectName &i_name, const std::string &i_title);
     virtual ~IMGUIWindow();
 public:
-    void Append(const IMGUINodeStrongReferenceObject &i_child);
+    void Append(const IMGUINodeStrongReferenceObject &i_child) override;
 public:
     void RecordCommand() override;
 protected:
-    std::list<IMGUINodeStrongReferenceObject> m_children;
     std::string m_title;
 };
 

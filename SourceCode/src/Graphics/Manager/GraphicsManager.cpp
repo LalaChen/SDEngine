@@ -38,7 +38,8 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
 
 GraphicsManager::GraphicsManager()
-: m_fps("FPS")
+: m_fps_counter("FPS")
+, m_FPS(0.0f)
 {
     // Register instance.
     SD_SINGLETON_DECLARATION_REGISTER;
@@ -56,8 +57,9 @@ void GraphicsManager::InitializeBasicResource()
 {
     std::function<void(uint64_t i_count, double i_period_ms)> fps_cbk = 
         std::function<void(uint64_t, double)>(
-            [](uint64_t i_count, double i_period_ms) {
-                SDLOG("FPS : %lf.", (static_cast<double>(i_count) / i_period_ms) * 1000.0);
+            [this](uint64_t i_count, double i_period_ms) {
+                m_FPS = (static_cast<double>(i_count) / i_period_ms) * 1000.0;
+                SDLOG("FPS : %lf.", m_FPS);
             }
     );
     SDLOG("Initialize Basic Resource Start!!!");
@@ -70,7 +72,7 @@ void GraphicsManager::InitializeBasicResource()
     InitializeDefaultPipelineInfos();
     InitializeBasicShaderPrograms();
 
-    m_fps.Start(1000.0, fps_cbk, false);
+    m_fps_counter.Start(1000.0, fps_cbk, false);
     SDLOG("Initialize Basic Resource End!!!");
 }
 
@@ -78,7 +80,7 @@ void GraphicsManager::ReleaseBasicResource()
 {
     SDLOG("Release.");
     ReleaseRenderPasses();
-    m_fps.Stop();
+    m_fps_counter.Stop();
 }
 
 void GraphicsManager::Render()
@@ -93,7 +95,7 @@ void GraphicsManager::Render()
     RenderEnd();
 
     //
-    m_fps.AddCount();
+    m_fps_counter.AddCount();
 }
 
 TextureFormatEnum GraphicsManager::GetDefaultDepthBufferFormat() const

@@ -38,9 +38,18 @@ IMGUITextLabel::~IMGUITextLabel()
 {
 }
 
+void IMGUITextLabel::SetText(const std::string &i_text)
+{
+    m_text = i_text;
+}
+
 void IMGUITextLabel::RecordCommand()
 {
     ImGui::Text(m_text.c_str());
+}
+
+void IMGUITextLabel::Append(const IMGUINodeStrongReferenceObject &i_child)
+{
 }
 
 _________________SD_END_GUI_NAMESPACE________________

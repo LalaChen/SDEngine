@@ -23,11 +23,15 @@ SOFTWARE.
 
 */
 
-#include "MaterialUniforms.h"
 #include "ECSManager.h"
+#include "Application.h"
 #include "BasicShapeCreator.h"
 #include "WorldGUIComponent.h"
 
+#include "MaterialUniforms.h"
+
+using SDE::Basic::TouchButtonEnum;
+using SDE::Basic::TouchButtonStateEnum;
 using SDE::Basic::ECSManager;
 using SDE::GUI::IMGUIRenderer;
 
@@ -102,7 +106,7 @@ void WorldGUIComponent::Update()
         m_GUI_render_flow,
         m_GUI_cb,
         m_batch,
-        TouchButton());
+        Application::GetRef().GetTouchButton(SDE::Basic::TOUCH_BUTTON_LEFT));
     GraphicsManager::GetRef().SubmitCommandBuffersToQueue({ m_GUI_cb });
 }
 

@@ -50,7 +50,10 @@ public:
     explicit IMGUITextLabel(const ObjectName &i_name, const std::string &i_text);
     virtual ~IMGUITextLabel();
 public:
+    void SetText(const std::string &i_text);
+public:
     void RecordCommand() override;
+    void Append(const IMGUINodeStrongReferenceObject &i_child) override;
 protected:
     std::string m_text;
 };

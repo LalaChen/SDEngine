@@ -1,5 +1,6 @@
-#include "SampleDrawObjects.h"
+#include "HUDComponent.h"
 #include "GameSystem.h"
+#include "SampleDrawObjects.h"
 
 GameSystem::GameSystem(const ObjectName &i_object_name)
 : System(i_object_name)
@@ -23,20 +24,36 @@ void GameSystem::Initialize()
             &GameSystem::OnAppEventTriggered));
 
     m_camera_motor_group = ECSManager::GetRef().AddEntityGroup(
-        "GameSystem",
+        "MotorComponent",
         {
             std::type_index(typeid(MotorComponent))
+        }
+    );
+
+    m_HUD_group = ECSManager::GetRef().AddEntityGroup(
+        "HUDComponent",
+        {
+            std::type_index(typeid(HUDComponent))
         }
     );
 }
 
 void GameSystem::Update()
 {
-    std::list<EntityWeakReferenceObject> entities = SD_WREF(m_camera_motor_group).GetEntities();
+    std::list<EntityWeakReferenceObject> entities;
+    entities = SD_WREF(m_camera_motor_group).GetEntities();
     for (EntityWeakReferenceObject &entity : entities) {
         MotorComponentWeakReferenceObject motor = SD_WREF(entity).GetComponent(typeid(MotorComponent)).DynamicCastTo<MotorComponent>();
         if (motor.IsNull() == false) {
             SD_WREF(motor).Update();
+        }
+    }
+
+    entities = SD_WREF(m_HUD_group).GetEntities();
+    for (EntityWeakReferenceObject &entity : entities) {
+        HUDComponentWeakReferenceObject hud = SD_WREF(entity).GetComponent(typeid(HUDComponent)).DynamicCastTo<HUDComponent>();
+        if (hud.IsNull() == false) {
+            SD_WREF(hud).Update();
         }
     }
 }
