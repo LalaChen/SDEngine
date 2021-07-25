@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      IMGUITextLabel.h
- *  \brief     The class IMGUITextLabel is used to show text.
+/*! \file      IMGUIButton.h
+ *  \brief     The class IMGUIButton is used to show button.
  *  \author    Kuan-Chih, Chen
  *  \date      2021/07/25
  *  \copyright MIT License.
@@ -45,22 +45,22 @@ using SDE::Basic::EventObjectStrongReferenceObject;
 
 ________________SD_START_GUI_NAMESPACE_______________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(IMGUIVectorLabel);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(IMGUIButton);
 
-class SDENGINE_CLASS IMGUIVectorLabel : public IMGUINode
+class SDENGINE_CLASS IMGUIButton : public IMGUINode
 {
 public:
-    explicit IMGUIVectorLabel(const ObjectName &i_name, const std::string &i_text);
-    virtual ~IMGUIVectorLabel();
+    explicit IMGUIButton(const ObjectName &i_name, const std::string &i_text);
+    virtual ~IMGUIButton();
 public:
     void SetText(const std::string &i_text);
-    void SetValue(const Vector3f &i_value);
+    void SetCallback(const std::function<void()> &i_func);
 public:
     void RecordCommand() override;
-    void Append(const IMGUINodeStrongReferenceObject &i_child) override;
+    void Append(const IMGUINodeStrongReferenceObject& i_child) override;
 protected:
     std::string m_text;
-    Vector3f m_value;
+    std::function<void()> m_func;
 };
 
 _________________SD_END_GUI_NAMESPACE________________

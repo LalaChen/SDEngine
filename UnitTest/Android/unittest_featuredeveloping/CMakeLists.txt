@@ -135,6 +135,7 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              src/main/cpp/android_jni_main.cpp
              src/main/cpp/FeatureApplication.cpp
+             ../../Common/UnitTest_FeatureDeveloping/Code/HUDComponent.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/MotorComponent.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/GameSystem.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/SampleDrawObjects.cpp
