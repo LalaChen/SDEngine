@@ -5,6 +5,8 @@
 #include <SDEngineCommonFunction.h>
 #include <SDEngine.h>
 
+#include "MotorComponent.h"
+
 using namespace SDE;
 using namespace SDE::Math;
 using namespace SDE::Basic;
@@ -25,5 +27,8 @@ public:
     virtual void Update();
 protected:
     WorldGUIComponentWeakReferenceObject m_GUI;
+    TransformComponentWeakReferenceObject m_transform;
     IMGUITextLabelWeakReferenceObject m_FPS_label;
+    IMGUIVectorLabelWeakReferenceObject m_camera_pos_label;
+    IMGUIVectorLabelWeakReferenceObject m_camera_rot_label;
 };

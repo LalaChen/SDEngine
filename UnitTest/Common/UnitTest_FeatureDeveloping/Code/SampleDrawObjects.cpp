@@ -125,8 +125,18 @@ bool SampleDrawObjects::Load()
             //
             IMGUITextLabelStrongReferenceObject text_label = new IMGUITextLabel("FPSLabel", "");
             SD_SREF(window).Append(text_label.StaticCastTo<IMGUINode>());
-            SD_WREF(i_batch).AddWindow(window);
             //
+            IMGUITextLabelStrongReferenceObject camera_label = new IMGUITextLabel("Camera", "Camera :");
+            SD_SREF(window).Append(camera_label.StaticCastTo<IMGUINode>());
+            //
+            IMGUIVectorLabelStrongReferenceObject camera_pos_label = new IMGUIVectorLabel("CameraPosition", "Position");
+            SD_SREF(window).Append(camera_pos_label.StaticCastTo<IMGUINode>());
+            //
+            IMGUIVectorLabelStrongReferenceObject camera_rot_label = new IMGUIVectorLabel("CameraRotation", "Rotation");
+            SD_SREF(window).Append(camera_rot_label.StaticCastTo<IMGUINode>());
+            //
+            SD_WREF(i_batch).AddWindow(window);
+
             return true;
         }
     );

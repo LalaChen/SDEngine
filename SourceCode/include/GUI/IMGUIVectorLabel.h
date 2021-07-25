@@ -23,34 +23,44 @@ SOFTWARE.
 
 */
 
-#include <ImGui/imgui.h>
+/*! \file      IMGUITextLabel.h
+ *  \brief     The class IMGUITextLabel is used to show text.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2021/07/01
+ *  \copyright MIT License.
+ */
 
-#include "IMGUITextLabel.h"
+#pragma once
+
+#include "Vector3f.h"
+#include "IMGUINode.h"
+
+using SDE::Math::Vector3f;
+
+using SDE::Basic::ObjectName;
+
+using SDE::Basic::EventObject;
+using SDE::Basic::EventObjectWeakReferenceObject;
+using SDE::Basic::EventObjectStrongReferenceObject;
 
 ________________SD_START_GUI_NAMESPACE_______________
 
-IMGUITextLabel::IMGUITextLabel(const ObjectName &i_name, const std::string &i_text)
-: IMGUINode(i_name)
-, m_text(i_text)
-{
-}
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(IMGUIVectorLabel);
 
-IMGUITextLabel::~IMGUITextLabel()
+class SDENGINE_CLASS IMGUIVectorLabel : public IMGUINode
 {
-}
-
-void IMGUITextLabel::SetText(const std::string &i_text)
-{
-    m_text = i_text;
-}
-
-void IMGUITextLabel::RecordCommand()
-{
-    ImGui::Text(m_text.c_str());
-}
-
-void IMGUITextLabel::Append(const IMGUINodeStrongReferenceObject &i_child)
-{
-}
+public:
+    explicit IMGUIVectorLabel(const ObjectName &i_name, const std::string &i_text);
+    virtual ~IMGUIVectorLabel();
+public:
+    void SetText(const std::string &i_text);
+    void SetValue(const Vector3f &i_value);
+public:
+    void RecordCommand() override;
+    void Append(const IMGUINodeStrongReferenceObject &i_child) override;
+protected:
+    std::string m_text;
+    Vector3f m_value;
+};
 
 _________________SD_END_GUI_NAMESPACE________________

@@ -25,31 +25,36 @@ SOFTWARE.
 
 #include <ImGui/imgui.h>
 
-#include "IMGUITextLabel.h"
+#include "IMGUIVectorLabel.h"
 
 ________________SD_START_GUI_NAMESPACE_______________
 
-IMGUITextLabel::IMGUITextLabel(const ObjectName &i_name, const std::string &i_text)
+IMGUIVectorLabel::IMGUIVectorLabel(const ObjectName &i_name, const std::string &i_text)
 : IMGUINode(i_name)
 , m_text(i_text)
 {
 }
 
-IMGUITextLabel::~IMGUITextLabel()
+IMGUIVectorLabel::~IMGUIVectorLabel()
 {
 }
 
-void IMGUITextLabel::SetText(const std::string &i_text)
+void IMGUIVectorLabel::SetText(const std::string &i_text)
 {
     m_text = i_text;
 }
 
-void IMGUITextLabel::RecordCommand()
+void IMGUIVectorLabel::SetValue(const Vector3f &i_value)
 {
-    ImGui::Text(m_text.c_str());
+    m_value = i_value;
 }
 
-void IMGUITextLabel::Append(const IMGUINodeStrongReferenceObject &i_child)
+void IMGUIVectorLabel::RecordCommand()
+{
+    ImGui::InputFloat3(m_text.c_str(), &m_value.m_vec.x);
+}
+
+void IMGUIVectorLabel::Append(const IMGUINodeStrongReferenceObject &i_child)
 {
 }
 
