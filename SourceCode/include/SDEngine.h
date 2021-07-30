@@ -93,6 +93,7 @@ SOFTWARE.
 #include "Graphics/RenderFlow/SubpassDescription.h"
 #include "Graphics/RenderFlow/SubpassDependency.h"
 #include "Graphics/RenderFlow/FrameBuffer.h"
+#include "Graphics/ShaderProgram/RenderOrder.h"
 #include "Graphics/ShaderProgram/ShaderModule.h"
 #include "Graphics/ShaderProgram/ShaderProgram.h"
 #include "Graphics/ShaderProgram/DescriptorSet.h"

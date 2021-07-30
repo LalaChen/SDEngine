@@ -873,6 +873,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\System\WorldGUISystem.h">
       <Filter>include\Graphics\System</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\RenderOrder.h">
+      <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1450,6 +1453,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_WorldGUI.cpp">
       <Filter>src\Graphics\BasicShapeCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ShaderProgram\RenderOrder.cpp">
+      <Filter>src\Graphics\ShaderProgram</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

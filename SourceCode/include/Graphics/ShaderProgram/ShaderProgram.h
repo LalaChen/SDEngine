@@ -39,6 +39,7 @@ SOFTWARE.
 #include "DescriptorPool.h"
 #include "UniformImages.h"
 #include "UniformBuffer.h"
+#include "RenderOrder.h"
 #include "UniformImagesDescriptor.h"
 #include "UniformBufferDescriptor.h"
 #include "DescriptorSetLayout.h"
@@ -141,6 +142,7 @@ protected:
     bool m_registered;
     FilePathString m_proj_dir_fp;
     FilePathString m_proj_fn;
+    RenderOrder m_render_order;
 };
 
 inline uint32_t ShaderProgram::GetPipelineAmount() const

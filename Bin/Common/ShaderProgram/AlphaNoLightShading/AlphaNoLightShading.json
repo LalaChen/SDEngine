@@ -1,6 +1,6 @@
 {
   "ShaderProgram": {
-    "RenderOrder":"Opaque",
+    "RenderOrder":"AlphaBlend",
     "DescriptorSetLayouts": [
       {
         "Name": "Camera",
@@ -201,12 +201,12 @@
             "Name": "FirstLight",
             "Pipelines": [
               {
-                "Name": "NoLightShading_P0",
-                "VertShader": "./NoLightShader_SP0.vert.spv",
+                "Name": "AlphaNoLightShading_P0",
+                "VertShader": "./AlphaNoLightShader_SP0.vert.spv",
                 "TessCtrlShader": "",
                 "TessEstShader": "",
                 "GeoShader": "",
-                "FragShader": "./NoLightShader_SP0.frag.spv",
+                "FragShader": "./AlphaNoLightShader_SP0.frag.spv",
                 "GraphicsParam": {
                   "BindPoint": 0,
                   "VertexLocationKind": 0,
@@ -245,7 +245,7 @@
                         "ColorMaskG": true,
                         "ColorMaskB": true,
                         "ColorMaskA": true,
-                        "Blending": false,
+                        "Blending": true,
                         "BlendingSrcColorFactor": 6,
                         "BlendingDstColorFactor": 7,
                         "BlendingColorOp": 0,
@@ -278,12 +278,12 @@
             "Name": "FirstLight",
             "Pipelines": [
               {
-                "Name": "NoLightShading_MV_P0",
-                "VertShader": "./NoLightShader_Multiview_SP0.vert.spv",
+                "Name": "AlphaNoLightShading_MV_P0",
+                "VertShader": "./AlphaNoLightShader_Multiview_SP0.vert.spv",
                 "TessCtrlShader": "",
                 "TessEstShader": "",
                 "GeoShader": "",
-                "FragShader": "./NoLightShader_Multiview_SP0.frag.spv",
+                "FragShader": "./AlphaNoLightShader_Multiview_SP0.frag.spv",
                 "GraphicsParam": {
                   "BindPoint": 0,
                   "VertexLocationKind": 0,
@@ -322,7 +322,7 @@
                         "ColorMaskG": true,
                         "ColorMaskB": true,
                         "ColorMaskA": true,
-                        "Blending": false,
+                        "Blending": true,
                         "BlendingSrcColorFactor": 6,
                         "BlendingDstColorFactor": 7,
                         "BlendingColorOp": 0,

@@ -145,14 +145,4 @@ typedef uint32_t LayerID;
  */
 typedef uint32_t LayerMaskValue;
 
-/*! \typedef uint32_t RenderOrder;
- *  \brief Type of render order.
- */
-typedef uint32_t RenderOrder;
-
-/*! \typedef uint32_t RenderOrderOffset;
- *  \brief Type of render order offset.
- */
-typedef uint32_t RenderOrderOffset;
-
 ______________SD_END_GRAPHICS_NAMESPACE______________
