@@ -26,7 +26,7 @@ SOFTWARE.
 /*! \file      IMGUITextLabel.h
  *  \brief     The class IMGUITextLabel is used to show text.
  *  \author    Kuan-Chih, Chen
- *  \date      2021/07/25
+ *  \date      2021/07/01
  *  \copyright MIT License.
  */
 
