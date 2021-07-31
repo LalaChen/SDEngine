@@ -879,9 +879,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUITextLabel.h">
       <Filter>include\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIVectorLabel.h">
-      <Filter>include\GUI</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1461,9 +1458,6 @@
       <Filter>src\Graphics\BasicShapeCreator</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUITextLabel.cpp">
-      <Filter>src\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIVectorLabel.cpp">
       <Filter>src\GUI</Filter>
     </ClCompile>
   </ItemGroup>
