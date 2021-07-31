@@ -227,6 +227,9 @@ public:
         std::vector<VertexAttribBindingDescription> &io_binds,
         std::vector<VertexAttribLocationDescription> &io_locations,
         VertexLocationKindEnum i_vl_kind = VertexLocationKind_GENERAL) const;
+public:
+    float GetFPS() const;
+public:
 //-------- Managing RenderPass Function ---------
     void RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp);
     void UnregisterRenderPass(const ObjectName &i_target_rp_name);
@@ -291,7 +294,15 @@ protected:
     std::map<ObjectName, ShaderProgramStrongReferenceObject> m_shader_program_maps;
 
 protected:
-    PeriodCounter m_fps;
+    PeriodCounter m_fps_counter;
+
+protected:
+    float m_FPS;
 };
+
+inline float GraphicsManager::GetFPS() const
+{
+    return m_FPS;
+}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

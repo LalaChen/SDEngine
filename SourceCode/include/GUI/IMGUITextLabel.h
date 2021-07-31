@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      IMGUIWindow.h
- *  \brief     The class GUILayout is the root of GUI.
+/*! \file      IMGUITextLabel.h
+ *  \brief     The class IMGUITextLabel is used to show text.
  *  \author    Kuan-Chih, Chen
  *  \date      2021/07/01
  *  \copyright MIT License.
@@ -42,19 +42,20 @@ using SDE::Basic::EventObjectStrongReferenceObject;
 
 ________________SD_START_GUI_NAMESPACE_______________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(IMGUIWindow);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(IMGUITextLabel);
 
-class SDENGINE_CLASS IMGUIWindow : public IMGUINode
+class SDENGINE_CLASS IMGUITextLabel : public IMGUINode
 {
 public:
-    explicit IMGUIWindow(const ObjectName &i_name, const std::string &i_title);
-    virtual ~IMGUIWindow();
+    explicit IMGUITextLabel(const ObjectName &i_name, const std::string &i_text);
+    virtual ~IMGUITextLabel();
+public:
+    void SetText(const std::string &i_text);
 public:
     void RecordCommand() override;
-public:
     void Append(const IMGUINodeStrongReferenceObject &i_child) override;
 protected:
-    std::string m_title;
+    std::string m_text;
 };
 
 _________________SD_END_GUI_NAMESPACE________________

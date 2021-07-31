@@ -23,38 +23,34 @@ SOFTWARE.
 
 */
 
-/*! \file      IMGUIWindow.h
- *  \brief     The class GUILayout is the root of GUI.
- *  \author    Kuan-Chih, Chen
- *  \date      2021/07/01
- *  \copyright MIT License.
- */
+#include <ImGui/imgui.h>
 
-#pragma once
-
-#include "IMGUINode.h"
-
-using SDE::Basic::ObjectName;
-
-using SDE::Basic::EventObject;
-using SDE::Basic::EventObjectWeakReferenceObject;
-using SDE::Basic::EventObjectStrongReferenceObject;
+#include "IMGUITextLabel.h"
 
 ________________SD_START_GUI_NAMESPACE_______________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(IMGUIWindow);
-
-class SDENGINE_CLASS IMGUIWindow : public IMGUINode
+IMGUITextLabel::IMGUITextLabel(const ObjectName &i_name, const std::string &i_text)
+: IMGUINode(i_name)
+, m_text(i_text)
 {
-public:
-    explicit IMGUIWindow(const ObjectName &i_name, const std::string &i_title);
-    virtual ~IMGUIWindow();
-public:
-    void RecordCommand() override;
-public:
-    void Append(const IMGUINodeStrongReferenceObject &i_child) override;
-protected:
-    std::string m_title;
-};
+}
+
+IMGUITextLabel::~IMGUITextLabel()
+{
+}
+
+void IMGUITextLabel::SetText(const std::string &i_text)
+{
+    m_text = i_text;
+}
+
+void IMGUITextLabel::RecordCommand()
+{
+    ImGui::Text(m_text.c_str());
+}
+
+void IMGUITextLabel::Append(const IMGUINodeStrongReferenceObject &i_child)
+{
+}
 
 _________________SD_END_GUI_NAMESPACE________________

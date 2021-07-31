@@ -119,5 +119,8 @@ SOFTWARE.
 #include "Graphics/Scene/Scene.h"
 #include "GUI/IMGUIBatch.h"
 #include "GUI/IMGUINode.h"
+#include "GUI/IMGUITextLabel.h"
+#include "GUI/IMGUIVectorLabel.h"
 #include "GUI/IMGUIWindow.h"
+#include "GUI/IMGUIButton.h"
 #include "GUI/IMGUIRenderer.h"

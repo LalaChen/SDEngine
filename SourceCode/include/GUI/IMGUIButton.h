@@ -23,16 +23,19 @@ SOFTWARE.
 
 */
 
-/*! \file      IMGUIWindow.h
- *  \brief     The class GUILayout is the root of GUI.
+/*! \file      IMGUIButton.h
+ *  \brief     The class IMGUIButton is used to show button.
  *  \author    Kuan-Chih, Chen
- *  \date      2021/07/01
+ *  \date      2021/07/25
  *  \copyright MIT License.
  */
 
 #pragma once
 
+#include "Vector3f.h"
 #include "IMGUINode.h"
+
+using SDE::Math::Vector3f;
 
 using SDE::Basic::ObjectName;
 
@@ -42,19 +45,22 @@ using SDE::Basic::EventObjectStrongReferenceObject;
 
 ________________SD_START_GUI_NAMESPACE_______________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(IMGUIWindow);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(IMGUIButton);
 
-class SDENGINE_CLASS IMGUIWindow : public IMGUINode
+class SDENGINE_CLASS IMGUIButton : public IMGUINode
 {
 public:
-    explicit IMGUIWindow(const ObjectName &i_name, const std::string &i_title);
-    virtual ~IMGUIWindow();
+    explicit IMGUIButton(const ObjectName &i_name, const std::string &i_text);
+    virtual ~IMGUIButton();
+public:
+    void SetText(const std::string &i_text);
+    void SetCallback(const std::function<void()> &i_func);
 public:
     void RecordCommand() override;
-public:
     void Append(const IMGUINodeStrongReferenceObject &i_child) override;
 protected:
-    std::string m_title;
+    std::string m_text;
+    std::function<void()> m_func;
 };
 
 _________________SD_END_GUI_NAMESPACE________________

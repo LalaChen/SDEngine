@@ -62,6 +62,8 @@ public:
     CommandBufferWeakReferenceObject GetCommandBuffer() const;
     bool LoadGUI(const IMGUIBatchLoadingCallback &i_load_func);
 public:
+    template<typename T> WeakReferenceObject<T> GetGUINode(const ObjectName &i_name);
+public:
     void Initialize() override;
 public:
     void Update();
@@ -90,5 +92,11 @@ inline CommandBufferWeakReferenceObject WorldGUIComponent::GetCommandBuffer() co
 {
     return m_GUI_cb;
 }
+
+template<typename T> inline WeakReferenceObject<T> WorldGUIComponent::GetGUINode(const ObjectName &i_name)
+{
+    return SD_SREF(m_batch).GetGUINode<T>(i_name);
+}
+
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
