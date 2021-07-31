@@ -49,7 +49,9 @@ TransformComponent::TransformComponent(const ObjectName &i_object_name)
 TransformComponent::~TransformComponent()
 {
     for (std::list<TransformComponentWeakReferenceObject>::iterator t_iter = m_children.begin(); t_iter != m_children.end();) {
-        SD_WREF((*t_iter)).SetParent(m_parent);
+        if (m_parent.IsNull() == false) {
+            SD_WREF((*t_iter)).SetParent(m_parent);
+        }
         t_iter = m_children.erase(t_iter);
     }
     if (m_parent.IsNull() == false) {

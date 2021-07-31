@@ -91,6 +91,11 @@ public:
      */
     void AddTask(const CommandFunction &i_task);
 
+    /*! \fn void Restart();
+     *  \brief Restart for starting record.
+     */
+    void Restart();
+
     /*! \fn void StartRecording(const CommandBufferInheritanceInfo &i_info, const Viewport &i_vp, const ScissorRegion &i_sr);
      *  \param [in] i_info Notify target renderpass, framebuffer and other infos for this secondary buffer.
      *  \param [in] i_vp Viewport data.
@@ -105,20 +110,25 @@ public:
      */
     void WaitAndStopRecording(std::list<CommandBufferWeakReferenceObject> &io_submitted_sc_list);
 protected:
+
+    void BeginCommandBuffer(const CommandBufferInheritanceInfo &i_info);
+
+    void EndCommandBuffer(std::list<CommandBufferWeakReferenceObject> &io_submitted_sc_list);
+protected:
     /*! \fn void Record();
      *  \brief Recording command function.
      */
     void Record();
 protected:
     /*! \fn CommandPoolStrongReferenceObject m_cp;
-     *  \brief Pool for manager secondary buffer for this poot thread.
+     *  \brief Pool for manager secondary buffers for this thread.
      */
     CommandPoolStrongReferenceObject m_cp;
 
-    /*! \fn CommandBufferWeakReferenceObject m_cb;
-     *  \brief Pool for manager secondary buffer for this poot thread.
+    /*! \fn std::vector<CommandBufferWeakReferenceObject> m_cbs;
+     *  \brief Secondary buffer for this thread.
      */
-    CommandBufferWeakReferenceObject m_cb;
+    std::vector<CommandBufferWeakReferenceObject> m_cbs;
 protected:
     /*! \fn std::thread m_thread;
      *  \brief Thread for launching recording task.
@@ -159,6 +169,11 @@ protected:
      *  \brief ScissorRegion information about this time recording.
      */
     ScissorRegion m_scissor_region;
+
+    /*! \fn uint32_t m_current_used_cb;
+     *  \brief current_used_cb.
+     */
+    uint32_t m_current_used_cb;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

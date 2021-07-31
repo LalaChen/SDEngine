@@ -211,6 +211,7 @@ void ECSManager::Update()
 
 void ECSManager::Terminate()
 {
+    SDLOG("ECS Manager terminating start.");
     for (std::list<EntityGroupStrongReferenceObject>::iterator group_iter = m_entity_group_list.begin();
         group_iter != m_entity_group_list.end();) {
         group_iter = m_entity_group_list.erase(group_iter);
@@ -232,6 +233,7 @@ void ECSManager::Terminate()
         SD_SREF((*system_iter).second).Destroy();
         system_iter = m_system_map.erase(system_iter);
     }
+    SDLOG("ECS Manager terminating end.");
 }
 
 void ECSManager::Resize()

@@ -141,6 +141,7 @@ void CameraComponent::RecordCommand(
 
         uint32_t tID = 0;
         for (tID = 0; tID < scp_threads.size(); ++tID) {
+            SD_SREF(scp_threads[tID]).Restart();
             SD_SREF(scp_threads[tID]).StartRecording(cb_inherit_info, vp, sr);
         }
 
