@@ -38,7 +38,7 @@ SOFTWARE.
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
 
-#include "NullRefException.h"
+#include "Exception.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 

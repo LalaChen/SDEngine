@@ -23,10 +23,10 @@ SOFTWARE.
 
 */
 
-/*! \file      NullRefException.h
- *  \brief     Introduce of class NullRefException
+/*! \file      Exception.h
+ *  \brief     Introduce of classes about all exception.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/02/07
+ *  \date      2021/07/31
  *  \copyright MIT License.
  */
 
@@ -40,9 +40,39 @@ SOFTWARE.
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
+/*! \class ReasonableException
+ *  \brief In our system, class ReasonableException throw when we need to throw exception for some reason.
+ *  or weak reference object.
+ */
+class ReasonableException : public std::exception
+{
+public:
+    ReasonableException(const std::string &i_msg);
+    ~ReasonableException();
+public:
+    /*! \fn virtual const char* what() const throw();
+     *  \brief override what function for using.
+     */
+    virtual const char* what() const throw() { return m_msg.c_str(); }
+protected:
+    /*! \fn std::string m_msg;
+     *  \brief exception msg.
+     */
+    std::string m_msg;
+};
+
+inline ReasonableException::ReasonableException(const std::string& i_msg)
+{
+    m_msg = StringFormat("ReasonableException : %s.", i_msg.c_str());
+}
+
+inline ReasonableException::~ReasonableException()
+{
+}
+
 /*! \class NullReferenceException
- *  \brief In our system, class NullReferenceException throw when we try to GetRef of null strong \n
- *  or weak reference object.\n
+ *  \brief In our system, class NullReferenceException throw when we try to GetRef of null strong
+ *  or weak reference object.
  */
 class NullReferenceException : public std::exception
 {

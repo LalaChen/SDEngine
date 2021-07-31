@@ -259,6 +259,9 @@
     <Filter Include="common\ShaderProgram\NoLighting">
       <UniqueIdentifier>{32220f24-89b1-47c2-896a-86c92a5af6ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Basic\Exception">
+      <UniqueIdentifier>{77cd960f-a322-4207-bb98-6bcee343f1f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -293,9 +296,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\FileSystem\FileSystemManager.h">
       <Filter>include\Basic\FileSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Object\NullRefException.h">
-      <Filter>include\Basic\Object</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Object\Object.h">
       <Filter>include\Basic\Object</Filter>
@@ -875,6 +875,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ShaderProgram\RenderOrder.h">
       <Filter>include\Graphics\ShaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Basic\Exception\Exception.h">
+      <Filter>include\Basic\Exception</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

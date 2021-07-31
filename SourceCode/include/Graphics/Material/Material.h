@@ -103,6 +103,7 @@ public:
 public:
 //bind shader to command buffer.
     void Update();
+
     void UseMaterial(
         const CommandBufferWeakReferenceObject &i_cb,
         const RenderPassWeakReferenceObject &i_rp,
@@ -111,6 +112,8 @@ public:
         uint32_t i_step_id);
 public:
     uint32_t GetStepAmount(const RenderPassWeakReferenceObject& i_rp, uint32_t i_sp_id) const;
+
+    const RenderOrder& GetRenderOrder() const;
 protected:
     std::map<ObjectName, UniformVariableWeakReferenceObject> m_uvs;
     ShaderProgramWeakReferenceObject m_sp;

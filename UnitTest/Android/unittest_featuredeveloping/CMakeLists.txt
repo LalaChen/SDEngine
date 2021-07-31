@@ -25,6 +25,7 @@ set (SD_ENGINE_INC_DIRS
         ${SD_ENGINE_INC_DIR}/
         ${SD_ENGINE_INC_DIR}/Math
         ${SD_ENGINE_INC_DIR}/Basic
+        ${SD_ENGINE_INC_DIR}/Basic/Exception
         ${SD_ENGINE_INC_DIR}/Basic/LogManager
         ${SD_ENGINE_INC_DIR}/Basic/LogManager/Android
         ${SD_ENGINE_INC_DIR}/Basic/Timer

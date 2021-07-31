@@ -121,6 +121,7 @@ public:
     void GetDescriptorCount(uint32_t i_d_counts[UniformBindingType_MAX_DEFINE_VALUE]) const;
     uint32_t GetStepAmount(const RenderPassWeakReferenceObject &i_rp, uint32_t i_sp_id) const;
     uint32_t GetPipelineAmount() const;
+    const RenderOrder& GetRenderOrder() const;
 public: //Material Use.
     void AllocateEssentialObjects(
         std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uvs,
@@ -148,6 +149,11 @@ protected:
 inline uint32_t ShaderProgram::GetPipelineAmount() const
 {
     return m_pipe_amount;
+}
+
+inline const RenderOrder& ShaderProgram::GetRenderOrder() const
+{
+    return m_render_order;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

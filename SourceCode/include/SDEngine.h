@@ -41,7 +41,7 @@ SOFTWARE.
 #include "Math/Quaternion.h"
 #include "Math/Transform.h"
 //-------- Basic --------
-#include "Basic/Object/NullRefException.h"
+#include "Basic/Exception/Exception.h"
 #include "Basic/Object/Object.h"
 #include "Basic/Object/StrongReferenceObject.h"
 #include "Basic/Object/WeakReferenceObject.h"

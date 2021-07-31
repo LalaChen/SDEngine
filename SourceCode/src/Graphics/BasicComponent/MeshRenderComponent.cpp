@@ -29,6 +29,8 @@ SOFTWARE.
 #include "MeshRenderComponent.h"
 
 using SDE::Basic::MemberFunctionSlot;
+using SDE::Basic::NullReferenceException;
+using SDE::Basic::ReasonableException;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -138,4 +140,20 @@ bool MeshRenderComponent::OnGeometryChanged(const EventArg &i_arg)
     return true;
 }
 
+
+const RenderOrder& MeshRenderComponent::GetRenderOrder() const
+{
+    try {
+        if (m_material.IsNull() == false) {
+            return SD_WREF(m_material).GetRenderOrder();
+        }
+        else {
+            throw ReasonableException("Null Material");
+        }
+    }
+    catch (std::exception &e) {
+        SDLOGE("exception at MeshRenderer(%s) : %s", m_object_name.c_str(), e.what());
+        throw e;
+    }
+}
 ______________SD_END_GRAPHICS_NAMESPACE______________

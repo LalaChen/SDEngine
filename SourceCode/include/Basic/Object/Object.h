@@ -35,6 +35,7 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
+#include "Exception.h"
 #include "StrongReferenceObject.h"
 #include "WeakReferenceObject.h"
 

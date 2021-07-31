@@ -25,10 +25,12 @@ SOFTWARE.
 
 #include <algorithm>
 
+#include "Exception.h"
 #include "LogManager.h"
 #include "Material.h"
 
 using SDE::Basic::StringFormat;
+using SDE::Basic::ReasonableException;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -378,6 +380,22 @@ void Material::Update()
 uint32_t Material::GetStepAmount(const RenderPassWeakReferenceObject &i_rp, uint32_t i_sp_id) const
 {
     return SD_WREF(m_sp).GetStepAmount(i_rp, i_sp_id);
+}
+
+const RenderOrder& Material::GetRenderOrder() const
+{
+    try {
+        if (m_sp.IsNull() == false) {
+            return SD_WREF(m_sp).GetRenderOrder();
+        }
+        else {
+            throw ReasonableException("Null ShaderProgram");
+        }
+    }
+    catch (std::exception &e) {
+        SDLOGE("Exception at Material[%s] : %s ", m_object_name.c_str(), e.what());
+        throw e;
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
