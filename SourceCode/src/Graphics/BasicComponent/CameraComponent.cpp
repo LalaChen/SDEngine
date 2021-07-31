@@ -111,13 +111,14 @@ void CameraComponent::SetCameraSize(const Resolution &i_size)
 void CameraComponent::RecordCommand(
     const CommandBufferWeakReferenceObject &i_cb,
     const std::list<LightComponentWeakReferenceObject> &i_light_comps,
-    const std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> > &i_mesh_render_comps)
+    const std::list<MeshRenderComponentWeakReferenceObject> &i_mesh_render_comps)
 {
     GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
     std::list<LightComponentWeakReferenceObject>::const_iterator light_iter;
+    std::list<MeshRenderComponentWeakReferenceObject>::const_iterator mr_iter;
+
     const std::vector<SecondaryCommandPoolThreadStrongReferenceObject> &scp_threads = SD_WREF(gs).GetSecondaryCommandPool();
     std::list<CommandBufferWeakReferenceObject> secondary_cbs;
-
     Viewport vp;
     vp.m_x = 0.0f; vp.m_y = static_cast<float>(m_buffer_size.GetHeight());
     vp.m_width = static_cast<float>(m_buffer_size.GetWidth());
@@ -140,37 +141,27 @@ void CameraComponent::RecordCommand(
 
         uint32_t tID = 0;
         for (tID = 0; tID < scp_threads.size(); ++tID) {
-            SD_SREF(scp_threads[tID]).Reset();
+            SD_SREF(scp_threads[tID]).StartRecording(cb_inherit_info, vp, sr);
         }
 
-        std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> >::const_iterator mrs_iter;
-        std::list<MeshRenderComponentWeakReferenceObject>::const_iterator mr_iter;
-        for (mrs_iter = i_mesh_render_comps.begin(); mrs_iter != i_mesh_render_comps.end(); ++mrs_iter) {
-            
-            for (tID = 0; tID < scp_threads.size(); ++tID) {
-                SD_SREF(scp_threads[tID]).StartRecording(cb_inherit_info, vp, sr);
-            }
+        light_iter = i_light_comps.begin();
+        tID = 0;
+        for (mr_iter = i_mesh_render_comps.begin(); mr_iter != i_mesh_render_comps.end(); ++mr_iter) {
+            DescriptorSetWeakReferenceObject light_ds = SD_WREF((*light_iter)).GetDescriptorSet();
+            MeshRenderComponentWeakReferenceObject mr = (*mr_iter);
+            std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, current_rp, light_ds, mr](const CommandBufferWeakReferenceObject &i_cb) {
+                SD_WREF(mr).RenderMesh(current_rp, i_cb, m_ds, light_ds, 0);
+            };
 
-            light_iter = i_light_comps.begin();
-            tID = 0;
-            for (mr_iter = (*mrs_iter).second.begin(); mr_iter != (*mrs_iter).second.end(); ++mr_iter) {
-                DescriptorSetWeakReferenceObject light_ds = SD_WREF((*light_iter)).GetDescriptorSet();
-                MeshRenderComponentWeakReferenceObject mr = (*mr_iter);
-                std::function<void(const CommandBufferWeakReferenceObject&)> task_func = [this, current_rp, light_ds, mr](const CommandBufferWeakReferenceObject &i_cb) {
-                    SD_WREF(mr).RenderMesh(current_rp, i_cb, m_ds, light_ds, 0);
-                };
+            SD_SREF(scp_threads[tID]).AddTask(task_func);
+            tID = (tID + 1) % scp_threads.size();
+        }
 
-                SD_SREF(scp_threads[tID]).AddTask(task_func);
-                tID = (tID + 1) % scp_threads.size();
-            }
-
-            for (tID = 0; tID < scp_threads.size(); ++tID) {
-                SD_SREF(scp_threads[tID]).WaitAndStopRecording(secondary_cbs);
-            }
+        for (tID = 0; tID < scp_threads.size(); ++tID) {
+            SD_SREF(scp_threads[tID]).WaitAndStopRecording(secondary_cbs);
         }
 
         GraphicsManager::GetRef().ExecuteCommandsToPrimaryCommandBuffer(i_cb, secondary_cbs);
-
         SD_SREF(m_render_flow).EndRenderFlow(i_cb);
     }
     else if (m_workspace_type == CameraWorkspaceType_Deferred) {

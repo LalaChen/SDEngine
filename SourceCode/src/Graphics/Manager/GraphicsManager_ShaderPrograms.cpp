@@ -192,7 +192,6 @@ void GraphicsManager::InitializeBasicShaderPrograms()
     RegisterShaderProgram("BasicShader", "Common/ShaderProgram/BasicShading/BasicShading.json");
     RegisterShaderProgram("NoLightShader", "Common/ShaderProgram/NoLightShading/NoLightShading.json");
     RegisterShaderProgram("GUIShader", "Common/ShaderProgram/GUIShading/GUIShading.json");
-    RegisterShaderProgram("AlphaNoLightingShader", "Common/ShaderProgram/AlphaNoLightShading/AlphaNoLightShading.json");
 }
 
 /*

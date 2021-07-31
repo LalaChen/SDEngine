@@ -41,27 +41,6 @@ if (nodeRoot.at(varName).is_null() == false) { \
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-const std::string sOrderNames[RenderOrder_MAX_DEFINE_VALUE] = {
-    "Opaque",
-    "AlphaBlend",
-    "VolumeRendering"
-};
-
-const uint32_t sOrderNumbers[RenderOrder_MAX_DEFINE_VALUE] = {
-    0,
-    1000,
-    2000
-};
-
-RenderOrder::RenderOrder(const std::string &i_desc) {
-    for (uint32_t count = 0; count < RenderOrder_MAX_DEFINE_VALUE; ++count) {
-        if (sOrderNames[count].compare(i_desc) == 0) {
-            m_order = sOrderNumbers[count];
-            break;
-        }
-    }
-}
-
 ShaderProgram::ShaderProgram(const ObjectName &i_name)
 : Object(i_name)
 , m_descriptor_counts{0}
@@ -98,10 +77,6 @@ bool ShaderProgram::LoadFromSource(const std::string &i_sp_proj_str)
     if (i_sp_proj_str.empty() == false) {
         nlohmann::json sp_root = nlohmann::json::parse(i_sp_proj_str);
         nlohmann::json &sp = sp_root.at("ShaderProgram");
-        
-        nlohmann::json &render_order_root = sp.at("RenderOrder");
-        std::string render_order_desc = render_order_root.get<std::string>();
-        m_render_order = RenderOrder(render_order_desc);
         //1. parse descriptor set layouts.
         nlohmann::json &dsls_root = sp.at("DescriptorSetLayouts");
         for (uint32_t dsl_id = 0; dsl_id < dsls_root.size(); ++dsl_id) {

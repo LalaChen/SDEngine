@@ -84,7 +84,7 @@ void WorldGUIComponent::Initialize()
     }
     //2.1 create material.
     m_GUI_material = new Material("GUIMaterial");
-    SD_SREF(m_GUI_material).BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("AlphaNoLightingShader"));
+    SD_SREF(m_GUI_material).BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("NoLightShader"));
     //Set data done. Link with shader program.(Write descirptor)
     SD_SREF(m_GUI_material).LinkWithShaderProgram();
     MaterialUniforms mat_ub; //use default color.

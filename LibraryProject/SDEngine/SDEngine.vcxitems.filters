@@ -259,9 +259,6 @@
     <Filter Include="common\ShaderProgram\NoLighting">
       <UniqueIdentifier>{32220f24-89b1-47c2-896a-86c92a5af6ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="common\ShaderProgram\AlphaNoLighting">
-      <UniqueIdentifier>{2a39257d-0e82-4546-84a1-d75dd94eb204}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -876,9 +873,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\System\WorldGUISystem.h">
       <Filter>include\Graphics\System</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUITextLabel.h">
-      <Filter>include\GUI</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1457,9 +1451,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_WorldGUI.cpp">
       <Filter>src\Graphics\BasicShapeCreator</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUITextLabel.cpp">
-      <Filter>src\GUI</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.frag">
@@ -1563,21 +1554,6 @@
     </None>
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.vert.spv">
       <Filter>common\ShaderProgram\NoLighting</Filter>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AlphaNoLightShading\AlphaNoLightShader_Multiview_SP0.frag">
-      <Filter>common\ShaderProgram\AlphaNoLighting</Filter>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AlphaNoLightShading\AlphaNoLightShader_Multiview_SP0.vert">
-      <Filter>common\ShaderProgram\AlphaNoLighting</Filter>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AlphaNoLightShading\AlphaNoLightShader_SP0.frag">
-      <Filter>common\ShaderProgram\AlphaNoLighting</Filter>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AlphaNoLightShading\AlphaNoLightShader_SP0.vert">
-      <Filter>common\ShaderProgram\AlphaNoLighting</Filter>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AlphaNoLightShading\AlphaNoLightShading.json">
-      <Filter>common\ShaderProgram\AlphaNoLighting</Filter>
     </None>
   </ItemGroup>
 </Project>

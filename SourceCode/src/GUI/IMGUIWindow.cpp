@@ -38,16 +38,13 @@ IMGUIWindow::~IMGUIWindow()
 {
 }
 
-void IMGUIWindow::Append(const IMGUINodeStrongReferenceObject &i_child)
-{
-    m_children.push_back(i_child);
-}
-
 void IMGUIWindow::RecordCommand()
 {
     ImGui::SetNextWindowPos(m_region.m_pos, ImGuiCond_Always);
     ImGui::SetNextWindowSize(m_region.m_size, ImGuiCond_Always);
     ImGui::Begin(m_title.c_str(), 0, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+
+    ImGui::Text("ABOUT THIS DEMO:");
 
     std::list<IMGUINodeStrongReferenceObject>::iterator node_iter;
     for (node_iter = m_children.begin(); node_iter != m_children.end(); ++node_iter) {

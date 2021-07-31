@@ -207,7 +207,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUINode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIBatch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIRenderer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUITextLabel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIWindow.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\MathConstant.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\Matrix4X4f.h" />
@@ -407,7 +406,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIBatch.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUINode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIRenderer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUITextLabel.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIWindow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Matrix4X4f.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Quaternion.cpp" />
@@ -416,11 +414,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AlphaNoLightShading\AlphaNoLightShader_Multiview_SP0.frag" />
-    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AlphaNoLightShading\AlphaNoLightShader_Multiview_SP0.vert" />
-    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AlphaNoLightShading\AlphaNoLightShader_SP0.frag" />
-    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AlphaNoLightShading\AlphaNoLightShader_SP0.vert" />
-    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AlphaNoLightShading\AlphaNoLightShading.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\AxesShading.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag.spv" />
