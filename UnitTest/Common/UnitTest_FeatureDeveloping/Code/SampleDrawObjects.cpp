@@ -1,5 +1,4 @@
 #include "SDEngine.h"
-#include "HUDComponent.h"
 #include "SampleDrawObjects.h"
 
 using namespace SDE::Math;
@@ -27,6 +26,7 @@ SampleDrawObjects::~SampleDrawObjects()
 {
 }
 
+//#define INITIAL_BY_CODE
 bool SampleDrawObjects::Load()
 {
     bool result = Scene::Load();
@@ -114,7 +114,7 @@ bool SampleDrawObjects::Load()
     SD_TYPE_COMP_WREF(m_WGUI_node, WorldGUIComponent).SetWorldSize(0.15f, 0.15f);
     SD_TYPE_COMP_WREF(m_WGUI_node, WorldGUIComponent).Initialize();
     SD_TYPE_COMP_WREF(m_WGUI_node, WorldGUIComponent).LoadGUI(
-        [](const IMGUIBatchWeakReferenceObject &i_batch) -> bool {
+        [](const IMGUIBatchWeakReferenceObject& i_batch) -> bool {
             IMGUIWindowStrongReferenceObject window = new IMGUIWindow("CameraWGUI", "HUD");
             IMGUIRect rect;
             rect.m_pos.x = 0;
@@ -123,17 +123,12 @@ bool SampleDrawObjects::Load()
             rect.m_size.y = 360;
             SD_SREF(window).SetUIVertices(rect);
             //
-            IMGUITextLabelStrongReferenceObject text_label = new IMGUITextLabel("FPSLabel", "");
+            IMGUITextLabelStrongReferenceObject text_label = new IMGUITextLabel("TextLabel", "Demo Window .");
             SD_SREF(window).Append(text_label.StaticCastTo<IMGUINode>());
             SD_WREF(i_batch).AddWindow(window);
-            //
             return true;
         }
     );
-
-    ECSManager::GetRef().AddComponentForEntity<HUDComponent>(m_WGUI_node, "HUDComponent");
-    SD_TYPE_COMP_WREF(m_WGUI_node, HUDComponent).Initialize();
-
     //7. Add light.
     m_light_node = ECSManager::GetRef().CreateEntity("Light");
     m_entities.push_back(m_light_node);

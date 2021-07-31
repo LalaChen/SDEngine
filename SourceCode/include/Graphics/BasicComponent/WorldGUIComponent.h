@@ -40,14 +40,9 @@ using SDE::Basic::Component;
 using SDE::Basic::ComponentStrongReferenceObject;
 using SDE::Basic::ComponentWeakReferenceObject;
 
-using SDE::GUI::IMGUINode;
-using SDE::GUI::IMGUINodeStrongReferenceObject;
-using SDE::GUI::IMGUINodeWeakReferenceObject;
-
 using SDE::GUI::IMGUIBatch;
 using SDE::GUI::IMGUIBatchStrongReferenceObject;
 using SDE::GUI::IMGUIBatchWeakReferenceObject;
-
 using SDE::GUI::IMGUIBatchLoadingCallback;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -64,11 +59,8 @@ public:
 public:
     void SetBufferSize(uint32_t i_width, uint32_t i_height);
     void SetWorldSize(float i_world_w, float i_world_h);
-    bool LoadGUI(const IMGUIBatchLoadingCallback &i_load_func);
-public:
     CommandBufferWeakReferenceObject GetCommandBuffer() const;
-public:
-    template<typename T> WeakReferenceObject<T> GetGUINode(const ObjectName& i_name);
+    bool LoadGUI(const IMGUIBatchLoadingCallback &i_load_func);
 public:
     void Initialize() override;
 public:
@@ -97,11 +89,6 @@ protected:
 inline CommandBufferWeakReferenceObject WorldGUIComponent::GetCommandBuffer() const
 {
     return m_GUI_cb;
-}
-
-template<typename T> WeakReferenceObject<T> WorldGUIComponent::GetGUINode(const ObjectName &i_name)
-{
-    return SD_SREF(m_batch).GetGUINode<T>(i_name);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

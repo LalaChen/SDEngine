@@ -104,13 +104,9 @@ public:
         DynamicVertexBufferWeakReferenceObject &io_GUI_texcoords,
         DynamicVertexBufferWeakReferenceObject &io_GUI_colors,
         DynamicIndexBufferWeakReferenceObject &io_GUI_indices);
-    
     ImVec2 GetBufferSize() const;
-
-    template<typename T> WeakReferenceObject<T> GetGUINode(const ObjectName &i_name);
 public:
     void RecordBatchCommand(const TouchButton &i_touch);
-
 protected:
     std::list<IMGUIWindowStrongReferenceObject> m_windows;
     ImVec2 m_buffer_size;
@@ -125,18 +121,6 @@ protected:
 inline ImVec2 IMGUIBatch::GetBufferSize() const
 {
     return m_buffer_size;
-}
-
-template<typename T> WeakReferenceObject<T> IMGUIBatch::GetGUINode(const ObjectName &i_name)
-{
-    WeakReferenceObject<T> target;
-    for (IMGUIWindowStrongReferenceObject &window : m_windows) {
-        target = SD_WREF(window).GetGUINode<T>(i_name);
-        if (target.IsNull() == false) {
-            return target;
-        }
-    }
-    return target;
 }
 
 _________________SD_END_GUI_NAMESPACE________________

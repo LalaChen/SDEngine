@@ -20,8 +20,6 @@ public:
 public:
     virtual void Initialize();
     virtual void Update();
-public:
-    //void Bind
 protected:
     TransformComponentWeakReferenceObject m_trans_comp;
     Transform m_current_trans;

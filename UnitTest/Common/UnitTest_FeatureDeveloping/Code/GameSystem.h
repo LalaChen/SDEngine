@@ -23,5 +23,4 @@ protected:
     uint32_t m_cur_sample_idx;
     std::vector<ObjectName> m_scene_names;
     EntityGroupWeakReferenceObject m_camera_motor_group;
-    EntityGroupWeakReferenceObject m_HUD_group;
 };

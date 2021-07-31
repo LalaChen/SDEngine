@@ -232,7 +232,6 @@ public:
     void UnregisterRenderPass(const ObjectName &i_target_rp_name);
     void ReleaseRenderPasses();
     RenderPassWeakReferenceObject GetRenderPass(const ObjectName &i_target_rp_name) const;
-    float GetFPS() const;
 public:
     TextureFormatEnum GetDefaultDepthBufferFormat() const;
     bool IsSupportedDepthBufferFormat(TextureFormatEnum i_fmt) const;
@@ -292,14 +291,7 @@ protected:
     std::map<ObjectName, ShaderProgramStrongReferenceObject> m_shader_program_maps;
 
 protected:
-    PeriodCounter m_fps_counter;
-protected:
-    float m_FPS;
+    PeriodCounter m_fps;
 };
-
-inline float GraphicsManager::GetFPS() const
-{
-    return m_FPS;
-}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
