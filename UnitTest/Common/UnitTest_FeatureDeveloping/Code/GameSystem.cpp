@@ -23,7 +23,7 @@ void GameSystem::Initialize()
             GetThisWeakPtrByType<GameSystem>(),
             &GameSystem::OnAppEventTriggered));
 
-     m_camera_motor_group = ECSManager::GetRef().AddEntityGroup(
+    m_camera_motor_group = ECSManager::GetRef().AddEntityGroup(
         "MotorComponent",
         {
             std::type_index(typeid(MotorComponent))

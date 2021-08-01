@@ -1,0 +1,89 @@
+apply plugin: 'com.android.application'
+
+def aarFilename = "wvr_client"
+def VR_SDK_ROOT = "${buildDir}/${aarFilename}" //Add for wave app.
+def WVR_AAR = 'wvr_client' //Add for building wave app.
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "29.0.2"
+
+    signingConfigs {
+        TestKey {
+            storeFile file('D:\\Project\\SDEngine\\UnitTest\\Android\\key\\SDSample.jks')
+            storePassword 'lala1234'
+            keyAlias = 'key0'
+            keyPassword 'lala1234'
+
+            v1SigningEnabled true
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.sdengine.wavevrapp"
+        minSdkVersion 26
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        externalNativeBuild {
+
+            cmake {
+                cppFlags "-std=c++17 -frtti -fexceptions -DVK_USE_PLATFORM_ANDROID_KHR -DSD_VR_MODE"
+                arguments "-DANDROID_STL=c++_shared", "-DVR_SDK_ROOT=$VR_SDK_ROOT" ,"-DWVR_AAR=$WVR_AAR"
+                abiFilters "armeabi-v7a" , "arm64-v8a"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.TestKey
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file('CMakeLists.txt')
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+        debug {
+            jniLibs.srcDirs = ['libs/Debug']
+        }
+        release {
+            jniLibs.srcDirs = ['libs/Release']
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    compile 'com.htc.vr:wvr_client:+' //add for build wave app.
+}
+
+task doPreBuild(dependsOn: preBuild, type: Exec) {
+    println "Current Dir: $buildDir"
+    println "Project Dir: $projectDir"
+    def proc = "$projectDir/../../../Scripts/CopyAndroidLibs.bat".execute()
+    proc.waitForProcessOutput(System.out, System.err)
+}
+
+// unzip wave aar
+afterEvaluate {
+    def unzipDir = file("${buildDir}/${aarFilename}")
+    def artifacts = configurations.compile.resolvedConfiguration.resolvedArtifacts
+    artifacts.find { it.name == aarFilename }?.with { aar ->
+        copy {
+            println 'unzip: ' + aar
+            from zipTree(aar.file)
+            into unzipDir
+        }
+    }
+}

@@ -140,7 +140,6 @@ add_library( # Sets the name of the library.
              ../../Common/UnitTest_FeatureDeveloping/Code/MotorComponent.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/GameSystem.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/SampleDrawObjects.cpp
-             ../../Common/UnitTest_FeatureDeveloping/Code/CommandRecordingThread.cpp
         )
 
 # Specifies libraries CMake should link to your target library. You
