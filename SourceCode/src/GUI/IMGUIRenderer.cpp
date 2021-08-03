@@ -202,11 +202,10 @@ bool IMGUIRenderer::PrepareVerticesData(
 void IMGUIRenderer::RecordGUICommands(
     const RenderFlowWeakReferenceObject &i_flow,
     const CommandBufferWeakReferenceObject &i_cmd_buffer,
-    const IMGUIBatchWeakReferenceObject &i_gui_batch,
-    const TouchButton &i_touch_data)
+    const IMGUIBatchWeakReferenceObject &i_gui_batch)
 {
     //1. Record Imgui commands.
-    SD_WREF(i_gui_batch).RecordBatchCommand(i_touch_data);
+    SD_WREF(i_gui_batch).RecordBatchCommand();
     //2. Update vertices.
     DynamicVertexBufferWeakReferenceObject vertices;
     DynamicVertexBufferWeakReferenceObject texcoords;

@@ -52,7 +52,10 @@ void WaveSystem::Update()
 {
     //1. get pose for devices.
     WVR_GetSyncPose(WVR_PoseOriginModel_OriginOnGround, m_device_poses, WVR_DEVICE_COUNT_LEVEL_1);
-    UpdateCameraPose();
+    //2. update camera pose.
+	UpdateCameraPose();
+	//3. update world GUI.
+	UpdateWorldGUIs();
 }
 
 void WaveSystem::Destroy()
@@ -137,7 +140,7 @@ void WaveSystem::UpdateCameraInnerParameter()
     }
 
     Matrix4X4f projs[WVR_Eye_Both];
-    projs[WVR_Eye_Left]  = ConvertWVR_Matrix4f_tToMatrix4X4f(WVR_GetProjection( WVR_Eye_Left, 0.01f, 300.0f));
+    projs[WVR_Eye_Left] = ConvertWVR_Matrix4f_tToMatrix4X4f(WVR_GetProjection(WVR_Eye_Left, 0.01f, 300.0f));
     projs[WVR_Eye_Right] = ConvertWVR_Matrix4f_tToMatrix4X4f(WVR_GetProjection(WVR_Eye_Right, 0.01f, 300.0f));
 
     std::list<EntityWeakReferenceObject> entities = SD_WREF(m_camera_group).GetEntities();
@@ -170,6 +173,17 @@ void WaveSystem::UpdateCameraPose()
                 xform = Transform();
             }
             SD_WREF(vrcamera_xform).SetWorldTransform(xform);
+        }
+    }
+}
+
+void WaveSystem::UpdateWorldGUIs()
+{
+    std::list<EntityWeakReferenceObject> entities = SD_WREF(m_HUD_group).GetEntities();
+    for (EntityWeakReferenceObject &entity : entities) {
+        HUDComponentWeakReferenceObject hud = SD_WREF(entity).GetComponent(typeid(HUDComponent)).DynamicCastTo<HUDComponent>();
+        if (hud.IsNull() == false) {
+            SD_WREF(hud).Update();
         }
     }
 }

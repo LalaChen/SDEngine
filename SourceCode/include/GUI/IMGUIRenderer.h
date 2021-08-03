@@ -103,8 +103,7 @@ public:
     void RecordGUICommands(
         const RenderFlowWeakReferenceObject &i_flow,
         const CommandBufferWeakReferenceObject &i_cmd_buffer,
-        const IMGUIBatchWeakReferenceObject &i_gui_batch,
-        const TouchButton &i_touch_data);
+        const IMGUIBatchWeakReferenceObject &i_gui_batch);
 protected:
     bool PrepareVerticesData(
         DynamicVertexBufferWeakReferenceObject &io_vertices,

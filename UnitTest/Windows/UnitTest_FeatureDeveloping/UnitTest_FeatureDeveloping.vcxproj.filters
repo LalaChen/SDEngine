@@ -23,9 +23,6 @@
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.cpp">
       <Filter>src</Filter>
     </ClCompile>

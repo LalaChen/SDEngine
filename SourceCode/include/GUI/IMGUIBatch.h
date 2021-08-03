@@ -99,6 +99,7 @@ public:
     void AddWindow(const IMGUIWindowStrongReferenceObject &i_window);
     void Initialize();
 public:
+    void UpdateTouchButton(const TouchButton &i_touch_btn);
     void GetBuffers(
         DynamicVertexBufferWeakReferenceObject &io_GUI_vertices,
         DynamicVertexBufferWeakReferenceObject &io_GUI_texcoords,
@@ -109,9 +110,10 @@ public:
 
     template<typename T> WeakReferenceObject<T> GetGUINode(const ObjectName &i_name);
 public:
-    void RecordBatchCommand(const TouchButton &i_touch);
+    void RecordBatchCommand();
 protected:
     std::list<IMGUIWindowStrongReferenceObject> m_windows;
+    TouchButton m_touch_btn;
     ImVec2 m_buffer_size;
 protected:
     MeshStrongReferenceObject m_GUI_meshes;
@@ -120,6 +122,11 @@ protected:
     DynamicVertexBufferWeakReferenceObject m_GUI_colors;
     DynamicIndexBufferWeakReferenceObject m_GUI_indices;
 };
+
+inline void IMGUIBatch::UpdateTouchButton(const TouchButton &i_touch_btn)
+{
+    m_touch_btn = i_touch_btn;
+}
 
 inline ImVec2 IMGUIBatch::GetBufferSize() const
 {

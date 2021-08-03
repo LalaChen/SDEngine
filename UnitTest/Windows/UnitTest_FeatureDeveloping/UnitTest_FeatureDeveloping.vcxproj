@@ -211,7 +211,6 @@ xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\HUDComponent.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\MotorComponent.cpp" />

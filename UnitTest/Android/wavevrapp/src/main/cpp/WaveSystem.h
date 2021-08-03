@@ -29,6 +29,7 @@ public:
 public:
     void UpdateCameraInnerParameter();
     void UpdateCameraPose();
+	void UpdateWorldGUIs();
 protected:
     std::vector<ObjectName> m_scene_names;
 protected:

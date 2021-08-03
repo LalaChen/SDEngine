@@ -98,11 +98,12 @@ void WorldGUIComponent::Initialize()
 
 void WorldGUIComponent::Update()
 {
+
     IMGUIRenderer::GetRef().RecordGUICommands(
         m_GUI_render_flow,
         m_GUI_cb,
-        m_batch,
-        TouchButton());
+        m_batch);
+
     GraphicsManager::GetRef().SubmitCommandBuffersToQueue({ m_GUI_cb });
 }
 

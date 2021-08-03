@@ -79,16 +79,15 @@ void IMGUIBatch::Initialize()
     m_GUI_indices = indices;
 }
 
-void IMGUIBatch::RecordBatchCommand(const TouchButton &i_touch)
+void IMGUIBatch::RecordBatchCommand()
 {
-
     ImGuiIO &io = ImGui::GetIO();
     io.DeltaTime = static_cast<float>(Timer::GetRef().GetProgramDeltaTime());
     io.DisplaySize = m_buffer_size;
     io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
-    io.MousePos.x = i_touch.m_x;
-    io.MousePos.y = i_touch.m_y;
-    io.MouseDown[0] = (i_touch.m_state == SDE::Basic::TOUCH_BUTTON_STATE_PRESSED);
+    io.MousePos.x = m_touch_btn.m_x;
+    io.MousePos.y = m_touch_btn.m_y;
+    io.MouseDown[0] = (m_touch_btn.m_state == SDE::Basic::TOUCH_BUTTON_STATE_PRESSED);
 
     ImGui::NewFrame(); //Need to execute after calling io.Fonts->GetTexDataAsRGBA32(). 
 
