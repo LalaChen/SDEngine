@@ -192,6 +192,11 @@ public:
      */
     static vec2 normalize(const vec2 &i_v);
 public:
+    /*! \var static const vec2 Zero;
+     *  \brief The zero vector. v(0.0, 0.0)
+     */
+    static const vec2 Zero;
+public:
     /*! \fn vec2();
      *  \brief Defualt constructor of vec2.
      */

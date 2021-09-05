@@ -169,7 +169,7 @@ protected:
         VkDescriptorSetLayout &io_handle,
         const VkDescriptorSetLayoutCreateInfo &i_c_info);
 
-    void DestroyVkDescriptorSetLayout(VkDescriptorSetLayout& io_handle);
+    void DestroyVkDescriptorSetLayout(VkDescriptorSetLayout &io_handle);
 
     VkResult CreateVkDescriptorPool(
         VkDescriptorPool &io_handle,

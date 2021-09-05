@@ -119,14 +119,14 @@ void Application::SetKeyboardStatus(int32_t i_key_id, bool i_is_pressed)
 
 void Application::SetTouchStatus(TouchButtonEnum i_touch_id, TouchButtonStateEnum i_touch_state)
 {
-    if (i_touch_id != TOUCH_BUTTON_MAX_DEFINE_VALUE) {
+    if (i_touch_id != TouchButton_MAX_DEFINE_VALUE) {
         m_buttons[SD_ENUM_TO_UINT(i_touch_id)].m_state = i_touch_state;
     }
 }
 
 void Application::SetTouchPosition(TouchButtonEnum i_touch_id, float i_x, float i_y)
 {
-    if (i_touch_id != TOUCH_BUTTON_MAX_DEFINE_VALUE) {
+    if (i_touch_id != TouchButton_MAX_DEFINE_VALUE) {
         m_buttons[SD_ENUM_TO_UINT(i_touch_id)].m_x = i_x;
         m_buttons[SD_ENUM_TO_UINT(i_touch_id)].m_y = i_y;
     }
@@ -134,7 +134,7 @@ void Application::SetTouchPosition(TouchButtonEnum i_touch_id, float i_x, float 
 
 TouchButton Application::GetTouchButton(TouchButtonEnum i_button_id) const
 {
-    if (i_button_id != TOUCH_BUTTON_MAX_DEFINE_VALUE) {
+    if (i_button_id != TouchButton_MAX_DEFINE_VALUE) {
         return m_buttons[i_button_id];
     }
     else {

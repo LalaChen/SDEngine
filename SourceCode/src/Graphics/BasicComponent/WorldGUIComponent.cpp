@@ -23,13 +23,19 @@ SOFTWARE.
 
 */
 
+#include "MathAlgoritm.h"
 #include "MaterialUniforms.h"
+#include "Application.h"
 #include "ECSManager.h"
 #include "BasicShapeCreator.h"
+#include "GraphicsSystem.h"
+#include "CameraComponent.h"
 #include "WorldGUIComponent.h"
 
+using namespace SDE::Math;
+using namespace SDE::GUI;
+using namespace SDE::Basic;
 using SDE::Basic::ECSManager;
-using SDE::GUI::IMGUIRenderer;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -61,6 +67,59 @@ void WorldGUIComponent::SetWorldSize(float i_world_w, float i_world_h)
     if (m_initialized == false) {
         m_world_size[0] = i_world_w;
         m_world_size[1] = i_world_h;
+        float hw = i_world_w / 2.0f, hh = i_world_h / 2.0f;
+        m_UI_vertices[0] = Vector3f(-hw, -hh, 0.0f, 1.0f);
+        m_UI_vertices[1] = Vector3f( hw, -hh, 0.0f, 1.0f);
+        m_UI_vertices[2] = Vector3f( hw,  hh, 0.0f, 1.0f);
+        m_UI_vertices[3] = Vector3f(-hw,  hh, 0.0f, 1.0f);
+    }
+}
+
+void WorldGUIComponent::SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb)
+{
+    if (m_transform.IsNull() == false && m_batch.IsNull() == false && i_ray.IsValid() == true) {
+        Transform xform = SD_WREF(m_transform).GetWorldTransform();
+        Matrix4X4f world_inv = xform.MakeWorldMatrix().inverse();
+        Vector3f ray_obj_origin = world_inv * i_ray.m_origin;
+        Vector3f ray_obj_orientation = world_inv * i_ray.m_orientation;
+        bool hit_result = false;
+        float distance, u, v;
+        float fu = -1.0f, fv = -1.0f;
+        Vector3f hitted_pt;
+        hit_result = CalculateRayTriangleIntersection(
+            distance, u, v, hitted_pt,
+            m_UI_vertices[0], m_UI_vertices[1], m_UI_vertices[2],
+            ray_obj_origin, ray_obj_orientation);
+
+        if (hit_result == false) {
+            hit_result = CalculateRayTriangleIntersection(
+                distance, u, v, hitted_pt,
+                m_UI_vertices[0], m_UI_vertices[2], m_UI_vertices[3],
+                ray_obj_origin, ray_obj_orientation);
+        }
+
+        TouchButtonStateEnum pre_state = m_touch_data.m_state;
+        if (hit_result == true) {
+            fu = (hitted_pt.m_vec.x - m_UI_vertices[0].m_vec.x) / m_world_size[0];
+            fv = (hitted_pt.m_vec.y - m_UI_vertices[0].m_vec.y) / m_world_size[1];
+
+            m_touch_data.m_state = i_tb.m_state;
+            m_touch_data.m_x = fu * static_cast<float>(m_buffer_size[0]);
+            m_touch_data.m_y = (1.0f - fv) * static_cast<float>(m_buffer_size[1]);
+            SD_WREF(m_batch).UpdateTouchButton(m_touch_data);
+            if (pre_state != m_touch_data.m_state) {
+                SDLOG("WGUI(%s) state(%d) at (%lf,%lf)", m_object_name.c_str(), i_tb.m_state, m_touch_data.m_x, m_touch_data.m_y);
+            }
+        }
+        else {
+            m_touch_data.m_state = TouchButtonState_RELEASED;
+            m_touch_data.m_x = -1.0f;
+            m_touch_data.m_y = -1.0f;
+            SD_WREF(m_batch).UpdateTouchButton(m_touch_data);
+            if (pre_state != m_touch_data.m_state) {
+                SDLOG("WGUI(%s) Pressed at (%lf,%lf)", m_object_name.c_str(), m_touch_data.m_x, m_touch_data.m_y);
+            }
+        }
     }
 }
 
@@ -91,13 +150,27 @@ void WorldGUIComponent::Initialize()
     SD_SREF(m_GUI_material).SetDataToUniformBuffer(sUniformBuffer_Material, &mat_ub, sizeof(MaterialUniforms));
     SD_SREF(m_GUI_material).SetTexture(sUniformImages_Material_Textures, m_GUI_color_buffer, 0);
     SD_SREF(m_GUI_material).Update();
-    //2.2 create mesh
+    //2.2 create mesh.
     m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUI(m_world_size[0], m_world_size[1]);
     SD_WREF(m_GUI_mesh_render).AppendMesh(m_GUI_mesh, m_GUI_material);
+    //
+    m_transform = SD_GET_TYPE_COMP_WREF(m_entity, TransformComponent);
 }
 
 void WorldGUIComponent::Update()
 {
+    GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
+    if (gs.IsNull() == false) {
+        CameraComponentWeakReferenceObject camera = SD_WREF(gs).GetScreenCamera().DynamicCastTo<CameraComponent>();
+        if (camera.IsNull() == false) {
+            TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_LEFT);
+            Ray ray = SD_WREF(camera).CalculateRay(tb);
+            SetTouchDataByRay(ray, tb);
+        }
+        else {
+            SDLOGW("Camera is null. We can't update ray.");
+        }
+    }
 
     IMGUIRenderer::GetRef().RecordGUICommands(
         m_GUI_render_flow,

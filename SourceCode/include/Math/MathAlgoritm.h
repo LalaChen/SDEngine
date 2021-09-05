@@ -20,50 +20,35 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-#include <ImGui/imgui.h>
+/*! \file      MathAlgoritm.h
+ *  \brief     MathAlgoritm is collection with basic math methods.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2021/07/31
+ *  \copyright MIT License.
+ */
 
-#include "IMGUIButton.h"
+#pragma once
 
-using SDE::Basic::EventArg;
-using SDE::Basic::Event;
-using SDE::Basic::EventStrongReferenceObject;
-using SDE::Basic::EventWeakReferenceObject;
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+#include "Ray.h"
+#include "Resolution.h"
+#include "Matrix4X4f.h"
+#include "Vector3f.h"
 
-________________SD_START_GUI_NAMESPACE_______________
+using SDE::Math::Matrix4X4f;
+using SDE::Math::Vector3f;
+using SDE::Graphics::Resolution;
 
-const std::string IMGUIButton::sButtonEventName_Clicked = "Clicked";
+_______________SD_START_MATH_NAMESPACE_______________
 
-IMGUIButton::IMGUIButton(const ObjectName &i_name, const std::string &i_text)
-: IMGUINode(i_name)
-, m_text(i_text)
-{
-    EventStrongReferenceObject click_event = new Event("Clicked");
-    RegisterEvent(click_event);
-}
+bool SDENGINE_API CalculateRayTriangleIntersection(
+    float &io_distance, float &io_u, float &io_v, Vector3f &io_hitted_point,
+    const Vector3f &i_v0, const Vector3f &i_v1, const Vector3f &i_v2,
+    const Vector3f &i_ray_origin, const Vector3f &i_ray_direction, const float i_length = -1.0f,
+    bool i_culling = true);
 
-IMGUIButton::~IMGUIButton()
-{
-}
-
-void IMGUIButton::SetText(const std::string &i_text)
-{
-    m_text = i_text;
-}
-
-
-void IMGUIButton::RecordCommand()
-{
-    bool result = ImGui::Button(m_text.c_str());
-    if (result == true) {
-        NotifyEvent(sButtonEventName_Clicked, EventArg());
-    }
-}
-
-void IMGUIButton::Append(const IMGUINodeStrongReferenceObject &i_child)
-{
-}
-
-_________________SD_END_GUI_NAMESPACE________________
+________________SD_END_MATH_NAMESPACE________________

@@ -47,27 +47,27 @@ ______________SD_START_BASIC_NAMESPACE_______________
 
 enum TouchButtonEnum
 {
-    TOUCH_BUTTON_0 = 0,
-    TOUCH_BUTTON_1,
-    TOUCH_BUTTON_2,
-    TOUCH_BUTTON_3,
-    TOUCH_BUTTON_4,
-    TOUCH_BUTTON_5,
-    TOUCH_BUTTON_6,
-    TOUCH_BUTTON_7,
-    TOUCH_BUTTON_8,
-    TOUCH_BUTTON_9,
-    TOUCH_BUTTON_MAX_DEFINE_VALUE,
-    TOUCH_BUTTON_RIGHT = TOUCH_BUTTON_0,
-    TOUCH_BUTTON_LEFT = TOUCH_BUTTON_1,
-    TOUCH_BUTTON_MIDDLE = TOUCH_BUTTON_2,
+    TouchButton_0 = 0,
+    TouchButton_1,
+    TouchButton_2,
+    TouchButton_3,
+    TouchButton_4,
+    TouchButton_5,
+    TouchButton_6,
+    TouchButton_7,
+    TouchButton_8,
+    TouchButton_9,
+    TouchButton_MAX_DEFINE_VALUE,
+    TouchButton_RIGHT = TouchButton_0,
+    TouchButton_LEFT = TouchButton_1,
+    TouchButton_MIDDLE = TouchButton_2,
 };
 
 enum TouchButtonStateEnum
 {
-    TOUCH_BUTTON_STATE_RELEASED = 0,
-    TOUCH_BUTTON_STATE_PRESSED,
-    TOUCH_BUTTON_STATE_MAX_DEFINE_VALUE
+    TouchButtonState_RELEASED = 0,
+    TouchButtonState_PRESSED,
+    TouchButtonState_MAX_DEFINE_VALUE
 };
 
 class SDENGINE_CLASS TouchButton
@@ -76,7 +76,7 @@ public:
     TouchButton()
     : m_x(-1.0f)
     , m_y(-1.0f)
-    , m_state(TOUCH_BUTTON_STATE_RELEASED)
+    , m_state(TouchButtonState_RELEASED)
     {
     }
     ~TouchButton(){}
@@ -260,10 +260,10 @@ protected:
      */
     CompHandle m_graphics_app_instance;
 
-    /*! \var TouchButton m_buttons[TOUCH_BUTTON_MAX_DEFINE_VALUE];
+    /*! \var TouchButton m_buttons[TouchButton_MAX_DEFINE_VALUE];
      *  \brief Button data.
      */
-    TouchButton m_buttons[TOUCH_BUTTON_MAX_DEFINE_VALUE];
+    TouchButton m_buttons[TouchButton_MAX_DEFINE_VALUE];
 };
 
 inline void Application::SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height)

@@ -146,6 +146,16 @@ namespace GUI \
 } \
 }
 
+#define ______________SD_START_PHYSICS_NAMESPACE_____________ \
+namespace SDE \
+{ \
+namespace Physics \
+{
+
+#define _______________SD_END_PHYSICS_NAMESPACE______________ \
+} \
+}
+
 //Strong And Weak Reference.
 #define SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Type) \
     class Type; \

@@ -50,6 +50,7 @@ MeshStrongReferenceObject BasicShapeCreator::CreatePlane(
 	vec3 f_vertices[4];
 	vec3 f_normals[4];
 	vec2 f_textures[4];
+	Color4f f_colors[4];
 	vec3 f_tangent;
 	vec3 f_binormal;
 	//----- count
@@ -71,6 +72,7 @@ MeshStrongReferenceObject BasicShapeCreator::CreatePlane(
     std::vector<vec2> t_data;
     std::vector<vec3> tn_data;
     std::vector<vec3> bn_data;
+	std::vector<Color4f> c_data;
     std::vector<uint32_t> i_data;
 
 	uint32_t face_index_start_id = 0;
@@ -98,10 +100,10 @@ MeshStrongReferenceObject BasicShapeCreator::CreatePlane(
 
 			f_binormal = normal.cross(f_tangent).normalize();
 
-			bn_data.push_back(f_binormal); tn_data.push_back(f_tangent); t_data.push_back(f_textures[0]); n_data.push_back(f_normals[0]); v_data.push_back(f_vertices[0]);
-			bn_data.push_back(f_binormal); tn_data.push_back(f_tangent); t_data.push_back(f_textures[1]); n_data.push_back(f_normals[1]); v_data.push_back(f_vertices[1]);
-			bn_data.push_back(f_binormal); tn_data.push_back(f_tangent); t_data.push_back(f_textures[2]); n_data.push_back(f_normals[2]); v_data.push_back(f_vertices[2]);
-			bn_data.push_back(f_binormal); tn_data.push_back(f_tangent); t_data.push_back(f_textures[3]); n_data.push_back(f_normals[3]); v_data.push_back(f_vertices[3]);
+			bn_data.push_back(f_binormal); tn_data.push_back(f_tangent); c_data.push_back(Color4f::White()); t_data.push_back(f_textures[0]); n_data.push_back(f_normals[0]); v_data.push_back(f_vertices[0]);
+			bn_data.push_back(f_binormal); tn_data.push_back(f_tangent); c_data.push_back(Color4f::White()); t_data.push_back(f_textures[1]); n_data.push_back(f_normals[1]); v_data.push_back(f_vertices[1]);
+			bn_data.push_back(f_binormal); tn_data.push_back(f_tangent); c_data.push_back(Color4f::White()); t_data.push_back(f_textures[2]); n_data.push_back(f_normals[2]); v_data.push_back(f_vertices[2]);
+			bn_data.push_back(f_binormal); tn_data.push_back(f_tangent); c_data.push_back(Color4f::White()); t_data.push_back(f_textures[3]); n_data.push_back(f_normals[3]); v_data.push_back(f_vertices[3]);
 			//2. combine up triangle (0,1,2)
 			i_data.push_back(face_index_start_id + 0);
 			i_data.push_back(face_index_start_id + 1);
@@ -127,11 +129,14 @@ MeshStrongReferenceObject BasicShapeCreator::CreatePlane(
 	SD_SREF(tnbuf).RefreshBufferData(tn_data.data(), tn_data.size() * sizeof(vec3));
 	StaticVertexBufferStrongReferenceObject tbuf = new StaticVertexBuffer("PlaneTBuffer", VertexBufferUsage_TEX_COORD_BUFFER, VertexBufferFormat_X32Y32_SFLOAT);
 	SD_SREF(tbuf).RefreshBufferData(t_data.data(), t_data.size() * sizeof(vec2));
+	StaticVertexBufferStrongReferenceObject cbuf = new StaticVertexBuffer("CubeCBuffer", VertexBufferUsage_COLOR_BUFFER, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
+	SD_SREF(cbuf).RefreshBufferData(c_data.data(), c_data.size() * sizeof(Color4f));
 	StaticIndexBufferStrongReferenceObject ibuf = new StaticIndexBuffer("PlaneIBuffer", IndexBufferFormat_X32_UINT);
 	SD_SREF(ibuf).RefreshBufferData(i_data.data(), i_data.size() * sizeof(uint32_t));
 
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, vbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_NORMAL_BUFFER, nbuf.StaticCastTo<VertexBuffer>());
+	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_COLOR_BUFFER, cbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_BINORMAL_BUFFER, bnbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_TANGENT_BUFFER, tnbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_TEX_COORD_BUFFER, tbuf.StaticCastTo<VertexBuffer>());

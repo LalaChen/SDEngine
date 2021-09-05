@@ -38,6 +38,7 @@ SOFTWARE.
 #include "CommandPool.h"
 #include "GraphicsManager.h"
 #include "SecondaryCommandPoolThread.h"
+#include "CameraComponentBase.h"
 #include "System.h"
 
 using SDE::Basic::ObjectName;
@@ -66,6 +67,7 @@ public:
     void Resize() override;
 public:
     const std::vector<SecondaryCommandPoolThreadStrongReferenceObject>& GetSecondaryCommandPool() const;
+    CameraComponentBaseWeakReferenceObject GetScreenCamera() const;
 protected:
     virtual void RecordCommand();
 protected:

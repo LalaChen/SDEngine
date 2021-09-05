@@ -23,10 +23,13 @@ public:
 public:
     virtual void Initialize();
     virtual void Update();
+public:
+    bool OnBtn1Clicked(const EventArg &i_arg);
 protected:
     WorldGUIComponentWeakReferenceObject m_GUI;
     TransformComponentWeakReferenceObject m_transform;
     IMGUITextLabelWeakReferenceObject m_FPS_label;
     IMGUIVectorLabelWeakReferenceObject m_camera_pos_label;
     IMGUIVectorLabelWeakReferenceObject m_camera_rot_label;
+    IMGUIButtonWeakReferenceObject m_btn1;
 };

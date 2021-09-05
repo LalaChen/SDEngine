@@ -28,6 +28,7 @@ protected:
     EntityWeakReferenceObject m_light_node;
     EntityWeakReferenceObject m_axis_node;
     EntityWeakReferenceObject m_floor_node;
+    EntityWeakReferenceObject m_screen_ray_node;
     std::list<EntityWeakReferenceObject> m_cube_objects;
 protected:
     MeshStrongReferenceObject m_axis_mesh;

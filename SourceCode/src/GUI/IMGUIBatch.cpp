@@ -87,7 +87,7 @@ void IMGUIBatch::RecordBatchCommand()
     io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
     io.MousePos.x = m_touch_btn.m_x;
     io.MousePos.y = m_touch_btn.m_y;
-    io.MouseDown[0] = (m_touch_btn.m_state == SDE::Basic::TOUCH_BUTTON_STATE_PRESSED);
+    io.MouseDown[0] = (m_touch_btn.m_state == SDE::Basic::TouchButtonState_PRESSED);
 
     ImGui::NewFrame(); //Need to execute after calling io.Fonts->GetTexDataAsRGBA32(). 
 

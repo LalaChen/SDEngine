@@ -212,11 +212,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUITextLabel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIVectorLabel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIWindow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\MathAlgoritm.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\MathConstant.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\Matrix4X4f.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\Quaternion.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\Transform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\Vector3f.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Physics\Ray\Ray.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngineCommonFunction.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngineCommonType.h" />
@@ -416,9 +418,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIVectorLabel.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIWindow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Matrix4X4f.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\MollerTrumboreInteraction.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Quaternion.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Transform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Vector3f.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Physics\Ray\Ray.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>
   <ItemGroup>

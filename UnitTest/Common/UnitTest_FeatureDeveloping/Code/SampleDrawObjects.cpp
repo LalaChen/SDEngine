@@ -1,5 +1,6 @@
 #include "SDEngine.h"
 #include "HUDComponent.h"
+#include "ScreenRayComponent.h"
 #include "SampleDrawObjects.h"
 
 using namespace SDE::Math;
@@ -102,6 +103,15 @@ bool SampleDrawObjects::Load()
     m_camera_motor = SD_GET_TYPE_COMP_WREF(m_camera_node, MotorComponent);
     SD_WREF(m_camera_motor).Initialize();
 #endif
+
+    m_screen_ray_node = ECSManager::GetRef().CreateEntity("ScreenRay");
+    m_entities.push_back(m_screen_ray_node);
+    ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_screen_ray_node, "ScreenRayTransform");
+    SD_TYPE_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(m_screen_ray_node, TransformComponent));
+
+    ECSManager::GetRef().AddComponentForEntity<ScreenRayComponent>(m_screen_ray_node, "ScreenRay");
+    SD_TYPE_COMP_WREF(m_screen_ray_node, ScreenRayComponent).Initialize();
+
     SDLOG("Initialize WGUI");
     //6. WorldGUI.
     m_WGUI_node = ECSManager::GetRef().CreateEntity("WGUI");
@@ -134,6 +144,9 @@ bool SampleDrawObjects::Load()
             //
             IMGUIVectorLabelStrongReferenceObject camera_rot_label = new IMGUIVectorLabel("CameraRotation", "Rotation");
             SD_SREF(window).Append(camera_rot_label.StaticCastTo<IMGUINode>());
+            //
+            IMGUIButtonStrongReferenceObject btn1 = new IMGUIButton("Button1", "Button1");
+            SD_SREF(window).Append(btn1.StaticCastTo<IMGUINode>());
             //
             SD_WREF(i_batch).AddWindow(window);
             return true;

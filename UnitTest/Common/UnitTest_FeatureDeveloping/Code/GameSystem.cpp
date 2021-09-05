@@ -1,4 +1,5 @@
 #include "SampleDrawObjects.h"
+#include "ScreenRayComponent.h"
 #include "HUDComponent.h"
 #include "GameSystem.h"
 
@@ -36,6 +37,13 @@ void GameSystem::Initialize()
             std::type_index(typeid(HUDComponent))
         }
     );
+
+    m_screen_ray_group = ECSManager::GetRef().AddEntityGroup(
+        "ScreenRayComponent",
+        {
+            std::type_index(typeid(ScreenRayComponent))
+        }
+    );
 }
 
 void GameSystem::Update()
@@ -54,6 +62,14 @@ void GameSystem::Update()
         HUDComponentWeakReferenceObject hud = SD_WREF(entity).GetComponent(typeid(HUDComponent)).DynamicCastTo<HUDComponent>();
         if (hud.IsNull() == false) {
             SD_WREF(hud).Update();
+        }
+    }
+
+    entities = SD_WREF(m_screen_ray_group).GetEntities();
+    for (EntityWeakReferenceObject &entity : entities) {
+        ScreenRayComponentWeakReferenceObject screen_ray = SD_WREF(entity).GetComponent(typeid(ScreenRayComponent)).DynamicCastTo<ScreenRayComponent>();
+        if (screen_ray.IsNull() == false) {
+            SD_WREF(screen_ray).Update();
         }
     }
 }

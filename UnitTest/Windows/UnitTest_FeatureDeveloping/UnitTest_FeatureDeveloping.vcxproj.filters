@@ -32,6 +32,9 @@
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\HUDComponent.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\ScreenRayComponent.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FeatureApplication.h">
@@ -46,11 +49,14 @@
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\MotorComponent.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\HUDComponent.h">
-      <Filter>src</Filter>
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\MotorComponent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\ScreenRayComponent.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

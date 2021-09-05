@@ -23,6 +23,7 @@ SOFTWARE.
 
 */
 
+#include "MathAlgoritm.h"
 #include "BasicUniforms.h"
 #include "ECSManager.h"
 #include "GraphicsSystem.h"
@@ -105,6 +106,20 @@ void CameraComponent::SetCameraSize(const Resolution &i_size)
     m_follow_resolution = false;
     if (m_initialized == true) {
         Resize();
+    }
+}
+
+Ray CameraComponent::CalculateRay(const TouchButton &i_tb) const
+{
+    if (i_tb.m_x >= 0 && i_tb.m_x < m_buffer_size.GetWidth() &&
+        i_tb.m_y >= 0 && i_tb.m_y < m_buffer_size.GetHeight()) {
+        Transform node_trans = SD_WREF(m_geo_comp).GetWorldTransform();
+        Ray ray;
+        ray.InitializeByScreen(m_proj_mat, node_trans.MakeViewMatrix(), m_buffer_size, i_tb, m_near);
+        return ray;
+    }
+    else {
+        return Ray();
     }
 }
 

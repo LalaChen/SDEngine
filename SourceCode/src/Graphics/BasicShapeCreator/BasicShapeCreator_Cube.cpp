@@ -114,6 +114,7 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCube(const Vector3f &i_center
 	std::vector<vec2> t_data;
 	std::vector<vec3> tn_data;
 	std::vector<vec3> bn_data;
+	std::vector<Color4f> c_data;
 	std::vector<uint32_t> i_data;
 	//
 	vec3 f_vertices[3];
@@ -148,18 +149,21 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCube(const Vector3f &i_center
 			v_data.push_back(f_vertices[0]);
 			n_data.push_back(f_normals[0]);
 			t_data.push_back(f_textures[0]);
+			c_data.push_back(Color4f::White());
 			tn_data.push_back(f_tangent);
 			bn_data.push_back(f_binormal);
 
 			v_data.push_back(f_vertices[1]);
 			n_data.push_back(f_normals[1]);
 			t_data.push_back(f_textures[1]);
+			c_data.push_back(Color4f::White());
 			tn_data.push_back(f_tangent);
 			bn_data.push_back(f_binormal);
 
 			v_data.push_back(f_vertices[2]);
 			n_data.push_back(f_normals[2]);
 			t_data.push_back(f_textures[2]);
+			c_data.push_back(Color4f::White());
 			tn_data.push_back(f_tangent);
 			bn_data.push_back(f_binormal);
 
@@ -183,11 +187,14 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCube(const Vector3f &i_center
 	SD_SREF(tnbuf).RefreshBufferData(tn_data.data(), tn_data.size() * sizeof(vec3));
 	StaticVertexBufferStrongReferenceObject tbuf = new StaticVertexBuffer("CubeTBuffer", VertexBufferUsage_TEX_COORD_BUFFER, VertexBufferFormat_X32Y32_SFLOAT);
 	SD_SREF(tbuf).RefreshBufferData(t_data.data(), t_data.size() * sizeof(vec2));
+	StaticVertexBufferStrongReferenceObject cbuf = new StaticVertexBuffer("CubeCBuffer", VertexBufferUsage_COLOR_BUFFER, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
+	SD_SREF(cbuf).RefreshBufferData(c_data.data(), c_data.size() * sizeof(Color4f));
 	StaticIndexBufferStrongReferenceObject ibuf = new StaticIndexBuffer("CubeIBuffer", IndexBufferFormat_X32_UINT);
 	SD_SREF(ibuf).RefreshBufferData(i_data.data(), i_data.size() * sizeof(uint32_t));
 
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, vbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_NORMAL_BUFFER, nbuf.StaticCastTo<VertexBuffer>());
+	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_COLOR_BUFFER, cbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_BINORMAL_BUFFER, bnbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_TANGENT_BUFFER, tnbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_TEX_COORD_BUFFER, tbuf.StaticCastTo<VertexBuffer>());

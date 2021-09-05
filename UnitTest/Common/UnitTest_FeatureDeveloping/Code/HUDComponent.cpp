@@ -16,19 +16,30 @@ void HUDComponent::Initialize()
     m_transform = SD_GET_COMP_WREF(entity, TransformComponent);
 
     m_FPS_label = SD_WREF(m_GUI).GetGUINode<IMGUITextLabel>("FPSLabel");
-
     if (m_FPS_label.IsNull() == true) {
         SDLOGE("No FPSLabel !!!");
     }
 
     m_camera_pos_label = SD_WREF(m_GUI).GetGUINode<IMGUIVectorLabel>("CameraPosition");
     if (m_camera_pos_label.IsNull() == true) {
-        SDLOGE("No IMGUIVectorLabel !!!");
+        SDLOGE("No m_camera_pos_label !!!");
     }
 
     m_camera_rot_label = SD_WREF(m_GUI).GetGUINode<IMGUIVectorLabel>("CameraRotation");
     if (m_camera_rot_label.IsNull() == true) {
-        SDLOGE("No IMGUIVectorLabel !!!");
+        SDLOGE("No m_camera_rot_label !!!");
+    }
+
+    m_btn1 = SD_WREF(m_GUI).GetGUINode<IMGUIButton>("Button1");
+    if (m_btn1.IsNull() == true) {
+        SDLOGE("No m_btn1 !!!");
+    }
+    else {
+        SD_WREF(m_btn1).RegisterSlotFunctionIntoEvent(IMGUIButton::sButtonEventName_Clicked, 
+            new MemberFunctionSlot<HUDComponent>(
+            "HUDComponent::OnBtn1Clicked",
+            GetThisWeakPtrByType<HUDComponent>(),
+            &HUDComponent::OnBtn1Clicked));
     }
 }
 
@@ -49,4 +60,10 @@ void HUDComponent::Update()
             SD_WREF(m_camera_rot_label).SetValue(camera_trans.m_rotation.toEulerianAngles());
         }
     }
+}
+
+bool HUDComponent::OnBtn1Clicked(const EventArg &i_arg)
+{
+    SDLOG("HUDComponent::OnBtn1Clicked() : %s clicked.", SD_WREF(m_btn1).GetObjectName().c_str());
+    return true;
 }

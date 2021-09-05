@@ -20,47 +20,61 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-/*! \file      IMGUIButton.h
- *  \brief     The class IMGUIButton is used to show button.
+/*! \file      Ray.h
+ *  \brief     Ray class is used to present ray.
  *  \author    Kuan-Chih, Chen
- *  \date      2021/07/25
+ *  \date      2021/07/31
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "Vector3f.h"
-#include "IMGUINode.h"
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "SDEngineCommonFunction.h"
+#include "Application.h"
+#include "Resolution.h"
+#include "Transform.h"
 
+using SDE::Basic::TouchButton;
+using SDE::Math::Matrix4X4f;
 using SDE::Math::Vector3f;
+using SDE::Math::Transform;
+using SDE::Graphics::Resolution;
 
-using SDE::Basic::ObjectName;
+______________SD_START_PHYSICS_NAMESPACE_____________
 
-using SDE::Basic::EventObject;
-using SDE::Basic::EventObjectWeakReferenceObject;
-using SDE::Basic::EventObjectStrongReferenceObject;
-
-________________SD_START_GUI_NAMESPACE_______________
-
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(IMGUIButton);
-
-class SDENGINE_CLASS IMGUIButton : public IMGUINode
+class SDENGINE_CLASS Ray
 {
 public:
-    static const std::string sButtonEventName_Clicked;
+    Ray();
+    ~Ray();
 public:
-    explicit IMGUIButton(const ObjectName &i_name, const std::string &i_text);
-    virtual ~IMGUIButton();
+    void InitializeByScreen(const Matrix4X4f &i_proj_mat, const Matrix4X4f &i_view_mat, const Resolution &i_res, const TouchButton &i_tb, float i_near, float i_length = 1000.0f);
+    void InitializeByStartAndEnd(const Vector3f &i_start, const Vector3f &i_end);
 public:
-    void SetText(const std::string &i_text);
+    bool IsEndless() const;
+    bool IsValid() const;
+    Transform CalculateTransform(const Vector3f &i_v = Vector3f::PositiveY) const;
 public:
-    void RecordCommand() override;
-    void Append(const IMGUINodeStrongReferenceObject &i_child) override;
+    Vector3f m_origin;
+    Vector3f m_orientation;
+    float m_length;
 protected:
-    std::string m_text;
+    bool m_is_endless;
 };
 
-_________________SD_END_GUI_NAMESPACE________________
+inline bool Ray::IsEndless() const
+{
+    return m_is_endless;
+}
+
+inline bool Ray::IsValid() const
+{
+    return (std::fabs(m_orientation.magnitude()) > 0.000001);
+}
+
+
+_______________SD_END_PHYSICS_NAMESPACE______________

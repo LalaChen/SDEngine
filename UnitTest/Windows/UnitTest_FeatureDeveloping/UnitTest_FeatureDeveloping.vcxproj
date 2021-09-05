@@ -215,6 +215,7 @@ xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\HUDComponent.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\MotorComponent.cpp" />
     <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.cpp" />
+    <ClCompile Include="..\..\Common\UnitTest_FeatureDeveloping\Code\ScreenRayComponent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FeatureApplication.cpp" />
   </ItemGroup>
@@ -224,6 +225,7 @@ xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\HUDComponent.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\MotorComponent.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.h" />
+    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\ScreenRayComponent.h" />
     <ClInclude Include="FeatureApplication.h" />
   </ItemGroup>
   <ItemGroup>

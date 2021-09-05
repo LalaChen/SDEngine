@@ -262,6 +262,15 @@
     <Filter Include="include\Basic\Exception">
       <UniqueIdentifier>{77cd960f-a322-4207-bb98-6bcee343f1f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Physics">
+      <UniqueIdentifier>{30e3b7c4-9c16-4eb1-87b1-050e5a152a7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Physics">
+      <UniqueIdentifier>{4a8d18a2-ec9a-4f63-ae86-a6357476618e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Physics\Ray">
+      <UniqueIdentifier>{37cc4623-ca9d-4345-acea-db9a6943d98a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -888,6 +897,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIButton.h">
       <Filter>include\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Physics\Ray\Ray.h">
+      <Filter>include\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\MathAlgoritm.h">
+      <Filter>include\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1477,6 +1492,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIButton.cpp">
       <Filter>src\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Physics\Ray\Ray.cpp">
+      <Filter>src\Physics\Ray</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\MollerTrumboreInteraction.cpp">
+      <Filter>src\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

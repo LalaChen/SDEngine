@@ -46,17 +46,18 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCone(
 	//---- basic vertex data
 	std::vector<vec3> v_data;
 	std::vector<vec3> n_data;
-	std::vector<vec3> t_data;
+	std::vector<vec2> t_data;
 	//---- additional attribute
 	std::vector<vec3> tn_data;
 	std::vector<vec3> bn_data;
+	std::vector<Color4f> c_data;
 	//---- face index data
 	std::vector<uint32_t> i_data;
 	//---- data.
 	std::vector<vec3> circle_vertices;
 	Vector3f t_vertex;
 	vec3 f_vertex[2];
-	vec3 f_coord[2];
+	vec2 f_coord[2];
 	vec3 f_normal;
 	vec3 f_tangent;
 	vec3 f_binormal;
@@ -105,17 +106,18 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCone(
 		f_normal = (f_vertex[1] - center).cross(f_vertex[0] - center).normalize();
 		f_tangent = CalculateTangetVector(vec3::normalize(f_vertex[0] - center), //v1
 			vec3::normalize(f_vertex[1] - center), //v2
-			vec2::normalize(vec2((f_coord[0] - vec3::Zero).x, (f_coord[0] - vec3::Zero).y)), //st1
-			vec2::normalize(vec2((f_coord[1] - vec3::Zero).x, (f_coord[1] - vec3::Zero).y))  //st2
+			vec2::normalize(vec2((f_coord[0] - vec2::Zero).x, (f_coord[0] - vec2::Zero).y)), //st1
+			vec2::normalize(vec2((f_coord[1] - vec2::Zero).x, (f_coord[1] - vec2::Zero).y))  //st2
 		);
 
 		f_binormal = f_normal.cross(f_tangent).normalize();
 
 		v_data.push_back(center); v_data.push_back(f_vertex[0]); v_data.push_back(f_vertex[1]);
-		t_data.push_back(vec3::Zero); t_data.push_back(f_coord[0]); t_data.push_back(f_coord[1]);
+		t_data.push_back(vec2::Zero); t_data.push_back(f_coord[0]); t_data.push_back(f_coord[1]);
 		n_data.push_back(f_normal); n_data.push_back(f_normal); n_data.push_back(f_normal);
 		tn_data.push_back(f_tangent); tn_data.push_back(f_tangent); tn_data.push_back(f_tangent);
 		bn_data.push_back(f_binormal); bn_data.push_back(f_binormal); bn_data.push_back(f_binormal);
+		c_data.push_back(Color4f::White()); c_data.push_back(Color4f::White()); c_data.push_back(Color4f::White());
 
 		i_data.push_back(face_index_start_id);
 		i_data.push_back(face_index_start_id + 1);
@@ -134,6 +136,8 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCone(
 	SD_SREF(nbuf).RefreshBufferData(tn_data.data(), tn_data.size() * sizeof(vec3));
 	StaticVertexBufferStrongReferenceObject tbuf = new StaticVertexBuffer("CubeTBuffer", VertexBufferUsage_TEX_COORD_BUFFER, VertexBufferFormat_X32Y32_SFLOAT);
 	SD_SREF(tbuf).RefreshBufferData(t_data.data(), t_data.size() * sizeof(vec2));
+	StaticVertexBufferStrongReferenceObject cbuf = new StaticVertexBuffer("CubeCBuffer", VertexBufferUsage_COLOR_BUFFER, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
+	SD_SREF(cbuf).RefreshBufferData(c_data.data(), c_data.size() * sizeof(Color4f));
 	StaticIndexBufferStrongReferenceObject ibuf = new StaticIndexBuffer("CubeIBuffer", IndexBufferFormat_X32_UINT);
 	SD_SREF(ibuf).RefreshBufferData(i_data.data(), i_data.size() * sizeof(uint32_t));
 
@@ -142,6 +146,7 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCone(
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_BINORMAL_BUFFER, bnbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_TANGENT_BUFFER, tnbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_TEX_COORD_BUFFER, tbuf.StaticCastTo<VertexBuffer>());
+	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_COLOR_BUFFER, cbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterIndexBuffer(ibuf.StaticCastTo<IndexBuffer>());
 
     return mesh;

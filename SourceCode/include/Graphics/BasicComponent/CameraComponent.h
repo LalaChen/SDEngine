@@ -33,7 +33,12 @@ SOFTWARE.
 
 #pragma once
 
+#include "Ray.h"
 #include "CameraComponentBase.h"
+
+using SDE::Basic::TouchButton;
+
+using SDE::Physics::Ray;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -53,6 +58,7 @@ public:
     void SetCameraSize(const Resolution &i_size);
     TextureWeakReferenceObject GetColorBuffer() const override;
     TextureWeakReferenceObject GetDepthBuffer() const override;
+    Ray CalculateRay(const TouchButton &i_tb) const;
 public:
     bool OnGeometryChanged(const EventArg &i_arg) override;
 public:

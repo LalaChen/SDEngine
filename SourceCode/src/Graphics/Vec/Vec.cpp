@@ -143,6 +143,8 @@ std::string vec3::ToString() const
     return SDE::Basic::StringFormat("(%lf,%lf,%lf)", x, y, z);
 }
 //----------------------------------- vec2 static ------------------------------------
+const vec2 vec2::Zero(0.0f, 0.0f);
+
 vec2 vec2::normalize(const vec2 &i_v)
 {
     float magnitude = sqrt(i_v.x*i_v.x + i_v.y*i_v.y);

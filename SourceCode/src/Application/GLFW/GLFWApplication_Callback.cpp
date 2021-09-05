@@ -35,19 +35,32 @@ void GLFWApplication::CursorMouseButtonCallback(GLFWwindow *i_window, int i_butt
     TouchButtonEnum button;
     TouchButtonStateEnum state;
 
-    button = static_cast<TouchButtonEnum>(i_button);
+    if (i_button == GLFW_MOUSE_BUTTON_LEFT) {
+        button = SDE::Basic::TouchButton_LEFT;
+    }
+    else if (i_button == GLFW_MOUSE_BUTTON_RIGHT){
+        button = SDE::Basic::TouchButton_RIGHT;
+    }
+    else if (i_button == GLFW_MOUSE_BUTTON_MIDDLE) {
+        button = SDE::Basic::TouchButton_MIDDLE;
+    }
+    else {
+        button = SDE::Basic::TouchButton_MAX_DEFINE_VALUE;
+    }
 
     switch (i_action) {
         case GLFW_PRESS:
-            state = SDE::Basic::TOUCH_BUTTON_STATE_PRESSED;
+            state = SDE::Basic::TouchButtonState_PRESSED;
             break;
         case GLFW_RELEASE:
-            state = SDE::Basic::TOUCH_BUTTON_STATE_RELEASED;
+            state = SDE::Basic::TouchButtonState_RELEASED;
             break;
         default:
-            state = SDE::Basic::TOUCH_BUTTON_STATE_MAX_DEFINE_VALUE;
+            state = SDE::Basic::TouchButtonState_MAX_DEFINE_VALUE;
             break;
     }
+
+    Application::GetRef().SetTouchStatus(button, state);
 }
 
 void GLFWApplication::CursorEnterCallback(GLFWwindow *i_window, int entered)
@@ -59,8 +72,8 @@ void GLFWApplication::CursorPositionCallback(GLFWwindow *i_window, double i_x, d
 {
     //Motion
     //SDLOGD("Mouse Motion (%lf,%lf)", i_x, i_y);
-    Application::GetRef().SetTouchPosition(SDE::Basic::TOUCH_BUTTON_LEFT, i_x, i_y);
-    Application::GetRef().SetTouchPosition(SDE::Basic::TOUCH_BUTTON_RIGHT, i_x, i_y);
+    Application::GetRef().SetTouchPosition(SDE::Basic::TouchButton_LEFT, i_x, i_y);
+    Application::GetRef().SetTouchPosition(SDE::Basic::TouchButton_RIGHT, i_x, i_y);
 }
 
 //----- JoyStick ------

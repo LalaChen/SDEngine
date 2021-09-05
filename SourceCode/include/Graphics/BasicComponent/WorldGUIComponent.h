@@ -34,16 +34,20 @@ SOFTWARE.
 
 #include "IMGUIBatch.h"
 #include "IMGUIRenderer.h"
+#include "TransformComponent.h"
 #include "MeshRenderComponent.h"
-
+#include "Ray.h"
 using SDE::Basic::Component;
 using SDE::Basic::ComponentStrongReferenceObject;
+
 using SDE::Basic::ComponentWeakReferenceObject;
 
 using SDE::GUI::IMGUIBatch;
 using SDE::GUI::IMGUIBatchStrongReferenceObject;
 using SDE::GUI::IMGUIBatchWeakReferenceObject;
 using SDE::GUI::IMGUIBatchLoadingCallback;
+
+using SDE::Physics::Ray;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -59,6 +63,7 @@ public:
 public:
     void SetBufferSize(uint32_t i_width, uint32_t i_height);
     void SetWorldSize(float i_world_w, float i_world_h);
+    void SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb);
     CommandBufferWeakReferenceObject GetCommandBuffer() const;
     bool LoadGUI(const IMGUIBatchLoadingCallback &i_load_func);
 public:
@@ -76,16 +81,21 @@ protected:
     TextureStrongReferenceObject m_GUI_depth_buffer;
     CommandPoolStrongReferenceObject m_GUI_cp;
     CommandBufferWeakReferenceObject m_GUI_cb;
-protected:
     IMGUIBatchStrongReferenceObject m_batch;
+protected:
     MeshRenderComponentWeakReferenceObject m_GUI_mesh_render;
     MaterialStrongReferenceObject m_GUI_material;
     MeshStrongReferenceObject m_GUI_mesh;
     ClearValue m_clear_color;
     ClearValue m_clear_d_and_s;
+protected:
+    Vector3f m_UI_vertices[4];
     uint32_t m_buffer_size[2];
     float m_world_size[2];
     bool m_initialized;
+protected:
+    TransformComponentWeakReferenceObject m_transform;
+    TouchButton m_touch_data;
 };
 
 inline CommandBufferWeakReferenceObject WorldGUIComponent::GetCommandBuffer() const
