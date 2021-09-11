@@ -130,9 +130,9 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCircle(
 	StaticVertexBufferStrongReferenceObject nbuf = new StaticVertexBuffer("CircleNBuffer", VertexBufferUsage_NORMAL_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
 	SD_SREF(nbuf).RefreshBufferData(n_data.data(), n_data.size() * sizeof(vec3));
 	StaticVertexBufferStrongReferenceObject bnbuf = new StaticVertexBuffer("CircleBNBuffer", VertexBufferUsage_BINORMAL_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
-	SD_SREF(nbuf).RefreshBufferData(bn_data.data(), bn_data.size() * sizeof(vec3));
+	SD_SREF(bnbuf).RefreshBufferData(bn_data.data(), bn_data.size() * sizeof(vec3));
 	StaticVertexBufferStrongReferenceObject tnbuf = new StaticVertexBuffer("CircleTNBuffer", VertexBufferUsage_TANGENT_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
-	SD_SREF(nbuf).RefreshBufferData(tn_data.data(), tn_data.size() * sizeof(vec3));
+	SD_SREF(tnbuf).RefreshBufferData(tn_data.data(), tn_data.size() * sizeof(vec3));
 	StaticVertexBufferStrongReferenceObject tbuf = new StaticVertexBuffer("CircleTBuffer", VertexBufferUsage_TEX_COORD_BUFFER, VertexBufferFormat_X32Y32_SFLOAT);
 	SD_SREF(tbuf).RefreshBufferData(t_data.data(), t_data.size() * sizeof(vec2));
 	StaticVertexBufferStrongReferenceObject cbuf = new StaticVertexBuffer("CircleCBuffer", VertexBufferUsage_COLOR_BUFFER, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
