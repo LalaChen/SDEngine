@@ -31,7 +31,7 @@ void ScreenRayComponent::Initialize()
     SD_SREF(m_material).SetDataToUniformBuffer(sUniformBuffer_Material, &mat_ub, sizeof(MaterialUniforms));
     SD_SREF(m_material).Update();
 
-    m_mesh = BasicShapeCreator::GetRef().CreateAxis(0.002,0.02);
+    m_mesh = BasicShapeCreator::GetRef().CreateCircle(Vector3f::PositiveX, Vector3f::PositiveY.negative(), 0.1f);
     SD_SREF(m_mesh_render).AppendMesh(m_mesh, m_material);
 
     m_transform = SD_GET_COMP_WREF(m_entity, TransformComponent);
@@ -46,10 +46,7 @@ void ScreenRayComponent::Update()
             TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_LEFT);
             Ray ray = SD_WREF(camera).CalculateRay(tb);
             Transform ray_xform = ray.CalculateTransform();
-            ray_xform.m_position -= ray_xform.GetForward().scale(0.01);
-            //SDLOG("ray pos:%s rot:%s",
-            //    ray_xform.m_position.ToString().c_str(),
-            //    ray_xform.m_rotation.ToString().c_str());
+            ray_xform.AddTranslation(ray_xform.GetForward().scale(10.0f));
             SD_WREF(m_transform).SetWorldTransform(ray_xform);
         }
         else {

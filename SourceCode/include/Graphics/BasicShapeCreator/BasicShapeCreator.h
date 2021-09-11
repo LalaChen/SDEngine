@@ -81,6 +81,12 @@ public:
         const Vector3f &i_w = Vector3f::PositiveZ,
         float i_height = 1.0f, float i_angle = 15.0f, uint32_t i_slices = 15);
 
+    MeshStrongReferenceObject CreateCircle(
+        const Vector3f &i_u = Vector3f::PositiveX,
+        const Vector3f &i_v = Vector3f::PositiveY,
+        float i_radius = 1.0f,
+        uint32_t i_slices = 15);
+
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

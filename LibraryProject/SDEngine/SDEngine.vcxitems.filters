@@ -1499,6 +1499,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\MollerTrumboreInteraction.cpp">
       <Filter>src\Math</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Circle.cpp">
+      <Filter>src\Graphics\BasicShapeCreator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.frag">

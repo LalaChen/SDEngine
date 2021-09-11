@@ -34,14 +34,13 @@ using SDE::Math::ONE_DEGREE_OF_PI;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-MeshStrongReferenceObject BasicShapeCreator::CreateCone(
-    const Vector3f &i_center,
-    const Vector3f &i_u, const Vector3f &i_v, const Vector3f &i_w,
-    float i_height, float i_angle, uint32_t i_slices)
+MeshStrongReferenceObject BasicShapeCreator::CreateCircle(
+    const Vector3f &i_u, const Vector3f &i_v,
+    float i_radius, uint32_t i_slices)
 {
-    MeshStrongReferenceObject mesh;
+	MeshStrongReferenceObject mesh;
 
-	vec3 center(i_center.m_vec.x, i_center.m_vec.y, i_center.m_vec.z);
+	vec3 center(0.0f, 0.0f, 0.0f);
 
 	//---- basic vertex data
 	std::vector<vec3> v_data;
@@ -63,7 +62,7 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCone(
 	vec3 f_binormal;
 	uint32_t i, face_index_start_id;
 	float slice_angle, current_slice_angle, next_slice_angle;
-	float radius = i_height * tan(i_angle * ONE_DEGREE_OF_PI);
+	float radius = i_radius;
 
 	//1. calculate slice angle.
 	if (i_slices < 3) {
@@ -77,7 +76,7 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCone(
 			current_slice_angle = TWO_PI;
 		}
 		//To calculate vertex.
-		t_vertex = i_u.normalize().scale(radius * cos(current_slice_angle)) + i_v.normalize().scale(radius * sin(current_slice_angle)) + i_w.normalize().scale(i_height);
+		t_vertex = i_u.normalize().scale(radius * cos(current_slice_angle)) + i_v.normalize().scale(radius * sin(current_slice_angle));
 		//Save vertex.
 		circle_vertices.push_back(vec3(t_vertex.m_vec.x, t_vertex.m_vec.y, t_vertex.m_vec.z));
 	}
@@ -92,7 +91,7 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCone(
 		if (current_slice_angle >= TWO_PI) {
 			current_slice_angle = TWO_PI;
 		}
-		
+
 		if (current_slice_angle >= TWO_PI) {
 			current_slice_angle = TWO_PI;
 		}
@@ -123,22 +122,22 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCone(
 		i_data.push_back(face_index_start_id + 1);
 		i_data.push_back(face_index_start_id + 2);
 	}
-	
-	mesh = new Mesh("Cone");
 
-	StaticVertexBufferStrongReferenceObject vbuf = new StaticVertexBuffer("ConeVBuffer", VertexBufferUsage_VERTEX_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
+	mesh = new Mesh("Circle");
+
+	StaticVertexBufferStrongReferenceObject vbuf = new StaticVertexBuffer("CircleVBuffer", VertexBufferUsage_VERTEX_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
 	SD_SREF(vbuf).RefreshBufferData(v_data.data(), v_data.size() * sizeof(vec3));
-	StaticVertexBufferStrongReferenceObject nbuf = new StaticVertexBuffer("ConeNBuffer", VertexBufferUsage_NORMAL_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
+	StaticVertexBufferStrongReferenceObject nbuf = new StaticVertexBuffer("CircleNBuffer", VertexBufferUsage_NORMAL_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
 	SD_SREF(nbuf).RefreshBufferData(n_data.data(), n_data.size() * sizeof(vec3));
-	StaticVertexBufferStrongReferenceObject bnbuf = new StaticVertexBuffer("ConeBNBuffer", VertexBufferUsage_BINORMAL_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
+	StaticVertexBufferStrongReferenceObject bnbuf = new StaticVertexBuffer("CircleBNBuffer", VertexBufferUsage_BINORMAL_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
 	SD_SREF(nbuf).RefreshBufferData(bn_data.data(), bn_data.size() * sizeof(vec3));
-	StaticVertexBufferStrongReferenceObject tnbuf = new StaticVertexBuffer("ConeTNBuffer", VertexBufferUsage_TANGENT_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
+	StaticVertexBufferStrongReferenceObject tnbuf = new StaticVertexBuffer("CircleTNBuffer", VertexBufferUsage_TANGENT_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
 	SD_SREF(nbuf).RefreshBufferData(tn_data.data(), tn_data.size() * sizeof(vec3));
-	StaticVertexBufferStrongReferenceObject tbuf = new StaticVertexBuffer("ConeTBuffer", VertexBufferUsage_TEX_COORD_BUFFER, VertexBufferFormat_X32Y32_SFLOAT);
+	StaticVertexBufferStrongReferenceObject tbuf = new StaticVertexBuffer("CircleTBuffer", VertexBufferUsage_TEX_COORD_BUFFER, VertexBufferFormat_X32Y32_SFLOAT);
 	SD_SREF(tbuf).RefreshBufferData(t_data.data(), t_data.size() * sizeof(vec2));
-	StaticVertexBufferStrongReferenceObject cbuf = new StaticVertexBuffer("ConeCBuffer", VertexBufferUsage_COLOR_BUFFER, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
+	StaticVertexBufferStrongReferenceObject cbuf = new StaticVertexBuffer("CircleCBuffer", VertexBufferUsage_COLOR_BUFFER, VertexBufferFormat_X32Y32Z32W32_SFLOAT);
 	SD_SREF(cbuf).RefreshBufferData(c_data.data(), c_data.size() * sizeof(Color4f));
-	StaticIndexBufferStrongReferenceObject ibuf = new StaticIndexBuffer("ConeIBuffer", IndexBufferFormat_X32_UINT);
+	StaticIndexBufferStrongReferenceObject ibuf = new StaticIndexBuffer("CircleIBuffer", IndexBufferFormat_X32_UINT);
 	SD_SREF(ibuf).RefreshBufferData(i_data.data(), i_data.size() * sizeof(uint32_t));
 
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, vbuf.StaticCastTo<VertexBuffer>());
@@ -149,7 +148,7 @@ MeshStrongReferenceObject BasicShapeCreator::CreateCone(
 	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_COLOR_BUFFER, cbuf.StaticCastTo<VertexBuffer>());
 	SD_SREF(mesh).RegisterIndexBuffer(ibuf.StaticCastTo<IndexBuffer>());
 
-    return mesh;
+	return mesh;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
