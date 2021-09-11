@@ -58,7 +58,7 @@ void GraphicsManager::InitializeBasicResource()
         std::function<void(uint64_t, double)>(
             [this](uint64_t i_count, double i_period_ms) {
                 m_FPS = (static_cast<double>(i_count) / i_period_ms) * 1000.0;
-                SDLOGD("FPS : %lf.", m_FPS);
+                //SDLOGD("FPS : %lf.", m_FPS);
             }
     );
     SDLOG("Initialize Basic Resource Start!!!");

@@ -62,7 +62,8 @@ set (SD_ENGINE_INC_DIRS
         ${SD_ENGINE_INC_DIR}/Graphics/CommandBuffer
 		${SD_ENGINE_INC_DIR}/Graphics/BasicComponent
         ${SD_ENGINE_INC_DIR}/Graphics/EmbeddedShaderProgramSource
-        ${SD_ENGINE_INC_DIR}/GUI)
+        ${SD_ENGINE_INC_DIR}/GUI
+        ${SD_ENGINE_INC_DIR}/Physics/Ray)
 
 message(STATUS "SDEngineRootDir: ${SD_ENGINE_DIR}")
 message(STATUS "SDThirdPartyRootDir: ${SD_THIRD_PARTY_DIR}")
@@ -135,9 +136,10 @@ add_library( # Sets the name of the library.
 
              # Provides a relative path to your source file(s).
              src/main/cpp/android_jni_main.cpp
-             src/main/cpp/FeatureApplication.cpp
+        src/main/cpp/FeatureApplication.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/HUDComponent.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/MotorComponent.cpp
+             ../../Common/UnitTest_FeatureDeveloping/Code/ScreenRayComponent.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/GameSystem.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/SampleDrawObjects.cpp
         )

@@ -145,6 +145,9 @@ bool SampleDrawObjects::Load()
             IMGUIVectorLabelStrongReferenceObject camera_rot_label = new IMGUIVectorLabel("CameraRotation", "Rotation");
             SD_SREF(window).Append(camera_rot_label.StaticCastTo<IMGUINode>());
             //
+            IMGUITextLabelStrongReferenceObject touch_btn_label = new IMGUITextLabel("TouchButton", "");
+            SD_SREF(window).Append(touch_btn_label.StaticCastTo<IMGUINode>());
+            //
             IMGUIButtonStrongReferenceObject btn1 = new IMGUIButton("Button1", "Button1");
             SD_SREF(window).Append(btn1.StaticCastTo<IMGUINode>());
             //

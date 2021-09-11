@@ -66,13 +66,16 @@ public:
 public:
     /*! \fn explicit AndroidApplication(const std::string &i_win_title, const Resolution &i_win_res, FullWindowOption i_full_window, int i_argc, char **i_argv);
      *  \param [in] i_win_title Window title.
+     *  \param [in] i_javaVM Target javaVM
      *  \param [in] i_asset_mgr Target asset manager.
      *  \param [in] i_adopt_library Which graphics library you use.
      *  \param [in] i_argc argument count.
      *  \param [in] i_argv arguments.
      *  \brief The constructor of AndroidApplication Class.
      */
-    explicit AndroidApplication(const std::string &i_win_title, AAssetManager *i_asset_mgr, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv);
+    explicit AndroidApplication(const std::string &i_win_title,
+        JavaVM *i_javaVM, AAssetManager *i_asset_mgr,
+        GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv);
 
     /*! \fn virtual ~AndroidApplication();
      *  \brief The destructor of AndroidApplication Class.
@@ -112,15 +115,24 @@ public:
     void InitializeNativeWindow(ANativeWindow *i_window);
     void RefreshNativeWindow(ANativeWindow *i_window, int i_width, int i_height);
     void RunMainLoop();
+    void ReceiveMotionEvent(jobject i_jMotionEvent_mv);
 public:
     SD_DECLARE_ATTRIBUTE_VAR_GET(AppStateEnum, m_current_state, CurrentState);
 protected:
+    JavaVM *m_javaVM;
     ANativeWindow *m_window;
     AAssetManager *m_asset_mgr;
     std::thread m_render_thread;
     std::mutex m_pause_mtx;
     std::condition_variable m_pause_cv;
     bool m_resize_signal;
+protected:
+    jclass jClass_MotionEvent;
+    jmethodID jMethod_MotionEvent_getActionMasked;
+    jmethodID jMethod_MotionEvent_getPointerCount;
+    jmethodID jMethod_MotionEvent_getPointerId;
+    jmethodID jMethod_MotionEvent_getX;
+    jmethodID jMethod_MotionEvent_getY;
 };
 
 _________________SD_END_APP_NAMESPACE________________

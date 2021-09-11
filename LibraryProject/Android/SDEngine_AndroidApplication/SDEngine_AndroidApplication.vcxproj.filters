@@ -12,9 +12,15 @@
     <ClInclude Include="..\..\..\SourceCode\include\Application\Android\AndroidApplication.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\SourceCode\include\Application\Android\AndroidEnvAttacher.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\Application\Android\AndroidApplication.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SourceCode\src\Application\Android\AndroidEnvAttacher.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

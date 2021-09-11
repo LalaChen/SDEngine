@@ -163,7 +163,7 @@ void WorldGUIComponent::Update()
     if (gs.IsNull() == false) {
         CameraComponentWeakReferenceObject camera = SD_WREF(gs).GetScreenCamera().DynamicCastTo<CameraComponent>();
         if (camera.IsNull() == false) {
-            TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_LEFT);
+            TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_RIGHT);
             Ray ray = SD_WREF(camera).CalculateRay(tb);
             SetTouchDataByRay(ray, tb);
         }

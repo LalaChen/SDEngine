@@ -31,5 +31,6 @@ protected:
     IMGUITextLabelWeakReferenceObject m_FPS_label;
     IMGUIVectorLabelWeakReferenceObject m_camera_pos_label;
     IMGUIVectorLabelWeakReferenceObject m_camera_rot_label;
+    IMGUITextLabelWeakReferenceObject m_touch_btn_label;
     IMGUIButtonWeakReferenceObject m_btn1;
 };

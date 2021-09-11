@@ -34,8 +34,8 @@ using namespace SDE;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
-FeatureApplication::FeatureApplication(const std::string &i_win_title, AAssetManager *i_asset_mgr, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv)
-: AndroidApplication(i_win_title, i_asset_mgr, i_adopt_library, i_argc, i_argv)
+FeatureApplication::FeatureApplication(const std::string &i_win_title, JavaVM *i_javaVM, AAssetManager *i_asset_mgr, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv)
+: AndroidApplication(i_win_title, i_javaVM, i_asset_mgr, i_adopt_library, i_argc, i_argv)
 {
 }
 

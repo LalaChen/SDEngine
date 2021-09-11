@@ -1,6 +1,7 @@
 #include "SDEngine.h"
 #include "SDEnginePlatform.h"
 #include "VulkanWrapper.h"
+#include "AndroidEnvAttacher.h"
 #include "AndroidApplication.h"
 
 using namespace SDE;
@@ -10,17 +11,52 @@ using namespace SDE::GUI;
 
 ________________SD_START_APP_NAMESPACE_______________
 
-AndroidApplication::AndroidApplication(const std::string &i_win_title, AAssetManager *i_asset_mgr, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv)
+AndroidApplication::AndroidApplication(
+    const std::string &i_win_title,
+    JavaVM *i_javaVM, AAssetManager *i_asset_mgr,
+    GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv)
 : Application(i_win_title, Resolution(2,2), true, i_adopt_library, i_argc, i_argv)
 , m_current_state(AppState_CREATE)
 , m_window(nullptr)
+, m_javaVM(i_javaVM)
 , m_asset_mgr(i_asset_mgr)
 , m_resize_signal(false)
 {
+    if (m_javaVM != nullptr) {
+        AndroidEnvAttacher env_attacher(m_javaVM);
+        JNIEnv *env = env_attacher.GetEnv();
+        if (env != nullptr) {
+            jClass_MotionEvent = env->FindClass("android/view/MotionEvent");
+            jMethod_MotionEvent_getActionMasked = env->GetMethodID(jClass_MotionEvent, "getActionMasked", "()I");
+            jMethod_MotionEvent_getPointerCount = env->GetMethodID(jClass_MotionEvent, "getPointerCount", "()I");
+            jMethod_MotionEvent_getPointerId = env->GetMethodID(jClass_MotionEvent, "getPointerId", "(I)I");
+            jMethod_MotionEvent_getX = env->GetMethodID(jClass_MotionEvent, "getX", "(I)F");
+            jMethod_MotionEvent_getY = env->GetMethodID(jClass_MotionEvent, "getY", "(I)F");
+        }
+        else {
+            SDLOG("env is nullptr!!!");
+        }
+    }
+    else {
+        SDLOG("Java VM is nullptr!!!");
+    }
 }
 
 AndroidApplication::~AndroidApplication()
 {
+    if (m_javaVM != nullptr) {
+        AndroidEnvAttacher env_attacher(m_javaVM);
+        JNIEnv* env = env_attacher.GetEnv();
+        if (env != nullptr) {
+            env->DeleteLocalRef(jClass_MotionEvent);
+        }
+        else {
+            SDLOG("env is nullptr!!!");
+        }
+    }
+    else {
+        SDLOG("Java VM is nullptr!!!");
+    }
 }
 
 void AndroidApplication::Initialize()
@@ -257,5 +293,46 @@ void AndroidApplication::Pause()
 void AndroidApplication::Resume()
 {
     Application::Resume();
+}
+
+void AndroidApplication::ReceiveMotionEvent(jobject i_jMotionEvent_mv)
+{
+    if (m_javaVM != nullptr) {
+        AndroidEnvAttacher env_attacher(m_javaVM);
+        JNIEnv* env = env_attacher.GetEnv();
+        if (env != nullptr) {
+            //for (jint tID = 0; tID < SDE::Basic::TouchButton_MAX_DEFINE_VALUE; tID++) {
+            //    SetTouchPosition(static_cast<SDE::Basic::TouchButtonEnum>(tID), -1.0f, -1.0f);
+            //    SetTouchStatus(static_cast<SDE::Basic::TouchButtonEnum>(tID), SDE::Basic::TouchButtonState_RELEASED);
+            //}
+
+            jint touch_count = env->CallIntMethod(i_jMotionEvent_mv, jMethod_MotionEvent_getPointerCount);
+            jint event_action = env->CallIntMethod(i_jMotionEvent_mv, jMethod_MotionEvent_getActionMasked);
+            for (jint tID = 0; tID < touch_count; ++tID) {
+                jint touchID = env->CallIntMethod(i_jMotionEvent_mv, jMethod_MotionEvent_getPointerId, tID);
+                jfloat x = env->CallFloatMethod(i_jMotionEvent_mv, jMethod_MotionEvent_getX, tID);
+                jfloat y = env->CallFloatMethod(i_jMotionEvent_mv, jMethod_MotionEvent_getY, tID);
+
+                SDLOG("Touch(%d) ID(%d) A:%d, (%lf, %lf)", tID, touchID, event_action, x, y);
+                SetTouchPosition(static_cast<SDE::Basic::TouchButtonEnum>(touchID), x, y);
+                if (event_action == 1 || event_action == 6) {
+                    SetTouchStatus(static_cast<SDE::Basic::TouchButtonEnum>(touchID), SDE::Basic::TouchButtonState_RELEASED);
+                }
+                else if(event_action == 0 || event_action == 2 || event_action == 5) {
+                    SetTouchStatus(static_cast<SDE::Basic::TouchButtonEnum>(touchID), SDE::Basic::TouchButtonState_PRESSED);
+                }
+                else {
+                    SetTouchStatus(static_cast<SDE::Basic::TouchButtonEnum>(touchID), SDE::Basic::TouchButtonState_RELEASED);
+                }
+            }
+
+        }
+        else {
+            SDLOG("env is nullptr!!!");
+        }
+    }
+    else {
+        SDLOG("Java VM is nullptr!!!");
+    }
 }
 _________________SD_END_APP_NAMESPACE________________

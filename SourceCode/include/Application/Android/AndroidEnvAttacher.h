@@ -21,26 +21,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-* /
+*/
 
-/*! \file      FeatureApplication.h
- *  \brief     Introduce of class FeatureApplication.
+/*! \file      AndroidEnvAttacher.h
+ *  \brief     Introduce of class AndroidEnvAttacher.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/09/01
+ *  \date      2021/09/11
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include <Application/Android/AndroidApplication.h>
+#include <jni.h>
 
-using SDE::App::AndroidApplication;
+________________SD_START_APP_NAMESPACE_______________
 
-class FeatureApplication : public AndroidApplication
-{
+class AndroidEnvAttacher {
 public:
-    explicit FeatureApplication(const std::string &i_win_title, JavaVM *i_javaVM, AAssetManager *i_asset_mgr, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv);
-    ~FeatureApplication();
+    explicit AndroidEnvAttacher(JavaVM *i_vm);
+
+    ~AndroidEnvAttacher();
+
 public:
-    void Initialize() override;
+    JNIEnv *GetEnv();
+private:
+    JNIEnv *m_env;
+    JavaVM *m_target_VM;
+    bool   m_is_attach_thread;
 };
+
+_________________SD_END_APP_NAMESPACE________________

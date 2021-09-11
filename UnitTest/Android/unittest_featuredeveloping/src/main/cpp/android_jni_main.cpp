@@ -8,9 +8,14 @@
 #include <SDEngineCommonFunction.h>
 #include <SDEngine.h>
 
-#include "FeatureApplication.h"
 #include "android_log.h"
+#include "FeatureApplication.h"
 
+using namespace SDE;
+using namespace SDE::Basic;
+using namespace SDE::Graphics;
+
+JavaVM             *m_global_VM = nullptr;
 FeatureApplication *g_app = nullptr;
 
 void TerminateApplication()
@@ -21,6 +26,14 @@ void TerminateApplication()
 		delete g_app;
 		g_app = nullptr;
     }
+}
+
+extern "C" JNIEXPORT
+jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
+{
+    LOGI("JNI_OnLoad");
+    m_global_VM = vm;
+    return JNI_VERSION_1_6;
 }
 
 extern "C" JNIEXPORT
@@ -39,6 +52,7 @@ void JNICALL Java_com_sdengine_unittest_1featuredeveloping_MainActivity_Initiali
 	}
     //1. new Android Application.
     g_app = new FeatureApplication("test",
+                                   m_global_VM,
                                    asset_mgr,
                                    SDE::Graphics::GraphicsLibrary_Vulkan,
                                    0, nullptr);
@@ -88,6 +102,18 @@ void JNICALL Java_com_sdengine_unittest_1featuredeveloping_MainActivity_Pause(
     if (g_app != nullptr) {
 		LOGI("Pause application.");
         g_app->Pause();
+    }
+}
+
+extern "C" JNIEXPORT
+void JNICALL Java_com_sdengine_unittest_1featuredeveloping_MainActivity_onMotionEventReceived(
+        JNIEnv *env,
+        jclass clazz,
+        jobject motion_event)
+{
+    if (g_app != nullptr) {
+        //1. convert motion event to touch event.
+        g_app->ReceiveMotionEvent(motion_event);
     }
 }
 

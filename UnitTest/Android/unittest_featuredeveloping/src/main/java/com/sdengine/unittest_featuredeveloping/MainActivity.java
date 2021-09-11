@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     public static native void ChangeSurface(Surface surface, int format, int width, int height);
     public static native void Pause();
     public static native void TerminateApplication();
+    public static native void onMotionEventReceived(MotionEvent event);
 
     public final String TAG = "SDE_AndroidActivity";
 
@@ -54,10 +55,8 @@ public class MainActivity extends AppCompatActivity {
         sv.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.i(TAG, "Touch event !!! Event action is " + (event.getAction() & MotionEvent.ACTION_MASK) + " touch count = " + event.getPointerCount());
-                for (int touchID = 0; touchID < event.getPointerCount(); touchID++) {
-                    Log.i(TAG, "T(" + event.getPointerId(touchID) + ")(" + event.getX(touchID) + "," + event.getY(touchID) + ")");
-                }
+                //Log.i(TAG, "Touch event !!! Event action is " + (event.getAction() & MotionEvent.ACTION_MASK) + " touch count = " + event.getPointerCount());
+                onMotionEventReceived(event);
                 return true;
             }
         });

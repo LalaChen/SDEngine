@@ -66,6 +66,7 @@ public:
     void SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb);
     CommandBufferWeakReferenceObject GetCommandBuffer() const;
     bool LoadGUI(const IMGUIBatchLoadingCallback &i_load_func);
+    TouchButton GetTouchButton() const;
 public:
     template<typename T> WeakReferenceObject<T> GetGUINode(const ObjectName &i_name);
 public:
@@ -101,6 +102,11 @@ protected:
 inline CommandBufferWeakReferenceObject WorldGUIComponent::GetCommandBuffer() const
 {
     return m_GUI_cb;
+}
+
+inline TouchButton WorldGUIComponent::GetTouchButton() const
+{
+    return m_touch_data;
 }
 
 template<typename T> inline WeakReferenceObject<T> WorldGUIComponent::GetGUINode(const ObjectName &i_name)

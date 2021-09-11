@@ -108,6 +108,8 @@ SOFTWARE.
 #include "Graphics/CommandBuffer/CommandPool.h"
 #include "Graphics/CommandBuffer/CommandBuffer.h"
 #include "Graphics/CommandBuffer/SecondaryCommandPoolThread.h"
+#include "Graphics/System/GraphicsSystem.h"
+#include "Graphics/System/WorldGUISystem.h"
 #include "Graphics/BasicComponent/TransformComponent.h"
 #include "Graphics/BasicComponent/MeshRenderComponent.h"
 #include "Graphics/BasicComponent/WorldGUIComponent.h"

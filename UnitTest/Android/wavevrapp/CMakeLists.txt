@@ -62,7 +62,8 @@ set (SD_ENGINE_INC_DIRS
         ${SD_ENGINE_INC_DIR}/Graphics/CommandBuffer
 		${SD_ENGINE_INC_DIR}/Graphics/BasicComponent
         ${SD_ENGINE_INC_DIR}/Graphics/EmbeddedShaderProgramSource
-        ${SD_ENGINE_INC_DIR}/GUI)
+        ${SD_ENGINE_INC_DIR}/GUI
+        ${SD_ENGINE_INC_DIR}/Physics/Ray)
 
 set (WAVE_SDK_DIR ${VR_SDK_ROOT}/include)
 
@@ -155,6 +156,7 @@ add_library( # Sets the name of the library.
              src/main/cpp/WaveVREventArg.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/HUDComponent.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/SampleDrawObjects.cpp
+             ../../Common/UnitTest_FeatureDeveloping/Code/ScreenRayComponent.cpp
         )
 
 # Specifies libraries CMake should link to your target library. You

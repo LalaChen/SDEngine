@@ -13,7 +13,7 @@ using namespace SDE::GUI;
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ScreenRayComponent);
 
-class ScreenRayComponent : public SDE::Basic::Component
+class ScreenRayComponent : public Component
 {
 public:
     SD_COMPONENT_POOL_TYPE_DECLARATION(ScreenRayComponent, ScreenRayComponent);

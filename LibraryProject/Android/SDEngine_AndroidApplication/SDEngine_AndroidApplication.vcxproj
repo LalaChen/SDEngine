@@ -36,9 +36,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SourceCode\include\Application\Android\AndroidApplication.h" />
+    <ClInclude Include="..\..\..\SourceCode\include\Application\Android\AndroidEnvAttacher.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SourceCode\src\Application\Android\AndroidApplication.cpp" />
+    <ClCompile Include="..\..\..\SourceCode\src\Application\Android\AndroidEnvAttacher.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6bff10d0-86e0-4fef-a0a0-9abfa7b4d80b}</ProjectGuid>

@@ -21,26 +21,52 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-* /
+*/
 
-/*! \file      FeatureApplication.h
- *  \brief     Introduce of class FeatureApplication.
+/*! \file      AndroidEnvAttacher.h
+ *  \brief     Introduce of class AndroidEnvAttacher.
  *  \author    Kuan-Chih, Chen
- *  \date      2020/09/01
+ *  \date      2021/09/11
  *  \copyright MIT License.
  */
 
-#pragma once
+#include "LogManager.h"
+#include "AndroidEnvAttacher.h"
 
-#include <Application/Android/AndroidApplication.h>
+using SDE::Basic::LogManager;
 
-using SDE::App::AndroidApplication;
+________________SD_START_APP_NAMESPACE_______________
 
-class FeatureApplication : public AndroidApplication
+AndroidEnvAttacher::AndroidEnvAttacher(JavaVM *i_vm)
+:m_env(nullptr)
+,m_target_VM(i_vm)
+,m_is_attach_thread(false)
 {
-public:
-    explicit FeatureApplication(const std::string &i_win_title, JavaVM *i_javaVM, AAssetManager *i_asset_mgr, GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv);
-    ~FeatureApplication();
-public:
-    void Initialize() override;
-};
+    int env_result = m_target_VM->GetEnv((void**)&m_env, JNI_VERSION_1_6);
+    if (env_result == JNI_EDETACHED) {
+        SDLOG("GetEnv : JNI_EDETACHED");
+        if (m_target_VM->AttachCurrentThread(&m_env , nullptr) != 0) {
+            SDLOG("GetEnv : Failed to attach");
+        }
+        m_is_attach_thread = true;
+    }
+    else if (env_result == JNI_EVERSION) {
+        SDLOG("GetEnv: version not supported");
+    }
+
+}
+
+AndroidEnvAttacher::~AndroidEnvAttacher()
+{
+    if(m_is_attach_thread == true)
+         m_target_VM->DetachCurrentThread();
+    m_target_VM = nullptr;
+    m_env = nullptr;
+}
+
+JNIEnv* AndroidEnvAttacher::GetEnv()
+{
+    return m_env;
+}
+
+_________________SD_END_APP_NAMESPACE________________
