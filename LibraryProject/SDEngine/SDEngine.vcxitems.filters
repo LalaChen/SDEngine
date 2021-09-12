@@ -271,6 +271,9 @@
     <Filter Include="src\Physics\Ray">
       <UniqueIdentifier>{37cc4623-ca9d-4345-acea-db9a6943d98a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common\RenderPass">
+      <UniqueIdentifier>{3cd5f848-2caa-4f82-aabe-3ceea8ac5a5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -1605,6 +1608,15 @@
     </None>
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.vert.spv">
       <Filter>common\ShaderProgram\NoLighting</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\ForwardPass.json">
+      <Filter>common\RenderPass</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\GUIPass.json">
+      <Filter>common\RenderPass</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\VRForwardPass.json">
+      <Filter>common\RenderPass</Filter>
     </None>
   </ItemGroup>
 </Project>

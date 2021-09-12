@@ -98,7 +98,7 @@ static const std::string sUniformBuffer_GUI_Offset = "offsets";
 static const std::string sUniformImages_GUI_Font = "font";
 
 /*! \class GraphicsManager
- *  \brief In our system, GraphicsManager is a interface for all graphics API(opengl, gles, vulkan) and manage \n
+ *  \brief In our system, GraphicsManager is a interface for all graphics API(opengl, gles, vulkan) and manage
  *  graphics resource those need to be managed.
  */
 class SDENGINE_CLASS GraphicsManager

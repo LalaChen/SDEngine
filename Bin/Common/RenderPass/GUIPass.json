@@ -1,0 +1,84 @@
+{
+  "RenderPass": {
+    "AttachmentDescriptions": [
+      {
+        "IsColorAttachment": true,
+        "FormatType": -1,
+        "SampleCountType": 0,
+        "LoadOpType": 1,
+        "StoreOpType": 0,
+        "StencilLoadOpType": 2,
+        "StencilStoreOpType": 1,
+        "InitialLayoutType": 2,
+        "FinalLayoutType": 2
+      },
+      {
+        "IsColorAttachment": false,
+        "FormatType": -1,
+        "SampleCountType": 0,
+        "LoadOpType": 1,
+        "StoreOpType": 0,
+        "StencilLoadOpType": 1,
+        "StencilStoreOpType": 1,
+        "InitialLayoutType": 3,
+        "FinalLayoutType": 3
+      }
+    ],
+    "SubpassDescriptions": [
+      {
+        "Name": "GUI",
+        "BindPoint": 0,
+        "ColorAttachmentRefs": [
+          {
+            "AttachmentID": 0,
+            "LayoutType": 2
+          }
+        ],
+        "DepthAttachmentRef": {
+          "AttachmentID": 1,
+          "LayoutType": 3
+        }
+      }
+    ],
+    "SubpassDependencies": [
+      {
+        "SrcSPID": -1,
+        "DstSPID": 0,
+        "SrcPipeStages": [
+          13
+        ],
+        "DstPipeStages": [
+          0
+        ],
+        "SrcMemMasks": [
+          16
+        ],
+        "DstMemMasks": [
+          15
+        ],
+        "DepScopes": [
+          0
+        ]
+      },
+      {
+        "SrcSPID": 0,
+        "DstSPID": -1,
+        "SrcPipeStages": [
+          13
+        ],
+        "DstPipeStages": [
+          0
+        ],
+        "SrcMemMasks": [
+          16
+        ],
+        "DstMemMasks": [
+          15
+        ],
+        "DepScopes": [
+          0
+        ]
+      }
+    ]
+  }
+}

@@ -58,7 +58,6 @@ bool ShaderProgram::LoadFromFile(const FilePathString &i_fp)
     FileData file_data;
     bool result = FileResourceRequester::GetRef().AskFile(i_fp, file_data);
     if (result == true) {
-
         SDE::Basic::SpliteTargetFileToPathAndName(i_fp, m_proj_dir_fp, m_proj_fn);
         return LoadFromSource(file_data.GetDataString());
     }

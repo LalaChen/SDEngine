@@ -427,6 +427,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\ForwardPass.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\GUIPass.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\VRForwardPass.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\AxesShading.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag.spv" />

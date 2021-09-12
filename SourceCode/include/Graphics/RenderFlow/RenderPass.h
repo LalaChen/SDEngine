@@ -42,6 +42,7 @@ SOFTWARE.
 
 using SDE::Basic::ObjectName;
 using SDE::Basic::Object;
+using SDE::Basic::FilePathString;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -68,6 +69,18 @@ public:
      */
     virtual ~RenderPass();
 public:
+    /*! \fn void AddRenderPassDescriptionFromText(const FilePathString &i_file_url);
+     *  \param [in] i_file_url URL of file about rp description.
+     *  \brief Add descriptions of render pass from file.
+     */
+    void AddRenderPassDescriptionFromFile(const FilePathString &i_file_url);
+
+    /*! \fn void AddRenderPassDescriptionFromText(const std::string &i_rp_file);
+     *  \param [in] i_rp_file File about rp description.
+     *  \brief Add descriptions of render pass from file.
+     */
+    void AddRenderPassDescriptionFromText(const std::string &i_rp_file);
+
     /*! \fn void AddRenderPassDescription(const std::vector<AttachmentDescription> &i_att_descs, const std::vector<SubpassDescription> &i_sp_descs, const std::vector<SubpassDependency> &i_sp_deps);
      *  \param [in] i_att_descs Descriptions about attachments.
      *  \param [in] i_sp_descs Descriptions about subpasses.

@@ -28,12 +28,15 @@ SOFTWARE.
 #include "LogManager.h"
 #include "GraphicsManager.h"
 
+//#define __SD_HARD_CODE__
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 void GraphicsManager::InitializeDefaultRenderPasses()
 {
     SDLOG("Create default render pass");
 
+#if defined(__SD_HARD_CODE__)
     //1. Initialize render pass.
     //--- ForwardPass
     RenderPassStrongReferenceObject forward_pass = new RenderPass(sRenderPass_Forward);
@@ -188,6 +191,23 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     SD_SREF(gui_pass).AddRenderPassDescription(att_descs, sp_descs, sp_denps);
     SD_SREF(gui_pass).Initialize();
     RegisterRenderPass(gui_pass);
+#else
+    RenderPassStrongReferenceObject rp;
+    rp = new RenderPass(sRenderPass_Forward);
+    SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/ForwardPass.json");
+    SD_SREF(rp).Initialize();
+    RegisterRenderPass(rp);
+
+    rp = new RenderPass(sRenderPass_VRForward);
+    SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/VRForwardPass.json");
+    SD_SREF(rp).Initialize();
+    RegisterRenderPass(rp);
+
+    rp = new RenderPass(sRenderPass_GUI);
+    SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/GUIPass.json");
+    SD_SREF(rp).Initialize();
+    RegisterRenderPass(rp);
+#endif
 }
 
 void GraphicsManager::RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp)
