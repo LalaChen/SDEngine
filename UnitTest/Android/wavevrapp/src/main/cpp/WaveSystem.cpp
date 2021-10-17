@@ -1,4 +1,5 @@
 #include "HUDComponent.h"
+#include "WaveVRControllerComponent.h"
 #include "SampleDrawObjects.h"
 #include "WaveVREventArg.h"
 #include "WaveSystem.h"
@@ -46,6 +47,12 @@ void WaveSystem::Initialize()
             std::type_index(typeid(HUDComponent))
         }
     );
+
+    m_ctrlers_group = ECSManager::GetRef().AddEntityGroup(
+            "WaveVRControllerComponent",
+            {
+                std::type_index(typeid(WaveVRControllerComponent))
+            });
 }
 
 void WaveSystem::Update()
@@ -54,7 +61,9 @@ void WaveSystem::Update()
     WVR_GetSyncPose(WVR_PoseOriginModel_OriginOnGround, m_device_poses, WVR_DEVICE_COUNT_LEVEL_1);
     //2. update camera pose.
 	UpdateCameraPose();
-	//3. update world GUI.
+	//3. update ctrler pose.
+
+	//4. update world GUI.
 	UpdateWorldGUIs();
 }
 
@@ -184,6 +193,24 @@ void WaveSystem::UpdateWorldGUIs()
         HUDComponentWeakReferenceObject hud = SD_WREF(entity).GetComponent(typeid(HUDComponent)).DynamicCastTo<HUDComponent>();
         if (hud.IsNull() == false) {
             SD_WREF(hud).Update();
+        }
+    }
+}
+
+void WaveSystem::UpdateControllerPose()
+{
+    std::list<EntityWeakReferenceObject> entities = SD_WREF(m_ctrlers_group).GetEntities();
+    for (EntityWeakReferenceObject &entity : entities) {
+        WaveVRControllerComponentWeakReferenceObject ctrler_xform = SD_WREF(entity).GetComponent(typeid(WaveVRControllerComponent)).DynamicCastTo<WaveVRControllerComponent>();
+        if (ctrler_xform.IsNull() == false) {
+            Transform xform;
+            if (m_device_poses[WVR_DEVICE_HMD].pose.isValidPose == true) {
+                xform = ConvertWVR_PoseState_tToMatrix4X4f(m_device_poses[WVR_DEVICE_HMD].pose);
+            }
+            else {
+                xform = Transform();
+            }
+            SD_WREF(ctrler_xform).SetControllerPose(xform);
         }
     }
 }

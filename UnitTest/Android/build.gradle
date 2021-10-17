@@ -21,7 +21,7 @@ allprojects {
         google()
         jcenter()
         maven {
-            url "$rootDir/../../ThirdParty/WaveSDK/4.0.0"
+            url "$rootDir/../../ThirdParty/WaveSDK/4.1.1"
         }
     }
 }

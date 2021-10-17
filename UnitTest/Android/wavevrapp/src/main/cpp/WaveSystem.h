@@ -29,6 +29,7 @@ public:
 public:
     void UpdateCameraInnerParameter();
     void UpdateCameraPose();
+    void UpdateControllerPose();
 	void UpdateWorldGUIs();
 protected:
     std::vector<ObjectName> m_scene_names;
@@ -36,4 +37,5 @@ protected:
     WVR_DevicePosePair_t m_device_poses[WVR_DEVICE_COUNT_LEVEL_1];
     EntityGroupWeakReferenceObject m_camera_group;
 	EntityGroupWeakReferenceObject m_HUD_group;
+	EntityGroupWeakReferenceObject m_ctrlers_group;
 };
