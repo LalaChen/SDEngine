@@ -58,7 +58,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandPool.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandPoolBase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\SecondaryCommandPoolThread.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\BasicPipelines.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ImageLoader\Bitmap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ImageLoader\ImageLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\IndexBuffer\DynamicIndexBuffer.h" />
@@ -151,8 +150,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\UniformBindingType_Vulkan.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\VertexBufferFormat_Vulkan.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\VertexInputRate_Vulkan.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsConfig.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4Manager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanConfig.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanStructureInitializer.h" />
@@ -326,6 +327,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\UniformBindingType_Vulkan.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\VertexBufferFormat_Vulkan.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\VertexInputRate_Vulkan.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsConfig.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager_Identity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager_PipelineInfos.cpp" />
@@ -340,6 +342,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager_Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager_UniformBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\OpenGL4\OpenGL4Manager_VertexBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanConfig.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_Command.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_Descriptor.cpp" />
@@ -427,6 +430,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\Configs\EngineConfig.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\Configs\VKConfig.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\ForwardPass.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\GUIPass.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\VRForwardPass.json" />
@@ -462,7 +467,5 @@
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_SP0.vert" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_SP0.vert.spv" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShading.json" />
-    <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.frag" />
-    <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.vert" />
   </ItemGroup>
 </Project>

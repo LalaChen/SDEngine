@@ -15,7 +15,7 @@ using namespace SDE::GUI;
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(WaveVRControllerComponent);
 
-class WaveVRControllerComponent : public Component
+class WaveVRControllerComponent : public SDE::Basic::Component
 {
 public:
     SD_COMPONENT_POOL_TYPE_DECLARATION(WaveVRControllerComponent, WaveVRControllerComponent);

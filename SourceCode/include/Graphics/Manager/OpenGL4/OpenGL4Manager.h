@@ -68,6 +68,8 @@ public:
      *  \brief Print system information.
      */
     void PrintSystemInformation() override;
+public:
+    void GetDesiredVulkanValidLayers(std::vector<const char*> &io_valid_layers) const override;
 //----------- Descriptor Set Function (OpenGL doesn't have command buffer) ------------
 public:
     void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvds) override;

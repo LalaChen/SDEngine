@@ -8,6 +8,13 @@
 
 class VulkanAPITestManager : public SDE::Graphics::VulkanManager
 {
+protected:
+    static const uint32_t sMaxImgAcqirationTime; //2s
+    static const uint32_t sMaxFenceWaitTime; //17ms
+    static std::vector<const char*> sDesiredValidLayers;
+    static std::vector<const char*> sNecessaryExtensions;
+public:
+    static const std::vector<const char*>& GetDesiredValidLayers();
 public:
     explicit VulkanAPITestManager();
     virtual ~VulkanAPITestManager();

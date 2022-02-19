@@ -208,9 +208,6 @@
     <Filter Include="src\Graphics\ShaderProgram">
       <UniqueIdentifier>{17fef5be-a72f-4926-97ae-ecc1521fe0a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Graphics\EmbeddedShaderProgram">
-      <UniqueIdentifier>{9e28ec69-3c88-4ad6-81a4-96a32b1abfcb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Graphics\BasicComponent">
       <UniqueIdentifier>{869a6823-47cd-4143-aaf7-dde48a73cf89}</UniqueIdentifier>
     </Filter>
@@ -273,6 +270,9 @@
     </Filter>
     <Filter Include="common\RenderPass">
       <UniqueIdentifier>{3cd5f848-2caa-4f82-aabe-3ceea8ac5a5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\Configs">
+      <UniqueIdentifier>{d5070fc8-83c1-4fb2-aff2-93c60efd2d31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -798,9 +798,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\DescriptorSetLayoutIdentity.h">
       <Filter>include\Graphics\ManagerIdentity</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\BasicPipelines.h">
-      <Filter>include\Graphics\EmbeddedShaderProgram</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\TransformComponent.h">
       <Filter>include\Graphics\BasicComponent</Filter>
     </ClInclude>
@@ -905,6 +902,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\MathAlgoritm.h">
       <Filter>include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanConfig.h">
+      <Filter>include\Graphics\Manager\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsConfig.h">
+      <Filter>include\Graphics\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1505,14 +1508,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Circle.cpp">
       <Filter>src\Graphics\BasicShapeCreator</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsConfig.cpp">
+      <Filter>src\Graphics\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanConfig.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.frag">
-      <Filter>include\Graphics\EmbeddedShaderProgram</Filter>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\EmbeddedShaderProgramSource\ShaderPrograms\BasedShading\Vulkan\BasicShader_SP0.vert">
-      <Filter>include\Graphics\EmbeddedShaderProgram</Filter>
-    </None>
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\AxesShading.json">
       <Filter>common\ShaderProgram\AxesShading</Filter>
     </None>
@@ -1617,6 +1620,12 @@
     </None>
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\VRForwardPass.json">
       <Filter>common\RenderPass</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\Configs\VKConfig.json">
+      <Filter>common\Configs</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\Configs\EngineConfig.json">
+      <Filter>common\Configs</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -150,7 +150,10 @@ void GLFWApplication::InitializeGraphicsSystem()
                     avaiable_valid_layers[ext_id].implementationVersion, 
                     avaiable_valid_layers[ext_id].specVersion);
 
-                for (const char *desired_name : VulkanManager::GetDesiredValidLayers()) {
+                std::vector<const char*> desired_layer_names;
+                GraphicsManager::GetRef().GetDesiredVulkanValidLayers(desired_layer_names);
+
+                for (const char *desired_name : desired_layer_names) {
                     if (strcmp(desired_name, avaiable_valid_layers[ext_id].layerName) == 0) {
                         desired_valid_layer_names.push_back(desired_name);
                         break;

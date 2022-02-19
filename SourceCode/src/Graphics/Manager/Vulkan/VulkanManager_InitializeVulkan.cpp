@@ -223,7 +223,10 @@ void VulkanManager::InitializePhysicalDevice()
 
         std::vector<VkExtensionProperties> avaible_exts(avaible_ext_counts);
         vkEnumerateDeviceExtensionProperties(phy_device, nullptr, &avaible_ext_counts, avaible_exts.data());
-        std::list<const char*> check_ext_names(sNecessaryExtensions.begin(), sNecessaryExtensions.end());
+        std::list<const char*> check_ext_names;
+        for (std::string& ext : m_vulkan_config.m_necessary_extensions) {
+            check_ext_names.push_back(ext.c_str());
+        }
 
         for (VkExtensionProperties &avaible_ext : avaible_exts) {
             SDLOGD("Extension(%s)(%d)", avaible_ext.extensionName, avaible_ext.specVersion);
@@ -286,9 +289,9 @@ void VulkanManager::InitializeDevice()
         avaiable_valid_layers.resize(layer_count);
         vkEnumerateInstanceLayerProperties(&layer_count, avaiable_valid_layers.data());
         for (uint32_t ext_id = 0; ext_id < avaiable_valid_layers.size(); ext_id++) {
-            for (const char *desired_name : sDesiredValidLayers) {
-                if (strcmp(desired_name, avaiable_valid_layers[ext_id].layerName) == 0) {
-                    desired_valid_layer_names.push_back(desired_name);
+            for (std::string &desired_name : m_vulkan_config.m_desire_valid_layers) {
+                if (strcmp(desired_name.c_str(), avaiable_valid_layers[ext_id].layerName) == 0) {
+                    desired_valid_layer_names.push_back(desired_name.c_str());
                     break;
                 }
             }
@@ -334,6 +337,11 @@ void VulkanManager::InitializeDevice()
         queue_families[m_final_queue_fam_id].minImageTransferGranularity.height,
         queue_families[m_final_queue_fam_id].minImageTransferGranularity.depth);
 
+    std::vector<const char*> target_ext_names;
+    for (std::string &ext : m_vulkan_config.m_necessary_extensions) {
+        target_ext_names.push_back(ext.c_str());
+    }
+
     //Create queues.
     float quene_priorities[1] = { 1.0f };
     VkDeviceQueueCreateInfo queue_c_info = {};
@@ -354,8 +362,8 @@ void VulkanManager::InitializeDevice()
     dev_c_info.pQueueCreateInfos = &queue_c_info;
     dev_c_info.queueCreateInfoCount = 1;
     dev_c_info.pEnabledFeatures = nullptr; //use all features physical device support.
-    dev_c_info.ppEnabledExtensionNames = sNecessaryExtensions.data();
-    dev_c_info.enabledExtensionCount = static_cast<uint32_t>(sNecessaryExtensions.size());
+    dev_c_info.ppEnabledExtensionNames = target_ext_names.data();
+    dev_c_info.enabledExtensionCount = static_cast<uint32_t>(target_ext_names.size());
 
 #ifdef NDEBUG
     dev_c_info.enabledLayerCount = 0;
@@ -383,15 +391,7 @@ void VulkanManager::InitializeDevice()
 
 void VulkanManager::InitializeSettings()
 {
-    //-------- Collect depth format.
-    std::vector<TextureFormatEnum> depth_format = {
-        TextureFormat_D32_SFLOAT_S8_UINT, //Default Depth
-        TextureFormat_D24_UNORM_S8_UINT,
-        TextureFormat_D32_SFLOAT,
-        TextureFormat_D16_UNORM,
-    };
-
-    for (TextureFormatEnum &fmt : depth_format) {
+    for (TextureFormatEnum &fmt : m_graphics_config.m_desired_depth_buffer_formats) {
         VkFormat vk_fmt = TextureFormat_Vulkan::Convert(fmt);
         VkFormatProperties fmt_props;
         vkGetPhysicalDeviceFormatProperties(m_phy_device_handle, vk_fmt, &fmt_props);
@@ -408,25 +408,7 @@ void VulkanManager::InitializeSettings()
         SDLOGE("There is no supported depth format in this device.");
     }
     //-------- Collect color format.
-    std::vector<TextureFormatEnum> color_format = {
-        TextureFormat_R8G8B8A8_UNORM, //Default Color Buffer,
-        TextureFormat_R8G8B8A8_SNORM,
-        TextureFormat_R8G8B8A8_UINT,
-        TextureFormat_R8G8B8A8_SINT,
-        TextureFormat_R32G32B32A32_SFLOAT,
-        TextureFormat_R8G8_UNORM,
-        TextureFormat_R8G8_SNORM,
-        TextureFormat_R8G8_UINT,
-        TextureFormat_R8G8_SINT,
-        TextureFormat_R32G32_SFLOAT,
-        TextureFormat_R8_UNORM,
-        TextureFormat_R8_SNORM,
-        TextureFormat_R8_UINT,
-        TextureFormat_R8_SINT,
-        TextureFormat_R32_SFLOAT
-    };
-
-    for (TextureFormatEnum &fmt : color_format) {
+    for (TextureFormatEnum &fmt : m_graphics_config.m_desired_color_buffer_formats) {
         VkFormat vk_fmt = TextureFormat_Vulkan::Convert(fmt);
         VkFormatProperties fmt_props;
         vkGetPhysicalDeviceFormatProperties(m_phy_device_handle, vk_fmt, &fmt_props);
@@ -583,7 +565,7 @@ void VulkanManager::InitializeSwapChain()
             SDLOGD("Supported SurfaceFormat:(Format)%d, (colorSpace)%d", fmt.format, fmt.colorSpace);
         }
 
-        for (VkSurfaceFormatKHR &desired_fmt : m_desired_sur_formats) {
+        for (VkSurfaceFormatKHR &desired_fmt : m_vulkan_config.m_desired_sur_formats) {
             for (VkSurfaceFormatKHR &fmt : sur_formats) {
                 if (fmt.colorSpace == desired_fmt.colorSpace &&
                     fmt.format == desired_fmt.format) {
@@ -625,10 +607,10 @@ void VulkanManager::InitializeSwapChain()
         SDLOGD("Supported present mode : %d", p_mode);
     }
 
-    for (uint32_t mode_id = 0; mode_id < m_desired_pre_modes.size(); mode_id++) {
+    for (uint32_t mode_id = 0; mode_id < m_vulkan_config.m_desired_pre_modes.size(); mode_id++) {
         for (const VkPresentModeKHR &p_mode : supported_p_modes) {
-            if (m_desired_pre_modes[mode_id] == p_mode) {
-                m_final_p_mode = m_desired_pre_modes[mode_id];
+            if (m_vulkan_config.m_desired_pre_modes[mode_id] == p_mode) {
+                m_final_p_mode = m_vulkan_config.m_desired_pre_modes[mode_id];
                 break;
             }
         }

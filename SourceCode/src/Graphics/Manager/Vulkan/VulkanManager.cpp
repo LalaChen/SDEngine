@@ -29,29 +29,8 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-const uint32_t VulkanManager::sMaxImgAcqirationTime = 2000000000; //2s
-const uint32_t VulkanManager::sMaxFenceWaitTime = 17000000; //17ms
 const VkClearValue VulkanManager::sClearColor = { {0.2f, 0.5f, 0.8f, 1.0f} };
 const VkClearValue VulkanManager::sClearDepth = { {1.0f, 0} };
-
-const std::vector<const char*>& VulkanManager::GetDesiredValidLayers()
-{
-    return sDesiredValidLayers;
-}
-
-std::vector<const char*> VulkanManager::sDesiredValidLayers = {
-    "VK_LAYER_LUNARG_standard_validation",
-    //"VK_LAYER_RENDERDOC_Capture"//,
-    //"VK_LAYER_VALVE_steam_overlay",
-    //"VK_LAYER_VALVE_steam_fossilize", // will create a lot of json file.
-    //"VK_LAYER_NV_optimus"
-};
-
-std::vector<const char*> VulkanManager::sNecessaryExtensions = {
-    VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-    VK_KHR_MAINTENANCE1_EXTENSION_NAME,
-};
-
 
 VkBool32 VulkanManager::ConvertBoolean(bool flag)
 {
@@ -66,8 +45,6 @@ VkBool32 VulkanManager::ConvertBoolean(bool flag)
 //------------------------------------------------
 VulkanManager::VulkanManager()
 : m_desired_queue_abilities{ VK_QUEUE_GRAPHICS_BIT, VK_QUEUE_COMPUTE_BIT }
-, m_desired_sur_formats{ {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}, {VK_FORMAT_R8G8B8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} }
-, m_desired_pre_modes{VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_FIFO_RELAXED_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR }
 // application created.
 , m_ins_handle(VK_NULL_HANDLE)
 , m_sur_handle(VK_NULL_HANDLE)
@@ -99,6 +76,8 @@ VulkanManager::VulkanManager()
     else {
         SDLOG("Load vulkan library func successfully.");
     }
+
+    m_vulkan_config.LoadFromFile("Common/Configs/VKConfig.json");
 }
 
 VulkanManager::~VulkanManager()
@@ -263,6 +242,15 @@ void VulkanManager::RenderEnd()
     //Reset command buffers in pool.
     if (vkResetCommandPool(m_device_handle, m_main_cp_handle, 0) != VK_SUCCESS) {
         SDLOGW("reset command buffer in main pool failure!!!");
+    }
+}
+
+void VulkanManager::GetDesiredVulkanValidLayers(std::vector<const char*> &io_valid_layers) const
+{
+    for (const std::string &layer_name : m_vulkan_config.m_desire_valid_layers) {
+        if (layer_name.empty() == false) {
+            io_valid_layers.push_back(layer_name.c_str());
+        }
     }
 }
 

@@ -353,3 +353,8 @@ namespace Physics \
   * \brief initial value about attachment reference.
   */
 #define SD_ERROR_ATTACHMENT_REF ~0U
+
+#define SD_GET_JSON_ATTRIBUTE(nodeRoot, varName, varType, dst, dstType) \
+if (nodeRoot.at(varName).is_null() == false) { \
+    dst = static_cast<dstType>(nodeRoot.at(varName).get<varType>()); \
+} \

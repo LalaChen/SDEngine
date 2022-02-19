@@ -6,6 +6,27 @@
 using namespace::SDE::Basic;
 using namespace::SDE::Graphics;
 
+const uint32_t VulkanAPITestManager::sMaxImgAcqirationTime = 2000000000; //2s
+const uint32_t VulkanAPITestManager::sMaxFenceWaitTime = 17000000; //17ms
+
+const std::vector<const char*>& VulkanAPITestManager::GetDesiredValidLayers()
+{
+    return sDesiredValidLayers;
+}
+
+std::vector<const char*> VulkanAPITestManager::sDesiredValidLayers = {
+    "VK_LAYER_LUNARG_standard_validation",
+    //"VK_LAYER_RENDERDOC_Capture"//,
+    //"VK_LAYER_VALVE_steam_overlay",
+    //"VK_LAYER_VALVE_steam_fossilize", // will create a lot of json file.
+    //"VK_LAYER_NV_optimus"
+};
+
+std::vector<const char*> VulkanAPITestManager::sNecessaryExtensions = {
+    VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+    VK_KHR_MAINTENANCE1_EXTENSION_NAME,
+};
+
 VulkanAPITestManager::VulkanAPITestManager()
 : VulkanManager()
 , m_cur_sample_idx(0)
@@ -30,10 +51,8 @@ VulkanAPITestManager::VulkanAPITestManager()
 , m_VK_screen_indices_buffer(VK_NULL_HANDLE)
 , m_VK_screen_ibuf_memory(VK_NULL_HANDLE)
 {
-    m_samples.push_back(new Sample4_DrawObjects(this));
     m_samples.push_back(new Sample3_MultiSubpass(this));
     m_samples.push_back(new Sample1_DrawTriangle(this));
-    //m_samples.push_back(new Sample2_DrawScene(this));
 }
 
 VulkanAPITestManager::~VulkanAPITestManager()

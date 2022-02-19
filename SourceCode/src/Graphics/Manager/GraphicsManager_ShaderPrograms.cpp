@@ -23,7 +23,6 @@ SOFTWARE.
 
 */
 
-#include "BasicPipelines.h"
 #include "BasicUniforms.h"
 #include "LightUniforms.h"
 #include "MaterialUniforms.h"
@@ -65,6 +64,7 @@ ShaderProgramWeakReferenceObject GraphicsManager::GetShaderProgram(const ObjectN
         return (*sp_iter).second;
     }
     else {
+        SDLOGE("We can't get shader program[%s].", i_sp_name.c_str());
         return ShaderProgramStrongReferenceObject();
     }
 }

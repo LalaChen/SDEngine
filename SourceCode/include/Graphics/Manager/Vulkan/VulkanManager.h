@@ -32,8 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "VulkanWrapper.h"
-#include "VulkanStructureInitializer.h"
+#include "VulkanConfig.h"
 #include "GraphicsManager.h"
 
 using SDE::Basic::UBytePtr;
@@ -48,15 +47,8 @@ class SDENGINE_CLASS VulkanManager : public GraphicsManager
 public:
     static VkBool32 ConvertBoolean(bool flag);
 protected:
-    static const uint32_t sMaxImgAcqirationTime; //nanosecond.
-    static const uint32_t sMaxFenceWaitTime;
     static const VkClearValue sClearColor;
     static const VkClearValue sClearDepth;
-protected:
-    static std::vector<const char*> sDesiredValidLayers;
-    static std::vector<const char*> sNecessaryExtensions;
-public:
-    static const std::vector<const char*>& GetDesiredValidLayers();
 public:
     /*! \fn VulkanManager();
      *  \brief The constructor of VulkanManager Class.
@@ -83,6 +75,8 @@ public:
      *  \brief Print system information.
      */
     void PrintSystemInformation() override;
+public:
+    void GetDesiredVulkanValidLayers(std::vector<const char*> &io_valid_layers) const override;
 //----------- Descriptor Set and Pool Function.
 public:
     void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvds) override;
@@ -507,6 +501,8 @@ protected:
     std::vector<VkQueueFlagBits> m_desired_queue_abilities;
     std::vector<VkSurfaceFormatKHR> m_desired_sur_formats;
     std::vector<VkPresentModeKHR> m_desired_pre_modes;
+
+    VulkanConfig m_vulkan_config;
 protected:
     //Application Create.
     VkInstance m_ins_handle;

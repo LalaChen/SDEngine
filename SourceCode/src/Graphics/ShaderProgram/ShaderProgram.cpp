@@ -23,21 +23,18 @@ SOFTWARE.
 
 */
 
+#include "ShaderProgram.h"
+
 #include <nlohmann/json.hpp>
 
 #include "SDEngineCommonFunction.h"
 #include "FileResourceRequester.h"
 #include "LogManager.h"
 #include "GraphicsManager.h"
-#include "ShaderProgram.h"
+
 
 using SDE::Basic::FileData;
 using SDE::Basic::FileResourceRequester;
-
-#define SD_GET_JSON_ATTRIBUTE(nodeRoot, varName, varType, dst, dstType) \
-if (nodeRoot.at(varName).is_null() == false) { \
-    dst = static_cast<dstType>(nodeRoot.at(varName).get<varType>()); \
-} \
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

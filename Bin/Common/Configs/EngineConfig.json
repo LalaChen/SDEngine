@@ -1,0 +1,25 @@
+{
+  "DesiredColorTextureFormats": [
+    8,
+    9,
+    10,
+    11,
+    32,
+    4,
+    5,
+    6,
+    7,
+    31,
+    0,
+    1,
+    2,
+    3,
+    30
+  ],
+  "DesiredDepthTextureFormats": [
+    36,
+    35,
+    34,
+    33
+  ]
+}

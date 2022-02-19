@@ -98,7 +98,7 @@ VkResult VulkanManager::SubmitVkCommandBuffers(const std::vector<VkCommandBuffer
     }
 
     do {
-        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, sMaxFenceWaitTime);
+        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, m_vulkan_config.m_max_fence_wait_time);
     } while (result == VK_TIMEOUT);
     if (result != VK_SUCCESS) {
         SDLOGW("Wait sync failure(%d)!!!", result);

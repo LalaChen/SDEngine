@@ -86,6 +86,10 @@ void OpenGL4Manager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i
     //render quad to screen.
 }
 
+void OpenGL4Manager::GetDesiredVulkanValidLayers(std::vector<const char*> &io_valid_layers) const
+{
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________
 
 #endif

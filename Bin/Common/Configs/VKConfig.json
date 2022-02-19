@@ -1,0 +1,112 @@
+{
+  "default": {
+    "ImageAcqNanoTime": 2000000000,
+    "MaxFenceWaitNanoTime": 17000000,
+    "DesiredValidLayers": [
+      "VK_LAYER_LUNARG_standard_validation"
+    ],
+    "DesiredDeviceExtension": [
+      "VK_KHR_swapchain",
+      "VK_KHR_maintenance1"
+    ],
+    "DesiredSurfaceFormats": [
+      {
+        "format": 44,
+        "colorSpace": 0
+      },
+      {
+        "format": 50,
+        "colorSpace": 0
+      },
+      {
+        "format": 37,
+        "colorSpace": 0
+      },
+      {
+        "format": 43,
+        "colorSpace": 0
+      }
+    ],
+    "DesiredPresentModes": [
+      1,
+      2,
+      3,
+      0
+    ]
+  },
+  "windows": {
+    "ImageAcqNanoTime": 2000000000,
+    "MaxFenceWaitNanoTime": 17000000,
+    "DesiredValidLayers": [
+      "VK_LAYER_LUNARG_standard_validation"
+    ],
+    "DesiredDeviceExtension": [
+      "VK_KHR_swapchain",
+      "VK_KHR_maintenance1"
+    ],
+    "DesiredSurfaceFormats": [
+      {
+        "format": 44,
+        "colorSpace": 0
+      },
+      {
+        "format": 50,
+        "colorSpace": 0
+      },
+      {
+        "format": 37,
+        "colorSpace": 0
+      },
+      {
+        "format": 43,
+        "colorSpace": 0
+      }
+    ],
+    "DesiredPresentModes": [
+      1,
+      2,
+      3,
+      0
+    ]
+  },
+  "android": {
+    "ImageAcqNanoTime": 2000000000,
+    "MaxFenceWaitNanoTime": 17000000,
+    "DesiredValidLayers": [
+      "VK_LAYER_LUNARG_standard_validation"
+    ],
+    "DesiredDeviceExtension": [
+      "VK_KHR_swapchain",
+      "VK_KHR_maintenance1",
+      "VK_EXT_fragment_density_map",
+      "VK_KHR_external_memory",
+      "VK_EXT_queue_family_foreign",
+      "VK_KHR_dedicated_allocation",
+      "VK_ANDROID_external_memory_android_hardware_buffer"
+    ],
+    "DesiredSurfaceFormats": [
+      {
+        "format": 44,
+        "colorSpace": 0
+      },
+      {
+        "format": 50,
+        "colorSpace": 0
+      },
+      {
+        "format": 37,
+        "colorSpace": 0
+      },
+      {
+        "format": 43,
+        "colorSpace": 0
+      }
+    ],
+    "DesiredPresentModes": [
+      1,
+      2,
+      3,
+      0
+    ]
+  }
+}

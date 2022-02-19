@@ -42,6 +42,8 @@ GraphicsManager::GraphicsManager()
 {
     // Register instance.
     SD_SINGLETON_DECLARATION_REGISTER;
+    // Load Graphics Config.
+    m_graphics_config.LoadFromFile("Common/Configs/EngineConfig.json");
     // Assimp Model Loader.
     new AssimpModelLoader();
     // Basic Shader Creator
@@ -61,7 +63,9 @@ void GraphicsManager::InitializeBasicResource()
                 //SDLOGD("FPS : %lf.", m_FPS);
             }
     );
+
     SDLOG("Initialize Basic Resource Start!!!");
+
     ECSManager::GetRef().RegisterSystem<WorldGUISystem>("WorldGUISystem");
     ECSManager::GetRef().RegisterSystem<GraphicsSystem>("GraphicsSystem");
 

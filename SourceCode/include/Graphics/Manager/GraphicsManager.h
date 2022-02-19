@@ -37,8 +37,8 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
-#include "ManagerParam.h"
 #include "ManagerIdentity.h"
+#include "GraphicsConfig.h"
 #include "PeriodCounter.h"
 #include "GraphicsPipeline.h"
 #include "CommandBufferInheritanceInfo.h"
@@ -53,6 +53,7 @@ SOFTWARE.
 #include "ShaderProgram.h"
 #include "RenderPass.h"
 #include "ImageLoader.h"
+#include "GraphicsConfig.h"
 #include "Resolution.h"
 #include "EventArg.h"
 
@@ -142,6 +143,8 @@ public:
      *  \brief Print system information.
      */
     virtual void PrintSystemInformation() = 0;
+public:
+    virtual void GetDesiredVulkanValidLayers(std::vector<const char*>& io_valid_layers) const = 0;
 public:
     virtual void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvds) = 0;
     virtual void DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity) = 0;
@@ -275,13 +278,15 @@ protected:
 protected:
     SD_DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_screen_size, ScreenResolution);
 protected:
-    std::map<ObjectName, RenderPassStrongReferenceObject> m_rp_map;
+    GraphicsConfig m_graphics_config;
 protected:
-    std::vector<TextureFormatEnum> m_supported_depth_buffer_formats;
     std::vector<TextureFormatEnum> m_supported_color_buffer_formats;
+    std::vector<TextureFormatEnum> m_supported_depth_buffer_formats;
 protected:
     std::vector<VertexAttribBindingDescription> m_default_va_binding_descs;
     std::vector<VertexAttribLocationDescription> m_default_va_location_descs;
+protected:
+    std::map<ObjectName, RenderPassStrongReferenceObject> m_rp_map;
 protected:
     /*! \var std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject> m_basic_dsl_maps;
      *  \brief Map of DescriptorSetLeyouts for MeshRenderer(MVP Matrices), Light(Light Parameter) and Material(Textures).

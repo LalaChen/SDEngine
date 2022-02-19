@@ -35,7 +35,7 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
     uint32_t image_index;
 
     VkResult result = vkAcquireNextImageKHR(
-        m_device_handle, m_sc_handle, sMaxImgAcqirationTime,
+        m_device_handle, m_sc_handle, m_vulkan_config.m_max_img_acq_time,
         m_acq_img_sema_handle, VK_NULL_HANDLE, &image_index);
 
     if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
@@ -118,7 +118,7 @@ void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_
     }
 
     do {
-        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, sMaxFenceWaitTime);
+        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, m_vulkan_config.m_max_fence_wait_time);
     } while (result == VK_TIMEOUT);
     if (result != VK_SUCCESS) {
         SDLOGW("Wait sync failure(%d)!!!", result);
@@ -157,7 +157,7 @@ void VulkanManager::RenderToScreen()
     uint32_t image_index;
 
     VkResult result = vkAcquireNextImageKHR(
-        m_device_handle, m_sc_handle, sMaxImgAcqirationTime,
+        m_device_handle, m_sc_handle, m_vulkan_config.m_max_img_acq_time,
         m_acq_img_sema_handle, VK_NULL_HANDLE, &image_index);
 
     if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
@@ -221,7 +221,7 @@ void VulkanManager::RenderToScreen()
     }
 
     do {
-        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, sMaxFenceWaitTime);
+        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, m_vulkan_config.m_max_fence_wait_time);
     } while (result == VK_TIMEOUT);
     if (result != VK_SUCCESS) {
         SDLOGW("Wait sync failure(%d)!!!", result);
