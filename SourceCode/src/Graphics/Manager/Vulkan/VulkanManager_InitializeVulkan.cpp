@@ -112,7 +112,7 @@ void VulkanManager::InitializePhysicalDevice()
         SDLOGD("------ Feature[depthBiasClamp] : %d", dev_features.depthBiasClamp);
         dev_score += dev_features.depthBiasClamp;
         SDLOGD("------ Feature[depthBounds] : %d", dev_features.depthBounds);
-        dev_score += dev_features.depthBiasClamp;
+        dev_score += dev_features.depthBounds;
         SDLOGD("------ Feature[depthClamp] : %d", dev_features.depthClamp);
         dev_score += dev_features.depthClamp;
         SDLOGD("------ Feature[drawIndirectFirstInstance] : %d", dev_features.drawIndirectFirstInstance);

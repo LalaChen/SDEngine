@@ -499,9 +499,6 @@ protected:
 protected:
     //configuration
     std::vector<VkQueueFlagBits> m_desired_queue_abilities;
-    std::vector<VkSurfaceFormatKHR> m_desired_sur_formats;
-    std::vector<VkPresentModeKHR> m_desired_pre_modes;
-
     VulkanConfig m_vulkan_config;
 protected:
     //Application Create.

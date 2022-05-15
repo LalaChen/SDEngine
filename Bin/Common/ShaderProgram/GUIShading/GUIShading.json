@@ -78,12 +78,12 @@
                         "ColorMaskG": true,
                         "ColorMaskB": true,
                         "ColorMaskA": true,
-                        "Blending": false,
+                        "Blending": true,
                         "BlendingSrcColorFactor": 6,
                         "BlendingDstColorFactor": 7,
                         "BlendingColorOp": 0,
                         "BlendingSrcAlphaFactor": 6,
-                        "BlendingDstAlphaFactor": 7,
+                        "BlendingDstAlphaFactor": 8,
                         "BlendingAlphaOp": 0
                       }
                     ]

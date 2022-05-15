@@ -188,6 +188,7 @@ void WorldGUIComponent::InitializeWorkspace()
         m_GUI_color_buffer.Reset();
     }
     m_GUI_color_buffer = new Texture("GUIColorBuffer");
+    SD_SREF(m_GUI_color_buffer).SetSamplerFilterType(SamplerFilterType_NEAREST, SamplerFilterType_NEAREST);
     SD_SREF(m_GUI_color_buffer).Initialize2DColorOrDepthBuffer(
         m_buffer_size[0], m_buffer_size[1],
         GraphicsManager::GetRef().GetDefaultColorBufferFormat(),

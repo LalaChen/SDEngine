@@ -27,6 +27,5 @@ void main()
 	fragColor = fColor * texture(font, texCoord).aaaa;
 	//fragColor = texture(font, texCoord).aaaa;
 	//fragColor = vec4(texCoord, 0, 1) * texture(font, texCoord).aaaa;
-	//fragColor.a = 1.0f;
 	//fragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
