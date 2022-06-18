@@ -33,13 +33,32 @@ SOFTWARE.
 #pragma once
 
 #include <map>
+#include <queue>
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
+#include "SDEngineTemplates.h"
 
 #include "Scene.h"
 
+using SDE::Basic::Dispatcher;
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class SDENGINE_CLASS SceneLoadingDispatcher : public Dispatcher< std::function<void()> >
+{
+public:
+    explicit SceneLoadingDispatcher(const ObjectName &i_object_name)
+    : Dispatcher< std::function<void()> > (i_object_name)
+    {
+    }
+
+    virtual ~SceneLoadingDispatcher()
+    {
+    }
+};
+
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(SceneLoadingDispatcher);
 
 class SDENGINE_CLASS SceneManager
 {
@@ -55,10 +74,13 @@ public:
     bool RegisterScene(const FilePathString &i_fp);
     bool RegisterScene(const SceneStrongReferenceObject &i_scene);
     bool LoadScene(const ObjectName &i_scene_name);
+    void LoadSceneAsync(const ObjectName &i_scene_name);
     bool UnloadScene(const ObjectName &i_scene_name);
 protected:
     std::map<ObjectName, SceneStrongReferenceObject> m_scene_maps;
     EntityWeakReferenceObject m_global_root;
+protected:
+    SceneLoadingDispatcherStrongReferenceObject m_dispatcher;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

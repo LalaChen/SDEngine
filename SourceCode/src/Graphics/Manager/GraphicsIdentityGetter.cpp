@@ -23,77 +23,85 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
-#include "GraphicsManager.h"
+#include "GraphicsIdentityGetter.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-const ShaderModuleIdentity& GraphicsManager::GetIdentity(const ShaderModuleWeakReferenceObject &i_module) const
+GraphicsIdentityGetter::GraphicsIdentityGetter(const ObjectName &i_name)
+: Object(i_name)
+{
+}
+
+GraphicsIdentityGetter::~GraphicsIdentityGetter()
+{
+}
+
+const ShaderModuleIdentity& GraphicsIdentityGetter::GetIdentity(const ShaderModuleWeakReferenceObject &i_module) const
 {
     return SD_CONST_WREF(i_module).m_identity;
 }
 
-const TextureIdentity& GraphicsManager::GetIdentity(const TextureWeakReferenceObject &i_tex) const
+const TextureIdentity& GraphicsIdentityGetter::GetIdentity(const TextureWeakReferenceObject &i_tex) const
 {
     return SD_CONST_WREF(i_tex).m_tex_identity;
 }
 
-const SamplerIdentity& GraphicsManager::GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex) const
+const SamplerIdentity& GraphicsIdentityGetter::GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex) const
 {
     return SD_CONST_WREF(i_tex).m_sampler_idnetity;
 }
 
-const FrameBufferIdentity& GraphicsManager::GetIdentity(const FrameBufferWeakReferenceObject &i_fb) const
+const FrameBufferIdentity& GraphicsIdentityGetter::GetIdentity(const FrameBufferWeakReferenceObject &i_fb) const
 {
     return SD_CONST_WREF(i_fb).m_identity;
 }
 
-const CommandBufferIdentity& GraphicsManager::GetIdentity(const CommandBufferWeakReferenceObject &i_cb) const
+const CommandBufferIdentity& GraphicsIdentityGetter::GetIdentity(const CommandBufferWeakReferenceObject &i_cb) const
 {
     return SD_CONST_WREF(i_cb).m_identity;
 }
 
-const CommandPoolIdentity& GraphicsManager::GetIdentity(const CommandPoolWeakReferenceObject &i_cp) const
+const CommandPoolIdentity& GraphicsIdentityGetter::GetIdentity(const CommandPoolWeakReferenceObject &i_cp) const
 {
     return SD_CONST_WREF(i_cp).m_identity;
 }
 
-const RenderPassIdentity& GraphicsManager::GetIdentity(const RenderPassWeakReferenceObject &i_rp) const
+const RenderPassIdentity& GraphicsIdentityGetter::GetIdentity(const RenderPassWeakReferenceObject &i_rp) const
 {
     return SD_CONST_WREF(i_rp).m_identity;
 }
 
-const VertexBufferIdentity& GraphicsManager::GetIdentity(const VertexBufferWeakReferenceObject &i_vb) const
+const VertexBufferIdentity& GraphicsIdentityGetter::GetIdentity(const VertexBufferWeakReferenceObject &i_vb) const
 {
     return SD_CONST_WREF(i_vb).m_identity;
 }
 
-const IndexBufferIdentity& GraphicsManager::GetIdentity(const IndexBufferWeakReferenceObject &i_ib) const
+const IndexBufferIdentity& GraphicsIdentityGetter::GetIdentity(const IndexBufferWeakReferenceObject &i_ib) const
 {
     return SD_CONST_WREF(i_ib).m_identity;
 }
 
-const UniformBufferIdentity& GraphicsManager::GetIdentity(const UniformBufferWeakReferenceObject &i_ub) const
+const UniformBufferIdentity& GraphicsIdentityGetter::GetIdentity(const UniformBufferWeakReferenceObject &i_ub) const
 {
     return SD_CONST_WREF(i_ub).m_identity;
 }
 
-const GraphicsPipelineIdentity& GraphicsManager::GetIdentity(const GraphicsPipelineWeakReferenceObject &i_pipe) const
+const GraphicsPipelineIdentity& GraphicsIdentityGetter::GetIdentity(const GraphicsPipelineWeakReferenceObject &i_pipe) const
 {
     return SD_CONST_WREF(i_pipe).m_identity;
 }
 
-const DescriptorPoolIdentity& GraphicsManager::GetIdentity(const DescriptorPoolWeakReferenceObject &i_pool) const
+const DescriptorPoolIdentity& GraphicsIdentityGetter::GetIdentity(const DescriptorPoolWeakReferenceObject &i_pool) const
 {
     return SD_CONST_WREF(i_pool).m_identity;
 }
 
-const DescriptorSetIdentity& GraphicsManager::GetIdentity(const DescriptorSetWeakReferenceObject &i_desc) const
+const DescriptorSetIdentity& GraphicsIdentityGetter::GetIdentity(const DescriptorSetWeakReferenceObject &i_desc) const
 {
     return SD_CONST_WREF(i_desc).m_identity;
 }
 
-const DescriptorSetLayoutIdentity& GraphicsManager::GetIdentity(const DescriptorSetLayoutWeakReferenceObject &i_ds_layout) const
+const DescriptorSetLayoutIdentity& GraphicsIdentityGetter::GetIdentity(const DescriptorSetLayoutWeakReferenceObject &i_ds_layout) const
 {
     return SD_CONST_WREF(i_ds_layout).m_identity;
 }

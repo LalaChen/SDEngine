@@ -32,8 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "MemoryType.h"
 #include "IndexBufferFormat.h"
 
@@ -42,7 +41,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 /*! \class IndexBufferIdentity
  *  \brief Keep all graphics handle or ID in this struct.
  */
-class SDENGINE_CLASS IndexBufferIdentity
+class SDENGINE_CLASS IndexBufferIdentity : public GraphicsElementIdentity
 {
 public:
     /*! \fn explicit IndexBufferIdentity();

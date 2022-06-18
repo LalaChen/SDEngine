@@ -32,8 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "ManagerParam.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -41,7 +40,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 /*! \class SamplerIdentity
  *  \brief Keep all sampling parameters (mag and min filter, texture wrap mode and etc ...)in this struct.
  */
-class SDENGINE_CLASS SamplerIdentity
+class SDENGINE_CLASS SamplerIdentity : public GraphicsElementIdentity
 {
 public:
     /*! \fn explicit SamplerIdentity();

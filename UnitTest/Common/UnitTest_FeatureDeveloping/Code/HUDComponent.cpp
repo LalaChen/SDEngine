@@ -9,7 +9,7 @@ HUDComponent::~HUDComponent()
 {
 }
 
-void HUDComponent::Initialize()
+void HUDComponent::InitializeImpl()
 {
     EntityWeakReferenceObject entity = GetEntity();
     m_GUI = SD_GET_COMP_WREF(entity, WorldGUIComponent);
@@ -48,7 +48,7 @@ void HUDComponent::Initialize()
     }
 }
 
-void HUDComponent::Update()
+void HUDComponent::UpdateImpl()
 {
     if (m_FPS_label.IsNull() == false) {
         float fps = GraphicsManager::GetRef().GetFPS();

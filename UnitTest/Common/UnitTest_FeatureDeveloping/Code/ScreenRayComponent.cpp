@@ -9,7 +9,7 @@ ScreenRayComponent::~ScreenRayComponent()
 {
 }
 
-void ScreenRayComponent::Initialize()
+void ScreenRayComponent::InitializeImpl()
 {
     m_mesh_render = SD_WREF(m_entity).GetComponentByType<MeshRenderComponent>().StaticCastTo<MeshRenderComponent>();
     if (m_mesh_render.IsNull() == true) {
@@ -32,7 +32,7 @@ void ScreenRayComponent::Initialize()
     m_transform = SD_GET_COMP_WREF(m_entity, TransformComponent);
 }
 
-void ScreenRayComponent::Update()
+void ScreenRayComponent::UpdateImpl()
 {
     GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
     if (gs.IsNull() == false) {

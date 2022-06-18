@@ -53,8 +53,6 @@ public:
 public:
     explicit Component(const ObjectName &i_object_name);
     virtual ~Component();
-public:
-    virtual void Initialize() = 0;
 protected:
     void SetEntity(const EntityWeakReferenceObject &i_entity);
     EntityWeakReferenceObject GetEntity() const;

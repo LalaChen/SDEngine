@@ -32,13 +32,12 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "UniformBindingType.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS DescriptorPoolIdentity
+class SDENGINE_CLASS DescriptorPoolIdentity : public GraphicsElementIdentity
 {
 public:
     DescriptorPoolIdentity();

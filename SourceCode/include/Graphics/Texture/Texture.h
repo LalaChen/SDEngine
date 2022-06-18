@@ -57,7 +57,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Texture);
 class SDENGINE_CLASS Texture : public Object
 {
 public:
-    friend class GraphicsManager;
+    friend class GraphicsIdentityGetter;
 public:
     /*! \fn explicit Texture(const ObjectName &i_object_name);
      *  \param [in] i_object_name Name of this texture.
@@ -133,6 +133,8 @@ public:
     void SetAnisotropy(bool i_signal);
 
     void SetMaxAnisotropy(float i_max_anisotropy);
+
+    bool IsInitialized() const;
 public:
     const CompHandle GetHandle() const;
 
@@ -207,6 +209,11 @@ inline ImageSize Texture::GetDataSize() const
 inline Size_ui32 Texture::GetLayerCount() const
 {
     return m_tex_identity.m_array_layers;
+}
+
+inline bool Texture::IsInitialized() const
+{
+    return m_tex_identity.IsValid() && m_sampler_idnetity.IsValid();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

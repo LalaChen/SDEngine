@@ -32,15 +32,14 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class UniformBufferIdentity
  *  \brief Keep all graphics handle or ID about uniform buffer in this structure.
  */
-class SDENGINE_CLASS UniformBufferIdentity
+class SDENGINE_CLASS UniformBufferIdentity : public GraphicsElementIdentity
 {
 public:
     /*! \fn explicit UniformBufferIdentity();

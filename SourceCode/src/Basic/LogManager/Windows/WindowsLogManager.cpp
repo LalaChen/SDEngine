@@ -30,10 +30,13 @@ SOFTWARE.
 #include <cstdio>
 #include <cstdarg>
 #include <cstdlib>
+#include <mutex>
 
 #include "WindowsLogManager.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
+
+std::mutex m_mutex;
 
 WindowsLogManager::WindowsLogManager()
 {
@@ -45,6 +48,7 @@ WindowsLogManager::~WindowsLogManager()
 
 void WindowsLogManager::Log(LogType i_type, const std::string &i_prefix, const char *i_log, ...)
 {
+    std::lock_guard<std::mutex> lck(m_mutex);
     m_prefix = i_prefix;
     va_list args;
     va_start(args, i_log);

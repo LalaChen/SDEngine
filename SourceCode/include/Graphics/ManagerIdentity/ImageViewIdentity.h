@@ -32,8 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 
 #include "ImageUsage.h"
 #include "ImageLayout.h"
@@ -42,7 +41,7 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS ImageViewIdentity
+class SDENGINE_CLASS ImageViewIdentity : public GraphicsElementIdentity
 {
 public:
     ImageViewIdentity();

@@ -26,6 +26,8 @@ SOFTWARE.
 #include "LogManager.h"
 #include "VulkanManager.h"
 
+std::mutex m_queue_mutex;
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVkCommandPool(VkCommandPool &io_pool_handle, VkCommandPoolCreateFlags i_flag)
@@ -79,6 +81,9 @@ VkResult VulkanManager::EndVkCommandBuffer(VkCommandBuffer i_cb_handle)
 
 VkResult VulkanManager::SubmitVkCommandBuffers(const std::vector<VkCommandBuffer> &i_cb_handles)
 {
+    SDLOG("SubmitVkCommandBuffers");
+    std::lock_guard<std::mutex> lck(m_queue_mutex);
+    SDLOG("SubmitVkCommandBuffers-CSBegin");
     VkResult result;
     VkSubmitInfo submit_info = {};
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -91,27 +96,40 @@ VkResult VulkanManager::SubmitVkCommandBuffers(const std::vector<VkCommandBuffer
     submit_info.commandBufferCount = static_cast<uint32_t>(i_cb_handles.size());
     submit_info.pCommandBuffers = i_cb_handles.data();
 
-    result = vkQueueSubmit(m_present_q_handle, 1, &submit_info, m_main_cb_fence_handle);
+    VkFenceCreateInfo fence_c_info = {};
+    fence_c_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fence_c_info.pNext = nullptr;
+    fence_c_info.flags = 0;
+    VkFence submit_fence = VK_NULL_HANDLE;
+    if (vkCreateFence(m_device_handle, &fence_c_info, nullptr, &submit_fence) != VK_SUCCESS) {
+        throw std::runtime_error("Create main cmd buf fence failure!");
+    }
+
+    result = vkQueueSubmit(m_present_q_handle, 1, &submit_info, submit_fence); //m_main_cb_fence_handle need to move out for one queue
 
     if (result != VK_SUCCESS) {
         SDLOGW("Submit command buffer failure(%d)!!!", result);
     }
 
     do {
-        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, m_vulkan_config.m_max_fence_wait_time);
+        result = vkWaitForFences(m_device_handle, 1, &submit_fence, VK_TRUE, m_vulkan_config.m_max_fence_wait_time);
     } while (result == VK_TIMEOUT);
     if (result != VK_SUCCESS) {
         SDLOGW("Wait sync failure(%d)!!!", result);
+        SDLOG("SubmitVkCommandBuffers-CSEnd");
         return result;
     }
 
     //Reset main command buffer sync.
-    result = vkResetFences(m_device_handle, 1, &m_main_cb_fence_handle);
+    result = vkResetFences(m_device_handle, 1, &submit_fence);
     if (result != VK_SUCCESS) {
         SDLOGW("reset command buffer fence failure(%d)!!!", result);
+        SDLOG("SubmitVkCommandBuffers-CSEnd");
         return result;
     }
 
+    vkDestroyFence(m_device_handle, submit_fence, nullptr);
+    SDLOG("SubmitVkCommandBuffers-CSEnd");
     return VK_SUCCESS;
 }
 

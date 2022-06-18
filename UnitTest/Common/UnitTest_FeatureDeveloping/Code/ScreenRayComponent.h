@@ -20,9 +20,9 @@ public:
 public:
     explicit ScreenRayComponent(const ObjectName &i_name);
     virtual ~ScreenRayComponent();
-public:
-    virtual void Initialize();
-    virtual void Update();
+protected:
+    void InitializeImpl() override;
+    void UpdateImpl() override;
 protected:
     MeshStrongReferenceObject m_mesh;
     MeshRenderComponentWeakReferenceObject m_mesh_render;

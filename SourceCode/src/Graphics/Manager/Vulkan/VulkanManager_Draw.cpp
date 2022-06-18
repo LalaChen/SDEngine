@@ -29,7 +29,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 void VulkanManager::SetViewport(const CommandBufferWeakReferenceObject &i_cb, const Viewport &i_vp)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
     VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     VkViewport vp;
     vp.x        = i_vp.m_x;
@@ -43,7 +43,7 @@ void VulkanManager::SetViewport(const CommandBufferWeakReferenceObject &i_cb, co
 
 void VulkanManager::SetViewports(const CommandBufferWeakReferenceObject& i_cb, const std::vector<Viewport> &i_vps)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
     VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     std::vector<VkViewport> vps;
     vps.resize(i_vps.size());
@@ -60,7 +60,7 @@ void VulkanManager::SetViewports(const CommandBufferWeakReferenceObject& i_cb, c
 
 void VulkanManager::SetScissor(const CommandBufferWeakReferenceObject &i_cb, const ScissorRegion &i_region)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
     VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     VkRect2D rect;
     rect.offset.x = static_cast<int32_t>(i_region.m_x);
@@ -72,7 +72,7 @@ void VulkanManager::SetScissor(const CommandBufferWeakReferenceObject &i_cb, con
 
 void VulkanManager::SetScissors(const CommandBufferWeakReferenceObject &i_cb, const std::vector<ScissorRegion> &i_regions)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
     VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     std::vector<VkRect2D> rects;
     rects.resize(i_regions.size());
@@ -87,8 +87,8 @@ void VulkanManager::SetScissors(const CommandBufferWeakReferenceObject &i_cb, co
 
 void VulkanManager::DrawByIndices(const CommandBufferWeakReferenceObject &i_cb, const IndexBufferWeakReferenceObject &i_ib, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
-    const IndexBufferIdentity &ib_idnetity = GetIdentity(i_ib);
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
+    const IndexBufferIdentity &ib_idnetity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_ib);
     VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     DrawByVkIndexBuffer(cb_handle, 
         ib_idnetity.m_index_array_size,

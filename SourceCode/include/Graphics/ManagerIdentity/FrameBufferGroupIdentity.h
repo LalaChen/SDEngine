@@ -32,14 +32,13 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "Color4f.h"
 #include "Texture.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS FrameBufferGroupIdentity
+class SDENGINE_CLASS FrameBufferGroupIdentity : public GraphicsElementIdentity
 {
 public:
     FrameBufferGroupIdentity();

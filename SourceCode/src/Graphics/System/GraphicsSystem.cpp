@@ -203,10 +203,22 @@ const std::vector<SecondaryCommandPoolThreadStrongReferenceObject>& GraphicsSyst
 CameraComponentBaseWeakReferenceObject GraphicsSystem::GetScreenCamera() const
 {
     std::list<EntityWeakReferenceObject> camera_entity_list = SD_WREF(m_camera_eg).GetEntities();
-    std::list<CameraComponentBaseWeakReferenceObject> camera_list;
-    for (EntityWeakReferenceObject& ce : camera_entity_list) {
-        camera_list.push_back(SD_GET_COMP_WREF(ce, CameraComponentBase));
+    
+    if (camera_entity_list.empty() == false) {
+        std::list<CameraComponentBaseWeakReferenceObject> camera_list;
+        for (EntityWeakReferenceObject& ce : camera_entity_list) {
+            camera_list.push_back(SD_GET_COMP_WREF(ce, CameraComponentBase));
+        }
+        return (*camera_list.rbegin());
     }
-    return (*camera_list.rbegin());
+    else {
+        return CameraComponentBaseWeakReferenceObject();
+    }
 }
+
+void GraphicsSystem::NotifySceneChanged()
+{
+    m_scene_changed = true;
+}
+
 ______________SD_END_GRAPHICS_NAMESPACE______________

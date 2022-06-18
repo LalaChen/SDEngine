@@ -91,7 +91,7 @@ bool GameSystem::OnAppEventTriggered(const EventArg &i_arg)
         const AppEventArg &arg = dynamic_cast<const AppEventArg&>(i_arg);
         if (arg.m_app_event == AppEvent_GRAPHICS_INITIALIZED) {
             SceneManager::GetRef().RegisterScene(new SampleDrawObjects(m_scene_names[0]));
-            SceneManager::GetRef().LoadScene(m_scene_names[0]);
+            SceneManager::GetRef().LoadSceneAsync(m_scene_names[0]);
         }
         return true;
     }

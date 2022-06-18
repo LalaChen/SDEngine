@@ -52,21 +52,21 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(VertexBuffer);
 class SDENGINE_CLASS VertexBuffer : public Object
 {
 public:
-    friend class GraphicsManager;
+    friend class GraphicsIdentityGetter;
 public:
-	/*! \fn explicit VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format);
-	 *  \param [in] i_object_name Name of this buffer.
-	 *  \param [in] i_va_location Attribute location of this buffer.
-	 *  \param [in] i_value_type The value type of this buffer.
+    /*! \fn explicit VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format);
+     *  \param [in] i_object_name Name of this buffer.
+     *  \param [in] i_va_location Attribute location of this buffer.
+     *  \param [in] i_value_type The value type of this buffer.
      *  \param [in] i_memory_type The memory type of this buffer memory.
-	 *  \brief The constructor of VertexBuffer Class.
-	 */
-	explicit VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
+     *  \brief The constructor of VertexBuffer Class.
+     */
+    explicit VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_location, VertexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
 
-	/*! \fn ~VertexBuffer()
-	 *  \brief The destructor of VertexBuffer Class.
-	 */
-	virtual ~VertexBuffer();
+    /*! \fn ~VertexBuffer()
+     *  \brief The destructor of VertexBuffer Class.
+     */
+    virtual ~VertexBuffer();
 public:
     /*! \fn Size_ui64 GetBufferSize() const;
      *  \brief return data size of vertex buffer.
@@ -108,9 +108,9 @@ public:
      */
     void Bind(const CommandBufferWeakReferenceObject &i_cb, uint32_t i_binding_id, Size_ui64 i_offset);
 protected:
-	/*! \var VertexBufferIdentity m_identity;
+    /*! \var VertexBufferIdentity m_identity;
      *  \brief The identity. We keep all handles or ids from graphics API.
-	 */
+     */
     VertexBufferIdentity m_identity;
 };
 
