@@ -28,7 +28,8 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 FrameBufferIdentity::FrameBufferIdentity()
-: m_fb_handle(SD_NULL_HANDLE)
+: m_handle(SD_NULL_HANDLE)
+, m_device(SD_NULL_HANDLE)
 , m_size(2, 2, 1)
 {
 }

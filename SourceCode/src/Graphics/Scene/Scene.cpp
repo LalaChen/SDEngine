@@ -37,7 +37,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 Scene::Scene(const ObjectName & i_object_name, const FilePathString &i_fp)
 : Object(i_object_name)
 , m_scene_fp(i_fp)
-, m_is_loading(false)
+, m_loading_status(LoadStatus_NONE)
 {
 }
 
@@ -47,7 +47,8 @@ Scene::~Scene()
 
 EntityWeakReferenceObject Scene::GetRoot() const
 {
-    if (m_is_loading == false) {
+    LoadStatusEnum cur_status = GetStatus();
+    if (cur_status != LoadStatus_FINISHED) {
         return EntityWeakReferenceObject();
     }
     else {
@@ -57,14 +58,24 @@ EntityWeakReferenceObject Scene::GetRoot() const
 
 bool Scene::Load()
 {
-    if (m_is_loading == false) {
-        EntityWeakReferenceObject root = ECSManager::GetRef().CreateEntity(SDE::Basic::StringFormat("%s_root", m_object_name.c_str()));
-        ECSManager::GetRef().AddComponentForEntity<TransformComponent>(root, SDE::Basic::StringFormat("%s_Transform", SD_WREF(root).GetObjectName().c_str()));
-        m_entities.push_back(root);
-        m_is_loading = true;
-        return true;
+    LoadStatusEnum cur_status = GetStatus();
+    if (cur_status == LoadStatus_NONE) {
+        SetStatus(LoadStatus_INPROGRESS);
+        bool result = LoadImpl();
+        if (result == true) {
+            SetStatus(LoadStatus_FINISHED);
+        }
+        else {
+            UnloadImpl();
+            SetStatus(LoadStatus_NONE);
+        }
+        return result;
     }
-    else {
+    else if (cur_status == LoadStatus_INPROGRESS) {
+        SDLOGW("Scene[%s] is loading now.", m_object_name.c_str());
+        return false;
+    }
+    else  {
         SDLOGW("Scene[%s] has been loaded.", m_object_name.c_str());
         return false;
     }
@@ -72,17 +83,44 @@ bool Scene::Load()
 
 bool Scene::Unload()
 {
-    if (m_is_loading == true) {
-        for (std::list<EntityWeakReferenceObject>::reverse_iterator e_iter = m_entities.rbegin(); e_iter != m_entities.rend();) {
-            ECSManager::GetRef().DeleteEntity((*e_iter));
-            m_entities.erase(std::next(e_iter).base());
-        }
+    LoadStatusEnum cur_status = GetStatus();
+    if (cur_status == LoadStatus_FINISHED) {
+        UnloadImpl();
+        SetStatus(LoadStatus_NONE);
         return true;
     }
     else {
         SDLOGW("Scene[%s] han't been loaded.", m_object_name.c_str());
         return false;
     }
+}
+
+bool Scene::LoadImpl()
+{
+    EntityWeakReferenceObject root = ECSManager::GetRef().CreateEntity(SDE::Basic::StringFormat("%s_root", m_object_name.c_str()));
+    ECSManager::GetRef().AddComponentForEntity<TransformComponent>(root, SDE::Basic::StringFormat("%s_Transform", SD_WREF(root).GetObjectName().c_str()));
+    m_entities.push_back(root);
+    return true;
+}
+
+void Scene::UnloadImpl()
+{
+    for (std::list<EntityWeakReferenceObject>::reverse_iterator e_iter = m_entities.rbegin(); e_iter != m_entities.rend();) {
+        ECSManager::GetRef().DeleteEntity((*e_iter));
+        m_entities.erase(std::next(e_iter).base());
+    }
+}
+
+void Scene::SetStatus(LoadStatusEnum i_status)
+{
+    std::lock_guard<std::mutex> lck(m_ld_mutex);
+    m_loading_status = i_status;
+}
+
+Scene::LoadStatusEnum Scene::GetStatus() const
+{
+    std::lock_guard<std::mutex> lck(m_ld_mutex);
+    return m_loading_status;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

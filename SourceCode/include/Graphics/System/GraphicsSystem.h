@@ -68,6 +68,7 @@ public:
 public:
     const std::vector<SecondaryCommandPoolThreadStrongReferenceObject>& GetSecondaryCommandPool() const;
     CameraComponentBaseWeakReferenceObject GetScreenCamera() const;
+    void NotifySceneChanged();
 protected:
     virtual void RecordCommand();
 protected:

@@ -87,8 +87,6 @@ public:
     void BeginCommandBuffer(const CommandBufferIdentity &i_identity, const CommandBufferInheritanceInfo &i_inheritance_info) override;
     void EndCommandBuffer(const CommandBufferIdentity &i_identity) override;
     void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool) override;
-    void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cbs) override;
-    void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb) override;
     void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cbs) override;
 public:
 //----------- Vertex Buffer Function ------------
@@ -144,15 +142,28 @@ public:
     void SetScissors(const CommandBufferWeakReferenceObject &i_cb, const std::vector<ScissorRegion> &i_regions) override;
     void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb, const IndexBufferWeakReferenceObject &i_ib, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) override;
 public:
-    void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
+    void CreateQueue(GraphicsQueueIdentity &io_identity) override;
+    void SubmitCommandBuffersToQueue(const GraphicsQueueIdentity &i_identity, const GraphicsFenceWeakReferenceObject &i_fence, const std::vector<CommandBufferWeakReferenceObject> &i_cbs) override;
+    void PresentToQueue(const GraphicsQueueIdentity &i_identity, const GraphicsSwapchainIdentity &i_sw_identity, uint32_t i_img_id, const std::vector<GraphicsSemaphoreWeakReferenceObject> &i_semas) override;
+    void DestroyQueue(GraphicsQueueIdentity &io_identity) override;
+public:
+    void CreateFence(GraphicsFenceIdentity &io_identity) override;
+    void ResetFence(const GraphicsFenceIdentity &i_identity) override;
+    void DestroyFence(GraphicsFenceIdentity &io_identity) override;
+public:
+    void CreateSemaphoreObject(GraphicsSemaphoreIdentity &io_identity) override;
+    void DestroySemaphoreObject(GraphicsSemaphoreIdentity &io_identity) override;
+public:
+    void CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
+    void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture) override;
+    void DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
+public:
+    void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
+public:
+    Resolution GetScreenResolution() const override { return Resolution(); }
 public:
 //------------- Force Render Function -----------------
-    void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex) override;
-protected:
-//--------------- Render Flow Function ------------------
-    void RenderBegin() override;
-    void RenderToScreen() override;
-    void RenderEnd() override;
+    void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex) override;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

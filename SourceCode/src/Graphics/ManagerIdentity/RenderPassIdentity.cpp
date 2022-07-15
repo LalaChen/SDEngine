@@ -29,6 +29,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 RenderPassIdentity::RenderPassIdentity()
 : m_handle(SD_NULL_HANDLE)
+, m_device(SD_NULL_HANDLE)
 {
 }
 

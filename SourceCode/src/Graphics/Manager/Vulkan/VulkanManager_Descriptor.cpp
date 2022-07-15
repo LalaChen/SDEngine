@@ -35,7 +35,9 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 void VulkanManager::CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity, const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvds)
 {
-    VkDescriptorSetLayout &dsl_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_handle);
+    VkDescriptorSetLayout &ds_layout = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_handle);
+    VkDevice              &device    = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    device = m_device;
     std::vector<VkDescriptorSetLayoutBinding> vk_dsl_bindings;
     for (const UniformVariableDescriptorWeakReferenceObject &uvd : i_uvds) {
         UniformBinding ub = SD_WREF(uvd).CreateUniformBinding();
@@ -50,19 +52,33 @@ void VulkanManager::CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_id
     VkDescriptorSetLayoutCreateInfo dsl_c_info = InitializeVkDescriptorSetLayoutCreateInfo();
     dsl_c_info.bindingCount = static_cast<uint32_t>(vk_dsl_bindings.size());
     dsl_c_info.pBindings = vk_dsl_bindings.data();
-    CreateVKDescriptorSetLayout(dsl_handle, dsl_c_info);
+    VkResult result = CreateVKDescriptorSetLayout(ds_layout, device, dsl_c_info);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Create fence failure(%d) !!!", result);
+    }
+    else {
+        io_identity.SetValid();
+    }
 }
 
 void VulkanManager::DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity)
 {
-    VkDescriptorSetLayout &dsl_handle = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_handle);
-    DestroyVkDescriptorSetLayout(dsl_handle);
+    VkDescriptorSetLayout &ds_layout = reinterpret_cast<VkDescriptorSetLayout&>(io_identity.m_handle);
+    VkDevice              &device    = reinterpret_cast<VkDevice&>(io_identity.m_device);
+
+    DestroyVkDescriptorSetLayout(ds_layout, device);
+    io_identity.SetInvalid();
+    io_identity = DescriptorSetLayoutIdentity();
 }
 
 void VulkanManager::CreateDescriptorPool(DescriptorPoolIdentity &io_identity)
 {
-    VkDescriptorPool &dp_handle = reinterpret_cast<VkDescriptorPool&>(io_identity.m_handle);
+    VkDescriptorPool &des_pool = reinterpret_cast<VkDescriptorPool&>(io_identity.m_handle);
+    VkDevice         &device   = reinterpret_cast<VkDevice&>(io_identity.m_device);
     VkDescriptorPoolCreateInfo c_info = InitializeVkDescriptorPoolCreateInfo();
+
+    device = m_device;
+
     if (io_identity.m_individual_op_flag == true) {
         c_info.flags |= VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
     }
@@ -79,32 +95,46 @@ void VulkanManager::CreateDescriptorPool(DescriptorPoolIdentity &io_identity)
 
     c_info.pPoolSizes = type_sizes.data();
     c_info.poolSizeCount = static_cast<uint32_t>(type_sizes.size());
-    CreateVkDescriptorPool(dp_handle, c_info);
+    VkResult result = CreateVkDescriptorPool(des_pool, device, c_info);
+    if (result != VK_SUCCESS) {
+        //
+    } else {
+        io_identity.SetValid();
+    } 
 }
 
 void VulkanManager::DestroyDescriptorPool(DescriptorPoolIdentity &io_identity)
 {
-    VkDescriptorPool &dp_handle = reinterpret_cast<VkDescriptorPool&>(io_identity.m_handle);
-    DestroyVkDescriptorPool(dp_handle);
+    VkDescriptorPool &pool   = reinterpret_cast<VkDescriptorPool&>(io_identity.m_handle);
+    VkDevice         &device = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    DestroyVkDescriptorPool(pool, device);
+    io_identity.SetInvalid();
+    io_identity = DescriptorPoolIdentity();
 }
 
 
 void VulkanManager::AllocateDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool, const DescriptorSetLayoutWeakReferenceObject &i_layout)
 {
-    VkDescriptorSet &ds_handle = reinterpret_cast<VkDescriptorSet&>(io_identity.m_handle);
-    const DescriptorPoolIdentity &pool_identity = GetIdentity(i_pool);
-    const DescriptorSetLayoutIdentity &layout_identity = GetIdentity(i_layout);
-    VkDescriptorSetAllocateInfo a_info = InitializeVkDescriptorSetAllocateInfo();
-    a_info.descriptorPool = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
-    a_info.pSetLayouts = reinterpret_cast<const VkDescriptorSetLayout*>(&layout_identity.m_handle);
-    a_info.descriptorSetCount = 1;
-    VkResult result = AllocateVkDescriptorSet(ds_handle, a_info);
+    VkDescriptorSet &set    = reinterpret_cast<VkDescriptorSet&>(io_identity.m_handle);
+    VkDevice        &device = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    device = m_device;
+
+    const DescriptorPoolIdentity &pool_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_pool);
+    const DescriptorSetLayoutIdentity &layout_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_layout);
+    VkDescriptorSetAllocateInfo info = InitializeVkDescriptorSetAllocateInfo();
+    info.descriptorPool = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
+    info.pSetLayouts = reinterpret_cast<const VkDescriptorSetLayout*>(&layout_identity.m_handle);
+    info.descriptorSetCount = 1;
+    VkResult result = AllocateVkDescriptorSet(set, device, info);
     if (result != VK_SUCCESS) {
         SDLOGE("result = %d. PoolHandle : %p(%d, %d, %d), layoutHandle : %p, SetHandle : %p ", 
             result,
             pool_identity.m_handle, pool_identity.m_descriptor_counts[0], pool_identity.m_descriptor_counts[1], pool_identity.m_max_set,
             layout_identity.m_handle,
             io_identity.m_handle);
+    }
+    else {
+        io_identity.SetValid();
     }
 }
 
@@ -120,6 +150,8 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
         return;
     }
 
+    const VkDevice &device = reinterpret_cast<const VkDevice&>(i_identity.m_device);
+
     std::vector<VkWriteDescriptorSet> write_infos;
     std::vector<VkCopyDescriptorSet> copy_infos;
     std::list<std::vector<VkDescriptorImageInfo>> decriptor_img_infos;
@@ -132,10 +164,10 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
 
             if (binding_type == UniformBindingType_UNIFORM_BUFFER) {
                 UniformBufferWeakReferenceObject buffer = uv.DynamicCastTo<UniformBuffer>();
-                UniformBufferIdentity ub_identity = GetIdentity(buffer);
+                UniformBufferIdentity ub_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(buffer);
 
                 VkDescriptorBufferInfo basic_uniform_b_info = {};
-                basic_uniform_b_info.buffer = reinterpret_cast<VkBuffer>(ub_identity.m_buffer_handle);
+                basic_uniform_b_info.buffer = reinterpret_cast<VkBuffer>(ub_identity.m_buffer);
                 basic_uniform_b_info.offset = 0;
                 basic_uniform_b_info.range = ub_identity.m_data_size;
                 decriptor_buffer_infos.push_back(basic_uniform_b_info);
@@ -157,11 +189,11 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
 
                 for (const TextureWeakReferenceObject &tex : texs) {
                     if (tex.IsNull() == false) {
-                        TextureIdentity tex_identity = GetIdentity(tex);
-                        SamplerIdentity sampler_identity = GetIdentityFromTexture(tex);
+                        TextureIdentity tex_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(tex);
+                        SamplerIdentity sampler_identity = SD_SREF(m_graphics_identity_getter).GetIdentityFromTexture(tex);
                         VkDescriptorImageInfo tex_i_info = {};
                         tex_i_info.sampler = reinterpret_cast<VkSampler>(sampler_identity.m_handle);
-                        tex_i_info.imageView = reinterpret_cast<VkImageView>(tex_identity.m_view_handle);
+                        tex_i_info.imageView = reinterpret_cast<VkImageView>(tex_identity.m_image_view);
                         tex_i_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                         uv_image_infos.push_back(tex_i_info);
                     }
@@ -180,15 +212,18 @@ void VulkanManager::WriteUniformVariablesToDescriptorSet(const DescriptorSetIden
         }
     }
 
-    UpdateVkDescriptorSet(write_infos, copy_infos);
+    UpdateVkDescriptorSet(device, write_infos, copy_infos);
 }
 
 void VulkanManager::FreeDescriptorSet(DescriptorSetIdentity &io_identity, const DescriptorPoolWeakReferenceObject &i_pool)
 {
-    VkDescriptorSet &ds_handle = reinterpret_cast<VkDescriptorSet&>(io_identity.m_handle);
-    const DescriptorPoolIdentity &pool_identity = GetIdentity(i_pool);
-    VkDescriptorPool dp_handle = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
-    FreeVkDescriptorSet(ds_handle, dp_handle);
+    VkDescriptorSet &set    = reinterpret_cast<VkDescriptorSet&>(io_identity.m_handle);
+    VkDevice        &device = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    const DescriptorPoolIdentity &pool_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_pool);
+    VkDescriptorPool pool = reinterpret_cast<VkDescriptorPool>(pool_identity.m_handle);
+    FreeVkDescriptorSet(set, device, pool);
+    io_identity.SetInvalid();
+    io_identity = DescriptorSetIdentity();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________ 

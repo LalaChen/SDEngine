@@ -52,7 +52,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandPoolBase);
 class SDENGINE_CLASS CommandPoolBase : public Object
 {
 public:
-    friend class GraphicsManager;
+    friend class GraphicsIdentityGetter;
 public:
     /*! \fn explicit CommandPoolBase(const ObjectName &i_object_name);
      *  \param [in] i_object_name Name of this object.

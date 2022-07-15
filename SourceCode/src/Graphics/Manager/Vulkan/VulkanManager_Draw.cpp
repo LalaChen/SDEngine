@@ -29,8 +29,8 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 void VulkanManager::SetViewport(const CommandBufferWeakReferenceObject &i_cb, const Viewport &i_vp)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
-    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
+    VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     VkViewport vp;
     vp.x        = i_vp.m_x;
     vp.y        = i_vp.m_y;
@@ -38,13 +38,13 @@ void VulkanManager::SetViewport(const CommandBufferWeakReferenceObject &i_cb, co
     vp.height   = i_vp.m_height;
     vp.minDepth = i_vp.m_min_depth;
     vp.maxDepth = i_vp.m_max_depth;
-    SetVkViewport(cb_handle, vp);
+    SetVkViewport(cmd_buffer, vp);
 }
 
-void VulkanManager::SetViewports(const CommandBufferWeakReferenceObject& i_cb, const std::vector<Viewport> &i_vps)
+void VulkanManager::SetViewports(const CommandBufferWeakReferenceObject &i_cb, const std::vector<Viewport> &i_vps)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
-    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
+    VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     std::vector<VkViewport> vps;
     vps.resize(i_vps.size());
     for (uint32_t idx = 0; idx < vps.size(); ++idx) {
@@ -55,25 +55,25 @@ void VulkanManager::SetViewports(const CommandBufferWeakReferenceObject& i_cb, c
         vps[idx].minDepth = i_vps[idx].m_min_depth;
         vps[idx].maxDepth = i_vps[idx].m_max_depth;
     }
-    SetVkViewports(cb_handle, vps);
+    SetVkViewports(cmd_buffer, vps);
 }
 
 void VulkanManager::SetScissor(const CommandBufferWeakReferenceObject &i_cb, const ScissorRegion &i_region)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
-    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
+    VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     VkRect2D rect;
     rect.offset.x = static_cast<int32_t>(i_region.m_x);
     rect.offset.y = static_cast<int32_t>(i_region.m_y);
     rect.extent.width = static_cast<uint32_t>(i_region.m_width);
     rect.extent.height = static_cast<uint32_t>(i_region.m_height);
-    SetVkScissor(cb_handle, rect);
+    SetVkScissor(cmd_buffer, rect);
 }
 
 void VulkanManager::SetScissors(const CommandBufferWeakReferenceObject &i_cb, const std::vector<ScissorRegion> &i_regions)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
-    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
+    VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
     std::vector<VkRect2D> rects;
     rects.resize(i_regions.size());
     for (uint32_t idx = 0; idx < i_regions.size(); ++idx) {
@@ -82,15 +82,15 @@ void VulkanManager::SetScissors(const CommandBufferWeakReferenceObject &i_cb, co
         rects[idx].extent.width  = static_cast<uint32_t>(i_regions[idx].m_width);
         rects[idx].extent.height = static_cast<uint32_t>(i_regions[idx].m_height);
     }
-    SetVkScissors(cb_handle, rects);
+    SetVkScissors(cmd_buffer, rects);
 }
 
 void VulkanManager::DrawByIndices(const CommandBufferWeakReferenceObject &i_cb, const IndexBufferWeakReferenceObject &i_ib, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
-    const IndexBufferIdentity &ib_idnetity = GetIdentity(i_ib);
-    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
-    DrawByVkIndexBuffer(cb_handle, 
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
+    const IndexBufferIdentity &ib_idnetity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_ib);
+    VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    DrawByVkIndexBuffer(cmd_buffer,
         ib_idnetity.m_index_array_size,
         i_ins_number,
         i_first_id,

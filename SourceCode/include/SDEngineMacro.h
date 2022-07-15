@@ -156,6 +156,16 @@ namespace Physics \
 } \
 }
 
+#define ______________SD_START_OPENXR_NAMESPACE______________ \
+namespace SDE \
+{ \
+namespace OPENXR \
+{
+
+#define _______________SD_END_OPENXR_NAMESPACE_______________ \
+} \
+}
+
 //Strong And Weak Reference.
 #define SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Type) \
     class Type; \
@@ -358,3 +368,7 @@ namespace Physics \
 if (nodeRoot.at(varName).is_null() == false) { \
     dst = static_cast<dstType>(nodeRoot.at(varName).get<varType>()); \
 } \
+
+
+#define SD_COMP_HANDE_CAST(object) \
+    reinterpret_cast<SDE::Graphics::CompHandle>(object)

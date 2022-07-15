@@ -32,14 +32,13 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "Color4f.h"
 #include "Texture.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS FrameBufferGroupIdentity
+class SDENGINE_CLASS FrameBufferGroupIdentity : public GraphicsElementIdentity
 {
 public:
     FrameBufferGroupIdentity();
@@ -50,6 +49,11 @@ public:
      *        it's framebufferobject id.
      */
     CompHandle m_handle;
+
+    /*! \var CompHandle m_device;
+     *  \brief devices handle. (Original Context in OpenGL, VkDevice in Vulkan)
+     */
+    CompHandle m_device;
 
     /* \var std::vector<TextureWeakReferenceObject> m_input_bufs;
      * \brief Keep buffer weak references for input in this group.

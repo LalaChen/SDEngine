@@ -14,7 +14,7 @@ MotorComponent::~MotorComponent()
 {
 }
 
-void MotorComponent::Initialize()
+void MotorComponent::InitializeImpl()
 {
     m_trans_comp = SD_GET_COMP_WREF(m_entity, TransformComponent);
     if (m_trans_comp.IsNull() == false) {
@@ -22,7 +22,7 @@ void MotorComponent::Initialize()
     }
 }
 
-void MotorComponent::Update()
+void MotorComponent::UpdateImpl()
 {
     if (Application::GetRef().GetKeyStateByCode(KEY_A) == KEY_STATUS_PRESS) {
         m_current_trans.AddRotation(m_current_trans.GetTop(), static_cast<float>(Timer::GetRef().GetProgramDeltaTime()) * 10.0f);

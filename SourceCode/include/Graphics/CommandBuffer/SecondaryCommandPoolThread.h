@@ -61,7 +61,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(SecondaryCommandPoolThread);
 class SDENGINE_CLASS SecondaryCommandPoolThread : public Object
 {
 public:
-    friend class GraphicsManager;
+    friend class GraphicsIdentityGetter;
 public:
     /*! \var typedef std::function<void(const CommandBufferWeakReferenceObject&)> CommandFunction;
      *  \brief CommandFunction is the type for representing command task function callback. We type-define it for using 

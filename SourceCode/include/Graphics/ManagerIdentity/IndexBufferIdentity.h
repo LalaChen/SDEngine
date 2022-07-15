@@ -32,8 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "MemoryType.h"
 #include "IndexBufferFormat.h"
 
@@ -42,7 +41,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 /*! \class IndexBufferIdentity
  *  \brief Keep all graphics handle or ID in this struct.
  */
-class SDENGINE_CLASS IndexBufferIdentity
+class SDENGINE_CLASS IndexBufferIdentity : public GraphicsElementIdentity
 {
 public:
     /*! \fn explicit IndexBufferIdentity();
@@ -55,15 +54,20 @@ public:
      */
     ~IndexBufferIdentity();
 public:
-    /*! \var CompHandle m_buffer_handle;
+    /*! \var CompHandle m_buffer;
      *  \brief The buffer handle. It is valid while the value is not equal 0.
      */
-    CompHandle m_buffer_handle;
+    CompHandle m_buffer;
 
-    /*! \var CompHandle m_memory_handle;
+    /* \var CompHandle m_device;
+     * \brief Device this handle belong.
+     */
+    CompHandle m_device;
+
+    /*! \var CompHandle m_memory;
      *  \brief The memory handle. This value is nullptr in opengl system.
      */
-    CompHandle m_memory_handle;
+    CompHandle m_memory;
 
     /*! \var Size_ui64 m_data_size;
      *  \brief current buffer data size.

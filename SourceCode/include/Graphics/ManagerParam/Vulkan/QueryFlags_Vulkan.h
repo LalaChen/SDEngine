@@ -55,6 +55,6 @@ public:
     static VkQueryPipelineStatisticFlags Convert(const QueryPipelineStatisticFlagMask &i_flag_mask);
 public:
     static VkQueryPipelineStatisticFlagBits QueryPipelineStatisticFlags[QueryPipelineStatisticFlag_MAX_DEFINE_VALUE];
-}; 
+};
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

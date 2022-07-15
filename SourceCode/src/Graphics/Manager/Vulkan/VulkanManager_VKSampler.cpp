@@ -29,52 +29,20 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVkSampler(
-    VkSampler & io_handle,
-    VkFilter i_mag_filter_type,
-    VkFilter i_min_filter_type,
-    VkSamplerMipmapMode i_mipmap_mode,
-    VkSamplerAddressMode i_wrap_mode_s,
-    VkSamplerAddressMode i_wrap_mode_t,
-    VkSamplerAddressMode i_wrap_mode_r,
-    float i_mip_lod_bias,
-    VkBool32 i_enable_anisotropy,
-    float i_max_anisotropy,
-    VkBool32 i_enable_compare,
-    VkCompareOp i_compare_op,
-    float i_min_lod,
-    float i_max_lod,
-    VkBorderColor i_border_color,
-    VkBool32 i_unnormalize_coord)
+    VkSampler &io_sampler,
+    VkDevice i_device,
+    const VkSamplerCreateInfo &i_info)
 {
-    VkSamplerCreateInfo sampler_c_info = {};
-    sampler_c_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-    sampler_c_info.pNext = nullptr;
-    sampler_c_info.flags = 0; //
-    sampler_c_info.minFilter = i_min_filter_type;
-    sampler_c_info.magFilter = i_mag_filter_type;
-    sampler_c_info.mipmapMode = i_mipmap_mode;
-    sampler_c_info.addressModeU = i_wrap_mode_s;
-    sampler_c_info.addressModeV = i_wrap_mode_t;
-    sampler_c_info.addressModeW = i_wrap_mode_r;
-    sampler_c_info.mipLodBias = i_mip_lod_bias;
-    sampler_c_info.anisotropyEnable = i_enable_anisotropy; //We need to check physical device have this feature or not.
-    sampler_c_info.maxAnisotropy = i_max_anisotropy; //We need to check this value in this physical device.
-    sampler_c_info.compareEnable = i_enable_compare;
-    sampler_c_info.compareOp = i_compare_op;
-    sampler_c_info.minLod = i_min_lod;
-    sampler_c_info.maxLod = i_max_lod;
-    sampler_c_info.borderColor = i_border_color;
-    sampler_c_info.unnormalizedCoordinates = i_unnormalize_coord;
 
-    return vkCreateSampler(m_device_handle, &sampler_c_info, nullptr, &io_handle);
+    return vkCreateSampler(i_device, &i_info, nullptr, &io_sampler);
 }
 
-void VulkanManager::DestroyVkSampler(VkSampler &io_handle)
+void VulkanManager::DestroyVkSampler(VkSampler &io_sampler, VkDevice i_device)
 {
-    if (io_handle != VK_NULL_HANDLE) {
-        vkDestroySampler(m_device_handle, io_handle, nullptr);
+    if (io_sampler != VK_NULL_HANDLE) {
+        vkDestroySampler(i_device, io_sampler, nullptr);
     }
-    io_handle = VK_NULL_HANDLE;
+    io_sampler = VK_NULL_HANDLE;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

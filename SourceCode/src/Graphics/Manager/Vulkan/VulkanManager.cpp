@@ -46,28 +46,15 @@ VkBool32 VulkanManager::ConvertBoolean(bool flag)
 VulkanManager::VulkanManager()
 : m_desired_queue_abilities{ VK_QUEUE_GRAPHICS_BIT, VK_QUEUE_COMPUTE_BIT }
 // application created.
-, m_ins_handle(VK_NULL_HANDLE)
-, m_sur_handle(VK_NULL_HANDLE)
+, m_instance(VK_NULL_HANDLE)
+, m_surface(VK_NULL_HANDLE)
 // debug cbk
 , m_debug_rp_cbk(VK_NULL_HANDLE)
 // desired device properities
-, m_final_q_abi_flag(0)
 , m_final_sur_format{VK_FORMAT_UNDEFINED, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR }
 // device(phy and logical)
-, m_phy_device_handle(VK_NULL_HANDLE)
-, m_device_handle(VK_NULL_HANDLE)
-, m_final_queue_fam_id(-1)
-, m_present_q_handle(VK_NULL_HANDLE)
-// swap chain
-, m_final_p_mode(VK_PRESENT_MODE_MAX_ENUM_KHR)
-, m_sc_handle(VK_NULL_HANDLE)
-, m_acq_img_sema_handle(VK_NULL_HANDLE)
-, m_pre_sema_handle(VK_NULL_HANDLE)
-, m_pre_rp_handle(VK_NULL_HANDLE)
-// main command pool
-, m_main_cp_handle(VK_NULL_HANDLE)
-, m_main_cb_handle(VK_NULL_HANDLE)
-, m_main_cb_fence_handle(VK_NULL_HANDLE)
+, m_phy_device(VK_NULL_HANDLE)
+, m_device(VK_NULL_HANDLE)
 {
     SDLOG("New VulkanManager object.");
     if (InitVulkanFunction() == false) {
@@ -92,20 +79,16 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
     if (typeid(i_arg).hash_code() == typeid(VulkanCreationArg).hash_code()) {
         VulkanCreationArg vk_c_arg = dynamic_cast<const VulkanCreationArg&>(i_arg);
 
-        m_ins_handle = vk_c_arg.m_instance;
-        m_sur_handle = vk_c_arg.m_surface;
+        m_instance = vk_c_arg.m_instance;
+        m_surface = vk_c_arg.m_surface;
 
-        if (m_ins_handle != nullptr) {
+        if (m_instance != nullptr) {
             //egl like
-            InitializeDebugMessage();
-            InitializePhysicalDevice();
+            InitializeVulkanEnvironment();
             InitializeSettings();
-            InitializeDevice();
-            InitializeCommandPoolAndBuffers();
+            InitializeGraphicsQueues();
             //graphics
             InitializeSwapChain();
-            InitializePresentRenderPass();
-            InitializeSCImageViewsAndFBs();
             //
             PrintSystemInformation();
         }
@@ -119,129 +102,66 @@ void VulkanManager::ReleaseGraphicsSystem()
 {
     SDLOG("Release VulkanManager.");
 
+    m_swapchain.Reset();
+
+    m_present_queue.Reset();
+
+    m_graphics_queue.Reset();
+
+    m_loading_queue.Reset();
+
+    SD_SREF(m_loading_cmd_pool).Clear();
+
+    m_loading_cmd_pool.Reset();
+
     PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT =
-        (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_ins_handle, "vkDestroyDebugReportCallbackEXT");
+        (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_instance, "vkDestroyDebugReportCallbackEXT");
 
     if (vkDestroyDebugReportCallbackEXT != nullptr && m_debug_rp_cbk != VK_NULL_HANDLE) {
-        vkDestroyDebugReportCallbackEXT(m_ins_handle, m_debug_rp_cbk, nullptr);
+        vkDestroyDebugReportCallbackEXT(m_instance, m_debug_rp_cbk, nullptr);
         m_debug_rp_cbk = VK_NULL_HANDLE;
     }
     else {
         SDLOG("failed to load set up destroy debug messenger function!");
     }
 
-    if (m_pre_rp_handle != VK_NULL_HANDLE) {
-        vkDestroyRenderPass(m_device_handle, m_pre_rp_handle, nullptr);
-        m_pre_rp_handle = VK_NULL_HANDLE;
+    if (m_device != VK_NULL_HANDLE) {
+        vkDestroyDevice(m_device, nullptr);
+        m_device = VK_NULL_HANDLE;
     }
 
-    if (m_main_cb_handle != VK_NULL_HANDLE) {
-        vkFreeCommandBuffers(m_device_handle, m_main_cp_handle, 1, &m_main_cb_handle);
-        m_main_cb_handle = VK_NULL_HANDLE;
+    m_phy_device = VK_NULL_HANDLE;
+
+    if (m_surface != VK_NULL_HANDLE) {
+        vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
+        m_surface = VK_NULL_HANDLE;
     }
 
-    if (m_main_cp_handle != VK_NULL_HANDLE) {
-        vkDestroyCommandPool(m_device_handle, m_main_cp_handle, nullptr);
-        m_main_cp_handle = VK_NULL_HANDLE;
-    }
-
-    if (m_acq_img_sema_handle != VK_NULL_HANDLE) {
-        vkDestroySemaphore(m_device_handle, m_acq_img_sema_handle, nullptr);
-        m_acq_img_sema_handle = VK_NULL_HANDLE;
-    }
-
-    if (m_pre_sema_handle != VK_NULL_HANDLE) {
-        vkDestroySemaphore(m_device_handle, m_pre_sema_handle, nullptr);
-        m_pre_sema_handle = VK_NULL_HANDLE;
-    }
-
-    for (VkFramebuffer &fbo : m_sc_fb_handles) {
-        if (fbo != VK_NULL_HANDLE) {
-            vkDestroyFramebuffer(m_device_handle, fbo, nullptr);
-        }
-        fbo = VK_NULL_HANDLE;
-    }
-    m_sc_fb_handles.clear();
-
-    for (VkImageView &iv : m_sc_iv_handles) {
-        if (iv != VK_NULL_HANDLE) {
-            vkDestroyImageView(m_device_handle, iv, nullptr);
-            iv = VK_NULL_HANDLE;
-        }
-    }
-    m_sc_iv_handles.clear();
-
-    if (m_sc_handle != VK_NULL_HANDLE) {
-        vkDestroySwapchainKHR(m_device_handle, m_sc_handle, nullptr);
-        m_sc_handle = VK_NULL_HANDLE;
-    }
-
-    if (m_device_handle != VK_NULL_HANDLE) {
-        vkDestroyDevice(m_device_handle, nullptr);
-        m_device_handle = VK_NULL_HANDLE;
-    }
-
-    m_phy_device_handle = VK_NULL_HANDLE;
-
-    if (m_sur_handle != VK_NULL_HANDLE) {
-        vkDestroySurfaceKHR(m_ins_handle, m_sur_handle, nullptr);
-        m_sur_handle = VK_NULL_HANDLE;
-    }
-
-    if (m_ins_handle != VK_NULL_HANDLE) {
-        vkDestroyInstance(m_ins_handle, nullptr);
-        m_ins_handle = VK_NULL_HANDLE;
+    if (m_instance != VK_NULL_HANDLE) {
+        vkDestroyInstance(m_instance, nullptr);
+        m_instance = VK_NULL_HANDLE;
     }
 }
 
 //----------------------- Render Flow -----------------------
-void VulkanManager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
+void VulkanManager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
 {
-    for (VkFramebuffer &fbo : m_sc_fb_handles) {
-        if (fbo != VK_NULL_HANDLE) {
-            vkDestroyFramebuffer(m_device_handle, fbo, nullptr);
-        }
-        fbo = VK_NULL_HANDLE;
-    }
-    m_sc_fb_handles.clear();
+    m_swapchain.Reset();
 
-    for (VkImageView &iv : m_sc_iv_handles) {
-        if (iv != VK_NULL_HANDLE) {
-            vkDestroyImageView(m_device_handle, iv, nullptr);
-            iv = VK_NULL_HANDLE;
-        }
-    }
-    m_sc_iv_handles.clear();
-
-    if (m_sc_handle != VK_NULL_HANDLE) {
-        vkDestroySwapchainKHR(m_device_handle, m_sc_handle, nullptr);
-        m_sc_handle = VK_NULL_HANDLE;
-    }
-
-    VkSurfaceKHR new_surface_handle = reinterpret_cast<VkSurfaceKHR>(i_ns_handle);
-    if (m_sur_handle != new_surface_handle && new_surface_handle != SD_NULL_HANDLE) {
-        SDLOG("Refresh surface for resize.");
-        vkDestroySurfaceKHR(m_ins_handle, m_sur_handle, nullptr);
-        m_sur_handle = new_surface_handle;
-    }
-    else {
-        SDLOG("Surface no change. We don't need to refresh surface for resize.");
+    if (i_new_surface != VK_NULL_HANDLE) {
+        m_surface = reinterpret_cast<VkSurfaceKHR>(i_new_surface);
     }
 
     InitializeSwapChain();
-    InitializeSCImageViewsAndFBs();
 }
 
-void VulkanManager::RenderBegin()
+Resolution VulkanManager::GetScreenResolution() const
 {
-
-}
-
-void VulkanManager::RenderEnd()
-{
-    //Reset command buffers in pool.
-    if (vkResetCommandPool(m_device_handle, m_main_cp_handle, 0) != VK_SUCCESS) {
-        SDLOGW("reset command buffer in main pool failure!!!");
+    if (m_swapchain.IsNull() == false) {
+        return SD_SREF(m_swapchain).GetResolution();
+    }
+    else {
+        return Resolution();
     }
 }
 

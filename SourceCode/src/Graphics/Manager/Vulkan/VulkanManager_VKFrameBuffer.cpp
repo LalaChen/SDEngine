@@ -29,9 +29,10 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVKFrameBuffer(
-    VkFramebuffer &io_fb_handle,
-    const VkRenderPass i_rp_handle,
-    const std::vector<VkImageView> &i_iv_handles,
+    VkFramebuffer &io_framebuffer,
+    VkDevice i_device,
+    const VkRenderPass i_render_pass,
+    const std::vector<VkImageView> &i_img_views,
     Size_ui32 i_width,
     Size_ui32 i_height,
     Size_ui32 i_layers)
@@ -41,20 +42,20 @@ VkResult VulkanManager::CreateVKFrameBuffer(
     fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     fbo_c_info.pNext = nullptr;
     fbo_c_info.flags = 0; //Reserved for future use
-    fbo_c_info.renderPass = i_rp_handle;
-    fbo_c_info.attachmentCount = static_cast<uint32_t>(i_iv_handles.size());
-    fbo_c_info.pAttachments = i_iv_handles.data();
+    fbo_c_info.renderPass = i_render_pass;
+    fbo_c_info.attachmentCount = static_cast<uint32_t>(i_img_views.size());
+    fbo_c_info.pAttachments = i_img_views.data();
     fbo_c_info.width  = i_width;
     fbo_c_info.height = i_height;
     fbo_c_info.layers = i_layers;
-    result = vkCreateFramebuffer(m_device_handle, &fbo_c_info, nullptr, &io_fb_handle);
+    result = vkCreateFramebuffer(m_device, &fbo_c_info, nullptr, &io_framebuffer);
     return result;
 }
 
-void VulkanManager::DestroyVkFrameBuffer(VkFramebuffer &io_fb_handle)
+void VulkanManager::DestroyVkFrameBuffer(VkFramebuffer &io_framebuffer, VkDevice i_device)
 {
-    vkDestroyFramebuffer(m_device_handle, io_fb_handle, nullptr);
-    io_fb_handle = VK_NULL_HANDLE;
+    vkDestroyFramebuffer(i_device, io_framebuffer, nullptr);
+    io_framebuffer = VK_NULL_HANDLE;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

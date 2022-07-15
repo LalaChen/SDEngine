@@ -29,7 +29,6 @@ SOFTWARE.
 #define ENABLE_STATIC_FUNC_AND(func, mask) \
     (mask.m_enable_masks[SD_ENUM_TO_UINT(func)] & QueryPipelineStatisticFlags[SD_ENUM_TO_UINT(func)])
 
-
 #include "QueryFlags_Vulkan.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________

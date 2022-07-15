@@ -32,8 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "ShaderKind.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
@@ -41,7 +40,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 /*! \class ShaderModuleIdentity
  *  \brief Class ShaderModuleIdentity is used to record some necessary information for shader.
  */
-class SDENGINE_CLASS ShaderModuleIdentity
+class SDENGINE_CLASS ShaderModuleIdentity : public GraphicsElementIdentity
 {
 public:
     /*! \fn explicit ShaderModuleIdentity();
@@ -58,6 +57,11 @@ public:
      *  \brief The shader handle. It is valid while the value is not equal 0.
      */
     CompHandle m_handle;
+
+    /* \var CompHandle m_device;
+     * \brief Device this handle belong.
+     */
+    CompHandle m_device;
 
     /*! \var ShaderKindEnum m_shader_kind;
      *  \brief kind of shader.

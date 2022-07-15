@@ -28,6 +28,42 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+void OpenGL4Manager::CreateQueue(GraphicsQueueIdentity& io_identity)
+{
+}
+
+void OpenGL4Manager::SubmitCommandBuffersToQueue(const GraphicsQueueIdentity &i_identity, const GraphicsFenceWeakReferenceObject &i_fence, const std::vector<CommandBufferWeakReferenceObject> &i_cbs)
+{
+}
+
+void OpenGL4Manager::PresentToQueue(const GraphicsQueueIdentity &i_identity, const GraphicsSwapchainIdentity &i_sw_identity, uint32_t i_img_id, const std::vector<GraphicsSemaphoreWeakReferenceObject> &i_semas)
+{
+}
+
+void OpenGL4Manager::DestroyQueue(GraphicsQueueIdentity& io_identity)
+{
+}
+
+void OpenGL4Manager::CreateFence(GraphicsFenceIdentity &io_identity)
+{
+}
+
+void OpenGL4Manager::ResetFence(const GraphicsFenceIdentity &i_identity)
+{
+}
+
+void OpenGL4Manager::DestroyFence(GraphicsFenceIdentity &io_identity)
+{
+}
+
+void OpenGL4Manager::CreateSemaphoreObject(GraphicsSemaphoreIdentity &io_identity)
+{
+}
+
+void OpenGL4Manager::DestroySemaphoreObject(GraphicsSemaphoreIdentity &io_identity)
+{
+}
+
 void OpenGL4Manager::CreateCommandPool(CommandPoolIdentity &io_identity)
 {
 }
@@ -49,14 +85,6 @@ void OpenGL4Manager::EndCommandBuffer(const CommandBufferIdentity &i_identity)
 }
 
 void OpenGL4Manager::FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool)
-{
-}
-
-void OpenGL4Manager::SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cbs)
-{
-}
-
-void OpenGL4Manager::SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject& i_cb)
 {
 }
 

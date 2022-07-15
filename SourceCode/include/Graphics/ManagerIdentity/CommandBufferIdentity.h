@@ -32,20 +32,19 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
-
+#include "GraphicsElementIdentity.h"
 #include "CommandBufferLevel.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS CommandBufferIdentity
+class SDENGINE_CLASS CommandBufferIdentity : public GraphicsElementIdentity
 {
 public:
     CommandBufferIdentity();
     ~CommandBufferIdentity();
 public:
     CompHandle m_handle;
+    CompHandle m_device;
     CommandBufferLevelEnum m_cmd_buffer_level;
 };
 

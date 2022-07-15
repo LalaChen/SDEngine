@@ -274,6 +274,12 @@
     <Filter Include="common\Configs">
       <UniqueIdentifier>{d5070fc8-83c1-4fb2-aff2-93c60efd2d31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\OpenXR">
+      <UniqueIdentifier>{bb7bb997-d194-4aca-8d9d-9d006cc4c267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\OpenXR">
+      <UniqueIdentifier>{86c104c3-332f-4823-8cd4-7b45bab1640c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -909,6 +915,45 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsConfig.h">
       <Filter>include\Graphics\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRAPIManager.h">
+      <Filter>include\OpenXR</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngineTemplates.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\GraphicsElementIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsIdentityGetter.h">
+      <Filter>include\Graphics\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsQueue.h">
+      <Filter>include\Graphics\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsSwapchain.h">
+      <Filter>include\Graphics\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\GraphicsQueueIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\GraphicsSwapchainIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanQueueFamily.h">
+      <Filter>include\Graphics\Manager\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\QueueAbility.h">
+      <Filter>include\Graphics\ManagerParam</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\Vulkan\QueueAbility_Vulkan.h">
+      <Filter>include\Graphics\ManagerParam\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerIdentity\GraphicsSynchronousIdentity.h">
+      <Filter>include\Graphics\ManagerIdentity</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsSynchronousElements.h">
+      <Filter>include\Graphics\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1289,7 +1334,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\CommandBuffer\CommandBufferInheritanceInfo.cpp">
       <Filter>src\Graphics\CommandBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsManager_Identity.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsIdentityGetter.cpp">
       <Filter>src\Graphics\Manager</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\IndexBufferIdentity.cpp">
@@ -1513,6 +1558,42 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanConfig.cpp">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRAPIManager.cpp">
+      <Filter>src\OpenXR</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\ECS\ComponentBase.cpp">
+      <Filter>src\Basic\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\GraphicsSwapchainIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\GraphicsQueueIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanQueueFamily.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerParam\Vulkan\QueueAbility_Vulkan.cpp">
+      <Filter>src\Graphics\ManagerParam\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsQueue.cpp">
+      <Filter>src\Graphics\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsSwapchain.cpp">
+      <Filter>src\Graphics\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VKSwapchain.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanManager_VkQueueFenceSamephore.cpp">
+      <Filter>src\Graphics\Manager\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsSynchronousElements.cpp">
+      <Filter>src\Graphics\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\GraphicsSynchronousIdentity.cpp">
+      <Filter>src\Graphics\ManagerIdentity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

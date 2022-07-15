@@ -52,17 +52,31 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Scene);
 class SDENGINE_CLASS Scene : public Object
 {
 public:
+    enum LoadStatusEnum {
+        LoadStatus_NONE,
+        LoadStatus_INPROGRESS,
+        LoadStatus_FINISHED
+    };
+public:
     explicit Scene(const ObjectName &i_object_name, const FilePathString &i_fp);
     virtual ~Scene();
 public:
-    virtual bool Load();
-    virtual bool Unload();
+    bool Load();
+    bool Unload();
 public:
     EntityWeakReferenceObject GetRoot() const;
 protected:
+    virtual bool LoadImpl();
+    virtual void UnloadImpl();
+protected:
+    void SetStatus(LoadStatusEnum i_status);
+    LoadStatusEnum GetStatus() const;
+protected:
     std::list<EntityWeakReferenceObject> m_entities;
     FilePathString m_scene_fp;
-    bool m_is_loading;
+protected:
+    mutable LoadStatusEnum m_loading_status;
+    mutable std::mutex m_ld_mutex;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

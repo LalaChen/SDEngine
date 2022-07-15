@@ -29,29 +29,19 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVkImageView(
-    VkImageView& io_iv_handle,
-    const VkImage i_img_handle,
-    VkImageViewType i_view_type,
-    VkFormat i_img_format,
-    VkComponentMapping i_comp_swizzle,
-    VkImageSubresourceRange i_sub_src_range)
+    VkImageView &io_image_view,
+    VkDevice i_device,
+    const VkImageViewCreateInfo &i_info)
 {
-    VkImageViewCreateInfo iv_c_info = {};
-    iv_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    iv_c_info.pNext = nullptr;
-    iv_c_info.flags = 0;
-    iv_c_info.viewType = i_view_type;
-    iv_c_info.image = i_img_handle;
-    iv_c_info.format = i_img_format;
-    iv_c_info.components = i_comp_swizzle;
-    iv_c_info.subresourceRange = i_sub_src_range;
-    return vkCreateImageView(m_device_handle, &iv_c_info, nullptr, &io_iv_handle);
+    return vkCreateImageView(i_device, &i_info, nullptr, &io_image_view);
 }
 
-void VulkanManager::DestroyVkImageView(VkImageView& io_iv_handle)
+void VulkanManager::DestroyVkImageView(
+    VkImageView &io_image_view,
+    VkDevice i_device)
 {
-    vkDestroyImageView(m_device_handle, io_iv_handle, nullptr);
-    io_iv_handle = VK_NULL_HANDLE;
+    vkDestroyImageView(i_device, io_image_view, nullptr);
+    io_image_view = VK_NULL_HANDLE;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

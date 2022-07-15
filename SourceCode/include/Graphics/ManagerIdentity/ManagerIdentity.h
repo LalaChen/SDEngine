@@ -46,3 +46,6 @@ SOFTWARE.
 #include "DescriptorPoolIdentity.h"
 #include "UniformBufferIdentity.h"
 #include "DescriptorSetLayoutIdentity.h"
+#include "GraphicsQueueIdentity.h"
+#include "GraphicsSwapchainIdentity.h"
+#include "GraphicsSynchronousIdentity.h"

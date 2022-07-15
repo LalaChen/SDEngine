@@ -28,7 +28,8 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 ImageViewIdentity::ImageViewIdentity()
-: m_iv_handle(SD_NULL_HANDLE)
+: m_handle(SD_NULL_HANDLE)
+, m_device(SD_NULL_HANDLE)
 , m_format(TextureFormat_MAX_DEFINE_VALUE)
 , m_aspect(ImageAspect_MAX_DEFINE_VALUE)
 , m_base_mip_level(0)

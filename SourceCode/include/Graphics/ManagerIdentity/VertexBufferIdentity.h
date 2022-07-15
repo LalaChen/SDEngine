@@ -32,8 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "MemoryType.h"
 #include "VertexBufferFormat.h"
 
@@ -42,7 +41,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 /*! \class VertexBufferIdentity
  *  \brief Keep all graphics handle or ID about vertex buffer in this structure.
  */
-class SDENGINE_CLASS VertexBufferIdentity
+class SDENGINE_CLASS VertexBufferIdentity : public GraphicsElementIdentity
 {
 public:
     /*! \fn explicit VertexBufferIdentity();
@@ -55,15 +54,20 @@ public:
      */
     ~VertexBufferIdentity();
 public:
-    /*! \var CompHandle m_buffer_handle;
+    /*! \var CompHandle m_buffer;
      *  \brief The buffer handle. It is valid while the value is not equal 0.
      */
-    CompHandle m_buffer_handle;
+    CompHandle m_handle;
 
-    /*! \var CompHandle m_memory_handle;
+    /*! \var CompHandle m_device;
+     *  \brief devices handle. (Original Context in OpenGL, VkDevice in Vulkan)
+     */
+    CompHandle m_device;
+
+    /*! \var CompHandle m_memory;
      *  \brief The memory handle. This value is nullptr in opengl system.
      */
-    CompHandle m_memory_handle;
+    CompHandle m_memory;
 
     /*! \var Size_ui64 m_data_size;
      *  \brief current buffer data size.

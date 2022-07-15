@@ -61,7 +61,7 @@ void Texture::InitializeFromImageResource(const FilePathString &i_filename, Size
 void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap, Size_ui32 i_mipmap_level)
 {
     if (i_bitmap.IsNull() == false) {
-        if (m_tex_identity.m_image_handle == SD_NULL_HANDLE) {
+        if (m_tex_identity.m_handle == SD_NULL_HANDLE) {
             //1. collect necessary datas.
             Size_ui32 img_w = i_bitmap.GetRef().GetWidth();
             Size_ui32 img_h = i_bitmap.GetRef().GetHeight();
@@ -134,7 +134,7 @@ void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap, Si
             GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
 
             //4. Refresh texture image.
-            if (m_tex_identity.m_image_handle != SD_NULL_HANDLE) {
+            if (m_tex_identity.m_handle != SD_NULL_HANDLE) {
                 GraphicsManager::GetRef().RefreshTextureImage(m_tex_identity, img_ptr, ImageOffset(), m_tex_identity.m_image_size, img_buf_size, ImageLayout_SHADER_READ_ONLY_OPTIMAL);
             }
             else {
@@ -152,7 +152,7 @@ void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap, Si
 
 void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, ImageLayoutEnum i_layout, Size_ui32 i_mipmap_levels)
 {
-    if (m_tex_identity.m_image_handle == SD_NULL_HANDLE) {
+    if (m_tex_identity.m_handle == SD_NULL_HANDLE) {
         m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;
         m_tex_identity.m_texture_view_type = TextureViewType_TEXTURE_2D;
         m_tex_identity.m_mipmap_levels = i_mipmap_levels;
@@ -200,7 +200,7 @@ void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
 
 void Texture::InitializeVRColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, ImageLayoutEnum i_layout, Size_ui32 i_mipmap_levels)
 {
-    if (m_tex_identity.m_image_handle == SD_NULL_HANDLE) {
+    if (m_tex_identity.m_handle == SD_NULL_HANDLE) {
         m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;
         m_tex_identity.m_texture_view_type = TextureViewType_TEXTURE_2D_ARRAY;
         m_tex_identity.m_mipmap_levels = i_mipmap_levels;

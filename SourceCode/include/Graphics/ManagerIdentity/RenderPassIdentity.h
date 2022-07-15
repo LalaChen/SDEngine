@@ -32,8 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "MultiviewInfo.h"
 #include "AttachmentDescription.h"
 #include "SubpassDescription.h"
@@ -45,7 +44,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  *  \brief In our system, class RenderPassIdentity is used to record information
  *         about render pass.
  */
-class SDENGINE_CLASS RenderPassIdentity
+class SDENGINE_CLASS RenderPassIdentity : public GraphicsElementIdentity
 {
 public:
     /*! \fn explicit RenderPassIdentity();
@@ -62,6 +61,11 @@ public:
      *  \brief handle about render pass.
      */
     CompHandle m_handle;
+
+    /* \var CompHandle m_device;
+     * \brief Device this handle belong.
+     */
+    CompHandle m_device;
 
     /*! \var std::vector<AttachmentDescription> m_attachment_descs;
      *  \brief Description about each attachment.

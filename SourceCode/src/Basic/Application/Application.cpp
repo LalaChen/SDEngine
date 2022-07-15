@@ -98,9 +98,9 @@ void Application::Pause()
 
 }
 
-void Application::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
+void Application::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
 {
-    GraphicsManager::GetRef().Resize(i_ns_handle, i_w, i_h);
+    GraphicsManager::GetRef().Resize(i_new_surface, i_w, i_h);
 
     ECSManager::GetRef().Resize();
 

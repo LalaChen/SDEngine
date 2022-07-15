@@ -41,7 +41,9 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 void VulkanManager::CreateRenderPass(RenderPassIdentity &io_identity)
 {
     VkResult result = VK_SUCCESS;
-    VkRenderPass &rp_handle = reinterpret_cast<VkRenderPass&>(io_identity.m_handle);
+    VkRenderPass &render_pass = reinterpret_cast<VkRenderPass&>(io_identity.m_handle);
+    VkDevice     &device      = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    device = m_device;
     std::vector<VkAttachmentDescription> vk_attachment_descs;
     std::vector<VkSubpassDescription> vk_subpass_descs;
     std::vector<VkSubpassDependency> vk_subpass_dependecies;
@@ -168,26 +170,33 @@ void VulkanManager::CreateRenderPass(RenderPassIdentity &io_identity)
         rp_c_info.pNext = &rpm_c_info;
     }
 
-    result = CreateVKRenderPass(rp_handle, rp_c_info);
+    result = CreateVKRenderPass(render_pass, device, rp_c_info);
     if (result != VK_SUCCESS) {
         SDLOGE("Create render pass failure(%d).", result);
+    }
+    else {
+        io_identity.SetValid();
     }
 }
 
 void VulkanManager::DestroyRenderPass(RenderPassIdentity &io_identity)
 {
     VkRenderPass &rp_handle = reinterpret_cast<VkRenderPass&>(io_identity.m_handle);
-    DestroyVKRenderPass(rp_handle);
+    VkDevice     &device    = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    device = m_device;
+    DestroyVKRenderPass(rp_handle, device);
+    io_identity.SetInvalid();
+    io_identity = RenderPassIdentity();
 }
 
 void VulkanManager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb, const FrameBufferWeakReferenceObject &i_fb, const RenderPassWeakReferenceObject &i_rp, const ImageOffset &i_start_pos, const ImageSize &i_render_size)
 {
-    const FrameBufferIdentity &fb_identity = GetIdentity(i_fb);
-    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cb);
-    const RenderPassIdentity &rp_identity = GetIdentity(i_rp);
-    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
-    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
-    VkFramebuffer fb_handle = reinterpret_cast<VkFramebuffer>(fb_identity.m_fb_handle);
+    const FrameBufferIdentity &fb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_fb);
+    const CommandBufferIdentity &cmd_buf_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
+    const RenderPassIdentity &rp_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_rp);
+    VkCommandBuffer cmd_buffer  = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
+    VkRenderPass    render_pass = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
+    VkFramebuffer   framebuffer = reinterpret_cast<VkFramebuffer>(fb_identity.m_handle);
     VkRect2D render_area = {};
     Size_ui32 final_w = i_render_size.m_width, final_h = i_render_size.m_height;
 
@@ -212,21 +221,21 @@ void VulkanManager::BeginRenderPass(const CommandBufferWeakReferenceObject &i_cb
         std::memcpy(dst_ptr, src_ptr, dst_size);
     }
 
-    BeginVkRenderPass(cmd_handle, rp_handle, fb_handle, render_area, clear_values);
+    BeginVkRenderPass(cmd_buffer, render_pass, framebuffer, render_area, clear_values);
 }
 
 void VulkanManager::GoToNextStepOfRenderPass(const CommandBufferWeakReferenceObject &i_cb, const FrameBufferWeakReferenceObject &i_fb, uint32_t i_sp_id)
 {
-    const CommandBufferIdentity &cmd_buf_identity = GetIdentity(i_cb);
-    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
-    GotoNextStepInVKRenderPass(cmd_handle);
+    const CommandBufferIdentity &cmd_buf_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
+    VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cmd_buf_identity.m_handle);
+    GotoNextStepInVKRenderPass(cmd_buffer);
 }
 
 void VulkanManager::EndRenderPass(const CommandBufferWeakReferenceObject &i_cb)
 {
-    const CommandBufferIdentity& cb_identity = GetIdentity(i_cb);
-    VkCommandBuffer cmd_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
-    EndVkRenderPass(cmd_handle);
+    const CommandBufferIdentity& cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
+    VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    EndVkRenderPass(cmd_buffer);
 }
 
 //-------- FrameBuffer --------
@@ -237,17 +246,23 @@ void VulkanManager::CreateFrameBuffer(FrameBufferIdentity &io_identity, const Re
     std::vector<VkImageView> ivs;
 
     for (const TextureWeakReferenceObject &buf : i_bufs) {
-        const TextureIdentity &tex_identity = GetIdentity(buf);
-        ivs.push_back(reinterpret_cast<VkImageView>(tex_identity.m_view_handle));
+        const TextureIdentity &tex_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(buf);
+        ivs.push_back(reinterpret_cast<VkImageView>(tex_identity.m_image_view));
     }
 
     //2. create framebuffer.
-    const RenderPassIdentity &rp_identity = GetIdentity(i_rp);
-    VkFramebuffer &fb_handle = reinterpret_cast<VkFramebuffer&>(io_identity.m_fb_handle);
-    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
-    result = CreateVKFrameBuffer(fb_handle, rp_handle, ivs, io_identity.m_size.m_width, io_identity.m_size.m_height, io_identity.m_size.m_length);
+    const RenderPassIdentity &rp_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_rp);
+    VkFramebuffer &framebuffer = reinterpret_cast<VkFramebuffer&>(io_identity.m_handle);
+    VkRenderPass  render_pass  = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
+    VkDevice      &device      = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    device = m_device;
+
+    result = CreateVKFrameBuffer(framebuffer, device, render_pass, ivs, io_identity.m_size.m_width, io_identity.m_size.m_height, io_identity.m_size.m_length);
     if (result != VK_SUCCESS) {
-        SDLOGE("Create Framebuffer failure(%d)!!!.",  result);
+        SDLOGE("Create Framebuffer failure(%d)!!!.", result);
+    }
+    else {
+        io_identity.SetValid();
     }
 }
 
@@ -263,8 +278,11 @@ void VulkanManager::DestroyFrameBufferGroup(FrameBufferGroupIdentity &io_identit
 
 void VulkanManager::DestroyFrameBuffer(FrameBufferIdentity &io_identity)
 {
-    VkFramebuffer &fb_handle = reinterpret_cast<VkFramebuffer&>(io_identity.m_fb_handle);
-    DestroyVkFrameBuffer(fb_handle);
+    VkFramebuffer &framebuffer = reinterpret_cast<VkFramebuffer&>(io_identity.m_handle);
+    VkDevice      &device      = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    device = m_device;
+    DestroyVkFrameBuffer(framebuffer, device);
+    io_identity.SetInvalid();
     io_identity = FrameBufferIdentity();
 }
 

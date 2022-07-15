@@ -48,7 +48,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DescriptorSetLayout);
 class SDENGINE_CLASS DescriptorSetLayout : public Object
 {
 public:
-    friend class GraphicsManager;
+    friend class GraphicsIdentityGetter;
 public:
     explicit DescriptorSetLayout(const ObjectName &i_object_name);
     virtual ~DescriptorSetLayout();

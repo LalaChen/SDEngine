@@ -32,18 +32,18 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS DescriptorSetLayoutIdentity
+class SDENGINE_CLASS DescriptorSetLayoutIdentity : public GraphicsElementIdentity
 {
 public:
     DescriptorSetLayoutIdentity();
     ~DescriptorSetLayoutIdentity();
 public:
     CompHandle m_handle;
+    CompHandle m_device;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

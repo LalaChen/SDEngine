@@ -34,8 +34,7 @@ SOFTWARE.
 
 #include <vector>
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "ClearValue.h"
 #include "ImageParam.h"
 #include "ImageViewIdentity.h"
@@ -45,7 +44,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 /*! \class FrameBufferIdentity
  *  \brief In our graphic system, class FrameBufferIdentity is used to keep framebuffer.
  */
-class SDENGINE_CLASS FrameBufferIdentity
+class SDENGINE_CLASS FrameBufferIdentity : public GraphicsElementIdentity
 {
 public:
     /*! \fn FrameBufferIdentity();
@@ -58,10 +57,15 @@ public:
      */
     ~FrameBufferIdentity();
 public:
-    /*! \var CompHandle m_fb_handle;
+    /*! \var CompHandle m_handle;
      *  \brief Framebuffer handle.
      */
-    CompHandle m_fb_handle;
+    CompHandle m_handle;
+
+    /* \var CompHandle m_device;
+     * \brief Device this handle belong.
+     */
+    CompHandle m_device;
 
     /*! \var ImageSize m_size;
      *  \brief Size of this framebuffer. Attribute m_length is used to layer.
