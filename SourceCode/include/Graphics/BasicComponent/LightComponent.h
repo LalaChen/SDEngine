@@ -64,12 +64,11 @@ public:
     explicit LightComponent(const ObjectName &i_object_name);
     virtual ~LightComponent();
 public:
+    void Initialize() override;
     bool OnGeometryChanged(const EventArg &i_arg);
 public:
     const DescriptorSetWeakReferenceObject GetDescriptorSet() const;
     void SetLightParameter(const LightUniforms &i_light_data);
-protected:
-    void InitializeImpl() override;
 protected:
     void InitializeDescriptorSetAndPool();
     void InitializeShadowMappingWorkspace();

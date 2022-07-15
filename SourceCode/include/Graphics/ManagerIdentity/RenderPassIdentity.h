@@ -32,7 +32,8 @@ SOFTWARE.
 
 #pragma once
 
-#include "GraphicsElementIdentity.h"
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 #include "MultiviewInfo.h"
 #include "AttachmentDescription.h"
 #include "SubpassDescription.h"
@@ -44,7 +45,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  *  \brief In our system, class RenderPassIdentity is used to record information
  *         about render pass.
  */
-class SDENGINE_CLASS RenderPassIdentity : public GraphicsElementIdentity
+class SDENGINE_CLASS RenderPassIdentity
 {
 public:
     /*! \fn explicit RenderPassIdentity();

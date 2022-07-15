@@ -109,9 +109,6 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
         SDLOGE("Allocated sampler for this image failure(%x)!!!", result);
         return;
     }
-    else {
-        io_sampler_identity.SetValid();
-    }
 
     //4. create image vie for this texture.
     VkComponentMapping swizzle = {
@@ -139,10 +136,6 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
     if (result != VK_SUCCESS) {
         SDLOGE("Create image view for this image failure(%x)!!!", result);
         return;
-    }
-    else {
-        //set singal about texture initialization.
-        io_tex_identity.SetValid();
     }
 }
 
@@ -208,12 +201,8 @@ void VulkanManager::DeleteTextureImage(TextureIdentity &io_identity, SamplerIden
     //destroy image handle.
     VkImage &image_handle = reinterpret_cast<VkImage&>(io_identity.m_image_handle);
     DestroyVkImage(image_handle);
-    io_identity.SetInvalid();
-    io_identity = TextureIdentity();
     VkSampler &sample_handle = reinterpret_cast<VkSampler&>(io_sampler_identity.m_handle);
     DestroyVkSampler(sample_handle);
-    io_sampler_identity.SetInvalid();
-    io_sampler_identity = SamplerIdentity();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

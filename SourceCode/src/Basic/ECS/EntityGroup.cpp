@@ -40,48 +40,33 @@ EntityGroup::~EntityGroup()
 {
 }
 
-const std::list<EntityWeakReferenceObject>& EntityGroup::GetEntities() const
-{
-    std::lock_guard<std::mutex> lck(m_mutex);
-    return m_entities;
-}
-
 bool EntityGroup::AddEntity(const EntityWeakReferenceObject &i_entity)
 {
-    bool result = false;
-    {
-        std::lock_guard<std::mutex> lck(m_mutex);
-        if (i_entity.IsNull() == false) {
-            if (SD_WREF(i_entity).IsMatch(m_conditions) == true) {
-                if (std::find(m_entities.begin(), m_entities.end(), i_entity) == m_entities.end()) {
-                    m_entities.push_back(i_entity);
-                    result = true;
-                }
-                else {
-                    //SDLOGD("Add E(%s) entity to G[%s] repeatly.", SD_WREF(i_entity).GetObjectName().c_str(), m_object_name.c_str());
-                    result = false;
-                }
+    if (i_entity.IsNull() == false) {
+        if (SD_WREF(i_entity).IsMatch(m_conditions) == true) {
+            if (std::find(m_entities.begin(), m_entities.end(), i_entity) == m_entities.end()) {
+                m_entities.push_back(i_entity);
+                NotifyEvent("ChangedEvent", EventArg());
+                return true;
             }
             else {
-                //SDLOGD("Add E(%s) entity to G[%s] failure", SD_WREF(i_entity).GetObjectName().c_str(), m_object_name.c_str());
-                result = false;
+                //SDLOGD("Add E(%s) entity to G[%s] repeatly.", SD_WREF(i_entity).GetObjectName().c_str(), m_object_name.c_str());
+                return false;
             }
         }
         else {
-            SDLOGE("Add nullptr entity to group[%s]", m_object_name.c_str());
-            result = false;
+            //SDLOGD("Add E(%s) entity to G[%s] failure", SD_WREF(i_entity).GetObjectName().c_str(), m_object_name.c_str());
+            return false;
         }
     }
-
-    if (result == true) {
-        NotifyEvent("ChangedEvent", EventArg());
+    else {
+        SDLOGE("Add nullptr entity to group[%s]", m_object_name.c_str());
+        return false;
     }
-    return result;
 }
 
 bool EntityGroup::RemoveEntity(const EntityWeakReferenceObject &i_entity)
 {
-    std::lock_guard<std::mutex> lck(m_mutex);
     std::list<EntityWeakReferenceObject>::iterator iter;
     for (iter = m_entities.begin(); iter != m_entities.end(); ) {
         if ((*iter) == i_entity) {

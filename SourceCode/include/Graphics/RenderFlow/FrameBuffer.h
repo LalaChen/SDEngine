@@ -55,7 +55,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(FrameBuffer);
 class SDENGINE_CLASS FrameBuffer : public Object
 {
 public:
-    friend class GraphicsIdentityGetter;
+    friend class GraphicsManager;
 public:
     /*! \fn explicit FrameBuffer(const ObjectName &i_object_name, const ImageSize &i_size);
      *  \param [in] i_object_name Name of this framebuffer.

@@ -34,7 +34,8 @@ SOFTWARE.
 
 #include <vector>
 
-#include "GraphicsElementIdentity.h"
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 
 #include "GraphicsPipelineParam.h"
 
@@ -44,7 +45,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  *  \brief Class GraphicsPipelineIdentity is used to record some necessary information
            for pipeline.
  */
-class SDENGINE_CLASS GraphicsPipelineIdentity : public GraphicsElementIdentity
+class SDENGINE_CLASS GraphicsPipelineIdentity
 {
 public:
    /*! \fn explicit GraphicsPipelineIdentity();

@@ -53,7 +53,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DescriptorSet);
 class SDENGINE_CLASS DescriptorSet : public Object
 {
 public:
-    friend class GraphicsIdentityGetter;
+    friend class GraphicsManager;
 public:
     /*! \fn explicit DescriptorSet(const ObjectName &i_object_name);
      *  \param [in] i_object_name Name of this object.

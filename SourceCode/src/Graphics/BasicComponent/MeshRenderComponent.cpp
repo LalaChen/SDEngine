@@ -43,7 +43,7 @@ MeshRenderComponent::~MeshRenderComponent()
 {
 }
 
-void MeshRenderComponent::InitializeImpl()
+void MeshRenderComponent::Initialize()
 {
     std::map<ObjectName, UniformVariableWeakReferenceObject> uvs;
     uint32_t desc_counts[UniformBindingType_MAX_DEFINE_VALUE] = { 0 };
@@ -127,6 +127,20 @@ void MeshRenderComponent::RenderMesh(
     }
 }
 
+bool MeshRenderComponent::OnGeometryChanged(const EventArg &i_arg)
+{
+    if (m_geo_ub.IsNull() == false) {
+        SD_WREF(m_geo_ub).SetMatrix4X4f("world",
+            SD_WREF(m_geo_comp).GetWorldTransform().MakeWorldMatrix());
+        SD_WREF(m_geo_ub).SetMatrix4X4f("normal",
+            SD_WREF(m_geo_comp).GetWorldTransform().MakeNormalMatrix());
+        SD_WREF(m_geo_ub).Update();
+    }
+
+    return true;
+}
+
+
 const RenderOrder& MeshRenderComponent::GetRenderOrder() const
 {
     try {
@@ -142,18 +156,4 @@ const RenderOrder& MeshRenderComponent::GetRenderOrder() const
         throw e;
     }
 }
-
-bool MeshRenderComponent::OnGeometryChanged(const EventArg &i_arg)
-{
-    if (m_geo_ub.IsNull() == false) {
-        SD_WREF(m_geo_ub).SetMatrix4X4f("world",
-            SD_WREF(m_geo_comp).GetWorldTransform().MakeWorldMatrix());
-        SD_WREF(m_geo_ub).SetMatrix4X4f("normal",
-            SD_WREF(m_geo_comp).GetWorldTransform().MakeNormalMatrix());
-        SD_WREF(m_geo_ub).Update();
-    }
-
-    return true;
-}
-
 ______________SD_END_GRAPHICS_NAMESPACE______________

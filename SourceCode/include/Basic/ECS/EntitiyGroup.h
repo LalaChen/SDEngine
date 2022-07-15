@@ -32,7 +32,6 @@ SOFTWARE.
 
 #pragma once
 
-#include <mutex>
 #include <map>
 
 #include "SDEngineMacro.h"
@@ -60,8 +59,11 @@ protected:
 protected:
     std::list<EntityWeakReferenceObject> m_entities;
     std::vector<std::type_index> m_conditions;
-protected:
-    mutable std::mutex m_mutex;
 };
+
+inline const std::list<EntityWeakReferenceObject>& EntityGroup::GetEntities() const
+{
+    return m_entities;
+}
 
 _______________SD_END_BASIC_NAMESPACE________________

@@ -62,13 +62,13 @@ public:
     TextureWeakReferenceObject GetDepthBuffer() const override;
 public:
     bool OnGeometryChanged(const EventArg &i_arg) override;
+public:
+    void Initialize() override;
     void Resize() override;
     void RecordCommand(
         const CommandBufferWeakReferenceObject &i_cb,
         const std::list<LightComponentWeakReferenceObject> &i_light_list,
         const std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> > &i_mr_groups) override;
-protected:
-    void InitializeImpl() override;
 protected:
     void InitializeDescriptorSetAndPool();
     void InitializeWorkspaceForForwardPass();
@@ -89,7 +89,7 @@ protected:
 protected:
     TransformComponentWeakReferenceObject m_geo_comp;
 protected:
-    bool m_ws_initialized;
+    bool m_initialized;
     bool m_follow_resolution;
     Resolution m_buffer_size;
     ClearValue m_clear_color;
@@ -100,22 +100,12 @@ protected:
 
 inline TextureWeakReferenceObject VRCameraComponent::GetColorBuffer() const
 {
-    if (IsInitialized() == true && m_ws_initialized == true) {
-        return m_color_buffer;
-    }
-    else {
-        return TextureWeakReferenceObject();
-    }
+    return m_color_buffer;
 }
 
 inline TextureWeakReferenceObject VRCameraComponent::GetDepthBuffer() const
 {
-    if (IsInitialized() == true && m_ws_initialized == true) {
-        return m_depth_buffer;
-    }
-    else {
-        return TextureWeakReferenceObject();
-    }
+    return m_depth_buffer;
 }
 
 inline void VRCameraComponent::SetClearValues(ClearValue i_color, ClearValue i_d_and_s)

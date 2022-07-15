@@ -29,9 +29,9 @@ SampleDrawObjects::~SampleDrawObjects()
 }
 
 //#define INITIAL_BY_CODE
-bool SampleDrawObjects::LoadImpl()
+bool SampleDrawObjects::Load()
 {
-    bool result = Scene::LoadImpl();
+    bool result = Scene::Load();
     if (result == false) {
         SDLOGW("Load scene failure.");
         return result;
@@ -103,7 +103,7 @@ bool SampleDrawObjects::LoadImpl()
     m_camera_motor = SD_GET_TYPE_COMP_WREF(m_camera_node, MotorComponent);
     SD_WREF(m_camera_motor).Initialize();
 #endif
-    SDLOG("Initialize ScreenRay");
+
     m_screen_ray_node = ECSManager::GetRef().CreateEntity("ScreenRay");
     m_entities.push_back(m_screen_ray_node);
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_screen_ray_node, "ScreenRayTransform");
@@ -160,7 +160,6 @@ bool SampleDrawObjects::LoadImpl()
     SD_TYPE_COMP_WREF(m_WGUI_node, HUDComponent).Initialize();
 
     //7. Add light.
-    SDLOG("Initialize Light");
     m_light_node = ECSManager::GetRef().CreateEntity("Light");
     m_entities.push_back(m_light_node);
     ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_light_node, "LightTransform");
@@ -174,7 +173,6 @@ bool SampleDrawObjects::LoadImpl()
     );
 
     //8. add axis.
-    SDLOG("Initialize Axis");
     m_axis_mesh = BasicShapeCreator::GetRef().CreateAxis(0.2f, 20.0f);
 
     m_axis_node = ECSManager::GetRef().CreateEntity("AxisNode");
@@ -189,7 +187,6 @@ bool SampleDrawObjects::LoadImpl()
     SD_TYPE_COMP_WREF(m_axis_node, MeshRenderComponent).AppendMesh(m_axis_mesh, m_axis_material);
 
     //9. add floor.
-    SDLOG("Initialize Floor");
     m_floor_mesh = BasicShapeCreator::GetRef().CreatePlane(
         Vector3f::Zero, Vector3f::PositiveZ, Vector3f::PositiveX,
         100.0f, 100.0f, 100.0f, 100.0f);
@@ -205,7 +202,6 @@ bool SampleDrawObjects::LoadImpl()
     SD_TYPE_COMP_WREF(m_floor_node, MeshRenderComponent).AppendMesh(m_floor_mesh, m_basic_material);
 
     //10. add cubes.
-    SDLOG("Initialize Cubes");
     m_cube_mesh = BasicShapeCreator::GetRef().CreateCube(Vector3f::Zero, Vector3f(0.25f, 0.25f, 0.25f));
     
     Vector3f start_pos = Vector3f(m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, m_cube_side_length * 2.0f, 1.0f).scale(
@@ -235,12 +231,16 @@ bool SampleDrawObjects::LoadImpl()
     return result;
 }
 
-void SampleDrawObjects::UnloadImpl()
+bool SampleDrawObjects::Unload()
 {
-    Scene::UnloadImpl();
+    bool result = Scene::Unload();
+    if (result == false) {
+        return false;
+    }
     m_axis_shader.Reset();
     m_axis_mesh.Reset();
     m_axis_material.Reset();
     m_basic_material.Reset();
     m_main_tex.Reset();
+    return true;
 }

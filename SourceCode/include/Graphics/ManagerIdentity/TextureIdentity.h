@@ -34,7 +34,8 @@ SOFTWARE.
 
 #include <vector>
 
-#include "GraphicsElementIdentity.h"
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 #include "ImageParam.h"
 #include "ManagerParam.h"
 
@@ -43,7 +44,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 /*! \class TextureIdentity
  *  Keep all graphics handle or ID in this struct.
  */
-class SDENGINE_CLASS TextureIdentity : public GraphicsElementIdentity
+class SDENGINE_CLASS TextureIdentity
 {
 public:
     /*! \fn explicit TextureIdentity();

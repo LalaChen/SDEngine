@@ -34,7 +34,8 @@ SOFTWARE.
 
 #include <vector>
 
-#include "GraphicsElementIdentity.h"
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 #include "ClearValue.h"
 #include "ImageParam.h"
 #include "ImageViewIdentity.h"
@@ -44,7 +45,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 /*! \class FrameBufferIdentity
  *  \brief In our graphic system, class FrameBufferIdentity is used to keep framebuffer.
  */
-class SDENGINE_CLASS FrameBufferIdentity : public GraphicsElementIdentity
+class SDENGINE_CLASS FrameBufferIdentity
 {
 public:
     /*! \fn FrameBufferIdentity();

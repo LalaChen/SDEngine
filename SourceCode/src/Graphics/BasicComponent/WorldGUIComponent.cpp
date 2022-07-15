@@ -128,7 +128,7 @@ bool WorldGUIComponent::LoadGUI(const IMGUIBatchLoadingCallback &i_load_func)
     return SD_SREF(m_batch).LoadGUI(i_load_func);
 }
 
-void WorldGUIComponent::InitializeImpl()
+void WorldGUIComponent::Initialize()
 {
     m_batch = new IMGUIBatch("GUIBatch", ImVec2(m_buffer_size[0], m_buffer_size[1]));
     SD_SREF(m_batch).Initialize();
@@ -157,7 +157,7 @@ void WorldGUIComponent::InitializeImpl()
     m_transform = SD_GET_TYPE_COMP_WREF(m_entity, TransformComponent);
 }
 
-void WorldGUIComponent::UpdateImpl()
+void WorldGUIComponent::Update()
 {
     GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
     if (gs.IsNull() == false) {
@@ -215,6 +215,8 @@ void WorldGUIComponent::InitializeWorkspace()
     m_GUI_cp = new CommandPool("WGUICmdPool");
     SD_REF(m_GUI_cp).Initialize();
     m_GUI_cb = SD_REF(m_GUI_cp).AllocateCommandBuffer("WGUICmdBuffer");
+
+    m_initialized = true;
 }
 
 void WorldGUIComponent::ClearWorkspace()

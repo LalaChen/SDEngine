@@ -32,7 +32,8 @@ SOFTWARE.
 
 #pragma once
 
-#include "GraphicsElementIdentity.h"
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 #include "MemoryType.h"
 #include "VertexBufferFormat.h"
 
@@ -41,7 +42,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 /*! \class VertexBufferIdentity
  *  \brief Keep all graphics handle or ID about vertex buffer in this structure.
  */
-class SDENGINE_CLASS VertexBufferIdentity : public GraphicsElementIdentity
+class SDENGINE_CLASS VertexBufferIdentity
 {
 public:
     /*! \fn explicit VertexBufferIdentity();

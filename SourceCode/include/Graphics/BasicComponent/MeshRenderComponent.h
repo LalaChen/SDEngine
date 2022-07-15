@@ -68,6 +68,8 @@ public:
     explicit MeshRenderComponent(const ObjectName &i_object_name);
     virtual ~MeshRenderComponent();
 public:
+    void Initialize() override;
+public:
     bool AppendMesh(const MeshWeakReferenceObject &i_mesh, const MaterialWeakReferenceObject &i_material);
     void RenderMesh(
         const RenderPassWeakReferenceObject &i_rp,
@@ -79,8 +81,6 @@ public:
     bool OnGeometryChanged(const EventArg &i_arg);
 public:
     const RenderOrder& GetRenderOrder() const;
-protected:
-    void InitializeImpl() override;
 protected:
     MeshWeakReferenceObject m_mesh;
     MaterialWeakReferenceObject m_material;

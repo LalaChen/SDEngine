@@ -59,6 +59,10 @@ TransformComponent::~TransformComponent()
     }
 }
 
+void TransformComponent::Initialize()
+{
+}
+
 void TransformComponent::SetLocalPosition(const Vector3f &i_position)
 {
     m_local_trans.m_position = i_position;

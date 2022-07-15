@@ -35,11 +35,7 @@ SOFTWARE.
 #include "VulkanConfig.h"
 #include "GraphicsManager.h"
 
-#include "VulkanSwapchain.h"
-
 using SDE::Basic::UBytePtr;
-
-extern std::mutex m_queue_mutex;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -48,8 +44,6 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  */
 class SDENGINE_CLASS VulkanManager : public GraphicsManager
 {
-public:
-    friend class VulkanSwapchain;
 public:
     static VkBool32 ConvertBoolean(bool flag);
 protected:
@@ -159,8 +153,6 @@ public:
     void SetScissor(const CommandBufferWeakReferenceObject &i_cb, const ScissorRegion &i_region) override;
     void SetScissors(const CommandBufferWeakReferenceObject &i_cb, const std::vector<ScissorRegion> &i_regions) override;
     void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb, const IndexBufferWeakReferenceObject &i_ib, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) override;
-public:
-    Resolution GetScreenResolution() const override;
 public:
     void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
 public:
@@ -501,6 +493,8 @@ protected:
     void InitializeSettings();
     void InitializeDevice();
     void InitializeSwapChain();
+    void InitializePresentRenderPass();
+    void InitializeSCImageViewsAndFBs();
     void InitializeCommandPoolAndBuffers();
 protected:
     //configuration
@@ -521,11 +515,18 @@ protected:
     int32_t m_final_queue_fam_id;
     VkQueue m_present_q_handle;
 protected:
+    VkPresentModeKHR m_final_p_mode;
+    VkSwapchainKHR m_sc_handle;
+    VkSemaphore m_acq_img_sema_handle; //GPU to GPU lock
+    VkSemaphore m_pre_sema_handle; //GPU to GPU lock
+    VkRenderPass m_pre_rp_handle;
+    std::vector<VkImage> m_sc_img_handles;
+    std::vector<VkImageView> m_sc_iv_handles;
+    std::vector<VkFramebuffer> m_sc_fb_handles;
+protected:
     VkCommandPool m_main_cp_handle; //main render thread use.
     VkCommandBuffer m_main_cb_handle;
     VkFence m_main_cb_fence_handle;
-protected:
-    VulkanSwapchainStrongReferenceObject m_swapchain;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -64,6 +64,8 @@ public:
     explicit TransformComponent(const ObjectName &i_object_name);
     virtual ~TransformComponent();
 public:
+    void Initialize() override;
+public:
     void SetLocalPosition(const Vector3f &i_position);
     void SetLocalRotation(const Quaternion &i_rotation);
     void SetLocalScale(const Vector3f &i_scale);

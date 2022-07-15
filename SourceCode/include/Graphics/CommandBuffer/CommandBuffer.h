@@ -52,7 +52,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(CommandBuffer);
 class SDENGINE_CLASS CommandBuffer : public Object
 {
 public:
-    friend class GraphicsIdentityGetter;
+    friend class GraphicsManager;
 public:
     /*! \fn explicit CommandBuffer(const ObjectName &i_object_name, CommandPoolBaseWeakReferenceObject &i_cmd_pool, const CommandPoolWeakReferenceObject &i_cmd_pool);
      *  \param [in] i_object_name Name of this object.

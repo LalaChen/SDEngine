@@ -106,41 +106,6 @@ public:
 protected:
     void InitializeScreenRendering();
     void ReleaseScreenRendering();
-
-#if 0
-protected:
-    //configuration
-    std::vector<VkQueueFlagBits> m_desired_queue_abilities;
-    VulkanConfig m_vulkan_config;
-protected:
-    //Application Create.
-    VkInstance m_ins_handle;
-    VkSurfaceKHR m_sur_handle;
-protected:
-    VkDebugReportCallbackEXT m_debug_rp_cbk;
-protected:
-    VkQueueFlags m_final_q_abi_flag;
-    VkSurfaceFormatKHR m_final_sur_format;
-protected:
-    VkPhysicalDevice m_phy_device_handle;
-    VkDevice m_device_handle;
-    int32_t m_final_queue_fam_id;
-    VkQueue m_present_q_handle;
-protected:
-    VkPresentModeKHR m_final_p_mode;
-    VkSwapchainKHR m_sc_handle;
-    VkSemaphore m_acq_img_sema_handle; //GPU to GPU lock
-    VkSemaphore m_pre_sema_handle; //GPU to GPU lock
-    VkRenderPass m_pre_rp_handle;
-    std::vector<VkImage> m_sc_img_handles;
-    std::vector<VkImageView> m_sc_iv_handles;
-    std::vector<VkFramebuffer> m_sc_fb_handles;
-protected:
-    VkCommandPool m_main_cp_handle; //main render thread use.
-    VkCommandBuffer m_main_cb_handle;
-    VkFence m_main_cb_fence_handle;
-#endif
-
 protected:
     uint32_t m_cur_sample_idx;
     std::vector<SampleStrongReferenceObject> m_samples;

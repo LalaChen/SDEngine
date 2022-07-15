@@ -37,13 +37,25 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
+#include "ManagerIdentity.h"
 #include "GraphicsConfig.h"
 #include "PeriodCounter.h"
-#include "GraphicsIdentityGetter.h"
+#include "GraphicsPipeline.h"
+#include "CommandBufferInheritanceInfo.h"
+#include "CommandPool.h"
+#include "CommandBuffer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "UniformBuffer.h"
+#include "DescriptorPool.h"
+#include "DescriptorSet.h"
+#include "DescriptorSetLayout.h"
+#include "ShaderProgram.h"
+#include "RenderPass.h"
 #include "ImageLoader.h"
+#include "GraphicsConfig.h"
 #include "Resolution.h"
 #include "EventArg.h"
-#include "CommandBufferInheritanceInfo.h"
 
 using SDE::Basic::EventArg;
 using SDE::Basic::PeriodCounter;
@@ -211,8 +223,6 @@ public:
 //------------- Render Function -----------------
     virtual void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex) = 0;
 public:
-    virtual Resolution GetScreenResolution() const = 0;
-public:
 //------------- Render Function -----------------
     void Render();
 public:
@@ -246,10 +256,27 @@ protected:
     void InitializeBasicShaderPrograms();
     void InitializeDefaultRenderPasses();
 protected:
+    const ShaderModuleIdentity &GetIdentity(const ShaderModuleWeakReferenceObject &i_module) const;
+    const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex) const;
+    const SamplerIdentity& GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex) const;
+    const FrameBufferIdentity& GetIdentity(const FrameBufferWeakReferenceObject &i_fb) const;
+    const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject &i_cb) const;
+    const CommandPoolIdentity& GetIdentity(const CommandPoolWeakReferenceObject &i_cp) const;
+    const RenderPassIdentity& GetIdentity(const RenderPassWeakReferenceObject &i_rp) const;
+    const VertexBufferIdentity& GetIdentity(const VertexBufferWeakReferenceObject &i_vb) const;
+    const IndexBufferIdentity& GetIdentity(const IndexBufferWeakReferenceObject &i_ib) const;
+    const UniformBufferIdentity& GetIdentity(const UniformBufferWeakReferenceObject &i_ub) const;
+    const GraphicsPipelineIdentity& GetIdentity(const GraphicsPipelineWeakReferenceObject &i_pipe) const;
+    const DescriptorPoolIdentity& GetIdentity(const DescriptorPoolWeakReferenceObject &i_pool) const;
+    const DescriptorSetIdentity& GetIdentity(const DescriptorSetWeakReferenceObject &i_desc) const;
+    const DescriptorSetLayoutIdentity& GetIdentity(const DescriptorSetLayoutWeakReferenceObject &i_ds_layout) const;
+protected:
 //------------ Render Flow Function -------------
     virtual void RenderBegin() = 0;
     virtual void RenderToScreen() = 0;
     virtual void RenderEnd() = 0;
+protected:
+    SD_DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_screen_size, ScreenResolution);
 protected:
     GraphicsConfig m_graphics_config;
 protected:
@@ -270,8 +297,6 @@ protected:
     std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject> m_material_basic_uvd_maps;
 
     std::map<ObjectName, ShaderProgramStrongReferenceObject> m_shader_program_maps;
-
-    GraphicsIdentityGetterStrongReferenceObject m_graphics_identity_getter;
 
 protected:
     PeriodCounter m_fps_counter;

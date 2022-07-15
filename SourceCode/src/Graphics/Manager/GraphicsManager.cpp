@@ -39,7 +39,6 @@ SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
 
 GraphicsManager::GraphicsManager()
 : m_fps_counter("FPS")
-, m_graphics_identity_getter(new GraphicsIdentityGetter("GraphicsIdentityGetter"))
 {
     // Register instance.
     SD_SINGLETON_DECLARATION_REGISTER;

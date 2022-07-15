@@ -44,7 +44,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(DynamicIndexBuffer);
 class SDENGINE_CLASS DynamicIndexBuffer : public IndexBuffer
 {
 public:
-    friend class GraphicsIdentityGetter;
+    friend class GraphicsManager;
 public:
     /*! \fn explicit DynamicVertexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format);
      *  \param [in] i_object_name Name of this buffer.

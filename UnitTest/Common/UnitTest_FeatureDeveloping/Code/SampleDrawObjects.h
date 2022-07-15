@@ -19,8 +19,8 @@ public:
     explicit SampleDrawObjects(const ObjectName &i_scene_name);
     virtual ~SampleDrawObjects();
 public:
-    bool LoadImpl() override;
-    void UnloadImpl() override;
+    bool Load() override;
+    bool Unload() override;
 protected:
     EntityWeakReferenceObject m_scene_root_node;
     EntityWeakReferenceObject m_camera_node;

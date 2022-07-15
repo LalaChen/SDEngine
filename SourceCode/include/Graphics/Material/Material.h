@@ -58,7 +58,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Material);
 class SDENGINE_CLASS Material : public Object
 {
 public:
-    friend class GraphicsIdentityGetter;
+    friend class GraphicsManager;
 public:
     explicit Material(const ObjectName &i_object_name);
     virtual ~Material();

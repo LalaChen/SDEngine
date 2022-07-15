@@ -51,7 +51,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(IndexBuffer);
 class SDENGINE_CLASS IndexBuffer : public Object
 {
 public:
-    friend class GraphicsIdentityGetter;
+    friend class GraphicsManager;
 public:
     /*! \fn explicit IndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
      *  \param [in] i_object_name Name of this buffer.

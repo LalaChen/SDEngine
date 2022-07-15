@@ -58,6 +58,12 @@ VulkanManager::VulkanManager()
 , m_device_handle(VK_NULL_HANDLE)
 , m_final_queue_fam_id(-1)
 , m_present_q_handle(VK_NULL_HANDLE)
+// swap chain
+, m_final_p_mode(VK_PRESENT_MODE_MAX_ENUM_KHR)
+, m_sc_handle(VK_NULL_HANDLE)
+, m_acq_img_sema_handle(VK_NULL_HANDLE)
+, m_pre_sema_handle(VK_NULL_HANDLE)
+, m_pre_rp_handle(VK_NULL_HANDLE)
 // main command pool
 , m_main_cp_handle(VK_NULL_HANDLE)
 , m_main_cb_handle(VK_NULL_HANDLE)
@@ -72,8 +78,6 @@ VulkanManager::VulkanManager()
     }
 
     m_vulkan_config.LoadFromFile("Common/Configs/VKConfig.json");
-
-    m_swapchain = new VulkanSwapchain("VulkanSwapchain", m_graphics_identity_getter);
 }
 
 VulkanManager::~VulkanManager()
@@ -100,6 +104,8 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializeCommandPoolAndBuffers();
             //graphics
             InitializeSwapChain();
+            InitializePresentRenderPass();
+            InitializeSCImageViewsAndFBs();
             //
             PrintSystemInformation();
         }
@@ -113,8 +119,6 @@ void VulkanManager::ReleaseGraphicsSystem()
 {
     SDLOG("Release VulkanManager.");
 
-    m_swapchain.Reset();
-
     PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT =
         (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_ins_handle, "vkDestroyDebugReportCallbackEXT");
 
@@ -126,6 +130,11 @@ void VulkanManager::ReleaseGraphicsSystem()
         SDLOG("failed to load set up destroy debug messenger function!");
     }
 
+    if (m_pre_rp_handle != VK_NULL_HANDLE) {
+        vkDestroyRenderPass(m_device_handle, m_pre_rp_handle, nullptr);
+        m_pre_rp_handle = VK_NULL_HANDLE;
+    }
+
     if (m_main_cb_handle != VK_NULL_HANDLE) {
         vkFreeCommandBuffers(m_device_handle, m_main_cp_handle, 1, &m_main_cb_handle);
         m_main_cb_handle = VK_NULL_HANDLE;
@@ -134,6 +143,37 @@ void VulkanManager::ReleaseGraphicsSystem()
     if (m_main_cp_handle != VK_NULL_HANDLE) {
         vkDestroyCommandPool(m_device_handle, m_main_cp_handle, nullptr);
         m_main_cp_handle = VK_NULL_HANDLE;
+    }
+
+    if (m_acq_img_sema_handle != VK_NULL_HANDLE) {
+        vkDestroySemaphore(m_device_handle, m_acq_img_sema_handle, nullptr);
+        m_acq_img_sema_handle = VK_NULL_HANDLE;
+    }
+
+    if (m_pre_sema_handle != VK_NULL_HANDLE) {
+        vkDestroySemaphore(m_device_handle, m_pre_sema_handle, nullptr);
+        m_pre_sema_handle = VK_NULL_HANDLE;
+    }
+
+    for (VkFramebuffer &fbo : m_sc_fb_handles) {
+        if (fbo != VK_NULL_HANDLE) {
+            vkDestroyFramebuffer(m_device_handle, fbo, nullptr);
+        }
+        fbo = VK_NULL_HANDLE;
+    }
+    m_sc_fb_handles.clear();
+
+    for (VkImageView &iv : m_sc_iv_handles) {
+        if (iv != VK_NULL_HANDLE) {
+            vkDestroyImageView(m_device_handle, iv, nullptr);
+            iv = VK_NULL_HANDLE;
+        }
+    }
+    m_sc_iv_handles.clear();
+
+    if (m_sc_handle != VK_NULL_HANDLE) {
+        vkDestroySwapchainKHR(m_device_handle, m_sc_handle, nullptr);
+        m_sc_handle = VK_NULL_HANDLE;
     }
 
     if (m_device_handle != VK_NULL_HANDLE) {
@@ -157,8 +197,26 @@ void VulkanManager::ReleaseGraphicsSystem()
 //----------------------- Render Flow -----------------------
 void VulkanManager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
 {
-    m_swapchain.Reset();
-    m_swapchain = new VulkanSwapchain("VulkanSwapchain", m_graphics_identity_getter);
+    for (VkFramebuffer &fbo : m_sc_fb_handles) {
+        if (fbo != VK_NULL_HANDLE) {
+            vkDestroyFramebuffer(m_device_handle, fbo, nullptr);
+        }
+        fbo = VK_NULL_HANDLE;
+    }
+    m_sc_fb_handles.clear();
+
+    for (VkImageView &iv : m_sc_iv_handles) {
+        if (iv != VK_NULL_HANDLE) {
+            vkDestroyImageView(m_device_handle, iv, nullptr);
+            iv = VK_NULL_HANDLE;
+        }
+    }
+    m_sc_iv_handles.clear();
+
+    if (m_sc_handle != VK_NULL_HANDLE) {
+        vkDestroySwapchainKHR(m_device_handle, m_sc_handle, nullptr);
+        m_sc_handle = VK_NULL_HANDLE;
+    }
 
     VkSurfaceKHR new_surface_handle = reinterpret_cast<VkSurfaceKHR>(i_ns_handle);
     if (m_sur_handle != new_surface_handle && new_surface_handle != SD_NULL_HANDLE) {
@@ -171,16 +229,7 @@ void VulkanManager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
     }
 
     InitializeSwapChain();
-}
-
-Resolution VulkanManager::GetScreenResolution() const
-{
-    if (m_swapchain.IsNull() == false) {
-        return SD_SREF(m_swapchain).GetResolution();
-    }
-    else {
-        return Resolution();
-    }
+    InitializeSCImageViewsAndFBs();
 }
 
 void VulkanManager::RenderBegin()

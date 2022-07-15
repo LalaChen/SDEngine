@@ -36,7 +36,6 @@ SOFTWARE.
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <thread>
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
@@ -117,32 +116,32 @@ _______________SD_END_BASIC_NAMESPACE________________
     #define __func__ __FUNCTION__
 #endif
 
-#define INFO_PREFIX SDE::Basic::StringFormat("T:(%d)L:(%d):", std::this_thread::get_id(), __LINE__) + std::string(__func__) + std::string("() : ")
+#define INFO_PREFIX std::string(__FILE__) + SDE::Basic::StringFormat("(%d):", __LINE__) + std::string(__func__) + std::string("() : ")
 
 /*! \def SDLOGD(log,...)
  *  \brief Print debug log.
  */
 #define SDLOGD(log,...) \
-    if (SDE::Basic::LogManager::IsNull() == false) \
+    if(SDE::Basic::LogManager::IsNull() == false) \
         SDE::Basic::LogManager::GetRef().Log(SDE::Basic::LogManager::Internal, INFO_PREFIX, log, ##__VA_ARGS__);
 
 /*! \def SDLOGE(log,...)
  *  \brief Print error log.
  */
 #define SDLOGE(log,...) \
-    if (SDE::Basic::LogManager::IsNull() == false) \
+    if(SDE::Basic::LogManager::IsNull() == false) \
         SDE::Basic::LogManager::GetRef().Log(SDE::Basic::LogManager::Error, INFO_PREFIX , log, ##__VA_ARGS__);
 
 /*! \def SDLOGW(log,...)
  *  \brief Print warning log.
  */
 #define SDLOGW(log,...) \
-    if (SDE::Basic::LogManager::IsNull() == false) \
+    if(SDE::Basic::LogManager::IsNull() == false) \
         SDE::Basic::LogManager::GetRef().Log(SDE::Basic::LogManager::Warning, INFO_PREFIX , log, ##__VA_ARGS__); 
 
 /*! \def SDLOG(log,...)
  *  \brief Print log.
  */
 #define SDLOG(log,...) \
-    if (SDE::Basic::LogManager::IsNull() == false) \
+    if(SDE::Basic::LogManager::IsNull() == false) \
         SDE::Basic::LogManager::GetRef().Log(SDE::Basic::LogManager::LogType::Normal, INFO_PREFIX, log,##__VA_ARGS__); 

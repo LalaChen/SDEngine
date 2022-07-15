@@ -63,7 +63,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GraphicsPipeline);
 class SDENGINE_CLASS GraphicsPipeline : public Object
 {
 public:
-    friend class GraphicsIdentityGetter;
+    friend class GraphicsManager;
 public:
     /*! \fn explicit GraphicsPipeline(const ObjectName &i_object_name);
      *  \param [in] i_object_name Name of this object.

@@ -146,8 +146,6 @@ public:
 public:
     void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
 public:
-    Resolution GetScreenResolution() const override { return Resolution(); }
-public:
 //------------- Force Render Function -----------------
     void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex) override;
 protected:

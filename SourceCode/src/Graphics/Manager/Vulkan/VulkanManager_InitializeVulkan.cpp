@@ -25,8 +25,6 @@ SOFTWARE.
 
 #define NOMINMAX //For avoid max and min redefinition in Windows.h
 
-#include "VulkanManager.h"
-
 #include <list>
 #include <algorithm>
 
@@ -34,7 +32,7 @@ SOFTWARE.
 #include "TextureFormat_Vulkan.h"
 #include "VulkanCreationArg.h"
 #include "VulkanWrapper.h"
-
+#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -467,12 +465,289 @@ void VulkanManager::InitializeCommandPoolAndBuffers()
     }
 }
 
+void VulkanManager::InitializePresentRenderPass()
+{
+    SDLOG("--- Vulkan initialize present render pass.");
+    //1. Write all used attachment descriptions in RenderPass--- PresentRenderPass.
+    //--- Attachment about color buffer for subpass 0, it's used to store rendering result to image getted from swapchain.
+    VkAttachmentDescription clr_attachment_desc = {};
+    clr_attachment_desc.flags = 0; //Write the other purpose about this attachment. We don't have other usage about this flag.
+    clr_attachment_desc.format = m_final_sur_format.format;
+    clr_attachment_desc.samples = VK_SAMPLE_COUNT_1_BIT; //Get color from sample by sample 1 pixel.
+    clr_attachment_desc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; //Clear before using. If we set VK_ATTACHMENT_LOAD_OP_DONT_CARE, we can't clear via clearcolor.
+    clr_attachment_desc.storeOp = VK_ATTACHMENT_STORE_OP_STORE; //Store after using. If we set VK_ATTACHMENT_STORE_OP_DONT_CARE, we can't store rendering result to the buffer binded to this attachment.
+    clr_attachment_desc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    clr_attachment_desc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    clr_attachment_desc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    clr_attachment_desc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    VkAttachmentDescription attachment_descs[1] = {
+        clr_attachment_desc,
+    };
+
+    //--- Bind the output to color attachment.
+    VkAttachmentReference clr_attachment_ref = {};
+    clr_attachment_ref.attachment = 0; //ID of attachment in RenderPass.
+    clr_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    //2. Specify all subpass in this render pass.
+    //--- i. Subpass 0 for present rendering result.
+    //--- Create present subpass.
+    VkSubpassDescription present_sp_desc = {};
+    present_sp_desc.flags = 0;
+    present_sp_desc.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    present_sp_desc.inputAttachmentCount = 0;
+    present_sp_desc.pInputAttachments = nullptr;
+    present_sp_desc.colorAttachmentCount = 1;
+    present_sp_desc.pColorAttachments = &clr_attachment_ref;
+    present_sp_desc.pResolveAttachments = nullptr; //for multisample.
+    present_sp_desc.pDepthStencilAttachment = nullptr;
+    present_sp_desc.preserveAttachmentCount = 0;
+    present_sp_desc.pPreserveAttachments = nullptr;
+
+    //3. Create subpass dependecy for present pass.
+    std::vector<VkSubpassDependency> sp_dependencies;
+    sp_dependencies.resize(2);
+    //--- Begin dep.
+    sp_dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+    sp_dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    sp_dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    sp_dependencies[0].dstSubpass = 0;
+    sp_dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+    //--- End dep.
+    sp_dependencies[1].srcSubpass = 0;
+    sp_dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    sp_dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    sp_dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+    sp_dependencies[1].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    sp_dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    sp_dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    //4. Write created information for present pass.
+    VkRenderPassCreateInfo pass_c_info = {};
+    pass_c_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    pass_c_info.pNext = nullptr;
+    pass_c_info.flags = 0; //Not implement in Vulkan, it say 'reversed for future use.
+    pass_c_info.attachmentCount = 1;
+    pass_c_info.pAttachments = attachment_descs;
+    pass_c_info.subpassCount = 1;
+    pass_c_info.pSubpasses = &present_sp_desc;
+    pass_c_info.dependencyCount = static_cast<uint32_t>(sp_dependencies.size());
+    pass_c_info.pDependencies = sp_dependencies.data();
+
+    if (vkCreateRenderPass(m_device_handle, &pass_c_info, nullptr, &m_pre_rp_handle) != VK_SUCCESS) {
+        throw std::runtime_error("Create present render pass failure!");
+    }
+}
+
 //------- surface related -----------
 void VulkanManager::InitializeSwapChain()
 {
-    SD_SREF(m_swapchain).Initialize(m_vulkan_config,
-        m_phy_device_handle, m_device_handle, m_sur_handle,
-        m_final_queue_fam_id, m_present_q_handle);
+    SDLOG("--- Vulkan initialize swap chains.(Create swap chain)");
+    VkSurfaceCapabilitiesKHR sur_caps;
+    SDLOGD("------- Get surface capability : ");
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_phy_device_handle, m_sur_handle, &sur_caps);
+
+    bool has_desired_sur_fmt = false;
+    std::vector<VkSurfaceFormatKHR> sur_formats;
+    uint32_t sur_format_count;
+    vkGetPhysicalDeviceSurfaceFormatsKHR(m_phy_device_handle, m_sur_handle, &sur_format_count, nullptr);
+
+    if (sur_format_count != 0) {
+        sur_formats.resize(sur_format_count);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(m_phy_device_handle, m_sur_handle, &sur_format_count, sur_formats.data());
+    }
+
+    if (sur_format_count > 1) {
+        for (VkSurfaceFormatKHR &fmt : sur_formats) {
+            SDLOGD("Supported SurfaceFormat:(Format)%d, (colorSpace)%d", fmt.format, fmt.colorSpace);
+        }
+
+        for (VkSurfaceFormatKHR &desired_fmt : m_vulkan_config.m_desired_sur_formats) {
+            for (VkSurfaceFormatKHR &fmt : sur_formats) {
+                if (fmt.colorSpace == desired_fmt.colorSpace &&
+                    fmt.format == desired_fmt.format) {
+                    m_final_sur_format = fmt;
+                    has_desired_sur_fmt = true;
+                    break;
+                }
+            }
+            if (has_desired_sur_fmt == true) {
+                break;
+            }
+        }
+    }
+    else if (sur_format_count == 1) {
+        if (sur_formats[0].format == VK_FORMAT_UNDEFINED) {
+            has_desired_sur_fmt = true;
+        }
+    }
+
+    if (has_desired_sur_fmt == false) {
+        throw std::runtime_error("Desire surface format isn't exist.");
+    }
+
+    SDLOGD("Desired SurfaceFormat:(%d, %d)", m_final_sur_format.format, m_final_sur_format.colorSpace);
+
+    std::vector<VkPresentModeKHR> supported_p_modes;
+    uint32_t supported_p_mode_count;
+    vkGetPhysicalDeviceSurfacePresentModesKHR(m_phy_device_handle, m_sur_handle, &supported_p_mode_count, nullptr);
+
+    if (supported_p_mode_count != 0) {
+        supported_p_modes.resize(supported_p_mode_count);
+        vkGetPhysicalDeviceSurfacePresentModesKHR(m_phy_device_handle, m_sur_handle, &supported_p_mode_count, supported_p_modes.data());
+    }
+    else {
+        throw std::runtime_error("No present mode supported!");
+    }
+
+    for (const VkPresentModeKHR &p_mode : supported_p_modes) {
+        SDLOGD("Supported present mode : %d", p_mode);
+    }
+
+    for (uint32_t mode_id = 0; mode_id < m_vulkan_config.m_desired_pre_modes.size(); mode_id++) {
+        for (const VkPresentModeKHR &p_mode : supported_p_modes) {
+            if (m_vulkan_config.m_desired_pre_modes[mode_id] == p_mode) {
+                m_final_p_mode = m_vulkan_config.m_desired_pre_modes[mode_id];
+                break;
+            }
+        }
+        if (m_final_p_mode != VK_PRESENT_MODE_MAX_ENUM_KHR) {
+            break;
+        }
+    }
+
+    if (m_final_p_mode == VK_PRESENT_MODE_MAX_ENUM_KHR) {
+        throw std::runtime_error("No desired present mode supported!");
+    }
+    else {
+        SDLOG("final present mode : %d", m_final_p_mode);
+    }
+
+    if (sur_caps.currentExtent.width != 0 && sur_caps.currentExtent.height != 0) {
+        m_screen_size.SetResolution(sur_caps.currentExtent.width, sur_caps.currentExtent.height);
+    }
+    else {
+        m_screen_size.SetResolution(
+            std::max(sur_caps.minImageExtent.width, std::min(sur_caps.maxImageExtent.width, sur_caps.minImageExtent.width)),
+            std::max(sur_caps.minImageExtent.height, std::min(sur_caps.maxImageExtent.height, sur_caps.minImageExtent.height)));
+    }
+
+    uint32_t image_count = sur_caps.minImageCount + 1;
+    if (image_count > sur_caps.maxImageCount) {
+        image_count = sur_caps.maxImageCount;
+    }
+
+    uint32_t present_queue_fam_id = static_cast<uint32_t>(m_final_queue_fam_id);
+
+    VkSwapchainCreateInfoKHR sw_c_info = {};
+    sw_c_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    sw_c_info.pNext = nullptr;
+    sw_c_info.flags = 0;
+    sw_c_info.surface = m_sur_handle;
+    sw_c_info.minImageCount = image_count;
+    sw_c_info.imageFormat = m_final_sur_format.format;
+    sw_c_info.imageColorSpace = m_final_sur_format.colorSpace;
+    sw_c_info.imageExtent = { m_screen_size.GetWidth(), m_screen_size.GetHeight() };
+    sw_c_info.imageArrayLayers = 1;
+    sw_c_info.imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    sw_c_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    sw_c_info.queueFamilyIndexCount = 1;
+    sw_c_info.pQueueFamilyIndices = &present_queue_fam_id;
+    sw_c_info.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR; //Use this for android.(If use currentTransform as presentTransform, we will see double rotation)
+    sw_c_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    sw_c_info.presentMode = m_final_p_mode;
+    sw_c_info.clipped = VK_TRUE;
+    sw_c_info.oldSwapchain = VK_NULL_HANDLE;
+
+    if (vkCreateSwapchainKHR(m_device_handle, &sw_c_info, nullptr, &m_sc_handle) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create swap chain!");
+    }
+
+    if (vkGetSwapchainImagesKHR(m_device_handle, m_sc_handle, &image_count, nullptr) != VK_SUCCESS) {
+        throw std::runtime_error("failed to get image number of swap chain!");
+    }
+
+    if (image_count > 0) {
+        m_sc_img_handles.resize(image_count);
+        if (vkGetSwapchainImagesKHR(m_device_handle, m_sc_handle, &image_count, m_sc_img_handles.data()) == VK_SUCCESS) {
+            SDLOG("SwapChainImages number : %u, ViewPort(%u,%u)", image_count, m_screen_size.GetWidth(), m_screen_size.GetHeight());
+        }
+        else {
+            throw std::runtime_error("failed to get image handle of swap chain!");
+        }
+    }
+
+    VkSemaphoreCreateInfo acq_sem_c_info = {};
+    acq_sem_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    acq_sem_c_info.pNext = nullptr;
+    acq_sem_c_info.flags = 0;
+
+    if (vkCreateSemaphore(m_device_handle, &acq_sem_c_info, nullptr, &m_acq_img_sema_handle) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create acq img semaphore!");
+    }
+
+    VkSemaphoreCreateInfo present_sem_c_info = {};
+    present_sem_c_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    present_sem_c_info.pNext = nullptr;
+    present_sem_c_info.flags = 0;
+
+    if (vkCreateSemaphore(m_device_handle, &present_sem_c_info, nullptr, &m_pre_sema_handle) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create present semaphore!");
+    }
+}
+
+void VulkanManager::InitializeSCImageViewsAndFBs()
+{
+    SDLOG("--- Vulkan initialize image views.");
+    //
+    m_sc_iv_handles.resize(m_sc_img_handles.size());
+    m_sc_fb_handles.resize(m_sc_img_handles.size());
+    for (uint32_t imgv_id = 0; imgv_id < m_sc_iv_handles.size(); imgv_id++) {
+        //create image view for sc img[id].
+        VkImageViewCreateInfo iv_c_info = {};
+        iv_c_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        iv_c_info.pNext = nullptr;
+        iv_c_info.flags = 0;
+        iv_c_info.image = m_sc_img_handles[imgv_id];
+        iv_c_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        iv_c_info.format = m_final_sur_format.format;
+        iv_c_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable r in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_R(r is r channel).
+        iv_c_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable g in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_G(g is g channel).
+        iv_c_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable b in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_B(b is b channel).
+        iv_c_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY; //Tell us if we use it in shader, variable a in struct is which channel. Use identity means we use VK_COMPONENT_SWIZZLE_A(a is a channel).
+        iv_c_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        iv_c_info.subresourceRange.baseMipLevel = 0;
+        iv_c_info.subresourceRange.levelCount = 1;
+        iv_c_info.subresourceRange.baseArrayLayer = 0;
+        iv_c_info.subresourceRange.layerCount = 1;
+
+        if (vkCreateImageView(m_device_handle, &iv_c_info, nullptr, &m_sc_iv_handles[imgv_id]) != VK_SUCCESS) {
+            throw std::runtime_error(SDE::Basic::StringFormat("failed to create image views[%d]!", imgv_id).c_str());
+        }
+
+        //create fbo for sc img[id].
+        VkImageView attachments[1] = {
+            m_sc_iv_handles[imgv_id]
+        };
+
+        VkFramebufferCreateInfo fbo_c_info = {};
+        fbo_c_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        fbo_c_info.pNext = nullptr;
+        fbo_c_info.flags = 0; //Reserved for future use
+        fbo_c_info.renderPass = m_pre_rp_handle;
+        fbo_c_info.attachmentCount = 1;
+        fbo_c_info.pAttachments = attachments;
+        fbo_c_info.width = m_screen_size.GetWidth();
+        fbo_c_info.height = m_screen_size.GetHeight();
+        fbo_c_info.layers = 1;
+
+        if (vkCreateFramebuffer(m_device_handle, &fbo_c_info, nullptr, &m_sc_fb_handles[imgv_id]) != VK_SUCCESS) {
+            throw std::runtime_error(SDE::Basic::StringFormat("failed to create FBO[%d]!", imgv_id).c_str());
+        }
+    }
 }
 
 bool VulkanManager::IsContainerNecessaryQueueFlags(VkQueueFlags i_flags)

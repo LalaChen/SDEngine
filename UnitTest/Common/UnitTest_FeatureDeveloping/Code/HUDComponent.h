@@ -20,9 +20,9 @@ public:
 public:
     explicit HUDComponent(const ObjectName &i_name);
     virtual ~HUDComponent();
-protected:
-    void InitializeImpl() override;
-    void UpdateImpl() override;
+public:
+    virtual void Initialize();
+    virtual void Update();
 public:
     bool OnBtn1Clicked(const EventArg &i_arg);
 protected:
