@@ -28,8 +28,9 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VertexBufferIdentity::VertexBufferIdentity()
-: m_buffer_handle(SD_NULL_HANDLE)
-, m_memory_handle(SD_NULL_HANDLE)
+: m_handle(SD_NULL_HANDLE)
+, m_device(SD_NULL_HANDLE)
+, m_memory(SD_NULL_HANDLE)
 , m_data_size(0)
 , m_memory_size(0)
 , m_format(VertexBufferFormat_MAX_DEFINE_VALUE)

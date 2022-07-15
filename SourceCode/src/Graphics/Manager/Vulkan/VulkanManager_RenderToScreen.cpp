@@ -28,225 +28,153 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-void VulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex)
+void VulkanManager::CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity)
 {
-    const TextureIdentity &tex_identity = GetIdentity(i_tex);
-    //Get swapchain image.
-    uint32_t image_index;
+    //
+    VkPhysicalDevice &phy_device   = reinterpret_cast<VkPhysicalDevice&>(io_identity.m_phy_device);
+    VkDevice         &device       = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    VkSurfaceKHR     &surface      = reinterpret_cast<VkSurfaceKHR&>(io_identity.m_surface);
+    VkSwapchainKHR   &swapchain    = reinterpret_cast<VkSwapchainKHR&>(io_identity.m_handle);
 
-    VkResult result = vkAcquireNextImageKHR(
-        m_device_handle, m_sc_handle, m_vulkan_config.m_max_img_acq_time,
-        m_acq_img_sema_handle, VK_NULL_HANDLE, &image_index);
+    phy_device = m_phy_device;
+    device     = m_device;
+    surface    = m_surface;
 
-    if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-        SDLOGW("We can't get nxt swapchain image. error(%d)", result);
-        return;
+    if (m_surface_capabilities.currentExtent.width != 0 && m_surface_capabilities.currentExtent.height != 0) {
+        io_identity.m_screen_size.SetResolution(m_surface_capabilities.currentExtent.width, m_surface_capabilities.currentExtent.height);
     }
-    //Begin command buffer
-    VkCommandBufferBeginInfo cmd_buf_c_info = {};
-    cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    cmd_buf_c_info.pNext = nullptr;
-    cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    cmd_buf_c_info.pInheritanceInfo = nullptr;
+    else {
+        io_identity.m_screen_size.SetResolution(
+            std::max(m_surface_capabilities.minImageExtent.width, std::min(m_surface_capabilities.maxImageExtent.width, m_surface_capabilities.minImageExtent.width)),
+            std::max(m_surface_capabilities.minImageExtent.height, std::min(m_surface_capabilities.maxImageExtent.height, m_surface_capabilities.minImageExtent.height)));
+    }
 
-    result = vkBeginCommandBuffer(m_main_cb_handle, &cmd_buf_c_info);
+    uint32_t image_count = m_surface_capabilities.minImageCount + 1;
+    if (image_count > m_surface_capabilities.maxImageCount) {
+        image_count = m_surface_capabilities.maxImageCount;
+    }
+
+    //Write Create Info
+    std::vector<uint32_t> queue_fam_ids = { m_queue_family.GetQueueFamilyID() };
+    VkSwapchainCreateInfoKHR info = InitializeVkSwapchainCreateInfoKHR(
+        m_surface,
+        m_final_sur_format,
+        image_count,
+        io_identity.m_screen_size.GetWidth(),
+        io_identity.m_screen_size.GetHeight(),
+        1, queue_fam_ids, m_final_p_mode);
+
+    VkResult result = CreateVkSwapchain(swapchain, device, info);
     if (result != VK_SUCCESS) {
-        SDLOGW("We can't begin command buffer(%x)!!! error(%d)", m_main_cb_handle, result);
+        SDLOGE("Create VkSwapchain failure(%d)!!!", result);
+        return;
+    }
+    else {
+        std::vector<VkImage> images;
+        result = CollectVkImageForVkSwapchain(images, device, swapchain);
+        if (result != VK_SUCCESS) {
+            SDLOGE("Get images from VkSwapchain failure(%d)!!!", result);
+        }
+        else {
+            io_identity.m_swapchain_images.resize(images.size());
+            for (uint32_t i = 0; i < images.size(); ++i) {
+                io_identity.m_swapchain_images[i] = reinterpret_cast<CompHandle>(images[i]);
+            }
+            io_identity.SetValid();
+        }
+    }
+}
+
+void VulkanManager::DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity)
+{
+    VkDevice         &device    = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    VkSurfaceKHR     &surface   = reinterpret_cast<VkSurfaceKHR&>(io_identity.m_surface);
+    VkSwapchainKHR   &swapchain = reinterpret_cast<VkSwapchainKHR&>(io_identity.m_handle);
+    DestroyVkSwapchain(swapchain, device);
+    io_identity.SetInvalid();
+}
+
+void VulkanManager::RenderTextureToSwapchain(
+    const GraphicsSwapchainIdentity &i_identity,
+    const GraphicsQueueWeakReferenceObject &i_queue,
+    const CommandBufferWeakReferenceObject &i_cmd_buffer,
+    const GraphicsSemaphoreWeakReferenceObject &i_acq_sema,
+    const GraphicsSemaphoreWeakReferenceObject &i_present_sema,
+    const TextureWeakReferenceObject &i_texture)
+{
+    uint32_t image_idx;
+    VkResult result = VK_SUCCESS;
+    VkDevice         device    = reinterpret_cast<VkDevice>(i_identity.m_device);
+    VkSurfaceKHR     surface   = reinterpret_cast<VkSurfaceKHR>(i_identity.m_surface);
+    VkSwapchainKHR   swapchain = reinterpret_cast<VkSwapchainKHR>(i_identity.m_handle);
+
+    const GraphicsSemaphoreIdentity &acq_sema_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_acq_sema);
+    VkSemaphore acq_sema = reinterpret_cast<VkSemaphore>(acq_sema_identity.m_handle);
+
+    const CommandBufferIdentity &cmd_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_cmd_buffer);
+    VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cmd_identity.m_handle);
+
+    const TextureIdentity &tex_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_texture);
+    VkImage src_image = reinterpret_cast<VkImage>(tex_identity.m_handle);
+    //1. Acquire Image Idx.
+    result = GetCurrentVkSwapchainIdx(
+        image_idx, device, swapchain, acq_sema);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Get vulkan swapchain image idx failure(%d)", result);
         return;
     }
 
-    //Begin RenderPass.
-    VkRect2D render_area = {};
-    render_area.offset = { 0, 0 };
-    render_area.extent = { m_screen_size.GetWidth(), m_screen_size.GetHeight() };
+    //2. Record Image Copy to Swapchain Image.
+    BeginCommandBuffer(cmd_identity, CommandBufferInheritanceInfo());
 
     VkImageBlit blit_param = {};
     blit_param.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit_param.srcSubresource.baseArrayLayer = 0;
     blit_param.srcSubresource.mipLevel = 0;
-    blit_param.srcSubresource.layerCount = 1;
+    blit_param.srcSubresource.layerCount = tex_identity.m_array_layers;
     blit_param.srcOffsets[0].x = 0;
     blit_param.srcOffsets[0].y = 0;
     blit_param.srcOffsets[0].z = 0;
-    blit_param.srcOffsets[1].x = m_screen_size.GetWidth();
-    blit_param.srcOffsets[1].y = m_screen_size.GetHeight();
+    blit_param.srcOffsets[1].x = i_identity.m_screen_size.GetWidth();
+    blit_param.srcOffsets[1].y = i_identity.m_screen_size.GetHeight();
     blit_param.srcOffsets[1].z = 1;
     blit_param.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit_param.dstSubresource.baseArrayLayer = 0;
     blit_param.dstSubresource.mipLevel = 0;
-    blit_param.dstSubresource.layerCount = 1;
+    blit_param.dstSubresource.layerCount = tex_identity.m_array_layers;
     blit_param.dstOffsets[0].x = 0;
     blit_param.dstOffsets[0].y = 0;
     blit_param.dstOffsets[0].z = 0;
-    blit_param.dstOffsets[1].x = m_screen_size.GetWidth();
-    blit_param.dstOffsets[1].y = m_screen_size.GetHeight();
-    blit_param.dstOffsets[1].z = 1;
+    blit_param.dstOffsets[1].x = i_identity.m_screen_size.GetWidth();
+    blit_param.dstOffsets[1].y = i_identity.m_screen_size.GetHeight();
+    blit_param.dstOffsets[1].z = tex_identity.m_array_layers;
 
-    if (tex_identity.m_image_handle != VK_NULL_HANDLE) {
-        vkCmdBlitImage(m_main_cb_handle,
-            reinterpret_cast<VkImage>(tex_identity.m_image_handle),
-            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-            m_sc_img_handles[image_index],
-            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit_param,
-            VK_FILTER_NEAREST);
-    }
+    VkImage dst_image = reinterpret_cast<VkImage>(i_identity.m_swapchain_images[image_idx]);
 
-    //End command buffer
-    result = vkEndCommandBuffer(m_main_cb_handle);
-    if (result != VK_SUCCESS) {
-        SDLOGW("We can't end command buffer(%x)!!! error(%d)", m_main_cb_handle, result);
-        return;
-    }
+    BlitVkImages(cmd_buffer, src_image, dst_image, blit_param);
 
-    //Push command buffer to queue.
-    VkSemaphore wait_semaphores[1] = { m_acq_img_sema_handle };
-    VkPipelineStageFlags submit_wait_flags[1] = { VK_PIPELINE_STAGE_ALL_COMMANDS_BIT };
-    VkSubmitInfo submit_info = {};
-    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submit_info.pNext = nullptr;
-    submit_info.waitSemaphoreCount = 1;
-    submit_info.pWaitSemaphores = wait_semaphores; //wait acq image.
-    submit_info.pWaitDstStageMask = submit_wait_flags;
-    submit_info.signalSemaphoreCount = 1;
-    submit_info.pSignalSemaphores = &m_pre_sema_handle; //set present semaphore.
-    submit_info.commandBufferCount = 1;
-    submit_info.pCommandBuffers = &m_main_cb_handle;
+    EndCommandBuffer(cmd_identity);
+    //3. submit to present queue.
+    SD_SREF(i_queue).SubmitCommandBuffers({i_cmd_buffer});
 
-    result = vkQueueSubmit(m_present_q_handle, 1, &submit_info, m_main_cb_fence_handle);
-    if (result != VK_SUCCESS) {
-        SDLOGW("Submit command buffer to PresentQueue(%p) failure(%d)!!!", m_present_q_handle, result);
-    }
-
-    do {
-        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, m_vulkan_config.m_max_fence_wait_time);
-    } while (result == VK_TIMEOUT);
-    if (result != VK_SUCCESS) {
-        SDLOGW("Wait sync failure(%d)!!!", result);
-        return;
-    }
-
-    //Reset main command buffer sync.
-    result = vkResetFences(m_device_handle, 1, &m_main_cb_fence_handle);
-    if (result != VK_SUCCESS) {
-        SDLOGW("reset main command buffer fence failure!!! error(%d).", result);
-    }
-
-    //Present to screen
-    VkPresentInfoKHR p_info = {};
-    p_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    p_info.pNext = nullptr;
-    p_info.waitSemaphoreCount = 1;
-    p_info.pWaitSemaphores = &m_pre_sema_handle;
-    p_info.swapchainCount = 1;
-    p_info.pSwapchains = &m_sc_handle;
-    p_info.pImageIndices = &image_index;
-    p_info.pResults = nullptr;
-
-    result = vkQueuePresentKHR(m_present_q_handle, &p_info);
-    if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-        SDLOGW("We can't present image by queue. error(%d).", result);
-    }
-
-    m_fps_counter.AddCount();
+    //4. present queue.
+    SD_SREF(i_queue).Present(i_identity, image_idx, {i_present_sema});
 }
 
-
-void VulkanManager::RenderToScreen()
+void VulkanManager::RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex)
 {
-    //Get swapchain image.
-    uint32_t image_index;
+    if (m_swapchain.IsNull() == false) {
+        if (i_tex.IsNull() == true) {
+            return;
+        }
 
-    VkResult result = vkAcquireNextImageKHR(
-        m_device_handle, m_sc_handle, m_vulkan_config.m_max_img_acq_time,
-        m_acq_img_sema_handle, VK_NULL_HANDLE, &image_index);
+        if (SD_WREF(i_tex).IsInitialized() == false) {
+            return;
+        }
 
-    if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-        SDLOGW("We can't get nxt swapchain image.");
-        return;
-    }
-    //Begin command buffer
-    VkCommandBufferBeginInfo cmd_buf_c_info = {};
-    cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    cmd_buf_c_info.pNext = nullptr;
-    cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    cmd_buf_c_info.pInheritanceInfo = nullptr;
+        SD_SREF(m_swapchain).RenderTextureToSwapchain(i_tex);
 
-    if (vkBeginCommandBuffer(m_main_cb_handle, &cmd_buf_c_info) != VK_SUCCESS) {
-        SDLOGW("We can't begin command buffer(%x)!!!", m_main_cb_handle);
-        return;
-    }
-
-    //Begin RenderPass.
-    VkRect2D render_area = {};
-    render_area.offset = { 0, 0 };
-    render_area.extent = { m_screen_size.GetWidth(), m_screen_size.GetHeight() };
-
-    VkRenderPassBeginInfo rp_begin_info = {};
-    rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    rp_begin_info.pNext = nullptr;
-    rp_begin_info.renderPass = m_pre_rp_handle;
-    rp_begin_info.framebuffer = m_sc_fb_handles[image_index];
-    rp_begin_info.renderArea = render_area;
-    rp_begin_info.clearValueCount = 1;
-    rp_begin_info.pClearValues = &sClearColor;
-
-    vkCmdBeginRenderPass(m_main_cb_handle, &rp_begin_info, VK_SUBPASS_CONTENTS_INLINE);
-
-    //Render to screen (To do : Compose buffers.)
-
-    //End RenderPass.
-    vkCmdEndRenderPass(m_main_cb_handle);
-    //End command buffer
-    if (vkEndCommandBuffer(m_main_cb_handle) != VK_SUCCESS) {
-        SDLOGW("We can't end command buffer(%x)!!!", m_main_cb_handle);
-        return;
-    }
-
-    //Push command buffer to queue.
-    VkSemaphore wait_semaphores[1] = { m_acq_img_sema_handle };
-    VkPipelineStageFlags submit_wait_flags[1] = { VK_PIPELINE_STAGE_ALL_COMMANDS_BIT };
-    VkSubmitInfo submit_info = {};
-    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submit_info.pNext = nullptr;
-    submit_info.waitSemaphoreCount = 1;
-    submit_info.pWaitSemaphores = wait_semaphores; //wait acq image.
-    submit_info.pWaitDstStageMask = submit_wait_flags;
-    submit_info.signalSemaphoreCount = 1;
-    submit_info.pSignalSemaphores = &m_pre_sema_handle; //set present semaphore.
-    submit_info.commandBufferCount = 1;
-    submit_info.pCommandBuffers = &m_main_cb_handle;
-
-    if (vkQueueSubmit(m_present_q_handle, 1, &submit_info, m_main_cb_fence_handle) != VK_SUCCESS) {
-        SDLOGW("Submit command buffer to PresentQueue(%p) failure!!!", m_present_q_handle);
-    }
-
-    do {
-        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, m_vulkan_config.m_max_fence_wait_time);
-    } while (result == VK_TIMEOUT);
-    if (result != VK_SUCCESS) {
-        SDLOGW("Wait sync failure(%d)!!!", result);
-        return;
-    }
-
-    //Reset main command buffer sync.
-    if (vkResetFences(m_device_handle, 1, &m_main_cb_fence_handle) != VK_SUCCESS) {
-        SDLOGW("reset main command buffer fence failure!!!");
-    }
-
-    //Present to screen
-    VkPresentInfoKHR p_info = {};
-    p_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    p_info.pNext = nullptr;
-    p_info.waitSemaphoreCount = 1;
-    p_info.pWaitSemaphores = &m_pre_sema_handle;
-    p_info.swapchainCount = 1;
-    p_info.pSwapchains = &m_sc_handle;
-    p_info.pImageIndices = &image_index;
-    p_info.pResults = nullptr;
-
-    if (vkQueuePresentKHR(m_present_q_handle, &p_info) != VK_SUCCESS) {
-        SDLOGW("We can't present image by queue.");
-        return;
+        m_fps_counter.AddCount();
     }
 }
 

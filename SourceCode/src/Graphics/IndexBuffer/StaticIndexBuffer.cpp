@@ -42,14 +42,14 @@ StaticIndexBuffer::~StaticIndexBuffer()
 void StaticIndexBuffer::RefreshBufferData(const void *i_data_ptr, Size_ui64 i_data_size)
 {
     //1. Ckeck CompHandle is null handle or not.
-    if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
+    if (m_identity.m_buffer != SD_NULL_HANDLE) {
         SDLOGW("Static vertex buffer had been initialized. Please refresh data after clear old one.");
         return;
     }
     //2. Create new one.
     GraphicsManager::GetRef().CreateIndexBuffer(m_identity, i_data_size);
     //3. refresh static buffer.(staging)
-    if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
+    if (m_identity.m_buffer != SD_NULL_HANDLE && m_identity.m_memory != SD_NULL_HANDLE) {
         GraphicsManager::GetRef().RefreshStaticIndexBuffer(m_identity, i_data_ptr, i_data_size);
     }
     else {

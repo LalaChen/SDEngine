@@ -111,6 +111,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_OpenXR.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -119,6 +120,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_OpenXR.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -127,6 +129,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_OpenXR.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -135,6 +138,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_OpenXR.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -143,6 +147,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_OpenXR.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -151,6 +156,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_OpenXR.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -159,6 +165,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_OpenXR.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <Import Project="..\..\..\PropSheet\SDEngine.props" />
@@ -167,6 +174,7 @@
     <Import Project="..\..\..\PropSheet\SDThirdParty_StbImage.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_Json.props" />
     <Import Project="..\..\..\PropSheet\SDThirdParty_ImGui.props" />
+    <Import Project="..\..\..\PropSheet\SDThirdParty_OpenXR.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

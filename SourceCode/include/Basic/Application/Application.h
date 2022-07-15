@@ -168,13 +168,13 @@ public:
      */
     virtual void Resume();
 
-    /*! \fn virtual void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h);
-     *  \param [in] i_ns_handle new surface of window.(if necessary)
+    /*! \fn virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h);
+     *  \param [in] i_new_surface new surface of window.(if necessary)
      *  \param [in] i_w Width.
      *  \param [in] i_h Height.
      *  \brief Resume app. Please call this function when app re-focus.
      */
-    virtual void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h);
+    virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h);
 public:
     /*! \fn void SetWindowResolution(Size_ui32 i_width, Size_ui32 i_height);
      *  \param [in] i_width Width of app.

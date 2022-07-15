@@ -47,15 +47,21 @@ class SDENGINE_CLASS ComponentBase : public EventObject
 public:
     explicit ComponentBase(const ObjectName &i_object_name);
     virtual ~ComponentBase();
+public:
+    void Initialize();
+    void Update();
+public:
+    bool IsInitialized() const;
+protected:
+    virtual void InitializeImpl() {};
+    virtual void UpdateImpl() {};
+protected:
+    bool m_initialized;
 };
 
-inline ComponentBase::ComponentBase(const ObjectName &i_object_name)
-: EventObject(i_object_name)
+inline bool ComponentBase::IsInitialized() const
 {
-}
-
-inline ComponentBase::~ComponentBase()
-{
+    return m_initialized;
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

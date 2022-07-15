@@ -39,6 +39,7 @@ SD_SINGLETON_DECLARATION_IMPL(GraphicsManager);
 
 GraphicsManager::GraphicsManager()
 : m_fps_counter("FPS")
+, m_graphics_identity_getter(new GraphicsIdentityGetter("GraphicsIdentityGetter"))
 {
     // Register instance.
     SD_SINGLETON_DECLARATION_REGISTER;
@@ -62,7 +63,7 @@ void GraphicsManager::InitializeBasicResource()
                 m_FPS = (static_cast<double>(i_count) / i_period_ms) * 1000.0;
                 //SDLOGD("FPS : %lf.", m_FPS);
             }
-    );
+        );
 
     SDLOG("Initialize Basic Resource Start!!!");
 
@@ -81,24 +82,24 @@ void GraphicsManager::InitializeBasicResource()
 
 void GraphicsManager::ReleaseBasicResource()
 {
-    SDLOG("Release.");
+    SDLOG("Release Basic Resource.");
+    for (std::map<ObjectName, ShaderProgramStrongReferenceObject>::iterator sp_iter = m_shader_program_maps.begin();
+        sp_iter != m_shader_program_maps.end();) {
+        sp_iter = m_shader_program_maps.erase(sp_iter);
+    }
+
+    for (std::map<ObjectName, DescriptorSetLayoutStrongReferenceObject>::iterator ds_iter = m_basic_dsl_maps.begin();
+        ds_iter != m_basic_dsl_maps.end();) {
+        ds_iter = m_basic_dsl_maps.erase(ds_iter);
+    }
+
+    for (std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject>::iterator mvud_iter = m_material_basic_uvd_maps.begin();
+        mvud_iter != m_material_basic_uvd_maps.end();) {
+        mvud_iter = m_material_basic_uvd_maps.erase(mvud_iter);
+    }
+
     ReleaseRenderPasses();
     m_fps_counter.Stop();
-}
-
-void GraphicsManager::Render()
-{
-    //1. Execute some operations for each graphics API before rendering.
-    RenderBegin();
-    //2. Render scene by each camera.
-
-    //3. Execute some operations for each graphics API when render to screen.
-    RenderToScreen();
-    //4. Execute some operations for each graphics API after rendering.
-    RenderEnd();
-
-    //
-    m_fps_counter.AddCount();
 }
 
 TextureFormatEnum GraphicsManager::GetDefaultDepthBufferFormat() const

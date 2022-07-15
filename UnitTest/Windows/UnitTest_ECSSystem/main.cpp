@@ -17,8 +17,6 @@ public:
     explicit ComponentA(const ObjectName &i_object_name, uint32_t i_a, uint32_t i_b, uint32_t i_c) : Component(i_object_name), m_a(i_a), m_b(i_b), m_c(i_c){}
     virtual ~ComponentA() {}
 public:
-    void Initialize() override{}
-public:
     uint32_t m_a, m_b, m_c;
 };
 
@@ -31,8 +29,6 @@ public:
 public:
     explicit ComponentB(const ObjectName &i_object_name, const std::string &i_name1, const std::string &i_name2) : Component(i_object_name), m_name1(i_name1), m_name2(i_name2){}
     virtual ~ComponentB() {}
-public:
-    void Initialize() override {}
 public:
     std::string m_name1;
     std::string m_name2;

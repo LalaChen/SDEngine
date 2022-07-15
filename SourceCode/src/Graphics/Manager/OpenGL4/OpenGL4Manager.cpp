@@ -53,7 +53,7 @@ void OpenGL4Manager::ReleaseGraphicsSystem()
     SDLOG("Release OpenGL4Manager.");
 }
 
-void OpenGL4Manager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h)
+void OpenGL4Manager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
 {
     glViewport(0, 0, i_w, i_h);
     glClearColor(0.2f, 0.5f, 0.8f, 1.0f);
@@ -61,26 +61,7 @@ void OpenGL4Manager::Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h
     glEnable(GL_DEPTH_TEST);
 }
 
-//----------------------- Render Flow -----------------------
-void OpenGL4Manager::RenderBegin()
-{
-}
-
-void OpenGL4Manager::RenderToScreen()
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, 800, 600);
-    glClearColor(0.2f, 0.5f, 0.8f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-}
-
-void OpenGL4Manager::RenderEnd() 
-{
-}
-
-
-void OpenGL4Manager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex)
+void OpenGL4Manager::RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //render quad to screen.

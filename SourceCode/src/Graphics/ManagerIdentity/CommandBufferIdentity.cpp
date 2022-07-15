@@ -29,14 +29,13 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 CommandBufferIdentity::CommandBufferIdentity()
 : m_handle(SD_NULL_HANDLE)
+, m_device(SD_NULL_HANDLE)
 , m_cmd_buffer_level(CommandBufferLevel_PRIMARY)
 {
-
 }
 
 CommandBufferIdentity::~CommandBufferIdentity()
 {
-
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

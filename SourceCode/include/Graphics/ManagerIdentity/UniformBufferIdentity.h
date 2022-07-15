@@ -32,15 +32,14 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 /*! \class UniformBufferIdentity
  *  \brief Keep all graphics handle or ID about uniform buffer in this structure.
  */
-class SDENGINE_CLASS UniformBufferIdentity
+class SDENGINE_CLASS UniformBufferIdentity : public GraphicsElementIdentity
 {
 public:
     /*! \fn explicit UniformBufferIdentity();
@@ -53,15 +52,20 @@ public:
      */
     ~UniformBufferIdentity();
 public:
-    /*! \var CompHandle m_buffer_handle;
+    /*! \var CompHandle m_buffer;
      *  \brief The buffer handle. It is valid while the value is not equal 0.
      */
-    CompHandle m_buffer_handle;
+    CompHandle m_buffer;
 
-    /*! \var CompHandle m_memory_handle;
+    /*! \var CompHandle m_device;
+     *  \brief devices handle. (Original Context in OpenGL, VkDevice in Vulkan)
+     */
+    CompHandle m_device;
+
+    /*! \var CompHandle m_memory;
      *  \brief The memory handle. This value is nullptr in opengl system.
      */
-    CompHandle m_memory_handle;
+    CompHandle m_memory;
 
     /*! \var Size_ui64 m_data_size;
      *  \brief current buffer data size.

@@ -44,7 +44,7 @@ void DynamicIndexBuffer::RefreshBufferData(const void *i_data_ptr, Size_ui64 i_d
         return;
     }
     //1. Ckeck CompHandle is null handle or not.
-    if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
+    if (m_identity.m_buffer != SD_NULL_HANDLE) {
         //--- No, compare current buffer size with new one.
         if (m_identity.m_memory_size < i_data_size) {
             SDLOG("Dynamic buffer size is small than input datas. Delete old and allocate new one!!!");
@@ -61,7 +61,7 @@ void DynamicIndexBuffer::RefreshBufferData(const void *i_data_ptr, Size_ui64 i_d
     }
 
     //2. refresh dynamic buffer.(host)
-    if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
+    if (m_identity.m_buffer != SD_NULL_HANDLE && m_identity.m_memory != SD_NULL_HANDLE) {
         GraphicsManager::GetRef().RefreshDynamicIndexBuffer(m_identity, i_data_ptr, i_data_size);
     }
     else {
@@ -78,7 +78,7 @@ void DynamicIndexBuffer::Resize(Size_ui64 i_data_size)
         return;
     }
     //1. Ckeck CompHandle is null handle or not.
-    if (m_identity.m_buffer_handle != SD_NULL_HANDLE) {
+    if (m_identity.m_buffer != SD_NULL_HANDLE) {
         //--- No, compare current buffer size with new one.
         if (m_identity.m_memory_size < i_data_size) {
             SDLOG("Dynamic buffer size is small than input datas. Delete old and allocate new one!!!");

@@ -29,7 +29,8 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 GraphicsPipelineIdentity::GraphicsPipelineIdentity()
 : m_handle(SD_NULL_HANDLE)
-, m_pipeline_layout_handle(SD_NULL_HANDLE)
+, m_device(SD_NULL_HANDLE)
+, m_pipeline_layout(SD_NULL_HANDLE)
 , m_subpass_id(0)
 {
 }

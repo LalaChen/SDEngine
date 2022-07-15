@@ -55,7 +55,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(ShaderModule);
 class SDENGINE_CLASS ShaderModule : public Object
 {
 public:
-    friend class GraphicsManager;
+    friend class GraphicsIdentityGetter;
 public:
     /*! \fn explicit ShaderModule(const ObjectName i_shader_name);
      *  \brief The constructor of ShaderModule Class.

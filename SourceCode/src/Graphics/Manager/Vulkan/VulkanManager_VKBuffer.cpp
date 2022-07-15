@@ -30,35 +30,23 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 //----------- Vertex Buffer Function ------------
 VkResult VulkanManager::CreateVkBuffer(
-    VkBuffer &io_handle,
-    VkDeviceSize i_size,
-    VkBufferUsageFlags i_buffer_usage,
-    VkSharingMode i_sharing_mode)
+    VkBuffer &io_buffer,
+    VkDevice i_device,
+    const VkBufferCreateInfo &i_info)
 {
-    //1. create buffer information.
-    VkBufferCreateInfo vec_buf_c_info = {};
-    vec_buf_c_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    vec_buf_c_info.pNext = nullptr;
-    vec_buf_c_info.flags = 0;
-    vec_buf_c_info.usage = i_buffer_usage;
-    vec_buf_c_info.size = i_size;
-    vec_buf_c_info.sharingMode = i_sharing_mode;
-    if (i_sharing_mode == VK_SHARING_MODE_EXCLUSIVE) {
-        vec_buf_c_info.queueFamilyIndexCount = 0; //VK_SHARING_MODE_EXCLUSIVE don't need.
-        vec_buf_c_info.pQueueFamilyIndices = nullptr;
-    }
-    else {
-        SDLOGW("Not support concurrent mode (I haven't design for concurrent res now)!!");
-    }
-
-    return vkCreateBuffer(m_device_handle, &vec_buf_c_info, nullptr, &io_handle);
+    return vkCreateBuffer(i_device, &i_info, nullptr, &io_buffer);
 }
 
-VkResult VulkanManager::RefreshDataToHostVisibleVKDeviceMemory(VkDeviceMemory i_memory_handle, VkDeviceSize i_allocated_size, const void *i_data_ptr, Size_ui64 i_data_size)
+VkResult VulkanManager::RefreshDataToHostVisibleVKDeviceMemory(
+    VkDeviceMemory i_memory,
+    VkDevice i_device,
+    VkDeviceSize i_allocated_size,
+    const void *i_data_ptr,
+    Size_ui64 i_data_size)
 {
     VkResult result = VK_SUCCESS;
     void *local_ptr = nullptr;
-    result = MapVkDeviceMemory(i_memory_handle, i_allocated_size, local_ptr);
+    result = MapVkDeviceMemory(i_memory, i_device, i_allocated_size, local_ptr);
     if (result != VK_SUCCESS) {
         return result;
     }
@@ -66,20 +54,20 @@ VkResult VulkanManager::RefreshDataToHostVisibleVKDeviceMemory(VkDeviceMemory i_
     std::memcpy(local_ptr, i_data_ptr, i_data_size);
 
     //--- ii. flush memory.
-    result = FlushMappedVkDeviceMemoryRanges(i_memory_handle);
+    result = FlushMappedVkDeviceMemoryRanges(i_memory, i_device);
     if (result != VK_SUCCESS) {
         return result;
     }
     //--- iii. unmap memory.
-    UnmapVkDeviceMemory(i_memory_handle);
+    UnmapVkDeviceMemory(i_memory, i_device);
     return result;
 }
 
-VkResult VulkanManager::CopyVkBuffer(
-    VkCommandBuffer i_cb_handle,
-    VkBuffer i_sb_handle,
+VkResult VulkanManager::PrepareCopyVkBufferCommand(
+    VkCommandBuffer i_cmd_buffer,
+    VkBuffer i_src_buffer,
     VkDeviceSize i_data_size,
-    VkBuffer i_db_handle,
+    VkBuffer i_dst_buffer,
     VkAccessFlags i_src_access_flags,
     VkAccessFlags i_dst_access_flags,
     VkPipelineStageFlags i_src_pipe_stage_flags,
@@ -93,14 +81,14 @@ VkResult VulkanManager::CopyVkBuffer(
     cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     cmd_buf_c_info.pInheritanceInfo = nullptr;
 
-    result = vkBeginCommandBuffer(i_cb_handle, &cmd_buf_c_info);
+    result = vkBeginCommandBuffer(i_cmd_buffer, &cmd_buf_c_info);
     if (result != VK_SUCCESS) {
-        SDLOGW("We can't begin command buffer(%p)(e:%d)!!!", i_cb_handle, result);
+        SDLOGW("We can't begin command buffer(%p)(e:%d)!!!", i_cmd_buffer, result);
         return result;
     }
     //--- i. set buffer memory barrier (block transfer).
-    SwitchVKBufferLayout(i_cb_handle,
-        i_db_handle, 0, VK_WHOLE_SIZE,
+    SwitchVKBufferLayout(i_cmd_buffer,
+        i_dst_buffer, 0, VK_WHOLE_SIZE,
         i_src_pipe_stage_flags, 
         VK_PIPELINE_STAGE_TRANSFER_BIT);
 
@@ -109,50 +97,49 @@ VkResult VulkanManager::CopyVkBuffer(
     buf_cpy_info.size = i_data_size;
     buf_cpy_info.srcOffset = 0;
     buf_cpy_info.dstOffset = 0;
-    vkCmdCopyBuffer(i_cb_handle, i_sb_handle, i_db_handle, 1, &buf_cpy_info);
+    vkCmdCopyBuffer(i_cmd_buffer, i_src_buffer, i_dst_buffer, 1, &buf_cpy_info);
 
     //--- iii. set buffer memory barrier (block transfer).
-    SwitchVKBufferLayout(i_cb_handle,
-        i_db_handle, 0, VK_WHOLE_SIZE,
+    SwitchVKBufferLayout(i_cmd_buffer,
+        i_dst_buffer, 0, VK_WHOLE_SIZE,
         VK_PIPELINE_STAGE_TRANSFER_BIT,
         i_dst_pipe_stage_flags);
 
     //--- iv. end command buffer.
-    result = vkEndCommandBuffer(i_cb_handle);
+    result = vkEndCommandBuffer(i_cmd_buffer);
     if (result != VK_SUCCESS) {
-        SDLOGW("We can't end command buffer(%x)!!!", i_cb_handle);
-        return result;
+        SDLOGW("We can't end command buffer(%x)!!!", i_cmd_buffer);
     }
-
-    //3. Submit command.
-    std::vector<VkCommandBuffer> cb_handles = {i_cb_handle};
-    return SubmitVkCommandBuffers(cb_handles);
+    
+    return result;
 }
 
 void VulkanManager::BindVkVertexBuffer(
-    VkCommandBuffer i_cb_handle,
-    VkBuffer i_vb_handle,
+    VkCommandBuffer i_cmd_buffer,
+    VkBuffer i_buffer,
     uint32_t i_binding_id,
     VkDeviceSize i_offset)
 {
-    vkCmdBindVertexBuffers(i_cb_handle, i_binding_id, 1, &i_vb_handle, &i_offset);
+    vkCmdBindVertexBuffers(i_cmd_buffer, i_binding_id, 1, &i_buffer, &i_offset);
 }
 
 void VulkanManager::BindVkIndexBuffer(
-    VkCommandBuffer i_cb_handle,
-    VkBuffer i_ib_handle,
+    VkCommandBuffer i_cmd_buffer,
+    VkBuffer i_buffer,
     VkDeviceSize i_offset,
     VkIndexType i_type)
 {
-    vkCmdBindIndexBuffer(i_cb_handle, i_ib_handle, i_offset, i_type);
+    vkCmdBindIndexBuffer(i_cmd_buffer, i_buffer, i_offset, i_type);
 }
 
-void VulkanManager::DestroyVkBuffer(VkBuffer &io_buffer_handle)
+void VulkanManager::DestroyVkBuffer(
+    VkBuffer &io_buffer,
+    VkDevice i_device)
 {
-    if (io_buffer_handle != VK_NULL_HANDLE) {
-        vkDestroyBuffer(m_device_handle, io_buffer_handle, nullptr);
+    if (io_buffer != VK_NULL_HANDLE) {
+        vkDestroyBuffer(i_device, io_buffer, nullptr);
     }
-    io_buffer_handle = VK_NULL_HANDLE;
+    io_buffer = VK_NULL_HANDLE;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

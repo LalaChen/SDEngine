@@ -29,6 +29,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 DescriptorPoolIdentity::DescriptorPoolIdentity()
 : m_handle(SD_NULL_HANDLE)
+, m_device(SD_NULL_HANDLE)
 , m_max_set(0)
 , m_descriptor_counts{0}
 , m_individual_op_flag(false)

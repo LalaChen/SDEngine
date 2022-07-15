@@ -30,60 +30,72 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 void VulkanManager::CreateUniformBuffer(UniformBufferIdentity &io_identity)
 {
     VkResult result = VK_SUCCESS;
-    VkBuffer& buffer_handle = reinterpret_cast<VkBuffer&>(io_identity.m_buffer_handle);
-    VkDeviceMemory& memory_handle = reinterpret_cast<VkDeviceMemory&>(io_identity.m_memory_handle);
-    VkDeviceSize& allocated_size = reinterpret_cast<VkDeviceSize&>(io_identity.m_memory_size);
+    VkBuffer       &buffer         = reinterpret_cast<VkBuffer&>(io_identity.m_buffer);
+    VkDevice       &device         = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    VkDeviceMemory &memory         = reinterpret_cast<VkDeviceMemory&>(io_identity.m_memory);
+    VkDeviceSize   &allocated_size = reinterpret_cast<VkDeviceSize&>(io_identity.m_memory_size);
     VkFlags memo_prop_flags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT; //Create uniform buffer with host memory.
 
     //1. Set buffer size and memory property flags.
     VkBufferUsageFlags buf_usage_flags = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
     
-    //2. Create buffer.   
-    result = CreateVkBuffer(buffer_handle, io_identity.m_data_size, buf_usage_flags, VK_SHARING_MODE_EXCLUSIVE);
+    device = m_device;
+    //2. Create buffer.
+    VkBufferCreateInfo info = InitializeVkBufferCreateInfo(io_identity.m_data_size, buf_usage_flags);
+
+    result = CreateVkBuffer(buffer, device, info);
     if (result != VK_SUCCESS) {
-        SDLOGE("VKError : Create buffer error. code=%d", result);
-        if (buffer_handle != VK_NULL_HANDLE) {
-            DestroyVkBuffer(buffer_handle);
-            buffer_handle = VK_NULL_HANDLE;
+        SDLOGE("Create buffer for uniform failure(%d)", result);
+        if (buffer != VK_NULL_HANDLE) {
+            DestroyVkBuffer(buffer, device);
+            buffer = VK_NULL_HANDLE;
         }
         return;
     }
 
     //3. Create device memory.
-    result = AllocatVkDeviceMemoryForVkBuffer(memory_handle, allocated_size, buffer_handle, 0, memo_prop_flags);
+    result = AllocatVkDeviceMemoryForVkBuffer(memory, allocated_size, device, buffer, 0, memo_prop_flags);
     if (result != VK_SUCCESS) {
-        SDLOGE("VKError: Create memory error. code=%d", result);
-        if (memory_handle != VK_NULL_HANDLE) {
-            FreeVkDeviceMemory(memory_handle);
-            memory_handle = VK_NULL_HANDLE;
+        SDLOGE("Create memory for uniform failure(%d)", result);
+        if (memory != VK_NULL_HANDLE) {
+            FreeVkDeviceMemory(memory, device);
+            memory = VK_NULL_HANDLE;
         }
         return;
+    }
+    else {
+        io_identity.SetValid();
     }
 }
 
 void VulkanManager::DeleteUnifromBuffer(UniformBufferIdentity &io_identity)
 {
-    VkBuffer &buffer_handle = reinterpret_cast<VkBuffer&>(io_identity.m_buffer_handle);
-    VkDeviceMemory &memory_handle = reinterpret_cast<VkDeviceMemory&>(io_identity.m_memory_handle);
-    FreeVkDeviceMemory(memory_handle);
-    io_identity.m_memory_handle = SD_NULL_HANDLE;
-    DestroyVkBuffer(buffer_handle);
-    io_identity.m_buffer_handle = SD_NULL_HANDLE;
+    VkBuffer       &buffer = reinterpret_cast<VkBuffer&>(io_identity.m_buffer);
+    VkDeviceMemory &memory = reinterpret_cast<VkDeviceMemory&>(io_identity.m_memory);
+    VkDevice       &device = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    FreeVkDeviceMemory(memory, device);
+    io_identity.m_memory = SD_NULL_HANDLE;
+    DestroyVkBuffer(buffer, device);
+    io_identity.m_buffer = SD_NULL_HANDLE;
+    io_identity.SetInvalid();
+    io_identity = UniformBufferIdentity();
 }
 
 
 void VulkanManager::MapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub, VoidPtr &io_buffer_handle)
 {
-    const UniformBufferIdentity &identity = GetIdentity(i_ub);
-    VkDeviceMemory memory_handle = reinterpret_cast<VkDeviceMemory>(identity.m_memory_handle);
-    MapVkDeviceMemory(memory_handle, identity.m_memory_size, io_buffer_handle);
+    const UniformBufferIdentity &identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_ub);
+    const VkDeviceMemory &memory = reinterpret_cast<const VkDeviceMemory&>(identity.m_memory);
+    const VkDevice       &device = reinterpret_cast<const VkDevice&>(identity.m_device);
+    MapVkDeviceMemory(memory, device, identity.m_memory_size, io_buffer_handle);
 }
 
 void VulkanManager::UnmapUniformBuffer(const UniformBufferWeakReferenceObject &i_ub)
 {
-    const UniformBufferIdentity &identity = GetIdentity(i_ub);
-    VkDeviceMemory memory_handle = reinterpret_cast<VkDeviceMemory>(identity.m_memory_handle);
-    UnmapVkDeviceMemory(memory_handle);
+    const UniformBufferIdentity &identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_ub);
+    const VkDeviceMemory &memory = reinterpret_cast<const VkDeviceMemory&>(identity.m_memory);
+    const VkDevice       &device = reinterpret_cast<const VkDevice&>(identity.m_device);
+    UnmapVkDeviceMemory(memory, device);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

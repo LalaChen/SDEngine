@@ -38,7 +38,7 @@ VertexBuffer::VertexBuffer(const ObjectName &i_object_name, uint32_t i_va_locati
 
 VertexBuffer::~VertexBuffer()
 {
-    if (m_identity.m_buffer_handle != SD_NULL_HANDLE && m_identity.m_memory_handle != SD_NULL_HANDLE) {
+    if (m_identity.m_handle != SD_NULL_HANDLE && m_identity.m_memory != SD_NULL_HANDLE) {
         GraphicsManager::GetRef().DeleteVertexBuffer(m_identity);
     }
 }

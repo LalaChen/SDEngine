@@ -32,19 +32,19 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 #include "UniformBindingType.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS DescriptorPoolIdentity
+class SDENGINE_CLASS DescriptorPoolIdentity : public GraphicsElementIdentity
 {
 public:
     DescriptorPoolIdentity();
     ~DescriptorPoolIdentity();
 public:
     CompHandle m_handle;
+    CompHandle m_device;
     Size_ui32 m_max_set;
     Size_ui32 m_descriptor_counts[UniformBindingType_MAX_DEFINE_VALUE];
     bool m_individual_op_flag;

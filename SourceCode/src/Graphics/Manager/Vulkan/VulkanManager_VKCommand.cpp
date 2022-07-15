@@ -26,100 +26,61 @@ SOFTWARE.
 #include "LogManager.h"
 #include "VulkanManager.h"
 
+std::mutex m_queue_mutex;
+
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VkResult VulkanManager::CreateVkCommandPool(VkCommandPool &io_pool_handle, VkCommandPoolCreateFlags i_flag)
+VkResult VulkanManager::CreateVkCommandPool(VkCommandPool &io_cmd_pool, VkDevice i_device, VkCommandPoolCreateFlags i_flag)
 {
     VkCommandPoolCreateInfo cmd_pool_c_info = {};
     cmd_pool_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     cmd_pool_c_info.pNext = nullptr;
     cmd_pool_c_info.flags = i_flag; //VkCommandPoolCreateFlags
-    cmd_pool_c_info.queueFamilyIndex = m_final_queue_fam_id;
-    return vkCreateCommandPool(m_device_handle, &cmd_pool_c_info, nullptr, &io_pool_handle);
+    cmd_pool_c_info.queueFamilyIndex = m_queue_family.GetQueueFamilyID();
+    return vkCreateCommandPool(i_device, &cmd_pool_c_info, nullptr, &io_cmd_pool);
 }
 
-void VulkanManager::DestroyVkCommandPool(VkCommandPool &io_pool_handle)
+void VulkanManager::DestroyVkCommandPool(VkCommandPool &io_cmd_pool, VkDevice i_device)
 {
-    vkDestroyCommandPool(m_device_handle, io_pool_handle, nullptr);
-    io_pool_handle = VK_NULL_HANDLE;
+    vkDestroyCommandPool(i_device, io_cmd_pool, nullptr);
+    io_cmd_pool = VK_NULL_HANDLE;
 }
 
 VkResult VulkanManager::AllocateVkCommandBuffer(
-    VkCommandBuffer &io_cb_handle,
-    VkCommandPool i_cp_handle,
-    VkCommandBufferLevel i_level)
+    VkCommandBuffer &io_cmd_buffer, VkDevice i_device, VkCommandPool i_cmd_pool, VkCommandBufferLevel i_level)
 {
     VkCommandBufferAllocateInfo cmd_buf_a_info = {};
     cmd_buf_a_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     cmd_buf_a_info.pNext = nullptr;
-    cmd_buf_a_info.commandPool = i_cp_handle;
+    cmd_buf_a_info.commandPool = i_cmd_pool;
     cmd_buf_a_info.level = i_level; //VkCommandBufferLevel
     cmd_buf_a_info.commandBufferCount = 1;
-    return vkAllocateCommandBuffers(m_device_handle, &cmd_buf_a_info, &io_cb_handle);
+    return vkAllocateCommandBuffers(i_device, &cmd_buf_a_info, &io_cmd_buffer);
 }
 
 void VulkanManager::FreeVkCommandBuffer(
-    VkCommandBuffer &io_cb_handle,
-    VkCommandPool i_cp_handle)
+    VkCommandBuffer &io_cmd_buffer, VkDevice i_device, VkCommandPool i_cmd_pool)
 {
-    vkFreeCommandBuffers(m_device_handle, i_cp_handle, 1, &io_cb_handle);
+    vkFreeCommandBuffers(i_device, i_cmd_pool, 1, &io_cmd_buffer);
 }
 
 VkResult VulkanManager::BeginVkCommandBuffer(
-    VkCommandBuffer i_cb_handle,
+    VkCommandBuffer i_cmd_buffer,
     const VkCommandBufferBeginInfo &i_info)
 {
-    return vkBeginCommandBuffer(i_cb_handle, &i_info);
+    return vkBeginCommandBuffer(i_cmd_buffer, &i_info);
 }
 
-VkResult VulkanManager::EndVkCommandBuffer(VkCommandBuffer i_cb_handle)
+VkResult VulkanManager::EndVkCommandBuffer(VkCommandBuffer i_cmd_buffer)
 {
-    return vkEndCommandBuffer(i_cb_handle);
-}
-
-VkResult VulkanManager::SubmitVkCommandBuffers(const std::vector<VkCommandBuffer> &i_cb_handles)
-{
-    VkResult result;
-    VkSubmitInfo submit_info = {};
-    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submit_info.pNext = nullptr;
-    submit_info.waitSemaphoreCount = 0;
-    submit_info.pWaitSemaphores = nullptr; //wait acq image.
-    submit_info.pWaitDstStageMask = nullptr;
-    submit_info.signalSemaphoreCount = 0;
-    submit_info.pSignalSemaphores = nullptr;
-    submit_info.commandBufferCount = static_cast<uint32_t>(i_cb_handles.size());
-    submit_info.pCommandBuffers = i_cb_handles.data();
-
-    result = vkQueueSubmit(m_present_q_handle, 1, &submit_info, m_main_cb_fence_handle);
-
-    if (result != VK_SUCCESS) {
-        SDLOGW("Submit command buffer failure(%d)!!!", result);
-    }
-
-    do {
-        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, m_vulkan_config.m_max_fence_wait_time);
-    } while (result == VK_TIMEOUT);
-    if (result != VK_SUCCESS) {
-        SDLOGW("Wait sync failure(%d)!!!", result);
-        return result;
-    }
-
-    //Reset main command buffer sync.
-    result = vkResetFences(m_device_handle, 1, &m_main_cb_fence_handle);
-    if (result != VK_SUCCESS) {
-        SDLOGW("reset command buffer fence failure(%d)!!!", result);
-        return result;
-    }
-
-    return VK_SUCCESS;
+    return vkEndCommandBuffer(i_cmd_buffer);
 }
 
 void VulkanManager::ExecuteVkSecondaryCommandBuffersToPrimaryVkCommandBuffer(
-    VkCommandBuffer i_primary_cb_handle,
-    const std::vector<VkCommandBuffer> &i_second_cb_handles)
+    VkCommandBuffer i_primary_cmd_buffer,
+    const std::vector<VkCommandBuffer>& i_second_cmd_buffers)
 {
-    vkCmdExecuteCommands(i_primary_cb_handle, static_cast<uint32_t>(i_second_cb_handles.size()), i_second_cb_handles.data());
+    vkCmdExecuteCommands(i_primary_cmd_buffer, static_cast<uint32_t>(i_second_cmd_buffers.size()), i_second_cmd_buffers.data());
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

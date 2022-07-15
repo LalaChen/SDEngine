@@ -37,25 +37,13 @@ SOFTWARE.
 #include "SDEngineMacro.h"
 #include "SDEngineCommonType.h"
 #include "SDEngineCommonFunction.h"
-#include "ManagerIdentity.h"
 #include "GraphicsConfig.h"
 #include "PeriodCounter.h"
-#include "GraphicsPipeline.h"
-#include "CommandBufferInheritanceInfo.h"
-#include "CommandPool.h"
-#include "CommandBuffer.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "UniformBuffer.h"
-#include "DescriptorPool.h"
-#include "DescriptorSet.h"
-#include "DescriptorSetLayout.h"
-#include "ShaderProgram.h"
-#include "RenderPass.h"
+#include "GraphicsIdentityGetter.h"
 #include "ImageLoader.h"
-#include "GraphicsConfig.h"
 #include "Resolution.h"
 #include "EventArg.h"
+#include "CommandBufferInheritanceInfo.h"
 
 using SDE::Basic::EventArg;
 using SDE::Basic::PeriodCounter;
@@ -160,8 +148,6 @@ public:
     virtual void BeginCommandBuffer(const CommandBufferIdentity &i_identity, const CommandBufferInheritanceInfo &i_inheritance_info) = 0;
     virtual void EndCommandBuffer(const CommandBufferIdentity &i_identity) = 0;
     virtual void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool) = 0;
-    virtual void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cbs) = 0;
-    virtual void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb) = 0;
     virtual void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cbs) = 0;
 public:
 //----------- Vertex Buffer Function ------------
@@ -215,16 +201,31 @@ public:
     virtual void SetViewports(const CommandBufferWeakReferenceObject &i_cb, const std::vector<Viewport> &i_vps) = 0;
     virtual void SetScissor(const CommandBufferWeakReferenceObject &i_cb, const ScissorRegion &i_region) = 0;
     virtual void SetScissors(const CommandBufferWeakReferenceObject &i_cb, const std::vector<ScissorRegion> &i_regions) = 0;
-    virtual void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb, const IndexBufferWeakReferenceObject& i_ib, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) = 0;
+    virtual void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb, const IndexBufferWeakReferenceObject &i_ib, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) = 0;
+public:
+    virtual void CreateQueue(GraphicsQueueIdentity &io_identity) = 0;
+    virtual void SubmitCommandBuffersToQueue(const GraphicsQueueIdentity &i_identity, const GraphicsFenceWeakReferenceObject &i_fence, const std::vector<CommandBufferWeakReferenceObject> &i_cbs) = 0;
+    virtual void PresentToQueue(const GraphicsQueueIdentity &i_identity, const GraphicsSwapchainIdentity &i_sw_identity, uint32_t i_img_id, const std::vector<GraphicsSemaphoreWeakReferenceObject> &i_semas) = 0;
+    virtual void DestroyQueue(GraphicsQueueIdentity &io_identity) = 0;
+public:
+    virtual void CreateFence(GraphicsFenceIdentity &io_identity) = 0;
+    virtual void ResetFence(const GraphicsFenceIdentity &i_identity) = 0;
+    virtual void DestroyFence(GraphicsFenceIdentity &io_identity) = 0;
+public:
+    virtual void CreateSemaphoreObject(GraphicsSemaphoreIdentity &io_identity) = 0;
+    virtual void DestroySemaphoreObject(GraphicsSemaphoreIdentity &io_identity) = 0;
+public:
+    virtual void CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) = 0;
+    virtual void DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) = 0;
+    virtual void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture) = 0;
 public:
 //------------- Resize Function -----------------
-    virtual void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) = 0;
+    virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:
 //------------- Render Function -----------------
-    virtual void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex) = 0;
+    virtual void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex) = 0;
 public:
-//------------- Render Function -----------------
-    void Render();
+    virtual Resolution GetScreenResolution() const = 0;
 public:
     void GetBasicVertexAttribInfos(
         std::vector<VertexAttribBindingDescription> &io_binds,
@@ -249,34 +250,14 @@ public:
     virtual ShaderProgramWeakReferenceObject GetShaderProgram(const ObjectName &i_sp_name) const;
     virtual void RegisterShaderProgram(const ShaderProgramStrongReferenceObject &i_sp);
     virtual void RegisterShaderProgram(const ObjectName &i_sp_name, const FilePathString &i_path);
+public:
+    void SubmitGraphicsCommands(const std::vector<CommandBufferWeakReferenceObject> &i_cbs);
 protected:
     void InitializeDefaultPipelineInfos();
     void InitializeBasicDescriptorSetLayout();
     void InitializeBasicMaterialUniformDescriptors();
     void InitializeBasicShaderPrograms();
     void InitializeDefaultRenderPasses();
-protected:
-    const ShaderModuleIdentity &GetIdentity(const ShaderModuleWeakReferenceObject &i_module) const;
-    const TextureIdentity& GetIdentity(const TextureWeakReferenceObject &i_tex) const;
-    const SamplerIdentity& GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex) const;
-    const FrameBufferIdentity& GetIdentity(const FrameBufferWeakReferenceObject &i_fb) const;
-    const CommandBufferIdentity& GetIdentity(const CommandBufferWeakReferenceObject &i_cb) const;
-    const CommandPoolIdentity& GetIdentity(const CommandPoolWeakReferenceObject &i_cp) const;
-    const RenderPassIdentity& GetIdentity(const RenderPassWeakReferenceObject &i_rp) const;
-    const VertexBufferIdentity& GetIdentity(const VertexBufferWeakReferenceObject &i_vb) const;
-    const IndexBufferIdentity& GetIdentity(const IndexBufferWeakReferenceObject &i_ib) const;
-    const UniformBufferIdentity& GetIdentity(const UniformBufferWeakReferenceObject &i_ub) const;
-    const GraphicsPipelineIdentity& GetIdentity(const GraphicsPipelineWeakReferenceObject &i_pipe) const;
-    const DescriptorPoolIdentity& GetIdentity(const DescriptorPoolWeakReferenceObject &i_pool) const;
-    const DescriptorSetIdentity& GetIdentity(const DescriptorSetWeakReferenceObject &i_desc) const;
-    const DescriptorSetLayoutIdentity& GetIdentity(const DescriptorSetLayoutWeakReferenceObject &i_ds_layout) const;
-protected:
-//------------ Render Flow Function -------------
-    virtual void RenderBegin() = 0;
-    virtual void RenderToScreen() = 0;
-    virtual void RenderEnd() = 0;
-protected:
-    SD_DECLARE_ATTRIBUTE_VAR_GET(Resolution, m_screen_size, ScreenResolution);
 protected:
     GraphicsConfig m_graphics_config;
 protected:
@@ -297,6 +278,23 @@ protected:
     std::map<ObjectName, UniformVariableDescriptorStrongReferenceObject> m_material_basic_uvd_maps;
 
     std::map<ObjectName, ShaderProgramStrongReferenceObject> m_shader_program_maps;
+
+    GraphicsIdentityGetterStrongReferenceObject m_graphics_identity_getter;
+
+protected:
+    GraphicsQueueStrongReferenceObject m_present_queue;
+
+    GraphicsQueueStrongReferenceObject m_graphics_queue;
+
+    GraphicsQueueStrongReferenceObject m_loading_queue;
+
+    CommandPoolStrongReferenceObject m_loading_cmd_pool;
+
+    CommandBufferWeakReferenceObject m_loading_cmd_buffer;
+
+    GraphicsSwapchainStrongReferenceObject m_swapchain;
+
+    std::mutex m_loading_buffer_lock;
 
 protected:
     PeriodCounter m_fps_counter;

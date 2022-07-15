@@ -3,8 +3,9 @@
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 IndexBufferIdentity::IndexBufferIdentity()
-: m_buffer_handle(SD_NULL_HANDLE)
-, m_memory_handle(SD_NULL_HANDLE)
+: m_buffer(SD_NULL_HANDLE)
+, m_device(SD_NULL_HANDLE)
+, m_memory(SD_NULL_HANDLE)
 , m_data_size(0)
 , m_index_array_size(0)
 , m_memory_size(0)

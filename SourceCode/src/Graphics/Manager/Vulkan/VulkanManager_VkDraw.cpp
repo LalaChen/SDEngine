@@ -22,49 +22,50 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "VulkanWrapper.h"
-#include "LogManager.h"
 #include "VulkanManager.h"
+
+#include "LogManager.h"
+
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 void VulkanManager::SetVkViewport(
-    VkCommandBuffer i_cb_handle,
+    VkCommandBuffer i_cmd_buffer,
     const VkViewport &i_viewport)
 {
-    vkCmdSetViewport(i_cb_handle, 0, 1, &i_viewport);
+    vkCmdSetViewport(i_cmd_buffer, 0, 1, &i_viewport);
 }
 
 void VulkanManager::SetVkViewports(
-    VkCommandBuffer i_cb_handle,
+    VkCommandBuffer i_cmd_buffer,
     const std::vector<VkViewport> &i_viewports)
 {
-    vkCmdSetViewport(i_cb_handle, 0, static_cast<uint32_t>(i_viewports.size()), i_viewports.data());
+    vkCmdSetViewport(i_cmd_buffer, 0, static_cast<uint32_t>(i_viewports.size()), i_viewports.data());
 }
 
 void VulkanManager::SetVkScissors(
-    VkCommandBuffer i_cb_handle,
+    VkCommandBuffer i_cmd_buffer,
     const std::vector<VkRect2D> &i_rects)
 {
-    vkCmdSetScissor(i_cb_handle, 0, static_cast<uint32_t>(i_rects.size()), i_rects.data());
+    vkCmdSetScissor(i_cmd_buffer, 0, static_cast<uint32_t>(i_rects.size()), i_rects.data());
 }
 
 void VulkanManager::SetVkScissor(
-    VkCommandBuffer i_cb_handle,
+    VkCommandBuffer i_cmd_buffer,
     const VkRect2D &i_rect)
 {
-    vkCmdSetScissor(i_cb_handle, 0, 1, &i_rect);
+    vkCmdSetScissor(i_cmd_buffer, 0, 1, &i_rect);
 }
 
 void VulkanManager::DrawByVkIndexBuffer(
-    VkCommandBuffer i_cb_handle,
+    VkCommandBuffer i_cmd_buffer,
     uint32_t i_indice_size,
     uint32_t i_instance_count,
     uint32_t i_first_index,
     int32_t i_index_offest,
     uint32_t i_first_instance)
 {
-    vkCmdDrawIndexed(i_cb_handle, i_indice_size, i_instance_count, i_first_index, i_index_offest, i_first_instance);
+    vkCmdDrawIndexed(i_cmd_buffer, i_indice_size, i_instance_count, i_first_index, i_index_offest, i_first_instance);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

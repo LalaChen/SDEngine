@@ -48,7 +48,7 @@ void VulkanManager::PrintSystemInformation()
     SDLOG("Memory Information :");
     VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
     //1. Get memory property.
-    vkGetPhysicalDeviceMemoryProperties(m_phy_device_handle, &phy_dev_memory_props);
+    vkGetPhysicalDeviceMemoryProperties(m_phy_device, &phy_dev_memory_props);
     for (uint32_t type = 0; type < phy_dev_memory_props.memoryTypeCount; ++type) {
         SDLOG("Type[%d] : Flags(%u) HeapID(%u)", type,
             phy_dev_memory_props.memoryTypes[type].propertyFlags,
@@ -67,7 +67,7 @@ void VulkanManager::PrintSystemInformation()
         VkFormatProperties format_prop;
         TextureFormatEnum format_enum = static_cast<TextureFormatEnum>(format_ID);
         VkFormat format = static_cast<VkFormat>(TextureFormat_Vulkan::Convert(format_enum));
-        vkGetPhysicalDeviceFormatProperties(m_phy_device_handle, format, &format_prop);
+        vkGetPhysicalDeviceFormatProperties(m_phy_device, format, &format_prop);
         SDLOG("Format[%d](%d)(%s) :"
               " features(%08x)(StorageImage:%d),"
               " linearTile(%08x)(Sampler:%d)(CA:%d)(DA:%d)(BlitSRC:%d)(BlitDST:%d),"
@@ -91,7 +91,7 @@ void VulkanManager::PrintSystemInformation()
     }
 
     VkPhysicalDeviceProperties picked_dev_props;
-    vkGetPhysicalDeviceProperties(m_phy_device_handle, &picked_dev_props);
+    vkGetPhysicalDeviceProperties(m_phy_device, &picked_dev_props);
     SDLOG("Target Device Service: %s(%d:%d:%d) driver version(%d, %d, %d) apiversion(%d, %d, %d).",
         picked_dev_props.deviceName,
         picked_dev_props.vendorID, picked_dev_props.deviceID, picked_dev_props.deviceType,
@@ -207,10 +207,10 @@ void VulkanManager::PrintSystemInformation()
     SD_VK_SHOW_LIMIT_DEV_SIZE(nonCoherentAtomSize);
     
     //----------------- surface information.
-    if (m_sur_handle != VK_NULL_HANDLE) {
+    if (m_surface != VK_NULL_HANDLE) {
         SDLOG("--- Surface Capabilities ---");
         VkSurfaceCapabilitiesKHR sur_caps;
-        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_phy_device_handle, m_sur_handle, &sur_caps);
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_phy_device, m_surface, &sur_caps);
         SDLOG("ImageCount Min:%d Max:%d", sur_caps.minImageCount, sur_caps.maxImageCount);
         SDLOG("ImageExtents Min:(%d,%d) Cur:(%d,%d) Max:(%d,%d)",
             sur_caps.minImageExtent.width, sur_caps.minImageExtent.height,

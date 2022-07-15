@@ -35,7 +35,11 @@ SOFTWARE.
 #include "VulkanConfig.h"
 #include "GraphicsManager.h"
 
+#include "VulkanQueueFamily.h"
+
 using SDE::Basic::UBytePtr;
+
+extern std::mutex m_queue_mutex;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -44,6 +48,8 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  */
 class SDENGINE_CLASS VulkanManager : public GraphicsManager
 {
+public:
+    friend class VulkanSwapchain;
 public:
     static VkBool32 ConvertBoolean(bool flag);
 protected:
@@ -94,8 +100,6 @@ public:
     void BeginCommandBuffer(const CommandBufferIdentity &i_identity, const CommandBufferInheritanceInfo &i_inheritance_info) override;
     void EndCommandBuffer(const CommandBufferIdentity &i_identity) override;
     void FreeCommandBuffer(CommandBufferIdentity &io_identity, const CommandPoolWeakReferenceObject &i_pool) override;
-    void SubmitCommandBuffersToQueue(const std::vector<CommandBufferWeakReferenceObject> &i_cbs) override;
-    void SubmitCommandBufferToQueue(const CommandBufferWeakReferenceObject &i_cb) override;
     void ExecuteCommandsToPrimaryCommandBuffer(const CommandBufferWeakReferenceObject &i_primary_cb, const std::list<CommandBufferWeakReferenceObject> &i_secondary_cbs) override;
 public:
 //----------- Vertex Buffer Interface Function ------------
@@ -114,7 +118,7 @@ public:
     void RefreshStaticIndexBuffer(const IndexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size) override;
     void RefreshDynamicIndexBuffer(const IndexBufferIdentity &i_identity, const void *i_data_ptr, Size_ui64 i_data_size) override;
     void DeleteIndexBuffer(IndexBufferIdentity &io_identity) override;
-    void MapIndexBuffer(const IndexBufferIdentity &i_identity, VoidPtr &io_buffer_handle) override;
+    void MapIndexBuffer(const IndexBufferIdentity &i_identity, VoidPtr & io_buffer) override;
     void UnmapIndexBuffer(const IndexBufferIdentity &i_identity) override;
 public:
 //----------- Uniform Buffer Interface Function ------------
@@ -154,127 +158,177 @@ public:
     void SetScissors(const CommandBufferWeakReferenceObject &i_cb, const std::vector<ScissorRegion> &i_regions) override;
     void DrawByIndices(const CommandBufferWeakReferenceObject &i_cb, const IndexBufferWeakReferenceObject &i_ib, uint32_t i_first_id, int32_t i_offset, uint32_t i_first_ins_id, uint32_t i_ins_number) override;
 public:
-    void Resize(CompHandle i_ns_handle, Size_ui32 i_w, Size_ui32 i_h) override;
+    void CreateQueue(GraphicsQueueIdentity &io_identity) override;
+    void SubmitCommandBuffersToQueue(const GraphicsQueueIdentity &i_identity, const GraphicsFenceWeakReferenceObject &i_fence, const std::vector<CommandBufferWeakReferenceObject> &i_cbs) override;
+    void PresentToQueue(const GraphicsQueueIdentity &i_identity, const GraphicsSwapchainIdentity &i_sw_identity, uint32_t i_img_id, const std::vector<GraphicsSemaphoreWeakReferenceObject> &i_semas) override;
+    void DestroyQueue(GraphicsQueueIdentity &io_identity) override;
 public:
-    void RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex) override;
+    void CreateFence(GraphicsFenceIdentity &io_identity) override;
+    void ResetFence(const GraphicsFenceIdentity &i_identity) override;
+    void DestroyFence(GraphicsFenceIdentity &io_identity) override;
+public:
+    void CreateSemaphoreObject(GraphicsSemaphoreIdentity &io_identity) override;
+    void DestroySemaphoreObject(GraphicsSemaphoreIdentity &io_identity) override;
+public:
+    void CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
+    void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture) override;
+    void DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
+public:
+    Resolution GetScreenResolution() const override;
+public:
+    void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
+public:
+    void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex) override;
 protected:
 //------- Vulkan descriptor set and pool private Function ------
     VkResult CreateVkDescriptorSetLayout(
-        VkDescriptorSetLayout &io_handle,
+        VkDescriptorSetLayout &io_ds_layout,
+        VkDevice i_device,
         const VkDescriptorSetLayoutCreateInfo &i_c_info);
 
-    void DestroyVkDescriptorSetLayout(VkDescriptorSetLayout &io_handle);
+    void DestroyVkDescriptorSetLayout(
+        VkDescriptorSetLayout &io_layout,
+        VkDevice i_device);
 
     VkResult CreateVkDescriptorPool(
-        VkDescriptorPool &io_handle,
-        const VkDescriptorPoolCreateInfo &i_dp_c_info);
+        VkDescriptorPool &io_pool,
+        VkDevice i_device,
+        const VkDescriptorPoolCreateInfo &i_c_info);
 
-    void DestroyVkDescriptorPool(VkDescriptorPool &io_handle);
+    void DestroyVkDescriptorPool(
+        VkDescriptorPool &io_pool,
+        VkDevice i_device);
 
     VkResult AllocateVkDescriptorSet(
-        VkDescriptorSet &io_handle,
-        const VkDescriptorSetAllocateInfo &i_a_info);
+        VkDescriptorSet & io_set, 
+        VkDevice i_device,
+        const VkDescriptorSetAllocateInfo & i_info);
 
     void UpdateVkDescriptorSet(
+        VkDevice i_device,
         const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos,
         const std::vector<VkCopyDescriptorSet> &i_descriptor_c_infos);
 
     void BindVkDescriptorSets(
-        VkCommandBuffer i_cb_handle,
+        VkCommandBuffer i_cmd_buffer,
         VkPipelineBindPoint i_pipe_bind_point,
-        VkPipelineLayout i_pipe_layout_handle,
-        const std::vector<VkDescriptorSet> &i_ds_handles,
+        VkPipelineLayout i_pipe_layout,
+        const std::vector<VkDescriptorSet> &i_sets,
         const std::vector<uint32_t> &i_dynamic_offsets = {});
 
     void FreeVkDescriptorSet(
-        VkDescriptorSet &io_handle,
-        VkDescriptorPool i_dp_handle);
+        VkDescriptorSet &io_set, 
+        VkDevice i_device,
+        VkDescriptorPool i_pool);
 protected:
 //------- Vulkan command buffer and pool private Function --------
     VkResult CreateVkCommandPool(
-        VkCommandPool &io_pool_handle,
+        VkCommandPool &io_cmd_pool,
+        VkDevice i_device,
         VkCommandPoolCreateFlags i_flag = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 
-    void DestroyVkCommandPool(VkCommandPool &io_pool_handle);
+    void DestroyVkCommandPool(
+        VkCommandPool &io_cmd_pool,
+        VkDevice i_device);
 
     VkResult AllocateVkCommandBuffer(
-        VkCommandBuffer &io_cb_handle,
-        VkCommandPool i_cp_handle,
+        VkCommandBuffer &io_cmd_buffer, 
+        VkDevice i_device,
+        VkCommandPool i_cmd_pool,
         VkCommandBufferLevel i_level = VK_COMMAND_BUFFER_LEVEL_MAX_ENUM);
 
     void FreeVkCommandBuffer(
-        VkCommandBuffer &io_cb_handle,
-        VkCommandPool i_cp_handle);
+        VkCommandBuffer &io_cmd_buffer,
+        VkDevice i_device,
+        VkCommandPool i_cmd_pool);
 
     VkResult BeginVkCommandBuffer(
-        VkCommandBuffer i_cb_handle,
+        VkCommandBuffer i_cmd_buffer,
         const VkCommandBufferBeginInfo &i_info);
 
-    VkResult EndVkCommandBuffer(VkCommandBuffer i_cb_handle);
-
-    VkResult SubmitVkCommandBuffers(const std::vector<VkCommandBuffer> &i_cb_handles);
+    VkResult EndVkCommandBuffer(VkCommandBuffer i_cmd_buffer);
 
     void ExecuteVkSecondaryCommandBuffersToPrimaryVkCommandBuffer(
-        VkCommandBuffer i_primary_cb_handle,
-        const std::vector<VkCommandBuffer> &i_second_cb_handles);
+        VkCommandBuffer i_primary_cmd_buffer,
+        const std::vector<VkCommandBuffer> &i_second_cmd_buffers);
 protected:
 //----------- Vulkan buffer private Function ------------
     VkResult CreateVkBuffer(
-        VkBuffer &io_handle, 
-        VkDeviceSize i_size, 
-        VkBufferUsageFlags i_buffer_usage,
-        VkSharingMode i_sharing_mode = VK_SHARING_MODE_EXCLUSIVE);
+        VkBuffer &io_buffer,
+        VkDevice i_device,
+        const VkBufferCreateInfo & i_info);
 
-    VkResult CopyVkBuffer(
-        VkCommandBuffer i_cb_handle,
-        VkBuffer i_sb_handle,
+    VkResult PrepareCopyVkBufferCommand(
+        VkCommandBuffer i_cmd_buffer,
+        VkBuffer i_src_buffer,
         VkDeviceSize i_data_size,
-        VkBuffer i_db_handle,
+        VkBuffer i_dst_buffer,
         VkAccessFlags i_src_access_flags = 0,
         VkAccessFlags i_dst_access_flags = 0,
         VkPipelineStageFlags i_src_pipe_stage_flags = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
         VkPipelineStageFlags i_dst_pipe_stage_flags = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
     VkResult RefreshDataToHostVisibleVKDeviceMemory(
-        VkDeviceMemory i_memory_handle,
+        VkDeviceMemory i_memory,
+        VkDevice i_device,
         VkDeviceSize i_allocated_size,
         const void *i_data_ptr,
         Size_ui64 i_data_size);
 
     void BindVkVertexBuffer(
-        VkCommandBuffer i_cb_handle,
-        VkBuffer i_vb_handle,
+        VkCommandBuffer i_cmd_buffer,
+        VkBuffer i_buffer,
         uint32_t i_binding_id,
         VkDeviceSize i_offset);
 
     void BindVkIndexBuffer(
-        VkCommandBuffer i_cb_handle,
-        VkBuffer i_ib_handle,
+        VkCommandBuffer i_cmd_buffer,
+        VkBuffer i_buffer,
         VkDeviceSize i_offset,
         VkIndexType i_type);
 
-    void DestroyVkBuffer(VkBuffer &io_buffer_handle);
+    void DestroyVkBuffer(
+        VkBuffer &io_buffer,
+        VkDevice i_device);
+protected:
+    VkResult CreateVkFence(
+        VkFence &io_fence,
+        VkDevice i_device,
+        const VkFenceCreateInfo &i_info);
+    
+    VkResult ResetVkFence(
+        VkFence i_fence,
+        VkDevice i_device);
 
+    void DestroyVkFence(
+        VkFence &io_fence,
+        VkDevice i_device);
+
+    VkResult CreateVkSemaphore(
+        VkSemaphore &io_semaphore,
+        VkDevice i_device,
+        const VkSemaphoreCreateInfo &i_info);
+
+    void DestroyVkSemaphore(
+        VkSemaphore &io_semaphore,
+        VkDevice i_device);
 protected:
 //----------- Vulkan image private Function -------------
     VkResult CreateVkImage(
-        VkImage &io_image_handle,
-        VkImageType i_type,
-        VkFormat i_image_format,
-        VkExtent3D i_image_size,
-        VkImageUsageFlags i_usage_flags,
-        VkSampleCountFlagBits i_sample_count = VK_SAMPLE_COUNT_1_BIT,
-        VkImageLayout i_image_layout = VK_IMAGE_LAYOUT_UNDEFINED,
-        uint32_t i_mipmap_levels = 1,
-        uint32_t i_array_layers = 1,
-        VkImageTiling i_tiling_mode = VK_IMAGE_TILING_OPTIMAL,
-        VkSharingMode i_sharing_mode = VK_SHARING_MODE_EXCLUSIVE);
+        VkImage &io_image,
+        VkDevice i_device,
+        const VkImageCreateInfo &i_info);
 
-    VkResult CopyVkBufferToVkImage(
-        VkCommandBuffer i_cb_handle,
-        VkBuffer i_sb_handle,
+    void GetVkImageMemoryRequirement(
+        VkMemoryRequirements &io_mem_req,
+        VkDevice i_device,
+        VkImage i_image);
+
+    VkResult PrepareCopyVkBufferToVkImage(
+        VkCommandBuffer i_cmd_buffer,
+        VkBuffer i_src_buffer,
         VkDeviceSize i_data_size,
-        VkImage i_di_handle,
+        VkImage i_dst_image,
         VkOffset3D i_image_offset,
         VkExtent3D i_image_size,
         VkAccessFlags i_src_access_flags = 0,
@@ -284,104 +338,96 @@ protected:
         VkPipelineStageFlags i_src_pipe_stage_flags = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
         VkPipelineStageFlags i_dst_pipe_stage_flags = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
-    void DestroyVkImage(VkImage &io_image_handle);
+    void DestroyVkImage(
+        VkImage &io_image,
+        VkDevice i_device);
 
 protected:
 //----------- Vulkan sampler private Function -------------
-    /*! \fn VkResult CreateVkSampler( VkSampler &io_sampler, VkFilter i_mag_filter_type, VkFilter i_min_filter_type, VkSamplerMipmapMode i_mipmap_mode, VkSamplerAddressMode i_wrap_mode_s, VkSamplerAddressMode i_wrap_mode_t, VkSamplerAddressMode i_wrap_mode_r, float i_mip_lod_bias, VkBool32 i_enable_anisotropy, float i_max_anisotropy, VkBool32 i_enable_compare, VkCompareOp i_compare_op, float i_min_lod, float i_max_lod, VkBorderColor i_border_color, VkBool32 i_unnormalize_coord);
-     *  \param [in] io_sampler Created handle. It's used to keep created handle.
-     *  \param [in] i_mag_filter_type Mag filter type. Default type is nearset.
-     *  \param [in] i_min_filter_type Min filter type. Default type is nearest.
-     *  \param [in] i_mipmap_mode Mipmap type. Default is nearest.
-     *  \param [in] i_wrap_mode_s Texture coordinate wrap mode. Default is clamp tp edge.
-     *  \param [in] i_wrap_mode_t Texture coordinate wrap mode. Default is clamp tp edge.
-     *  \param [in] i_wrap_mode_r Texture coordinate wrap mode. Default is clamp tp edge.
-     *  \param [in] i_mip_lod_bias Mipmap bias. Default is 0.
-     *  \param [in] i_enable_anisotropy Default false.
-     *  \param [in] i_max_anisotropy Default 1.0f.
-     *  \param [in] i_enable_compare Default false.
-     *  \param [in] i_compare_op Default always.
-     *  \param [in] i_min_lod Default 0.0f.
-     *  \param [in] i_max_lod Default 1.0f.
-     *  \param [in] i_border_color Default float opaque black.
-     *  \param [in] i_unnormalize_coord Default false.(Normalize coord.)
-     *  \brief Initialize graphics API. (link dll, ...)
-     */
     VkResult CreateVkSampler(
-        VkSampler &io_handle,
-        VkFilter i_mag_filter_type = VK_FILTER_NEAREST,
-        VkFilter i_min_filter_type = VK_FILTER_NEAREST,
-        VkSamplerMipmapMode i_mipmap_mode = VK_SAMPLER_MIPMAP_MODE_NEAREST,
-        VkSamplerAddressMode i_wrap_mode_s = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-        VkSamplerAddressMode i_wrap_mode_t = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-        VkSamplerAddressMode i_wrap_mode_r = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-        float i_mip_lod_bias = 0.0f,
-        VkBool32 i_enable_anisotropy = VK_FALSE,
-        float i_max_anisotropy = 1.0f,
-        VkBool32 i_enable_compare = VK_FALSE,
-        VkCompareOp i_compare_op = VK_COMPARE_OP_ALWAYS,
-        float i_min_lod = 0.0f,
-        float i_max_lod = 1.0f,
-        VkBorderColor i_border_color = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK,
-        VkBool32 i_unnormalize_coord = VK_FALSE);
+        VkSampler &io_sampler,
+        VkDevice i_device,
+        const VkSamplerCreateInfo &i_info);
 
-    void DestroyVkSampler(VkSampler &io_handle);
+    void DestroyVkSampler(
+        VkSampler &io_sampler,
+        VkDevice i_device);
 protected:
 //----------- Vulkan memory private Function ------------
     VkResult AllocatVkDeviceMemoryForVkBuffer(
-        VkDeviceMemory &io_memory_handle, 
+        VkDeviceMemory &io_memory,
         VkDeviceSize &io_allocated_size,
-        VkBuffer i_buffer_handle, 
-        VkDeviceSize i_mem_offset, 
-        VkFlags i_memo_prop_flags);
-
-    VkResult AllocateVkDeviceMemoryForVkImage(
-        VkDeviceMemory &io_memory_handle,
-        VkDeviceSize &io_allocated_size,
-        VkImage &i_image_handle,
+        VkDevice i_device,
+        VkBuffer i_buffer, 
         VkDeviceSize i_mem_offset,
         VkFlags i_memo_prop_flags);
 
+    VkResult AllocateVkDeviceMemoryForVkImage(
+        VkDeviceMemory &io_memory,
+        VkDevice i_device,
+        VkImage i_image,
+        VkDeviceSize i_mem_offset,
+        const VkMemoryAllocateInfo &i_info);
+
     VkResult MapVkDeviceMemory(
-        VkDeviceMemory i_memory_handle,
-        VkDeviceSize i_allocated_size, 
+        VkDeviceMemory i_memory,
+        VkDevice i_device,
+        VkDeviceSize i_allocated_size,
         VoidPtr &i_local_ptr);
 
-    VkResult FlushMappedVkDeviceMemoryRanges(VkDeviceMemory i_memory_handle);
+    VkResult FlushMappedVkDeviceMemoryRanges(
+        VkDeviceMemory i_memory,
+        VkDevice i_device);
 
-    void UnmapVkDeviceMemory(VkDeviceMemory i_memory_handle);
+    void UnmapVkDeviceMemory(
+        VkDeviceMemory i_memory,
+        VkDevice i_device);
 
-    void FreeVkDeviceMemory(VkDeviceMemory &io_memory_handle);
+    void FreeVkDeviceMemory(
+        VkDeviceMemory &io_memory,
+        VkDevice i_device);
 protected:
     VkResult CreateVKShaderModule(
-        VkShaderModule &io_sm_handle,
+        VkShaderModule &io_module,
+        VkDevice i_device,
         const UByte *i_binary_ptr,
         const Size_ui64 i_binary_size);
 
-    void DestroyVKShaderModule(VkShaderModule &io_sm_handle);
+    void DestroyVKShaderModule(
+        VkShaderModule &io_module,
+        VkDevice i_device);
 
     VkResult CreateVKDescriptorSetLayout(
-        VkDescriptorSetLayout &io_layout_handle,
-        const VkDescriptorSetLayoutCreateInfo &i_c_info);
+        VkDescriptorSetLayout &io_layout,
+        VkDevice i_device,
+        const VkDescriptorSetLayoutCreateInfo &i_info);
 
-    void DestroyVKDescriptorSetLayout(VkDescriptorSetLayout &io_layout_handle);
+    void DestroyVKDescriptorSetLayout(
+        VkDescriptorSetLayout &io_layout,
+        VkDevice i_device);
 
     VkResult CreateVKPipelineLayout(
-        VkPipelineLayout &io_layout_handle,
-        const VkPipelineLayoutCreateInfo &i_c_info);
+        VkPipelineLayout &io_layout,
+        VkDevice i_device,
+        const VkPipelineLayoutCreateInfo &i_info);
 
-    void DestroyVKPipelineLayout(VkPipelineLayout &io_layout_handle);
+    void DestroyVKPipelineLayout(
+        VkPipelineLayout &io_layout,
+        VkDevice i_device);
 
     VkResult CreateVKPipeline(
-        VkPipeline &io_pipeline_handle,
-        const VkGraphicsPipelineCreateInfo &i_c_info);
+        VkPipeline &io_pipeline,
+        VkDevice i_device,
+        const VkGraphicsPipelineCreateInfo &i_info);
 
     void BindVkPipeline(
-        VkCommandBuffer i_cb_handle,
-        VkPipeline i_pipe_handle,
+        VkCommandBuffer i_cmd_buffer,
+        VkPipeline i_pipeline,
         VkPipelineBindPoint i_pipe_point);
 
-    void DestroyVKPipeline(VkPipeline &io_pipeline_handle);
+    void DestroyVKPipeline(
+        VkPipeline &io_pipeline,
+        VkDevice i_device);
 protected:
 //----------- Vulkan image layout changing Function ------------
     void SwitchVKImageLayout(
@@ -415,118 +461,146 @@ protected:
 protected:
 //----------- Vulkan RenderPass Function ------------
     VkResult CreateVKRenderPass(
-        VkRenderPass &io_rp_handle,
-        const VkRenderPassCreateInfo &i_rp_c_info);
+        VkRenderPass &io_render_pass,
+        VkDevice i_device,
+        const VkRenderPassCreateInfo &i_info);
 
     void BeginVkRenderPass(
-        VkCommandBuffer i_cb_handle,
-        VkRenderPass i_rp_handle,
-        VkFramebuffer i_fb_handle,
+        VkCommandBuffer i_cmd_buffer,
+        VkRenderPass i_render_pass,
+        VkFramebuffer i_framebuffer,
         const VkRect2D &i_render_area,
         const std::vector<VkClearValue> &i_clear_values,
         VkSubpassContents i_sp_contents = VK_SUBPASS_CONTENTS_INLINE);
 
     void GotoNextStepInVKRenderPass(
-        VkCommandBuffer i_cb_handle,
+        VkCommandBuffer i_cmd_buffer,
         VkSubpassContents i_sp_content = VK_SUBPASS_CONTENTS_INLINE);
 
-    void EndVkRenderPass(VkCommandBuffer i_cb_handle);
+    void EndVkRenderPass(VkCommandBuffer i_cmd_buffer);
 
-    void DestroyVKRenderPass(VkRenderPass &io_rp_handle);
-public:
+    void DestroyVKRenderPass(
+        VkRenderPass &io_render_pass,
+        VkDevice i_device);
+protected:
 //----------- Vulkan ImageView Function ------------
     VkResult CreateVkImageView(
-        VkImageView &io_iv_handle,
-        const VkImage i_img_handle,
-        VkImageViewType i_view_type,
-        VkFormat i_img_format,
-        VkComponentMapping i_comp_swizzle,
-        VkImageSubresourceRange i_sub_src_range);
+        VkImageView &io_image_view,
+        VkDevice i_device,
+        const VkImageViewCreateInfo &i_info);
 
-    void DestroyVkImageView(VkImageView &io_iv_handle);
-public:
+    void DestroyVkImageView(
+        VkImageView &io_image_view,
+        VkDevice i_device);
+protected:
 //----------- Vulkan FrameBuffer Function ------------
     VkResult CreateVKFrameBuffer(
-        VkFramebuffer &io_fb_handle,
-        const VkRenderPass i_rp_handle,
-        const std::vector<VkImageView> &i_iv_handles,
+        VkFramebuffer &io_framebuffer,
+        VkDevice i_device,
+        const VkRenderPass i_render_pass,
+        const std::vector<VkImageView> &i_img_views,
         Size_ui32 i_width,
         Size_ui32 i_height,
         Size_ui32 i_layers = 1);
 
-    void DestroyVkFrameBuffer(VkFramebuffer &io_fb_handle);
-public:
+    void DestroyVkFrameBuffer(
+        VkFramebuffer &io_framebuffer,
+        VkDevice i_device);
+protected:
     void SetVkViewport(
-        VkCommandBuffer i_cb_handle,
+        VkCommandBuffer i_cmd_buffer,
         const VkViewport &i_viewport);
 
     void SetVkViewports(
-        VkCommandBuffer i_cb_handle,
+        VkCommandBuffer i_cmd_buffer,
         const std::vector<VkViewport> &i_viewports);
 
     void SetVkScissor(
-        VkCommandBuffer i_cb_handle,
+        VkCommandBuffer i_cmd_buffer,
         const VkRect2D &i_rect);
 
     void SetVkScissors(
-        VkCommandBuffer i_cb_handle,
-        const std::vector<VkRect2D>& i_rects);
+        VkCommandBuffer i_cmd_buffer,
+        const std::vector<VkRect2D> &i_rects);
 
     void DrawByVkIndexBuffer(
-        VkCommandBuffer i_cb_handle,
+        VkCommandBuffer i_cmd_buffer,
         uint32_t i_indice_size,
         uint32_t i_instance_count,
         uint32_t i_first_index,
         int32_t i_vertex_offset,
         uint32_t i_first_instance);
+protected:
+    void GetVkQueue(
+        VkDevice i_device,
+        uint32_t i_q_fam_id,
+        uint32_t i_q_id,
+        VkQueue &io_queue);
+
+    VkResult SubmitVkCommandBuffersToQueue(
+        VkDevice i_device,
+        VkQueue i_queue,
+        VkFence i_fence,
+        const std::vector<VkCommandBuffer> &i_cbs);
+
+    VkResult PresentVkSwapchainToVkQueue(
+        VkQueue i_queue,
+        const VkPresentInfoKHR &i_info);
+protected:
+    VkResult CreateVkSwapchain(
+        VkSwapchainKHR &io_swapchain,
+        VkDevice i_device,
+        const VkSwapchainCreateInfoKHR &i_info);
+
+    VkResult CollectVkImageForVkSwapchain(
+        std::vector<VkImage> &io_iamges,
+        VkDevice i_device,
+        VkSwapchainKHR i_swapchain);
+
+    VkResult GetCurrentVkSwapchainIdx(
+        uint32_t &io_image_idx,
+        VkDevice i_device,
+        VkSwapchainKHR i_swapchain,
+        VkSemaphore i_wait_sema);
+
+    void BlitVkImages(
+        VkCommandBuffer i_cmd_buffer,
+        VkImage i_src_image,
+        VkImage i_dst_image,
+        const VkImageBlit &i_param,
+        VkFilter i_filter = VK_FILTER_NEAREST);
+
+    void DestroyVkSwapchain(
+        VkSwapchainKHR &io_swapchain,
+        VkDevice i_device);
 public:
     bool IsContainerNecessaryQueueFlags(VkQueueFlags i_flags);
-protected:
-//--------------- Render Flow Function ------------------
-    void RenderBegin() override;
-    void RenderToScreen() override;
-    void RenderEnd() override;
+    int32_t GetSuitableMemoryTypeID(const VkMemoryRequirements &i_mem_req, VkFlags i_mem_prop_flags);
 protected:
 //-------------------- Vulkan Builder -------------------
-    void InitializeDebugMessage();
-    void InitializePhysicalDevice();
+    void InitializeVulkanEnvironment();
+    void InitializeVulkanSurface();
     void InitializeSettings();
-    void InitializeDevice();
+    void InitializeGraphicsQueues();
     void InitializeSwapChain();
-    void InitializePresentRenderPass();
-    void InitializeSCImageViewsAndFBs();
-    void InitializeCommandPoolAndBuffers();
 protected:
     //configuration
     std::vector<VkQueueFlagBits> m_desired_queue_abilities;
     VulkanConfig m_vulkan_config;
 protected:
     //Application Create.
-    VkInstance m_ins_handle;
-    VkSurfaceKHR m_sur_handle;
-protected:
+    VkInstance m_instance;
+    VkPhysicalDevice m_phy_device;
     VkDebugReportCallbackEXT m_debug_rp_cbk;
-protected:
-    VkQueueFlags m_final_q_abi_flag;
+    VkPhysicalDeviceMemoryProperties m_phy_dev_memory_props;
+    VkPhysicalDeviceFeatures m_phy_dev_features;
+    VkPhysicalDeviceProperties m_picked_dev_props;
+    VkDevice m_device;
+    VkSurfaceKHR m_surface;
     VkSurfaceFormatKHR m_final_sur_format;
-protected:
-    VkPhysicalDevice m_phy_device_handle;
-    VkDevice m_device_handle;
-    int32_t m_final_queue_fam_id;
-    VkQueue m_present_q_handle;
-protected:
+    VkSurfaceCapabilitiesKHR m_surface_capabilities;
     VkPresentModeKHR m_final_p_mode;
-    VkSwapchainKHR m_sc_handle;
-    VkSemaphore m_acq_img_sema_handle; //GPU to GPU lock
-    VkSemaphore m_pre_sema_handle; //GPU to GPU lock
-    VkRenderPass m_pre_rp_handle;
-    std::vector<VkImage> m_sc_img_handles;
-    std::vector<VkImageView> m_sc_iv_handles;
-    std::vector<VkFramebuffer> m_sc_fb_handles;
-protected:
-    VkCommandPool m_main_cp_handle; //main render thread use.
-    VkCommandBuffer m_main_cb_handle;
-    VkFence m_main_cb_fence_handle;
+    VulkanQueueFamily m_queue_family;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

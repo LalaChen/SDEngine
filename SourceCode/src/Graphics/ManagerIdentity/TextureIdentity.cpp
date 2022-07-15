@@ -28,9 +28,10 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 TextureIdentity::TextureIdentity()
-: m_image_handle(SD_NULL_HANDLE)
-, m_memory_handle(SD_NULL_HANDLE)
-, m_view_handle(SD_NULL_HANDLE)
+: m_handle(SD_NULL_HANDLE)
+, m_device(SD_NULL_HANDLE)
+, m_memory(SD_NULL_HANDLE)
+, m_image_view(SD_NULL_HANDLE)
 , m_texture_type(TextureType_MAX_DEFINE_VALUE)
 , m_texture_format(TextureFormat_MAX_DEFINE_VALUE)
 , m_init_layout(ImageLayout_UNDEFINED)

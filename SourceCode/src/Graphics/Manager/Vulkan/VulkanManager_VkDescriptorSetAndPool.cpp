@@ -29,43 +29,45 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVkDescriptorSetLayout(
-    VkDescriptorSetLayout &io_handle,
+    VkDescriptorSetLayout &io_ds_layout,
+    VkDevice i_device,
     const VkDescriptorSetLayoutCreateInfo &i_c_info)
 {
-    return vkCreateDescriptorSetLayout(m_device_handle, &i_c_info, nullptr, &io_handle);
+    return vkCreateDescriptorSetLayout(i_device, &i_c_info, nullptr, &io_ds_layout);
 }
 
-void VulkanManager::DestroyVkDescriptorSetLayout(VkDescriptorSetLayout &io_handle)
+void VulkanManager::DestroyVkDescriptorSetLayout(
+    VkDescriptorSetLayout &io_layout,
+    VkDevice i_device)
 {
-    vkDestroyDescriptorSetLayout(m_device_handle, io_handle, nullptr);
-    io_handle = VK_NULL_HANDLE;
+    vkDestroyDescriptorSetLayout(i_device, io_layout, nullptr);
+    io_layout = VK_NULL_HANDLE;
 }
 
 VkResult VulkanManager::CreateVkDescriptorPool(
-    VkDescriptorPool &io_handle,
-    const VkDescriptorPoolCreateInfo &i_dp_c_info)
+    VkDescriptorPool &io_pool, VkDevice i_device, const VkDescriptorPoolCreateInfo &i_c_info)
 {
-    return vkCreateDescriptorPool(m_device_handle, &i_dp_c_info, nullptr, &io_handle);
+    return vkCreateDescriptorPool(i_device, &i_c_info, nullptr, &io_pool);
 }
 
-void VulkanManager::DestroyVkDescriptorPool(VkDescriptorPool &io_handle)
+void VulkanManager::DestroyVkDescriptorPool(VkDescriptorPool &io_pool, VkDevice i_device)
 {
-    vkDestroyDescriptorPool(m_device_handle, io_handle, nullptr);
-    io_handle = SD_NULL_HANDLE;
+    vkDestroyDescriptorPool(i_device, io_pool, nullptr);
+    io_pool = SD_NULL_HANDLE;
 }
 
 VkResult VulkanManager::AllocateVkDescriptorSet(
-    VkDescriptorSet &io_handle,
-    const VkDescriptorSetAllocateInfo &i_a_info)
+    VkDescriptorSet &io_set, VkDevice i_device, const VkDescriptorSetAllocateInfo &i_info)
 {
-    return vkAllocateDescriptorSets(m_device_handle, &i_a_info, &io_handle);
+    return vkAllocateDescriptorSets(i_device, &i_info, &io_set);
 }
 
 void VulkanManager::UpdateVkDescriptorSet(
+    VkDevice i_device,
     const std::vector<VkWriteDescriptorSet> &i_descriptor_w_infos,
     const std::vector<VkCopyDescriptorSet> &i_descriptor_c_infos)
 {
-    vkUpdateDescriptorSets(m_device_handle,
+    vkUpdateDescriptorSets(i_device,
         static_cast<uint32_t>(i_descriptor_w_infos.size()),
         i_descriptor_w_infos.data(),
         static_cast<uint32_t>(i_descriptor_c_infos.size()),
@@ -73,24 +75,24 @@ void VulkanManager::UpdateVkDescriptorSet(
 }
 
 void VulkanManager::BindVkDescriptorSets(
-    VkCommandBuffer i_cb_handle,
+    VkCommandBuffer i_cmd_buffer,
     VkPipelineBindPoint i_pipe_bind_point,
-    VkPipelineLayout i_pipe_layout_handle,
-    const std::vector<VkDescriptorSet> &i_ds_handles,
+    VkPipelineLayout i_pipe_layout,
+    const std::vector<VkDescriptorSet> &i_sets,
     const std::vector<uint32_t> &i_dynamic_offsets)
 {
     vkCmdBindDescriptorSets(
-        i_cb_handle,
+        i_cmd_buffer,
         i_pipe_bind_point,
-        i_pipe_layout_handle, 0,
-        static_cast<uint32_t>(i_ds_handles.size()), i_ds_handles.data(),
+        i_pipe_layout, 0,
+        static_cast<uint32_t>(i_sets.size()), i_sets.data(),
         static_cast<uint32_t>(i_dynamic_offsets.size()), i_dynamic_offsets.data());
 }
 
-void VulkanManager::FreeVkDescriptorSet(VkDescriptorSet &io_handle, VkDescriptorPool i_dp_handle)
+void VulkanManager::FreeVkDescriptorSet(VkDescriptorSet &io_set, VkDevice i_device, VkDescriptorPool i_pool)
 {
-    vkFreeDescriptorSets(m_device_handle, i_dp_handle, 1, &io_handle);
-    io_handle = VK_NULL_HANDLE;
+    vkFreeDescriptorSets(i_device, i_pool, 1, &io_set);
+    i_pool = VK_NULL_HANDLE;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -61,13 +61,13 @@ public:
     Ray CalculateRay(const TouchButton &i_tb) const;
 public:
     bool OnGeometryChanged(const EventArg &i_arg) override;
-public:
-    void Initialize() override;
     void Resize() override;
     void RecordCommand(
         const CommandBufferWeakReferenceObject &i_cb,
         const std::list<LightComponentWeakReferenceObject> &i_light_list,
         const std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> > &i_mr_groups) override;
+protected:
+    void InitializeImpl() override;
 protected:
     void InitializeDescriptorSetAndPool();
     void InitializeWorkspaceForForwardPass();
@@ -88,7 +88,7 @@ protected:
 protected:
     TransformComponentWeakReferenceObject m_geo_comp;
 protected:
-    bool m_initialized;
+    bool m_ws_initialized;
     bool m_follow_resolution;
     Resolution m_buffer_size;
     ClearValue m_clear_color;
@@ -115,12 +115,22 @@ inline void CameraComponent::SetPerspective(float i_fov, float i_near, float i_f
 
 inline TextureWeakReferenceObject CameraComponent::GetColorBuffer() const
 {
-    return m_color_buffer;
+    if (IsInitialized() == true && m_ws_initialized == true) {
+        return m_color_buffer;
+    }
+    else {
+        return TextureWeakReferenceObject();
+    }
 }
 
 inline TextureWeakReferenceObject CameraComponent::GetDepthBuffer() const
 {
-    return m_depth_buffer;
+    if (IsInitialized() == true && m_ws_initialized == true) {
+        return m_depth_buffer;
+    }
+    else {
+        return TextureWeakReferenceObject();
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

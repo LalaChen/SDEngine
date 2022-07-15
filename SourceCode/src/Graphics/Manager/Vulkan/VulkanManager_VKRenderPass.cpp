@@ -29,16 +29,17 @@ SOFTWARE.
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVKRenderPass(
-    VkRenderPass &io_rp_handle,
-    const VkRenderPassCreateInfo& i_rp_c_info)
+    VkRenderPass &io_render_pass,
+    VkDevice i_device,
+    const VkRenderPassCreateInfo &i_info)
 {   
-    return vkCreateRenderPass(m_device_handle, &i_rp_c_info, nullptr, &io_rp_handle);
+    return vkCreateRenderPass(i_device, &i_info, nullptr, &io_render_pass);
 }
 
 void VulkanManager::BeginVkRenderPass(
-    VkCommandBuffer i_cb_handle,
-    VkRenderPass i_rp_handle,
-    VkFramebuffer i_fb_handle,
+    VkCommandBuffer i_cmd_buffer,
+    VkRenderPass i_render_pass,
+    VkFramebuffer i_framebuffer,
     const VkRect2D &i_render_area,
     const std::vector<VkClearValue> &i_clear_values,
     VkSubpassContents i_sp_content)
@@ -46,29 +47,31 @@ void VulkanManager::BeginVkRenderPass(
     VkRenderPassBeginInfo rp_begin_info = {};
     rp_begin_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     rp_begin_info.pNext = nullptr;
-    rp_begin_info.renderPass = i_rp_handle;
-    rp_begin_info.framebuffer = i_fb_handle;
+    rp_begin_info.renderPass = i_render_pass;
+    rp_begin_info.framebuffer = i_framebuffer;
     rp_begin_info.renderArea = i_render_area;
     rp_begin_info.clearValueCount = static_cast<uint32_t>(i_clear_values.size());
     rp_begin_info.pClearValues = i_clear_values.data();
 
-    vkCmdBeginRenderPass(i_cb_handle, &rp_begin_info, i_sp_content);
+    vkCmdBeginRenderPass(i_cmd_buffer, &rp_begin_info, i_sp_content);
 }
 
-void VulkanManager::GotoNextStepInVKRenderPass(VkCommandBuffer i_cb_handle, VkSubpassContents i_sp_content)
+void VulkanManager::GotoNextStepInVKRenderPass(
+    VkCommandBuffer i_cmd_buffer,
+    VkSubpassContents i_sp_content)
 {
-    vkCmdNextSubpass(i_cb_handle, i_sp_content);
+    vkCmdNextSubpass(i_cmd_buffer, i_sp_content);
 }
 
-void VulkanManager::EndVkRenderPass(VkCommandBuffer i_cb_handle)
+void VulkanManager::EndVkRenderPass(VkCommandBuffer i_cmd_buffer)
 {
-    vkCmdEndRenderPass(i_cb_handle);
+    vkCmdEndRenderPass(i_cmd_buffer);
 }
 
-void VulkanManager::DestroyVKRenderPass(VkRenderPass &io_rp_handle)
+void VulkanManager::DestroyVKRenderPass(VkRenderPass &io_render_pass, VkDevice i_device)
 {
-    vkDestroyRenderPass(m_device_handle, io_rp_handle, nullptr);
-    io_rp_handle = SD_NULL_HANDLE;
+    vkDestroyRenderPass(i_device, io_render_pass, nullptr);
+    io_render_pass = SD_NULL_HANDLE;
 }
 
 

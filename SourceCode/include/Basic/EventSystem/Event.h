@@ -42,6 +42,8 @@ SOFTWARE.
 
 ______________SD_START_BASIC_NAMESPACE_______________
 
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Event);
+
 /*! \class Event
  *  \brief In our event system, we allow user register and use events in the component inheritance EventObject.
  *  User can NOTIFY event where he wanted. Via notifying event, some slot functions registered into event
@@ -98,7 +100,5 @@ private:
      */
     std::mutex m_mutex;
 };
-
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(Event);
 
 _______________SD_END_BASIC_NAMESPACE________________

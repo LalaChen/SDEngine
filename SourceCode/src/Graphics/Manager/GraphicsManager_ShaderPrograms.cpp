@@ -99,6 +99,11 @@ void GraphicsManager::RegisterShaderProgram(const ObjectName &i_sp_name, const F
     }
 }
 
+void GraphicsManager::SubmitGraphicsCommands(const std::vector<CommandBufferWeakReferenceObject> &i_cbs)
+{
+    SD_SREF(m_graphics_queue).SubmitCommandBuffers(i_cbs);
+}
+
 void GraphicsManager::InitializeBasicDescriptorSetLayout()
 {
     //1. new common descriptor set and its uniform variable descriptors.

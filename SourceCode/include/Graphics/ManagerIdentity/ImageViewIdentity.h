@@ -32,8 +32,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 
 #include "ImageUsage.h"
 #include "ImageLayout.h"
@@ -42,18 +41,29 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS ImageViewIdentity
+class SDENGINE_CLASS ImageViewIdentity : public GraphicsElementIdentity
 {
 public:
     ImageViewIdentity();
     ~ImageViewIdentity();
 public:
-    CompHandle m_iv_handle;
+    CompHandle m_handle;
+
+    /* \var CompHandle m_device;
+     * \brief Device this handle belong.
+     */
+    CompHandle m_device;
+
     TextureFormatEnum m_format;
+
     ImageAspectEnum m_aspect;
+
     uint32_t m_base_mip_level;
+
     uint32_t m_level_count;
+
     uint32_t m_base_array_level;
+
     uint32_t m_layer_count;
 };
 

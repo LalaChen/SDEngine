@@ -44,7 +44,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(StaticIndexBuffer);
 class SDENGINE_CLASS StaticIndexBuffer : public IndexBuffer
 {
 public:
-    friend class GraphicsManager;
+    friend class GraphicsIdentityGetter;
 public:
     /*! \fn explicit StaticIndexBuffer(const ObjectName &i_object_name, IndexBufferFormatEnum i_format, MemoryTypeEnum i_memory_type);
      *  \param [in] i_object_name Name of this buffer.

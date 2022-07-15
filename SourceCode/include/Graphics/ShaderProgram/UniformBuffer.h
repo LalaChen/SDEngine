@@ -50,7 +50,7 @@ SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(UniformBuffer);
 class SDENGINE_CLASS UniformBuffer : public UniformVariable
 {
 public:
-    friend class GraphicsManager;
+    friend class GraphicsIdentityGetter;
 public:
     /*! \fn explicit UniformBuffer(const ObjectName &i_object_name, uint32_t i_binding_id);
      *  \param [in] i_object_name Name of this object.

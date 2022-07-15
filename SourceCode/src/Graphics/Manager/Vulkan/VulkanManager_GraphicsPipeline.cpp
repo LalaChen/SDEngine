@@ -48,36 +48,54 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 void VulkanManager::CreateShaderModule(ShaderModuleIdentity &io_identity, const std::vector<UByte> &i_content)
 {
     VkShaderModule &shader_module = reinterpret_cast<VkShaderModule&>(io_identity.m_handle);
-    CreateVKShaderModule(shader_module, i_content.data(), i_content.size());
+    VkDevice       &device        = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    device = m_device;
+    
+    VkResult result = CreateVKShaderModule(shader_module, device, i_content.data(), i_content.size());
+    if (result != VK_SUCCESS) {
+        SDLOGE("");
+    }
+    else {
+        io_identity.SetValid();
+    }
 }
 
 void VulkanManager::DeleteShaderModule(ShaderModuleIdentity &io_identity)
 {
     VkShaderModule &shader_module = reinterpret_cast<VkShaderModule&>(io_identity.m_handle);
-    DestroyVKShaderModule(shader_module);
+    VkDevice& device = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    device = m_device;
+
+    DestroyVKShaderModule(shader_module, device);
+    io_identity.SetInvalid();
+    io_identity = ShaderModuleIdentity();
 }
 
 //-------- GraphicsPipeline --------
 void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity, const ShaderModules &i_shaders, const RenderPassWeakReferenceObject &i_rp, const std::vector<DescriptorSetLayoutWeakReferenceObject> &i_dsls)
 {
-    const RenderPassIdentity &rp_identity = GetIdentity(i_rp);
-    VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
-    VkPipelineLayout &pipeline_layout_handle = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout_handle);
-    VkRenderPass rp_handle = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
+    VkResult result = VK_SUCCESS;
+    const RenderPassIdentity &rp_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_rp);
+    VkPipeline       &pipeline    = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
+    VkPipelineLayout &pipe_layout = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout);
+    VkRenderPass     render_pass  = reinterpret_cast<VkRenderPass>(rp_identity.m_handle);
+    VkDevice         &device      = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    device = m_device;
+
     std::vector<VkVertexInputBindingDescription> va_input_binding_descs;
     std::vector<VkVertexInputAttributeDescription> va_input_location_descs;
 
-    if (rp_handle == VK_NULL_HANDLE) {
-        SDLOG("rp_handle is nullptr.");
-        throw std::runtime_error("rp_handle is nullptr.");
+    if (render_pass == VK_NULL_HANDLE) {
+        SDLOGE("rp_handle is nullptr.");
+        return;
     }
 
     std::vector<VkDescriptorSetLayout> vk_ds_layouts;
     for (const DescriptorSetLayoutWeakReferenceObject &dsl : i_dsls) {
-        const DescriptorSetLayoutIdentity &dsl_identity = GetIdentity(dsl);
+        const DescriptorSetLayoutIdentity &dsl_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(dsl);
         if (dsl_identity.m_handle == VK_NULL_HANDLE) {
-            SDLOG("dsl_identity.m_handle is nullptr.");
-            throw std::runtime_error("dsl_identity.m_handle is nullptr.");
+            SDLOGE("dsl_identity.m_handle is nullptr.");
+            return;
         }
         else {
             vk_ds_layouts.push_back(reinterpret_cast<VkDescriptorSetLayout>(dsl_identity.m_handle));
@@ -129,7 +147,7 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     std::vector<VkPipelineShaderStageCreateInfo> stage_c_infos;
     for (uint32_t sID = 0; sID < ShaderKind_GRAPHICS_SHADER_NUMBER; ++sID) {
         if (i_shaders.m_shaders[sID].IsNull() == false) {
-            const ShaderModuleIdentity &module_identity = GetIdentity(i_shaders.m_shaders[sID]);
+            const ShaderModuleIdentity &module_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_shaders.m_shaders[sID]);
             VkPipelineShaderStageCreateInfo stage_c_info = {};
             stage_c_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
             stage_c_info.pNext = nullptr;
@@ -275,9 +293,10 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     pipeline_layout_c_info.pushConstantRangeCount = 0;
     pipeline_layout_c_info.pPushConstantRanges = nullptr;
 
-    if (CreateVKPipelineLayout(pipeline_layout_handle, pipeline_layout_c_info) != VK_SUCCESS) {
-        SDLOGE("create pipeline layout failure.");
-        throw std::runtime_error("create pipeline layout failure.");
+    result = CreateVKPipelineLayout(pipe_layout, device, pipeline_layout_c_info);
+    if (result != VK_SUCCESS) {
+        SDLOGE("create pipeline layout failure(%d).", result);
+        return;
     }
 
     //6. Create pipeline.
@@ -296,42 +315,49 @@ void VulkanManager::CreateGraphicsPipeline(GraphicsPipelineIdentity &io_identity
     graphics_pipeline_c_info.pDepthStencilState = &depth_stencil_c_info;
     graphics_pipeline_c_info.pColorBlendState = &color_blending_c_info;
     graphics_pipeline_c_info.pDynamicState = &dyn_state_c_info;
-    graphics_pipeline_c_info.layout = pipeline_layout_handle;
+    graphics_pipeline_c_info.layout = pipe_layout;
     graphics_pipeline_c_info.basePipelineHandle = VK_NULL_HANDLE;
     graphics_pipeline_c_info.basePipelineIndex = -1;
-    graphics_pipeline_c_info.renderPass = rp_handle;
+    graphics_pipeline_c_info.renderPass = render_pass;
     graphics_pipeline_c_info.subpass = io_identity.m_subpass_id;
 
-    VkResult result = CreateVKPipeline(pipeline_handle, graphics_pipeline_c_info);
+    result = CreateVKPipeline(pipeline, device, graphics_pipeline_c_info);
     if (result != VK_SUCCESS) {
-        SDLOGE("Create pipeline failure")
-        return;
+        SDLOGE("Create pipeline failure(%d).", result);
+    }
+    else {
+        io_identity.SetValid();
     }
 }
 
 void VulkanManager::BindGraphicsPipeline(const GraphicsPipelineIdentity &i_identity, const CommandBufferWeakReferenceObject &i_cb, const std::vector<DescriptorSetWeakReferenceObject> &i_dss)
 {
-    const CommandBufferIdentity &cb_identity = GetIdentity(i_cb);
-    VkCommandBuffer cb_handle = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
-    VkPipeline pipe_handle = reinterpret_cast<VkPipeline>(i_identity.m_handle);
-    VkPipelineLayout pipe_layout_handle = reinterpret_cast<VkPipelineLayout>(i_identity.m_pipeline_layout_handle);
-    VkPipelineBindPoint pipe_bp = PipelineBindPoint_Vulkan::Convert(i_identity.m_params.m_pipe_bind_point);
-    std::vector<VkDescriptorSet> ds_handles;
+    const CommandBufferIdentity &cb_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_cb);
+    VkCommandBuffer     cmd_buffer  = reinterpret_cast<VkCommandBuffer>(cb_identity.m_handle);
+    VkPipeline          pipeline    = reinterpret_cast<VkPipeline>(i_identity.m_handle);
+    VkPipelineLayout    pipe_layout = reinterpret_cast<VkPipelineLayout>(i_identity.m_pipeline_layout);
+    VkPipelineBindPoint pipe_bp     = PipelineBindPoint_Vulkan::Convert(i_identity.m_params.m_pipe_bind_point);
+    std::vector<VkDescriptorSet> sets;
     for (const DescriptorSetWeakReferenceObject &ds : i_dss) {
-        const DescriptorSetIdentity &ds_identity = GetIdentity(ds);
-        ds_handles.push_back(reinterpret_cast<VkDescriptorSet>(ds_identity.m_handle));
+        const DescriptorSetIdentity &ds_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(ds);
+        sets.push_back(reinterpret_cast<VkDescriptorSet>(ds_identity.m_handle));
     }
-    BindVkPipeline(cb_handle, pipe_handle, pipe_bp);
-    BindVkDescriptorSets(cb_handle, pipe_bp, pipe_layout_handle, ds_handles);
+    BindVkPipeline(cmd_buffer, pipeline, pipe_bp);
+    BindVkDescriptorSets(cmd_buffer, pipe_bp, pipe_layout, sets);
 }
 
 void VulkanManager::DestroyGraphicsPipeline(GraphicsPipelineIdentity &io_identity)
 {
-    VkPipeline &pipeline_handle = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
-    VkPipelineLayout &pipeline_layout_handle = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout_handle);
+    VkPipeline       &pipeline        = reinterpret_cast<VkPipeline&>(io_identity.m_handle);
+    VkPipelineLayout &pipeline_layout = reinterpret_cast<VkPipelineLayout&>(io_identity.m_pipeline_layout);
+    VkDevice         &device          = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    device = m_device;
 
-    DestroyVKPipelineLayout(pipeline_layout_handle);
-    DestroyVKPipeline(pipeline_handle);
+    DestroyVKPipelineLayout(pipeline_layout, device);
+    DestroyVKPipeline(pipeline, device);
+
+    io_identity.SetInvalid();
+    io_identity = GraphicsPipelineIdentity();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

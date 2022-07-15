@@ -34,8 +34,7 @@ SOFTWARE.
 
 #include <vector>
 
-#include "SDEngineMacro.h"
-#include "SDEngineCommonType.h"
+#include "GraphicsElementIdentity.h"
 
 #include "GraphicsPipelineParam.h"
 
@@ -45,7 +44,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
  *  \brief Class GraphicsPipelineIdentity is used to record some necessary information
            for pipeline.
  */
-class SDENGINE_CLASS GraphicsPipelineIdentity
+class SDENGINE_CLASS GraphicsPipelineIdentity : public GraphicsElementIdentity
 {
 public:
    /*! \fn explicit GraphicsPipelineIdentity();
@@ -63,10 +62,15 @@ public:
      */
     CompHandle m_handle;
 
-    /*! \var CompHandle m_pipeline_layout_handle;
+    /* \var CompHandle m_device;
+     * \brief Device this handle belong.
+     */
+    CompHandle m_device;
+
+    /*! \var CompHandle m_pipeline_layout;
      *  \brief The pipeline layout handle. It is valid while the value is not equal 0.(Opengl doesn't need.)
      */
-    CompHandle m_pipeline_layout_handle;
+    CompHandle m_pipeline_layout;
 
     /*! \var uint32_t m_subpass_id;
      *  \brief Claim this pipeline is used at which sub pass of this render pass.

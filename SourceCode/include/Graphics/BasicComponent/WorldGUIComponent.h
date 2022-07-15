@@ -69,10 +69,9 @@ public:
     TouchButton GetTouchButton() const;
 public:
     template<typename T> WeakReferenceObject<T> GetGUINode(const ObjectName &i_name);
-public:
-    void Initialize() override;
-public:
-    void Update();
+protected:
+    void InitializeImpl() override;
+    void UpdateImpl() override;
 protected:
     void InitializeWorkspace();
     void ClearWorkspace();

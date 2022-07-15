@@ -29,6 +29,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 FrameBufferGroupIdentity::FrameBufferGroupIdentity()
 : m_handle(SD_NULL_HANDLE)
+, m_device(SD_NULL_HANDLE)
 , m_clear_depth_or_stencil_flag(false)
 , m_clear_depth(1.0f)
 , m_clear_stencil(1)

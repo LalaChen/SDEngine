@@ -29,6 +29,18 @@ SOFTWARE.
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
+void OpenGL4Manager::CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity)
+{
+}
+
+void OpenGL4Manager::RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture)
+{
+}
+
+void OpenGL4Manager::DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity)
+{
+}
+
 void OpenGL4Manager::SetViewport(const CommandBufferWeakReferenceObject& i_cb, const Viewport &i_vp)
 {
 }

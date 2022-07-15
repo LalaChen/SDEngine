@@ -33,11 +33,11 @@ DescriptorSetLayout::DescriptorSetLayout(const ObjectName &i_object_name)
 : Object(i_object_name)
 , m_descriptor_counts{0}
 {
-    GraphicsManager::GetRef().DestroyDescriptorSetLayout(m_identity);
 }
 
 DescriptorSetLayout::~DescriptorSetLayout()
 {
+    GraphicsManager::GetRef().DestroyDescriptorSetLayout(m_identity);
 }
 
 void DescriptorSetLayout::AddUniformVariableDescriptors(const std::vector<UniformVariableDescriptorStrongReferenceObject> &i_uvds)
