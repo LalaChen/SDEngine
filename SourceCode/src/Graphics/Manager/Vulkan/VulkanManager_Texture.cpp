@@ -244,7 +244,9 @@ void VulkanManager::DeleteTextureImage(TextureIdentity &io_identity, SamplerIden
 {
     VkDevice device = reinterpret_cast<VkDevice>(io_identity.m_device);
     //destroy image handle.
-    VkImage  &image = reinterpret_cast<VkImage&>(io_identity.m_handle);
+    VkDeviceMemory &memory = reinterpret_cast<VkDeviceMemory&>(io_identity.m_memory);
+    VkImage        &image = reinterpret_cast<VkImage&>(io_identity.m_handle);
+    FreeVkDeviceMemory(memory, device);
     DestroyVkImage(image, device);
     io_identity.SetInvalid();
     io_identity = TextureIdentity();

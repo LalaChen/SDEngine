@@ -92,6 +92,7 @@ void VulkanManager::DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_ident
     VkSwapchainKHR   &swapchain = reinterpret_cast<VkSwapchainKHR&>(io_identity.m_handle);
     DestroyVkSwapchain(swapchain, device);
     io_identity.SetInvalid();
+    io_identity = GraphicsSwapchainIdentity();
 }
 
 void VulkanManager::RenderTextureToSwapchain(

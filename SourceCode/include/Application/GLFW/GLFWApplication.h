@@ -113,6 +113,14 @@ public:
      */
     void TerminateApplication() override;
 public:
+    /*! \fn void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
+     *  \param [in] i_new_surface new surface of window.(if necessary)
+     *  \param [in] i_w Width.
+     *  \param [in] i_h Height.
+     *  \brief Resume app. Please call this function when app re-focus.
+     */
+    void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
+public:
     /*! \fn KeyStatusEnum GetKeyStateByCode(KeyCodeEnum i_code) override;
      *  \param [in] i_code Target key in keyboard.
      *  \brief Get key status by key code. Return not support if the key isn't supported.

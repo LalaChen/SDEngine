@@ -39,6 +39,7 @@ SOFTWARE.
 #include <sstream>
 #include <vector>
 #include <utility>
+#include <thread>
 #include <functional>
 #include <condition_variable>
 
@@ -52,10 +53,10 @@ template <class CallbackType>
 class Dispatcher : public Object
 {
 public:
-    explicit Dispatcher(const ObjectName& i_object_name);
+    explicit Dispatcher(const ObjectName &i_object_name);
     virtual ~Dispatcher();
 public:
-    void AddTask(const CallbackType& i_func);
+    void AddTask(const CallbackType &i_func);
     void Run();
 protected:
     /*! \fn std::thread m_thread;

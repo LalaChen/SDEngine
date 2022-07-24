@@ -396,12 +396,12 @@ void VulkanManager::InitializeVulkanSurface()
     }
 
     if (sur_format_count > 1) {
-        for (VkSurfaceFormatKHR& fmt : sur_formats) {
+        for (VkSurfaceFormatKHR &fmt : sur_formats) {
             SDLOGD("Supported SurfaceFormat:(Format)%d, (colorSpace)%d", fmt.format, fmt.colorSpace);
         }
 
-        for (const VkSurfaceFormatKHR& desired_fmt : m_vulkan_config.m_desired_sur_formats) {
-            for (VkSurfaceFormatKHR& fmt : sur_formats) {
+        for (const VkSurfaceFormatKHR &desired_fmt : m_vulkan_config.m_desired_sur_formats) {
+            for (VkSurfaceFormatKHR &fmt : sur_formats) {
                 if (fmt.colorSpace == desired_fmt.colorSpace &&
                     fmt.format == desired_fmt.format) {
                     m_final_sur_format = fmt;
@@ -438,12 +438,12 @@ void VulkanManager::InitializeVulkanSurface()
         throw std::runtime_error("No present mode supported!");
     }
 
-    for (const VkPresentModeKHR& p_mode : supported_p_modes) {
+    for (const VkPresentModeKHR &p_mode : supported_p_modes) {
         SDLOGD("Supported present mode : %d", p_mode);
     }
 
     for (uint32_t mode_id = 0; mode_id < m_vulkan_config.m_desired_pre_modes.size(); mode_id++) {
-        for (const VkPresentModeKHR& p_mode : supported_p_modes) {
+        for (const VkPresentModeKHR &p_mode : supported_p_modes) {
             if (m_vulkan_config.m_desired_pre_modes[mode_id] == p_mode) {
                 m_final_p_mode = m_vulkan_config.m_desired_pre_modes[mode_id];
                 break;

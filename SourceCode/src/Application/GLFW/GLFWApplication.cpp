@@ -250,6 +250,17 @@ void GLFWApplication::TerminateApplication()
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_TERMINATED));
 }
 
+void GLFWApplication::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
+{
+    VkSurfaceKHR new_surface = VK_NULL_HANDLE;
+    if (glfwCreateWindowSurface(reinterpret_cast<VkInstance>(m_graphics_app_instance), m_window, nullptr, &new_surface) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create window surface!");
+    }
+    else {
+        Application::Resize(reinterpret_cast<CompHandle>(new_surface), i_w, i_h);
+    }
+}
+
 KeyStatusEnum GLFWApplication::GetKeyStateByCode(KeyCodeEnum i_code)
 {
     if (i_code != KEY_MAX_NUMBER) {

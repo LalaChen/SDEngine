@@ -56,6 +56,7 @@ public:
 public:
     void SetEyeCenters(Vector3f i_eye_centers[VREye_Both]);
     void SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both]);
+    void SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum);
     void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
 public:
     TextureWeakReferenceObject GetColorBuffer() const override;

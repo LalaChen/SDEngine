@@ -146,13 +146,18 @@ void VulkanManager::ReleaseGraphicsSystem()
 //----------------------- Render Flow -----------------------
 void VulkanManager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
 {
-    m_swapchain.Reset();
 
-    if (i_new_surface != VK_NULL_HANDLE) {
-        m_surface = reinterpret_cast<VkSurfaceKHR>(i_new_surface);
+    VkSurfaceKHR new_surface = reinterpret_cast<VkSurfaceKHR>(i_new_surface);
+    if (m_surface != new_surface && new_surface != SD_NULL_HANDLE) {
+        SDLOG("Refresh surface for resize.");
+        m_swapchain.Reset();
+        vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
+        m_surface = new_surface;
+        InitializeSwapChain();
     }
-
-    InitializeSwapChain();
+    else {
+        SDLOG("Surface no change. We don't need to refresh surface for resize.");
+    }
 }
 
 Resolution VulkanManager::GetScreenResolution() const

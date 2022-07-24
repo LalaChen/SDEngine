@@ -168,7 +168,7 @@ void VRCameraComponent::InitializeWorkspaceForDeferredPass()
     }
 }
 
-bool VRCameraComponent::OnGeometryChanged(const EventArg& i_arg)
+bool VRCameraComponent::OnGeometryChanged(const EventArg &i_arg)
 {
     if (m_ub.IsNull() == false) {
         Transform node_xform = SD_WREF(m_geo_comp).GetWorldTransform();
@@ -209,9 +209,12 @@ void VRCameraComponent::SetEyeCenters(Vector3f i_eye_centers[VREye_Both])
     OnGeometryChanged(EventArg());
 }
 
+void VRCameraComponent::SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum)
+{
+}
+
 void VRCameraComponent::SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both])
 {
-
     for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
         m_proj_mats[eid] = i_proj_mats[eid];
     }
