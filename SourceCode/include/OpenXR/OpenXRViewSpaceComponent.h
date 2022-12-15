@@ -22,39 +22,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#include <ImGui/imgui.h>
 
-#include "IMGUIWindow.h"
+/*! \file      OpenXRViewSpaceComponent.h
+ *  \brief     The class OpenXRViewSpaceComponent is used to perform rendering for XR at location of owner(Entity).
+ *             We will register it to Entity for performing application logic.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2022/10/16
+ *  \copyright MIT License.
+ */
 
-________________SD_START_GUI_NAMESPACE_______________
+#include <openxr/openxr.h>
+#include <openxr/openxr_platform.h>
+#include <openxr/openxr_reflection.h>
 
-IMGUIWindow::IMGUIWindow(const ObjectName &i_name, const std::string &i_title)
-: IMGUINode(i_name)
-, m_title(i_title)
+#include "OpenXRSpaceComponent.h"
+
+______________SD_START_OPENXR_NAMESPACE______________
+
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(OpenXRViewSpaceComponent);
+
+class OpenXRViewSpaceComponent: public OpenXRSpaceComponent
 {
-}
+public:
+    SD_COMPONENT_POOL_TYPE_DECLARATION(OpenXRViewSpaceComponent, OpenXRSpaceComponent);
+public:
+    explicit OpenXRViewSpaceComponent(const ObjectName &i_object_name);
+    virtual ~OpenXRViewSpaceComponent();
+protected:
+    void InitializeImpl() override;
+    void UpdateImpl() override;
+protected:
+    VRCameraComponentWeakReferenceObject m_camera_comp;
+    TransformComponentWeakReferenceObject m_trans_comp;
+};
 
-IMGUIWindow::~IMGUIWindow()
-{
-}
-
-void IMGUIWindow::Append(const IMGUINodeStrongReferenceObject &i_child)
-{
-    m_children.push_back(i_child);
-}
-
-void IMGUIWindow::RecordCommand()
-{
-    ImGui::SetNextWindowPos(m_region.m_pos, ImGuiCond_Always);
-    ImGui::SetNextWindowSize(m_region.m_size, ImGuiCond_Always);
-    ImGui::Begin(m_title.c_str(), 0, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding);
-
-    std::list<IMGUINodeStrongReferenceObject>::iterator node_iter;
-    for (node_iter = m_children.begin(); node_iter != m_children.end(); ++node_iter) {
-        SD_SREF((*node_iter)).RecordCommand();
-    }
-
-    ImGui::End();
-}
-
-_________________SD_END_GUI_NAMESPACE________________
+_______________SD_END_OPENXR_NAMESPACE_______________

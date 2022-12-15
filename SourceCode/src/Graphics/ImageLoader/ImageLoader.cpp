@@ -1,11 +1,14 @@
 #define STB_IMAGE_IMPLEMENTATION
+#include "ImageLoader.h"
 
 #include <stb/stb_image.h>
 
+#include "LogManager.h"
 #include "FileResourceRequester.h"
-#include "ImageLoader.h"
+
 
 using SDE::Basic::FileData;
+using SDE::Basic::LogManager;
 using SDE::Basic::FileResourceRequester;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________

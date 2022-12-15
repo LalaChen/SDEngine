@@ -61,9 +61,13 @@ void GraphicsSwapchain::Initialize()
 
 void GraphicsSwapchain::RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex)
 {
+	uint32_t image_idx = UINT32_MAX;
+
+	GraphicsManager::GetRef().GetReadyTextureOfSwapchain(m_identity, m_acq_sema, image_idx);
+
 	GraphicsManager::GetRef().RenderTextureToSwapchain(
-		m_identity, m_queue, m_cmd_buffer,
-		m_acq_sema, m_present_sema, i_tex);
+		m_identity, image_idx,
+		m_queue, m_cmd_buffer, m_present_sema, i_tex);
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

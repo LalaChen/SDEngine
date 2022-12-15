@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include "GraphicsSystem.h"
 
 #include "Application.h"
 #include "ECSManager.h"
@@ -29,7 +30,6 @@ SOFTWARE.
 #include "CameraComponent.h"
 #include "LightComponent.h"
 #include "MeshRenderComponent.h"
-#include "GraphicsSystem.h"
 
 using SDE::Basic::StringFormat;
 using SDE::Basic::Application;
@@ -109,7 +109,7 @@ void GraphicsSystem::Update()
     CameraComponentBaseWeakReferenceObject screen_camera = GetScreenCamera();
 
     if (screen_camera.IsNull() == false) {
-        GraphicsManager::GetRef().RenderTextureToSwapchain(SD_WREF(screen_camera).GetColorBuffer());
+        GraphicsManager::GetRef().RenderTextureToScreen(SD_WREF(screen_camera).GetColorBuffer());
     }
 }
 
@@ -126,7 +126,7 @@ void GraphicsSystem::Destroy()
 
 void GraphicsSystem::Resize()
 {
-    std::list<EntityWeakReferenceObject> camera_entity_list = m_camera_eg.GetRef().GetEntities();
+    std::list<EntityWeakReferenceObject> camera_entity_list = SD_WREF(m_camera_eg).GetEntities();
     for (EntityWeakReferenceObject ce : camera_entity_list) {
         SD_WREF(SD_GET_COMP_WREF(ce, CameraComponentBase)).Resize();
     }

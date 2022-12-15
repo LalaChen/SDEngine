@@ -20,57 +20,53 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-#if defined(_WIN32) || defined(_WIN64)
+#include "OpenXRApplication.h"
 
-#include <GL/glew.h>
-
+#include "OpenXRAPIManager.h"
 #include "LogManager.h"
-#include "OpenGL4Manager.h"
+#include "Timer.h"
+#include "ECSManager.h"
+#include "ImageLoader.h"
+#include "GraphicsManager.h"
+#include "SceneManager.h"
+#include "FileResourceRequester.h"
 
-_____________SD_START_GRAPHICS_NAMESPACE_____________
+using SDE::Basic::KEY_STATUS_NOT_SUPPORT;
 
-OpenGL4Manager::OpenGL4Manager()
-: GraphicsManager()
-{
-    SDLOG("New OpenGL4Manager object.");
-}
+______________SD_START_OPENXR_NAMESPACE______________
 
-OpenGL4Manager::~OpenGL4Manager()
-{
-    SDLOG("Delete OpenGL4Manager object.");
-}
-
-void OpenGL4Manager::InitializeGraphicsSystem(const EventArg &i_arg)
-{
-    SDLOG("Initialize OpenGL4Manager.");
-    glewInit();
-}
-
-void OpenGL4Manager::ReleaseGraphicsSystem()
-{
-    SDLOG("Release OpenGL4Manager.");
-}
-
-void OpenGL4Manager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
-{
-    glViewport(0, 0, i_w, i_h);
-    glClearColor(0.2f, 0.5f, 0.8f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-}
-
-void OpenGL4Manager::RenderTextureToScreen(const TextureWeakReferenceObject &i_tex)
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    //render quad to screen.
-}
-
-void OpenGL4Manager::GetDesiredVulkanValidLayers(std::vector<const char*> &io_valid_layers) const
+OpenXRApplication::OpenXRApplication(
+	const std::string &i_win_title,
+	const Resolution &i_win_res,
+	FullWindowOption i_full_window,
+	GraphicsLibraryEnum i_adopt_library,
+	int i_argc, char **i_argv)
+: Application(i_win_title, i_win_res, i_full_window, i_adopt_library, i_argc, i_argv)
 {
 }
 
-______________SD_END_GRAPHICS_NAMESPACE______________
+OpenXRApplication::~OpenXRApplication()
+{
+}
 
-#endif
+void OpenXRApplication::Initialize()
+{
+	new OpenXRAPIManager("Common/Configs/OpenXRConfig.json");
+	OpenXRAPIManager::GetRef().Initialize(m_win_title);
+}
+
+void OpenXRApplication::TerminateApplication()
+{
+	OpenXRAPIManager::GetRef().Terminate();
+	OpenXRAPIManager::Destroy();
+}
+
+KeyStatusEnum OpenXRApplication::GetKeyStateByCode(KeyCodeEnum i_code)
+{
+	return KEY_STATUS_NOT_SUPPORT;
+}
+
+_______________SD_END_OPENXR_NAMESPACE_______________

@@ -24,12 +24,14 @@ SOFTWARE.
 */
 
 //#define SD_IMGUI_DEBUG
+#include "IMGUIRenderer.h"
 
 #include <ImGui/imgui.h>
 
 #include "LogManager.h"
-#include "IMGUIRenderer.h"
+#include "FileResourceRequester.h"
 
+using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
 ________________SD_START_GUI_NAMESPACE_______________
@@ -100,6 +102,18 @@ void IMGUIRenderer::InitializeGraphicsSystem()
     ImGuiIO &io = ImGui::GetIO();
     unsigned char* font = nullptr;
     int tex_width, tex_height;
+    io.FontGlobalScale = 1.0f;
+    
+    FileData file;
+
+    bool result = FileResourceRequester::GetRef().AskFile("/Common/Fonts/Roboto-Medium.ttf", file);
+    if (result == false) {
+        SDLOGW("Font Roboto can't be found. Use default.");
+    }
+    else {
+        io.Fonts->AddFontFromMemoryTTF(file.GetDataCharAddr(), file.GetSize(), 16.0f);
+    }
+
     io.Fonts->GetTexDataAsRGBA32(&font, &tex_width, &tex_height);
     BitmapStrongReferenceObject font_bitmap = new Bitmap("FontAltasBitmap", BitmapConfig_RGBA_8888, tex_width, tex_height, font, tex_width * tex_height * 4, -1, BitmapPixelDataType_UNSIGNED_BYTE);
     m_font_atlas = new Texture("IMGUIDefaultFontAtlas");
@@ -156,8 +170,17 @@ bool IMGUIRenderer::PrepareVerticesData(
 {
 
     ImDrawData* draw_data = ImGui::GetDrawData();
-    Size_ui64 vtx_count = draw_data->TotalVtxCount;
-    Size_ui64 idx_count = draw_data->TotalIdxCount;
+    Size_ui64 vtx_count = draw_data->TotalVtxCount + 12;
+    Size_ui64 idx_count = draw_data->TotalIdxCount + 12;
+
+    /*
+    for (int n = 0; n < draw_data->CmdListsCount; n++) {
+        const ImDrawList* cmd_list = draw_data->CmdLists[n];
+        vtx_count += cmd_list->VtxBuffer.Size;
+        idx_count += cmd_list->IdxBuffer.Size;
+    }
+    SDLOG("(%d,%d),(%d, %d)", vtx_count, draw_data->TotalVtxCount, idx_count, draw_data->TotalIdxCount);
+    */
 
     if (vtx_count == 0 || idx_count == 0) {
         return false;
@@ -285,6 +308,7 @@ void IMGUIRenderer::RecordGUICommands(
         SD_WREF(colors).Bind(i_cmd_buffer, VertexBufferUsage_COLOR_BUFFER, 0);
         SD_WREF(vertices).Bind(i_cmd_buffer, VertexBufferUsage_VERTEX_BUFFER, 0);
         SD_WREF(indices).Bind(i_cmd_buffer, 0);
+
         GraphicsManager::GetRef().DrawByIndices(i_cmd_buffer, indices.StaticCastTo<IndexBuffer>(), 0, 0, 0, 1);
 
         SD_WREF(i_flow).EndRenderFlow(i_cmd_buffer);

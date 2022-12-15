@@ -22,7 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#include "AndroidApplication.h"
+
+#include "OpenXRAndroidApplication.h"
 
 #include "SDEngine.h"
 #include "SDEnginePlatform.h"
@@ -36,11 +37,11 @@ using namespace SDE::GUI;
 
 ________________SD_START_APP_NAMESPACE_______________
 
-AndroidApplication::AndroidApplication(
+OpenXRAndroidApplication::OpenXRAndroidApplication(
     const std::string &i_win_title,
     JavaVM *i_javaVM, AAssetManager *i_asset_mgr,
-    GraphicsLibraryEnum i_adopt_library, int i_argc, char **i_argv)
-: Application(i_win_title, Resolution(2,2), true, i_adopt_library, i_argc, i_argv)
+    GraphicsLibraryEnum i_adopt_library, int i_argc, char** i_argv)
+: Application(i_win_title, Resolution(2, 2), true, i_adopt_library, i_argc, i_argv)
 , m_current_state(AppState_CREATE)
 , m_window(nullptr)
 , m_javaVM(i_javaVM)
@@ -48,43 +49,22 @@ AndroidApplication::AndroidApplication(
 , m_resize_signal(false)
 {
     if (m_javaVM != nullptr) {
-        AndroidEnvAttacher env_attacher(m_javaVM);
-        JNIEnv *env = env_attacher.GetEnv();
-        if (env != nullptr) {
-            jClass_MotionEvent = env->FindClass("android/view/MotionEvent");
-            jMethod_MotionEvent_getActionMasked = env->GetMethodID(jClass_MotionEvent, "getActionMasked", "()I");
-            jMethod_MotionEvent_getPointerCount = env->GetMethodID(jClass_MotionEvent, "getPointerCount", "()I");
-            jMethod_MotionEvent_getPointerId = env->GetMethodID(jClass_MotionEvent, "getPointerId", "(I)I");
-            jMethod_MotionEvent_getX = env->GetMethodID(jClass_MotionEvent, "getX", "(I)F");
-            jMethod_MotionEvent_getY = env->GetMethodID(jClass_MotionEvent, "getY", "(I)F");
-        }
-        else {
-            SDLOG("env is nullptr!!!");
-        }
     }
     else {
         SDLOG("Java VM is nullptr!!!");
     }
 }
 
-AndroidApplication::~AndroidApplication()
+OpenXRAndroidApplication::~OpenXRAndroidApplication()
 {
     if (m_javaVM != nullptr) {
-        AndroidEnvAttacher env_attacher(m_javaVM);
-        JNIEnv* env = env_attacher.GetEnv();
-        if (env != nullptr) {
-            env->DeleteLocalRef(jClass_MotionEvent);
-        }
-        else {
-            SDLOG("env is nullptr!!!");
-        }
     }
     else {
         SDLOG("Java VM is nullptr!!!");
     }
 }
 
-void AndroidApplication::Initialize()
+void OpenXRAndroidApplication::Initialize()
 {
     m_current_state = AppState_INITIALIZE;
 
@@ -99,15 +79,17 @@ void AndroidApplication::Initialize()
 
     }
     else if (m_adopt_library == GraphicsLibrary_Vulkan) {
-        new VulkanManager();
+        new OpenXRVulkanManager();
     }
 
     new IMGUIRenderer();
 
+    OpenXRApplication::Initialize();
+
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_INITIALIZED));
 }
 
-void AndroidApplication::InitializeGraphicsSystem()
+void OpenXRAndroidApplication::InitializeGraphicsSystem()
 {
     if (m_adopt_library == SDE::Graphics::GraphicsLibrary_Vulkan) {
         VkInstance instance = VK_NULL_HANDLE;
@@ -138,15 +120,15 @@ void AndroidApplication::InitializeGraphicsSystem()
             vkEnumerateInstanceLayerProperties(&layer_count, avaiable_valid_layers.data());
             for (uint32_t ext_id = 0; ext_id < avaiable_valid_layers.size(); ext_id++) {
                 SDLOG("[AppFlow] --- Avaiable valid layer :%s[%s](%d)(%d)",
-                      avaiable_valid_layers[ext_id].layerName,
-                      avaiable_valid_layers[ext_id].description,
-                      avaiable_valid_layers[ext_id].implementationVersion,
-                      avaiable_valid_layers[ext_id].specVersion);
+                    avaiable_valid_layers[ext_id].layerName,
+                    avaiable_valid_layers[ext_id].description,
+                    avaiable_valid_layers[ext_id].implementationVersion,
+                    avaiable_valid_layers[ext_id].specVersion);
 
                 std::vector<const char*> desired_layer_names;
                 GraphicsManager::GetRef().GetDesiredVulkanValidLayers(desired_layer_names);
 
-                for (const char *desired_name : desired_layer_names) {
+                for (const char* desired_name : desired_layer_names) {
                     if (strcmp(desired_name, avaiable_valid_layers[ext_id].layerName) == 0) {
                         desired_valid_layer_names.push_back(desired_name);
                         break;
@@ -182,19 +164,6 @@ void AndroidApplication::InitializeGraphicsSystem()
             SDLOG("[AppFlow] --- failed to create instance.");
             throw std::runtime_error("failed to create instance!");
         }
-        SDLOG("[AppFlow] --- Vulkan create surface.");
-        VkAndroidSurfaceCreateInfoKHR surface_c_info = {};
-        surface_c_info.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
-        surface_c_info.pNext = nullptr;
-        surface_c_info.flags = 0;
-        surface_c_info.window = m_window;
-        SDLOG("[AppFlow] vkCreateAndroidSurfaceKHR(%p)", (void*)vkCreateAndroidSurfaceKHR);
-        if (vkCreateAndroidSurfaceKHR(instance, &surface_c_info, nullptr, &surface) != VK_SUCCESS){
-            SDLOG("[AppFlow] --- failed to create surface.");
-            throw std::runtime_error("failed to create surface!");
-        }
-        SDLOG("[AppFlow] Vulkan instance creation end!!!");
-        m_graphics_app_instance = reinterpret_cast<CompHandle>(instance);
 
         VulkanCreationArg arg;
         arg.m_instance = instance;
@@ -210,22 +179,23 @@ void AndroidApplication::InitializeGraphicsSystem()
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
 }
 
-void AndroidApplication::ReleaseGraphicsSystem()
+void OpenXRAndroidApplication::ReleaseGraphicsSystem()
 {
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
     IMGUIRenderer::GetRef().ReleaseGraphicsSystem();
 
     GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
-    
+
     m_window = nullptr;
 }
 
-void AndroidApplication::TerminateApplication()
+void OpenXRAndroidApplication::TerminateApplication()
 {
     m_current_state = AppState_TERMINATE;
     m_pause_cv.notify_all();
     m_render_thread.join();
+    OpenXRApplication::TerminateApplication();
     SDLOG("[AppFlow] Terminate SceneManager.");
     SceneManager::GetRef().Terminate();
     SDLOG("[AppFlow] Terminate ECSManager.");
@@ -248,12 +218,12 @@ void AndroidApplication::TerminateApplication()
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_TERMINATED));
 }
 
-void AndroidApplication::InitializeNativeWindow(ANativeWindow *i_window)
+void OpenXRAndroidApplication::InitializeNativeWindow(ANativeWindow* i_window)
 {
     m_window = i_window;
 }
 
-void AndroidApplication::RefreshNativeWindow(ANativeWindow *i_window, int i_width, int i_height)
+void OpenXRAndroidApplication::RefreshNativeWindow(ANativeWindow* i_window, int i_width, int i_height)
 {
     if (i_window != nullptr) {
         SDLOG("[AppFlow] Refresh native for android.");
@@ -266,7 +236,7 @@ void AndroidApplication::RefreshNativeWindow(ANativeWindow *i_window, int i_widt
         surface_c_info.flags = 0;
         surface_c_info.window = m_window;
         VkInstance app_VK_instance = reinterpret_cast<VkInstance>(m_graphics_app_instance);
-        if (vkCreateAndroidSurfaceKHR(app_VK_instance, &surface_c_info, nullptr, &new_surface) != VK_SUCCESS){
+        if (vkCreateAndroidSurfaceKHR(app_VK_instance, &surface_c_info, nullptr, &new_surface) != VK_SUCCESS) {
             throw std::runtime_error("failed to create surface!");
         }
         m_win_res.SetResolution(i_width, i_height);
@@ -279,12 +249,12 @@ void AndroidApplication::RefreshNativeWindow(ANativeWindow *i_window, int i_widt
     }
 }
 
-KeyStatusEnum AndroidApplication::GetKeyStateByCode(KeyCodeEnum i_code)
+KeyStatusEnum OpenXRAndroidApplication::GetKeyStateByCode(KeyCodeEnum i_code)
 {
     return KEY_STATUS_NOT_SUPPORT;
 }
 
-void AndroidApplication::RunMainLoop()
+void OpenXRAndroidApplication::RunMainLoop()
 {
     m_current_state = AppState_INITIALIZE_GRAPHICS;
     InitializeGraphicsSystem();
@@ -298,16 +268,16 @@ void AndroidApplication::RunMainLoop()
             else {
                 std::unique_lock<std::mutex> mtx_lock(m_pause_mtx);
                 SDLOG("[AppFlow] App pause now");
-                m_pause_cv.wait(mtx_lock, [this](){return (m_current_state == AppState_RUN || m_current_state == AppState_TERMINATE);});
+                m_pause_cv.wait(mtx_lock, [this]() {return (m_current_state == AppState_RUN || m_current_state == AppState_TERMINATE); });
                 SDLOG("[AppFlow] App pause end - go to Resume");
                 Resume();
                 SDLOG("[AppFlow] App resume end");
             }
         }
-    });
+        });
 }
 
-void AndroidApplication::Pause()
+void OpenXRAndroidApplication::Pause()
 {
     if (m_current_state == AppState_RUN) {
         SDLOG("[AppFlow] Set app pause.");
@@ -318,49 +288,9 @@ void AndroidApplication::Pause()
     }
 }
 
-void AndroidApplication::Resume()
+void OpenXRAndroidApplication::Resume()
 {
     Application::Resume();
 }
 
-void AndroidApplication::ReceiveMotionEvent(jobject i_jMotionEvent_mv)
-{
-    if (m_javaVM != nullptr) {
-        AndroidEnvAttacher env_attacher(m_javaVM);
-        JNIEnv* env = env_attacher.GetEnv();
-        if (env != nullptr) {
-            //for (jint tID = 0; tID < SDE::Basic::TouchButton_MAX_DEFINE_VALUE; tID++) {
-            //    SetTouchPosition(static_cast<SDE::Basic::TouchButtonEnum>(tID), -1.0f, -1.0f);
-            //    SetTouchStatus(static_cast<SDE::Basic::TouchButtonEnum>(tID), SDE::Basic::TouchButtonState_RELEASED);
-            //}
-
-            jint touch_count = env->CallIntMethod(i_jMotionEvent_mv, jMethod_MotionEvent_getPointerCount);
-            jint event_action = env->CallIntMethod(i_jMotionEvent_mv, jMethod_MotionEvent_getActionMasked);
-            for (jint tID = 0; tID < touch_count; ++tID) {
-                jint touchID = env->CallIntMethod(i_jMotionEvent_mv, jMethod_MotionEvent_getPointerId, tID);
-                jfloat x = env->CallFloatMethod(i_jMotionEvent_mv, jMethod_MotionEvent_getX, tID);
-                jfloat y = env->CallFloatMethod(i_jMotionEvent_mv, jMethod_MotionEvent_getY, tID);
-
-                SDLOG("Touch(%d) ID(%d) A:%d, (%lf, %lf)", tID, touchID, event_action, x, y);
-                SetTouchPosition(static_cast<SDE::Basic::TouchButtonEnum>(touchID), x, y);
-                if (event_action == 1 || event_action == 6) {
-                    SetTouchStatus(static_cast<SDE::Basic::TouchButtonEnum>(touchID), SDE::Basic::TouchButtonState_RELEASED);
-                }
-                else if(event_action == 0 || event_action == 2 || event_action == 5) {
-                    SetTouchStatus(static_cast<SDE::Basic::TouchButtonEnum>(touchID), SDE::Basic::TouchButtonState_PRESSED);
-                }
-                else {
-                    SetTouchStatus(static_cast<SDE::Basic::TouchButtonEnum>(touchID), SDE::Basic::TouchButtonState_RELEASED);
-                }
-            }
-
-        }
-        else {
-            SDLOG("env is nullptr!!!");
-        }
-    }
-    else {
-        SDLOG("Java VM is nullptr!!!");
-    }
-}
 _________________SD_END_APP_NAMESPACE________________

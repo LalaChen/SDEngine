@@ -24,6 +24,7 @@ SOFTWARE.
 */
 
 #include "FileSystemManager.h"
+#include "LogManager.h"
 
 ______________SD_START_BASIC_NAMESPACE_______________
 

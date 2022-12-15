@@ -36,16 +36,27 @@ void ScreenRayComponent::UpdateImpl()
 {
     GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
     if (gs.IsNull() == false) {
-        CameraComponentWeakReferenceObject camera = SD_WREF(gs).GetScreenCamera().DynamicCastTo<CameraComponent>();
-        if (camera.IsNull() == false) {
-            TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_RIGHT);
-            Ray ray = SD_WREF(camera).CalculateRay(tb);
-            Transform ray_xform = ray.CalculateTransform();
-            ray_xform.AddTranslation(ray_xform.GetForward().scale(10.0f));
-            SD_WREF(m_transform).SetWorldTransform(ray_xform);
+        CameraComponentBaseWeakReferenceObject camera = SD_WREF(gs).GetScreenCamera();
+        if (camera.IsNull() == true) {
+            SDLOGW("Camera is null. We can't update ray.");
+            return;
+        }
+
+        bool is_vr_mode = SD_WREF(camera).IsType(typeid(VRCameraComponent));
+        if (is_vr_mode == false) {
+            CameraComponentWeakReferenceObject general_cam = camera.DynamicCastTo<CameraComponent>();
+            if (general_cam.IsNull() == false) {
+                TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_RIGHT);
+                Ray ray = SD_WREF(general_cam).CalculateRay(tb);
+                Transform ray_xform = ray.CalculateTransform();
+                ray_xform.AddTranslation(ray_xform.GetForward().scale(10.0f));
+                SD_WREF(m_transform).SetWorldTransform(ray_xform);
+            }
+            else {
+                SDLOGE("Camera(%s) can't be cast to camera component. We can't update ray.", SD_WREF(camera).GetObjectName().c_str());
+            }
         }
         else {
-            SDLOGW("Camera is null. We can't update ray.");
         }
     }
 }

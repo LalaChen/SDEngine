@@ -18,6 +18,10 @@
 extern "C" {
 #endif
 
+#ifdef XR_USE_GRAPHICS_API_VULKAN
+    #include <vulkan/vulkan.h>
+#endif
+
 
 #ifdef XR_USE_PLATFORM_ANDROID
 

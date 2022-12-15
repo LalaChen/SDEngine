@@ -27,6 +27,16 @@ void GraphicsQueue::Initialize()
 	SD_SREF(m_fence).Initialize();
 }
 
+uint32_t GraphicsQueue::GetQueueID() const
+{
+	return m_identity.m_queue_id;
+}
+
+uint32_t GraphicsQueue::GetQueueFamilyID() const
+{
+	return m_identity.m_family_id;
+}
+
 void GraphicsQueue::SubmitCommandBuffer(const CommandBufferWeakReferenceObject &i_cmd_buffer)
 {
 	std::lock_guard<std::mutex> lock(m_mutex);

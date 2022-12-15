@@ -915,9 +915,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsConfig.h">
       <Filter>include\Graphics\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRAPIManager.h">
-      <Filter>include\OpenXR</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngineTemplates.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -953,6 +950,30 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsSynchronousElements.h">
       <Filter>include\Graphics\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRApplication.h">
+      <Filter>include\OpenXR</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRConfig.h">
+      <Filter>include\OpenXR</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRVulkanManager.h">
+      <Filter>include\OpenXR</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRSwapchain.h">
+      <Filter>include\OpenXR</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRGraphicsSystem.h">
+      <Filter>include\OpenXR</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRSpaceComponent.h">
+      <Filter>include\OpenXR</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRAPIManager.h">
+      <Filter>include\OpenXR</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRViewSpaceComponent.h">
+      <Filter>include\OpenXR</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1559,9 +1580,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\Vulkan\VulkanConfig.cpp">
       <Filter>src\Graphics\Manager\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRAPIManager.cpp">
-      <Filter>src\OpenXR</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Basic\ECS\ComponentBase.cpp">
       <Filter>src\Basic\ECS</Filter>
     </ClCompile>
@@ -1594,6 +1612,30 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\ManagerIdentity\GraphicsSynchronousIdentity.cpp">
       <Filter>src\Graphics\ManagerIdentity</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRApplication.cpp">
+      <Filter>src\OpenXR</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRConfig.cpp">
+      <Filter>src\OpenXR</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRVulkanManager.cpp">
+      <Filter>src\OpenXR</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRSwapchain.cpp">
+      <Filter>src\OpenXR</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRGraphicsSystem.cpp">
+      <Filter>src\OpenXR</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRSpaceComponent.cpp">
+      <Filter>src\OpenXR</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRAPIManager.cpp">
+      <Filter>src\OpenXR</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRViewSpaceComponent.cpp">
+      <Filter>src\OpenXR</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

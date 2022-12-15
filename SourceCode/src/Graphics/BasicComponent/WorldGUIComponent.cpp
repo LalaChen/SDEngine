@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include "WorldGUIComponent.h"
 
 #include "MathAlgoritm.h"
 #include "MaterialUniforms.h"
@@ -30,7 +31,7 @@ SOFTWARE.
 #include "BasicShapeCreator.h"
 #include "GraphicsSystem.h"
 #include "CameraComponent.h"
-#include "WorldGUIComponent.h"
+#include "VRCameraComponent.h"
 
 using namespace SDE::Math;
 using namespace SDE::GUI;
@@ -161,14 +162,26 @@ void WorldGUIComponent::UpdateImpl()
 {
     GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
     if (gs.IsNull() == false) {
-        CameraComponentWeakReferenceObject camera = SD_WREF(gs).GetScreenCamera().DynamicCastTo<CameraComponent>();
-        if (camera.IsNull() == false) {
-            TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_RIGHT);
-            Ray ray = SD_WREF(camera).CalculateRay(tb);
-            SetTouchDataByRay(ray, tb);
+        CameraComponentBaseWeakReferenceObject camera = SD_WREF(gs).GetScreenCamera();
+        if (camera.IsNull() == true) {
+            SDLOGW("Camera is null. We can't update ray.");
+            return;
+        }
+
+        bool is_vr_mode = SD_WREF(camera).IsType(typeid(VRCameraComponent));
+
+        if (is_vr_mode == false) {
+            CameraComponentWeakReferenceObject general_cam = camera.DynamicCastTo<CameraComponent>();
+            if (general_cam.IsNull() == false) {
+                TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_RIGHT);
+                Ray ray = SD_WREF(general_cam).CalculateRay(tb);
+                SetTouchDataByRay(ray, tb);
+            }
+            else {
+                SDLOGE("Camera(%s) can't be cast to camera component. We can't update ray.", SD_WREF(camera).GetObjectName().c_str());
+            }
         }
         else {
-            SDLOGW("Camera is null. We can't update ray.");
         }
     }
 
@@ -188,7 +201,7 @@ void WorldGUIComponent::InitializeWorkspace()
         m_GUI_color_buffer.Reset();
     }
     m_GUI_color_buffer = new Texture("GUIColorBuffer");
-    SD_SREF(m_GUI_color_buffer).SetSamplerFilterType(SamplerFilterType_NEAREST, SamplerFilterType_NEAREST);
+    SD_SREF(m_GUI_color_buffer).SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
     SD_SREF(m_GUI_color_buffer).Initialize2DColorOrDepthBuffer(
         m_buffer_size[0], m_buffer_size[1],
         GraphicsManager::GetRef().GetDefaultColorBufferFormat(),

@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include <typeinfo>
 
 #include "Object.h"
 
@@ -44,6 +45,11 @@ bool Object::IsEqualTo(const Object &i_src) const
 std::string Object::ToString() const
 {
     return StringFormat("Name(%s)[%x]", m_object_name.c_str(), this);
+}
+
+bool Object::IsType(const std::type_info &i_type) const
+{
+    return typeid(*this) == i_type;
 }
 
 _______________SD_END_BASIC_NAMESPACE________________

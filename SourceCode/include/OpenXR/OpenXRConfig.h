@@ -20,57 +20,50 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
-#if defined(_WIN32) || defined(_WIN64)
+/*! \file      OpenXRConfig.h
+ *  \brief     Introduce of class OpenXRConfig
+ *  \author    Kuan-Chih, Chen
+ *  \date      2022/09/04
+ *  \copyright MIT License.
+ */
 
-#include <GL/glew.h>
+#pragma once
 
-#include "LogManager.h"
-#include "OpenGL4Manager.h"
+#include <vector>
+#include <string>
 
-_____________SD_START_GRAPHICS_NAMESPACE_____________
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
 
-OpenGL4Manager::OpenGL4Manager()
-: GraphicsManager()
+using SDE::Basic::FilePathString;
+
+______________SD_START_OPENXR_NAMESPACE______________
+
+enum OpenXRWindowSizeStrategyEnum {
+	OpenXRWindowSize_RECOMMAND_SIZE = 0,
+	OpenXRWindowSize_MAXIMUM_SIZE = 1,
+	OpenXRWindowSize_CUSTOM_SIZE
+};
+
+class SDENGINE_CLASS OpenXRConfig
 {
-    SDLOG("New OpenGL4Manager object.");
-}
+public:
+	OpenXRConfig();
+	~OpenXRConfig();
+public:
+	bool LoadFromFile(const FilePathString &i_fp);
+	bool LoadFromSource(const std::string &i_src_str);
+	void CollectExtensionCstr(std::vector<const char*> &io_extensions);
+public:
+	std::vector<std::string> m_extensions;
+public:
+	OpenXRWindowSizeStrategyEnum m_wm_strategy;
+	uint32_t m_wm_width;
+	uint32_t m_wm_height;
+};
 
-OpenGL4Manager::~OpenGL4Manager()
-{
-    SDLOG("Delete OpenGL4Manager object.");
-}
 
-void OpenGL4Manager::InitializeGraphicsSystem(const EventArg &i_arg)
-{
-    SDLOG("Initialize OpenGL4Manager.");
-    glewInit();
-}
-
-void OpenGL4Manager::ReleaseGraphicsSystem()
-{
-    SDLOG("Release OpenGL4Manager.");
-}
-
-void OpenGL4Manager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
-{
-    glViewport(0, 0, i_w, i_h);
-    glClearColor(0.2f, 0.5f, 0.8f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-}
-
-void OpenGL4Manager::RenderTextureToScreen(const TextureWeakReferenceObject &i_tex)
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    //render quad to screen.
-}
-
-void OpenGL4Manager::GetDesiredVulkanValidLayers(std::vector<const char*> &io_valid_layers) const
-{
-}
-
-______________SD_END_GRAPHICS_NAMESPACE______________
-
-#endif
+_______________SD_END_OPENXR_NAMESPACE_______________

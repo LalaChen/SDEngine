@@ -1,4 +1,4 @@
-/*==============  SD Engine License ==============
+/* ==============  SD Engine License ==============
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -23,25 +23,40 @@ SOFTWARE.
 
 */
 
-#include "AssetResourceManager.h"
+/*! \file      OpenXRGraphicsSystem.h
+ *  \brief     The class OpenXRGraphicsSystem is used to perform rendering commands in OpenXR.
+ *  \author    Kuan-Chih, Chen
+ *  \date      2020/10/25
+ *  \copyright MIT License.
+ */
 
-#include "LogManager.h"
+#pragma once
 
-using SDE::Basic::LogManager;
-using SDE::Basic::AssetResourceManager;
+#include "SDEngineMacro.h"
+#include "SDEngineCommonType.h"
+#include "GraphicsSystem.h"
 
-______________SD_START_BASIC_NAMESPACE_______________
+using SDE::Graphics::GraphicsSystem;
+using SDE::Graphics::GraphicsSystemStrongReferenceObject;
+using SDE::Graphics::GraphicsSystemWeakReferenceObject;
 
-SD_SINGLETON_DECLARATION_IMPL(AssetResourceManager);
+______________SD_START_OPENXR_NAMESPACE______________
 
-AssetResourceManager::AssetResourceManager()
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(OpenXRGraphicsSystem)
+
+class SDENGINE_CLASS OpenXRGraphicsSystem : public GraphicsSystem
 {
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
+public:
+    explicit OpenXRGraphicsSystem(const ObjectName &i_object_name);
+    virtual ~OpenXRGraphicsSystem();
+public:
+    void Initialize() override;
+    void Update() override;
+    void Destroy() override;
+    void Resize() override;
+protected:
+    EntityGroupWeakReferenceObject m_space_eg;
+};
 
 
-AssetResourceManager::~AssetResourceManager()
-{
-}
-
-_______________SD_END_BASIC_NAMESPACE________________
+_______________SD_END_OPENXR_NAMESPACE_______________

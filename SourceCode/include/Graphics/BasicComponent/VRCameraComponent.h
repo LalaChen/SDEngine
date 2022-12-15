@@ -54,10 +54,11 @@ public:
     explicit VRCameraComponent(const ObjectName &i_object_name);
     virtual ~VRCameraComponent();
 public:
-    void SetEyeCenters(Vector3f i_eye_centers[VREye_Both]);
-    void SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both]);
-    void SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum);
-    void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
+    virtual void SetEyeCenters(Vector3f i_eye_centers[VREye_Both]);
+    virtual void SetEyeMatrices(Matrix4X4f i_eye_mats[VREye_Both]);
+    virtual void SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both]);
+    virtual void SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum);
+    virtual void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
 public:
     TextureWeakReferenceObject GetColorBuffer() const override;
     TextureWeakReferenceObject GetDepthBuffer() const override;
@@ -95,7 +96,7 @@ protected:
     Resolution m_buffer_size;
     ClearValue m_clear_color;
     ClearValue m_clear_d_and_s;
-    Vector3f m_eye_centers[VREye_Both];
+    Matrix4X4f m_eye_mats[VREye_Both];
     Matrix4X4f m_proj_mats[VREye_Both];
 };
 

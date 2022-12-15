@@ -86,7 +86,7 @@ protected:
 protected:
     //Extra buffer for defer pass.
 protected:
-    TransformComponentWeakReferenceObject m_geo_comp;
+    TransformComponentWeakReferenceObject m_xform_comp;
 protected:
     bool m_ws_initialized;
     bool m_follow_resolution;

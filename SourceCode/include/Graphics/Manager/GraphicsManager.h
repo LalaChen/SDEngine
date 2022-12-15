@@ -217,13 +217,14 @@ public:
 public:
     virtual void CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) = 0;
     virtual void DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) = 0;
-    virtual void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture) = 0;
+    virtual void GetReadyTextureOfSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, uint32_t &io_idx) = 0;
+    virtual void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, uint32_t i_idx, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture) = 0;
 public:
 //------------- Resize Function -----------------
     virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:
 //------------- Render Function -----------------
-    virtual void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex) = 0;
+    virtual void RenderTextureToScreen(const TextureWeakReferenceObject &i_tex) = 0;
 public:
     virtual Resolution GetScreenResolution() const = 0;
 public:
@@ -233,6 +234,8 @@ public:
         VertexLocationKindEnum i_vl_kind = VertexLocationKind_GENERAL) const;
 public:
     float GetFPS() const;
+
+    GraphicsSwapchainWeakReferenceObject GetSwapchain() const;
 public:
 //-------- Managing RenderPass Function ---------
     void RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp);
@@ -306,6 +309,11 @@ protected:
 inline float GraphicsManager::GetFPS() const
 {
     return m_FPS;
+}
+
+inline GraphicsSwapchainWeakReferenceObject GraphicsManager::GetSwapchain() const
+{
+    return m_swapchain;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

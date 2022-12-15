@@ -58,9 +58,9 @@ public:
 	explicit GraphicsSwapchain(const ObjectName &i_name, const GraphicsQueueWeakReferenceObject &i_queue);
 	virtual ~GraphicsSwapchain();
 public:
-	void Initialize();
+	virtual void Initialize();
 
-	void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex);
+	virtual void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex);
 public:
 	Resolution GetResolution() const;
 protected:

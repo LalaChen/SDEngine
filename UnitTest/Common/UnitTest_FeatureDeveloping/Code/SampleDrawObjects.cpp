@@ -1,3 +1,5 @@
+#define SD_VR_MODE
+
 #include "SDEngine.h"
 #include "HUDComponent.h"
 #include "ScreenRayComponent.h"
@@ -152,6 +154,7 @@ bool SampleDrawObjects::LoadImpl()
             //
             IMGUIButtonStrongReferenceObject btn1 = new IMGUIButton("Button1", "Button1");
             SD_SREF(window).Append(btn1.StaticCastTo<IMGUINode>());
+
             //
             SD_WREF(i_batch).AddWindow(window);
             return true;

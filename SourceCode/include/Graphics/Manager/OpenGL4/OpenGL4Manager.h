@@ -155,15 +155,16 @@ public:
     void DestroySemaphoreObject(GraphicsSemaphoreIdentity &io_identity) override;
 public:
     void CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
-    void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture) override;
     void DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
+    void GetReadyTextureOfSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, uint32_t &io_idx) override;
+    void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, uint32_t i_idx, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture) override;
 public:
     void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
 public:
     Resolution GetScreenResolution() const override { return Resolution(); }
 public:
 //------------- Force Render Function -----------------
-    void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex) override;
+    void RenderTextureToScreen(const TextureWeakReferenceObject &i_tex) override;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

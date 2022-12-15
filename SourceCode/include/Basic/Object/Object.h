@@ -99,6 +99,8 @@ public:
         return this_obj;
     }
 
+    bool IsType(const std::type_info &i_type) const;
+
 protected:
 
     /*! \var ObjectName m_object_name;

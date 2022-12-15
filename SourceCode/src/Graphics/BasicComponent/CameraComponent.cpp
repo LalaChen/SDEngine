@@ -67,9 +67,9 @@ void CameraComponent::InitializeImpl()
         InitializeWorkspaceForDeferredPass();
     }
 
-    m_geo_comp = SD_GET_COMP_WREF(m_entity, TransformComponent);
+    m_xform_comp = SD_GET_COMP_WREF(m_entity, TransformComponent);
 
-    SD_WREF(m_geo_comp).RegisterSlotFunctionIntoEvent(
+    SD_WREF(m_xform_comp).RegisterSlotFunctionIntoEvent(
         TransformComponent::sTransformChangedEventName,
         new MemberFunctionSlot<CameraComponent>(
             "CameraComponent::OnGeometryChanged",
@@ -193,7 +193,7 @@ Ray CameraComponent::CalculateRay(const TouchButton &i_tb) const
 {
     if (i_tb.m_x >= 0 && i_tb.m_x < m_buffer_size.GetWidth() &&
         i_tb.m_y >= 0 && i_tb.m_y < m_buffer_size.GetHeight()) {
-        Transform node_trans = SD_WREF(m_geo_comp).GetWorldTransform();
+        Transform node_trans = SD_WREF(m_xform_comp).GetWorldTransform();
         Ray ray;
         ray.InitializeByScreen(m_proj_mat, node_trans.MakeViewMatrix(), m_buffer_size, i_tb, m_near);
         return ray;
@@ -295,7 +295,7 @@ void CameraComponent::RecordCommand(
 bool CameraComponent::OnGeometryChanged(const EventArg &i_arg)
 {
     if (m_ub.IsNull() == false) {
-        Transform node_trans = SD_WREF(m_geo_comp).GetWorldTransform();
+        Transform node_trans = SD_WREF(m_xform_comp).GetWorldTransform();
         SD_WREF(m_ub).SetMatrix4X4f("view", node_trans.MakeViewMatrix());
         SD_WREF(m_ub).SetMatrix4X4f("proj", m_proj_mat);
         SD_WREF(m_ub).SetVector3f("viewEye", node_trans.m_position);

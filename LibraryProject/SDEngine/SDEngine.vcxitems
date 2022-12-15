@@ -231,6 +231,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\Transform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Math\Vector3f.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRAPIManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRApplication.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRSpaceComponent.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRConfig.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRGraphicsSystem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRSwapchain.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRViewSpaceComponent.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\OpenXR\OpenXRVulkanManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Physics\Ray\Ray.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngineCommonFunction.h" />
@@ -451,6 +458,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Transform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Math\Vector3f.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRAPIManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRApplication.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRSpaceComponent.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRConfig.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRGraphicsSystem.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRSwapchain.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRViewSpaceComponent.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRVulkanManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Physics\Ray\Ray.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp" />
   </ItemGroup>

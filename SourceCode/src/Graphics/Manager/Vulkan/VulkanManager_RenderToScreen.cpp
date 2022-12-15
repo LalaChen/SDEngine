@@ -95,37 +95,44 @@ void VulkanManager::DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_ident
     io_identity = GraphicsSwapchainIdentity();
 }
 
-void VulkanManager::RenderTextureToSwapchain(
-    const GraphicsSwapchainIdentity &i_identity,
-    const GraphicsQueueWeakReferenceObject &i_queue,
-    const CommandBufferWeakReferenceObject &i_cmd_buffer,
-    const GraphicsSemaphoreWeakReferenceObject &i_acq_sema,
-    const GraphicsSemaphoreWeakReferenceObject &i_present_sema,
-    const TextureWeakReferenceObject &i_texture)
+void VulkanManager::GetReadyTextureOfSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, uint32_t &io_idx)
 {
-    uint32_t image_idx;
-    VkResult result = VK_SUCCESS;
-    VkDevice         device    = reinterpret_cast<VkDevice>(i_identity.m_device);
-    VkSurfaceKHR     surface   = reinterpret_cast<VkSurfaceKHR>(i_identity.m_surface);
+    VkResult         result = VK_SUCCESS;
+    VkDevice         device = reinterpret_cast<VkDevice>(i_identity.m_device);
+    VkSurfaceKHR     surface = reinterpret_cast<VkSurfaceKHR>(i_identity.m_surface);
     VkSwapchainKHR   swapchain = reinterpret_cast<VkSwapchainKHR>(i_identity.m_handle);
 
     const GraphicsSemaphoreIdentity &acq_sema_identity = SD_SREF(m_graphics_identity_getter).GetIdentity(i_acq_sema);
     VkSemaphore acq_sema = reinterpret_cast<VkSemaphore>(acq_sema_identity.m_handle);
+    //1. Acquire Image Idx.
+    result = GetCurrentVkSwapchainIdx(
+        io_idx, device, swapchain, acq_sema);
+    if (result != VK_SUCCESS) {
+        SDLOGE("Get vulkan swapchain image idx failure(%d)", result);
+        return;
+    }
+}
+
+void VulkanManager::RenderTextureToSwapchain(
+    const GraphicsSwapchainIdentity &i_identity, uint32_t i_idx,
+    const GraphicsQueueWeakReferenceObject &i_queue,
+    const CommandBufferWeakReferenceObject &i_cmd_buffer,
+    const GraphicsSemaphoreWeakReferenceObject &i_present_sema,
+    const TextureWeakReferenceObject &i_texture)
+{
+    
+    VkResult result = VK_SUCCESS;
+    VkDevice         device    = reinterpret_cast<VkDevice>(i_identity.m_device);
+    VkSurfaceKHR     surface   = reinterpret_cast<VkSurfaceKHR>(i_identity.m_surface);
+    VkSwapchainKHR   swapchain = reinterpret_cast<VkSwapchainKHR>(i_identity.m_handle);
 
     const CommandBufferIdentity &cmd_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_cmd_buffer);
     VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cmd_identity.m_handle);
 
     const TextureIdentity &tex_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_texture);
     VkImage src_image = reinterpret_cast<VkImage>(tex_identity.m_handle);
-    //1. Acquire Image Idx.
-    result = GetCurrentVkSwapchainIdx(
-        image_idx, device, swapchain, acq_sema);
-    if (result != VK_SUCCESS) {
-        SDLOGE("Get vulkan swapchain image idx failure(%d)", result);
-        return;
-    }
 
-    //2. Record Image Copy to Swapchain Image.
+    //1. Record Image Copy to Swapchain Image.
     BeginCommandBuffer(cmd_identity, CommandBufferInheritanceInfo());
 
     VkImageBlit blit_param = {};
@@ -142,15 +149,15 @@ void VulkanManager::RenderTextureToSwapchain(
     blit_param.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit_param.dstSubresource.baseArrayLayer = 0;
     blit_param.dstSubresource.mipLevel = 0;
-    blit_param.dstSubresource.layerCount = tex_identity.m_array_layers;
+    blit_param.dstSubresource.layerCount = i_identity.m_layer_size;
     blit_param.dstOffsets[0].x = 0;
     blit_param.dstOffsets[0].y = 0;
     blit_param.dstOffsets[0].z = 0;
     blit_param.dstOffsets[1].x = i_identity.m_screen_size.GetWidth();
     blit_param.dstOffsets[1].y = i_identity.m_screen_size.GetHeight();
-    blit_param.dstOffsets[1].z = tex_identity.m_array_layers;
+    blit_param.dstOffsets[1].z = 1;
 
-    VkImage dst_image = reinterpret_cast<VkImage>(i_identity.m_swapchain_images[image_idx]);
+    VkImage dst_image = reinterpret_cast<VkImage>(i_identity.m_swapchain_images[i_idx]);
 
     BlitVkImages(cmd_buffer, src_image, dst_image, blit_param);
 
@@ -159,10 +166,10 @@ void VulkanManager::RenderTextureToSwapchain(
     SD_SREF(i_queue).SubmitCommandBuffers({i_cmd_buffer});
 
     //4. present queue.
-    SD_SREF(i_queue).Present(i_identity, image_idx, {i_present_sema});
+    SD_SREF(i_queue).Present(i_identity, i_idx, {i_present_sema});
 }
 
-void VulkanManager::RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex)
+void VulkanManager::RenderTextureToScreen(const TextureWeakReferenceObject &i_tex)
 {
     if (m_swapchain.IsNull() == false) {
         if (i_tex.IsNull() == true) {

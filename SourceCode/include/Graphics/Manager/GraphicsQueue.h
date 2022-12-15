@@ -51,13 +51,16 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GraphicsQueue);
 
-class GraphicsQueue : public Object
+class SDENGINE_CLASS GraphicsQueue : public Object
 {
 public:
 	friend class GraphicsIdentityGetter;
 public:
 	GraphicsQueue(const ObjectName &i_name, QueueAbility i_abilities, CompHandle i_phy_device, CompHandle i_device, uint32_t i_q_fam_id, uint32_t i_q_id);
 	~GraphicsQueue();
+public:
+	uint32_t GetQueueID() const;
+	uint32_t GetQueueFamilyID() const;
 public:
 	void Initialize();
 	void SubmitCommandBuffer(const CommandBufferWeakReferenceObject &i_cmd_buffer);

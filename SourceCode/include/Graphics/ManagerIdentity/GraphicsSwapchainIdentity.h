@@ -79,6 +79,11 @@ public:
      *  \brief swapchain color buffer images.
      */
     std::vector<CompHandle> m_swapchain_images;
+
+    /*! \var uint32_t m_layer_size;
+     *  \brief layer of swapchain color buffer images.
+     */
+    int32_t m_layer_size;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

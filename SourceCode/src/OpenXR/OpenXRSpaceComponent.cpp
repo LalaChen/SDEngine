@@ -1,4 +1,4 @@
-/*==============  SD Engine License ==============
+/* ==============  SD Engine License ==============
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -23,25 +23,26 @@ SOFTWARE.
 
 */
 
-#include "AssetResourceManager.h"
+#include "OpenXRSpaceComponent.h"
 
 #include "LogManager.h"
 
-using SDE::Basic::LogManager;
-using SDE::Basic::AssetResourceManager;
+______________SD_START_OPENXR_NAMESPACE______________
 
-______________SD_START_BASIC_NAMESPACE_______________
-
-SD_SINGLETON_DECLARATION_IMPL(AssetResourceManager);
-
-AssetResourceManager::AssetResourceManager()
-{
-    SD_SINGLETON_DECLARATION_REGISTER;
-}
-
-
-AssetResourceManager::~AssetResourceManager()
+OpenXRSpaceComponent::OpenXRSpaceComponent(const ObjectName &i_object_name, XrReferenceSpaceType i_space_type)
+: Component(i_object_name)
+, m_space_type(i_space_type)
+, m_space(XR_NULL_HANDLE)
 {
 }
 
-_______________SD_END_BASIC_NAMESPACE________________
+OpenXRSpaceComponent::~OpenXRSpaceComponent()
+{
+}
+
+void OpenXRSpaceComponent::InitializeImpl()
+{
+    //1. get transform component
+    m_xform_comp = SD_GET_COMP_WREF(m_entity, TransformComponent);
+}
+_______________SD_END_OPENXR_NAMESPACE_______________

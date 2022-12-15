@@ -147,6 +147,7 @@ xcopy /y $(SDEngineRootDir)ThirdParty\GLEW\bin\$(Configuration)\$(Platform)\glew
 xcopy /y $(SDEngineRootDir)ThirdParty\GLFW\bin\$(Platform)\$(Configuration)\glfw3.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Vulkan\bin\vulkan-1.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\assimp.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\openxr_loader.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -175,6 +176,7 @@ xcopy /y $(SDEngineRootDir)ThirdParty\GLEW\bin\$(Configuration)\$(Platform)\glew
 xcopy /y $(SDEngineRootDir)ThirdParty\GLFW\bin\$(Platform)\$(Configuration)\glfw3.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Vulkan\bin\vulkan-1.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\assimp.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\openxr_loader.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -206,6 +208,7 @@ xcopy /y $(SDEngineRootDir)ThirdParty\GLEW\bin\$(Configuration)\$(Platform)\glew
 xcopy /y $(SDEngineRootDir)ThirdParty\GLFW\bin\$(Platform)\$(Configuration)\glfw3.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Vulkan\bin\vulkan-1.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\assimp.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\openxr_loader.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -237,6 +240,7 @@ xcopy /y $(SDEngineRootDir)ThirdParty\GLEW\bin\$(Configuration)\$(Platform)\glew
 xcopy /y $(SDEngineRootDir)ThirdParty\GLFW\bin\$(Platform)\$(Configuration)\glfw3.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Vulkan\bin\vulkan-1.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\assimp.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\openxr_loader.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine.dll $(SDEngineRootDir)Bin\UnitTest\Windows\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

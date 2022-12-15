@@ -228,7 +228,8 @@ namespace OPENXR \
 #define SD_SINGLETON_DECLARATION_REGISTER \
     if (m_instance != nullptr) \
     { \
-        /*SDLOGE("m_instance isn't nullptr!!!.");*/ \
+        SDLOGE("m_instance isn't nullptr!!!"); \
+        std::runtime_error("instance duplicated!!!"); \
     } \
     m_instance = this;
 

@@ -126,7 +126,7 @@ void VRCameraComponent::InitializeWorkspaceForForwardPass()
             ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
         m_render_flow = new RenderFlow("VRRenderFlow", ImageOffset(0, 0, 0),
-            ImageSize(m_buffer_size.GetWidth(), m_buffer_size.GetHeight(), 1));
+            ImageSize(m_buffer_size.GetWidth(), m_buffer_size.GetHeight(), 2));
 
         SD_SREF(m_render_flow).RegisterRenderPass(forward_rp);
         SD_SREF(m_render_flow).AllocateFrameBuffer();
@@ -172,20 +172,18 @@ bool VRCameraComponent::OnGeometryChanged(const EventArg &i_arg)
 {
     if (m_ub.IsNull() == false) {
         Transform node_xform = SD_WREF(m_geo_comp).GetWorldTransform();
+        Matrix4X4f node_mat = node_xform.MakeWorldMatrix();
 
         for (uint32_t eyeID = 0; eyeID < VREye_Both; ++eyeID) {
-            Vector3f eye_position;
-            Transform eye_xform;
-            eye_position =
-                node_xform.GetRight().scale(m_eye_centers[eyeID].m_vec.x) +
-                node_xform.GetTop().scale(m_eye_centers[eyeID].m_vec.y) +
-                node_xform.GetForward().scale(m_eye_centers[eyeID].m_vec.z);
-            eye_xform = node_xform;
-            eye_xform.AddTranslation(eye_position);
-
-            SD_WREF(m_ub).SetMatrix4X4f("views", eye_xform.MakeViewMatrix(), eyeID);
+            Matrix4X4f eye_world_mat = m_eye_mats[eyeID] * node_mat;
+            Vector3f eye_position = Vector3f(
+                eye_world_mat.m_matrix[3][0],
+                eye_world_mat.m_matrix[3][1],
+                eye_world_mat.m_matrix[3][2]);
+            eye_position.RepresentPosition();
+            SD_WREF(m_ub).SetMatrix4X4f("views", eye_world_mat.inverse(), eyeID);
             SD_WREF(m_ub).SetMatrix4X4f("projs", m_proj_mats[eyeID], eyeID);
-            SD_WREF(m_ub).SetVector3f("viewEyes", eye_xform.m_position, eyeID);
+            SD_WREF(m_ub).SetVector3f("viewEyes", eye_position, eyeID);
         }
         SD_WREF(m_ub).Update();
     }
@@ -204,13 +202,29 @@ void VRCameraComponent::SetEyeCenters(Vector3f i_eye_centers[VREye_Both])
 {
 
     for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
-        m_eye_centers[eid] = i_eye_centers[eid];
+        m_eye_mats[eid].translate(i_eye_centers[eid]);
     }
     OnGeometryChanged(EventArg());
 }
 
 void VRCameraComponent::SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum)
 {
+    Resolution screen_res = GraphicsManager::GetRef().GetScreenResolution();
+    Resolution proj_res;
+    proj_res.SetResolution(screen_res.GetWidth() / 2, screen_res.GetHeight() / 2);
+    
+    for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
+        m_proj_mats[eid].perspective(i_fov, proj_res.GetRatio(), i_near, i_far);
+    }
+    OnGeometryChanged(EventArg());
+}
+
+void VRCameraComponent::SetEyeMatrices(Matrix4X4f i_eye_mats[VREye_Both])
+{
+    for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
+        m_eye_mats[eid] = i_eye_mats[eid];
+    }
+    OnGeometryChanged(EventArg());
 }
 
 void VRCameraComponent::SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both])

@@ -169,12 +169,12 @@ public: //operator
     Vector3f scale(float i_scale_factor) const;
 
     /*! \fn Vector3f scale(float i_sx, float i_sy, float i_sz) const;
-	 *  \param [in] i_sx scale factor of component x.
-	 *  \param [in] i_sy scale factor of component y.
-	 *  \param [in] i_sz scale factor of component z.
-	 *  \brief Scale the vector or position. We won't modify w.
-	 */
-	Vector3f scale(float i_sx, float i_sy, float i_sz) const;
+     *  \param [in] i_sx scale factor of component x.
+     *  \param [in] i_sy scale factor of component y.
+     *  \param [in] i_sz scale factor of component z.
+     *  \brief Scale the vector or position. We won't modify w.
+     */
+    Vector3f scale(float i_sx, float i_sy, float i_sz) const;
 
     /*! \fn float magnitude() const;
      *  \brief Return the magnitude of the vector. Please note we don't consider w component.
@@ -182,14 +182,14 @@ public: //operator
     float magnitude() const;
 
     /*! \fn Vector3f normalize() const;
-	 *  \brief Return the normalized vector.
-	 */
-	Vector3f normalize() const;
+     *  \brief Return the normalized vector.
+     */
+    Vector3f normalize() const;
 
-	/*! \fn Vector3f negative() const;
-	 *	\brief Return the negivate vector or position. We won't modify the w component of vector.
-	 */
-	Vector3f negative() const;
+    /*! \fn Vector3f negative() const;
+     *	\brief Return the negivate vector or position. We won't modify the w component of vector.
+     */
+    Vector3f negative() const;
 
     /*! \fn bool operator==(const Vector3f &b) const;
      *  \param [in] b target vector.

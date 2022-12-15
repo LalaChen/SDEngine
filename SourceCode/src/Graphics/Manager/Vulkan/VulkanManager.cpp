@@ -21,11 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include "VulkanManager.h"
 
 #include "VulkanCreationArg.h"
 #include "VulkanWrapper.h"
 #include "LogManager.h"
-#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -146,7 +146,6 @@ void VulkanManager::ReleaseGraphicsSystem()
 //----------------------- Render Flow -----------------------
 void VulkanManager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
 {
-
     VkSurfaceKHR new_surface = reinterpret_cast<VkSurfaceKHR>(i_new_surface);
     if (m_surface != new_surface && new_surface != SD_NULL_HANDLE) {
         SDLOG("Refresh surface for resize.");

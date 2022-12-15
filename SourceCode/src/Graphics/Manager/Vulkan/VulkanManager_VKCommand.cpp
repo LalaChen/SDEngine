@@ -26,8 +26,6 @@ SOFTWARE.
 #include "LogManager.h"
 #include "VulkanManager.h"
 
-std::mutex m_queue_mutex;
-
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VkResult VulkanManager::CreateVkCommandPool(VkCommandPool &io_cmd_pool, VkDevice i_device, VkCommandPoolCreateFlags i_flag)

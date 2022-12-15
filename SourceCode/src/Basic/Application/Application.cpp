@@ -23,6 +23,8 @@ SOFTWARE.
 
 */
 
+#include "Application.h"
+
 #include "LogManager.h"
 #include "Timer.h"
 #include "ECSManager.h"
@@ -30,7 +32,7 @@ SOFTWARE.
 #include "GraphicsManager.h"
 #include "SceneManager.h"
 #include "FileResourceRequester.h"
-#include "Application.h"
+
 
 using SDE::Basic::FileResourceRequester;
 using SDE::Graphics::ImageLoader;
