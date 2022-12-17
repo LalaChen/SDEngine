@@ -31,6 +31,7 @@ SOFTWARE.
 #include "FeatureApplication.h"
 
 using namespace SDE;
+using namespace SDE::App;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
 

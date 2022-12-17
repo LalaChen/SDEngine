@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include "OpenXRVulkanManager.h"
 
+#include "Exception.h"
 #include "VulkanCreationArg.h"
 #include "VulkanWrapper.h"
 #include "LogManager.h"
@@ -32,6 +33,7 @@ SOFTWARE.
 #include "OpenXRAPIManager.h"
 #include "OpenXRSwapchain.h"
 
+using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
 ______________SD_START_OPENXR_NAMESPACE______________
@@ -120,7 +122,7 @@ void OpenXRVulkanManager::GetReadyTextureOfSwapchain(
     XrResult result;
     result = OpenXRAPIManager::GetRef().GetReadyTextureOfSwapchain(swapchain, io_idx);
     if (result != XR_SUCCESS) {
-        throw std::exception("Get Image idx failure");
+        throw ReasonableException("Get Image idx failure");
     }
 }
 

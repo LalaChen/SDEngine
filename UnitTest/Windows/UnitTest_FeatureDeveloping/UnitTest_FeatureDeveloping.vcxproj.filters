@@ -43,9 +43,6 @@
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\SampleDrawObjects.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.h">
       <Filter>include</Filter>
     </ClInclude>

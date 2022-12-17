@@ -221,8 +221,8 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\x86_64-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(OpenXRRoot)bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\x86_64-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android;openxr_loader</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -245,8 +245,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(OpenXRRoot)bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android;openxr_loader</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -269,8 +269,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(OpenXRRoot)bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android;openxr_loader</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -293,8 +293,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(OpenXRRoot)bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\i686-linux-android\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android;openxr_loader</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -317,8 +317,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(OpenXRRoot)bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android;openxr_loader</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -341,8 +341,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(OpenXRRoot)bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android;openxr_loader</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -365,8 +365,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;</AdditionalLibraryDirectories>
-      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(OpenXRRoot)bin/$(Platform)/$(Configuration)/;</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android;openxr_loader</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -389,8 +389,8 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName)\$(PlatformShortName);$(StlLibraryPath)</AdditionalLibraryDirectories>
-      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android</LibraryDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(IMGUIRoot)/bin/$(Platform)/$(Configuration)/;$(AssimpRoot)/bin/$(Platform)/$(Configuration)/;$(OpenXRRoot)bin/$(Platform)/$(Configuration)/;$(ToolchainPrebuiltPath)\lib\gcc\$(ToolchainName)\$(ToolchainFullVersionName)\$(PlatformShortName);$(StlLibraryPath)</AdditionalLibraryDirectories>
+      <LibraryDependencies>ImGui;assimp;m;c++_shared;log;android;openxr_loader</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\

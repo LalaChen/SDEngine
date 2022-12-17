@@ -32,6 +32,8 @@ SOFTWARE.
 
 #pragma once
 
+#include "SDEngineMacro.h"
+
 ________________SD_START_APP_NAMESPACE_______________
 
 enum AppStateEnum {

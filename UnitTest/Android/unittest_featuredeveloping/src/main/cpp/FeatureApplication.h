@@ -31,7 +31,7 @@ SOFTWARE.
  */
 
 #pragma once
-
+#include <Application/Android/AppStateEnum.h>
 #include <Application/Android/AndroidApplication.h>
 
 using SDE::App::AndroidApplication;

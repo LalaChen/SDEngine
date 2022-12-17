@@ -68,7 +68,14 @@ SOFTWARE.
 #include "Graphics/Vec/Vec.h"
 #include "Graphics/Vec/Color4f.h"
 #include "Graphics/Resolution/Resolution.h"
+#include "Graphics/ManagerIdentity/ManagerIdentity.h"
+#include "Graphics/ManagerParam/ManagerParam.h"
+#include "Graphics/Manager/GraphicsConfig.h"
 #include "Graphics/Manager/GraphicsManager.h"
+#include "Graphics/Manager/GraphicsQueue.h"
+#include "Graphics/Manager/GraphicsSynchronousElements.h"
+#include "Graphics/Manager/GraphicsIdentityGetter.h"
+#include "Graphics/Manager/GraphicsSwapchain.h"
 #include "Graphics/ImageLoader/Bitmap.h"
 #include "Graphics/ImageLoader/ImageLoader.h"
 #include "Graphics/ModelImporter/MaterialData.h"
@@ -119,6 +126,7 @@ SOFTWARE.
 #include "Graphics/ManagerParam/ManagerParam.h"
 #include "Graphics/Scene/SceneManager.h"
 #include "Graphics/Scene/Scene.h"
+//-------- GUI --------
 #include "GUI/IMGUIBatch.h"
 #include "GUI/IMGUINode.h"
 #include "GUI/IMGUITextLabel.h"
@@ -126,3 +134,6 @@ SOFTWARE.
 #include "GUI/IMGUIWindow.h"
 #include "GUI/IMGUIButton.h"
 #include "GUI/IMGUIRenderer.h"
+//-------- Physical --------
+#include "Physics/Ray/Ray.h"
+//-------- OpenXR --------

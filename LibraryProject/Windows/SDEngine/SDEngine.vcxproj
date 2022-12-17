@@ -165,7 +165,7 @@ xcopy /y $(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEn
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>shlwapi.lib;ImGui.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>shlwapi.lib;ImGui.lib;assimp.lib;openxr_loader.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\
@@ -229,7 +229,7 @@ xcopy /y $(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEn
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>shlwapi.lib;ImGui.lib;vulkan-1.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>shlwapi.lib;ImGui.lib;vulkan-1.lib;assimp.lib;openxr_loader.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SDEngineRootDir)Bin\UnitTest\

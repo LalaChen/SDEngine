@@ -25,6 +25,8 @@ SOFTWARE.
 
 #include "OpenXRAPIManager.h"
 
+#include <cstring>
+
 #include "LogManager.h"
 
 using SDE::Basic::LogManager;
@@ -63,8 +65,13 @@ XrResult OpenXRAPIManager::Initialize(const std::string &i_win_title)
 	create_info.enabledExtensionNames = exts.data();
 	create_info.enabledExtensionCount = exts.size();
 	create_info.applicationInfo.apiVersion = XR_CURRENT_API_VERSION;
-	strcpy_s(create_info.applicationInfo.applicationName, 127, i_win_title.c_str());
-	strcpy_s(create_info.applicationInfo.engineName, 127, "SD Engine");
+#if defined(_WIN32) || defined(_WIN64)
+	strncpy_s(create_info.applicationInfo.applicationName, i_win_title.c_str(), 127);
+	strncpy_s(create_info.applicationInfo.engineName, "SD Engine", 127);
+#else
+	strncpy(create_info.applicationInfo.applicationName, i_win_title.c_str(), 127);
+	strncpy(create_info.applicationInfo.engineName, "SD Engine", 127);
+#endif
 
 	XrResult result = xrCreateInstance(&create_info, &m_XR_instance);
 	if (result != XR_SUCCESS) {

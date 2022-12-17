@@ -220,7 +220,6 @@ xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     <ClCompile Include="FeatureApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\CommandRecordingThread.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\GameSystem.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\HUDComponent.h" />
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\MotorComponent.h" />

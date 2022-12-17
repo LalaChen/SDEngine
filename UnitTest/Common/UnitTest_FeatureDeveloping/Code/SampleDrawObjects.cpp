@@ -1,4 +1,4 @@
-#define SD_VR_MODE
+//#define SD_VR_MODE
 
 #include "SDEngine.h"
 #include "HUDComponent.h"

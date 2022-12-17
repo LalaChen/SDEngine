@@ -25,11 +25,14 @@ SOFTWARE.
 
 #include "OpenXRSwapchain.h"
 
+#include "Exception.h"
+
 #include "TextureFormat_Vulkan.h"
 #include "LogManager.h"
 #include "OpenXRAPIManager.h"
 #include "OpenXRVulkanManager.h"
 
+using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
 ______________SD_START_OPENXR_NAMESPACE______________
@@ -62,13 +65,13 @@ void OpenXRSwapchain::Initialize()
 	
 	XrResult result = OpenXRAPIManager::GetRef().CreateSwapchain(c_info, m_swapchain);
 	if (result != XR_SUCCESS) {
-		throw std::exception("Create XrSwapchain failure");
+		throw ReasonableException("Create XrSwapchain failure");
 	}
 	else {
 		XrResult result = OpenXRAPIManager::GetRef().EnumerateSwapchainImages(
 			m_swapchain, m_images);
 		if (result != XR_SUCCESS) {
-			throw std::exception("Enuermate XrSwapchain Image failure");
+			throw ReasonableException("Enuermate XrSwapchain Image failure");
 		}
 		//
 		m_identity.m_swapchain_images.resize(m_images.size());
@@ -80,7 +83,7 @@ void OpenXRSwapchain::Initialize()
 			}
 			else {
 				SDLOGE("Get XrSwapchain Image[%d] nullptr !!!", id);
-				throw std::exception("Get XrSwapchain Image failure");
+				throw ReasonableException("Get XrSwapchain Image failure");
 			}
 		}
 		//
@@ -103,7 +106,7 @@ void OpenXRSwapchain::RenderTextureToSwapchain(const TextureWeakReferenceObject 
 	uint32_t img_idx = UINT32_MAX;
 	result = OpenXRAPIManager::GetRef().GetReadyTextureOfSwapchain(m_swapchain, img_idx);
 	if (result != XR_SUCCESS) {
-		throw std::exception("Get Image idx failure");
+		throw ReasonableException("Get Image idx failure");
 	}
 
 	//2. Blit image to openxr swapchain.
@@ -114,7 +117,7 @@ void OpenXRSwapchain::RenderTextureToSwapchain(const TextureWeakReferenceObject 
 	//3. release image.
 	result = OpenXRAPIManager::GetRef().ReleaseSwapchainImage(m_swapchain);
 	if (result != XR_SUCCESS) {
-		throw std::exception("Release Image idx failure");
+		throw ReasonableException("Release Image idx failure");
 	}
 }
 

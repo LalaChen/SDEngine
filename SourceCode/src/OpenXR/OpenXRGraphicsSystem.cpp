@@ -54,8 +54,10 @@ void OpenXRGraphicsSystem::Update()
     //3. update graphics system.
     GraphicsSystem::Update();
     //4. collect layer info from swapchain.
+
     //5. end frame.
     XrFrameEndInfo frame_end_info = {XR_TYPE_FRAME_END_INFO};
+ 
     OpenXRAPIManager::GetRef().EndFrame(frame_end_info);
 }
 

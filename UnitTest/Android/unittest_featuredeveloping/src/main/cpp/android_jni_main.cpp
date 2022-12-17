@@ -12,6 +12,7 @@
 #include "FeatureApplication.h"
 
 using namespace SDE;
+using namespace SDE::App;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
 
@@ -76,14 +77,14 @@ void JNICALL Java_com_sdengine_unittest_1featuredeveloping_MainActivity_ChangeSu
     }
     LOGI("NativeWindow(%p) from surface(%p)with(%d,%d,(%d))", window, surface, width, height, format);
     if (g_app != nullptr) {
-		AndroidApplication::AppStateEnum current_state = g_app->GetCurrentState();
-        if (current_state == AndroidApplication::AppState_CREATE || current_state == AndroidApplication::AppState_INITIALIZE) {
+		AppStateEnum current_state = g_app->GetCurrentState();
+        if (current_state == AppState_CREATE || current_state == AppState_INITIALIZE) {
 			LOGI("NativeWindow(%p) State is (%d) create or initialize.", window, current_state);
             g_app->InitializeNativeWindow(window);
             g_app->RunMainLoop();
         }
         else {
-            if (current_state == AndroidApplication::AppState_PAUSE) {
+            if (current_state == AppState_PAUSE) {
 				LOGI("NativeWindow(%p) State is at Pause. Refresh native window.", window);
                 g_app->RefreshNativeWindow(window, width, height);
             }

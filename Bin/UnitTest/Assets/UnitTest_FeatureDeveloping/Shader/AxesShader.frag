@@ -14,31 +14,31 @@ layout(location = 0) out vec4 fragColor;
 //Uniform basic Buffer.
 layout(set = 0, binding = 0) uniform CameraUniforms {
     mat4 proj;
-	mat4 view;
-	vec4 viewEye;
+    mat4 view;
+    vec4 viewEye;
 } camera;
 
 layout(set = 1, binding = 0) uniform GeometryUniforms {
-	mat4 world;
-	mat4 normal;
+    mat4 world;
+    mat4 normal;
 } geometry;
 
 //Uniform Light Buffer.
 layout(set = 2, binding = 0) uniform LightUniforms {
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
-	vec4 position; //point light.
-	vec4 direction; //direction light.
-	float spotExponent;
-	float spotCosCutoff;
-	float constantAttenuation;
-	float linearAttenuation;
-	float quadraticAttenuation;
-	uint kind; //0: directional, 1: spot, 2: point
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+    vec4 position; //point light.
+    vec4 direction; //direction light.
+    float spotExponent;
+    float spotCosCutoff;
+    float constantAttenuation;
+    float linearAttenuation;
+    float quadraticAttenuation;
+    uint kind; //0: directional, 1: spot, 2: point
 } light;
 
 void main()
 {
-	fragColor = fColor;
+    fragColor = fColor;
 }

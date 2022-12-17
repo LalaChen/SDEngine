@@ -11,6 +11,7 @@
 #include <wvr/wvr_events.h>
 #include <wvr/wvr_vulkan.h>
 
+#include "WaveVRSwapchain.h"
 #include "WaveVRVulkanManager.h"
 
 using namespace SDE;
@@ -20,9 +21,6 @@ using namespace SDE::Graphics;
 
 WaveVRVulkanManager::WaveVRVulkanManager()
 : VulkanManager()
-, m_tex_queues{nullptr, nullptr}
-, m_tex_queue_size(0)
-, m_current_eb_idices{0, 0}
 {
 }
 
@@ -37,16 +35,14 @@ void WaveVRVulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
     if (typeid(i_arg).hash_code() == typeid(VulkanCreationArg).hash_code()) {
         VulkanCreationArg vk_c_arg = dynamic_cast<const VulkanCreationArg&>(i_arg);
 
-        m_ins_handle = vk_c_arg.m_instance;
-        m_sur_handle = vk_c_arg.m_surface;
+        m_instance = vk_c_arg.m_instance;
+        m_surface = vk_c_arg.m_surface;
 
-        if (m_ins_handle != nullptr) {
+        if (m_instance != nullptr) {
             //egl like
-            InitializeDebugMessage();
-            InitializePhysicalDevice();
+            InitializeVulkanEnvironment();
             InitializeSettings();
-            InitializeDevice();
-            InitializeCommandPoolAndBuffers();
+            InitializeGraphicsQueues();
             //graphics
             InitializeWaveVR();
             PrintSystemInformation();
@@ -71,38 +67,48 @@ void WaveVRVulkanManager::ReleaseGraphicsSystem()
 
 void WaveVRVulkanManager::InitializeWaveVR()
 {
-    //1. set eye resolution.
-    uint32_t screen_w, screen_h;
-    WVR_GetRenderTargetSize(&screen_w, &screen_h);
-    m_screen_size.SetResolution(screen_w, screen_h);
-    //2. setup WaveVR VulkanSystemInfo_t
+    //1. setup WaveVR VulkanSystemInfo_t
     WVR_VulkanSystemInfo_t vk_info = {
-        m_ins_handle,
-        m_phy_device_handle,
-        m_device_handle
+            m_instance,
+            m_phy_device,
+            m_device
     };
     if (WVR_VulkanInit(&vk_info) == false) {
         SDLOGE("Fail to initialize Vulkan info!");
         throw std::runtime_error("Fail to initialize Vulkan info!");
     }
+    //2. set eye resolution.
+    uint32_t screen_w, screen_h;
+    WVR_GetRenderTargetSize(&screen_w, &screen_h);
+    Resolution eye_buffer_size;
+    eye_buffer_size.SetResolution(screen_w, screen_h);
+    //
+    m_swapchain = new WaveVRSwapchain("WaveVRSwapchain", m_present_queue, eye_buffer_size);
+    SD_SREF(m_swapchain).Initialize();
+}
 
-    m_tex_queues[WVR_Eye_Left] = WVR_ObtainTextureQueue(WVR_TextureTarget_VULKAN, WVR_TextureFormat_RGBA, WVR_TextureType_UnsignedByte, m_screen_size.GetWidth(), m_screen_size.GetHeight(), 0);
-    m_tex_queues[WVR_Eye_Right] = WVR_ObtainTextureQueue(WVR_TextureTarget_VULKAN, WVR_TextureFormat_RGBA, WVR_TextureType_UnsignedByte, m_screen_size.GetWidth(), m_screen_size.GetHeight(), 0);
-    m_tex_queue_size = WVR_GetTextureQueueLength(m_tex_queues[WVR_Eye_Left]);
-
-    for (uint32_t eye_id = WVR_Eye_Left; eye_id < WVR_Eye_Both; ++eye_id) {
-        m_tq_cb_handles[eye_id].resize(m_tex_queue_size);
-        for (uint32_t eb_id = 0; eb_id < m_tq_cb_handles[eye_id].size(); ++eb_id) {
-            m_tq_cb_handles[eye_id][eb_id] = WVR_GetVkImage(m_tex_queues[eye_id], eb_id);
-        }
-    }
+void WaveVRVulkanManager::CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity)
+{
 
 }
 
-void WaveVRVulkanManager::RenderTexture2DToScreen(const TextureWeakReferenceObject &i_tex)
+void WaveVRVulkanManager::GetReadyTextureOfSwapchain(
+        const GraphicsSwapchainIdentity &i_identity,
+        const GraphicsSemaphoreWeakReferenceObject &i_acq_sema,
+        uint32_t &io_idx)
+{
+
+}
+
+void WaveVRVulkanManager::RenderTextureToSwapchain(
+        const GraphicsSwapchainIdentity &i_identity, uint32_t i_idx,
+        const GraphicsQueueWeakReferenceObject &i_queue,
+        const CommandBufferWeakReferenceObject &i_cmd_buffer,
+        const GraphicsSemaphoreWeakReferenceObject &i_present_sema,
+        const TextureWeakReferenceObject &i_texture)
 {
     VkResult result = VK_SUCCESS;
-    const TextureIdentity &tex_identity = GetIdentity(i_tex);
+    const TextureIdentity &tex_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_texture);
     if (tex_identity.m_texture_view_type != TextureViewType_TEXTURE_2D_ARRAY) {
         SDLOGE("We need texture with viewType TextureViewType_TEXTURE_2D_ARRAY for VR(Multiview). ErrorType:%d.", tex_identity.m_texture_view_type);
         throw std::runtime_error("We need texture 2D array tex for VR(Multiview)!!!");

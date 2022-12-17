@@ -23,25 +23,28 @@ SOFTWARE.
 
 */
 
-#include "OpenXRAndroidApplication.h"
+#include "AndroidOpenXRApplication.h"
 
 #include "SDEngine.h"
 #include "SDEnginePlatform.h"
 #include "VulkanWrapper.h"
+#include "OpenXRApplication.h"
+#include "OpenXRVulkanManager.h"
 #include "AndroidEnvAttacher.h"
 
 using namespace SDE;
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
 using namespace SDE::GUI;
+using namespace SDE::OPENXR;
 
 ________________SD_START_APP_NAMESPACE_______________
 
-OpenXRAndroidApplication::OpenXRAndroidApplication(
+AndroidOpenXRApplication::AndroidOpenXRApplication(
     const std::string &i_win_title,
     JavaVM *i_javaVM, AAssetManager *i_asset_mgr,
     GraphicsLibraryEnum i_adopt_library, int i_argc, char** i_argv)
-: Application(i_win_title, Resolution(2, 2), true, i_adopt_library, i_argc, i_argv)
+: OpenXRApplication(i_win_title, Resolution(2, 2), true, i_adopt_library, i_argc, i_argv)
 , m_current_state(AppState_CREATE)
 , m_window(nullptr)
 , m_javaVM(i_javaVM)
@@ -55,7 +58,7 @@ OpenXRAndroidApplication::OpenXRAndroidApplication(
     }
 }
 
-OpenXRAndroidApplication::~OpenXRAndroidApplication()
+AndroidOpenXRApplication::~AndroidOpenXRApplication()
 {
     if (m_javaVM != nullptr) {
     }
@@ -64,7 +67,7 @@ OpenXRAndroidApplication::~OpenXRAndroidApplication()
     }
 }
 
-void OpenXRAndroidApplication::Initialize()
+void AndroidOpenXRApplication::Initialize()
 {
     m_current_state = AppState_INITIALIZE;
 
@@ -89,7 +92,7 @@ void OpenXRAndroidApplication::Initialize()
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_INITIALIZED));
 }
 
-void OpenXRAndroidApplication::InitializeGraphicsSystem()
+void AndroidOpenXRApplication::InitializeGraphicsSystem()
 {
     if (m_adopt_library == SDE::Graphics::GraphicsLibrary_Vulkan) {
         VkInstance instance = VK_NULL_HANDLE;
@@ -179,7 +182,7 @@ void OpenXRAndroidApplication::InitializeGraphicsSystem()
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_INITIALIZED));
 }
 
-void OpenXRAndroidApplication::ReleaseGraphicsSystem()
+void AndroidOpenXRApplication::ReleaseGraphicsSystem()
 {
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
     IMGUIRenderer::GetRef().ReleaseGraphicsSystem();
@@ -190,7 +193,7 @@ void OpenXRAndroidApplication::ReleaseGraphicsSystem()
     m_window = nullptr;
 }
 
-void OpenXRAndroidApplication::TerminateApplication()
+void AndroidOpenXRApplication::TerminateApplication()
 {
     m_current_state = AppState_TERMINATE;
     m_pause_cv.notify_all();
@@ -218,12 +221,12 @@ void OpenXRAndroidApplication::TerminateApplication()
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_TERMINATED));
 }
 
-void OpenXRAndroidApplication::InitializeNativeWindow(ANativeWindow* i_window)
+void AndroidOpenXRApplication::InitializeNativeWindow(ANativeWindow* i_window)
 {
     m_window = i_window;
 }
 
-void OpenXRAndroidApplication::RefreshNativeWindow(ANativeWindow* i_window, int i_width, int i_height)
+void AndroidOpenXRApplication::RefreshNativeWindow(ANativeWindow* i_window, int i_width, int i_height)
 {
     if (i_window != nullptr) {
         SDLOG("[AppFlow] Refresh native for android.");
@@ -249,12 +252,12 @@ void OpenXRAndroidApplication::RefreshNativeWindow(ANativeWindow* i_window, int 
     }
 }
 
-KeyStatusEnum OpenXRAndroidApplication::GetKeyStateByCode(KeyCodeEnum i_code)
+KeyStatusEnum AndroidOpenXRApplication::GetKeyStateByCode(KeyCodeEnum i_code)
 {
     return KEY_STATUS_NOT_SUPPORT;
 }
 
-void OpenXRAndroidApplication::RunMainLoop()
+void AndroidOpenXRApplication::RunMainLoop()
 {
     m_current_state = AppState_INITIALIZE_GRAPHICS;
     InitializeGraphicsSystem();
@@ -277,7 +280,7 @@ void OpenXRAndroidApplication::RunMainLoop()
         });
 }
 
-void OpenXRAndroidApplication::Pause()
+void AndroidOpenXRApplication::Pause()
 {
     if (m_current_state == AppState_RUN) {
         SDLOG("[AppFlow] Set app pause.");
@@ -288,7 +291,7 @@ void OpenXRAndroidApplication::Pause()
     }
 }
 
-void OpenXRAndroidApplication::Resume()
+void AndroidOpenXRApplication::Resume()
 {
     Application::Resume();
 }
