@@ -1,7 +1,6 @@
 #pragma once
 
-#include <SDEnginePlatform.h>
-#include <SDEngine.h>
+#include "WaveCommonFunction.h"
 
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
@@ -27,10 +26,8 @@ public:
             const GraphicsQueueWeakReferenceObject &i_queue,
             const CommandBufferWeakReferenceObject &i_cmd_buffer,
             const GraphicsSemaphoreWeakReferenceObject &i_present_sema,
-            const TextureWeakReferenceObject &i_texture) override;
+            const TextureWeakReferenceObject &i_texture,
+            const ImageBlitParam &i_param) override;
 protected:
     void InitializeWaveVR();
-protected:
-    uint32_t m_tex_queue_size;
-    uint32_t m_current_eb_idices[WVR_Eye_Both];
 };

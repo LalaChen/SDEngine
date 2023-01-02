@@ -92,6 +92,17 @@ add_library( # Sets the name of the library.
 set_target_properties( assimp PROPERTIES IMPORTED_LOCATION
         ${CMAKE_CURRENT_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/${ANDROID_ABI}/libassimp.so )
 
+# third party library ----- openxr loader
+add_library( # Sets the name of the library.
+        openxr_loader
+        # Sets the library as a shared library.
+        SHARED
+        # Provides a relative path to your source file(s).
+        IMPORTED )
+
+set_target_properties( openxr_loader PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/${ANDROID_ABI}/libopenxr_loader.so )
+
 # Engine library
 add_library( # Sets the name of the library.
         SDEngine
@@ -136,7 +147,7 @@ add_library( # Sets the name of the library.
 
              # Provides a relative path to your source file(s).
              src/main/cpp/android_jni_main.cpp
-        src/main/cpp/FeatureApplication.cpp
+             src/main/cpp/FeatureApplication.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/HUDComponent.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/MotorComponent.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/ScreenRayComponent.cpp
@@ -154,8 +165,10 @@ target_link_libraries( # Specifies the target library.
                        # Links the target library to the log library
                        # included in the NDK.
                        assimp
+                       openxr_loader
                        SDEngine
                        SDEngine_AndroidApplication
+
                        -llog
                        -landroid
                        -lEGL

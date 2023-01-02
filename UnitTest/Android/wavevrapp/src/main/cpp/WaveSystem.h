@@ -1,10 +1,6 @@
 #pragma once
 
-#include <wvr/wvr_types.h>
-#include <wvr/wvr_device.h>
-#include <SDEngineMacro.h>
-#include <SDEngineCommonType.h>
-#include <SDEngine.h>
+#include "WaveCommonFunction.h"
 
 using SDE::Basic::ObjectName;
 using SDE::Basic::System;

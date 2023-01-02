@@ -26,6 +26,7 @@ SOFTWARE.
 #include "OpenXRVulkanManager.h"
 
 #include "Exception.h"
+#include "ImageAspect_Vulkan.h"
 #include "VulkanCreationArg.h"
 #include "VulkanWrapper.h"
 #include "LogManager.h"
@@ -131,7 +132,8 @@ void OpenXRVulkanManager::RenderTextureToSwapchain(
     const GraphicsQueueWeakReferenceObject &i_queue,
     const CommandBufferWeakReferenceObject &i_cmd_buffer,
     const GraphicsSemaphoreWeakReferenceObject &i_present_sema,
-    const TextureWeakReferenceObject &i_texture)
+    const TextureWeakReferenceObject &i_texture,
+    const ImageBlitParam &i_param)
 {
     VkResult result = VK_SUCCESS;
     VkDevice device = reinterpret_cast<VkDevice>(i_identity.m_device);
@@ -146,26 +148,27 @@ void OpenXRVulkanManager::RenderTextureToSwapchain(
     BeginCommandBuffer(cmd_identity, CommandBufferInheritanceInfo());
 
     VkImageBlit blit_param = {};
-    blit_param.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    blit_param.srcSubresource.baseArrayLayer = 0;
-    blit_param.srcSubresource.mipLevel = 0;
-    blit_param.srcSubresource.layerCount = tex_identity.m_array_layers;
-    blit_param.srcOffsets[0].x = 0;
-    blit_param.srcOffsets[0].y = 0;
-    blit_param.srcOffsets[0].z = 0;
-    blit_param.srcOffsets[1].x = i_identity.m_screen_size.GetWidth();
-    blit_param.srcOffsets[1].y = i_identity.m_screen_size.GetHeight();
-    blit_param.srcOffsets[1].z = 1;
-    blit_param.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    blit_param.dstSubresource.baseArrayLayer = 0;
-    blit_param.dstSubresource.mipLevel = 0;
-    blit_param.dstSubresource.layerCount = tex_identity.m_array_layers;
-    blit_param.dstOffsets[0].x = 0;
-    blit_param.dstOffsets[0].y = 0;
-    blit_param.dstOffsets[0].z = 0;
-    blit_param.dstOffsets[1].x = i_identity.m_screen_size.GetWidth();
-    blit_param.dstOffsets[1].y = i_identity.m_screen_size.GetHeight();
-    blit_param.dstOffsets[1].z = 1;
+    blit_param.srcSubresource.aspectMask = ImageAspect_Vulkan::Convert(i_param.m_src_param.m_aspect);
+    blit_param.srcSubresource.baseArrayLayer = i_param.m_src_param.m_based_layer;
+    blit_param.srcSubresource.mipLevel = i_param.m_src_param.m_mip_level;
+    blit_param.srcSubresource.layerCount = i_param.m_src_param.m_layer_count;
+    blit_param.srcOffsets[0].x = i_param.m_src_param.m_origin[0];
+    blit_param.srcOffsets[0].y = i_param.m_src_param.m_origin[1];
+    blit_param.srcOffsets[0].z = i_param.m_src_param.m_origin[2];
+    blit_param.srcOffsets[1].x = i_param.m_src_param.m_size[0];
+    blit_param.srcOffsets[1].y = i_param.m_src_param.m_size[1];
+    blit_param.srcOffsets[1].z = i_param.m_src_param.m_size[2];
+    blit_param.dstSubresource.aspectMask = ImageAspect_Vulkan::Convert(i_param.m_dst_param.m_aspect);
+    blit_param.dstSubresource.baseArrayLayer = i_param.m_dst_param.m_based_layer;
+    blit_param.dstSubresource.mipLevel = i_param.m_dst_param.m_mip_level;
+    blit_param.dstSubresource.layerCount = i_param.m_dst_param.m_layer_count;
+    blit_param.dstOffsets[0].x = i_param.m_dst_param.m_origin[0];
+    blit_param.dstOffsets[0].y = i_param.m_dst_param.m_origin[1];
+    blit_param.dstOffsets[0].z = i_param.m_dst_param.m_origin[2];
+    blit_param.dstOffsets[1].x = i_param.m_dst_param.m_size[0];
+    blit_param.dstOffsets[1].y = i_param.m_dst_param.m_size[1];
+    blit_param.dstOffsets[1].z = i_param.m_dst_param.m_size[2];
+
 
     VkImage dst_image = reinterpret_cast<VkImage>(i_identity.m_swapchain_images[i_idx]);
 

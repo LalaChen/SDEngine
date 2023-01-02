@@ -136,11 +136,6 @@ public:
 
     bool IsInitialized() const;
 public:
-    const CompHandle GetHandle() const;
-
-    const CompHandle GetSamplerHandle() const;
-
-    const CompHandle GetViewHandle() const;
 
     TextureTypeEnum GetTextureType() const;
 
@@ -155,26 +150,13 @@ public:
     ImageSize GetDataSize() const;
 
     Size_ui32 GetLayerCount() const;
+
+    Size_ui32 GetMipMapLevels() const;
 protected:
     TextureIdentity m_tex_identity;
 
     SamplerIdentity m_sampler_idnetity;
 };
-
-inline const CompHandle Texture::GetHandle() const
-{
-    return m_tex_identity.m_handle;
-}
-
-inline const CompHandle Texture::GetSamplerHandle() const
-{
-    return m_sampler_idnetity.m_handle;
-}
-
-inline const CompHandle Texture::GetViewHandle() const
-{
-    return m_tex_identity.m_image_view;
-}
 
 inline TextureTypeEnum Texture::GetTextureType() const
 {
@@ -209,6 +191,11 @@ inline ImageSize Texture::GetDataSize() const
 inline Size_ui32 Texture::GetLayerCount() const
 {
     return m_tex_identity.m_array_layers;
+}
+
+inline Size_ui32 Texture::GetMipMapLevels() const
+{
+    return m_tex_identity.m_mipmap_levels;
 }
 
 inline bool Texture::IsInitialized() const

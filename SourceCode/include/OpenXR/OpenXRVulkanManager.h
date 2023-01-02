@@ -23,6 +23,8 @@ SOFTWARE.
 
 */
 
+#pragma once
+
 #include <openxr/openxr.h>
 #include <openxr/openxr_platform.h>
 #include <openxr/openxr_reflection.h>
@@ -52,6 +54,8 @@ using SDE::Graphics::TextureStrongReferenceObject;
 using SDE::Graphics::TextureWeakReferenceObject;
 
 using SDE::Graphics::Resolution;
+using SDE::Graphics::ImageRegionSpec;
+using SDE::Graphics::ImageBlitParam;
 
 ______________SD_START_OPENXR_NAMESPACE______________
 
@@ -84,7 +88,8 @@ public:
         const GraphicsQueueWeakReferenceObject &i_queue,
         const CommandBufferWeakReferenceObject &i_cmd_buffer,
         const GraphicsSemaphoreWeakReferenceObject &i_present_sema,
-        const TextureWeakReferenceObject &i_texture) override;
+        const TextureWeakReferenceObject &i_texture,
+        const ImageBlitParam &i_param) override;
 
 protected:
     void InitializeSession();

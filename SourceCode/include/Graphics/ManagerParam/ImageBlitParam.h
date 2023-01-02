@@ -1,4 +1,4 @@
-/*==============  SD Engine License ==============
+/*
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -20,49 +20,56 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-/*! \file      ManagerParam.h
- *  \brief     Include all ManagerParam.
+/*! \file      ImageBlitParam.h
+ *  \brief     ImageBlit data struct.
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/03
+ *  \date      2022/12/18
  *  \copyright MIT License.
  */
 
 #pragma once
 
-#include "VertexBufferFormat.h"
-#include "VertexBufferUsage.h"
-#include "MemoryType.h"
-#include "BitmapPixelDataType.h"
-#include "TextureType.h"
-#include "TextureFormat.h"
-#include "SamplerFilterType.h"
-#include "SamplerMipmapMode.h"
-#include "SamplerWrapMode.h"
-#include "SamplerBorderColorType.h"
-#include "CompareOperator.h"
-#include "ShaderKind.h"
-#include "VertexInputRate.h"
-#include "Primitive.h"
-#include "PolygonMode.h"
-#include "FrontFaceMode.h"
-#include "FaceCulling.h"
-#include "StencilOperator.h"
-#include "SampleCount.h"
-#include "BlendFactor.h"
-#include "BlendOperator.h"
-#include "LogicOperator.h"
-#include "DynamicState.h"
-#include "MemoryAccessMask.h"
-#include "PipelineStage.h"
-#include "ImageUsage.h"
-#include "ImageLayout.h"
+#include "SDEngineMacro.h"
+
 #include "ImageAspect.h"
-#include "ImageTiling.h"
-#include "PipelineBindPoint.h"
-#include "UniformBindingType.h"
-#include "CommandBufferLevel.h"
-#include "QueryFlags.h"
-#include "ImageBlitParam.h"
+
+_____________SD_START_GRAPHICS_NAMESPACE_____________
+
+class SDENGINE_CLASS ImageRegionSpec
+{
+public:
+    ImageRegionSpec()
+    : m_origin{0, 0, 0}
+    , m_size{0, 0, 0}
+    , m_aspect(ImageAspect_ASPECT_COLOR)
+    , m_based_layer(0)
+    , m_layer_count(1)
+    , m_mip_level(0)
+    {
+    }
+    ~ImageRegionSpec()
+    {
+
+    }
+public:
+    uint32_t m_origin[3];
+    uint32_t m_size[3];
+    ImageAspectEnum m_aspect;
+    uint32_t m_based_layer;
+    uint32_t m_layer_count;
+    uint32_t m_mip_level;
+};
+
+class SDENGINE_CLASS ImageBlitParam
+{
+public:
+    ImageBlitParam() {}
+    ~ImageBlitParam() {}
+public:
+    ImageRegionSpec m_src_param;
+    ImageRegionSpec m_dst_param;
+};
+
+______________SD_END_GRAPHICS_NAMESPACE______________

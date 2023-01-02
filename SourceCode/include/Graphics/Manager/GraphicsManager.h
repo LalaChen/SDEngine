@@ -40,6 +40,7 @@ SOFTWARE.
 #include "GraphicsConfig.h"
 #include "PeriodCounter.h"
 #include "GraphicsIdentityGetter.h"
+#include "ImageBlitParam.h"
 #include "ImageLoader.h"
 #include "Resolution.h"
 #include "EventArg.h"
@@ -218,7 +219,7 @@ public:
     virtual void CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) = 0;
     virtual void DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) = 0;
     virtual void GetReadyTextureOfSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, uint32_t &io_idx) = 0;
-    virtual void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, uint32_t i_idx, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture) = 0;
+    virtual void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, uint32_t i_idx, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture, const ImageBlitParam &i_param) = 0;
 public:
 //------------- Resize Function -----------------
     virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) = 0;

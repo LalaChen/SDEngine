@@ -65,9 +65,33 @@ void GraphicsSwapchain::RenderTextureToSwapchain(const TextureWeakReferenceObjec
 
 	GraphicsManager::GetRef().GetReadyTextureOfSwapchain(m_identity, m_acq_sema, image_idx);
 
-	GraphicsManager::GetRef().RenderTextureToSwapchain(
-		m_identity, image_idx,
-		m_queue, m_cmd_buffer, m_present_sema, i_tex);
+	ImageBlitParam param;
+	param.m_src_param.m_aspect = ImageAspect_ASPECT_COLOR;
+	param.m_src_param.m_based_layer = 0;
+	param.m_src_param.m_layer_count = SD_WREF(i_tex).GetLayerCount();
+	param.m_src_param.m_mip_level = 0;
+	param.m_src_param.m_origin[0] = 0;
+	param.m_src_param.m_origin[1] = 0;
+	param.m_src_param.m_origin[2] = 0;
+	param.m_src_param.m_size[0] = SD_WREF(i_tex).GetWidth();
+	param.m_src_param.m_size[1] = SD_WREF(i_tex).GetHeight();
+	param.m_src_param.m_size[2] = 1;
+	param.m_dst_param.m_aspect = ImageAspect_ASPECT_COLOR;
+	param.m_dst_param.m_based_layer = 0;
+	param.m_dst_param.m_layer_count = m_identity.m_layer_size;
+	param.m_dst_param.m_mip_level = 0;
+	param.m_dst_param.m_origin[0] = 0;
+	param.m_dst_param.m_origin[1] = 0;
+	param.m_dst_param.m_origin[2] = 0;
+	param.m_dst_param.m_size[0] = m_identity.m_screen_size.GetWidth();
+	param.m_dst_param.m_size[1] = m_identity.m_screen_size.GetHeight();
+	param.m_dst_param.m_size[2] = 1;
+
+	if (image_idx < m_identity.m_swapchain_images.size()) {
+		GraphicsManager::GetRef().RenderTextureToSwapchain(
+			m_identity, image_idx,
+			m_queue, m_cmd_buffer, m_present_sema, i_tex, param);
+	}
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

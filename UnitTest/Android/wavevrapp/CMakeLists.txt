@@ -155,6 +155,7 @@ add_library( # Sets the name of the library.
              src/main/cpp/WaveSystem.cpp
              src/main/cpp/WaveVREventArg.cpp
              src/main/cpp/WaveVRControllerComponent.cpp
+             src/main/cpp/WaveVRSwapchain.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/HUDComponent.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/SampleDrawObjects.cpp
              ../../Common/UnitTest_FeatureDeveloping/Code/ScreenRayComponent.cpp

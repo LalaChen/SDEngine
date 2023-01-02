@@ -229,6 +229,7 @@
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)\
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\libopenxr_loader.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\libassimp.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEngine.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
@@ -253,6 +254,7 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)\
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\libopenxr_loader.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\libassimp.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEngine.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
@@ -277,6 +279,7 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)\
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\libopenxr_loader.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\libassimp.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEngine.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
@@ -301,6 +304,7 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)\
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\libopenxr_loader.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\libassimp.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEngine.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
@@ -325,6 +329,7 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)\
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\libopenxr_loader.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\libassimp.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEngine.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
@@ -349,6 +354,7 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)\
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\libopenxr_loader.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\libassimp.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEngine.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
@@ -373,6 +379,7 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)\
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\libopenxr_loader.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\libassimp.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEngine.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
@@ -397,6 +404,7 @@ xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEng
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\
 mkdir $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)\
+xcopy /y $(SDEngineRootDir)ThirdParty\OpenXR\bin\$(Platform)\$(Configuration)\libopenxr_loader.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SDEngineRootDir)ThirdParty\Assimp\bin\$(Platform)\$(Configuration)\libassimp.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)
 xcopy /y $(SolutionDir)Bin\Library\Android\$(Platform)\$(Configuration)\libSDEngine.so $(SDEngineRootDir)Bin\UnitTest\Android\$(Platform)\$(Configuration)</Command>
     </PostBuildEvent>

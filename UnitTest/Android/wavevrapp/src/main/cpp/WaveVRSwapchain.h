@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDEngine.h>
+#include "WaveCommonFunction.h"
 
 using namespace SDE::Basic;
 using namespace SDE::Graphics;
@@ -16,6 +16,6 @@ public:
 
 protected:
     WVR_TextureQueueHandle_t m_tex_queues[WVR_Eye_Both];
-    std::vector<VkImage> m_tq_cb_handles[WVR_Eye_Both]
+    std::vector<VkImage> m_tq_cb_handles[WVR_Eye_Both];
     uint32_t m_tex_queue_size;
 };

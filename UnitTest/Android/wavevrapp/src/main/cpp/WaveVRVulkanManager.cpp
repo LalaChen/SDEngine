@@ -1,3 +1,5 @@
+#include "WaveVRVulkanManager.h"
+
 #include <list>
 #include <algorithm>
 
@@ -11,8 +13,8 @@
 #include <wvr/wvr_events.h>
 #include <wvr/wvr_vulkan.h>
 
+#include "ImageAspect_Vulkan.h"
 #include "WaveVRSwapchain.h"
-#include "WaveVRVulkanManager.h"
 
 using namespace SDE;
 using namespace SDE::Math;
@@ -56,13 +58,6 @@ void WaveVRVulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
 void WaveVRVulkanManager::ReleaseGraphicsSystem()
 {
     VulkanManager::ReleaseGraphicsSystem();
-    WVR_ReleaseTextureQueue(m_tex_queues[WVR_Eye_Left]);
-    WVR_ReleaseTextureQueue(m_tex_queues[WVR_Eye_Right]);
-    m_tq_cb_handles[WVR_Eye_Left].resize(0);
-    m_tq_cb_handles[WVR_Eye_Right].resize(0);
-    m_current_eb_idices[WVR_Eye_Left] = 0;
-    m_current_eb_idices[WVR_Eye_Right] = 0;
-    m_tex_queue_size = 0;
 }
 
 void WaveVRVulkanManager::InitializeWaveVR()
@@ -89,7 +84,12 @@ void WaveVRVulkanManager::InitializeWaveVR()
 
 void WaveVRVulkanManager::CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity)
 {
-
+    VkPhysicalDevice &phy_device   = reinterpret_cast<VkPhysicalDevice&>(io_identity.m_phy_device);
+    VkDevice         &device       = reinterpret_cast<VkDevice&>(io_identity.m_device);
+    phy_device = m_phy_device;
+    device     = m_device;
+    io_identity.m_layer_size = 1;
+    io_identity.SetValid();
 }
 
 void WaveVRVulkanManager::GetReadyTextureOfSwapchain(
@@ -105,129 +105,49 @@ void WaveVRVulkanManager::RenderTextureToSwapchain(
         const GraphicsQueueWeakReferenceObject &i_queue,
         const CommandBufferWeakReferenceObject &i_cmd_buffer,
         const GraphicsSemaphoreWeakReferenceObject &i_present_sema,
-        const TextureWeakReferenceObject &i_texture)
+        const TextureWeakReferenceObject &i_texture,
+        const ImageBlitParam &i_param)
 {
     VkResult result = VK_SUCCESS;
+    VkDevice device = reinterpret_cast<VkDevice>(i_identity.m_device);
+
+    const CommandBufferIdentity &cmd_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_cmd_buffer);
+    VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cmd_identity.m_handle);
+
     const TextureIdentity &tex_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_texture);
-    if (tex_identity.m_texture_view_type != TextureViewType_TEXTURE_2D_ARRAY) {
-        SDLOGE("We need texture with viewType TextureViewType_TEXTURE_2D_ARRAY for VR(Multiview). ErrorType:%d.", tex_identity.m_texture_view_type);
-        throw std::runtime_error("We need texture 2D array tex for VR(Multiview)!!!");
-    }
+    VkImage src_image = reinterpret_cast<VkImage>(tex_identity.m_handle);
 
-    if (m_present_q_handle == VK_NULL_HANDLE) {
-        SDLOGE("m_present_q_handle is nullptr!!!");
-        throw std::runtime_error("m_present_q_handle is nullptr!!!");
-    }
+    //1. Record Image Copy to Swapchain Image.
+    BeginCommandBuffer(cmd_identity, CommandBufferInheritanceInfo());
 
-    if (m_main_cb_fence_handle == VK_NULL_HANDLE) {
-        SDLOGE("m_main_cb_fence_handle is nullptr!!!");
-        throw std::runtime_error("m_main_cb_fence_handle is nullptr!!!");
-    }
+    VkImageBlit blit_param = {};
+    blit_param.srcSubresource.aspectMask = ImageAspect_Vulkan::Convert(i_param.m_src_param.m_aspect);
+    blit_param.srcSubresource.baseArrayLayer = i_param.m_src_param.m_based_layer;
+    blit_param.srcSubresource.mipLevel = i_param.m_src_param.m_mip_level;
+    blit_param.srcSubresource.layerCount = i_param.m_src_param.m_layer_count;
+    blit_param.srcOffsets[0].x = i_param.m_src_param.m_origin[0];
+    blit_param.srcOffsets[0].y = i_param.m_src_param.m_origin[1];
+    blit_param.srcOffsets[0].z = i_param.m_src_param.m_origin[2];
+    blit_param.srcOffsets[1].x = i_param.m_src_param.m_size[0];
+    blit_param.srcOffsets[1].y = i_param.m_src_param.m_size[1];
+    blit_param.srcOffsets[1].z = i_param.m_src_param.m_size[2];
+    blit_param.dstSubresource.aspectMask = ImageAspect_Vulkan::Convert(i_param.m_dst_param.m_aspect);
+    blit_param.dstSubresource.baseArrayLayer = i_param.m_dst_param.m_based_layer;
+    blit_param.dstSubresource.mipLevel = i_param.m_dst_param.m_mip_level;
+    blit_param.dstSubresource.layerCount = i_param.m_dst_param.m_layer_count;
+    blit_param.dstOffsets[0].x = i_param.m_dst_param.m_origin[0];
+    blit_param.dstOffsets[0].y = i_param.m_dst_param.m_origin[1];
+    blit_param.dstOffsets[0].z = i_param.m_dst_param.m_origin[2];
+    blit_param.dstOffsets[1].x = i_param.m_dst_param.m_size[0];
+    blit_param.dstOffsets[1].y = i_param.m_dst_param.m_size[1];
+    blit_param.dstOffsets[1].z = i_param.m_dst_param.m_size[2];
 
-    if (m_main_cb_handle == VK_NULL_HANDLE) {
-        SDLOGE("m_main_cb_handle is nullptr!!!");
-        throw std::runtime_error("m_main_cb_handle is nullptr!!!");
-    }
 
-    //Begin command buffer
-    VkCommandBufferBeginInfo cmd_buf_c_info = {};
-    cmd_buf_c_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    cmd_buf_c_info.pNext = nullptr;
-    cmd_buf_c_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    cmd_buf_c_info.pInheritanceInfo = nullptr;
+    VkImage dst_image = reinterpret_cast<VkImage>(i_identity.m_swapchain_images[i_idx]);
 
-    result = vkBeginCommandBuffer(m_main_cb_handle, &cmd_buf_c_info);
-    if (result != VK_SUCCESS) {
-        SDLOGW("We can't begin command buffer(%x)!!! error(%x)", m_main_cb_handle, result);
-        return;
-    }
+    BlitVkImages(cmd_buffer, src_image, dst_image, blit_param);
 
-    //Copy camera image to eye buffer.
-    for (uint32_t eye_id = WVR_Eye_Left; eye_id < WVR_Eye_Both; ++eye_id) {
-
-        VkImageBlit blit_param = {};
-        blit_param.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        blit_param.srcSubresource.baseArrayLayer = eye_id;
-        blit_param.srcSubresource.mipLevel = 0;
-        blit_param.srcSubresource.layerCount = 1;
-        blit_param.srcOffsets[0].x = 0;
-        blit_param.srcOffsets[0].y = 0;
-        blit_param.srcOffsets[0].z = 0;
-        blit_param.srcOffsets[1].x = m_screen_size.GetWidth();
-        blit_param.srcOffsets[1].y = m_screen_size.GetHeight();
-        blit_param.srcOffsets[1].z = 1;
-        blit_param.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        blit_param.dstSubresource.baseArrayLayer = 0;
-        blit_param.dstSubresource.mipLevel = 0;
-        blit_param.dstSubresource.layerCount = 1;
-        blit_param.dstOffsets[0].x = 0;
-        blit_param.dstOffsets[0].y = m_screen_size.GetHeight();//inverse y back. Because wave app don't need flip y for viewport.
-        blit_param.dstOffsets[0].z = 0;
-        blit_param.dstOffsets[1].x = m_screen_size.GetWidth();
-        blit_param.dstOffsets[1].y = 0;
-        blit_param.dstOffsets[1].z = 1;
-
-        vkCmdBlitImage(m_main_cb_handle,
-                       reinterpret_cast<VkImage>(tex_identity.m_image_handle),
-                       VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                       m_tq_cb_handles[eye_id][m_current_eb_idices[eye_id]],
-                       VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit_param,
-                       VK_FILTER_NEAREST);
-    }
-
-    //End command buffer
-    result = vkEndCommandBuffer(m_main_cb_handle);
-    if (result != VK_SUCCESS) {
-        SDLOGW("We can't end command buffer(%x)!!! error(%x)!!!", m_main_cb_handle, result);
-        return;
-    }
-
-    //Push command buffer to queue.
-
-    VkPipelineStageFlags submit_wait_flags[1] = { VK_PIPELINE_STAGE_ALL_COMMANDS_BIT };
-    VkSubmitInfo submit_info = {};
-    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submit_info.pNext = nullptr;
-    submit_info.waitSemaphoreCount = 0;
-    submit_info.pWaitSemaphores = nullptr; //wait acq image.
-    submit_info.pWaitDstStageMask = submit_wait_flags;
-    submit_info.signalSemaphoreCount = 0;
-    submit_info.pSignalSemaphores = nullptr; //set present semaphore.
-    submit_info.commandBufferCount = 1;
-    submit_info.pCommandBuffers = &m_main_cb_handle;
-
-    result = vkQueueSubmit(m_present_q_handle, 1, &submit_info, m_main_cb_fence_handle);
-    if (result != VK_SUCCESS) {
-        SDLOGW("Submit command buffer to PresentQueue(%p) failure(%x)!!!", m_present_q_handle, result);
-    }
-
-    do {
-        result = vkWaitForFences(m_device_handle, 1, &m_main_cb_fence_handle, VK_TRUE, m_vulkan_config.m_max_fence_wait_time);
-    } while (result == VK_TIMEOUT);
-    if (result != VK_SUCCESS) {
-        SDLOGW("Wait sync failure(%x)!!!", result);
-        return;
-    }
-
-    //Reset main command buffer sync.
-    result = vkResetFences(m_device_handle, 1, &m_main_cb_fence_handle);
-    if (result != VK_SUCCESS) {
-        SDLOGW("reset main command buffer fence failure(%x)!!!", result);
-    }
-
-    //Submit frame to WVR
-    for (uint32_t eye_id = WVR_Eye_Left; eye_id < WVR_Eye_Both; ++eye_id) {
-        WVR_TextureParams_t eye_tex = WVR_GetTexture(m_tex_queues[eye_id], m_current_eb_idices[eye_id]);
-        WVR_SubmitError e = WVR_SubmitFrame(static_cast<WVR_Eye>(eye_id), &eye_tex);
-        if (e != WVR_SubmitError_None) {
-            SDLOGE("Submit WVR event failure(%d)!", e);
-            throw std::runtime_error("Submit frame error");
-        }
-    }
-
-    m_fps_counter.AddCount();
-
-    //Get Next index.
-    m_current_eb_idices[WVR_Eye_Left] = WVR_GetAvailableTextureIndex(m_tex_queues[WVR_Eye_Left]);
-    m_current_eb_idices[WVR_Eye_Right] = WVR_GetAvailableTextureIndex(m_tex_queues[WVR_Eye_Right]);
+    EndCommandBuffer(cmd_identity);
+    //3. submit to present queue.
+    SD_SREF(i_queue).SubmitCommandBuffers({ i_cmd_buffer });
 }

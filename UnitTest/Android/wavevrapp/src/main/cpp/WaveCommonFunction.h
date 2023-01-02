@@ -11,6 +11,7 @@
 
 #include <SDEngineMacro.h>
 #include <SDEngineCommonType.h>
+#include <SDEnginePlatform.h>
 #include <SDEngine.h>
 
 using namespace SDE;
