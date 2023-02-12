@@ -21,13 +21,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include "Vector3f.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
 #include "SDEngineCommonFunction.h"
-
 #include "Matrix4X4f.h"
-#include "Vector3f.h"
 
 using namespace SDE::Basic;
 

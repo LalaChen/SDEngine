@@ -56,5 +56,12 @@ void ComponentBase::Update()
 	}
 }
 
+void ComponentBase::Resize()
+{
+	if (m_initialized == true) {
+		ResizeImpl();
+	}
+}
+
 
 _______________SD_END_BASIC_NAMESPACE________________

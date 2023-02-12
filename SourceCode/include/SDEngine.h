@@ -65,6 +65,7 @@ SOFTWARE.
 #include "Basic/ECS/System.h"
 #include "Basic/ECS/ECSManager.h"
 //-------- Graphics --------
+#include "Graphics/Vec/Area.h"
 #include "Graphics/Vec/Vec.h"
 #include "Graphics/Vec/Color4f.h"
 #include "Graphics/Resolution/Resolution.h"

@@ -35,6 +35,8 @@ SOFTWARE.
 
 #include <glm/gtx/quaternion.hpp>
 
+#include "SDEngineMacro.h"
+
 _______________SD_START_MATH_NAMESPACE_______________
 
 class Matrix4X4f;

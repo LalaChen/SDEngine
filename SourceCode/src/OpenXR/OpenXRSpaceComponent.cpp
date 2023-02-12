@@ -43,6 +43,6 @@ OpenXRSpaceComponent::~OpenXRSpaceComponent()
 void OpenXRSpaceComponent::InitializeImpl()
 {
     //1. get transform component
-    m_xform_comp = SD_GET_COMP_WREF(m_entity, TransformComponent);
+    m_xform = SD_GET_COMP_WREF(m_entity, TransformComponent);
 }
 _______________SD_END_OPENXR_NAMESPACE_______________

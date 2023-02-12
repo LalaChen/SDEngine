@@ -21,11 +21,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include "MathAlgoritm.h"
 
 #include <cmath>
+
 #include "MathConstant.h"
 #include "Vector3f.h"
-#include "MathAlgoritm.h"
 
 _______________SD_START_MATH_NAMESPACE_______________
 

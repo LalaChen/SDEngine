@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include "Matrix4X4f.h"
 
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -28,7 +29,6 @@ SOFTWARE.
 #include "SDEngineCommonFunction.h"
 #include "Quaternion.h"
 #include "Vector3f.h"
-#include "Matrix4X4f.h"
 
 using namespace SDE::Basic;
 
@@ -151,7 +151,7 @@ void Matrix4X4f::lookAt(const Vector3f &i_eye, const Vector3f &i_view_center, co
 //--------------- Project Space Using --------------------
 void Matrix4X4f::perspective(float i_fovy, float i_aspect, float i_near, float i_far)
 {
-    m_matrix = glm::perspective(i_fovy, i_aspect, i_near, i_far);
+    m_matrix = glm::perspective(glm::radians(i_fovy), i_aspect, i_near, i_far);
 }
 
 void Matrix4X4f::ortho(float i_left, float i_right, float i_bottom, float i_top, float i_near, float i_far)

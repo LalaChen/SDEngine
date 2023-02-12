@@ -23,13 +23,15 @@ SOFTWARE.
 
 */
 
+#include "CameraComponent.h"
+#include "MathConstant.h"
 #include "MathAlgoritm.h"
 #include "BasicUniforms.h"
 #include "ECSManager.h"
 #include "GraphicsSystem.h"
 #include "GraphicsManager.h"
 #include "LogManager.h"
-#include "CameraComponent.h"
+
 
 using SDE::Basic::ECSManager;
 using SDE::Basic::MemberFunctionSlot;
@@ -38,16 +40,10 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 CameraComponent::CameraComponent(const ObjectName &i_object_name)
 : CameraComponentBase(i_object_name)
-, m_workspace_type(CameraWorkspaceType_Forward)
-, m_follow_resolution(true)
-, m_ws_initialized(false)
-, m_clear_color{ 0.15f, 0.15f, 0.75f, 1.0f }
-, m_clear_d_and_s{ 1.0f, 1 }
 , m_fov(120.0f)
 , m_near(0.01f)
 , m_far(1000.0f)
 {
-    m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
 }
 
 CameraComponent::~CameraComponent()
@@ -67,9 +63,9 @@ void CameraComponent::InitializeImpl()
         InitializeWorkspaceForDeferredPass();
     }
 
-    m_xform_comp = SD_GET_COMP_WREF(m_entity, TransformComponent);
+    m_xform = SD_GET_COMP_WREF(m_entity, TransformComponent);
 
-    SD_WREF(m_xform_comp).RegisterSlotFunctionIntoEvent(
+    SD_WREF(m_xform).RegisterSlotFunctionIntoEvent(
         TransformComponent::sTransformChangedEventName,
         new MemberFunctionSlot<CameraComponent>(
             "CameraComponent::OnGeometryChanged",
@@ -80,6 +76,15 @@ void CameraComponent::InitializeImpl()
 
     m_ws_initialized = true;
 }
+
+void CameraComponent::ResizeImpl()
+{
+    CameraComponentBase::ResizeImpl();
+
+    SetPerspective(m_fov, m_near, m_far);
+    OnGeometryChanged(EventArg());
+}
+
 
 void CameraComponent::InitializeDescriptorSetAndPool()
 {
@@ -149,13 +154,12 @@ void CameraComponent::InitializeWorkspaceForDeferredPass()
     RenderPassWeakReferenceObject deferred_rp = GraphicsManager::GetRef().GetRenderPass("DeferredPass");
 
     if (deferred_rp.IsNull() == false) {
-        Resolution current_res = GraphicsManager::GetRef().GetScreenResolution();
         if (m_color_buffer.IsNull() == false) {
             m_color_buffer.Reset();
         }
         m_color_buffer = new Texture("CameraColorBuffer");
         SD_SREF(m_color_buffer).Initialize2DColorOrDepthBuffer(
-            current_res.GetWidth(), current_res.GetHeight(),
+            m_buffer_size.GetWidth(), m_buffer_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
             ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
 
@@ -164,7 +168,7 @@ void CameraComponent::InitializeWorkspaceForDeferredPass()
         }
         m_depth_buffer = new Texture("CameraDepthBuffer");
         SD_SREF(m_depth_buffer).Initialize2DColorOrDepthBuffer(
-            current_res.GetWidth(), current_res.GetHeight(),
+            m_buffer_size.GetWidth(), m_buffer_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
             ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
     }
@@ -180,7 +184,15 @@ void CameraComponent::ClearWorkspace()
     m_render_flow.Reset();
 }
 //------------------ Common Part ---------------
-void CameraComponent::SetCameraSize(const Resolution& i_size)
+void CameraComponent::SetPerspective(float i_fov, float i_near, float i_far)
+{
+    m_fov = i_fov;
+    m_near = i_near;
+    m_far = i_far;
+    m_proj_mat.perspective(m_fov, m_buffer_size.GetRatio(), i_near, i_far);
+}
+
+void CameraComponent::SetCameraSize(const Resolution &i_size)
 {
     m_buffer_size = i_size;
     m_follow_resolution = false;
@@ -193,7 +205,7 @@ Ray CameraComponent::CalculateRay(const TouchButton &i_tb) const
 {
     if (i_tb.m_x >= 0 && i_tb.m_x < m_buffer_size.GetWidth() &&
         i_tb.m_y >= 0 && i_tb.m_y < m_buffer_size.GetHeight()) {
-        Transform node_trans = SD_WREF(m_xform_comp).GetWorldTransform();
+        Transform node_trans = SD_WREF(m_xform).GetWorldTransform();
         Ray ray;
         ray.InitializeByScreen(m_proj_mat, node_trans.MakeViewMatrix(), m_buffer_size, i_tb, m_near);
         return ray;
@@ -201,28 +213,6 @@ Ray CameraComponent::CalculateRay(const TouchButton &i_tb) const
     else {
         return Ray();
     }
-}
-
-void CameraComponent::Resize()
-{
-    ClearWorkspace();
-
-    if (m_follow_resolution == true) {
-
-        m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
-
-        if (m_workspace_type == CameraWorkspaceType_Forward) {
-            InitializeWorkspaceForForwardPass();
-        }
-        else if (m_workspace_type == CameraWorkspaceType_Deferred) {
-            InitializeWorkspaceForDeferredPass();
-        }
-    }
-
-    SetPerspective(m_fov, m_near, m_far);
-    OnGeometryChanged(EventArg());
-
-    m_ws_initialized = true;
 }
 
 void CameraComponent::RecordCommand(
@@ -292,10 +282,25 @@ void CameraComponent::RecordCommand(
     }
 }
 
+DepthArea2D CameraComponent::ConvertNCPAreaToWorldArea(const Area2D &i_ncp_area) const
+{
+    DepthArea2D da;
+    float near_scale = m_near * 2.0f + 0.001f;
+    float tangent = std::tanf(m_fov / 2.0f * SDE::Math::ONE_DEGREE_OF_PI);
+    float top = near_scale * tangent;  float bottom = -top; float height = top - bottom;
+    float right = top * m_buffer_size.GetRatio(); float left = -right; float width = right - left;
+    da.area.x = left   + i_ncp_area.x * width;
+    da.area.y = bottom + i_ncp_area.y * height;
+    da.area.w = i_ncp_area.w * width;
+    da.area.h = i_ncp_area.h * height;
+    da.depth  = -near_scale;
+    return da;
+}
+
 bool CameraComponent::OnGeometryChanged(const EventArg &i_arg)
 {
     if (m_ub.IsNull() == false) {
-        Transform node_trans = SD_WREF(m_xform_comp).GetWorldTransform();
+        Transform node_trans = SD_WREF(m_xform).GetWorldTransform();
         SD_WREF(m_ub).SetMatrix4X4f("view", node_trans.MakeViewMatrix());
         SD_WREF(m_ub).SetMatrix4X4f("proj", m_proj_mat);
         SD_WREF(m_ub).SetVector3f("viewEye", node_trans.m_position);

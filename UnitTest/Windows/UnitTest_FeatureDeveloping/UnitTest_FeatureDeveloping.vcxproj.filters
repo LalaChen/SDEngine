@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="shader">
-      <UniqueIdentifier>{ac346555-2097-4ceb-a848-4891e8f59b95}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -55,25 +52,5 @@
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\ScreenRayComponent.h">
       <Filter>include</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\PhongShader.vert">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\PhongShader.frag">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.frag">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.vert">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxisShadowShader.frag">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxisShadowShader.vert">
-      <Filter>shader</Filter>
-    </None>
   </ItemGroup>
 </Project>

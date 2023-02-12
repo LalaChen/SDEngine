@@ -58,72 +58,31 @@ public:
     virtual void SetEyeMatrices(Matrix4X4f i_eye_mats[VREye_Both]);
     virtual void SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both]);
     virtual void SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum);
-    virtual void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
-public:
-    TextureWeakReferenceObject GetColorBuffer() const override;
-    TextureWeakReferenceObject GetDepthBuffer() const override;
 public:
     bool OnGeometryChanged(const EventArg &i_arg) override;
-    void Resize() override;
+    DepthArea2D ConvertNCPAreaToWorldArea(const Area2D &i_ncp_area) const override;
     void RecordCommand(
         const CommandBufferWeakReferenceObject &i_cb,
         const std::list<LightComponentWeakReferenceObject> &i_light_list,
         const std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> > &i_mr_groups) override;
 protected:
     void InitializeImpl() override;
+    void ResizeImpl() override;
 protected:
-    void InitializeDescriptorSetAndPool();
-    void InitializeWorkspaceForForwardPass();
-    void InitializeWorkspaceForDeferredPass();
+    void InitializeDescriptorSetAndPool() override;
+    void InitializeWorkspaceForForwardPass() override;
+    void InitializeWorkspaceForDeferredPass() override;
 protected:
-    virtual void ClearWorkspace();
-protected:
-    CameraWorkspaceType m_workspace_type;
-    RenderFlowStrongReferenceObject m_render_flow;
-    TextureStrongReferenceObject m_color_buffer;
-    TextureStrongReferenceObject m_depth_buffer;
-protected:
-    DescriptorPoolStrongReferenceObject m_dp;
-    UniformBufferWeakReferenceObject m_ub;
-    DescriptorSetWeakReferenceObject m_ds;
+    void ClearWorkspace() override;
 protected:
     //Extra buffer for defer pass.
 protected:
-    TransformComponentWeakReferenceObject m_geo_comp;
-protected:
-    bool m_ws_initialized;
-    bool m_follow_resolution;
-    Resolution m_buffer_size;
-    ClearValue m_clear_color;
-    ClearValue m_clear_d_and_s;
     Matrix4X4f m_eye_mats[VREye_Both];
     Matrix4X4f m_proj_mats[VREye_Both];
 };
 
-inline TextureWeakReferenceObject VRCameraComponent::GetColorBuffer() const
-{
-    if (IsInitialized() == true && m_ws_initialized == true) {
-        return m_color_buffer;
-    }
-    else {
-        return TextureWeakReferenceObject();
-    }
-}
 
-inline TextureWeakReferenceObject VRCameraComponent::GetDepthBuffer() const
-{
-    if (IsInitialized() == true && m_ws_initialized == true) {
-        return m_depth_buffer;
-    }
-    else {
-        return TextureWeakReferenceObject();
-    }
-}
 
-inline void VRCameraComponent::SetClearValues(ClearValue i_color, ClearValue i_d_and_s)
-{
-    m_clear_color = i_color;
-    m_clear_d_and_s = i_d_and_s;
-}
+
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -227,14 +227,6 @@ xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     <ClInclude Include="..\..\Common\UnitTest_FeatureDeveloping\Code\ScreenRayComponent.h" />
     <ClInclude Include="FeatureApplication.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxesShader.vert" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxisShadowShader.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\AxisShadowShader.vert" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\PhongShader.frag" />
-    <None Include="..\..\..\Bin\UnitTest\Assets\UnitTest_FeatureDeveloping\Shader\PhongShader.vert" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

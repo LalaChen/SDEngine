@@ -169,7 +169,6 @@ void OpenXRVulkanManager::RenderTextureToSwapchain(
     blit_param.dstOffsets[1].y = i_param.m_dst_param.m_size[1];
     blit_param.dstOffsets[1].z = i_param.m_dst_param.m_size[2];
 
-
     VkImage dst_image = reinterpret_cast<VkImage>(i_identity.m_swapchain_images[i_idx]);
 
     BlitVkImages(cmd_buffer, src_image, dst_image, blit_param);

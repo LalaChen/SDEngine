@@ -36,7 +36,6 @@ SOFTWARE.
 using namespace SDE::Math;
 using namespace SDE::GUI;
 using namespace SDE::Basic;
-using SDE::Basic::ECSManager;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -46,7 +45,8 @@ WorldGUIComponent::WorldGUIComponent(const ObjectName &i_object_name, uint32_t i
 , m_world_size{i_world_w, i_world_h}
 , m_clear_color{ 0.0f, 0.0f, 0.0f, 0.0f }
 , m_clear_d_and_s{ 1.0f, 1 }
-, m_initialized(false)
+, m_is_ncp(false)
+, m_area_orientation(AreaAlignOrientation_LEFT_BOTTOM)
 {
 }
 
@@ -73,6 +73,15 @@ void WorldGUIComponent::SetWorldSize(float i_world_w, float i_world_h)
         m_UI_vertices[1] = Vector3f( hw, -hh, 0.0f, 1.0f);
         m_UI_vertices[2] = Vector3f( hw,  hh, 0.0f, 1.0f);
         m_UI_vertices[3] = Vector3f(-hw,  hh, 0.0f, 1.0f);
+    }
+}
+
+void WorldGUIComponent::SetGUIForScreen(AreaAlignOrientationEnum i_orientation, const Area2D &i_area)
+{
+    if (m_initialized == false) {
+        m_is_ncp = true;
+        m_screen_area = i_area;
+        m_area_orientation = i_orientation;
     }
 }
 
@@ -135,14 +144,16 @@ void WorldGUIComponent::InitializeImpl()
     SD_SREF(m_batch).Initialize();
     //1. Initialize RenderFlow.
     InitializeWorkspace();
-    //2. Initialize GUI Component.
-    m_GUI_mesh_render = SD_WREF(m_entity).GetComponentByType<MeshRenderComponent>().StaticCastTo<MeshRenderComponent>();
+    //2. Get camera component.
+    m_camera = SD_GET_TYPE_COMP_WREF(m_entity, CameraComponentBase);
+    //3. Initialize GUI Component.
+    m_GUI_mesh_render = SD_GET_TYPE_COMP_WREF(m_entity, MeshRenderComponent);
     if (m_GUI_mesh_render.IsNull() == true) {
         m_GUI_mesh_render = ECSManager::GetRef().AddComponentForEntity<MeshRenderComponent>(
             m_entity, SDE::Basic::StringFormat("%s_GUIMeshRender", m_object_name.c_str())).DynamicCastTo<MeshRenderComponent>();
         SD_WREF(m_GUI_mesh_render).Initialize();
     }
-    //2.1 create material.
+    //3.1 create material.
     m_GUI_material = new Material("GUIMaterial");
     SD_SREF(m_GUI_material).BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("AlphaNoLightingShader"));
     //Set data done. Link with shader program.(Write descirptor)
@@ -151,8 +162,29 @@ void WorldGUIComponent::InitializeImpl()
     SD_SREF(m_GUI_material).SetDataToUniformBuffer(sUniformBuffer_Material, &mat_ub, sizeof(MaterialUniforms));
     SD_SREF(m_GUI_material).SetTexture(sUniformImages_Material_Textures, m_GUI_color_buffer, 0);
     SD_SREF(m_GUI_material).Update();
-    //2.2 create mesh.
-    m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUI(m_world_size[0], m_world_size[1]);
+    //3.2 create mesh.
+    if (m_is_ncp == true && m_camera.IsNull() == false) {
+        SD_WREF(m_camera).RegisterSlotFunctionIntoEvent(
+            CameraComponentBase::sCameraResizedEventName,
+            new MemberFunctionSlot<WorldGUIComponent>(
+                "WorldGUIComponent::OnCameraResized",
+                GetThisWeakPtrByType<WorldGUIComponent>(),
+                &WorldGUIComponent::OnCameraResized));
+
+        DepthArea2D world_area = SD_WREF(m_camera).ConvertScreenAreaToWorldArea(m_area_orientation, m_screen_area);
+        m_world_size[0] = world_area.area.w;
+        m_world_size[1] = world_area.area.h;
+        //
+        for (uint32_t orientation = 0; orientation < 4; ++orientation) {
+            vec3 pos = world_area.GetPoint(orientation);
+            m_UI_vertices[orientation] = Vector3f(pos.x, pos.y, pos.z, 1.0f);
+        }
+        //
+        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUIViaDepthArea2D(world_area);
+    }
+    else {
+        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUI(m_world_size[0], m_world_size[1]);
+    }
     SD_WREF(m_GUI_mesh_render).AppendMesh(m_GUI_mesh, m_GUI_material);
     //
     m_transform = SD_GET_TYPE_COMP_WREF(m_entity, TransformComponent);
@@ -191,6 +223,30 @@ void WorldGUIComponent::UpdateImpl()
         m_batch);
 
     GraphicsManager::GetRef().SubmitGraphicsCommands({ m_GUI_cb });
+}
+
+bool WorldGUIComponent::OnCameraResized(const EventArg &i_argg)
+{
+    m_GUI_mesh.Reset();
+
+    if (m_is_ncp == true && m_camera.IsNull() == false) {
+        DepthArea2D world_area = SD_WREF(m_camera).ConvertScreenAreaToWorldArea(m_area_orientation, m_screen_area);
+        m_world_size[0] = world_area.area.w;
+        m_world_size[1] = world_area.area.h;
+        //
+        for (uint32_t orientation = 0; orientation < 4; ++orientation) {
+            vec3 pos = world_area.GetPoint(orientation);
+            m_UI_vertices[orientation] = Vector3f(pos.x, pos.y, pos.z, 1.0f);
+        }
+        //
+        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUIViaDepthArea2D(world_area);
+    }
+    else {
+        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUI(m_world_size[0], m_world_size[1]);
+    }
+    SD_WREF(m_GUI_mesh_render).AppendMesh(m_GUI_mesh, m_GUI_material);
+
+    return true;
 }
 
 void WorldGUIComponent::InitializeWorkspace()

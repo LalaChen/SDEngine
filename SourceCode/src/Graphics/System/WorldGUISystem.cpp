@@ -77,14 +77,14 @@ void WorldGUISystem::Update()
     }
 }
 
+void WorldGUISystem::Resize()
+{
+}
+
 void WorldGUISystem::Destroy()
 {
     SD_SREF(m_GUI_cp).Clear();
     m_GUI_cp.Reset();
-}
-
-void WorldGUISystem::Resize()
-{
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

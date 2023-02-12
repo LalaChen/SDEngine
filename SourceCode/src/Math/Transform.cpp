@@ -29,9 +29,9 @@ _______________SD_START_MATH_NAMESPACE_______________
 //----------------------------------- static part -----------------------------------
 Transform Transform::DecomposeMatrixToTransform(const Matrix4X4f &i_src)
 {
-	Transform result;
+    Transform result;
     Matrix4X4f::decompose(i_src, result.m_scale, result.m_rotation, result.m_skew, result.m_position, result.m_perspective);
-	return result;
+    return result;
 }
 Transform Transform::LookAt(const Vector3f &i_start, const Vector3f &i_focus, const Vector3f &i_up, bool i_is_view)
 {

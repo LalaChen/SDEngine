@@ -36,10 +36,13 @@ SOFTWARE.
 #include "IMGUIRenderer.h"
 #include "TransformComponent.h"
 #include "MeshRenderComponent.h"
+#include "CameraComponentBase.h"
 #include "Ray.h"
+
+using SDE::Basic::EventArg;
+
 using SDE::Basic::Component;
 using SDE::Basic::ComponentStrongReferenceObject;
-
 using SDE::Basic::ComponentWeakReferenceObject;
 
 using SDE::GUI::IMGUIBatch;
@@ -63,10 +66,13 @@ public:
 public:
     void SetBufferSize(uint32_t i_width, uint32_t i_height);
     void SetWorldSize(float i_world_w, float i_world_h);
+    void SetGUIForScreen(AreaAlignOrientationEnum i_orientation, const Area2D &i_area);
     void SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb);
     CommandBufferWeakReferenceObject GetCommandBuffer() const;
     bool LoadGUI(const IMGUIBatchLoadingCallback &i_load_func);
     TouchButton GetTouchButton() const;
+public:
+    bool OnCameraResized(const EventArg &i_arg);
 public:
     template<typename T> WeakReferenceObject<T> GetGUINode(const ObjectName &i_name);
 protected:
@@ -91,11 +97,17 @@ protected:
 protected:
     Vector3f m_UI_vertices[4];
     uint32_t m_buffer_size[2];
+protected:
     float m_world_size[2];
-    bool m_initialized;
+protected:
+    bool m_is_ncp;
+    Area2D m_screen_area;
+    AreaAlignOrientationEnum m_area_orientation;
 protected:
     TransformComponentWeakReferenceObject m_transform;
     TouchButton m_touch_data;
+protected:
+    CameraComponentBaseWeakReferenceObject m_camera;
 };
 
 inline CommandBufferWeakReferenceObject WorldGUIComponent::GetCommandBuffer() const

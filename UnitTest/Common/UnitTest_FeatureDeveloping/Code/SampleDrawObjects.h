@@ -41,8 +41,6 @@ protected:
 protected:
     TextureStrongReferenceObject m_main_tex;
 protected:
-    MotorComponentWeakReferenceObject m_camera_motor;
-protected:
     float m_cube_interval;
     float m_cube_side_length;
     uint32_t m_cube_row;

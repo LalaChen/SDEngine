@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include "Quaternion.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -28,7 +29,6 @@ SOFTWARE.
 #include "MathConstant.h"
 #include "Matrix4X4f.h"
 #include "Vector3f.h"
-#include "Quaternion.h"
 
 using namespace SDE::Basic;
 

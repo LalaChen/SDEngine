@@ -978,6 +978,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\ManagerParam\ImageBlitParam.h">
       <Filter>include\Graphics\ManagerParam</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Vec\Area.h">
+      <Filter>include\Graphics\Vec</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\SDEngineCommonFunction.cpp">
@@ -1639,6 +1642,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\OpenXR\OpenXRViewSpaceComponent.cpp">
       <Filter>src\OpenXR</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Vec\Area.cpp">
+      <Filter>src\Graphics\Vec</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

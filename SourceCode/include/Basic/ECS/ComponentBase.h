@@ -50,11 +50,13 @@ public:
 public:
     void Initialize();
     void Update();
+    void Resize();
 public:
     bool IsInitialized() const;
 protected:
-    virtual void InitializeImpl() {};
-    virtual void UpdateImpl() {};
+    virtual void InitializeImpl() {}
+    virtual void UpdateImpl() {}
+    virtual void ResizeImpl() {}
 protected:
     bool m_initialized;
 };

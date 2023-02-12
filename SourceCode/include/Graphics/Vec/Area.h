@@ -1,4 +1,4 @@
-/*==============  SD Engine License ==============
+/*
 MIT License
 
 Copyright (c) 2019 Kuan-Chih, Chen
@@ -20,53 +20,63 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
-/*! \file      WindowsImageLoader.h
- *  \brief     Introduce of class WindowsImageLoader.
+/*! \file      Area.h
+ *  \brief     Area
  *  \author    Kuan-Chih, Chen
- *  \date      2019/07/20
+ *  \date      2023/02/08
  *  \copyright MIT License.
  */
 
- //------- OS Platform Only -------
-#if defined(_WIN32) || defined(_WIN64) 
-
 #pragma once
 
-#include "ImageLoader.h"
+#include <string>
+
+#include "SDEngineMacro.h"
+#include "Vec.h"
+#include "Resolution.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-/*! \class WindowsImageLoader
- *  \brief In our system, WindowsImageLoader is used at windows OS and based on DevIL. 
+enum AreaAlignOrientationEnum
+{
+    AreaAlignOrientation_LEFT_BOTTOM = 0,
+    AreaAlignOrientation_LEFT_TOP,
+    AreaAlignOrientation_RIGHT_BOTTOM,
+    AreaAlignOrientation_RIGHT_TOP,
+    AreaAlignOrientation_MAX_DEFINE_VALUE
+};
+
+/*! \class Area2D
+ *  Class Area2D is used to represent area in 2D space.
  */
-class SDENGINE_CLASS WindowsImageLoader : public ImageLoader
+class SDENGINE_CLASS Area2D
 {
 public:
-    /*! \fn explicit WindowsImageLoader();
-     *  \brief Constructor of WindowsImageLoader.
-     */
-	explicit WindowsImageLoader();
+    Area2D();
+    Area2D(float i_x, float i_y, float i_w, float i_h);
+    ~Area2D();
+public:
+    void SetArea2DByOrientationAndSize(AreaAlignOrientationEnum i_orientation, const Area2D &i_target_size, const Resolution &i_resolution);
+    vec2 GetPoint(uint32_t i_orientation) const;
+public:
+    float x;
+    float y;
+    float w;
+    float h;
+};
 
-    /*! \fn explicit ~WindowsImageLoader();
-     *  \brief Destructor of WindowsImageLoader.
-     */
-	virtual ~WindowsImageLoader();
+class SDENGINE_CLASS DepthArea2D
+{
 public:
-    /*! \fn virtual void Initialize() = 0;
-     *  \brief Initialize image loader.
-     */
-    void Initialize() override;
+    DepthArea2D();
+    ~DepthArea2D();
 public:
-    /*! \fn virtual BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const = 0;
-     *  \param [in] i_fp File path of image data.
-     *  \brief Load data. Please note that we will convert RGB to RGBA automatically.
-     */
-    BitmapStrongReferenceObject LoadBitmap(const FilePathString &i_fp) const override;
+    vec3 GetPoint(uint32_t i_orientation) const;
+public:
+    Area2D area;
+    float depth;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
-
-#endif

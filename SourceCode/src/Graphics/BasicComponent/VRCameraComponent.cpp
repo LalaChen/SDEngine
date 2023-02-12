@@ -37,13 +37,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 VRCameraComponent::VRCameraComponent(const ObjectName& i_object_name)
 : CameraComponentBase(i_object_name)
-, m_workspace_type(CameraWorkspaceType_Forward)
-, m_follow_resolution(true)
-, m_ws_initialized(false)
-, m_clear_color{ 0.15f, 0.15f, 0.75f, 1.0f }
-, m_clear_d_and_s{ 1.0f, 1 }
 {
-    m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
 }
 
 VRCameraComponent::~VRCameraComponent()
@@ -63,9 +57,9 @@ void VRCameraComponent::InitializeImpl()
         InitializeWorkspaceForDeferredPass();
     }
 
-    m_geo_comp = SD_GET_COMP_WREF(m_entity, TransformComponent);
+    m_xform = SD_GET_COMP_WREF(m_entity, TransformComponent);
 
-    SD_WREF(m_geo_comp).RegisterSlotFunctionIntoEvent(
+    SD_WREF(m_xform).RegisterSlotFunctionIntoEvent(
         TransformComponent::sTransformChangedEventName,
         new MemberFunctionSlot<VRCameraComponent>(
             "VRCameraComponent::OnGeometryChanged",
@@ -75,6 +69,14 @@ void VRCameraComponent::InitializeImpl()
     OnGeometryChanged(EventArg());
     m_ws_initialized = true;
 }
+
+void VRCameraComponent::ResizeImpl()
+{
+    CameraComponentBase::ResizeImpl();
+
+    OnGeometryChanged(EventArg());
+}
+
 
 void VRCameraComponent::InitializeDescriptorSetAndPool()
 {
@@ -144,13 +146,12 @@ void VRCameraComponent::InitializeWorkspaceForDeferredPass()
     RenderPassWeakReferenceObject deferred_rp = GraphicsManager::GetRef().GetRenderPass("DeferredPass");
 
     if (deferred_rp.IsNull() == false) {
-        Resolution current_res = GraphicsManager::GetRef().GetScreenResolution();
         if (m_color_buffer.IsNull() == false) {
             m_color_buffer.Reset();
         }
         m_color_buffer = new Texture("VRCameraColorBuffer");
         SD_SREF(m_color_buffer).InitializeVRColorOrDepthBuffer(
-            current_res.GetWidth(), current_res.GetHeight(),
+            m_buffer_size.GetWidth(), m_buffer_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
             ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
 
@@ -159,7 +160,7 @@ void VRCameraComponent::InitializeWorkspaceForDeferredPass()
         }
         m_depth_buffer = new Texture("VRCameraDepthBuffer");
         SD_SREF(m_depth_buffer).InitializeVRColorOrDepthBuffer(
-            current_res.GetWidth(), current_res.GetHeight(),
+            m_buffer_size.GetWidth(), m_buffer_size.GetHeight(),
             GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
             ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
     }
@@ -168,10 +169,23 @@ void VRCameraComponent::InitializeWorkspaceForDeferredPass()
     }
 }
 
+DepthArea2D VRCameraComponent::ConvertNCPAreaToWorldArea(const Area2D &i_ncp_area) const
+{
+    DepthArea2D da;
+    //float right = std::atan(m_fov / 2.0f); float left = -right; float width = right - left;
+    //float top = right / m_buffer_size.GetRatio(); float bottom = -top; float height = top - bottom;
+    //area.x = left + i_ncp_area.x * width;
+    //area.y = bottom + i_ncp_area.y * height;
+    //area.w = i_ncp_area.w * width;
+    //area.h = i_ncp_area.h * height;
+    return da;
+}
+
+
 bool VRCameraComponent::OnGeometryChanged(const EventArg &i_arg)
 {
     if (m_ub.IsNull() == false) {
-        Transform node_xform = SD_WREF(m_geo_comp).GetWorldTransform();
+        Transform node_xform = SD_WREF(m_xform).GetWorldTransform();
         Matrix4X4f node_mat = node_xform.MakeWorldMatrix();
 
         for (uint32_t eyeID = 0; eyeID < VREye_Both; ++eyeID) {
@@ -209,9 +223,8 @@ void VRCameraComponent::SetEyeCenters(Vector3f i_eye_centers[VREye_Both])
 
 void VRCameraComponent::SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum)
 {
-    Resolution screen_res = GraphicsManager::GetRef().GetScreenResolution();
     Resolution proj_res;
-    proj_res.SetResolution(screen_res.GetWidth() / 2, screen_res.GetHeight() / 2);
+    proj_res.SetResolution(m_buffer_size.GetWidth() / 2, m_buffer_size.GetHeight() / 2);
     
     for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
         m_proj_mats[eid].perspective(i_fov, proj_res.GetRatio(), i_near, i_far);
@@ -233,27 +246,6 @@ void VRCameraComponent::SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both]
         m_proj_mats[eid] = i_proj_mats[eid];
     }
     OnGeometryChanged(EventArg());
-}
-
-void VRCameraComponent::Resize()
-{
-    ClearWorkspace();
-
-    if (m_follow_resolution == true) {
-
-        m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
-
-        if (m_workspace_type == CameraWorkspaceType_Forward) {
-            InitializeWorkspaceForForwardPass();
-        }
-        else if (m_workspace_type == CameraWorkspaceType_Deferred) {
-            InitializeWorkspaceForDeferredPass();
-        }
-    }
-
-    OnGeometryChanged(EventArg());
-
-    m_ws_initialized = true;
 }
 
 void VRCameraComponent::RecordCommand(

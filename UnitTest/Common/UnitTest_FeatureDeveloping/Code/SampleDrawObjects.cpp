@@ -91,8 +91,8 @@ bool SampleDrawObjects::LoadImpl()
         { 0.1f, 0.1f, 0.1f, 1.0f },
         { 1.0f, 1 });
 
-    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionForEye(120, 0.01f, 1000.0f, VREye_Left);
-    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionForEye(120, 0.01f, 1000.0f, VREye_Right);
+    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionForEye(45, 0.01f, 1000.0f, VREye_Left);
+    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionForEye(45, 0.01f, 1000.0f, VREye_Right);
     SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).Initialize();
 #else
     SDLOG("Initialize Camera");
@@ -100,35 +100,18 @@ bool SampleDrawObjects::LoadImpl()
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetClearValues(
         { 0.35f, 0.35f, 0.75f, 1.0f },
         { 1.0f, 1 });
-    SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(120, 0.01f, 1000.0f);
+    SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(45, 0.01f, 1000.0f);
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).Initialize();
 
     ECSManager::GetRef().AddComponentForEntity<MotorComponent>(m_camera_node, "CameraMotor");
-    m_camera_motor = SD_GET_TYPE_COMP_WREF(m_camera_node, MotorComponent);
-    SD_WREF(m_camera_motor).Initialize();
+    SD_TYPE_COMP_WREF(m_camera_node, MotorComponent).Initialize();
 #endif
-    SDLOG("Initialize ScreenRay");
-    m_screen_ray_node = ECSManager::GetRef().CreateEntity("ScreenRay");
-    m_entities.push_back(m_screen_ray_node);
-    ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_screen_ray_node, "ScreenRayTransform");
-    SD_TYPE_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(m_screen_ray_node, TransformComponent));
 
-    ECSManager::GetRef().AddComponentForEntity<ScreenRayComponent>(m_screen_ray_node, "ScreenRay");
-    SD_TYPE_COMP_WREF(m_screen_ray_node, ScreenRayComponent).Initialize();
-
-    SDLOG("Initialize WGUI");
-    //6. WorldGUI.
-    m_WGUI_node = ECSManager::GetRef().CreateEntity("WGUI");
-    m_entities.push_back(m_WGUI_node);
-    ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_WGUI_node, "WGUITransform");
-    SD_COMP_WREF(m_WGUI_node, TransformComponent).SetLocalPosition(Vector3f(0.165f, 0.087f, -0.5f, 1.0f));
-    SD_TYPE_COMP_WREF(m_camera_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(m_WGUI_node, TransformComponent));
-
-    ECSManager::GetRef().AddComponentForEntity<WorldGUIComponent>(m_WGUI_node, "WGUI");
-    SD_TYPE_COMP_WREF(m_WGUI_node, WorldGUIComponent).SetBufferSize(360, 360);
-    SD_TYPE_COMP_WREF(m_WGUI_node, WorldGUIComponent).SetWorldSize(0.15f, 0.15f);
-    SD_TYPE_COMP_WREF(m_WGUI_node, WorldGUIComponent).Initialize();
-    SD_TYPE_COMP_WREF(m_WGUI_node, WorldGUIComponent).LoadGUI(
+    ECSManager::GetRef().AddComponentForEntity<WorldGUIComponent>(m_camera_node, "WGUI");
+    SD_TYPE_COMP_WREF(m_camera_node, WorldGUIComponent).SetBufferSize(360, 360);
+    SD_TYPE_COMP_WREF(m_camera_node, WorldGUIComponent).SetGUIForScreen(AreaAlignOrientation_RIGHT_TOP, Area2D(0.0f, 0.0f, 360.0f, 360.0f));
+    SD_TYPE_COMP_WREF(m_camera_node, WorldGUIComponent).Initialize();
+    SD_TYPE_COMP_WREF(m_camera_node, WorldGUIComponent).LoadGUI(
         [](const IMGUIBatchWeakReferenceObject& i_batch) -> bool {
             IMGUIWindowStrongReferenceObject window = new IMGUIWindow("CameraWGUI", "HUD");
             IMGUIRect rect;
@@ -161,8 +144,17 @@ bool SampleDrawObjects::LoadImpl()
         }
     );
 
-    ECSManager::GetRef().AddComponentForEntity<HUDComponent>(m_WGUI_node, "HUDComponent");
-    SD_TYPE_COMP_WREF(m_WGUI_node, HUDComponent).Initialize();
+    ECSManager::GetRef().AddComponentForEntity<HUDComponent>(m_camera_node, "HUDComponent");
+    SD_TYPE_COMP_WREF(m_camera_node, HUDComponent).Initialize();
+
+    SDLOG("Initialize ScreenRay");
+    m_screen_ray_node = ECSManager::GetRef().CreateEntity("ScreenRay");
+    m_entities.push_back(m_screen_ray_node);
+    ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_screen_ray_node, "ScreenRayTransform");
+    SD_TYPE_COMP_WREF(m_scene_root_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(m_screen_ray_node, TransformComponent));
+
+    ECSManager::GetRef().AddComponentForEntity<ScreenRayComponent>(m_screen_ray_node, "ScreenRay");
+    SD_TYPE_COMP_WREF(m_screen_ray_node, ScreenRayComponent).Initialize();
 
     //7. Add light.
     SDLOG("Initialize Light");

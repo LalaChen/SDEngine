@@ -23,9 +23,10 @@ SOFTWARE.
 
 */
 
+#include "BasicShapeCreator.h"
+
 #include "StaticIndexBuffer.h"
 #include "StaticVertexBuffer.h"
-#include "BasicShapeCreator.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -49,6 +50,39 @@ MeshStrongReferenceObject BasicShapeCreator::CreateWorldGUI(float i_width, float
 	t_data.push_back(vec2(0.0f, 0.0f));
 	i_data = { 0, 1, 2, 0, 2, 3 };
 
+	mesh = new Mesh("WGUI");
+
+	StaticVertexBufferStrongReferenceObject vbuf = new StaticVertexBuffer("WGUIVBuffer", VertexBufferUsage_VERTEX_BUFFER, VertexBufferFormat_X32Y32Z32_SFLOAT);
+	SD_SREF(vbuf).RefreshBufferData(v_data.data(), v_data.size() * sizeof(vec3));
+	StaticVertexBufferStrongReferenceObject tbuf = new StaticVertexBuffer("WGUITBuffer", VertexBufferUsage_TEX_COORD_BUFFER, VertexBufferFormat_X32Y32_SFLOAT);
+	SD_SREF(tbuf).RefreshBufferData(t_data.data(), t_data.size() * sizeof(vec2));
+	StaticIndexBufferStrongReferenceObject ibuf = new StaticIndexBuffer("WGUIIBuffer", IndexBufferFormat_X32_UINT);
+	SD_SREF(ibuf).RefreshBufferData(i_data.data(), i_data.size() * sizeof(uint32_t));
+
+	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_VERTEX_BUFFER, vbuf.StaticCastTo<VertexBuffer>());
+	SD_SREF(mesh).RegisterVertexBuffer(VertexBufferUsage_TEX_COORD_BUFFER, tbuf.StaticCastTo<VertexBuffer>());
+	SD_SREF(mesh).RegisterIndexBuffer(ibuf.StaticCastTo<IndexBuffer>());
+
+	return mesh;
+}
+
+MeshStrongReferenceObject BasicShapeCreator::CreateWorldGUIViaDepthArea2D(const DepthArea2D &i_area)
+{
+	MeshStrongReferenceObject mesh;
+
+	std::vector<vec3> v_data;
+	std::vector<vec2> t_data;
+	std::vector<uint32_t> i_data;
+
+	v_data.push_back(i_area.GetPoint(0));
+	v_data.push_back(i_area.GetPoint(1));
+	v_data.push_back(i_area.GetPoint(2));
+	v_data.push_back(i_area.GetPoint(3));
+	t_data.push_back(vec2(0.0f, 1.0f));
+	t_data.push_back(vec2(1.0f, 1.0f));
+	t_data.push_back(vec2(1.0f, 0.0f));
+	t_data.push_back(vec2(0.0f, 0.0f));
+	i_data = { 0, 1, 2, 0, 2, 3 };
 
 	mesh = new Mesh("WGUI");
 

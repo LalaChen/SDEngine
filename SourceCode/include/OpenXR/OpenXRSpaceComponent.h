@@ -69,7 +69,7 @@ public:
 protected:
     void InitializeImpl() override;
 protected:
-    TransformComponentWeakReferenceObject m_xform_comp;
+    TransformComponentWeakReferenceObject m_xform;
 protected:
     XrSpace m_space;
     XrPosef m_world_offset;

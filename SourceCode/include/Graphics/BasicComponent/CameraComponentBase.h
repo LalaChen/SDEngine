@@ -38,6 +38,7 @@ SOFTWARE.
 #include "RenderFlow.h"
 #include "Transform.h"
 #include "Resolution.h"
+#include "Area.h"
 #include "LightComponent.h"
 #include "MeshRenderComponent.h"
 
@@ -66,19 +67,49 @@ enum CameraWorkspaceType {
 class SDENGINE_CLASS CameraComponentBase : public Component
 {
 public:
+    static const std::string sCameraResizedEventName;
+public:
     explicit CameraComponentBase(const ObjectName &i_object_name);
     virtual ~CameraComponentBase();
 public:
     virtual bool OnGeometryChanged(const EventArg &i_arg) = 0;
 public:
-    virtual TextureWeakReferenceObject GetColorBuffer() const = 0;
-    virtual TextureWeakReferenceObject GetDepthBuffer() const = 0;
+    void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
 public:
-    virtual void Resize() = 0;
+    TextureWeakReferenceObject GetColorBuffer() const;
+    TextureWeakReferenceObject GetDepthBuffer() const;
+    DepthArea2D ConvertScreenAreaToWorldArea(AreaAlignOrientationEnum i_orientation, const Area2D &i_screen_area) const;
+public:
+    virtual DepthArea2D ConvertNCPAreaToWorldArea(const Area2D &i_ncp_area) const = 0;
     virtual void RecordCommand(
         const CommandBufferWeakReferenceObject &i_cb,
         const std::list<LightComponentWeakReferenceObject> &i_light_list,
         const std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> > &i_mr_groups) = 0;
+protected:
+    void ResizeImpl() override;
+protected:
+    virtual void InitializeDescriptorSetAndPool() = 0;
+    virtual void InitializeWorkspaceForForwardPass() = 0;
+    virtual void InitializeWorkspaceForDeferredPass() = 0;
+protected:
+    virtual void ClearWorkspace() = 0;
+protected:
+    TransformComponentWeakReferenceObject m_xform;
+protected:
+    CameraWorkspaceType m_workspace_type;
+    RenderFlowStrongReferenceObject m_render_flow;
+    TextureStrongReferenceObject m_color_buffer;
+    TextureStrongReferenceObject m_depth_buffer;
+protected:
+    DescriptorPoolStrongReferenceObject m_dp;
+    UniformBufferWeakReferenceObject m_ub;
+    DescriptorSetWeakReferenceObject m_ds;
+protected:
+    Resolution m_buffer_size;
+    bool m_follow_resolution;
+    bool m_ws_initialized;
+    ClearValue m_clear_color;
+    ClearValue m_clear_d_and_s;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
