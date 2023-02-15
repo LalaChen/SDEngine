@@ -37,6 +37,7 @@ SOFTWARE.
 #include "TransformComponent.h"
 #include "MeshRenderComponent.h"
 #include "CameraComponentBase.h"
+#include "Area.h"
 #include "Ray.h"
 
 using SDE::Basic::EventArg;
