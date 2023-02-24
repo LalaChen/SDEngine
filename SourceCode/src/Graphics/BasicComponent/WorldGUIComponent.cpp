@@ -225,7 +225,7 @@ void WorldGUIComponent::UpdateImpl()
     GraphicsManager::GetRef().SubmitGraphicsCommands({ m_GUI_cb });
 }
 
-bool WorldGUIComponent::OnCameraResized(const EventArg &i_argg)
+bool WorldGUIComponent::OnCameraResized(const EventArg &i_arg)
 {
     m_GUI_mesh.Reset();
 

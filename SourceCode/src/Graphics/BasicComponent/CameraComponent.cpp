@@ -40,9 +40,6 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 CameraComponent::CameraComponent(const ObjectName &i_object_name)
 : CameraComponentBase(i_object_name)
-, m_fov(120.0f)
-, m_near(0.01f)
-, m_far(1000.0f)
 {
 }
 
@@ -79,9 +76,23 @@ void CameraComponent::InitializeImpl()
 
 void CameraComponent::ResizeImpl()
 {
-    CameraComponentBase::ResizeImpl();
+    ClearWorkspace();
 
+    if (m_follow_resolution == true) {
+
+        m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
+
+        if (m_workspace_type == CameraWorkspaceType_Forward) {
+            InitializeWorkspaceForForwardPass();
+        }
+        else if (m_workspace_type == CameraWorkspaceType_Deferred) {
+            InitializeWorkspaceForDeferredPass();
+        }
+    }
+
+    m_ws_initialized = true;
     SetPerspective(m_fov, m_near, m_far);
+    NotifyEvent(sCameraResizedEventName, EventArg());
     OnGeometryChanged(EventArg());
 }
 
@@ -186,10 +197,13 @@ void CameraComponent::ClearWorkspace()
 //------------------ Common Part ---------------
 void CameraComponent::SetPerspective(float i_fov, float i_near, float i_far)
 {
-    m_fov = i_fov;
-    m_near = i_near;
-    m_far = i_far;
-    m_proj_mat.perspective(m_fov, m_buffer_size.GetRatio(), i_near, i_far);
+    if (m_buffer_size.IsValid() == true) {
+        m_fov = i_fov;
+        m_near = i_near;
+        m_far = i_far;
+        m_proj_mat.perspective(i_fov, m_buffer_size.GetRatio(), i_near, i_far);
+        m_frustum = Frustum(m_proj_mat, i_near, i_far, true);
+    }
 }
 
 void CameraComponent::SetCameraSize(const Resolution &i_size)
@@ -285,12 +299,11 @@ void CameraComponent::RecordCommand(
 DepthArea2D CameraComponent::ConvertNCPAreaToWorldArea(const Area2D &i_ncp_area) const
 {
     DepthArea2D da;
-    float near_scale = m_near * 2.0f + 0.001f;
-    float tangent = std::tanf(m_fov / 2.0f * SDE::Math::ONE_DEGREE_OF_PI);
-    float top = near_scale * tangent;  float bottom = -top; float height = top - bottom;
-    float right = top * m_buffer_size.GetRatio(); float left = -right; float width = right - left;
-    da.area.x = left   + i_ncp_area.x * width;
-    da.area.y = bottom + i_ncp_area.y * height;
+    float near_scale = m_frustum.n * 2.0f;
+    float width = m_frustum.r - m_frustum.l;
+    float height = m_frustum.t - m_frustum.b;
+    da.area.x = m_frustum.l + i_ncp_area.x * width;
+    da.area.y = m_frustum.b + i_ncp_area.y * height;
     da.area.w = i_ncp_area.w * width;
     da.area.h = i_ncp_area.h * height;
     da.depth  = -near_scale;

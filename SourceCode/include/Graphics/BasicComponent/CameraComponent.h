@@ -54,6 +54,7 @@ public:
     virtual ~CameraComponent();
 public:
     void SetPerspective(float i_fov, float i_near, float i_far);
+    void SetFrustum(const Frustum &i_frustum);
     void SetCameraSize(const Resolution &i_size);
     Ray CalculateRay(const TouchButton &i_tb) const;
 public:
@@ -80,6 +81,7 @@ protected:
     float m_fov;
     float m_near;
     float m_far;
+    Frustum m_frustum;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

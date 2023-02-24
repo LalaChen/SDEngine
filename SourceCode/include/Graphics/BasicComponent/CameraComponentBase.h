@@ -64,6 +64,23 @@ enum CameraWorkspaceType {
     CameraWorkspaceType_Other
 };
 
+class SDENGINE_CLASS Frustum
+{
+public:
+    Frustum();
+    Frustum(float i_l, float i_r, float i_t, float i_b, float i_n, float i_f, bool i_p = true);
+    Frustum(const Matrix4X4f &i_src, float i_n, float i_f, bool i_p = true);
+    ~Frustum();
+public:
+    float l;
+    float r;
+    float t;
+    float b;
+    float n;
+    float f;
+    bool p;
+};
+
 class SDENGINE_CLASS CameraComponentBase : public Component
 {
 public:
@@ -85,8 +102,6 @@ public:
         const CommandBufferWeakReferenceObject &i_cb,
         const std::list<LightComponentWeakReferenceObject> &i_light_list,
         const std::map<uint32_t, std::list<MeshRenderComponentWeakReferenceObject> > &i_mr_groups) = 0;
-protected:
-    void ResizeImpl() override;
 protected:
     virtual void InitializeDescriptorSetAndPool() = 0;
     virtual void InitializeWorkspaceForForwardPass() = 0;

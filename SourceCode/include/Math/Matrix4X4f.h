@@ -157,25 +157,34 @@ public: //operator
     void lookAt(const Vector3f &i_eye, const Vector3f &i_view_center, const Vector3f &i_up);
 
 //--------------- Project Space Using --------------------
-    /*! \fn void perspective(float i_fovy, float i_aspect, float i_near, float i_far);
+    /*! \fn void perspective(float i_fovy, float i_aspect, float i_n, float i_f);
+     *  \param [in] i_fovy set angle.
+     *  \param [in] i_aspect set ratio between w and h.
+     *  \param [in] i_n near distance.
+     *  \param [in] i_f far distance.
+     *  \brief set perspective projection matrix.
+     */
+    void perspective(float i_fovy, float i_aspect, float i_n, float i_f);
+
+    /*! \fn void frustum(float i_l, float i_r, float i_t, float i_b, float i_n, float i_f);
      *  \param [in] i_fovy set angle.
      *  \param [in] i_aspect set ratio between w and h.
      *  \param [in] i_near near distance.
      *  \param [in] i_far far distance.
      *  \brief set perspective projection matrix.
      */
-    void perspective(float i_fovy, float i_aspect, float i_near, float i_far);
+    void frustum(float i_l, float i_r, float i_t, float i_b, float i_n, float i_f);
 
-    /*! \fn void ortho(float i_left, float i_right, float i_bottom, float i_top, float i_near, float i_far);
-     *  \param [in] i_left x left.
-     *  \param [in] i_right x right.
-     *  \param [in] i_bottom set y buttom.
-     *  \param [in] i_top y top.
-     *  \param [in] i_near set z near.
-     *  \param [in] i_far set z far.
+    /*! \fn void ortho(float i_l, float i_r, float i_t, float i_b, float i_n, float i_f);
+     *  \param [in] i_l x left.
+     *  \param [in] i_r x right.
+     *  \param [in] i_t y buttom.
+     *  \param [in] i_b y top.
+     *  \param [in] i_n z near.
+     *  \param [in] i_f z far.
      *  \brief set orthogonal projection matrix.
      */
-    void ortho(float i_left, float i_right, float i_bottom, float i_top, float i_near, float i_far);
+    void ortho(float i_l, float i_r, float i_t, float i_b, float i_n, float i_f);
 
 public:
     /*! \fn std::string ToString() const;

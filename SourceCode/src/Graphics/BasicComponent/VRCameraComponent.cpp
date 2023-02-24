@@ -35,7 +35,7 @@ using SDE::Basic::MemberFunctionSlot;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-VRCameraComponent::VRCameraComponent(const ObjectName& i_object_name)
+VRCameraComponent::VRCameraComponent(const ObjectName &i_object_name)
 : CameraComponentBase(i_object_name)
 {
 }
@@ -72,8 +72,22 @@ void VRCameraComponent::InitializeImpl()
 
 void VRCameraComponent::ResizeImpl()
 {
-    CameraComponentBase::ResizeImpl();
+    ClearWorkspace();
 
+    if (m_follow_resolution == true) {
+
+        m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
+
+        if (m_workspace_type == CameraWorkspaceType_Forward) {
+            InitializeWorkspaceForForwardPass();
+        }
+        else if (m_workspace_type == CameraWorkspaceType_Deferred) {
+            InitializeWorkspaceForDeferredPass();
+        }
+    }
+
+    m_ws_initialized = true;
+    //
     OnGeometryChanged(EventArg());
 }
 
@@ -172,12 +186,7 @@ void VRCameraComponent::InitializeWorkspaceForDeferredPass()
 DepthArea2D VRCameraComponent::ConvertNCPAreaToWorldArea(const Area2D &i_ncp_area) const
 {
     DepthArea2D da;
-    //float right = std::atan(m_fov / 2.0f); float left = -right; float width = right - left;
-    //float top = right / m_buffer_size.GetRatio(); float bottom = -top; float height = top - bottom;
-    //area.x = left + i_ncp_area.x * width;
-    //area.y = bottom + i_ncp_area.y * height;
-    //area.w = i_ncp_area.w * width;
-    //area.h = i_ncp_area.h * height;
+    float right = (1.0f + m_proj_mats[VREye_Right].m_matrix[2][0]) / m_proj_mats[VREye_Right].m_matrix[0][0];
     return da;
 }
 

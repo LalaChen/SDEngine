@@ -149,14 +149,19 @@ void Matrix4X4f::lookAt(const Vector3f &i_eye, const Vector3f &i_view_center, co
         glm::vec3(i_up.m_vec.x, i_up.m_vec.y, i_up.m_vec.z));
 }
 //--------------- Project Space Using --------------------
-void Matrix4X4f::perspective(float i_fovy, float i_aspect, float i_near, float i_far)
+void Matrix4X4f::perspective(float i_fovy, float i_aspect, float i_n, float i_f)
 {
-    m_matrix = glm::perspective(glm::radians(i_fovy), i_aspect, i_near, i_far);
+    m_matrix = glm::perspective(glm::radians(i_fovy), i_aspect, i_n, i_f);
 }
 
-void Matrix4X4f::ortho(float i_left, float i_right, float i_bottom, float i_top, float i_near, float i_far)
+void Matrix4X4f::frustum(float i_l, float i_r, float i_t, float i_b, float i_n, float i_f)
 {
-    m_matrix = glm::ortho(i_left, i_right, i_bottom, i_top, i_near, i_far);
+    m_matrix = glm::frustum(i_l, i_r, i_t, i_b, i_n, i_f);
+}
+
+void Matrix4X4f::ortho(float i_l, float i_r, float i_t, float i_b, float i_n, float i_f)
+{
+    m_matrix = glm::ortho(i_l, i_r, i_t, i_b, i_n, i_f);
 }
 
 std::string Matrix4X4f::ToString() const

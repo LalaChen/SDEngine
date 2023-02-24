@@ -94,6 +94,11 @@ public:
      *  \brief Getter of class Resolution. We need offering initialized storage.
      */
     void GetResolution(Size_ui32 &io_w, Size_ui32 &io_h) const;
+
+    /*! \fn bool IsValid() const;
+     *  \brief Check Resolution is valid (w and h is large then 0)or not.
+     */
+    bool IsValid() const;
 public:
     /*! \fn Resolution& operator=(const Resolution &i_src);
      *  \param [in] i_src Assign target.
@@ -169,6 +174,11 @@ inline void Resolution::GetResolution(Size_ui32 &io_w, Size_ui32 &io_h) const
 {
     io_w = m_width;
     io_h = m_height;
+}
+
+inline bool Resolution::IsValid() const
+{
+    return (m_width > 0 && m_height > 0);
 }
 
 inline Resolution& Resolution::operator =(const Resolution &i_src)

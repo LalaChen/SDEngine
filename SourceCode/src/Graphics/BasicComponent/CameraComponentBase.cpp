@@ -6,6 +6,34 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 
 const std::string CameraComponentBase::sCameraResizedEventName = "CameraResized";
 
+Frustum::Frustum()
+: l(0.0f), r(0.0f), t(0.0f), b(0.0f), n(0.0f), f(0.0f), p(false)
+{
+}
+
+Frustum::Frustum(float i_l, float i_r, float i_t, float i_b, float i_n, float i_f, bool i_p)
+: l(i_l), r(i_r), t(i_t), b(i_b), n(i_n), f(i_f), p(i_p)
+{
+}
+
+Frustum::Frustum(const Matrix4X4f &i_src, float i_n, float i_f, bool i_p)
+: n(i_n), f(i_f), p(i_p)
+{
+    if (i_p == true) {
+        r = 2.0f * (1.0f + i_src.m_matrix[2][0]) * n / i_src.m_matrix[0][0];
+        l = 2.0f * (i_src.m_matrix[2][0] - 1.0f) * n / i_src.m_matrix[0][0];
+        t = 2.0f * (1.0f + i_src.m_matrix[2][1]) * n / i_src.m_matrix[1][1];
+        b = 2.0f * (i_src.m_matrix[2][1] - 1.0f) * n / i_src.m_matrix[1][1];
+    }
+    else {
+
+    }
+}
+
+Frustum::~Frustum()
+{
+}
+
 CameraComponentBase::CameraComponentBase(const ObjectName &i_object_name)
 : Component(i_object_name)
 , m_workspace_type(CameraWorkspaceType_Forward)
@@ -20,27 +48,6 @@ CameraComponentBase::CameraComponentBase(const ObjectName &i_object_name)
 
 CameraComponentBase::~CameraComponentBase()
 {
-}
-
-void CameraComponentBase::ResizeImpl()
-{
-    ClearWorkspace();
-
-    if (m_follow_resolution == true) {
-
-        m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
-
-        if (m_workspace_type == CameraWorkspaceType_Forward) {
-            InitializeWorkspaceForForwardPass();
-        }
-        else if (m_workspace_type == CameraWorkspaceType_Deferred) {
-            InitializeWorkspaceForDeferredPass();
-        }
-    }
-
-    m_ws_initialized = true;
-
-    NotifyEvent(sCameraResizedEventName, EventArg());
 }
 
 void CameraComponentBase::SetClearValues(ClearValue i_color, ClearValue i_d_and_s)
