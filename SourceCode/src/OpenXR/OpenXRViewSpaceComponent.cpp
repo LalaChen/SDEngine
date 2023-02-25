@@ -61,7 +61,7 @@ void OpenXRViewSpaceComponent::UpdateImpl()
                     OpenXRAPIManager::GetRef().ConvertXrViewToProjMatrix(views[i], 0.01f, 1000.0f, projs[i]);
                     OpenXRAPIManager::GetRef().CovertXrPoseToTransform(views[i].pose, view_trans[i]);
                 }
-                SD_WREF(m_camera_comp).SetProjectionMatrices(projs);
+                //SD_WREF(m_camera_comp).SetProjectionMatrices(projs);
                 //
                 camera_trans.m_position = (view_trans[0].m_position + view_trans[1].m_position).scale(0.5);
                 camera_trans.m_position.RepresentPosition();

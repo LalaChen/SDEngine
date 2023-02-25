@@ -81,14 +81,25 @@ void WorldIMGUIComponent::InitializeImpl()
     SD_SREF(m_GUI_material).SetTexture(sUniformImages_Material_Textures, m_GUI_color_buffer, 0);
     SD_SREF(m_GUI_material).Update();
     //3.2 create mesh.
-    if (m_is_ncp == true && m_camera.IsNull() == false) {
-        SD_WREF(m_camera).RegisterSlotFunctionIntoEvent(
-            CameraComponentBase::sCameraResizedEventName,
-            new MemberFunctionSlot<WorldIMGUIComponent>(
-                "WorldGUIComponent::OnCameraResized",
-                GetThisWeakPtrByType<WorldIMGUIComponent>(),
-                &WorldIMGUIComponent::OnCameraResized));
-        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUIViaDepthArea2D(m_world_area);
+    if (m_is_ncp == true) {
+        CameraComponentBaseWeakReferenceObject camera;
+        GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
+        if (gs.IsNull() == false) {
+            camera = SD_WREF(gs).GetScreenCamera();
+        }
+
+        if (camera.IsNull() == false) {
+            SD_WREF(camera).RegisterSlotFunctionIntoEvent(
+                CameraComponentBase::sCameraResizedEventName,
+                new MemberFunctionSlot<WorldIMGUIComponent>(
+                    "WorldGUIComponent::OnCameraResized",
+                    GetThisWeakPtrByType<WorldIMGUIComponent>(),
+                    &WorldIMGUIComponent::OnCameraResized));
+            m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUIViaDepthArea2D(m_world_area);
+        }
+        else {
+            SDLOGW("Can't find screen camera for GUI[%s].", m_object_name.c_str());
+        }
     }
     else {
         m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUI(m_world_size[0], m_world_size[1]);
@@ -113,7 +124,7 @@ void WorldIMGUIComponent::UpdateImpl()
             if (general_cam.IsNull() == false) {
                 TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_RIGHT);
                 Ray ray = SD_WREF(general_cam).CalculateRay(tb);
-                SetTouchDataByRay(ray, tb);
+                RefreshTouchDataByRay(ray, tb);
             }
             else {
                 SDLOGE("Camera(%s) can't be cast to camera component. We can't update ray.", SD_WREF(camera).GetObjectName().c_str());
@@ -137,7 +148,7 @@ bool WorldIMGUIComponent::OnCameraResized(const EventArg &i_arg)
 
     m_GUI_mesh.Reset();
 
-    if (m_is_ncp == true && m_camera.IsNull() == false) {
+    if (m_is_ncp == true) {
         m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUIViaDepthArea2D(m_world_area);
     }
     else {
@@ -195,7 +206,7 @@ void WorldIMGUIComponent::ClearWorkspace()
 }
 
 
-void WorldIMGUIComponent::SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb)
+void WorldIMGUIComponent::RefreshTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb)
 {
     if (m_transform.IsNull() == false && m_batch.IsNull() == false && i_ray.IsValid() == true) {
         Transform xform = SD_WREF(m_transform).GetWorldTransform();

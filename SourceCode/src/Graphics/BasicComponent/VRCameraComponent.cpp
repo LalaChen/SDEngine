@@ -186,7 +186,14 @@ void VRCameraComponent::InitializeWorkspaceForDeferredPass()
 DepthArea2D VRCameraComponent::ConvertNCPAreaToWorldArea(const Area2D &i_ncp_area) const
 {
     DepthArea2D da;
-    float right = (1.0f + m_proj_mats[VREye_Right].m_matrix[2][0]) / m_proj_mats[VREye_Right].m_matrix[0][0];
+    float near_scale = m_frustums[VREye_Right].n * 2.001f;
+    float width = m_frustums[VREye_Right].r - m_frustums[VREye_Right].l;
+    float height = m_frustums[VREye_Right].t - m_frustums[VREye_Right].b;
+    da.area.x = m_frustums[VREye_Right].l + i_ncp_area.x * width;
+    da.area.y = m_frustums[VREye_Right].b + i_ncp_area.y * height;
+    da.area.w = i_ncp_area.w * width;
+    da.area.h = i_ncp_area.h * height;
+    da.depth = -near_scale;
     return da;
 }
 
@@ -237,6 +244,7 @@ void VRCameraComponent::SetProjectionForEye(float i_fov, float i_near, float i_f
     
     for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
         m_proj_mats[eid].perspective(i_fov, proj_res.GetRatio(), i_near, i_far);
+        m_frustums[eid] = Frustum(m_proj_mats[eid], i_near, i_far);
     }
     OnGeometryChanged(EventArg());
 }
@@ -245,14 +253,6 @@ void VRCameraComponent::SetEyeMatrices(Matrix4X4f i_eye_mats[VREye_Both])
 {
     for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
         m_eye_mats[eid] = i_eye_mats[eid];
-    }
-    OnGeometryChanged(EventArg());
-}
-
-void VRCameraComponent::SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both])
-{
-    for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
-        m_proj_mats[eid] = i_proj_mats[eid];
     }
     OnGeometryChanged(EventArg());
 }

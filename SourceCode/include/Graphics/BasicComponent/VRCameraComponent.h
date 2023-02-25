@@ -56,7 +56,6 @@ public:
 public:
     virtual void SetEyeCenters(Vector3f i_eye_centers[VREye_Both]);
     virtual void SetEyeMatrices(Matrix4X4f i_eye_mats[VREye_Both]);
-    virtual void SetProjectionMatrices(Matrix4X4f i_proj_mats[VREye_Both]);
     virtual void SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum);
 public:
     bool OnGeometryChanged(const EventArg &i_arg) override;
@@ -79,6 +78,7 @@ protected:
 protected:
     Matrix4X4f m_eye_mats[VREye_Both];
     Matrix4X4f m_proj_mats[VREye_Both];
+    Frustum m_frustums[VREye_Both];
 };
 
 

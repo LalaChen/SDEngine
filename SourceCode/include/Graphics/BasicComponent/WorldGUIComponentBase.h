@@ -37,7 +37,6 @@ SOFTWARE.
 
 #include "Component.h"
 #include "TransformComponent.h"
-#include "CameraComponentBase.h"
 
 using SDE::Basic::EventArg;
 using SDE::Basic::Component;
@@ -59,15 +58,14 @@ public:
 public:
     void SetGUIAreaInWorldSpace(uint32_t i_width, uint32_t i_height, float i_world_w, float i_world_h);
     void SetGUIAreaInScreenSpace(AreaAlignOrientationEnum i_orientation, const Area2D &i_area);
+public:
+    virtual void RefreshTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb) = 0;
 protected:
     void InitializeImpl() override;
 protected:
     void UpdateArea();
 protected:
-    virtual void SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb) = 0;
-protected:
     TransformComponentWeakReferenceObject m_transform;
-    CameraComponentBaseWeakReferenceObject m_camera;
     TouchButton m_touch_data;
 protected:
     Vector3f m_UI_vertices[4];

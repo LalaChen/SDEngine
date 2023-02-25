@@ -61,6 +61,8 @@ public:
 public:
     bool OnCameraResized(const EventArg &i_arg);
 public:
+    void RefreshTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb) override;
+public:
     template<typename T> WeakReferenceObject<T> GetGUINode(const ObjectName &i_name);
 protected:
     void InitializeImpl() override;
@@ -68,8 +70,6 @@ protected:
 protected:
     void InitializeWorkspace();
     void ClearWorkspace();
-protected:
-    void SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb) override;
 protected:
     RenderFlowStrongReferenceObject m_GUI_render_flow;
     TextureStrongReferenceObject m_GUI_color_buffer;

@@ -6,8 +6,7 @@
 #include "ECSManager.h"
 #include "BasicShapeCreator.h"
 #include "GraphicsSystem.h"
-#include "CameraComponent.h"
-#include "VRCameraComponent.h"
+#include "CameraComponentBase.h"
 
 using namespace SDE::Math;
 using namespace SDE::Basic;
@@ -56,21 +55,31 @@ void WorldGUIComponentBase::SetGUIAreaInScreenSpace(AreaAlignOrientationEnum i_o
 
 void WorldGUIComponentBase::InitializeImpl()
 {
-    m_camera = SD_GET_TYPE_COMP_WREF(m_entity, CameraComponentBase);
     m_transform = SD_GET_TYPE_COMP_WREF(m_entity, TransformComponent);
     UpdateArea();
 }
 
 void WorldGUIComponentBase::UpdateArea()
-{
-    if (m_is_ncp == true && m_camera.IsNull() == false) {
-        m_world_area = SD_WREF(m_camera).ConvertScreenAreaToWorldArea(m_area_orientation, m_screen_area);
-        m_world_size[0] = m_world_area.area.w;
-        m_world_size[1] = m_world_area.area.h;
-        //
-        for (uint32_t orientation = 0; orientation < 4; ++orientation) {
-            vec3 pos = m_world_area.GetPoint(orientation);
-            m_UI_vertices[orientation] = Vector3f(pos.x, pos.y, pos.z, 1.0f);
+{  
+    if (m_is_ncp == true) {
+        CameraComponentBaseWeakReferenceObject camera;
+        GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
+        if (gs.IsNull() == false) {
+            camera = SD_WREF(gs).GetScreenCamera();
+        }
+
+        if (camera.IsNull() == false) {
+            m_world_area = SD_WREF(camera).ConvertScreenAreaToWorldArea(m_area_orientation, m_screen_area);
+            m_world_size[0] = m_world_area.area.w;
+            m_world_size[1] = m_world_area.area.h;
+            //
+            for (uint32_t orientation = 0; orientation < 4; ++orientation) {
+                vec3 pos = m_world_area.GetPoint(orientation);
+                m_UI_vertices[orientation] = Vector3f(pos.x, pos.y, pos.z, 1.0f);
+            }
+        }
+        else {
+            SDLOGW("Update area of GUI[%s] failure. Screen Camera is nullptr.", m_object_name.c_str());
         }
     }
 }
