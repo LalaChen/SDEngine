@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#include "WorldGUIComponent.h"
+#include "WorldIMGUIComponent.h"
 
 #include "MathAlgoritm.h"
 #include "MaterialUniforms.h"
@@ -39,53 +39,163 @@ using namespace SDE::Basic;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-WorldGUIComponent::WorldGUIComponent(const ObjectName &i_object_name, uint32_t i_width, uint32_t i_height, float i_world_w, float i_world_h)
-: Component(i_object_name)
-, m_buffer_size{i_width, i_height}
-, m_world_size{i_world_w, i_world_h}
+WorldIMGUIComponent::WorldIMGUIComponent(const ObjectName &i_object_name)
+: WorldGUIComponentBase(i_object_name)
 , m_clear_color{ 0.0f, 0.0f, 0.0f, 0.0f }
 , m_clear_d_and_s{ 1.0f, 1 }
-, m_is_ncp(false)
-, m_area_orientation(AreaAlignOrientation_LEFT_BOTTOM)
 {
 }
 
-WorldGUIComponent::~WorldGUIComponent()
+WorldIMGUIComponent::~WorldIMGUIComponent()
 {
     ClearWorkspace();
 }
 
-void WorldGUIComponent::SetBufferSize(uint32_t i_width, uint32_t i_height)
+bool WorldIMGUIComponent::LoadGUI(const IMGUIBatchLoadingCallback &i_load_func)
 {
-    if (m_initialized == false) {
-        m_buffer_size[0] = i_width;
-        m_buffer_size[1] = i_height;
-    }
+    return SD_SREF(m_batch).LoadGUI(i_load_func);
 }
 
-void WorldGUIComponent::SetWorldSize(float i_world_w, float i_world_h)
+void WorldIMGUIComponent::InitializeImpl()
 {
-    if (m_initialized == false) {
-        m_world_size[0] = i_world_w;
-        m_world_size[1] = i_world_h;
-        float hw = i_world_w / 2.0f, hh = i_world_h / 2.0f;
-        m_UI_vertices[0] = Vector3f(-hw, -hh, 0.0f, 1.0f);
-        m_UI_vertices[1] = Vector3f( hw, -hh, 0.0f, 1.0f);
-        m_UI_vertices[2] = Vector3f( hw,  hh, 0.0f, 1.0f);
-        m_UI_vertices[3] = Vector3f(-hw,  hh, 0.0f, 1.0f);
+    WorldGUIComponentBase::InitializeImpl();
+
+    m_batch = new IMGUIBatch("GUIBatch", ImVec2(m_buffer_size[0], m_buffer_size[1]));
+    SD_SREF(m_batch).Initialize();
+    //1. Initialize RenderFlow.
+    InitializeWorkspace();
+    //2. Initialize GUI Component.
+    m_GUI_mesh_render = SD_GET_TYPE_COMP_WREF(m_entity, MeshRenderComponent);
+    if (m_GUI_mesh_render.IsNull() == true) {
+        m_GUI_mesh_render = ECSManager::GetRef().AddComponentForEntity<MeshRenderComponent>(
+            m_entity, SDE::Basic::StringFormat("%s_GUIMeshRender", m_object_name.c_str())).DynamicCastTo<MeshRenderComponent>();
+        SD_WREF(m_GUI_mesh_render).Initialize();
     }
+    //3.1 create material.
+    m_GUI_material = new Material("GUIMaterial");
+    SD_SREF(m_GUI_material).BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("AlphaNoLightingShader"));
+    //Set data done. Link with shader program.(Write descirptor)
+    SD_SREF(m_GUI_material).LinkWithShaderProgram();
+    MaterialUniforms mat_ub; //use default color.
+    SD_SREF(m_GUI_material).SetDataToUniformBuffer(sUniformBuffer_Material, &mat_ub, sizeof(MaterialUniforms));
+    SD_SREF(m_GUI_material).SetTexture(sUniformImages_Material_Textures, m_GUI_color_buffer, 0);
+    SD_SREF(m_GUI_material).Update();
+    //3.2 create mesh.
+    if (m_is_ncp == true && m_camera.IsNull() == false) {
+        SD_WREF(m_camera).RegisterSlotFunctionIntoEvent(
+            CameraComponentBase::sCameraResizedEventName,
+            new MemberFunctionSlot<WorldIMGUIComponent>(
+                "WorldGUIComponent::OnCameraResized",
+                GetThisWeakPtrByType<WorldIMGUIComponent>(),
+                &WorldIMGUIComponent::OnCameraResized));
+        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUIViaDepthArea2D(m_world_area);
+    }
+    else {
+        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUI(m_world_size[0], m_world_size[1]);
+    }
+    SD_WREF(m_GUI_mesh_render).AppendMesh(m_GUI_mesh, m_GUI_material);
 }
 
-void WorldGUIComponent::SetGUIForScreen(AreaAlignOrientationEnum i_orientation, const Area2D &i_area)
+void WorldIMGUIComponent::UpdateImpl()
 {
-    if (m_initialized == false) {
-        m_is_ncp = true;
-        m_screen_area = i_area;
-        m_area_orientation = i_orientation;
+    GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
+    if (gs.IsNull() == false) {
+        CameraComponentBaseWeakReferenceObject camera = SD_WREF(gs).GetScreenCamera();
+        if (camera.IsNull() == true) {
+            SDLOGW("Camera is null. We can't update ray.");
+            return;
+        }
+
+        bool is_vr_mode = SD_WREF(camera).IsType(typeid(VRCameraComponent));
+
+        if (is_vr_mode == false) {
+            CameraComponentWeakReferenceObject general_cam = camera.DynamicCastTo<CameraComponent>();
+            if (general_cam.IsNull() == false) {
+                TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_RIGHT);
+                Ray ray = SD_WREF(general_cam).CalculateRay(tb);
+                SetTouchDataByRay(ray, tb);
+            }
+            else {
+                SDLOGE("Camera(%s) can't be cast to camera component. We can't update ray.", SD_WREF(camera).GetObjectName().c_str());
+            }
+        }
+        else {
+        }
     }
+
+    IMGUIRenderer::GetRef().RecordGUICommands(
+        m_GUI_render_flow,
+        m_GUI_cb,
+        m_batch);
+
+    GraphicsManager::GetRef().SubmitGraphicsCommands({ m_GUI_cb });
 }
 
-void WorldGUIComponent::SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb)
+bool WorldIMGUIComponent::OnCameraResized(const EventArg &i_arg)
+{
+    UpdateArea();
+
+    m_GUI_mesh.Reset();
+
+    if (m_is_ncp == true && m_camera.IsNull() == false) {
+        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUIViaDepthArea2D(m_world_area);
+    }
+    else {
+        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUI(m_world_size[0], m_world_size[1]);
+    }
+    SD_WREF(m_GUI_mesh_render).AppendMesh(m_GUI_mesh, m_GUI_material);
+
+    return true;
+}
+
+void WorldIMGUIComponent::InitializeWorkspace()
+{
+    RenderPassWeakReferenceObject gui_rp = GraphicsManager::GetRef().GetRenderPass(sRenderPass_GUI);
+
+    if (m_GUI_color_buffer.IsNull() == false) {
+        m_GUI_color_buffer.Reset();
+    }
+    m_GUI_color_buffer = new Texture("GUIColorBuffer");
+    SD_SREF(m_GUI_color_buffer).SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
+    SD_SREF(m_GUI_color_buffer).Initialize2DColorOrDepthBuffer(
+        m_buffer_size[0], m_buffer_size[1],
+        GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
+        ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
+
+    if (m_GUI_depth_buffer.IsNull() == false) {
+        m_GUI_depth_buffer.Reset();
+    }
+    m_GUI_depth_buffer = new Texture("GUIDepthBuffer");
+    SD_SREF(m_GUI_depth_buffer).Initialize2DColorOrDepthBuffer(
+        m_buffer_size[0], m_buffer_size[1],
+        GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
+        ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+    m_GUI_render_flow = new RenderFlow(SDE::Basic::StringFormat("%s_RenderFlow", m_object_name.c_str()),
+        ImageOffset(0, 0, 0), ImageSize(m_buffer_size[0], m_buffer_size[1], 1));
+
+    SD_SREF(m_GUI_render_flow).RegisterRenderPass(gui_rp);
+    SD_SREF(m_GUI_render_flow).AllocateFrameBuffer();
+    SD_SREF(m_GUI_render_flow).RegisterBufferToFrameBuffer(m_GUI_color_buffer, 0, m_clear_color);
+    SD_SREF(m_GUI_render_flow).RegisterBufferToFrameBuffer(m_GUI_depth_buffer, 1, m_clear_d_and_s);
+    SD_SREF(m_GUI_render_flow).Initialize();
+
+    m_GUI_cp = new CommandPool("WGUICmdPool");
+    SD_REF(m_GUI_cp).Initialize();
+    m_GUI_cb = SD_REF(m_GUI_cp).AllocateCommandBuffer("WGUICmdBuffer");
+}
+
+void WorldIMGUIComponent::ClearWorkspace()
+{
+    m_GUI_color_buffer.Reset();
+    m_GUI_depth_buffer.Reset();
+    m_GUI_render_flow.Reset();
+    SD_SREF(m_GUI_cp).Clear();
+    m_GUI_cp.Reset();
+}
+
+
+void WorldIMGUIComponent::SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb)
 {
     if (m_transform.IsNull() == false && m_batch.IsNull() == false && i_ray.IsValid() == true) {
         Transform xform = SD_WREF(m_transform).GetWorldTransform();
@@ -131,168 +241,6 @@ void WorldGUIComponent::SetTouchDataByRay(const Ray &i_ray, const TouchButton &i
             }
         }
     }
-}
-
-bool WorldGUIComponent::LoadGUI(const IMGUIBatchLoadingCallback &i_load_func)
-{
-    return SD_SREF(m_batch).LoadGUI(i_load_func);
-}
-
-void WorldGUIComponent::InitializeImpl()
-{
-    m_batch = new IMGUIBatch("GUIBatch", ImVec2(m_buffer_size[0], m_buffer_size[1]));
-    SD_SREF(m_batch).Initialize();
-    //1. Initialize RenderFlow.
-    InitializeWorkspace();
-    //2. Get camera component.
-    m_camera = SD_GET_TYPE_COMP_WREF(m_entity, CameraComponentBase);
-    //3. Initialize GUI Component.
-    m_GUI_mesh_render = SD_GET_TYPE_COMP_WREF(m_entity, MeshRenderComponent);
-    if (m_GUI_mesh_render.IsNull() == true) {
-        m_GUI_mesh_render = ECSManager::GetRef().AddComponentForEntity<MeshRenderComponent>(
-            m_entity, SDE::Basic::StringFormat("%s_GUIMeshRender", m_object_name.c_str())).DynamicCastTo<MeshRenderComponent>();
-        SD_WREF(m_GUI_mesh_render).Initialize();
-    }
-    //3.1 create material.
-    m_GUI_material = new Material("GUIMaterial");
-    SD_SREF(m_GUI_material).BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("AlphaNoLightingShader"));
-    //Set data done. Link with shader program.(Write descirptor)
-    SD_SREF(m_GUI_material).LinkWithShaderProgram();
-    MaterialUniforms mat_ub; //use default color.
-    SD_SREF(m_GUI_material).SetDataToUniformBuffer(sUniformBuffer_Material, &mat_ub, sizeof(MaterialUniforms));
-    SD_SREF(m_GUI_material).SetTexture(sUniformImages_Material_Textures, m_GUI_color_buffer, 0);
-    SD_SREF(m_GUI_material).Update();
-    //3.2 create mesh.
-    if (m_is_ncp == true && m_camera.IsNull() == false) {
-        SD_WREF(m_camera).RegisterSlotFunctionIntoEvent(
-            CameraComponentBase::sCameraResizedEventName,
-            new MemberFunctionSlot<WorldGUIComponent>(
-                "WorldGUIComponent::OnCameraResized",
-                GetThisWeakPtrByType<WorldGUIComponent>(),
-                &WorldGUIComponent::OnCameraResized));
-
-        DepthArea2D world_area = SD_WREF(m_camera).ConvertScreenAreaToWorldArea(m_area_orientation, m_screen_area);
-        m_world_size[0] = world_area.area.w;
-        m_world_size[1] = world_area.area.h;
-        //
-        for (uint32_t orientation = 0; orientation < 4; ++orientation) {
-            vec3 pos = world_area.GetPoint(orientation);
-            m_UI_vertices[orientation] = Vector3f(pos.x, pos.y, pos.z, 1.0f);
-        }
-        //
-        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUIViaDepthArea2D(world_area);
-    }
-    else {
-        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUI(m_world_size[0], m_world_size[1]);
-    }
-    SD_WREF(m_GUI_mesh_render).AppendMesh(m_GUI_mesh, m_GUI_material);
-    //
-    m_transform = SD_GET_TYPE_COMP_WREF(m_entity, TransformComponent);
-}
-
-void WorldGUIComponent::UpdateImpl()
-{
-    GraphicsSystemWeakReferenceObject gs = ECSManager::GetRef().GetSystem(typeid(GraphicsSystem)).DynamicCastTo<GraphicsSystem>();
-    if (gs.IsNull() == false) {
-        CameraComponentBaseWeakReferenceObject camera = SD_WREF(gs).GetScreenCamera();
-        if (camera.IsNull() == true) {
-            SDLOGW("Camera is null. We can't update ray.");
-            return;
-        }
-
-        bool is_vr_mode = SD_WREF(camera).IsType(typeid(VRCameraComponent));
-
-        if (is_vr_mode == false) {
-            CameraComponentWeakReferenceObject general_cam = camera.DynamicCastTo<CameraComponent>();
-            if (general_cam.IsNull() == false) {
-                TouchButton tb = Application::GetRef().GetTouchButton(TouchButton_RIGHT);
-                Ray ray = SD_WREF(general_cam).CalculateRay(tb);
-                SetTouchDataByRay(ray, tb);
-            }
-            else {
-                SDLOGE("Camera(%s) can't be cast to camera component. We can't update ray.", SD_WREF(camera).GetObjectName().c_str());
-            }
-        }
-        else {
-        }
-    }
-
-    IMGUIRenderer::GetRef().RecordGUICommands(
-        m_GUI_render_flow,
-        m_GUI_cb,
-        m_batch);
-
-    GraphicsManager::GetRef().SubmitGraphicsCommands({ m_GUI_cb });
-}
-
-bool WorldGUIComponent::OnCameraResized(const EventArg &i_arg)
-{
-    m_GUI_mesh.Reset();
-
-    if (m_is_ncp == true && m_camera.IsNull() == false) {
-        DepthArea2D world_area = SD_WREF(m_camera).ConvertScreenAreaToWorldArea(m_area_orientation, m_screen_area);
-        m_world_size[0] = world_area.area.w;
-        m_world_size[1] = world_area.area.h;
-        //
-        for (uint32_t orientation = 0; orientation < 4; ++orientation) {
-            vec3 pos = world_area.GetPoint(orientation);
-            m_UI_vertices[orientation] = Vector3f(pos.x, pos.y, pos.z, 1.0f);
-        }
-        //
-        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUIViaDepthArea2D(world_area);
-    }
-    else {
-        m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUI(m_world_size[0], m_world_size[1]);
-    }
-    SD_WREF(m_GUI_mesh_render).AppendMesh(m_GUI_mesh, m_GUI_material);
-
-    return true;
-}
-
-void WorldGUIComponent::InitializeWorkspace()
-{
-    RenderPassWeakReferenceObject gui_rp = GraphicsManager::GetRef().GetRenderPass(sRenderPass_GUI);
-
-    if (m_GUI_color_buffer.IsNull() == false) {
-        m_GUI_color_buffer.Reset();
-    }
-    m_GUI_color_buffer = new Texture("GUIColorBuffer");
-    SD_SREF(m_GUI_color_buffer).SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
-    SD_SREF(m_GUI_color_buffer).Initialize2DColorOrDepthBuffer(
-        m_buffer_size[0], m_buffer_size[1],
-        GraphicsManager::GetRef().GetDefaultColorBufferFormat(),
-        ImageLayout_COLOR_ATTACHMENT_OPTIMAL);
-
-    if (m_GUI_depth_buffer.IsNull() == false) {
-        m_GUI_depth_buffer.Reset();
-    }
-    m_GUI_depth_buffer = new Texture("GUIDepthBuffer");
-    SD_SREF(m_GUI_depth_buffer).Initialize2DColorOrDepthBuffer(
-        m_buffer_size[0], m_buffer_size[1],
-        GraphicsManager::GetRef().GetDefaultDepthBufferFormat(),
-        ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-    m_GUI_render_flow = new RenderFlow(SDE::Basic::StringFormat("%s_RenderFlow", m_object_name.c_str()),
-        ImageOffset(0, 0, 0), ImageSize(m_buffer_size[0], m_buffer_size[1], 1));
-
-    SD_SREF(m_GUI_render_flow).RegisterRenderPass(gui_rp);
-    SD_SREF(m_GUI_render_flow).AllocateFrameBuffer();
-    SD_SREF(m_GUI_render_flow).RegisterBufferToFrameBuffer(m_GUI_color_buffer, 0, m_clear_color);
-    SD_SREF(m_GUI_render_flow).RegisterBufferToFrameBuffer(m_GUI_depth_buffer, 1, m_clear_d_and_s);
-    SD_SREF(m_GUI_render_flow).Initialize();
-
-    m_GUI_cp = new CommandPool("WGUICmdPool");
-    SD_REF(m_GUI_cp).Initialize();
-    m_GUI_cb = SD_REF(m_GUI_cp).AllocateCommandBuffer("WGUICmdBuffer");
-}
-
-void WorldGUIComponent::ClearWorkspace()
-{
-    m_GUI_color_buffer.Reset();
-    m_GUI_depth_buffer.Reset();
-    m_GUI_render_flow.Reset();
-    SD_SREF(m_GUI_cp).Clear();
-    m_GUI_cp.Reset();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

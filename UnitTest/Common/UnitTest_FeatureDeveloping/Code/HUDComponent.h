@@ -26,7 +26,7 @@ protected:
 public:
     bool OnBtn1Clicked(const EventArg &i_arg);
 protected:
-    WorldGUIComponentWeakReferenceObject m_GUI;
+    WorldIMGUIComponentWeakReferenceObject m_GUI;
     TransformComponentWeakReferenceObject m_transform;
     IMGUITextLabelWeakReferenceObject m_FPS_label;
     IMGUIVectorLabelWeakReferenceObject m_camera_pos_label;

@@ -22,12 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include "WorldGUISystem.h"
 
 #include "Application.h"
 #include "Timer.h"
 #include "ECSManager.h"
-#include "WorldGUIComponent.h"
-#include "WorldGUISystem.h"
+#include "WorldIMGUIComponent.h"
+
 
 using SDE::Basic::StringFormat;
 using SDE::Basic::Application;
@@ -60,7 +61,7 @@ void WorldGUISystem::Initialize()
     m_world_GUI_eg = ECSManager::GetRef().AddEntityGroup(
         "WorldGUIGroup",
         {
-            std::type_index(typeid(WorldGUIComponent))
+            std::type_index(typeid(WorldIMGUIComponent))
         }
     );
 }
@@ -71,7 +72,7 @@ void WorldGUISystem::Update()
     if (delta_time > 0) {
         std::list<EntityWeakReferenceObject> world_gui_entities = SD_WREF(m_world_GUI_eg).GetEntities();
         for (EntityWeakReferenceObject &entity : world_gui_entities) {
-            WorldGUIComponentWeakReferenceObject world_gui = SD_GET_COMP_WREF(entity, WorldGUIComponent);
+            WorldIMGUIComponentWeakReferenceObject world_gui = SD_GET_COMP_WREF(entity, WorldIMGUIComponent);
             SD_WREF(world_gui).Update();
         }
     }

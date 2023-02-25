@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-/*! \file      WorldGUIComponent.h
- *  \brief     The class WorldGUIComponent is used to put GUI in world.
+/*! \file      WorldIMGUIComponent.h
+ *  \brief     The class WorldIMGUIComponent is used to put GUI in world.
  *  \author    Kuan-Chih, Chen
  *  \date      2021/07/03
  *  \copyright MIT License.
@@ -34,41 +34,27 @@ SOFTWARE.
 
 #include "IMGUIBatch.h"
 #include "IMGUIRenderer.h"
-#include "TransformComponent.h"
 #include "MeshRenderComponent.h"
-#include "CameraComponentBase.h"
-#include "Area.h"
-#include "Ray.h"
-
-using SDE::Basic::EventArg;
-
-using SDE::Basic::Component;
-using SDE::Basic::ComponentStrongReferenceObject;
-using SDE::Basic::ComponentWeakReferenceObject;
+#include "WorldGUIComponentBase.h"
 
 using SDE::GUI::IMGUIBatch;
 using SDE::GUI::IMGUIBatchStrongReferenceObject;
 using SDE::GUI::IMGUIBatchWeakReferenceObject;
 using SDE::GUI::IMGUIBatchLoadingCallback;
 
-using SDE::Physics::Ray;
-
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(WorldGUIComponent);
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(WorldIMGUIComponent);
 
-class SDENGINE_CLASS WorldGUIComponent : public Component
+class SDENGINE_CLASS WorldIMGUIComponent : public WorldGUIComponentBase
 {
 public:
-    SD_COMPONENT_POOL_TYPE_DECLARATION(WorldGUIComponent, WorldGUIComponent);
+    SD_COMPONENT_POOL_TYPE_DECLARATION(WorldIMGUIComponent, WorldIMGUIComponent);
 public:
-    explicit WorldGUIComponent(const ObjectName &i_object_name, uint32_t i_width = 200, uint32_t i_height = 200, float i_world_w = 0.5f, float i_world_h = 0.5f);
-    virtual ~WorldGUIComponent();
+    explicit WorldIMGUIComponent(const ObjectName &i_object_name);
+    virtual ~WorldIMGUIComponent();
 public:
-    void SetBufferSize(uint32_t i_width, uint32_t i_height);
-    void SetWorldSize(float i_world_w, float i_world_h);
-    void SetGUIForScreen(AreaAlignOrientationEnum i_orientation, const Area2D &i_area);
-    void SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb);
+
     CommandBufferWeakReferenceObject GetCommandBuffer() const;
     bool LoadGUI(const IMGUIBatchLoadingCallback &i_load_func);
     TouchButton GetTouchButton() const;
@@ -83,6 +69,8 @@ protected:
     void InitializeWorkspace();
     void ClearWorkspace();
 protected:
+    void SetTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb) override;
+protected:
     RenderFlowStrongReferenceObject m_GUI_render_flow;
     TextureStrongReferenceObject m_GUI_color_buffer;
     TextureStrongReferenceObject m_GUI_depth_buffer;
@@ -95,33 +83,19 @@ protected:
     MeshStrongReferenceObject m_GUI_mesh;
     ClearValue m_clear_color;
     ClearValue m_clear_d_and_s;
-protected:
-    Vector3f m_UI_vertices[4];
-    uint32_t m_buffer_size[2];
-protected:
-    float m_world_size[2];
-protected:
-    bool m_is_ncp;
-    Area2D m_screen_area;
-    AreaAlignOrientationEnum m_area_orientation;
-protected:
-    TransformComponentWeakReferenceObject m_transform;
-    TouchButton m_touch_data;
-protected:
-    CameraComponentBaseWeakReferenceObject m_camera;
 };
 
-inline CommandBufferWeakReferenceObject WorldGUIComponent::GetCommandBuffer() const
+inline CommandBufferWeakReferenceObject WorldIMGUIComponent::GetCommandBuffer() const
 {
     return m_GUI_cb;
 }
 
-inline TouchButton WorldGUIComponent::GetTouchButton() const
+inline TouchButton WorldIMGUIComponent::GetTouchButton() const
 {
     return m_touch_data;
 }
 
-template<typename T> inline WeakReferenceObject<T> WorldGUIComponent::GetGUINode(const ObjectName &i_name)
+template<typename T> inline WeakReferenceObject<T> WorldIMGUIComponent::GetGUINode(const ObjectName &i_name)
 {
     return SD_SREF(m_batch).GetGUINode<T>(i_name);
 }

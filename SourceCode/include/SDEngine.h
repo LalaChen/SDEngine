@@ -120,7 +120,7 @@ SOFTWARE.
 #include "Graphics/System/WorldGUISystem.h"
 #include "Graphics/BasicComponent/TransformComponent.h"
 #include "Graphics/BasicComponent/MeshRenderComponent.h"
-#include "Graphics/BasicComponent/WorldGUIComponent.h"
+#include "Graphics/BasicComponent/WorldIMGUIComponent.h"
 #include "Graphics/BasicComponent/CameraComponent.h"
 #include "Graphics/BasicComponent/VRCameraComponent.h"
 #include "Graphics/BasicComponent/LightComponent.h"

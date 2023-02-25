@@ -107,18 +107,18 @@ bool SampleDrawObjects::LoadImpl()
     SD_TYPE_COMP_WREF(m_camera_node, MotorComponent).Initialize();
 #endif
 
-    ECSManager::GetRef().AddComponentForEntity<WorldGUIComponent>(m_camera_node, "WGUI");
-    SD_TYPE_COMP_WREF(m_camera_node, WorldGUIComponent).SetBufferSize(360, 360);
-    SD_TYPE_COMP_WREF(m_camera_node, WorldGUIComponent).SetGUIForScreen(AreaAlignOrientation_RIGHT_TOP, Area2D(0.0f, 0.0f, 360.0f, 360.0f));
-    SD_TYPE_COMP_WREF(m_camera_node, WorldGUIComponent).Initialize();
-    SD_TYPE_COMP_WREF(m_camera_node, WorldGUIComponent).LoadGUI(
-        [](const IMGUIBatchWeakReferenceObject& i_batch) -> bool {
+    ECSManager::GetRef().AddComponentForEntity<WorldIMGUIComponent>(m_camera_node, "WGUI");
+    float window_width = 360.0f, window_height = 360.0f;
+    SD_TYPE_COMP_WREF(m_camera_node, WorldIMGUIComponent).SetGUIAreaInScreenSpace(AreaAlignOrientation_RIGHT_TOP, Area2D(0.0f, 0.0f, window_width, window_height));
+    SD_TYPE_COMP_WREF(m_camera_node, WorldIMGUIComponent).Initialize();
+    SD_TYPE_COMP_WREF(m_camera_node, WorldIMGUIComponent).LoadGUI(
+        [window_width, window_height](const IMGUIBatchWeakReferenceObject &i_batch) -> bool {
             IMGUIWindowStrongReferenceObject window = new IMGUIWindow("CameraWGUI", "HUD");
             IMGUIRect rect;
             rect.m_pos.x = 0;
             rect.m_pos.y = 0;
-            rect.m_size.x = 360;
-            rect.m_size.y = 360;
+            rect.m_size.x = window_width;
+            rect.m_size.y = window_height;
             SD_SREF(window).SetUIVertices(rect);
             IMGUITextLabelStrongReferenceObject text_label = new IMGUITextLabel("FPSLabel", "");
             SD_SREF(window).Append(text_label.StaticCastTo<IMGUINode>());

@@ -855,9 +855,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandPoolBase.h">
       <Filter>include\Graphics\CommandBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\CameraComponentBase.h">
-      <Filter>include\Graphics\BasicComponent</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\VRCameraComponent.h">
       <Filter>include\Graphics\BasicComponent</Filter>
     </ClInclude>
@@ -882,7 +879,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\GUI\IMGUIWindow.h">
       <Filter>include\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\WorldGUIComponent.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\WorldIMGUIComponent.h">
       <Filter>include\Graphics\BasicComponent</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\System\WorldGUISystem.h">
@@ -980,6 +977,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Vec\Area.h">
       <Filter>include\Graphics\Vec</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\CameraComponentBase.h">
+      <Filter>include\Graphics\BasicComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\WorldGUIComponentBase.h">
+      <Filter>include\Graphics\BasicComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1550,7 +1553,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\GUI\IMGUIBatch.cpp">
       <Filter>src\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\WorldGUIComponent.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\WorldIMGUIComponent.cpp">
       <Filter>src\Graphics\BasicComponent</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\System\WorldGUISystem.cpp">
@@ -1645,6 +1648,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Vec\Area.cpp">
       <Filter>src\Graphics\Vec</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\WorldGUIComponentBase.cpp">
+      <Filter>src\Graphics\BasicComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

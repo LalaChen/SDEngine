@@ -51,7 +51,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\MeshRenderComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\TransformComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\VRCameraComponent.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\WorldGUIComponent.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\WorldGUIComponentBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\WorldIMGUIComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicShapeCreator\BasicShapeCreator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\CommandBuffer\CommandBufferInheritanceInfo.h" />
@@ -282,7 +283,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\MeshRenderComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\TransformComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\VRCameraComponent.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\WorldGUIComponent.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\WorldGUIComponentBase.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\WorldIMGUIComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Axis.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicShapeCreator\BasicShapeCreator_Circle.cpp" />

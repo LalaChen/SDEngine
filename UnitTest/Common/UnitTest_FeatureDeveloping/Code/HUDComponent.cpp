@@ -12,7 +12,7 @@ HUDComponent::~HUDComponent()
 void HUDComponent::InitializeImpl()
 {
     EntityWeakReferenceObject entity = GetEntity();
-    m_GUI = SD_GET_COMP_WREF(entity, WorldGUIComponent);
+    m_GUI = SD_GET_COMP_WREF(entity, WorldIMGUIComponent);
     m_transform = SD_GET_COMP_WREF(entity, TransformComponent);
 
     m_FPS_label = SD_WREF(m_GUI).GetGUINode<IMGUITextLabel>("FPSLabel");
