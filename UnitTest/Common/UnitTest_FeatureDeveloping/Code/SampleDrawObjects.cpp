@@ -100,18 +100,24 @@ bool SampleDrawObjects::LoadImpl()
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetClearValues(
         { 0.35f, 0.35f, 0.75f, 1.0f },
         { 1.0f, 1 });
-    SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(45, 0.01f, 1000.0f);
+    SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(90.0f, 0.01f, 1000.0f);
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).Initialize();
 
     ECSManager::GetRef().AddComponentForEntity<MotorComponent>(m_camera_node, "CameraMotor");
     SD_TYPE_COMP_WREF(m_camera_node, MotorComponent).Initialize();
 #endif
 
-    ECSManager::GetRef().AddComponentForEntity<WorldIMGUIComponent>(m_camera_node, "WGUI");
+    SDLOG("Initialize WGUI");
+    m_WGUI_node = ECSManager::GetRef().CreateEntity("WGUI");
+    m_entities.push_back(m_WGUI_node);
+    ECSManager::GetRef().AddComponentForEntity<TransformComponent>(m_WGUI_node, "WGUITransform");
+    SD_TYPE_COMP_WREF(m_camera_node, TransformComponent).AddChild(SD_GET_TYPE_COMP_WREF(m_WGUI_node, TransformComponent));
+
+    ECSManager::GetRef().AddComponentForEntity<WorldIMGUIComponent>(m_WGUI_node, "WGUI");
     float window_width = 360.0f, window_height = 360.0f;
-    SD_TYPE_COMP_WREF(m_camera_node, WorldIMGUIComponent).SetGUIAreaInScreenSpace(AreaAlignOrientation_RIGHT_TOP, Area2D(0.0f, 0.0f, window_width, window_height));
-    SD_TYPE_COMP_WREF(m_camera_node, WorldIMGUIComponent).Initialize();
-    SD_TYPE_COMP_WREF(m_camera_node, WorldIMGUIComponent).LoadGUI(
+    SD_TYPE_COMP_WREF(m_WGUI_node, WorldIMGUIComponent).SetGUIAreaInScreenSpace(AreaAlignOrientation_RIGHT_TOP, Area2D(0.0f, 0.0f, window_width, window_height));
+    SD_TYPE_COMP_WREF(m_WGUI_node, WorldIMGUIComponent).Initialize();
+    SD_TYPE_COMP_WREF(m_WGUI_node, WorldIMGUIComponent).LoadGUI(
         [window_width, window_height](const IMGUIBatchWeakReferenceObject &i_batch) -> bool {
             IMGUIWindowStrongReferenceObject window = new IMGUIWindow("CameraWGUI", "HUD");
             IMGUIRect rect;
@@ -144,8 +150,8 @@ bool SampleDrawObjects::LoadImpl()
         }
     );
 
-    ECSManager::GetRef().AddComponentForEntity<HUDComponent>(m_camera_node, "HUDComponent");
-    SD_TYPE_COMP_WREF(m_camera_node, HUDComponent).Initialize();
+    ECSManager::GetRef().AddComponentForEntity<HUDComponent>(m_WGUI_node, "HUDComponent");
+    SD_TYPE_COMP_WREF(m_WGUI_node, HUDComponent).Initialize();
 
     SDLOG("Initialize ScreenRay");
     m_screen_ray_node = ECSManager::GetRef().CreateEntity("ScreenRay");

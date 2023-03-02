@@ -237,6 +237,19 @@ void VRCameraComponent::SetEyeCenters(Vector3f i_eye_centers[VREye_Both])
     OnGeometryChanged(EventArg());
 }
 
+void VRCameraComponent::SetFrustums(const Frustum i_frustums[VREye_Both])
+{
+    for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
+        m_frustums[eid] = i_frustums[eid];
+        if (m_frustums[eid].p == true) {
+            m_proj_mats[eid].frustum(m_frustums[eid].l, m_frustums[eid].r, m_frustums[eid].t, m_frustums[eid].b, m_frustums[eid].n, m_frustums[eid].f);
+        }
+        else {
+            m_proj_mats[eid].ortho(m_frustums[eid].l, m_frustums[eid].r, m_frustums[eid].t, m_frustums[eid].b, m_frustums[eid].n, m_frustums[eid].f);
+        }
+    }
+}
+
 void VRCameraComponent::SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum)
 {
     Resolution proj_res;

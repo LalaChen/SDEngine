@@ -148,9 +148,13 @@ void WaveSystem::UpdateCameraInnerParameter()
                 1.0f);
     }
 
-    Matrix4X4f projs[WVR_Eye_Both];
-    projs[WVR_Eye_Left] = ConvertWVR_Matrix4f_tToMatrix4X4f(WVR_GetProjection(WVR_Eye_Left, 0.01f, 300.0f));
-    projs[WVR_Eye_Right] = ConvertWVR_Matrix4f_tToMatrix4X4f(WVR_GetProjection(WVR_Eye_Right, 0.01f, 300.0f));
+    Frustum frustums[WVR_Eye_Both];
+    for (uint32_t eye = 0; eye < WVR_Eye_Both; ++eye) {
+        WVR_GetClippingPlaneBoundary((WVR_Eye)eye, &frustums[eye].l, &frustums[eye].r, &frustums[eye].t, &frustums[eye].b);
+        frustums[eye].n = 0.01f;
+        frustums[eye].f = 300.0f;
+        frustums[eye].p = true;
+    }
 
     std::list<EntityWeakReferenceObject> entities = SD_WREF(m_camera_group).GetEntities();
     if (entities.size() > 0) {
@@ -158,7 +162,7 @@ void WaveSystem::UpdateCameraInnerParameter()
             VRCameraComponentWeakReferenceObject vrcamera = SD_GET_TYPE_COMP_WREF(entity, VRCameraComponent);
             if (vrcamera.IsNull() == false) {
                 SD_WREF(vrcamera).SetEyeCenters(eye_positions);
-                SD_WREF(vrcamera).SetProjectionMatrices(projs);
+                SD_WREF(vrcamera).SetFrustums(frustums);
             } else {
                 SDLOGE("No VRCamera!!!!");
             }

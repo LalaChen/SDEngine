@@ -20,10 +20,10 @@ Frustum::Frustum(const Matrix4X4f &i_src, float i_n, float i_f, bool i_p)
 : n(i_n), f(i_f), p(i_p)
 {
     if (i_p == true) {
-        r = 2.0f * (1.0f + i_src.m_matrix[2][0]) * n / i_src.m_matrix[0][0];
-        l = 2.0f * (i_src.m_matrix[2][0] - 1.0f) * n / i_src.m_matrix[0][0];
-        t = 2.0f * (1.0f + i_src.m_matrix[2][1]) * n / i_src.m_matrix[1][1];
-        b = 2.0f * (i_src.m_matrix[2][1] - 1.0f) * n / i_src.m_matrix[1][1];
+        r = (1.0f + i_src.m_matrix[2][0]) * n / i_src.m_matrix[0][0];
+        l = (i_src.m_matrix[2][0] - 1.0f) * n / i_src.m_matrix[0][0];
+        t = (1.0f + i_src.m_matrix[2][1]) * n / i_src.m_matrix[1][1];
+        b = (i_src.m_matrix[2][1] - 1.0f) * n / i_src.m_matrix[1][1];
     }
     else {
 

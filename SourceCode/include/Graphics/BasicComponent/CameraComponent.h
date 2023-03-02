@@ -48,7 +48,6 @@ class SDENGINE_CLASS CameraComponent : public CameraComponentBase
 {
 public:
     SD_COMPONENT_POOL_TYPE_DECLARATION(CameraComponent, CameraComponentBase);
-
 public:
     explicit CameraComponent(const ObjectName &i_object_name);
     virtual ~CameraComponent();
@@ -78,9 +77,6 @@ protected:
 protected:
     Matrix4X4f m_proj_mat;
 protected:
-    float m_fov;
-    float m_near;
-    float m_far;
     Frustum m_frustum;
 };
 

@@ -79,7 +79,6 @@ void CameraComponent::ResizeImpl()
     ClearWorkspace();
 
     if (m_follow_resolution == true) {
-
         m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
 
         if (m_workspace_type == CameraWorkspaceType_Forward) {
@@ -91,7 +90,12 @@ void CameraComponent::ResizeImpl()
     }
 
     m_ws_initialized = true;
-    SetPerspective(m_fov, m_near, m_far);
+    float height = m_frustum.t - m_frustum.b;
+    float width  = m_buffer_size.GetRatio() * height;
+    float center_w = (m_frustum.r + m_frustum.l) / 2.0f;
+    m_frustum.r = center_w + width / 2.0f;
+    m_frustum.l = center_w - width / 2.0f;
+    SetFrustum(m_frustum);
     NotifyEvent(sCameraResizedEventName, EventArg());
     OnGeometryChanged(EventArg());
 }
@@ -198,11 +202,21 @@ void CameraComponent::ClearWorkspace()
 void CameraComponent::SetPerspective(float i_fov, float i_near, float i_far)
 {
     if (m_buffer_size.IsValid() == true) {
-        m_fov = i_fov;
-        m_near = i_near;
-        m_far = i_far;
         m_proj_mat.perspective(i_fov, m_buffer_size.GetRatio(), i_near, i_far);
         m_frustum = Frustum(m_proj_mat, i_near, i_far, true);
+    }
+}
+
+void CameraComponent::SetFrustum(const Frustum &i_frustum)
+{
+    if (m_buffer_size.IsValid() == true) {
+        m_frustum = i_frustum;
+        if (m_frustum.p == true) {
+            m_proj_mat.frustum(m_frustum.l, m_frustum.r, m_frustum.t, m_frustum.b, m_frustum.n, m_frustum.f);
+        }
+        else {
+            m_proj_mat.ortho(m_frustum.l, m_frustum.r, m_frustum.t, m_frustum.b, m_frustum.n, m_frustum.f);
+        }
     }
 }
 
@@ -221,7 +235,7 @@ Ray CameraComponent::CalculateRay(const TouchButton &i_tb) const
         i_tb.m_y >= 0 && i_tb.m_y < m_buffer_size.GetHeight()) {
         Transform node_trans = SD_WREF(m_xform).GetWorldTransform();
         Ray ray;
-        ray.InitializeByScreen(m_proj_mat, node_trans.MakeViewMatrix(), m_buffer_size, i_tb, m_near);
+        ray.InitializeByScreen(m_proj_mat, node_trans.MakeViewMatrix(), m_buffer_size, i_tb, m_frustum.n);
         return ray;
     }
     else {

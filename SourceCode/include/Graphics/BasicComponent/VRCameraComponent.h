@@ -56,6 +56,7 @@ public:
 public:
     virtual void SetEyeCenters(Vector3f i_eye_centers[VREye_Both]);
     virtual void SetEyeMatrices(Matrix4X4f i_eye_mats[VREye_Both]);
+    virtual void SetFrustums(const Frustum i_frustums[VREye_Both]);
     virtual void SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum);
 public:
     bool OnGeometryChanged(const EventArg &i_arg) override;

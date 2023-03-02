@@ -156,12 +156,12 @@ void Matrix4X4f::perspective(float i_fovy, float i_aspect, float i_n, float i_f)
 
 void Matrix4X4f::frustum(float i_l, float i_r, float i_t, float i_b, float i_n, float i_f)
 {
-    m_matrix = glm::frustum(i_l, i_r, i_t, i_b, i_n, i_f);
+    m_matrix = glm::frustum(i_l, i_r, i_b, i_t, i_n, i_f);
 }
 
 void Matrix4X4f::ortho(float i_l, float i_r, float i_t, float i_b, float i_n, float i_f)
 {
-    m_matrix = glm::ortho(i_l, i_r, i_t, i_b, i_n, i_f);
+    m_matrix = glm::ortho(i_l, i_r, i_b, i_t, i_n, i_f);
 }
 
 std::string Matrix4X4f::ToString() const

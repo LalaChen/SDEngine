@@ -70,9 +70,11 @@ Transform::~Transform()
 Matrix4X4f Transform::MakeWorldMatrix() const
 {
     Matrix4X4f result;
+
     result.translate(m_position);
     result.rotate(m_rotation);
     result.scale(m_scale);
+
     return result;
 }
 
