@@ -313,11 +313,12 @@ void CameraComponent::RecordCommand(
 DepthArea2D CameraComponent::ConvertNCPAreaToWorldArea(const Area2D &i_ncp_area) const
 {
     DepthArea2D da;
-    float near_scale = m_frustum.n * 2.001f;
-    float width = m_frustum.r - m_frustum.l;
-    float height = m_frustum.t - m_frustum.b;
-    da.area.x = m_frustum.l + i_ncp_area.x * width;
-    da.area.y = m_frustum.b + i_ncp_area.y * height;
+    float scale = 2.001f;
+    float near_scale = m_frustum.n * scale;
+    float width = m_frustum.r * scale - m_frustum.l * scale;
+    float height = m_frustum.t * scale - m_frustum.b * scale;
+    da.area.x = m_frustum.l * scale + i_ncp_area.x * width;
+    da.area.y = m_frustum.b * scale + i_ncp_area.y * height;
     da.area.w = i_ncp_area.w * width;
     da.area.h = i_ncp_area.h * height;
     da.depth  = -near_scale;
