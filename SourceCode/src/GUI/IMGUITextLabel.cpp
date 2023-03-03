@@ -46,7 +46,7 @@ void IMGUITextLabel::SetText(const std::string &i_text)
 
 void IMGUITextLabel::RecordCommand()
 {
-    ImGui::Text(m_text.c_str());
+    ImGui::Text("%s", m_text.c_str());
 }
 
 void IMGUITextLabel::Append(const IMGUINodeStrongReferenceObject &i_child)
