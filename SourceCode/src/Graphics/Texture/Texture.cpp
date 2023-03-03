@@ -201,7 +201,7 @@ void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
 void Texture::InitializeVRColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, ImageLayoutEnum i_layout, Size_ui32 i_mipmap_levels)
 {
     if (m_tex_identity.m_handle == SD_NULL_HANDLE) {
-        m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;
+        m_tex_identity.m_texture_type = TextureType_TEXTURE_2D_ARRAY;
         m_tex_identity.m_texture_view_type = TextureViewType_TEXTURE_2D_ARRAY;
         m_tex_identity.m_mipmap_levels = i_mipmap_levels;
         m_tex_identity.m_image_size.m_width = i_width;

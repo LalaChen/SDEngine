@@ -23,7 +23,7 @@ WaveVRSwapchain::~WaveVRSwapchain()
 
 void WaveVRSwapchain::Initialize()
 {
-    GraphicsManager::GetRef().CreateGraphicsSwapchain(m_identity);
+    GraphicsSwapchain::Initialize();
 
     m_tex_queues[WVR_Eye_Left]  = WVR_ObtainTextureQueue(WVR_TextureTarget_VULKAN, WVR_TextureFormat_RGBA, WVR_TextureType_UnsignedByte, m_identity.m_screen_size.GetWidth(), m_identity.m_screen_size.GetHeight(), 0);
     m_tex_queues[WVR_Eye_Right] = WVR_ObtainTextureQueue(WVR_TextureTarget_VULKAN, WVR_TextureFormat_RGBA, WVR_TextureType_UnsignedByte, m_identity.m_screen_size.GetWidth(), m_identity.m_screen_size.GetHeight(), 0);
