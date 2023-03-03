@@ -100,7 +100,7 @@ bool SampleDrawObjects::LoadImpl()
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetClearValues(
         { 0.35f, 0.35f, 0.75f, 1.0f },
         { 1.0f, 1 });
-    SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(90.0f, 0.01f, 1000.0f);
+    SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(60.0f, 0.01f, 1000.0f);
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).Initialize();
 
     ECSManager::GetRef().AddComponentForEntity<MotorComponent>(m_camera_node, "CameraMotor");
