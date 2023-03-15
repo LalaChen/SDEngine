@@ -59,7 +59,7 @@ void WaveVRSwapchain::RenderTextureToSwapchain(const TextureWeakReferenceObject 
         param.m_src_param.m_aspect = ImageAspect_ASPECT_COLOR;
         param.m_src_param.m_based_layer = 0;
         param.m_src_param.m_layer_count = 1;
-        param.m_src_param.m_mip_level = SD_WREF(i_tex).GetMipMapLevels();
+        param.m_src_param.m_mip_level = 0;
         param.m_src_param.m_origin[0] = 0;
         param.m_src_param.m_origin[1] = 0;
         param.m_src_param.m_origin[2] = 0;
@@ -84,7 +84,7 @@ void WaveVRSwapchain::RenderTextureToSwapchain(const TextureWeakReferenceObject 
         param.m_src_param.m_aspect = ImageAspect_ASPECT_COLOR;
         param.m_src_param.m_based_layer = 1;
         param.m_src_param.m_layer_count = 1;
-        param.m_src_param.m_mip_level = SD_WREF(i_tex).GetMipMapLevels();
+        param.m_src_param.m_mip_level = 0;
         param.m_src_param.m_origin[0] = 0;
         param.m_src_param.m_origin[1] = 0;
         param.m_src_param.m_origin[2] = 0;

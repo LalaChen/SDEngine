@@ -84,7 +84,9 @@ public:
 class SDENGINE_CLASS CameraComponentBase : public Component
 {
 public:
-    static const std::string sCameraResizedEventName;
+    static const std::string sCameraEyeChangedEventName;
+    static const std::string sCameraProjChangedEventName;
+    static const std::string sCameraSizeChangedEventName;
 public:
     explicit CameraComponentBase(const ObjectName &i_object_name);
     virtual ~CameraComponentBase();

@@ -96,7 +96,7 @@ void CameraComponent::ResizeImpl()
     m_frustum.r = center_w + width / 2.0f;
     m_frustum.l = center_w - width / 2.0f;
     SetFrustum(m_frustum);
-    NotifyEvent(sCameraResizedEventName, EventArg());
+    NotifyEvent(sCameraSizeChangedEventName, EventArg());
     OnGeometryChanged(EventArg());
 }
 
@@ -204,6 +204,8 @@ void CameraComponent::SetPerspective(float i_fov, float i_near, float i_far)
     if (m_buffer_size.IsValid() == true) {
         m_proj_mat.perspective(i_fov, m_buffer_size.GetRatio(), i_near, i_far);
         m_frustum = Frustum(m_proj_mat, i_near, i_far, true);
+        NotifyEvent(sCameraProjChangedEventName, EventArg());
+        OnGeometryChanged(EventArg());
     }
 }
 
@@ -217,6 +219,8 @@ void CameraComponent::SetFrustum(const Frustum &i_frustum)
         else {
             m_proj_mat.ortho(m_frustum.l, m_frustum.r, m_frustum.t, m_frustum.b, m_frustum.n, m_frustum.f);
         }
+        NotifyEvent(sCameraProjChangedEventName, EventArg());
+        OnGeometryChanged(EventArg());
     }
 }
 

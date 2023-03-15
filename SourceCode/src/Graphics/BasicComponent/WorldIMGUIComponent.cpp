@@ -90,11 +90,11 @@ void WorldIMGUIComponent::InitializeImpl()
 
         if (camera.IsNull() == false) {
             SD_WREF(camera).RegisterSlotFunctionIntoEvent(
-                CameraComponentBase::sCameraResizedEventName,
+                CameraComponentBase::sCameraProjChangedEventName,
                 new MemberFunctionSlot<WorldIMGUIComponent>(
-                    "WorldGUIComponent::OnCameraResized",
+                    "WorldGUIComponent::OnCameraProjectionChanged",
                     GetThisWeakPtrByType<WorldIMGUIComponent>(),
-                    &WorldIMGUIComponent::OnCameraResized));
+                    &WorldIMGUIComponent::OnCameraProjectionChanged));
             m_GUI_mesh = BasicShapeCreator::GetRef().CreateWorldGUIViaDepthArea2D(m_world_area);
         }
         else {
@@ -142,7 +142,7 @@ void WorldIMGUIComponent::UpdateImpl()
     GraphicsManager::GetRef().SubmitGraphicsCommands({ m_GUI_cb });
 }
 
-bool WorldIMGUIComponent::OnCameraResized(const EventArg &i_arg)
+bool WorldIMGUIComponent::OnCameraProjectionChanged(const EventArg &i_arg)
 {
     UpdateArea();
 

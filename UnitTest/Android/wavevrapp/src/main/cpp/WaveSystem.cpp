@@ -152,6 +152,10 @@ void WaveSystem::UpdateCameraInnerParameter()
     for (uint32_t eye = 0; eye < WVR_Eye_Both; ++eye) {
         WVR_GetClippingPlaneBoundary((WVR_Eye)eye, &frustums[eye].l, &frustums[eye].r, &frustums[eye].t, &frustums[eye].b);
         frustums[eye].n = 0.01f;
+        frustums[eye].l *= frustums[eye].n;
+        frustums[eye].r *= frustums[eye].n;
+        frustums[eye].t *= frustums[eye].n;
+        frustums[eye].b *= frustums[eye].n;
         frustums[eye].f = 300.0f;
         frustums[eye].p = true;
     }

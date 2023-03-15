@@ -4,7 +4,9 @@
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-const std::string CameraComponentBase::sCameraResizedEventName = "CameraResized";
+const std::string CameraComponentBase::sCameraEyeChangedEventName = "CameraEyeChanged";
+const std::string CameraComponentBase::sCameraProjChangedEventName = "CameraProjChanged";
+const std::string CameraComponentBase::sCameraSizeChangedEventName = "CameraSizeChanged";
 
 Frustum::Frustum()
 : l(0.0f), r(0.0f), t(0.0f), b(0.0f), n(0.0f), f(0.0f), p(false)
@@ -43,7 +45,9 @@ CameraComponentBase::CameraComponentBase(const ObjectName &i_object_name)
 , m_clear_d_and_s{ 1.0f, 1 }
 {
     m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
-    RegisterEvent(new Event(sCameraResizedEventName));
+    RegisterEvent(new Event(sCameraEyeChangedEventName));
+    RegisterEvent(new Event(sCameraProjChangedEventName));
+    RegisterEvent(new Event(sCameraSizeChangedEventName));
 }
 
 CameraComponentBase::~CameraComponentBase()

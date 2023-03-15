@@ -230,10 +230,20 @@ void VRCameraComponent::ClearWorkspace()
 
 void VRCameraComponent::SetEyeCenters(Vector3f i_eye_centers[VREye_Both])
 {
-
     for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
         m_eye_mats[eid].translate(i_eye_centers[eid]);
     }
+    NotifyEvent(sCameraEyeChangedEventName, EventArg());
+    OnGeometryChanged(EventArg());
+}
+
+void VRCameraComponent::SetEyeMatrices(Matrix4X4f i_eye_mats[VREye_Both])
+{
+    for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
+        m_eye_mats[eid] = i_eye_mats[eid];
+    }
+
+    NotifyEvent(sCameraEyeChangedEventName, EventArg());
     OnGeometryChanged(EventArg());
 }
 
@@ -248,6 +258,8 @@ void VRCameraComponent::SetFrustums(const Frustum i_frustums[VREye_Both])
             m_proj_mats[eid].ortho(m_frustums[eid].l, m_frustums[eid].r, m_frustums[eid].t, m_frustums[eid].b, m_frustums[eid].n, m_frustums[eid].f);
         }
     }
+    NotifyEvent(sCameraProjChangedEventName, EventArg());
+    OnGeometryChanged(EventArg());
 }
 
 void VRCameraComponent::SetProjectionForEye(float i_fov, float i_near, float i_far, VREyeEnum i_enum)
@@ -259,14 +271,8 @@ void VRCameraComponent::SetProjectionForEye(float i_fov, float i_near, float i_f
         m_proj_mats[eid].perspective(i_fov, proj_res.GetRatio(), i_near, i_far);
         m_frustums[eid] = Frustum(m_proj_mats[eid], i_near, i_far);
     }
-    OnGeometryChanged(EventArg());
-}
 
-void VRCameraComponent::SetEyeMatrices(Matrix4X4f i_eye_mats[VREye_Both])
-{
-    for (uint32_t eid = VREye_Left; eid < VREye_Both; ++eid) {
-        m_eye_mats[eid] = i_eye_mats[eid];
-    }
+    NotifyEvent(sCameraProjChangedEventName, EventArg());
     OnGeometryChanged(EventArg());
 }
 

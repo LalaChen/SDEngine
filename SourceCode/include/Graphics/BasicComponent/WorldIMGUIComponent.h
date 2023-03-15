@@ -59,7 +59,7 @@ public:
     bool LoadGUI(const IMGUIBatchLoadingCallback &i_load_func);
     TouchButton GetTouchButton() const;
 public:
-    bool OnCameraResized(const EventArg &i_arg);
+    bool OnCameraProjectionChanged(const EventArg &i_arg);
 public:
     void RefreshTouchDataByRay(const Ray &i_ray, const TouchButton &i_tb) override;
 public:

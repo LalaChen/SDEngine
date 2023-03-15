@@ -136,10 +136,10 @@ void WaveVRVulkanManager::RenderTextureToSwapchain(
     blit_param.dstSubresource.mipLevel = i_param.m_dst_param.m_mip_level;
     blit_param.dstSubresource.layerCount = i_param.m_dst_param.m_layer_count;
     blit_param.dstOffsets[0].x = i_param.m_dst_param.m_origin[0];
-    blit_param.dstOffsets[0].y = i_param.m_dst_param.m_origin[1];
+    blit_param.dstOffsets[0].y = i_param.m_dst_param.m_origin[1] + i_param.m_dst_param.m_size[1];
     blit_param.dstOffsets[0].z = i_param.m_dst_param.m_origin[2];
     blit_param.dstOffsets[1].x = i_param.m_dst_param.m_size[0];
-    blit_param.dstOffsets[1].y = i_param.m_dst_param.m_size[1];
+    blit_param.dstOffsets[1].y = i_param.m_dst_param.m_size[1] * -1.0f;
     blit_param.dstOffsets[1].z = i_param.m_dst_param.m_size[2];
 
 
