@@ -186,11 +186,12 @@ void VRCameraComponent::InitializeWorkspaceForDeferredPass()
 DepthArea2D VRCameraComponent::ConvertNCPAreaToWorldArea(const Area2D &i_ncp_area) const
 {
     DepthArea2D da;
-    float near_scale = m_frustums[VREye_Right].n * 2.001f;
-    float width = m_frustums[VREye_Right].r - m_frustums[VREye_Right].l;
-    float height = m_frustums[VREye_Right].t - m_frustums[VREye_Right].b;
-    da.area.x = m_frustums[VREye_Right].l + i_ncp_area.x * width;
-    da.area.y = m_frustums[VREye_Right].b + i_ncp_area.y * height;
+    float scale = 2.001f;
+    float near_scale = m_frustums[VREye_Right].n * scale;
+    float width = m_frustums[VREye_Right].r * scale - m_frustums[VREye_Right].l * scale;
+    float height = m_frustums[VREye_Right].t * scale - m_frustums[VREye_Right].b * scale;
+    da.area.x = m_frustums[VREye_Right].l * scale + i_ncp_area.x * width;
+    da.area.y = m_frustums[VREye_Right].b * scale + i_ncp_area.y * height;
     da.area.w = i_ncp_area.w * width;
     da.area.h = i_ncp_area.h * height;
     da.depth = -near_scale;
