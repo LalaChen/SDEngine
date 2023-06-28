@@ -280,6 +280,9 @@
     <Filter Include="src\OpenXR">
       <UniqueIdentifier>{86c104c3-332f-4823-8cd4-7b45bab1640c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Graphics\GPUEvent">
+      <UniqueIdentifier>{0b7afe83-2199-4297-afaa-bda5451ff390}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">

@@ -7,8 +7,7 @@ android {
             storePassword 'lala1234'
             keyAlias = 'key0'
             keyPassword 'lala1234'
-			
-			v1SigningEnabled true
+            v1SigningEnabled true
         }
     }
     compileSdkVersion 28
@@ -31,7 +30,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            resValue "string", "app_name", "SDUnitTest_Debug"
+        }
         release {
+            applicationIdSuffix ".release"
+            resValue "string", "app_name", "SDUnitTest_Release"
             minifyEnabled false
 			signingConfig signingConfigs.TestKey
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -55,7 +60,6 @@ android {
             jniLibs.srcDirs = ['libs/Release']
         }
     }
-
 }
 
 dependencies {

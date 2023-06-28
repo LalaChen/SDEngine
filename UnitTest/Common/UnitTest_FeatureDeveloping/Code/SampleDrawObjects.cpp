@@ -91,8 +91,8 @@ bool SampleDrawObjects::LoadImpl()
         { 0.1f, 0.1f, 0.1f, 1.0f },
         { 1.0f, 1 });
 
-    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionForEye(45, 0.01f, 1000.0f, VREye_Left);
-    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionForEye(45, 0.01f, 1000.0f, VREye_Right);
+    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionForEye(60.0f, 0.01f, 1000.0f, VREye_Left);
+    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionForEye(60.0f, 0.01f, 1000.0f, VREye_Right);
     SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).Initialize();
 #else
     SDLOG("Initialize Camera");
