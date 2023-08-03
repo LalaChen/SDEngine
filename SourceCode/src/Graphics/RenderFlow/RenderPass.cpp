@@ -175,12 +175,14 @@ void RenderPass::AddRenderPassDescriptionFromText(const std::string &i_rp_file)
                 }
             }
 
-            nlohmann::json &dar_root = spd_root.at("DepthAttachmentRef");
-            sp_desc.m_depth_attachment_ref.m_attachment_ID = dar_root.at("AttachmentID").get<uint32_t>();
-            sp_desc.m_depth_attachment_ref.m_layout = static_cast<ImageLayoutEnum>(dar_root.at("LayoutType").get<int32_t>());
-            if (sp_desc.m_depth_attachment_ref.m_layout == ImageLayout_MAX_DEFINE_VALUE) {
-                sp_desc.m_depth_attachment_ref.m_layout = ImageLayout_UNDEFINED;
-                SDLOGW("RP(%s): SP[%d]->Depth att_ref.m_layout is max define value. Mark it undefined.", m_object_name.c_str(), spd_id);
+            if (spd_root.find("DepthAttachmentRef") != spd_root.end()) {
+                nlohmann::json& dar_root = spd_root.at("DepthAttachmentRef");
+                sp_desc.m_depth_attachment_ref.m_attachment_ID = dar_root.at("AttachmentID").get<uint32_t>();
+                sp_desc.m_depth_attachment_ref.m_layout = static_cast<ImageLayoutEnum>(dar_root.at("LayoutType").get<int32_t>());
+                if (sp_desc.m_depth_attachment_ref.m_layout == ImageLayout_MAX_DEFINE_VALUE) {
+                    sp_desc.m_depth_attachment_ref.m_layout = ImageLayout_UNDEFINED;
+                    SDLOGW("RP(%s): SP[%d]->Depth att_ref.m_layout is max define value. Mark it undefined.", m_object_name.c_str(), spd_id);
+                }
             }
 
             m_identity.m_subpasses_descs.push_back(sp_desc);

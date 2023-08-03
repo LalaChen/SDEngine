@@ -1,7 +1,7 @@
 /*==============  SD Engine License ==============
 MIT License
 
-Copyright (c) 2019 Kuan-Chih, Chen
+Copyright (c) 2019 Tai-Yang, Chen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,10 @@ SOFTWARE.
 
 */
 
-/*! \file      GraphicsSwapchain.h
- *  \brief     Introduce of class GraphicsSwapchain
- *  \author    Kuan-Chih, Chen
- *  \date      2022/06/25
+/*! \file      RenderLayer.h
+ *  \brief     Introduce of classes RenderLayer.
+ *  \author    Tai-Yang, Chen
+ *  \date      2023/03/19
  *  \copyright MIT License.
  */
 
@@ -34,47 +34,17 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonFunction.h"
-
-#include "Resolution.h"
-#include "Object.h"
-#include "Texture.h"
-#include "GraphicsQueue.h"
-#include "CommandPool.h"
-
-#include "GraphicsSwapchainIdentity.h"
-
-using SDE::Basic::Object;
-using SDE::Basic::ObjectName;
+#include "GraphicsSwapchain.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GraphicsSwapchain);
-
-class SDENGINE_CLASS GraphicsSwapchain : public Object
+class SDENGINE_CLASS GraphicsCompositor : public Object
 {
 public:
-	friend class GraphicsIdentityGetter;
+	explicit GraphicsCompositor(const ObjectName &i_name);
+	virtual ~GraphicsCompositor();
 public:
-	explicit GraphicsSwapchain(const ObjectName &i_name, const GraphicsQueueWeakReferenceObject &i_queue);
-	virtual ~GraphicsSwapchain();
-public:
-	virtual void Initialize();
-
-	virtual void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex);
-public:
-	Resolution GetResolution() const;
-protected:
-	GraphicsSwapchainIdentity m_identity;
-	CommandPoolStrongReferenceObject m_cmd_pool;
-	CommandBufferWeakReferenceObject m_cmd_buffer;
-	GraphicsQueueWeakReferenceObject m_queue;
-	GraphicsSemaphoreStrongReferenceObject m_acq_sema;
-	GraphicsSemaphoreStrongReferenceObject m_present_sema;
+	void Initialize(const GraphicsSwapchainWeakReferenceObject &i_swapchain);
 };
-
-inline Resolution GraphicsSwapchain::GetResolution() const
-{
-	return m_identity.m_screen_size;
-}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

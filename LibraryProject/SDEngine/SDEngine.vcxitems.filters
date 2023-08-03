@@ -283,6 +283,9 @@
     <Filter Include="include\Graphics\GPUEvent">
       <UniqueIdentifier>{0b7afe83-2199-4297-afaa-bda5451ff390}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common\ShaderProgram\LayerComposing">
+      <UniqueIdentifier>{ea7b4da7-ac7a-4755-9aad-284c9a68b705}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\SDEngine.h">
@@ -986,6 +989,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\WorldGUIComponentBase.h">
       <Filter>include\Graphics\BasicComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsCompositor.h">
+      <Filter>include\Graphics\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1767,6 +1773,24 @@
     </None>
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\Configs\EngineConfig.json">
       <Filter>common\Configs</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.vert">
+      <Filter>common\ShaderProgram\LayerComposing</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposing.json">
+      <Filter>common\ShaderProgram\LayerComposing</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.frag">
+      <Filter>common\ShaderProgram\LayerComposing</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\CompositorPass.json">
+      <Filter>common\RenderPass</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.vert.spv">
+      <Filter>common\ShaderProgram\LayerComposing</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.frag.spv">
+      <Filter>common\ShaderProgram\LayerComposing</Filter>
     </None>
   </ItemGroup>
 </Project>

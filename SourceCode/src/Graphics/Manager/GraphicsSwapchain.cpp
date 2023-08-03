@@ -39,8 +39,8 @@ GraphicsSwapchain::~GraphicsSwapchain()
 	GraphicsManager::GetRef().DestroyGraphicsSwapchain(m_identity);
 	m_present_sema.Reset();
 	m_acq_sema.Reset();
-	SD_SREF(m_pool).RecycleCommandBuffer(m_cmd_buffer);
-	m_pool.Reset();
+	SD_SREF(m_cmd_pool).RecycleCommandBuffer(m_cmd_buffer);
+	m_cmd_pool.Reset();
 }
 
 void GraphicsSwapchain::Initialize()
@@ -48,9 +48,9 @@ void GraphicsSwapchain::Initialize()
 	//1. create GraphicsSwapchain.
 	GraphicsManager::GetRef().CreateGraphicsSwapchain(m_identity);
 	//2. create command pool.
-	m_pool = new CommandPool("GraphicsSwapchainCmdPool");
-	SD_SREF(m_pool).Initialize();
-	m_cmd_buffer = SD_SREF(m_pool).AllocateCommandBuffer("GraphicsSwapchainCmdBuffer");
+	m_cmd_pool = new CommandPool("GraphicsSwapchainCmdPool");
+	SD_SREF(m_cmd_pool).Initialize();
+	m_cmd_buffer = SD_SREF(m_cmd_pool).AllocateCommandBuffer("GraphicsSwapchainCmdBuffer");
 	//
 	m_acq_sema = new GraphicsSemaphore("AcquireSema", m_identity.m_device);
 	SD_SREF(m_acq_sema).Initialize();

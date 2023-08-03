@@ -87,9 +87,9 @@ void OpenXRSwapchain::Initialize()
 			}
 		}
 		//
-		m_pool = new CommandPool("GraphicsSwapchainCmdPool");
-		SD_SREF(m_pool).Initialize();
-		m_cmd_buffer = SD_SREF(m_pool).AllocateCommandBuffer("GraphicsSwapchainCmdBuffer");
+		m_cmd_pool = new CommandPool("GraphicsSwapchainCmdPool");
+		SD_SREF(m_cmd_pool).Initialize();
+		m_cmd_buffer = SD_SREF(m_cmd_pool).AllocateCommandBuffer("GraphicsSwapchainCmdBuffer");
 		//
 		m_acq_sema = new GraphicsSemaphore("AcquireSema", m_identity.m_device);
 		SD_SREF(m_acq_sema).Initialize();

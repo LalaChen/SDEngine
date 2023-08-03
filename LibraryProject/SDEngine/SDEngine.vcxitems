@@ -165,6 +165,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\OpenGL4\OpenGL4Manager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsSwapchain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsSynchronousElements.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsCompositor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanConfig.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanCreationArg.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\Vulkan\VulkanManager.h" />
@@ -476,6 +477,7 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\Configs\EngineConfig.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\Configs\VKConfig.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\CompositorPass.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\ForwardPass.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\GUIPass.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\VRForwardPass.json" />
@@ -502,6 +504,11 @@
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.vert" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.vert.spv" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShading.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposing.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.frag" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.frag.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.vert" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.vert.spv" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.frag" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.frag.spv" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\NoLightShading\NoLightShader_Multiview_SP0.vert" />

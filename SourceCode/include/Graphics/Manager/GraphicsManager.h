@@ -69,6 +69,7 @@ enum VertexLocationKindEnum {
 static const std::string sRenderPass_Forward = "ForwardPass";
 static const std::string sRenderPass_VRForward = "VRForwardPass";
 static const std::string sRenderPass_GUI = "GUIPass";
+static const std::string sRenderPass_Compositing = "CompositingPass";
 
 static const std::string sUniformDescriptorSetLayout_Camera = "Camera";
 static const std::string sUniformBuffer_Camera = "camera";
@@ -82,6 +83,10 @@ static const std::string sUniformImages_Light_ShadowMaps = "shadowMaps";
 static const std::string sUniformDescriptorSetLayout_Material = "Material";
 static const std::string sUniformBuffer_Material = "material";
 static const std::string sUniformImages_Material_Textures = "textures";
+
+static const std::string sUniformDescriptorSetLayout_Compositing = "Compositing";
+static const std::string sUniformBuffer_Compositing_UVData = "uvData";
+static const std::string sUniformImage_Compositing_Texture = "mainTexture";
 
 static const std::string sUniformDescriptorSetLayout_GUI = "GUI";
 static const std::string sUniformBuffer_GUI_Offset = "offsets";

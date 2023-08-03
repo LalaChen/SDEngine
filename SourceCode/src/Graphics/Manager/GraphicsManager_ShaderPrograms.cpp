@@ -162,6 +162,7 @@ void GraphicsManager::InitializeBasicDescriptorSetLayout()
     SD_SREF(light_dsl).Initialize();
     m_basic_dsl_maps[sUniformDescriptorSetLayout_Light] = light_dsl;
 
+    //4. GUI Offset Material.
     UniformBufferDescriptorStrongReferenceObject gui_ubd = new UniformBufferDescriptor(sUniformBuffer_GUI_Offset, 0);
     SD_SREF(gui_ubd).AddVariable("offsets", UniformBufferVariableType_VECTOR3F, 0);
     SD_SREF(gui_ubd).AddVariableDone();
@@ -173,6 +174,20 @@ void GraphicsManager::InitializeBasicDescriptorSetLayout()
         gui_font_ui.StaticCastTo<UniformVariableDescriptor>()});
     SD_SREF(gui_dsl).Initialize();
     m_basic_dsl_maps[sUniformDescriptorSetLayout_GUI] = gui_dsl;
+
+    //5. Compositing Material.
+    UniformBufferDescriptorStrongReferenceObject uvdata_ubd = new UniformBufferDescriptor(sUniformBuffer_Compositing_UVData, 0);
+    SD_SREF(uvdata_ubd).AddVariable("offsets", UniformBufferVariableType_VECTOR3F, 0);
+    SD_SREF(uvdata_ubd).AddVariableDone();
+
+    UniformImagesDescriptorStrongReferenceObject main_texture_ui = new UniformImagesDescriptor(sUniformImage_Compositing_Texture, 1);
+
+    DescriptorSetLayoutStrongReferenceObject compositing_dsl = new DescriptorSetLayout(sUniformDescriptorSetLayout_Compositing);
+    SD_SREF(compositing_dsl).AddUniformVariableDescriptors({
+        uvdata_ubd.StaticCastTo<UniformVariableDescriptor>(),
+        main_texture_ui.StaticCastTo<UniformVariableDescriptor>()});
+    SD_SREF(compositing_dsl).Initialize();
+    m_basic_dsl_maps[sUniformDescriptorSetLayout_Compositing] = compositing_dsl;
 }
 
 void GraphicsManager::InitializeBasicMaterialUniformDescriptors()
@@ -198,6 +213,7 @@ void GraphicsManager::InitializeBasicShaderPrograms()
     RegisterShaderProgram("NoLightShader", "Common/ShaderProgram/NoLightShading/NoLightShading.json");
     RegisterShaderProgram("GUIShader", "Common/ShaderProgram/GUIShading/GUIShading.json");
     RegisterShaderProgram("AlphaNoLightingShader", "Common/ShaderProgram/AlphaNoLightShading/AlphaNoLightShading.json");
+    RegisterShaderProgram("LayerCompositingShader", "Common/ShaderProgram/LayerCompositing/LayerCompositing.json");
 }
 
 /*

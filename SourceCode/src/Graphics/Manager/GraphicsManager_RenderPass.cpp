@@ -207,6 +207,11 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/GUIPass.json");
     SD_SREF(rp).Initialize();
     RegisterRenderPass(rp);
+
+    rp = new RenderPass(sRenderPass_Compositing);
+    SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/CompositorPass.json");
+    SD_SREF(rp).Initialize();
+    RegisterRenderPass(rp);
 #endif
 }
 
