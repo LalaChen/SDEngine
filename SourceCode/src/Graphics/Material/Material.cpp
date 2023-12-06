@@ -70,7 +70,7 @@ void Material::LinkWithShaderProgram()
 {
     if (m_sp.IsNull() == false) {
         for (DescriptorSetWeakReferenceObject &ds : m_dsets) {
-            ds.GetRef().WriteDescriptor();
+            SD_WREF(ds).WriteDescriptor();
         }
         m_is_linked = true;
     }
@@ -93,7 +93,7 @@ bool Material::SetInt(const ObjectName &i_ub_name, const ObjectName &i_var_name,
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetInt(i_var_name, i_value, i_idx);
+            return SD_WREF(target_uv).SetInt(i_var_name, i_value, i_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -112,7 +112,7 @@ bool Material::SetUint(const ObjectName &i_ub_name, const ObjectName &i_var_name
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetUint(i_var_name, i_value, i_idx);
+            return SD_WREF(target_uv).SetUint(i_var_name, i_value, i_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -131,7 +131,7 @@ bool Material::SetFloat(const ObjectName &i_ub_name, const ObjectName &i_var_nam
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetFloat(i_var_name, i_value, i_idx);
+            return SD_WREF(target_uv).SetFloat(i_var_name, i_value, i_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -150,7 +150,7 @@ bool Material::SetVector3f(const ObjectName &i_ub_name, const ObjectName &i_var_
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetVector3f(i_var_name, i_value, i_idx);
+            return SD_WREF(target_uv).SetVector3f(i_var_name, i_value, i_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -169,7 +169,7 @@ bool Material::SetColor4f(const ObjectName &i_ub_name, const ObjectName &i_var_n
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetColor4f(i_var_name, i_value, i_idx);
+            return SD_WREF(target_uv).SetColor4f(i_var_name, i_value, i_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -188,7 +188,7 @@ bool Material::SetMatrix4X4f(const ObjectName &i_ub_name, const ObjectName &i_va
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetMatrix4X4f(i_var_name, i_value, i_idx);
+            return SD_WREF(target_uv).SetMatrix4X4f(i_var_name, i_value, i_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -207,7 +207,7 @@ bool Material::SetIntArray(const ObjectName &i_ub_name, const ObjectName &i_var_
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetIntArray(i_var_name, i_datas, i_start_idx);
+            return SD_WREF(target_uv).SetIntArray(i_var_name, i_datas, i_start_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -226,7 +226,7 @@ bool Material::SetUintArray(const ObjectName &i_ub_name, const ObjectName &i_var
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetUintArray(i_var_name, i_datas, i_start_idx);
+            return SD_WREF(target_uv).SetUintArray(i_var_name, i_datas, i_start_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -245,7 +245,7 @@ bool Material::SetFloatArray(const ObjectName &i_ub_name, const ObjectName &i_va
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetFloatArray(i_var_name, i_datas, i_start_idx);
+            return SD_WREF(target_uv).SetFloatArray(i_var_name, i_datas, i_start_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -263,7 +263,7 @@ bool Material::SetVector3fArray(const ObjectName &i_ub_name, const ObjectName &i
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetVector3fArray(i_var_name, i_datas, i_start_idx);
+            return SD_WREF(target_uv).SetVector3fArray(i_var_name, i_datas, i_start_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -282,7 +282,7 @@ bool Material::SetColor4fArray(const ObjectName &i_ub_name, const ObjectName &i_
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetColor4fArray(i_var_name, i_datas, i_start_idx);
+            return SD_WREF(target_uv).SetColor4fArray(i_var_name, i_datas, i_start_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -300,7 +300,7 @@ bool Material::SetMatrix4X4fArray(const ObjectName &i_ub_name, const ObjectName 
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetMatrix4X4fArray(i_var_name, i_datas, i_start_idx);
+            return SD_WREF(target_uv).SetMatrix4X4fArray(i_var_name, i_datas, i_start_idx);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -319,7 +319,7 @@ bool Material::SetDataToUniformBuffer(const ObjectName &i_ub_name, const void *i
     if (uv_iter != m_uvs.end()) {
         UniformBufferWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformBuffer>();
         if (target_uv.IsNull() == false) {
-            return target_uv.GetRef().SetBufferData(i_data, i_data_size);
+            return SD_WREF(target_uv).SetBufferData(i_data, i_data_size);
         }
         else {
             SDLOGW("UB[%s] isn't uniform buffer in this materal.", i_ub_name.c_str());
@@ -338,7 +338,7 @@ bool Material::SetTexture(const ObjectName &i_uv_name, const TextureWeakReferenc
     if (uv_iter != m_uvs.end()) {
         UniformImagesWeakReferenceObject target_uv = (*uv_iter).second.DynamicCastTo<UniformImages>();
         if (target_uv.IsNull() == false) {
-            bool result = target_uv.GetRef().SetTexture(i_tex, i_idx);
+            bool result = SD_WREF(target_uv).SetTexture(i_tex, i_idx);
             //rebind texture and update write descriptor.
             RefreshLinkingWithShaderProgram();
             //
@@ -365,7 +365,7 @@ void Material::UseMaterial(
     std::vector<DescriptorSetWeakReferenceObject> dss = i_common_dss;
     dss.insert(std::end(dss), std::begin(m_dsets), std::end(m_dsets));
     if (m_sp.IsNull() == false) {
-        m_sp.GetRef().UseProgramWithTargetDescriptorSet(i_cb, i_rp, i_sp_id, i_step_id, dss);
+        SD_WREF(m_sp).UseProgramWithTargetDescriptorSet(i_cb, i_rp, i_sp_id, i_step_id, dss);
     }
 }
 
@@ -373,7 +373,7 @@ void Material::Update()
 {
     std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator uv_iter;
     for (uv_iter = m_uvs.begin(); uv_iter != m_uvs.end(); ++uv_iter) {
-        (*uv_iter).second.GetRef().Update();
+        SD_WREF((*uv_iter).second).Update();
     }
 }
 

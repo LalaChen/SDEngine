@@ -39,7 +39,7 @@ UniformImages::~UniformImages()
 
 void UniformImages::Initialize(const UniformImagesDescriptorWeakReferenceObject &i_uid)
 {
-    m_texs.resize(i_uid.GetRef().GetNumber());
+    m_texs.resize(SD_CONST_WREF(i_uid).GetNumber());
 }
 
 bool UniformImages::SetTexture(const TextureWeakReferenceObject &i_tex, uint32_t i_idx)

@@ -35,16 +35,25 @@ VkFormat TextureFormat_Vulkan::TextureFormatTypes[TextureFormat_MAX_DEFINE_VALUE
     VK_FORMAT_R8_SNORM, /*!read value to [-1,1]. data is byte. channel number is 1.*/
     VK_FORMAT_R8_UINT, /*!read value to [0,255]. data is byte. channel number is 1.*/
     VK_FORMAT_R8_SINT, /*!read value to [-128,127]. data is byte. channel number is 1.*/
+    VK_FORMAT_R8_SRGB,
     //--- RG
     VK_FORMAT_R8G8_UNORM, /*!read value to [0,1]. data is byte. channel number is 2.*/
     VK_FORMAT_R8G8_SNORM, /*!read value to [-1,1]. data is byte. channel number is 2.*/
     VK_FORMAT_R8G8_UINT, /*!read value to [0,255]. data is byte. channel number is 2.*/
     VK_FORMAT_R8G8_SINT, /*!read value to [-128,127]. data is byte. channel number is 2.*/
+    VK_FORMAT_R8G8_SRGB,
     //--- RGBA
     VK_FORMAT_R8G8B8A8_UNORM, /*!read value to [0,1]. data is byte. channel number is 4.*/
     VK_FORMAT_R8G8B8A8_SNORM, /*!read value to [-1,1]. data is byte. channel number is 4.*/
     VK_FORMAT_R8G8B8A8_UINT, /*!read value to [0,255]. data is byte. channel number is 4.*/
     VK_FORMAT_R8G8B8A8_SINT, /*!read value to [-128,127]. data is byte. channel number is 4.*/
+    VK_FORMAT_R8G8B8A8_SRGB,
+    //--- BGRA
+    VK_FORMAT_B8G8R8A8_UNORM, /*!read value to [0,1]. data is byte. channel number is 4.*/
+    VK_FORMAT_B8G8R8A8_SNORM, /*!read value to [-1,1]. data is byte. channel number is 4.*/
+    VK_FORMAT_B8G8R8A8_UINT, /*!read value to [0,255]. data is byte. channel number is 4.*/
+    VK_FORMAT_B8G8R8A8_SINT, /*!read value to [-128,127]. data is byte. channel number is 4.*/
+    VK_FORMAT_B8G8R8A8_SRGB,
     //Short
     //--- R
     VK_FORMAT_R16_UNORM, /*!read value to [0,1]. data is short. channel number is 1.*/
@@ -97,16 +106,25 @@ std::string TextureFormat_Vulkan::TextureFormatNames[TextureFormat_MAX_DEFINE_VA
     "VK_FORMAT_R8_SNORM",
     "VK_FORMAT_R8_UINT",
     "VK_FORMAT_R8_SINT",
+    "VK_FORMAT_R8_SRGB",
     //--- RG
     "VK_FORMAT_R8G8_UNORM",
     "VK_FORMAT_R8G8_SNORM",
     "VK_FORMAT_R8G8_UINT",
     "VK_FORMAT_R8G8_SINT",
+    "VK_FORMAT_R8G8_SRGB",
     //--- RGBA
     "VK_FORMAT_R8G8B8A8_UNORM",
     "VK_FORMAT_R8G8B8A8_SNORM",
     "VK_FORMAT_R8G8B8A8_UINT",
     "VK_FORMAT_R8G8B8A8_SINT",
+    "VK_FORMAT_R8G8B8A8_SRGB",
+    //--- BGRA
+    "VK_FORMAT_B8G8R8A8_UNORM",
+    "VK_FORMAT_B8G8R8A8_SNORM",
+    "VK_FORMAT_B8G8R8A8_UINT",
+    "VK_FORMAT_B8G8R8A8_SINT",
+    "VK_FORMAT_B8G8R8A8_SRGB",
     //Short
     //--- R
     "VK_FORMAT_R16_UNORM",
@@ -171,6 +189,18 @@ const char* TextureFormat_Vulkan::GetTextureFormatName(const TextureFormatEnum &
     else {
         return DummyName.c_str();
     }
+}
+
+TextureFormatEnum TextureFormat_Vulkan::Reverse(VkFormat i_format)
+{
+    TextureFormatEnum result = TextureFormat_MAX_DEFINE_VALUE;
+    for (uint32_t i = 0; i < TextureFormat_MAX_DEFINE_VALUE; ++i) {
+        if (TextureFormatTypes[i] == i_format) {
+            result = static_cast<TextureFormatEnum>(i);
+            break;
+        }
+    }
+    return result;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

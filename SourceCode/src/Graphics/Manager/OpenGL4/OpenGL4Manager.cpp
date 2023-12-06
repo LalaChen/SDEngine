@@ -61,11 +61,6 @@ void OpenGL4Manager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i
     glEnable(GL_DEPTH_TEST);
 }
 
-void OpenGL4Manager::RenderTextureToScreen(const TextureWeakReferenceObject &i_tex)
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    //render quad to screen.
-}
 
 void OpenGL4Manager::GetDesiredVulkanValidLayers(std::vector<const char*> &io_valid_layers) const
 {

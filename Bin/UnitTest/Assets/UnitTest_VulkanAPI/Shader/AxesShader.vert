@@ -19,8 +19,8 @@ layout(location = 5) out vec4 fColor;
 //layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
 //Uniform basic Buffer.
 layout(set = 0, binding = 0) uniform BasicUniforms {
-    mat4 clip;
-    mat4 proj;
+	mat4 clip;
+	mat4 proj;
 	mat4 view;
 	mat4 world;
 	mat4 normal;
@@ -57,5 +57,5 @@ void main()
 {
 	vec4 vertex = vec4(vertices, 1.0);
 	fColor = colors;
-    gl_Position = basic.clip * basic.proj * basic.view * basic.world * vertex;
+	gl_Position = basic.clip * basic.proj * basic.view * basic.world * vertex;
 }

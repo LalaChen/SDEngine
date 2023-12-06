@@ -17,8 +17,8 @@ layout(location = 0) out vec4 fragColor;
 //layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
 //Uniform basic Buffer.
 layout(set = 0, binding = 0) uniform BasicUniforms {
-    mat4 clip;
-    mat4 proj;
+	mat4 clip;
+	mat4 proj;
 	mat4 view;
 	mat4 world;
 	mat4 normal;
@@ -45,7 +45,7 @@ layout(set = 1, binding = 0) uniform MaterialUniforms {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
-    vec4 emission;
+	vec4 emission;
 	float shininess;
 } material;
 
@@ -111,7 +111,7 @@ vec4 CalculateLighting()
 		CalculatePointLightDAndSAndNDL(diffuse, specular, nDotL);
 	}
 	else {
-	    diffuse = vec4(1.0, 0.0, 0.0, 1.0);
+		diffuse = vec4(1.0, 0.0, 0.0, 1.0);
 	}
 	return (ambient + diffuse + specular + material.emission) * texture(mainTexture, texCoord);
 	//return vec4(wViewDir, 1.0);

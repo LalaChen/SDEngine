@@ -460,6 +460,61 @@ void VulkanManager::InitializeVulkanSurface()
     else {
         SDLOG("final present mode : %d", m_final_p_mode);
     }
+
+    //Create render pass of swapchain.
+    //--- prepare attachment references data.
+    std::vector<AttachmentDescription> att_descs;
+    AttachmentDescription att_desc;
+    att_desc.m_format = TextureFormat_Vulkan::Reverse(m_final_sur_format.format);
+    att_desc.m_initial_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
+    att_desc.m_final_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
+    att_desc.m_sample_counts = SampleCount_1;
+    att_desc.m_load_op = AttachmentLoadOperator_CLEAR;
+    att_desc.m_store_op = AttachmentStoreOperator_STORE;
+    att_desc.m_stencil_load_op = AttachmentLoadOperator_DONT_CARE;
+    att_desc.m_stencil_store_op = AttachmentStoreOperator_DONT_CARE;
+    att_descs.push_back(att_desc);
+    //--- prepare attachment references data.
+    std::vector<SubpassDescription> sp_descs;
+    SubpassDescription sp_desc;
+    AttachmentReference atta_ref;
+    //------ sp0 Compose
+    sp_desc = SubpassDescription();
+    sp_desc.m_name = "Compose";
+    sp_desc.m_bind_point = PipelineBindPoint_GRAPHICS;
+    //------ color attachment reference.
+    atta_ref.m_attachment_ID = 0;
+    atta_ref.m_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
+    sp_desc.m_color_attachment_refs.push_back(atta_ref);
+    sp_descs.push_back(sp_desc);
+    //--- SubpassDependency.
+    std::vector<SubpassDependency> sp_denps;
+    SubpassDependency sp_denp;
+    //------ sp external to sp0
+    sp_denp = SubpassDependency();
+    sp_denp.m_src_spID = SD_SUBPASS_EXTERNAL;
+    sp_denp.m_dst_spID = 0;
+    sp_denp.m_src_pipeline_stages.push_back(PipelineStage_BOTTOM_OF_PIPE);
+    sp_denp.m_dst_pipeline_stages.push_back(PipelineStage_TOP_OF_PIPE);
+    sp_denp.m_src_mem_masks.push_back(MemoryAccessMask_MEMORY_WRITE);
+    sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
+    sp_denp.m_dependencies.push_back(DependencyScope_REGION);
+    sp_denps.push_back(sp_denp);
+    //------ sp0 and sp external
+    sp_denp = SubpassDependency();
+    sp_denp.m_src_spID = 0;
+    sp_denp.m_dst_spID = SD_SUBPASS_EXTERNAL;
+    sp_denp.m_src_pipeline_stages.push_back(PipelineStage_BOTTOM_OF_PIPE);
+    sp_denp.m_dst_pipeline_stages.push_back(PipelineStage_TOP_OF_PIPE);
+    sp_denp.m_src_mem_masks.push_back(MemoryAccessMask_MEMORY_WRITE);
+    sp_denp.m_dst_mem_masks.push_back(MemoryAccessMask_MEMORY_READ);
+    sp_denp.m_dependencies.push_back(DependencyScope_REGION);
+    sp_denps.push_back(sp_denp);
+
+    RenderPassStrongReferenceObject rp = new RenderPass(sRenderPass_Composing);
+    SD_SREF(rp).AddRenderPassDescription(att_descs, sp_descs, sp_denps);
+    SD_SREF(rp).Initialize();
+    RegisterRenderPass(rp);
 }
 
 void VulkanManager::InitializeSettings()

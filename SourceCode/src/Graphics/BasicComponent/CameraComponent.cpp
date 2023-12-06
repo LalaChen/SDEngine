@@ -60,6 +60,15 @@ void CameraComponent::InitializeImpl()
         InitializeWorkspaceForDeferredPass();
     }
 
+    if (m_layer_id != UINT32_MAX) {
+        m_layer = GraphicsManager::GetRef().RegisterLayer(
+            SDE::Basic::StringFormat("%s_layer", m_object_name.c_str()),
+            m_color_buffer, m_depth_buffer, m_layer_id);
+    }
+    else {
+        SDLOG("Camera(%s)'s layer id is invalid, don't need to draw in screen", m_object_name.c_str());
+    }
+
     m_xform = SD_GET_COMP_WREF(m_entity, TransformComponent);
 
     SD_WREF(m_xform).RegisterSlotFunctionIntoEvent(
@@ -194,6 +203,10 @@ void CameraComponent::InitializeWorkspaceForDeferredPass()
 
 void CameraComponent::ClearWorkspace()
 {
+    if (m_layer.IsNull() == false) {
+        GraphicsManager::GetRef().UnregisterLayer(m_layer);
+        m_layer.Reset();
+    }
     m_color_buffer.Reset();
     m_depth_buffer.Reset();
     m_render_flow.Reset();

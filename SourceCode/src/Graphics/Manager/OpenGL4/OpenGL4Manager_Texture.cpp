@@ -33,6 +33,10 @@ void OpenGL4Manager::CreateTextureImage(TextureIdentity &io_identity, SamplerIde
 {
 }
 
+void OpenGL4Manager::InitializeSwapchainTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity)
+{
+}
+
 void OpenGL4Manager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout)
 {
 }

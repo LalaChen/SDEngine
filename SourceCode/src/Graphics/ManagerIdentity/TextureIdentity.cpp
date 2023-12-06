@@ -41,6 +41,7 @@ TextureIdentity::TextureIdentity()
 , m_allocated_size(0u)
 , m_mipmap_levels(1)
 , m_array_layers(1)
+, m_is_swapchain(false)
 {
 }
 

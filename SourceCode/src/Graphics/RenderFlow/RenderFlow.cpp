@@ -50,7 +50,7 @@ void RenderFlow::AllocateFrameBuffer()
 {
     if (m_rp.IsNull() == false) {
         m_fb = new FrameBuffer(m_object_name + "_FrameBuffer", m_size);
-        m_fb.GetRef().RegisterTargetRenderPass(m_rp);
+        SD_SREF(m_fb).RegisterTargetRenderPass(m_rp);
     }
     else {
         SDLOGE("No target render pass in RenderFlow(%s).", m_object_name.c_str());
@@ -60,7 +60,7 @@ void RenderFlow::AllocateFrameBuffer()
 void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i_tex, uint32_t i_idx, const ClearValue &i_clear_value)
 {
     if (m_fb.IsNull() == false) {
-        m_fb.GetRef().RegisterBuffer(i_tex, i_idx, i_clear_value);
+        SD_SREF(m_fb).RegisterBuffer(i_tex, i_idx, i_clear_value);
     }
     else {
         SDLOGE("No target frame buffe in RenderFlow(%s).", m_object_name.c_str());
@@ -70,7 +70,7 @@ void RenderFlow::RegisterBufferToFrameBuffer(const TextureWeakReferenceObject &i
 void RenderFlow::Initialize()
 {
     if (m_fb.IsNull() == false && m_rp.IsNull() == false) {
-        m_fb.GetRef().Initialize();
+        SD_SREF(m_fb).Initialize();
     }
     else {
         SDLOGE("One or both of render pass or frame buffer are null. RP null(%d). FB null(%d)."

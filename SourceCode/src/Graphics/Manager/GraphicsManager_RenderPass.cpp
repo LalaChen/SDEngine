@@ -22,11 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include "GraphicsManager.h"
+
 #include "UniformBufferDescriptor.h"
 #include "UniformImagesDescriptor.h"
 #include "DescriptorSetLayout.h"
 #include "LogManager.h"
-#include "GraphicsManager.h"
 
 //#define __SD_HARD_CODE__
 
@@ -205,11 +206,6 @@ void GraphicsManager::InitializeDefaultRenderPasses()
 
     rp = new RenderPass(sRenderPass_GUI);
     SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/GUIPass.json");
-    SD_SREF(rp).Initialize();
-    RegisterRenderPass(rp);
-
-    rp = new RenderPass(sRenderPass_Compositing);
-    SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/CompositorPass.json");
     SD_SREF(rp).Initialize();
     RegisterRenderPass(rp);
 #endif

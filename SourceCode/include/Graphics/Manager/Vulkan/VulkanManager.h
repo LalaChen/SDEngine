@@ -127,6 +127,7 @@ public:
     void DeleteUnifromBuffer(UniformBufferIdentity &io_identity) override;
 public:
     void CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;
+    void InitializeSwapchainTextureImage(TextureIdentity& io_tex_identity, SamplerIdentity& io_sampler_identity) override;
     void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) override;
     void DeleteTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;
 public:
@@ -170,15 +171,13 @@ public:
     void DestroySemaphoreObject(GraphicsSemaphoreIdentity &io_identity) override;
 public:
     void CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
-    void GetReadyTextureOfSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, uint32_t &io_idx)override;
+    void GetReadyTextureOfSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, uint32_t &io_idx) override;
     void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, uint32_t i_idx, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture, const ImageBlitParam &i_param) override;
     void DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
 public:
     Resolution GetScreenResolution() const override;
 public:
     void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
-public:
-    void RenderTextureToScreen(const TextureWeakReferenceObject &i_tex) override;
 protected:
 //------- Vulkan descriptor set and pool private Function ------
     VkResult CreateVkDescriptorSetLayout(

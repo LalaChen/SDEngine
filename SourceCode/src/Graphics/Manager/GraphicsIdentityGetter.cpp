@@ -48,7 +48,7 @@ const TextureIdentity& GraphicsIdentityGetter::GetIdentity(const TextureWeakRefe
 
 const SamplerIdentity& GraphicsIdentityGetter::GetIdentityFromTexture(const TextureWeakReferenceObject &i_tex) const
 {
-    return SD_CONST_WREF(i_tex).m_sampler_idnetity;
+    return SD_CONST_WREF(i_tex).m_sampler_identity;
 }
 
 const FrameBufferIdentity& GraphicsIdentityGetter::GetIdentity(const FrameBufferWeakReferenceObject &i_fb) const

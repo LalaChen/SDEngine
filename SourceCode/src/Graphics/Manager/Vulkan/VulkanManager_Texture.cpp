@@ -166,6 +166,54 @@ void VulkanManager::CreateTextureImage(TextureIdentity &io_tex_identity, Sampler
     }
 }
 
+void VulkanManager::InitializeSwapchainTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity)
+{
+    VkImage               &image = reinterpret_cast<VkImage&>(io_tex_identity.m_handle);
+    VkDevice              &device = reinterpret_cast<VkDevice&>(io_tex_identity.m_device);
+    VkImageView           &view = reinterpret_cast<VkImageView&>(io_tex_identity.m_image_view);
+    VkImageType           image_type = TextureType_Vulkan::Convert(io_tex_identity.m_texture_type);
+    VkImageViewType       view_type = TextureViewType_Vulkan::Convert(io_tex_identity.m_texture_view_type);
+    VkFormat              image_format = TextureFormat_Vulkan::Convert(io_tex_identity.m_texture_format);
+    VkImageLayout         init_layout = ImageLayout_Vulkan::Convert(io_tex_identity.m_init_layout);
+    VkImageUsageFlags     init_usages = ImageUsage_Vulkan::Convert(io_tex_identity.m_image_usages);
+    VkImageTiling         image_tiling = ImageTiling_Vulkan::Convert(io_tex_identity.m_tiling);
+    VkSampleCountFlagBits sample_count = SampleCount_Vulkan::Convert(io_tex_identity.m_sample_count);
+
+    VkResult result = VK_SUCCESS;
+    device = m_device;
+
+    float max_lod = static_cast<float>(io_tex_identity.m_mipmap_levels);
+    VkSampler& sampler = reinterpret_cast<VkSampler&>(io_sampler_identity.m_handle);
+    io_sampler_identity.m_device = reinterpret_cast<CompHandle>(m_device);
+
+    VkSamplerCreateInfo sampler_info = InitializeVkSamplerCreateInfo(
+        SamplerFilterType_Vulkan::Convert(io_sampler_identity.m_min_filter_type),
+        SamplerFilterType_Vulkan::Convert(io_sampler_identity.m_mag_filter_type),
+        SamplerMipmapMode_Vulkan::Convert(io_sampler_identity.m_mipmap_mode),
+        SamplerWrapMode_Vulkan::Convert(io_sampler_identity.m_wrap_mode_s),
+        SamplerWrapMode_Vulkan::Convert(io_sampler_identity.m_wrap_mode_t),
+        SamplerWrapMode_Vulkan::Convert(io_sampler_identity.m_wrap_mode_r),
+        0.0f,//Mip Bias
+        io_sampler_identity.m_use_anisotropy,
+        io_sampler_identity.m_max_anisotropy,
+        io_sampler_identity.m_use_compare,
+        CompareOp_Vulkan::Convert(io_sampler_identity.m_compare_op),
+        0.0f, max_lod,
+        BorderColorType_Vulkan::Convert(io_sampler_identity.m_sampler_b_color_type),
+        VK_FALSE //need to normalize texture.
+    );
+
+    result = CreateVkSampler(sampler, device, sampler_info);
+
+    if (result != VK_SUCCESS) {
+        SDLOGE("Allocated sampler for this image failure(%x)!!!", result);
+        return;
+    }
+    else {
+        io_sampler_identity.SetValid();
+    }
+}
+
 void VulkanManager::RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout)
 {
     std::lock_guard<std::mutex> lock(m_loading_buffer_lock);
@@ -246,8 +294,16 @@ void VulkanManager::DeleteTextureImage(TextureIdentity &io_identity, SamplerIden
     //destroy image handle.
     VkDeviceMemory &memory = reinterpret_cast<VkDeviceMemory&>(io_identity.m_memory);
     VkImage        &image = reinterpret_cast<VkImage&>(io_identity.m_handle);
-    FreeVkDeviceMemory(memory, device);
-    DestroyVkImage(image, device);
+    VkImageView    &image_view = reinterpret_cast<VkImageView&>(io_identity.m_image_view);
+    if (io_identity.m_is_swapchain == false) {
+        FreeVkDeviceMemory(memory, device);
+        DestroyVkImageView(image_view, device);
+        DestroyVkImage(image, device);
+    }
+    else {
+        io_identity.m_handle = SD_NULL_HANDLE;
+        io_identity.m_image_view = SD_NULL_HANDLE;
+    }
     io_identity.SetInvalid();
     io_identity = TextureIdentity();
     VkSampler &sample = reinterpret_cast<VkSampler&>(io_sampler_identity.m_handle);

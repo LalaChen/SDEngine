@@ -219,6 +219,14 @@ public:
     {
         return this->use_count();
     }
+
+    /*! \fn void Reset();
+    *  \brief Reset this reference.
+    */
+    void Reset()
+    {
+        this->reset();
+    }
 };
 
 _______________SD_END_BASIC_NAMESPACE________________

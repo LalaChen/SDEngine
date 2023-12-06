@@ -32,6 +32,9 @@ GraphicsSwapchainIdentity::GraphicsSwapchainIdentity()
 , m_phy_device(SD_NULL_HANDLE)
 , m_device(SD_NULL_HANDLE)
 , m_surface(SD_NULL_HANDLE)
+, m_format(TextureFormat_MAX_DEFINE_VALUE)
+, m_type(TextureType_MAX_DEFINE_VALUE)
+, m_view_type(TextureViewType_MAX_DEFINE_VALUE)
 , m_layer_size(1)
 {
 }

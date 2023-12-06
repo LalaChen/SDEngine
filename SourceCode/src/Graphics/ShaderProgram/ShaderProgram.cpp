@@ -60,8 +60,8 @@ bool ShaderProgram::LoadFromFile(const FilePathString &i_fp)
     }
     else {
         SDLOGE("fp[%s] isn't exist. Please check!!!", i_fp.c_str());
+        return false;
     }
-    return true;
 }
 
 bool ShaderProgram::LoadFromSource(const std::string &i_sp_proj_str)
@@ -419,7 +419,7 @@ void ShaderProgram::RegisterShaderProgramStructure(
 
     for (uint32_t dsl_count = 0; dsl_count < m_material_dsls.size(); ++dsl_count) {
         uint32_t dsl_dcounts[UniformBindingType_MAX_DEFINE_VALUE] = {0};
-        m_material_dsls[dsl_count].GetRef().GetUniformDescriptorCounts(dsl_dcounts);
+        SD_SREF(m_material_dsls[dsl_count]).GetUniformDescriptorCounts(dsl_dcounts);
         for (uint32_t count = 0; count < UniformBindingType_MAX_DEFINE_VALUE; ++count) {
             m_descriptor_counts[count] += dsl_dcounts[count];
         }
@@ -462,8 +462,8 @@ void ShaderProgram::AllocateEssentialObjects(
     //1. allocate descriptor set for each pipeline.
     io_desc_sets.resize(m_material_dsls.size());
     for (uint32_t dsl_count = 0; dsl_count < m_material_dsls.size(); ++dsl_count) {
-        io_desc_sets[dsl_count] = io_pool.GetRef().AllocateDescriptorSet(m_material_dsls[dsl_count]);
-        io_desc_sets[dsl_count].GetConstRef().GetAllocatedUniformVariables(io_uvs);
+        io_desc_sets[dsl_count] = SD_WREF(io_pool).AllocateDescriptorSet(m_material_dsls[dsl_count]);
+        SD_CONST_WREF(io_desc_sets[dsl_count]).GetAllocatedUniformVariables(io_uvs);
     }
 }
 

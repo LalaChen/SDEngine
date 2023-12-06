@@ -47,27 +47,27 @@ bool SampleDrawObjects::LoadImpl()
     }
     {
         m_main_tex = new Texture("MainTexture");
-        m_main_tex.GetRef().SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
-        m_main_tex.GetRef().InitializeFromImageResource("Texture/Lenna.png");
+        SD_SREF(m_main_tex).SetSamplerFilterType(SamplerFilterType_LINEAR, SamplerFilterType_LINEAR);
+        SD_SREF(m_main_tex).InitializeFromImageResource("Texture/Lenna.png");
     }
     {
         m_axis_material = new Material("AxesMaterial");
-        m_axis_material.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("AxesShader"));
+        SD_SREF(m_axis_material).BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("AxesShader"));
         //Set data done. Link with shader program.(Write descirptor)
-        m_axis_material.GetRef().LinkWithShaderProgram();
+        SD_SREF(m_axis_material).LinkWithShaderProgram();
         MaterialUniforms mat_ub; //use default color.
-        m_axis_material.GetRef().SetDataToUniformBuffer(sUniformBuffer_Material, &mat_ub, sizeof(MaterialUniforms));
-        m_axis_material.GetRef().Update();
+        SD_SREF(m_axis_material).SetDataToUniformBuffer(sUniformBuffer_Material, &mat_ub, sizeof(MaterialUniforms));
+        SD_SREF(m_axis_material).Update();
     }
     {
         m_basic_material = new Material("BasicMaterial");
-        m_basic_material.GetRef().BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("BasicShader"));
+        SD_SREF(m_basic_material).BindShaderProgram(GraphicsManager::GetRef().GetShaderProgram("BasicShader"));
         //Set data done. Link with shader program.(Write descirptor)
-        m_basic_material.GetRef().LinkWithShaderProgram();
+        SD_SREF(m_basic_material).LinkWithShaderProgram();
         MaterialUniforms mat_ub; //use default color.
-        m_basic_material.GetRef().SetDataToUniformBuffer(sUniformBuffer_Material, &mat_ub, sizeof(MaterialUniforms));
-        m_basic_material.GetRef().SetTexture(sUniformImages_Material_Textures, m_main_tex, 0);
-        m_basic_material.GetRef().Update();
+        SD_SREF(m_basic_material).SetDataToUniformBuffer(sUniformBuffer_Material, &mat_ub, sizeof(MaterialUniforms));
+        SD_SREF(m_basic_material).SetTexture(sUniformImages_Material_Textures, m_main_tex, 0);
+        SD_SREF(m_basic_material).Update();
     }
 
     //4. allocate scene root.
@@ -90,7 +90,7 @@ bool SampleDrawObjects::LoadImpl()
     SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetClearValues(
         { 0.1f, 0.1f, 0.1f, 1.0f },
         { 1.0f, 1 });
-
+    SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetLayerID(0);
     SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionForEye(60.0f, 0.01f, 1000.0f, VREye_Left);
     SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).SetProjectionForEye(60.0f, 0.01f, 1000.0f, VREye_Right);
     SD_TYPE_COMP_WREF(m_camera_node, VRCameraComponent).Initialize();
@@ -100,6 +100,7 @@ bool SampleDrawObjects::LoadImpl()
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetClearValues(
         { 0.35f, 0.35f, 0.75f, 1.0f },
         { 1.0f, 1 });
+    SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetLayerID(0);
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).SetPerspective(60.0f, 0.01f, 1000.0f);
     SD_TYPE_COMP_WREF(m_camera_node, CameraComponent).Initialize();
 

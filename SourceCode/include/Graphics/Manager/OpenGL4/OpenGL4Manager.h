@@ -112,6 +112,7 @@ public:
     void DeleteUnifromBuffer(UniformBufferIdentity &io_identity) override;
 public:
     void CreateTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;
+    void InitializeSwapchainTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity) override;
     void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum& i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) override;
     void DeleteTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) override;
 public:
@@ -162,9 +163,6 @@ public:
     void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
 public:
     Resolution GetScreenResolution() const override { return Resolution(); }
-public:
-//------------- Force Render Function -----------------
-    void RenderTextureToScreen(const TextureWeakReferenceObject &i_tex) override;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

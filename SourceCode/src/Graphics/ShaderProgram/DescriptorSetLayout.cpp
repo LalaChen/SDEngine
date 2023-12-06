@@ -44,13 +44,13 @@ void DescriptorSetLayout::AddUniformVariableDescriptors(const std::vector<Unifor
 {
     m_uvds = i_uvds;
     for (UniformVariableDescriptorStrongReferenceObject &uvd : m_uvds) {
-        UniformBindingTypeEnum ub_type = uvd.GetRef().GetBindingType();
+        UniformBindingTypeEnum ub_type = SD_SREF(uvd).GetBindingType();
         uint32_t bindingNumber = SD_SREF(uvd).GetNumber();
         if (ub_type != UniformBindingType_MAX_DEFINE_VALUE) {
             m_descriptor_counts[SD_ENUM_TO_UINT(ub_type)] += bindingNumber;
         }
         else {
-            SDLOGE("Error Uniform Binding in uniform variable descriptor(%s).", uvd.GetRef().GetObjectName().c_str());
+            SDLOGE("Error Uniform Binding in uniform variable descriptor(%s).", SD_SREF(uvd).GetObjectName().c_str());
         }
     }
 }
@@ -67,7 +67,7 @@ void DescriptorSetLayout::Initialize()
 void DescriptorSetLayout::AllocateUniformVariables(std::vector<UniformVariableStrongReferenceObject> &io_uvs)
 {
     for (uint32_t uvd_count = 0; uvd_count < m_uvds.size(); ++uvd_count) {
-        io_uvs.push_back(m_uvds[uvd_count].GetRef().AllocateUniformVariable());
+        io_uvs.push_back(SD_SREF(m_uvds[uvd_count]).AllocateUniformVariable());
     }
 }
 

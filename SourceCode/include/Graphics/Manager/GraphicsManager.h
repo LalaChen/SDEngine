@@ -40,6 +40,7 @@ SOFTWARE.
 #include "GraphicsConfig.h"
 #include "PeriodCounter.h"
 #include "GraphicsIdentityGetter.h"
+#include "GraphicsLayer.h"
 #include "ImageBlitParam.h"
 #include "ImageLoader.h"
 #include "Resolution.h"
@@ -69,7 +70,7 @@ enum VertexLocationKindEnum {
 static const std::string sRenderPass_Forward = "ForwardPass";
 static const std::string sRenderPass_VRForward = "VRForwardPass";
 static const std::string sRenderPass_GUI = "GUIPass";
-static const std::string sRenderPass_Compositing = "CompositingPass";
+static const std::string sRenderPass_Composing = "ComposingPass";
 
 static const std::string sUniformDescriptorSetLayout_Camera = "Camera";
 static const std::string sUniformBuffer_Camera = "camera";
@@ -179,6 +180,7 @@ public:
     virtual void DeleteUnifromBuffer(UniformBufferIdentity &io_identity) = 0;
 public:
     virtual void CreateTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity) = 0;
+    virtual void InitializeSwapchainTextureImage(TextureIdentity &io_tex_identity, SamplerIdentity &io_sampler_identity) = 0;
     virtual void RefreshTextureImage(const TextureIdentity &i_identity, VoidPtr i_data_ptr, ImageOffset i_offset, ImageSize i_size, Size_ui64 i_data_size, const ImageLayoutEnum &i_dst_layout = ImageLayout_MAX_DEFINE_VALUE) = 0;
     virtual void DeleteTextureImage(TextureIdentity &io_identity, SamplerIdentity &io_sampler_identity) = 0;
 public:
@@ -229,9 +231,6 @@ public:
 //------------- Resize Function -----------------
     virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) = 0;
 public:
-//------------- Render Function -----------------
-    virtual void RenderTextureToScreen(const TextureWeakReferenceObject &i_tex) = 0;
-public:
     virtual Resolution GetScreenResolution() const = 0;
 public:
     void GetBasicVertexAttribInfos(
@@ -240,7 +239,6 @@ public:
         VertexLocationKindEnum i_vl_kind = VertexLocationKind_GENERAL) const;
 public:
     float GetFPS() const;
-
     GraphicsSwapchainWeakReferenceObject GetSwapchain() const;
 public:
 //-------- Managing RenderPass Function ---------
@@ -260,7 +258,19 @@ public:
     virtual void RegisterShaderProgram(const ShaderProgramStrongReferenceObject &i_sp);
     virtual void RegisterShaderProgram(const ObjectName &i_sp_name, const FilePathString &i_path);
 public:
+    virtual GraphicsLayerWeakReferenceObject RegisterLayer(
+        const ObjectName &i_name,
+        const TextureWeakReferenceObject &i_color_buffer,
+        const TextureWeakReferenceObject &i_depth_buffer,
+        uint32_t i_layer_id);
+
+    virtual void UnregisterLayer(const GraphicsLayerWeakReferenceObject &i_layer);
+public:
     void SubmitGraphicsCommands(const std::vector<CommandBufferWeakReferenceObject> &i_cbs);
+public:
+    void RenderTextureToScreen(const TextureWeakReferenceObject &i_tex);
+    void RenderLayersToSwapchain();
+    void PresentSwapchain();
 protected:
     void InitializeDefaultPipelineInfos();
     void InitializeBasicDescriptorSetLayout();
@@ -305,6 +315,8 @@ protected:
 
     std::mutex m_loading_buffer_lock;
 
+protected:
+    std::list<GraphicsLayerStrongReferenceObject> m_layers;
 protected:
     PeriodCounter m_fps_counter;
 

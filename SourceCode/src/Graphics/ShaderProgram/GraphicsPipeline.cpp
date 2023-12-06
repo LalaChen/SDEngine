@@ -72,7 +72,7 @@ void GraphicsPipeline::UseAndBindDescriptorSets(const CommandBufferWeakReference
     std::vector<DescriptorSetWeakReferenceObject> pipe_dss;
     for (const DescriptorSetWeakReferenceObject &ds : i_dss) {
         for (uint32_t dsl_count = 0; dsl_count < m_dsls.size(); ++dsl_count) {
-            if (ds.GetRef().IsThisLayout(m_dsls[dsl_count]) == true) {
+            if (SD_WREF(ds).IsThisLayout(m_dsls[dsl_count]) == true) {
                 pipe_dss.push_back(ds);
                 break;
             }

@@ -38,7 +38,9 @@ Texture::Texture(const ObjectName &i_object_name)
 
 Texture::~Texture()
 {
-    GraphicsManager::GetRef().DeleteTextureImage(m_tex_identity, m_sampler_idnetity);
+    if (m_tex_identity.m_is_swapchain == false) {
+        GraphicsManager::GetRef().DeleteTextureImage(m_tex_identity, m_sampler_identity);
+    }
 }
 
 //--- Texture Data Function
@@ -63,12 +65,12 @@ void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap, Si
     if (i_bitmap.IsNull() == false) {
         if (m_tex_identity.m_handle == SD_NULL_HANDLE) {
             //1. collect necessary datas.
-            Size_ui32 img_w = i_bitmap.GetRef().GetWidth();
-            Size_ui32 img_h = i_bitmap.GetRef().GetHeight();
-            Size_ui32 img_n_of_c = i_bitmap.GetRef().GetNumOfChannel();
-            Size_ui32 img_buf_size = static_cast<Size_ui32>(i_bitmap.GetRef().GetBufferSize());
-            BitmapPixelValueType bitmap_p_type = i_bitmap.GetRef().GetPixelValueType();
-            const VoidPtr img_ptr = reinterpret_cast<const VoidPtr>(i_bitmap.GetRef().GetBitmap());
+            Size_ui32 img_w = SD_WREF(i_bitmap).GetWidth();
+            Size_ui32 img_h = SD_SREF(i_bitmap).GetHeight();
+            Size_ui32 img_n_of_c = SD_SREF(i_bitmap).GetNumOfChannel();
+            Size_ui32 img_buf_size = static_cast<Size_ui32>(SD_SREF(i_bitmap).GetBufferSize());
+            BitmapPixelValueType bitmap_p_type = SD_SREF(i_bitmap).GetPixelValueType();
+            const VoidPtr img_ptr = reinterpret_cast<const VoidPtr>(SD_SREF(i_bitmap).GetBitmap());
 
             //2. write down texture data.
             m_tex_identity.m_texture_type = TextureType_TEXTURE_2D;
@@ -131,7 +133,7 @@ void Texture::InitializeFromBitmap(const BitmapWeakReferenceObject &i_bitmap, Si
             }
 
             //3. Create image.
-            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_identity);
 
             //4. Refresh texture image.
             if (m_tex_identity.m_handle != SD_NULL_HANDLE) {
@@ -173,7 +175,7 @@ void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
             m_tex_identity.m_image_usages.push_back(ImageUsage_SAMPLED);
-            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_identity);
         }
         else if (i_layout == ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
             if (GraphicsManager::GetRef().IsSupportedDepthBufferFormat(i_format) == true) {
@@ -189,7 +191,7 @@ void Texture::Initialize2DColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
             m_tex_identity.m_image_usages.push_back(ImageUsage_SAMPLED);
-            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_identity);
         }
         else {
             m_tex_identity = TextureIdentity();
@@ -222,7 +224,7 @@ void Texture::InitializeVRColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
             m_tex_identity.m_image_usages.push_back(ImageUsage_SAMPLED);
-            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_identity);
         }
         else if (i_layout == ImageLayout_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
             if (GraphicsManager::GetRef().IsSupportedDepthBufferFormat(i_format) == true) {
@@ -238,12 +240,33 @@ void Texture::InitializeVRColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_SRC);
             m_tex_identity.m_image_usages.push_back(ImageUsage_TRANSFER_DST);
             m_tex_identity.m_image_usages.push_back(ImageUsage_SAMPLED);
-            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_idnetity);
+            GraphicsManager::GetRef().CreateTextureImage(m_tex_identity, m_sampler_identity);
         }
         else {
             m_tex_identity = TextureIdentity();
             SDLOGW("We cannot initialize texture[%s] whose layout isn't color attachment or depth attachment.", m_object_name.c_str());
         }
+    }
+}
+
+void Texture::InitializeWithSwapchainImage(CompHandle i_sw_image, CompHandle i_sw_image_view, Size_ui32 i_width, Size_ui32 i_height, TextureTypeEnum i_type, TextureViewTypeEnum i_view_type, TextureFormatEnum i_format)
+{
+    if (m_tex_identity.m_handle == SD_NULL_HANDLE) {
+        m_tex_identity.m_handle = i_sw_image;
+        m_tex_identity.m_image_view = i_sw_image_view;
+        m_tex_identity.m_texture_type = i_type;
+        m_tex_identity.m_texture_view_type = i_view_type;
+        m_tex_identity.m_texture_format = i_format;
+        m_tex_identity.m_mipmap_levels = 1;
+        m_tex_identity.m_image_size.m_width = i_width;
+        m_tex_identity.m_image_size.m_height = i_height;
+        m_tex_identity.m_image_size.m_length = 1;
+        m_tex_identity.m_array_layers = 1;
+        m_tex_identity.m_aspect = ImageAspect_ASPECT_COLOR;
+        m_tex_identity.m_init_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
+        m_tex_identity.m_image_usages.push_back(ImageUsage_COLOR_ATTACHMENT);
+        m_tex_identity.m_is_swapchain = true;
+        GraphicsManager::GetRef().InitializeSwapchainTextureImage(m_tex_identity, m_sampler_identity);
     }
 }
 
@@ -259,45 +282,45 @@ void Texture::SetTextureSampleCount(const SampleCountEnum &i_sample_count)
 
 void Texture::SetSamplerFilterType(const SamplerFilterTypeEnum &i_mag_type, const SamplerFilterTypeEnum &i_min_type)
 {
-    m_sampler_idnetity.m_mag_filter_type = i_mag_type;
-    m_sampler_idnetity.m_min_filter_type = i_min_type;
+    m_sampler_identity.m_mag_filter_type = i_mag_type;
+    m_sampler_identity.m_min_filter_type = i_min_type;
 }
 
 void Texture::SetSamplerMipmapMode(const SamplerMipmapModeEnum &i_mipmap_mode)
 {
-    m_sampler_idnetity.m_mipmap_mode = i_mipmap_mode;
+    m_sampler_identity.m_mipmap_mode = i_mipmap_mode;
 }
 
 void Texture::SetSamplerWrapMode(const SamplerWrapModeEnum &i_s_mode, const SamplerWrapModeEnum &i_t_mode, const SamplerWrapModeEnum &i_r_mode)
 {
-    m_sampler_idnetity.m_wrap_mode_s = i_s_mode;
-    m_sampler_idnetity.m_wrap_mode_t = i_t_mode;
-    m_sampler_idnetity.m_wrap_mode_r = i_r_mode;
+    m_sampler_identity.m_wrap_mode_s = i_s_mode;
+    m_sampler_identity.m_wrap_mode_t = i_t_mode;
+    m_sampler_identity.m_wrap_mode_r = i_r_mode;
 }
 
 void Texture::SetSamplerBorderColorType(const SamplerBorderColorTypeEnum &i_color_type)
 {
-    m_sampler_idnetity.m_sampler_b_color_type = i_color_type;
+    m_sampler_identity.m_sampler_b_color_type = i_color_type;
 }
 
 void Texture::SetCompareFunction(bool i_signal)
 {
-    m_sampler_idnetity.m_use_compare = i_signal;
+    m_sampler_identity.m_use_compare = i_signal;
 }
 
 void Texture::SetCompareOp(const CompareOperatorEnum &i_op)
 {
-    m_sampler_idnetity.m_compare_op = i_op;
+    m_sampler_identity.m_compare_op = i_op;
 }
 
 void Texture::SetAnisotropy(bool i_signal)
 {
-    m_sampler_idnetity.m_use_anisotropy = i_signal;
+    m_sampler_identity.m_use_anisotropy = i_signal;
 }
 
 void Texture::SetMaxAnisotropy(float i_max_anisotropy)
 {
-    m_sampler_idnetity.m_max_anisotropy = i_max_anisotropy;
+    m_sampler_identity.m_max_anisotropy = i_max_anisotropy;
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

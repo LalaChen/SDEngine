@@ -43,6 +43,7 @@ CameraComponentBase::CameraComponentBase(const ObjectName &i_object_name)
 , m_ws_initialized(false)
 , m_clear_color{ 0.15f, 0.15f, 0.75f, 1.0f }
 , m_clear_d_and_s{ 1.0f, 1 }
+, m_layer_id(UINT32_MAX)
 {
     m_buffer_size = GraphicsManager::GetRef().GetScreenResolution();
     RegisterEvent(new Event(sCameraEyeChangedEventName));
@@ -52,12 +53,20 @@ CameraComponentBase::CameraComponentBase(const ObjectName &i_object_name)
 
 CameraComponentBase::~CameraComponentBase()
 {
+    if (m_layer.IsNull() == false) {
+        GraphicsManager::GetRef().UnregisterLayer(m_layer);
+    }
 }
 
 void CameraComponentBase::SetClearValues(ClearValue i_color, ClearValue i_d_and_s)
 {
     m_clear_color = i_color;
     m_clear_d_and_s = i_d_and_s;
+}
+
+void CameraComponentBase::SetLayerID(uint32_t i_layer_id)
+{
+    m_layer_id = i_layer_id;
 }
 
 TextureWeakReferenceObject CameraComponentBase::GetColorBuffer() const

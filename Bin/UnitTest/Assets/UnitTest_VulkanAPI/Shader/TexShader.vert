@@ -17,8 +17,8 @@ layout(location = 0) out vec2 texCoord;
 //layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
 //Uniform basic Buffer
 layout(binding = 0) uniform BasicUniforms {
-    mat4 clip;
-    mat4 proj;
+	mat4 clip;
+	mat4 proj;
 	mat4 view;
 	mat4 world;
 	mat4 normal;
@@ -27,9 +27,9 @@ layout(binding = 0) uniform BasicUniforms {
 
 void main()
 {
-     vec4 vertex = vec4(vertice.x, vertice.y, vertice.z, 1.0);
+	 vec4 vertex = vec4(vertice.x, vertice.y, vertice.z, 1.0);
 	 texCoord = texCoords;
-     gl_Position = basic.clip * basic.proj * basic.view * basic.world * vertex;
+	 gl_Position = basic.clip * basic.proj * basic.view * basic.world * vertex;
 	 //gl_Position = basic.proj * vertex;
 	 //gl_Position = vec4(vertice.x, vertice.y, vertice.z, 1.0);
 }

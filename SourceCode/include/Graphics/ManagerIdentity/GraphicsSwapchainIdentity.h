@@ -34,6 +34,8 @@ SOFTWARE.
 
 #include "GraphicsElementIdentity.h"
 #include "Resolution.h"
+#include "TextureFormat.h"
+#include "TextureType.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -75,10 +77,30 @@ public:
      */
     Resolution m_screen_size;
 
+    /*! \var TextureFormatEnum m_format;
+     *  \brief format of swapchain color image.
+     */
+    TextureFormatEnum m_format;
+
+    /*! \var TextureTypeEnum m_type;
+     *  \brief tex type of swapchain color image.
+     */
+    TextureTypeEnum m_type;
+
+    /*! \var TextureTypeEnum m_type;
+     *  \brief tex type of swapchain color image.
+     */
+    TextureViewTypeEnum m_view_type;
+
     /*! \var std::vector<CompHandle> m_swapchain_images;
      *  \brief swapchain color buffer images.
      */
     std::vector<CompHandle> m_swapchain_images;
+
+    /*! \var std::vector<CompHandle> m_swapchain_image_views;
+     *  \brief swapchain color buffer image views.
+     */
+    std::vector<CompHandle> m_swapchain_image_views;
 
     /*! \var uint32_t m_layer_size;
      *  \brief layer of swapchain color buffer images.

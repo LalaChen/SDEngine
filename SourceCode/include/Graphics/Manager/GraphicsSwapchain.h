@@ -38,6 +38,9 @@ SOFTWARE.
 #include "Resolution.h"
 #include "Object.h"
 #include "Texture.h"
+#include "Mesh.h"
+#include "RenderFlow.h"
+#include "GraphicsLayer.h"
 #include "GraphicsQueue.h"
 #include "CommandPool.h"
 
@@ -59,10 +62,20 @@ public:
 	virtual ~GraphicsSwapchain();
 public:
 	virtual void Initialize();
-
 	virtual void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex);
+	virtual void RenderLayersToSwapchain(const std::list<GraphicsLayerStrongReferenceObject> &i_layers);
+	virtual void Present();
 public:
 	Resolution GetResolution() const;
+	uint32_t GetTextureSize() const;
+protected:
+	std::vector<TextureStrongReferenceObject> m_swapchain_texs;
+	std::vector<RenderFlowStrongReferenceObject> m_flows;
+	std::vector<bool> m_tex_valids;
+
+	uint32_t m_last_slot_id;
+	uint32_t m_current_slot_id;
+	uint64_t m_frame_count;
 protected:
 	GraphicsSwapchainIdentity m_identity;
 	CommandPoolStrongReferenceObject m_cmd_pool;
@@ -70,11 +83,17 @@ protected:
 	GraphicsQueueWeakReferenceObject m_queue;
 	GraphicsSemaphoreStrongReferenceObject m_acq_sema;
 	GraphicsSemaphoreStrongReferenceObject m_present_sema;
+	MeshStrongReferenceObject m_mesh;
 };
 
 inline Resolution GraphicsSwapchain::GetResolution() const
 {
 	return m_identity.m_screen_size;
+}
+
+inline uint32_t GraphicsSwapchain::GetTextureSize() const
+{
+	return static_cast<uint32_t>(m_identity.m_swapchain_images.size());
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

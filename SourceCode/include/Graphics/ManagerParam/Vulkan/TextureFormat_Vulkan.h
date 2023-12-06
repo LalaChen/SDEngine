@@ -45,6 +45,7 @@ class TextureFormat_Vulkan
 public:
     static VkFormat Convert(const TextureFormatEnum &i_src);
     static const char* GetTextureFormatName(const TextureFormatEnum &i_src);
+    static TextureFormatEnum Reverse(VkFormat i_format);
 public:
     static VkFormat TextureFormatTypes[TextureFormat_MAX_DEFINE_VALUE];
     static std::string TextureFormatNames[TextureFormat_MAX_DEFINE_VALUE];

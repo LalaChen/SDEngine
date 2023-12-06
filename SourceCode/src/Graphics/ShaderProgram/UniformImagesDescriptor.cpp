@@ -41,7 +41,7 @@ UniformVariableStrongReferenceObject UniformImagesDescriptor::AllocateUniformVar
 {
     UniformImagesStrongReferenceObject ub = new UniformImages(m_object_name, m_binding_id);
     UniformImagesDescriptorWeakReferenceObject this_obj = GetThisWeakPtrByType<UniformImagesDescriptor>();
-    ub.GetRef().Initialize(this_obj);
+    SD_SREF(ub).Initialize(this_obj);
     return ub.StaticCastTo<UniformVariable>();
 }
 

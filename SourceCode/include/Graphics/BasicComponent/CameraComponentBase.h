@@ -39,6 +39,7 @@ SOFTWARE.
 #include "Transform.h"
 #include "Resolution.h"
 #include "Area.h"
+#include "GraphicsLayer.h"
 #include "LightComponent.h"
 #include "MeshRenderComponent.h"
 
@@ -94,6 +95,7 @@ public:
     virtual bool OnGeometryChanged(const EventArg &i_arg) = 0;
 public:
     void SetClearValues(ClearValue i_color, ClearValue i_d_and_s);
+    void SetLayerID(uint32_t i_layer_id);
 public:
     TextureWeakReferenceObject GetColorBuffer() const;
     TextureWeakReferenceObject GetDepthBuffer() const;
@@ -117,6 +119,7 @@ protected:
     RenderFlowStrongReferenceObject m_render_flow;
     TextureStrongReferenceObject m_color_buffer;
     TextureStrongReferenceObject m_depth_buffer;
+    GraphicsLayerWeakReferenceObject m_layer;
 protected:
     DescriptorPoolStrongReferenceObject m_dp;
     UniformBufferWeakReferenceObject m_ub;
@@ -127,6 +130,7 @@ protected:
     bool m_ws_initialized;
     ClearValue m_clear_color;
     ClearValue m_clear_d_and_s;
+    uint32_t m_layer_id;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

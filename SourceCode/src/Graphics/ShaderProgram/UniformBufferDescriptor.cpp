@@ -80,7 +80,7 @@ UniformVariableStrongReferenceObject UniformBufferDescriptor::AllocateUniformVar
 {
     UniformBufferStrongReferenceObject ub = new UniformBuffer(m_object_name, m_binding_id);
     UniformBufferDescriptorWeakReferenceObject this_obj = GetThisWeakPtrByType<UniformBufferDescriptor>();
-    ub.GetRef().Initialize(this_obj);
+    SD_SREF(ub).Initialize(this_obj);
     return ub.StaticCastTo<UniformVariable>();
 }
 

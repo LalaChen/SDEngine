@@ -47,16 +47,25 @@ enum TextureFormatEnum
     TextureFormat_R8_SNORM, /*!< read value to [-1,1]. data is byte. channel number is 1.*/
     TextureFormat_R8_UINT, /*!< read value to [0,255]. data is byte. channel number is 1.*/
     TextureFormat_R8_SINT, /*!< read value to [-128,127]. data is byte. channel number is 1.*/
+    TextureFormat_R8_SRGB,
     //--- RG
     TextureFormat_R8G8_UNORM, /*!< read value to [0,1]. data is byte. channel number is 2.*/
     TextureFormat_R8G8_SNORM, /*!< read value to [-1,1]. data is byte. channel number is 2.*/
     TextureFormat_R8G8_UINT, /*!< read value to [0,255]. data is byte. channel number is 2.*/
     TextureFormat_R8G8_SINT, /*!< read value to [-128,127]. data is byte. channel number is 2.*/
+    TextureFormat_R8G8_SRGB,
     //--- RGBA
     TextureFormat_R8G8B8A8_UNORM, /*!< read value to [0,1]. data is byte. channel number is 4.*/
     TextureFormat_R8G8B8A8_SNORM, /*!< read value to [-1,1]. data is byte. channel number is 4.*/
     TextureFormat_R8G8B8A8_UINT, /*!< read value to [0,255]. data is byte. channel number is 4.*/
     TextureFormat_R8G8B8A8_SINT, /*!< read value to [-128,127]. data is byte. channel number is 4.*/
+    TextureFormat_R8G8B8A8_SRGB,
+    //--- BGRA
+    TextureFormat_B8G8R8A8_UNORM, /*!< read value to [0,1]. data is byte. channel number is 4.*/
+    TextureFormat_B8G8R8A8_SNORM, /*!< read value to [-1,1]. data is byte. channel number is 4.*/
+    TextureFormat_B8G8R8A8_UINT, /*!< read value to [0,255]. data is byte. channel number is 4.*/
+    TextureFormat_B8G8R8A8_SINT, /*!< read value to [-128,127]. data is byte. channel number is 4.*/
+    TextureFormat_B8G8R8A8_SRGB,
     //--- Short
     //--- R
     TextureFormat_R16_UNORM, /*!< read value to [0,1]. data is short. channel number is 1.*/

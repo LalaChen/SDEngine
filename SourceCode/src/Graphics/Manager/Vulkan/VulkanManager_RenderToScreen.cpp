@@ -24,6 +24,7 @@ SOFTWARE.
 */
 
 #include "VulkanManager.h"
+#include "TextureFormat_Vulkan.h"
 #include "ImageAspect_Vulkan.h"
 #include "LogManager.h"
 
@@ -56,6 +57,15 @@ void VulkanManager::CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identi
         image_count = m_surface_capabilities.maxImageCount;
     }
 
+    io_identity.m_format = TextureFormat_Vulkan::Reverse(m_final_sur_format.format);
+    if (io_identity.m_format == TextureFormat_MAX_DEFINE_VALUE) {
+        SDLOGE("Convert format(%d) for swapchain image failure!!!", m_final_sur_format.format);
+        return;
+    }
+
+    io_identity.m_type = TextureType_TEXTURE_2D;
+    io_identity.m_view_type = TextureViewType_TEXTURE_2D;
+
     //Write Create Info
     std::vector<uint32_t> queue_fam_ids = { m_queue_family.GetQueueFamilyID() };
     VkSwapchainCreateInfoKHR info = InitializeVkSwapchainCreateInfoKHR(
@@ -79,8 +89,31 @@ void VulkanManager::CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identi
         }
         else {
             io_identity.m_swapchain_images.resize(images.size());
+            io_identity.m_swapchain_image_views.resize(images.size());
+
+            VkImageSubresourceRange sub_res_range;
+            sub_res_range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            sub_res_range.baseArrayLayer = 0;
+            sub_res_range.layerCount = 1;
+            sub_res_range.baseMipLevel = 0;
+            sub_res_range.levelCount = 1;
+            
+            VkComponentMapping component_mapping;
+            component_mapping.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+            component_mapping.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+            component_mapping.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+            component_mapping.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
             for (uint32_t i = 0; i < images.size(); ++i) {
+
                 io_identity.m_swapchain_images[i] = reinterpret_cast<CompHandle>(images[i]);
+
+                VkImageView &swapchain_image_view = reinterpret_cast<VkImageView&>(io_identity.m_swapchain_image_views[i]);
+                VkImageViewCreateInfo info = InitializeVkImageViewCreateInfo(
+                    reinterpret_cast<VkImage>(io_identity.m_swapchain_images[i]),
+                    VK_IMAGE_VIEW_TYPE_2D, m_final_sur_format.format,
+                    component_mapping, sub_res_range);
+                result = CreateVkImageView(swapchain_image_view, m_device, info);
             }
             io_identity.SetValid();
         }
@@ -92,6 +125,9 @@ void VulkanManager::DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_ident
     VkDevice         &device    = reinterpret_cast<VkDevice&>(io_identity.m_device);
     VkSurfaceKHR     &surface   = reinterpret_cast<VkSurfaceKHR&>(io_identity.m_surface);
     VkSwapchainKHR   &swapchain = reinterpret_cast<VkSwapchainKHR&>(io_identity.m_handle);
+    for (uint32_t i = 0; i < io_identity.m_swapchain_image_views.size(); ++i) {
+        DestroyVkImageView(reinterpret_cast<VkImageView&>(io_identity.m_swapchain_image_views[i]), device);
+    }
     DestroyVkSwapchain(swapchain, device);
     io_identity.SetInvalid();
     io_identity = GraphicsSwapchainIdentity();
@@ -125,7 +161,6 @@ void VulkanManager::RenderTextureToSwapchain(
     const TextureWeakReferenceObject &i_texture,
     const ImageBlitParam &i_param)
 {
-    
     VkResult result = VK_SUCCESS;
 
     const CommandBufferIdentity &cmd_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_cmd_buffer);
@@ -170,22 +205,4 @@ void VulkanManager::RenderTextureToSwapchain(
     //4. present queue.
     SD_SREF(i_queue).Present(i_identity, i_idx, {i_present_sema});
 }
-
-void VulkanManager::RenderTextureToScreen(const TextureWeakReferenceObject &i_tex)
-{
-    if (m_swapchain.IsNull() == false) {
-        if (i_tex.IsNull() == true) {
-            return;
-        }
-
-        if (SD_WREF(i_tex).IsInitialized() == false) {
-            return;
-        }
-
-        SD_SREF(m_swapchain).RenderTextureToSwapchain(i_tex);
-
-        m_fps_counter.AddCount();
-    }
-}
-
 ______________SD_END_GRAPHICS_NAMESPACE______________

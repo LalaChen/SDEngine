@@ -66,7 +66,7 @@ void DescriptorSet::Initialize(
     //2. allocate identity.
     GraphicsManager::GetRef().AllocateDescriptorSet(m_identity, pool, m_layout);
     //3. allocate uniform variables.
-    m_layout.GetRef().AllocateUniformVariables(m_uvs);
+    SD_WREF(m_layout).AllocateUniformVariables(m_uvs);
 }
 
 void DescriptorSet::WriteDescriptor()
@@ -83,7 +83,7 @@ void DescriptorSet::GetAllocatedUniformVariables(
     std::map<ObjectName, UniformVariableWeakReferenceObject> &io_uvs) const
 {
     for (const UniformVariableStrongReferenceObject &uv : m_uvs) {
-        std::string uv_name = uv.GetRef().GetObjectName();
+        std::string uv_name = SD_SREF(uv).GetObjectName();
         std::map<ObjectName, UniformVariableWeakReferenceObject>::iterator iter;
         iter = io_uvs.find(uv_name);
         if (iter == io_uvs.end()) {

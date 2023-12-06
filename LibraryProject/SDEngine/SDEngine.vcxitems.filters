@@ -280,9 +280,6 @@
     <Filter Include="src\OpenXR">
       <UniqueIdentifier>{86c104c3-332f-4823-8cd4-7b45bab1640c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Graphics\GPUEvent">
-      <UniqueIdentifier>{0b7afe83-2199-4297-afaa-bda5451ff390}</UniqueIdentifier>
-    </Filter>
     <Filter Include="common\ShaderProgram\LayerComposing">
       <UniqueIdentifier>{ea7b4da7-ac7a-4755-9aad-284c9a68b705}</UniqueIdentifier>
     </Filter>
@@ -990,7 +987,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\BasicComponent\WorldGUIComponentBase.h">
       <Filter>include\Graphics\BasicComponent</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsCompositor.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\SourceCode\include\Graphics\Manager\GraphicsLayer.h">
       <Filter>include\Graphics\Manager</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1660,6 +1657,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\BasicComponent\WorldGUIComponentBase.cpp">
       <Filter>src\Graphics\BasicComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SourceCode\src\Graphics\Manager\GraphicsLayer.cpp">
+      <Filter>src\Graphics\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

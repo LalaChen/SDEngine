@@ -60,9 +60,10 @@ DescriptorSetWeakReferenceObject DescriptorPool::AllocateDescriptorSet(const Des
     if (m_current_set < m_identity.m_max_set) {
         DescriptorPoolWeakReferenceObject this_dp = GetThisWeakPtrByType<DescriptorPool>();
         DescriptorSetStrongReferenceObject new_set = new DescriptorSet(StringFormat("%s_dset_%d", m_object_name.c_str(), m_current_set));
-        new_set.GetRef().Initialize(this_dp.StaticCastTo<Object>(), i_dsl);
+        SD_SREF(new_set).Initialize(this_dp.StaticCastTo<Object>(), i_dsl);
         m_sets.push_back(new_set);
         ds = new_set;
+        m_current_set++;
     }
     else {
         SDLOGE("Descriptor Pool(%s)'s ds are allocated.", m_object_name.c_str());

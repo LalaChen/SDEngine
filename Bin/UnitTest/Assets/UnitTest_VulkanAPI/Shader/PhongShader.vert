@@ -24,8 +24,8 @@ layout(location = 4) out vec3 wViewDir;
 //layout(set = n, binding = m) for Opengl, we don't assign set. (default set is 0)
 //Uniform basic Buffer.
 layout(set = 0, binding = 0) uniform BasicUniforms {
-    mat4 clip;
-    mat4 proj;
+	mat4 clip;
+	mat4 proj;
 	mat4 view;
 	mat4 world;
 	mat4 normal;
@@ -62,7 +62,7 @@ layout(set = 1, binding = 1) uniform sampler2D mainTexture;
 vec3 CalculateLightDir(in vec4 iVertex)
 {
 	//Directional Light
-    if (light.kind == 0) {
+	if (light.kind == 0) {
 		return normalize(light.position.xyz);
 	} 
 	else if (light.kind == 1) {
@@ -89,5 +89,5 @@ void main()
 	wLightDir = CalculateLightDir(vertex).xyz;
 	wViewDir = CalculateViewDir(vertex).xyz;
 	wVertex = vertex;
-    gl_Position = basic.clip * basic.proj * basic.view * basic.world * vertex;
+	gl_Position = basic.clip * basic.proj * basic.view * basic.world * vertex;
 }

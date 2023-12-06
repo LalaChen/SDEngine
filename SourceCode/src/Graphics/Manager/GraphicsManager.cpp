@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include "GraphicsManager.h"
 
 #include "WorldGUISystem.h"
 #include "GraphicsSystem.h"
@@ -29,7 +30,6 @@ SOFTWARE.
 #include "LogManager.h"
 #include "BasicShapeCreator.h"
 #include "AssimpModelLoader.h"
-#include "GraphicsManager.h"
 
 using SDE::Basic::ECSManager;
 
@@ -98,6 +98,11 @@ void GraphicsManager::ReleaseBasicResource()
         mvud_iter = m_material_basic_uvd_maps.erase(mvud_iter);
     }
 
+    for (std::list<GraphicsLayerStrongReferenceObject>::iterator iter = m_layers.begin();
+        iter != m_layers.end(); ) {
+        iter = m_layers.erase(iter);
+    }
+
     ReleaseRenderPasses();
     m_fps_counter.Stop();
 }
@@ -124,7 +129,6 @@ bool GraphicsManager::IsSupportedDepthBufferFormat(TextureFormatEnum i_fmt) cons
     return false;
 }
 
-
 TextureFormatEnum GraphicsManager::GetDefaultColorBufferFormat() const
 {
     if (m_supported_color_buffer_formats.size() > 0) {
@@ -143,8 +147,76 @@ bool GraphicsManager::IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) cons
             return true;
         }
     }
-
     return false;
+}
+
+GraphicsLayerWeakReferenceObject GraphicsManager::RegisterLayer(
+    const ObjectName &i_name,
+    const TextureWeakReferenceObject &i_color_buffer,
+    const TextureWeakReferenceObject &i_depth_buffer,
+    uint32_t i_layer_id)
+{
+    GraphicsLayerStrongReferenceObject result = new GraphicsLayer(i_name);
+    SD_SREF(result).RegisterTexture(i_color_buffer, i_depth_buffer, i_layer_id);
+    SD_SREF(result).Initialize();
+    m_layers.push_back(result);
+    m_layers.sort([](const GraphicsLayerStrongReferenceObject &a, const GraphicsLayerStrongReferenceObject &b) -> bool {
+        return (SD_SREF(a).GetLayerOrder() < SD_SREF(b).GetLayerOrder());
+        });
+    return result;
+}
+
+void GraphicsManager::UnregisterLayer(
+    const GraphicsLayerWeakReferenceObject &i_layer)
+{
+    GraphicsLayerStrongReferenceObject layer_sref = i_layer.DynamicCastToSharedPtr<GraphicsLayer>();
+    for (std::list<GraphicsLayerStrongReferenceObject>::iterator iter = m_layers.begin();
+        iter != m_layers.end(); ) {
+        if ((*iter).IsEqualTo(layer_sref) == true) {
+            iter = m_layers.erase(iter);
+            return;
+        }
+        else {
+            iter++;
+        }
+    }
+}
+
+void GraphicsManager::SubmitGraphicsCommands(const std::vector<CommandBufferWeakReferenceObject> &i_cbs)
+{
+    SD_SREF(m_graphics_queue).SubmitCommandBuffers(i_cbs);
+}
+
+void GraphicsManager::RenderTextureToScreen(const TextureWeakReferenceObject &i_tex)
+{
+    if (m_swapchain.IsNull() == false) {
+        if (i_tex.IsNull() == true) {
+            return;
+        }
+
+        if (SD_WREF(i_tex).IsInitialized() == false) {
+            return;
+        }
+
+        SD_SREF(m_swapchain).RenderTextureToSwapchain(i_tex);
+
+        m_fps_counter.AddCount();
+    }
+}
+
+void GraphicsManager::RenderLayersToSwapchain()
+{
+    if (m_swapchain.IsNull() == false) {
+        SD_SREF(m_swapchain).RenderLayersToSwapchain(m_layers);
+        m_fps_counter.AddCount();
+    }
+}
+
+void GraphicsManager::PresentSwapchain()
+{
+    if (m_swapchain.IsNull() == false) {
+        SD_SREF(m_swapchain).Present();
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

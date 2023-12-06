@@ -16,6 +16,6 @@ layout(location = 0) out vec2 texCoord;
 void main()
 {
 	 texCoord = texCoords;
-     //gl_Position = vertex;
+	 //gl_Position = vertex;
 	 gl_Position = vec4(vertice.x, vertice.y, vertice.z, 1.0);
 }

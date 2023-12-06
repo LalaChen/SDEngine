@@ -1,7 +1,7 @@
 /*==============  SD Engine License ==============
 MIT License
 
-Copyright (c) 2019 Tai-Yang, Chen
+Copyright (c) 2019 Kuan-Chih, Chen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,10 @@ SOFTWARE.
 
 */
 
-/*! \file      GraphicsCompositor.h
- *  \brief     Introduce of classes GraphicsCompositor.
- *  \author    Tai-Yang, Chen
- *  \date      2023/03/19
+/*! \file      GraphicsLayer.h
+ *  \brief     Introduce of class GraphicsLayer
+ *  \author    Kuan-Chih, Chen
+ *  \date      2023/11/25
  *  \copyright MIT License.
  */
 
@@ -34,39 +34,45 @@ SOFTWARE.
 
 #include "SDEngineMacro.h"
 #include "SDEngineCommonFunction.h"
-#include "CommandPool.h"
-#include "CommandBuffer.h"
-#include "GraphicsSwapchain.h"
-#include "RenderFlow.h"
+
+#include "Object.h"
+#include "Texture.h"
+#include "ShaderProgram.h"
+#include "RenderPass.h"
 #include "DescriptorPool.h"
 #include "UniformImages.h"
 #include "UniformBuffer.h"
+#include "CommandBuffer.h"
+
+using SDE::Basic::Object;
+using SDE::Basic::ObjectName;
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
-class SDENGINE_CLASS GraphicsCompositor : public Object
+SD_DECLARE_STRONG_AMD_WEAK_REF_TYPE(GraphicsLayer);
+
+class SDENGINE_CLASS GraphicsLayer : public Object
 {
 public:
-	explicit GraphicsCompositor(const ObjectName &i_name, const GraphicsSwapchainWeakReferenceObject &i_swapchain);
-	virtual ~GraphicsCompositor();
+	explicit GraphicsLayer(const ObjectName &i_object_name);
+	virtual ~GraphicsLayer();
 public:
+	void RegisterTexture(const TextureWeakReferenceObject &i_color_tex, const TextureWeakReferenceObject &i_depth_tex, uint32_t i_order = 0);
 	void Initialize();
-	void Render(const std::vector<TextureWeakReferenceObject> &i_tex);
-	TextureWeakReferenceObject GetValidTexture();
+	void RefreshRenderRegion(const Vector3f &i_region = Vector3f(0.0f, 0.0f, 1.0f, 1.0f));
+	void BindUniformVariables(const CommandBufferWeakReferenceObject &i_cb);
+	uint32_t GetLayerOrder() const;
 protected:
-	std::vector<RenderFlowStrongReferenceObject> m_flows;
-	std::vector<TextureStrongReferenceObject> m_compose_texs;
-	std::vector<bool> m_tex_valids;
-	uint32_t m_last_slot_id;
-	uint32_t m_current_slot_id;
-	uint64_t m_frame_count;
-	CommandPoolStrongReferenceObject m_cmd_pools;
-	CommandBufferWeakReferenceObject m_cmd_buffer;
-	GraphicsSwapchainWeakReferenceObject m_swapchain;
-protected:
+	ShaderProgramWeakReferenceObject m_layer_sp;
+	RenderPassWeakReferenceObject m_layer_rp;
 	DescriptorPoolStrongReferenceObject m_dp;
 	UniformBufferWeakReferenceObject m_ub;
+	UniformImagesWeakReferenceObject m_ui;
 	DescriptorSetWeakReferenceObject m_ds;
+	TextureWeakReferenceObject m_color_texture;
+	TextureWeakReferenceObject m_depth_texture;
+	Vector3f m_region;
+	uint32_t m_layer_order;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

@@ -87,7 +87,7 @@ std::string ModelData::ToString() const
     for (t_iter = m_textures.begin(); t_iter != m_textures.end(); t_iter++) {
         ss << StringFormat("\tF[%s]:%s\n",
             (*t_iter).first.c_str(), 
-            (*t_iter).second.GetRef().ToString().c_str());
+            SD_SREF((*t_iter).second).ToString().c_str());
     }
 
     ss << "NodeData : \n";

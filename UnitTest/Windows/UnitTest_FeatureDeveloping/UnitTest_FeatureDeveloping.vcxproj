@@ -137,7 +137,7 @@
     <PostBuildEvent>
       <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"
 xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(SDEngineRootDir)Bin\UnitTest\Assets\$(ProjectName)\Common"
-xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)\Common"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -159,7 +159,7 @@ xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     <PostBuildEvent>
       <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"
 xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(SDEngineRootDir)Bin\UnitTest\Assets\$(ProjectName)\Common"
-xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)\Common"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -181,7 +181,7 @@ xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     <PostBuildEvent>
       <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"
 xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(SDEngineRootDir)Bin\UnitTest\Assets\$(ProjectName)\Common"
-xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)\Common"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -207,7 +207,7 @@ xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
     <PostBuildEvent>
       <Command>xcopy /y "$(SDEngineRootDir)Bin\Library\Windows\$(Platform)\$(Configuration)\SDEngine_GLFWApplication.dll" "$(OutDir)"
 xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(SDEngineRootDir)Bin\UnitTest\Assets\$(ProjectName)\Common"
-xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)"</Command>
+xcopy /i /y /s "$(SDEngineRootDir)Bin\Common\*.*" "$(OutDir)\Common"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

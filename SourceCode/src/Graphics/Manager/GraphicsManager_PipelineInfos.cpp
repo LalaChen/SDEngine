@@ -23,9 +23,10 @@ SOFTWARE.
 
 */
 
+#include "GraphicsManager.h"
+
 #include "Vec.h"
 #include "LogManager.h"
-#include "GraphicsManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

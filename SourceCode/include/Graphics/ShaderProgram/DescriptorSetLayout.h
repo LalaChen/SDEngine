@@ -101,7 +101,7 @@ inline Size_ui32 DescriptorSetLayout::GetUniformBindingAmount() const
 inline int32_t DescriptorSetLayout::GetUniformVariableIDByName(const std::string &i_uv_name) const
 {
     for (uint32_t uvd_count = 0; uvd_count < m_uvds.size(); ++uvd_count) {
-        if (m_uvds[uvd_count].GetConstRef().GetObjectName().compare(i_uv_name) == 0) {
+        if (SD_CONST_SREF(m_uvds[uvd_count]).GetObjectName().compare(i_uv_name) == 0) {
             return uvd_count;
         }
     }

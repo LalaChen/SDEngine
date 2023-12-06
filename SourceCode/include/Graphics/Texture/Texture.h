@@ -107,6 +107,8 @@ public:
      *         or depth buffer for VR.
      */
     void InitializeVRColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_height, TextureFormatEnum i_format, ImageLayoutEnum i_layout, Size_ui32 i_mipmap_levels = 1);
+
+    void InitializeWithSwapchainImage(CompHandle i_sw_image, CompHandle i_sw_image_view, Size_ui32 i_width, Size_ui32 i_height, TextureTypeEnum i_type, TextureViewTypeEnum i_view_type, TextureFormatEnum i_format);
 public:
     /*! \fn void SetTextureMemoryTilingMode(const ImageTilingEnum &i_tiling_mode);
      *  \param [in] i_tiling_mode Target tiling mode.
@@ -155,7 +157,7 @@ public:
 protected:
     TextureIdentity m_tex_identity;
 
-    SamplerIdentity m_sampler_idnetity;
+    SamplerIdentity m_sampler_identity;
 };
 
 inline TextureTypeEnum Texture::GetTextureType() const
@@ -200,7 +202,7 @@ inline Size_ui32 Texture::GetMipMapLevels() const
 
 inline bool Texture::IsInitialized() const
 {
-    return m_tex_identity.IsValid() && m_sampler_idnetity.IsValid();
+    return m_tex_identity.IsValid() && m_sampler_identity.IsValid();
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

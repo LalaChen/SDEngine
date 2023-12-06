@@ -136,6 +136,11 @@ public://Raw Data Part.
      *  \brief The array layer size of this texture.
      */
     Size_ui32 m_array_layers;
+
+    /*! \var bool m_is_swapchain;
+     *  \brief is texture for swapchain.
+     */
+    bool m_is_swapchain;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

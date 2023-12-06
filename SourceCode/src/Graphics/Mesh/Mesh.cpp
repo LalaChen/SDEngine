@@ -65,7 +65,7 @@ void Mesh::BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb)
 {
     for (uint32_t va_idx = 0; va_idx < VertexBufferUsage_MAX_DEFINE_VALUE; ++va_idx) {
         if (m_vertex_attribs[va_idx].IsNull() == false) {
-            m_vertex_attribs[va_idx].GetRef().Bind(i_cb, va_idx, 0);
+            SD_SREF(m_vertex_attribs[va_idx]).Bind(i_cb, va_idx, 0);
         }
     }
 }
@@ -73,7 +73,7 @@ void Mesh::BindVertexBuffers(const CommandBufferWeakReferenceObject &i_cb)
 void Mesh::BindIndexBuffer(const CommandBufferWeakReferenceObject &i_cb)
 {
     if (m_index_buffer.IsNull() == false) {
-        m_index_buffer.GetRef().Bind(i_cb, 0);
+        SD_SREF(m_index_buffer).Bind(i_cb, 0);
     }
 }
 

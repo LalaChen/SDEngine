@@ -149,6 +149,8 @@ void VRCameraComponent::InitializeWorkspaceForForwardPass()
         SD_SREF(m_render_flow).RegisterBufferToFrameBuffer(m_color_buffer, 0, m_clear_color);
         SD_SREF(m_render_flow).RegisterBufferToFrameBuffer(m_depth_buffer, 1, m_clear_d_and_s);
         SD_SREF(m_render_flow).Initialize();
+
+        m_layer = GraphicsManager::GetRef().RegisterLayer(m_object_name + "_Layer", m_color_buffer, m_depth_buffer, 0);
     }
     else {
         SDLOGE("VR forward render pass doesn't exist. Please check!!!");

@@ -73,6 +73,7 @@ SOFTWARE.
 #include "Graphics/ManagerParam/ManagerParam.h"
 #include "Graphics/Manager/GraphicsConfig.h"
 #include "Graphics/Manager/GraphicsManager.h"
+#include "Graphics/Manager/GraphicsLayer.h"
 #include "Graphics/Manager/GraphicsQueue.h"
 #include "Graphics/Manager/GraphicsSynchronousElements.h"
 #include "Graphics/Manager/GraphicsIdentityGetter.h"

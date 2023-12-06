@@ -22,6 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#define NEW_FLOW
+
 #include "GraphicsSystem.h"
 
 #include "Application.h"
@@ -88,7 +91,7 @@ void GraphicsSystem::Initialize()
     m_rec_threads.resize(max_threads);
     for (uint32_t tID = 0; tID < m_rec_threads.size(); ++tID) {
         m_rec_threads[tID] = new SecondaryCommandPoolThread(StringFormat("RecordThread_%d", tID));
-        m_rec_threads[tID].GetRef().Initialize();
+        SD_SREF(m_rec_threads[tID]).Initialize();
     }
 
     //4. decide update every frame or not.
@@ -106,11 +109,16 @@ void GraphicsSystem::Update()
 
     GraphicsManager::GetRef().SubmitGraphicsCommands({ m_graphics_cb });
 
+#if defined(NEW_FLOW)
+    GraphicsManager::GetRef().RenderLayersToSwapchain();
+    GraphicsManager::GetRef().PresentSwapchain();
+#else
     CameraComponentBaseWeakReferenceObject screen_camera = GetScreenCamera();
 
     if (screen_camera.IsNull() == false) {
         GraphicsManager::GetRef().RenderTextureToScreen(SD_WREF(screen_camera).GetColorBuffer());
     }
+#endif
 }
 
 void GraphicsSystem::Destroy()
