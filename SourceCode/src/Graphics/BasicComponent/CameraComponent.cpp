@@ -98,6 +98,15 @@ void CameraComponent::ResizeImpl()
         }
     }
 
+    if (m_layer_id != UINT32_MAX) {
+        m_layer = GraphicsManager::GetRef().RegisterLayer(
+            SDE::Basic::StringFormat("%s_layer", m_object_name.c_str()),
+            m_color_buffer, m_depth_buffer, m_layer_id);
+    }
+    else {
+        SDLOG("Camera(%s)'s layer id is invalid, don't need to draw in screen", m_object_name.c_str());
+    }
+
     m_ws_initialized = true;
     float height = m_frustum.t - m_frustum.b;
     float width  = m_buffer_size.GetRatio() * height;
