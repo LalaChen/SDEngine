@@ -185,7 +185,12 @@ void GraphicsSwapchain::RenderLayersToSwapchain(const std::list<GraphicsLayerStr
 
 void GraphicsSwapchain::Present()
 {
-	SD_WREF(m_queue).Present(m_identity, m_current_slot_id, { m_present_sema });
+	if (m_tex_valids[m_current_slot_id] == true) {
+		SD_WREF(m_queue).Present(m_identity, m_current_slot_id, { m_present_sema });
+	}
+	else {
+		SD_WREF(m_queue).Present(m_identity, m_last_slot_id, { m_present_sema });
+	}
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________
