@@ -152,22 +152,24 @@ void VulkanManager::GetReadyTextureOfSwapchain(const GraphicsSwapchainIdentity &
     }
 }
 
-void VulkanManager::RenderTextureToSwapchain(
-    const GraphicsSwapchainIdentity &i_identity,
-    uint32_t i_idx,
+void VulkanManager::CopyTexture(
     const GraphicsQueueWeakReferenceObject &i_queue,
     const CommandBufferWeakReferenceObject &i_cmd_buffer,
     const GraphicsSemaphoreWeakReferenceObject &i_present_sema,
-    const TextureWeakReferenceObject &i_texture,
-    const ImageBlitParam &i_param)
+    const ImageBlitParam &i_param,
+    const TextureWeakReferenceObject &i_src_tex,
+    const TextureWeakReferenceObject &i_dst_tex)
 {
     VkResult result = VK_SUCCESS;
 
     const CommandBufferIdentity &cmd_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_cmd_buffer);
     VkCommandBuffer cmd_buffer = reinterpret_cast<VkCommandBuffer>(cmd_identity.m_handle);
 
-    const TextureIdentity &tex_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_texture);
-    VkImage src_image = reinterpret_cast<VkImage>(tex_identity.m_handle);
+    const TextureIdentity &src_tex_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_src_tex);
+    VkImage src_image = reinterpret_cast<VkImage>(src_tex_identity.m_handle);
+
+    const TextureIdentity &dst_tex_identity = SD_WREF(m_graphics_identity_getter).GetIdentity(i_dst_tex);
+    VkImage dst_image = reinterpret_cast<VkImage>(dst_tex_identity.m_handle);
 
     //1. Record Image Copy to Swapchain Image.
     BeginCommandBuffer(cmd_identity, CommandBufferInheritanceInfo());
@@ -194,15 +196,10 @@ void VulkanManager::RenderTextureToSwapchain(
     blit_param.dstOffsets[1].y = i_param.m_dst_param.m_size[1];
     blit_param.dstOffsets[1].z = i_param.m_dst_param.m_size[2];
 
-    VkImage dst_image = reinterpret_cast<VkImage>(i_identity.m_swapchain_images[i_idx]);
-
     BlitVkImages(cmd_buffer, src_image, dst_image, blit_param);
 
     EndCommandBuffer(cmd_identity);
     //3. submit to present queue.
     SD_SREF(i_queue).SubmitCommandBuffers({i_cmd_buffer});
-
-    //4. present queue.
-    SD_SREF(i_queue).Present(i_identity, i_idx, {i_present_sema});
 }
 ______________SD_END_GRAPHICS_NAMESPACE______________

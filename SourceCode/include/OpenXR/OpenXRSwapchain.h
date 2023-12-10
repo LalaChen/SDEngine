@@ -57,7 +57,6 @@ public:
 	virtual ~OpenXRSwapchain();
 public:
 	void Initialize() override;
-	void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex) override;
 protected:
 	XrSession m_session;
 	XrSwapchain m_swapchain;

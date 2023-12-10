@@ -187,23 +187,6 @@ void GraphicsManager::SubmitGraphicsCommands(const std::vector<CommandBufferWeak
     SD_SREF(m_graphics_queue).SubmitCommandBuffers(i_cbs);
 }
 
-void GraphicsManager::RenderTextureToScreen(const TextureWeakReferenceObject &i_tex)
-{
-    if (m_swapchain.IsNull() == false) {
-        if (i_tex.IsNull() == true) {
-            return;
-        }
-
-        if (SD_WREF(i_tex).IsInitialized() == false) {
-            return;
-        }
-
-        SD_SREF(m_swapchain).RenderTextureToSwapchain(i_tex);
-
-        m_fps_counter.AddCount();
-    }
-}
-
 void GraphicsManager::RenderLayersToSwapchain()
 {
     if (m_swapchain.IsNull() == false) {

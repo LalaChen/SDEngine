@@ -99,48 +99,4 @@ void OpenXRSwapchain::Initialize()
 	m_identity.m_handle = reinterpret_cast<CompHandle>(m_swapchain);
 }
 
-void OpenXRSwapchain::RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex)
-{
-	//1. acquire image.
-	XrResult result;
-	uint32_t img_idx = UINT32_MAX;
-	result = OpenXRAPIManager::GetRef().GetReadyTextureOfSwapchain(m_swapchain, img_idx);
-	if (result != XR_SUCCESS) {
-		throw ReasonableException("Get Image idx failure");
-	}
-
-	ImageBlitParam param;
-	param.m_src_param.m_aspect = ImageAspect_ASPECT_COLOR;
-	param.m_src_param.m_based_layer = 0;
-	param.m_src_param.m_layer_count = SD_WREF(i_tex).GetLayerCount();
-	param.m_src_param.m_mip_level = SD_WREF(i_tex).GetMipMapLevels();
-	param.m_src_param.m_origin[0] = 0;
-	param.m_src_param.m_origin[1] = 0;
-	param.m_src_param.m_origin[2] = 0;
-	param.m_src_param.m_size[0] = SD_WREF(i_tex).GetWidth();
-	param.m_src_param.m_size[1] = SD_WREF(i_tex).GetHeight();
-	param.m_src_param.m_size[2] = 1;
-	param.m_dst_param.m_aspect = ImageAspect_ASPECT_COLOR;
-	param.m_dst_param.m_based_layer = 0;
-	param.m_dst_param.m_layer_count = m_identity.m_layer_size;
-	param.m_dst_param.m_mip_level = 0;
-	param.m_dst_param.m_origin[0] = 0;
-	param.m_dst_param.m_origin[1] = 0;
-	param.m_dst_param.m_origin[2] = 0;
-	param.m_dst_param.m_size[0] = m_identity.m_screen_size.GetWidth();
-	param.m_dst_param.m_size[1] = m_identity.m_screen_size.GetHeight();
-	param.m_dst_param.m_size[2] = 1;
-
-	//2. Blit image to openxr swapchain.
-	GraphicsManager::GetRef().RenderTextureToSwapchain(
-		m_identity, img_idx,
-		m_queue, m_cmd_buffer, m_present_sema, i_tex, param);
-
-	//3. release image.
-	result = OpenXRAPIManager::GetRef().ReleaseSwapchainImage(m_swapchain);
-	if (result != XR_SUCCESS) {
-		throw ReasonableException("Release Image idx failure");
-	}
-}
-
 _______________SD_END_OPENXR_NAMESPACE_______________

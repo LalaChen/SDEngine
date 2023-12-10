@@ -62,7 +62,6 @@ public:
 	virtual ~GraphicsSwapchain();
 public:
 	virtual void Initialize();
-	virtual void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex);
 	virtual void RenderLayersToSwapchain(const std::list<GraphicsLayerStrongReferenceObject> &i_layers);
 	virtual void Present();
 public:

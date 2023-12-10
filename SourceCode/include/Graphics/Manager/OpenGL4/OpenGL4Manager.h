@@ -158,7 +158,9 @@ public:
     void CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
     void DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
     void GetReadyTextureOfSwapchain(const GraphicsSwapchainIdentity &i_identity, const GraphicsSemaphoreWeakReferenceObject &i_acq_sema, uint32_t &io_idx) override;
-    void RenderTextureToSwapchain(const GraphicsSwapchainIdentity &i_identity, uint32_t i_idx, const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer, const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const TextureWeakReferenceObject &i_texture, const ImageBlitParam &i_param) override;
+    void CopyTexture(const GraphicsQueueWeakReferenceObject &i_queue, const CommandBufferWeakReferenceObject &i_cmd_buffer,
+        const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const ImageBlitParam &i_param,
+        const TextureWeakReferenceObject &i_src_tex, const TextureWeakReferenceObject &i_dst_tex) override;
 public:
     void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
 public:
