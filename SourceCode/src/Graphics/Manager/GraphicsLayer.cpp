@@ -1,5 +1,4 @@
 #include "GraphicsLayer.h"
-
 #include "LogManager.h"
 #include "GraphicsManager.h"
 

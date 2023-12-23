@@ -71,6 +71,7 @@ static const std::string sRenderPass_Forward = "ForwardPass";
 static const std::string sRenderPass_VRForward = "VRForwardPass";
 static const std::string sRenderPass_GUI = "GUIPass";
 static const std::string sRenderPass_Composing = "ComposingPass";
+static const std::string sRenderPass_VRComposing = "VRComposingPass";
 
 static const std::string sUniformDescriptorSetLayout_Camera = "Camera";
 static const std::string sUniformBuffer_Camera = "camera";
@@ -87,6 +88,8 @@ static const std::string sUniformImages_Material_Textures = "textures";
 
 static const std::string sUniformDescriptorSetLayout_Compositing = "Compositing";
 static const std::string sUniformBuffer_Compositing_UVData = "uvData";
+static const std::string sUniformDescriptorSetLayout_VRCompositing = "VRCompositing";
+static const std::string sUniformBuffer_VRCompositing_UVDatas = "uvDatas";
 static const std::string sUniformImage_Compositing_Texture = "mainTexture";
 
 static const std::string sUniformDescriptorSetLayout_GUI = "GUI";
@@ -113,33 +116,23 @@ public:
     virtual ~GraphicsManager();
 public:
 //------------ Initialize and Release -------------
-    /*! \fn virtual void InitializeGraphicsSystem(const EventArg &i_arg) = 0;
+    /*! \fn void InitializeGraphicsSystem(const EventArg &i_arg);
      *  \param [in] i_arg argumnet for initializing manager. We should define necessary arguments class(derived EventArg) and input those arguments.
      *  \brief Initialize graphics system. (link dll, ...)
      */
-    virtual void InitializeGraphicsSystem(const EventArg &i_arg) = 0;
+    void InitializeGraphicsSystem(const EventArg &i_arg);
     
     /*! \fn virtual void ReleaseGraphicsSystem() = 0;
      *  \brief Release graphics system.
      */
-    virtual void ReleaseGraphicsSystem() = 0;
-
-    /*! \fn virtual void InitializeBasicResource();
-     *  \brief Initialize common necessary components.
-     */
-    virtual void InitializeBasicResource();
-
-    /*! \fn void ReleaseBasicResource();
-     *  \brief Release common necessary components.
-     */
-    virtual void ReleaseBasicResource();
+    void ReleaseGraphicsSystem();
 public:
     /*! \fn virtual void PrintSystemInformation() = 0;
      *  \brief Print system information.
      */
     virtual void PrintSystemInformation() = 0;
 public:
-    virtual void GetDesiredVulkanValidLayers(std::vector<const char*>& io_valid_layers) const = 0;
+    virtual void GetDesiredVulkanValidLayers(std::vector<const char*> &io_valid_layers) const = 0;
 public:
     virtual void CreateDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity,  const std::vector<UniformVariableDescriptorWeakReferenceObject> &i_uvds) = 0;
     virtual void DestroyDescriptorSetLayout(DescriptorSetLayoutIdentity &io_identity) = 0;
@@ -234,12 +227,11 @@ public:
         const TextureWeakReferenceObject &i_src_tex,
         const TextureWeakReferenceObject &i_dst_tex) = 0;
 public:
-//------------- Resize Function -----------------
-    virtual void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) = 0;
+    void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h);
 public:
     virtual Resolution GetScreenResolution() const = 0;
 public:
-    void GetBasicVertexAttribInfos(
+    virtual void GetBasicVertexAttribInfos(
         std::vector<VertexAttribBindingDescription> &io_binds,
         std::vector<VertexAttribLocationDescription> &io_locations,
         VertexLocationKindEnum i_vl_kind = VertexLocationKind_GENERAL) const;
@@ -257,6 +249,7 @@ public:
     bool IsSupportedDepthBufferFormat(TextureFormatEnum i_fmt) const;
     TextureFormatEnum GetDefaultColorBufferFormat() const;
     bool IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) const;
+    TextureFormatEnum GetSurfaceColorBufferFormat() const;
 public:
     virtual DescriptorSetLayoutWeakReferenceObject GetBasicDescriptorSetLayout(const ObjectName &i_dsl_name) const;
     virtual UniformVariableDescriptorStrongReferenceObject GetDefaultMaterialUniformVariableDescriptor(const ObjectName &i_uvd_name) const;
@@ -274,15 +267,26 @@ public:
 public:
     void SubmitGraphicsCommands(const std::vector<CommandBufferWeakReferenceObject> &i_cbs);
 public:
-    void RenderTextureToScreen(const TextureWeakReferenceObject &i_tex);
     void RenderLayersToSwapchain();
     void PresentSwapchain();
 protected:
+    virtual void InitializeGraphicsSystemImpl(const EventArg &i_arg) = 0;
+    virtual void ResizeImpl(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) = 0;
+    virtual void ReleaseGraphicsSystemImpl() = 0;
+protected:
     void InitializeDefaultPipelineInfos();
+    void InitializeDefaultRenderPasses();
     void InitializeBasicDescriptorSetLayout();
     void InitializeBasicMaterialUniformDescriptors();
     void InitializeBasicShaderPrograms();
-    void InitializeDefaultRenderPasses();
+protected:
+    virtual void InitializeDefaultPipelineInfosImpl();
+    virtual void InitializeDefaultRenderPassesImpl();
+    virtual void InitializeBasicDescriptorSetLayoutImpl();
+    virtual void InitializeBasicMaterialUniformDescriptorsImpl();
+    virtual void InitializeBasicShaderProgramsImpl();
+protected:
+    virtual void InitializeMainSwapchain();
 protected:
     GraphicsConfig m_graphics_config;
 protected:
@@ -323,6 +327,9 @@ protected:
 
 protected:
     std::list<GraphicsLayerStrongReferenceObject> m_layers;
+
+protected:
+    TextureFormatEnum m_surface_color_format;
 protected:
     PeriodCounter m_fps_counter;
 

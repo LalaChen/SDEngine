@@ -3,6 +3,7 @@
     "AttachmentDescriptions": [
       {
         "IsColorAttachment": true,
+        "UseSurfaceColorFormat": false,
         "FormatType": -1,
         "SampleCountType": 0,
         "LoadOpType": 1,

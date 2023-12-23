@@ -53,17 +53,6 @@ public:
      */
     virtual ~OpenGL4Manager();
 public:
-    /*! \fn void InitializeGraphicsSystem() override;
-     *  \param [in] i_arg Nothing. implement for following interface.
-     *  \brief Initialize graphics API. (link dll, ...)
-     */
-    void InitializeGraphicsSystem(const EventArg &i_arg) override;
-    
-    /*! \fn void ReleaseGraphicsSystem() override;
-     *  \brief Release graphics API.
-     */
-    void ReleaseGraphicsSystem() override;
-public:
     /*! \fn void PrintSystemInformation() override;
      *  \brief Print system information.
      */
@@ -162,9 +151,26 @@ public:
         const GraphicsSemaphoreWeakReferenceObject &i_present_sema, const ImageBlitParam &i_param,
         const TextureWeakReferenceObject &i_src_tex, const TextureWeakReferenceObject &i_dst_tex) override;
 public:
-    void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
-public:
     Resolution GetScreenResolution() const override { return Resolution(); }
+protected:
+    /*! \fn void InitializeGraphicsSystem() override;
+     *  \param [in] i_arg Nothing. implement for following interface.
+     *  \brief Initialize graphics API. (link dll, ...)
+     */
+    void InitializeGraphicsSystemImpl(const EventArg& i_arg) override;
+
+    /*! \fn void ResizeImpl(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
+     *  \param [in] i_new_surface new surface of app. In opengl, it should be eglsurface.
+     *  \param [in] i_w width of new surface for app.
+     *  \param [in] i_h height of new surface for app.
+     *  \brief Resize surface.
+     */
+    void ResizeImpl(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
+
+    /*! \fn void ReleaseGraphicsSystem() override;
+     *  \brief Release graphics API.
+     */
+    void ReleaseGraphicsSystemImpl() override;
 };
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

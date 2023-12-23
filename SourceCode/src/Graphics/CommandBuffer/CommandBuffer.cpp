@@ -22,10 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include "CommandBuffer.h"
 
 #include "GraphicsManager.h"
 #include "CommandPool.h"
-#include "CommandBuffer.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

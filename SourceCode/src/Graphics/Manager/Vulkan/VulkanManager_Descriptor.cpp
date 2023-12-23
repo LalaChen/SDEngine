@@ -22,14 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-
+#include "VulkanManager.h"
 #include "VulkanStructureInitializer.h"
 #include "ShaderKind_Vulkan.h"
 #include "UniformBindingType_Vulkan.h"
 #include "UniformImages.h"
 #include "UniformBuffer.h"
 #include "LogManager.h"
-#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

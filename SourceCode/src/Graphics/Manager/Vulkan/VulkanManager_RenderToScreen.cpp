@@ -24,6 +24,7 @@ SOFTWARE.
 */
 
 #include "VulkanManager.h"
+
 #include "TextureFormat_Vulkan.h"
 #include "ImageAspect_Vulkan.h"
 #include "LogManager.h"

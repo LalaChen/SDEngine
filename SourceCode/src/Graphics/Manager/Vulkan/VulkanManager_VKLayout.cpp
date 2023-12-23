@@ -23,9 +23,9 @@ SOFTWARE.
 
 */
 
+#include "VulkanManager.h"
 #include "VulkanWrapper.h"
 #include "LogManager.h"
-#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

@@ -48,7 +48,7 @@ OpenXRVulkanManager::~OpenXRVulkanManager()
 {
 }
 
-void OpenXRVulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
+void OpenXRVulkanManager::InitializeGraphicsSystemImpl(const EventArg &i_arg)
 {
     SDLOG("Initialize OpenXRVulkanManager.");
 
@@ -63,9 +63,9 @@ void OpenXRVulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializeVulkanEnvironment();
             InitializeSettings();
             InitializeGraphicsQueues();
+            InitializeVulkanSurface();
             //graphics
             InitializeSession();
-            InitializeOpenXRSwapChain();
             //
             PrintSystemInformation();
             //
@@ -76,7 +76,7 @@ void OpenXRVulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
     }
 }
 
-void OpenXRVulkanManager::ReleaseGraphicsSystem()
+void OpenXRVulkanManager::ReleaseGraphicsSystemImpl()
 {
     SDLOG("Release OpenXRVulkanManager.");
     VulkanManager::ReleaseGraphicsSystem();
@@ -97,7 +97,7 @@ void OpenXRVulkanManager::InitializeSession()
     OpenXRAPIManager::GetRef().InitializeSession(info);
 }
 
-void OpenXRVulkanManager::InitializeOpenXRSwapChain()
+void OpenXRVulkanManager::InitializeMainSwapchain()
 {
     Resolution recommend_size = OpenXRAPIManager::GetRef().GetRecommendSize();
     m_swapchain = new OpenXRSwapchain("OpenXRSwapchain", m_present_queue, recommend_size);

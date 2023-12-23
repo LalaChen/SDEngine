@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "VulkanWrapper.h"
+
 #if defined(_WIN32) || defined(_WIN64)
     #include <windows.h>
     #define LoadFunc(handle, name) GetProcAddress(reinterpret_cast<HMODULE>(handle), name)
@@ -29,8 +31,6 @@ SOFTWARE.
     #include <dlfcn.h>
     #define LoadFunc(handle, name) dlsym(handle, name)
 #endif
-
-#include "VulkanWrapper.h"
 
 ///*
 VulkanFunc gVulkanFunc;

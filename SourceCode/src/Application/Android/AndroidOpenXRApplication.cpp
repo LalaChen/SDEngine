@@ -172,7 +172,6 @@ void AndroidOpenXRApplication::InitializeGraphicsSystem()
         arg.m_instance = instance;
         arg.m_surface = surface;
         GraphicsManager::GetRef().InitializeGraphicsSystem(arg);
-        GraphicsManager::GetRef().InitializeBasicResource();
     }
     else {
     }
@@ -186,8 +185,6 @@ void AndroidOpenXRApplication::ReleaseGraphicsSystem()
 {
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
     IMGUIRenderer::GetRef().ReleaseGraphicsSystem();
-
-    GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
 
     m_window = nullptr;

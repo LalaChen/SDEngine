@@ -23,9 +23,9 @@ SOFTWARE.
 
 */
 
+#include "DynamicIndexBuffer.h"
 #include "LogManager.h"
 #include "GraphicsManager.h"
-#include "DynamicIndexBuffer.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

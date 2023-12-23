@@ -50,7 +50,6 @@ GraphicsSwapchain::~GraphicsSwapchain()
 	m_acq_sema.Reset();
 	SD_SREF(m_cmd_pool).RecycleCommandBuffer(m_cmd_buffer);
 	m_cmd_pool.Reset();
-	//
 }
 
 void GraphicsSwapchain::Initialize()

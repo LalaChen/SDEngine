@@ -72,7 +72,7 @@ VulkanManager::~VulkanManager()
     SDLOG("Delete VulkanManager object.");
 }
 
-void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
+void VulkanManager::InitializeGraphicsSystemImpl(const EventArg &i_arg)
 {
     SDLOG("Initialize VulkanManager.");
     
@@ -87,9 +87,7 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializeVulkanEnvironment();
             InitializeSettings();
             InitializeGraphicsQueues();
-            //graphics
-            InitializeSwapChain();
-            //
+            InitializeVulkanSurface();
             PrintSystemInformation();
         }
         else {
@@ -98,7 +96,22 @@ void VulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
     }
 }
 
-void VulkanManager::ReleaseGraphicsSystem()
+void VulkanManager::ResizeImpl(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
+{
+    VkSurfaceKHR new_surface = reinterpret_cast<VkSurfaceKHR>(i_new_surface);
+    if (m_surface != new_surface && new_surface != SD_NULL_HANDLE) {
+        SDLOG("Refresh surface for resize.");
+        m_swapchain.Reset();
+        vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
+        m_surface = new_surface;
+        InitializeVulkanSurface();
+    }
+    else {
+        SDLOG("Surface no change. We don't need to refresh surface for resize.");
+    }
+}
+
+void VulkanManager::ReleaseGraphicsSystemImpl()
 {
     SDLOG("Release VulkanManager.");
 
@@ -140,22 +153,6 @@ void VulkanManager::ReleaseGraphicsSystem()
     if (m_instance != VK_NULL_HANDLE) {
         vkDestroyInstance(m_instance, nullptr);
         m_instance = VK_NULL_HANDLE;
-    }
-}
-
-//----------------------- Render Flow -----------------------
-void VulkanManager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
-{
-    VkSurfaceKHR new_surface = reinterpret_cast<VkSurfaceKHR>(i_new_surface);
-    if (m_surface != new_surface && new_surface != SD_NULL_HANDLE) {
-        SDLOG("Refresh surface for resize.");
-        m_swapchain.Reset();
-        vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
-        m_surface = new_surface;
-        InitializeSwapChain();
-    }
-    else {
-        SDLOG("Surface no change. We don't need to refresh surface for resize.");
     }
 }
 

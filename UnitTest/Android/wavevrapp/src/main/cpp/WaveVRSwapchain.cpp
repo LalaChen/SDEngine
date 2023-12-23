@@ -6,12 +6,10 @@ using namespace SDE::Graphics;
 
 WaveVRSwapchain::WaveVRSwapchain(
         const ObjectName &i_name,
-        const GraphicsQueueWeakReferenceObject &i_queue,
-        const Resolution &i_eye_buffer_size)
+        const GraphicsQueueWeakReferenceObject &i_queue)
 : GraphicsSwapchain(i_name, i_queue)
 , m_tex_queue_size(0)
 {
-    m_identity.m_screen_size = i_eye_buffer_size;
 }
 
 WaveVRSwapchain::~WaveVRSwapchain()
@@ -23,8 +21,9 @@ WaveVRSwapchain::~WaveVRSwapchain()
 
 void WaveVRSwapchain::Initialize()
 {
-    GraphicsSwapchain::Initialize();
-
+    //Initialize swapchain information.
+    GraphicsManager::GetRef().CreateGraphicsSwapchain(m_identity);
+    //Initialize texture queue.
     m_tex_queues[WVR_Eye_Left]  = WVR_ObtainTextureQueue(WVR_TextureTarget_VULKAN, WVR_TextureFormat_RGBA, WVR_TextureType_UnsignedByte, m_identity.m_screen_size.GetWidth(), m_identity.m_screen_size.GetHeight(), 0);
     m_tex_queues[WVR_Eye_Right] = WVR_ObtainTextureQueue(WVR_TextureTarget_VULKAN, WVR_TextureFormat_RGBA, WVR_TextureType_UnsignedByte, m_identity.m_screen_size.GetWidth(), m_identity.m_screen_size.GetHeight(), 0);
 
@@ -39,9 +38,10 @@ void WaveVRSwapchain::Initialize()
                     reinterpret_cast<CompHandle>(m_tq_cb_handles[eye_id][eb_id]);
         }
     }
+    //Create target render flow.
 }
 
-void WaveVRSwapchain::RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex)
+void WaveVRSwapchain::RenderLayersToSwapchain(const std::list<GraphicsLayerStrongReferenceObject> &i_layers)
 {
     TextureTypeEnum tex_type = SD_WREF(i_tex).GetTextureType();
     if (tex_type != TextureType_TEXTURE_2D_ARRAY) {

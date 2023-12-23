@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "LogManager.h"
 #include "VulkanManager.h"
+#include "LogManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

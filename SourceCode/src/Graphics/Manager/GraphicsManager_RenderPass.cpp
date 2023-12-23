@@ -23,7 +23,6 @@ SOFTWARE.
 
 */
 #include "GraphicsManager.h"
-
 #include "UniformBufferDescriptor.h"
 #include "UniformImagesDescriptor.h"
 #include "DescriptorSetLayout.h"
@@ -208,7 +207,30 @@ void GraphicsManager::InitializeDefaultRenderPasses()
     SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/GUIPass.json");
     SD_SREF(rp).Initialize();
     RegisterRenderPass(rp);
+
+    rp = new RenderPass(sRenderPass_Composing);
+    SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/CompositorPass.json");
+    SD_SREF(rp).Initialize();
+    RegisterRenderPass(rp);
+
+    rp = new RenderPass(sRenderPass_VRComposing);
+    SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/VRCompositorPass.json");
+    SD_SREF(rp).Initialize();
+    RegisterRenderPass(rp);
 #endif
+    InitializeDefaultRenderPassesImpl();
+}
+
+void GraphicsManager::InitializeDefaultRenderPassesImpl()
+{
+}
+
+void GraphicsManager::ReleaseRenderPasses()
+{
+    SDLOG("Release render passes");
+    for (std::map<ObjectName, RenderPassStrongReferenceObject>::iterator rp_iter = m_rp_map.begin(); rp_iter != m_rp_map.end(); ) {
+        rp_iter = m_rp_map.erase(rp_iter);
+    }
 }
 
 void GraphicsManager::RegisterRenderPass(const RenderPassStrongReferenceObject &i_rp)
@@ -237,14 +259,6 @@ void GraphicsManager::UnregisterRenderPass(const ObjectName &i_target_rp_name)
     }
     else {
         SDLOGW("RenderPass[%s] isn't in render pass map.", i_target_rp_name.c_str());
-    }
-}
-
-void GraphicsManager::ReleaseRenderPasses()
-{
-    SDLOG("Release render passes");
-    for (std::map<ObjectName, RenderPassStrongReferenceObject>::iterator rp_iter = m_rp_map.begin(); rp_iter != m_rp_map.end(); ) {
-        rp_iter = m_rp_map.erase(rp_iter);
     }
 }
 

@@ -423,8 +423,11 @@ void VulkanManager::InitializeVulkanSurface()
     if (has_desired_sur_fmt == false) {
         throw std::runtime_error("Desire surface format isn't exist.");
     }
+    else {
+        m_surface_color_format = TextureFormat_Vulkan::Reverse(m_final_sur_format.format);
+    }
 
-    SDLOGD("Desired SurfaceFormat:(%d, %d)", m_final_sur_format.format, m_final_sur_format.colorSpace);
+    SDLOG("Desired SurfaceFormat:(%d, %d)", m_final_sur_format.format, m_final_sur_format.colorSpace);
 
     std::vector<VkPresentModeKHR> supported_p_modes;
     uint32_t supported_p_mode_count;
@@ -460,7 +463,7 @@ void VulkanManager::InitializeVulkanSurface()
     else {
         SDLOG("final present mode : %d", m_final_p_mode);
     }
-
+    /*
     //Create render pass of swapchain.
     //--- prepare attachment references data.
     std::vector<AttachmentDescription> att_descs;
@@ -515,6 +518,7 @@ void VulkanManager::InitializeVulkanSurface()
     SD_SREF(rp).AddRenderPassDescription(att_descs, sp_descs, sp_denps);
     SD_SREF(rp).Initialize();
     RegisterRenderPass(rp);
+    */
 }
 
 void VulkanManager::InitializeSettings()
@@ -577,13 +581,6 @@ void VulkanManager::InitializeGraphicsQueues()
     m_loading_cmd_pool = new CommandPool("LoadingCommandPool");
     SD_SREF(m_loading_cmd_pool).Initialize();
     m_loading_cmd_buffer = SD_WREF(m_loading_cmd_pool).AllocateCommandBuffer("LoadingCommandBuffer");
-}
-
-void VulkanManager::InitializeSwapChain()
-{
-    InitializeVulkanSurface();
-    m_swapchain = new GraphicsSwapchain("VulkanSwapchain", m_present_queue);
-    SD_SREF(m_swapchain).Initialize();
 }
 
 bool VulkanManager::IsContainerNecessaryQueueFlags(VkQueueFlags i_flags)

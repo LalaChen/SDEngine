@@ -25,8 +25,9 @@ SOFTWARE.
 
 #if defined(_WIN32) || defined(_WIN64)
 
-#include "LogManager.h"
 #include "OpenGL4Manager.h"
+#include "LogManager.h"
+
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

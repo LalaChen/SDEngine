@@ -24,10 +24,11 @@ SOFTWARE.
 */
 
 #include "GraphicsConfig.h"
-#include "LogManager.h"
-#include "FileResourceRequester.h"
 
 #include <nlohmann/json.hpp>
+
+#include "LogManager.h"
+#include "FileResourceRequester.h"
 
 using SDE::Basic::FileData;
 using SDE::Basic::FileResourceRequester;

@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include "StaticIndexBuffer.h"
 
 #include "SDEngineMacro.h"
 #include "LogManager.h"
 #include "GraphicsManager.h"
-#include "StaticIndexBuffer.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

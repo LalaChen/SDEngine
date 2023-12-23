@@ -29,12 +29,12 @@ SOFTWARE.
  *  \date      2019/07/20
  *  \copyright MIT License.
  */
+#include "Bitmap.h"
 #include <sstream>
 #include <cstring>
-
 #include "SDEngineCommonFunction.h"
 #include "LogManager.h"
-#include "Bitmap.h"
+
 
 using SDE::Basic::LogManager;
 using SDE::Basic::StringFormat;
@@ -71,61 +71,61 @@ Bitmap::Bitmap(const ObjectName &i_object_name, const BitmapConfig &i_conf, Size
 , m_num_of_c(0)
 , m_bitmap(nullptr)
 {
-	SetBitmap(i_conf, i_width, i_height, i_data, i_size, i_n_of_c, i_v_type);
+    SetBitmap(i_conf, i_width, i_height, i_data, i_size, i_n_of_c, i_v_type);
 }
 
 Bitmap::~Bitmap()
 {
-	ClearBitmap();
+    ClearBitmap();
 }
 
 //--- Protected
 void Bitmap::DecideNumberOfChannel(int i_n_of_c)
 {
-	if (m_config == BitmapConfig_GRAYLEVEL) {
-		m_num_of_c = 1;
-		//v_type setted on outside.
-	}
-	else if (m_config == BitmapConfig_RGBA_F16) {
-		m_num_of_c = 4;
-	}
-	else if (m_config == BitmapConfig_RGBA_4444) {
-		m_num_of_c = 1;
-		m_v_type = BitmapPixelDataType_UNSIGNED_SHORT_4_4_4_4;
-	}
-	else if (m_config == BitmapConfig_RGB_565) {
-		m_num_of_c = 1;
-		m_v_type = BitmapPixelDataType_UNSIGNED_SHORT_5_6_5;
-	}
-	else if (m_config == BitmapConfig_RGBA_8888) {
-		m_num_of_c = 4;
-		m_v_type = BitmapPixelDataType_UNSIGNED_BYTE;
-	}
-	else if (m_config == BitmapConfig_RGB_888) {
-		m_num_of_c = 3;
-		m_v_type = BitmapPixelDataType_UNSIGNED_BYTE;
-	}
-	else if (m_config == BitmapConfig_ALPHA_8) {
-		m_num_of_c = 1;
-		m_v_type = BitmapPixelDataType_UNSIGNED_BYTE;
-	}
-	else if (m_config == BitmapConfig_DevIL || m_config == BitmapConfig_STB || m_config == BitmapConfig_HARDWARE) {
-		m_num_of_c   = i_n_of_c;
-		//v_type setted on outside.
-	}
+    if (m_config == BitmapConfig_GRAYLEVEL) {
+        m_num_of_c = 1;
+        //v_type setted on outside.
+    }
+    else if (m_config == BitmapConfig_RGBA_F16) {
+        m_num_of_c = 4;
+    }
+    else if (m_config == BitmapConfig_RGBA_4444) {
+        m_num_of_c = 1;
+        m_v_type = BitmapPixelDataType_UNSIGNED_SHORT_4_4_4_4;
+    }
+    else if (m_config == BitmapConfig_RGB_565) {
+        m_num_of_c = 1;
+        m_v_type = BitmapPixelDataType_UNSIGNED_SHORT_5_6_5;
+    }
+    else if (m_config == BitmapConfig_RGBA_8888) {
+        m_num_of_c = 4;
+        m_v_type = BitmapPixelDataType_UNSIGNED_BYTE;
+    }
+    else if (m_config == BitmapConfig_RGB_888) {
+        m_num_of_c = 3;
+        m_v_type = BitmapPixelDataType_UNSIGNED_BYTE;
+    }
+    else if (m_config == BitmapConfig_ALPHA_8) {
+        m_num_of_c = 1;
+        m_v_type = BitmapPixelDataType_UNSIGNED_BYTE;
+    }
+    else if (m_config == BitmapConfig_DevIL || m_config == BitmapConfig_STB || m_config == BitmapConfig_HARDWARE) {
+        m_num_of_c   = i_n_of_c;
+        //v_type setted on outside.
+    }
 }
 
 void Bitmap::ClearBitmap()
 {
-	m_config      = BitmapConfig_UNKNOWN;
-	m_buffer_size = 0;
-	m_width       = 0;
-	m_height      = 0;
-	m_num_of_c    = 0;
-	if (m_bitmap != nullptr) {
-		delete[] m_bitmap;
-		m_bitmap = nullptr;
-	}
+    m_config      = BitmapConfig_UNKNOWN;
+    m_buffer_size = 0;
+    m_width       = 0;
+    m_height      = 0;
+    m_num_of_c    = 0;
+    if (m_bitmap != nullptr) {
+        delete[] m_bitmap;
+        m_bitmap = nullptr;
+    }
 }
 //--- Public
 std::string Bitmap::ToString() const
@@ -138,23 +138,23 @@ std::string Bitmap::ToString() const
 
 bool Bitmap::SetBitmap(const BitmapConfig &i_conf, Size_ui32 i_width, Size_ui32 i_height, const ImageBufferAddr i_data, ImageBufferSize i_size, int i_n_of_c, const BitmapPixelValueType &i_v_type)
 {
-	if (i_conf != BitmapConfig_UNKNOWN && i_data != nullptr) {
-		ClearBitmap();
-		//
-		m_v_type      = i_v_type;
-		m_config      = i_conf;
-		m_width       = i_width;
-		m_height      = i_height;
-		m_buffer_size = i_size;
-		DecideNumberOfChannel(i_n_of_c);
-		m_bitmap = new UByte[m_buffer_size];
-		std::memcpy(m_bitmap, i_data, m_buffer_size);
-		return true;
-	}
-	else {
-		SDLOGE("Unsupport bitmap type : %d", m_config.m_enum);
-		return false;
-	}
+    if (i_conf != BitmapConfig_UNKNOWN && i_data != nullptr) {
+        ClearBitmap();
+        //
+        m_v_type      = i_v_type;
+        m_config      = i_conf;
+        m_width       = i_width;
+        m_height      = i_height;
+        m_buffer_size = i_size;
+        DecideNumberOfChannel(i_n_of_c);
+        m_bitmap = new UByte[m_buffer_size];
+        std::memcpy(m_bitmap, i_data, m_buffer_size);
+        return true;
+    }
+    else {
+        SDLOGE("Unsupport bitmap type : %d", m_config.m_enum);
+        return false;
+    }
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

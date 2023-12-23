@@ -22,10 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "VulkanManager.h"
+
 #include "VulkanWrapper.h"
 #include "TextureFormat_Vulkan.h"
 #include "LogManager.h"
-#include "VulkanManager.h"
 
 #define SD_VK_IS_FEATURE( var, feature_bit ) ((var & feature_bit) == feature_bit)
 
@@ -45,7 +46,7 @@ _____________SD_START_GRAPHICS_NAMESPACE_____________
 void VulkanManager::PrintSystemInformation()
 {
     SDLOG("----------------- Vulkan Graphics Information -----------------");
-    SDLOG("Memory Information :");
+    SDLOG("--- Memory Information ---");
     VkPhysicalDeviceMemoryProperties phy_dev_memory_props;
     //1. Get memory property.
     vkGetPhysicalDeviceMemoryProperties(m_phy_device, &phy_dev_memory_props);
@@ -92,11 +93,13 @@ void VulkanManager::PrintSystemInformation()
 
     VkPhysicalDeviceProperties picked_dev_props;
     vkGetPhysicalDeviceProperties(m_phy_device, &picked_dev_props);
-    SDLOG("Target Device Service: %s(%d:%d:%d) driver version(%d, %d, %d) apiversion(%d, %d, %d).",
+    SDLOG("Device Name : %s(%d:%d:%d)",
         picked_dev_props.deviceName,
-        picked_dev_props.vendorID, picked_dev_props.deviceID, picked_dev_props.deviceType,
-        VK_VERSION_MAJOR(picked_dev_props.apiVersion), VK_VERSION_MINOR(picked_dev_props.apiVersion), VK_VERSION_PATCH(picked_dev_props.apiVersion),
+        picked_dev_props.vendorID, picked_dev_props.deviceID, picked_dev_props.deviceType);
+    SDLOG("Driver Version : %d.%d.%d",
         VK_VERSION_MAJOR(picked_dev_props.driverVersion), VK_VERSION_MINOR(picked_dev_props.driverVersion), VK_VERSION_PATCH(picked_dev_props.driverVersion));
+    SDLOG("API version(%d.%d.%d",
+        VK_VERSION_MAJOR(picked_dev_props.apiVersion), VK_VERSION_MINOR(picked_dev_props.apiVersion), VK_VERSION_PATCH(picked_dev_props.apiVersion));
     SDLOG("--- Limits ---");
     SD_VK_SHOW_LIMIT_UINT32(maxImageDimension1D);
     SD_VK_SHOW_LIMIT_UINT32(maxImageDimension2D);
@@ -222,8 +225,8 @@ void VulkanManager::PrintSystemInformation()
         SDLOG("supportedCompositeAlpha:%d", sur_caps.supportedCompositeAlpha);
         SDLOG("supportedUsageFlags:%d", sur_caps.supportedUsageFlags);
     }
-    else {
-    }
+
+    SDLOG("----------------- Vulkan Graphics Information -----------------");
 }
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

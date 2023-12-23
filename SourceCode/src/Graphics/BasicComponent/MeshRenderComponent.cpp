@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include "MeshRenderComponent.h"
 
 #include "BasicUniforms.h"
 #include "GraphicsManager.h"
 #include "LogManager.h"
-#include "MeshRenderComponent.h"
 
 using SDE::Basic::MemberFunctionSlot;
 using SDE::Basic::NullReferenceException;

@@ -23,8 +23,9 @@ SOFTWARE.
 
 */
 
-#include "LogManager.h"
 #include "TransformComponent.h"
+
+#include "LogManager.h"
 
 using SDE::Basic::Event;
 using SDE::Basic::EventStrongReferenceObject;

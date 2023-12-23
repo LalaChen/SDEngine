@@ -30,7 +30,7 @@ WaveVRVulkanManager::~WaveVRVulkanManager()
 {
 }
 
-void WaveVRVulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
+void WaveVRVulkanManager::InitializeGraphicsSystemImpl(const EventArg &i_arg)
 {
     SDLOG("Initialize WaveVRVulkanManager.");
 
@@ -45,9 +45,10 @@ void WaveVRVulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
             InitializeVulkanEnvironment();
             InitializeSettings();
             InitializeGraphicsQueues();
+            InitializeVulkanSurface();
+            PrintSystemInformation();
             //graphics
             InitializeWaveVR();
-            PrintSystemInformation();
         }
         else {
             throw std::runtime_error("VkInstance in arg is nullptr!!!");
@@ -55,9 +56,18 @@ void WaveVRVulkanManager::InitializeGraphicsSystem(const EventArg &i_arg)
     }
 }
 
-void WaveVRVulkanManager::ReleaseGraphicsSystem()
+void WaveVRVulkanManager::InitializeDefaultRenderPassesImpl()
 {
-    VulkanManager::ReleaseGraphicsSystem();
+    RenderPassStrongReferenceObject rp;
+    rp = new RenderPass(sRenderPass_WaveVRComposing);
+    SD_SREF(rp).AddRenderPassDescriptionFromFile("Common/RenderPass/WaveVRCompositorPass.json");
+    SD_SREF(rp).Initialize();
+    RegisterRenderPass(rp);
+}
+
+void WaveVRVulkanManager::InitializeBasicShaderProgramsImpl()
+{
+
 }
 
 void WaveVRVulkanManager::InitializeWaveVR()
@@ -72,13 +82,11 @@ void WaveVRVulkanManager::InitializeWaveVR()
         SDLOGE("Fail to initialize Vulkan info!");
         throw std::runtime_error("Fail to initialize Vulkan info!");
     }
-    //2. set eye resolution.
-    uint32_t screen_w, screen_h;
-    WVR_GetRenderTargetSize(&screen_w, &screen_h);
-    Resolution eye_buffer_size;
-    eye_buffer_size.SetResolution(screen_w, screen_h);
-    //
-    m_swapchain = new WaveVRSwapchain("WaveVRSwapchain", m_present_queue, eye_buffer_size);
+}
+
+void WaveVRVulkanManager::InitializeMainSwapchain()
+{
+    m_swapchain = new WaveVRSwapchain("WaveVRSwapchain", m_present_queue);
     SD_SREF(m_swapchain).Initialize();
 }
 
@@ -86,9 +94,13 @@ void WaveVRVulkanManager::CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_
 {
     VkPhysicalDevice &phy_device   = reinterpret_cast<VkPhysicalDevice&>(io_identity.m_phy_device);
     VkDevice         &device       = reinterpret_cast<VkDevice&>(io_identity.m_device);
+
     phy_device = m_phy_device;
     device     = m_device;
     io_identity.m_layer_size = 1;
+    uint32_t screen_w, screen_h;
+    WVR_GetRenderTargetSize(&screen_w, &screen_h);
+    io_identity.m_screen_size.SetResolution(screen_w, screen_h);
     io_identity.SetValid();
 }
 
@@ -100,6 +112,7 @@ void WaveVRVulkanManager::GetReadyTextureOfSwapchain(
 
 }
 
+/*
 void WaveVRVulkanManager::RenderTextureToSwapchain(
         const GraphicsSwapchainIdentity &i_identity, uint32_t i_idx,
         const GraphicsQueueWeakReferenceObject &i_queue,
@@ -151,3 +164,4 @@ void WaveVRVulkanManager::RenderTextureToSwapchain(
     //3. submit to present queue.
     SD_SREF(i_queue).SubmitCommandBuffers({ i_cmd_buffer });
 }
+*/

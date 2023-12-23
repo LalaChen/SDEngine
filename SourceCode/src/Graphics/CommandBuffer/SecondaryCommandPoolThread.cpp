@@ -22,11 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-
+#include "SecondaryCommandPoolThread.h"
 #include "SDEngineCommonFunction.h"
 #include "LogManager.h"
 #include "GraphicsManager.h"
-#include "SecondaryCommandPoolThread.h"
 
 using SDE::Basic::StringFormat;
 

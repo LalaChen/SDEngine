@@ -65,16 +65,16 @@ public:
     explicit OpenXRVulkanManager();
     virtual ~OpenXRVulkanManager();
 public:
-    /*! \fn void InitializeGraphicsSystem(const EventArg &i_arg) override;
+    /*! \fn void InitializeGraphicsSystemImpl(const EventArg &i_arg) override;
      *  \param [in] i_arg Vulkan creating arguments.
      *  \brief Initialize graphics API. (link dll, ...)
      */
-    void InitializeGraphicsSystem(const EventArg &i_arg) override;
+    void InitializeGraphicsSystemImpl(const EventArg &i_arg) override;
 
-    /*! \fn void ReleaseGraphicsSystem() override;
+    /*! \fn void ReleaseGraphicsSystemImpl() override;
      *  \brief Release graphics API.
      */
-    void ReleaseGraphicsSystem() override;
+    void ReleaseGraphicsSystemImpl() override;
 public:
     void CreateGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
 
@@ -85,7 +85,8 @@ public:
 
 protected:
     void InitializeSession();
-    void InitializeOpenXRSwapChain();
+protected:
+    void InitializeMainSwapchain() override;
 protected:
     XrGraphicsBindingVulkanKHR m_binding;
 };

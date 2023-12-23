@@ -94,10 +94,6 @@ public:
      */
     void Initialize();
 public:
-    /*! \fn const CompHandle GetHandle() const;
-     *  \brief return render pass handle for create frame buffer.
-     */
-    const CompHandle GetHandle() const;
 
     /*! \fn std::vector<TextureFormatEnum> CreateImageViewFormats();
      *  \brief return ImageView format corresponding this render pass. We only assign format to description.
@@ -127,11 +123,6 @@ protected:
      */
     RenderPassIdentity m_identity;
 };
-
-inline const CompHandle RenderPass::GetHandle() const
-{
-    return m_identity.m_handle;
-}
 
 inline const std::vector<SubpassDescription>& RenderPass::GetSubpassDescriptions() const
 {

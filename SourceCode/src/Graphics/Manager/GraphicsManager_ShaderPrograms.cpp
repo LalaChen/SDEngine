@@ -23,7 +23,6 @@ SOFTWARE.
 
 */
 #include "GraphicsManager.h"
-
 #include "BasicUniforms.h"
 #include "LightUniforms.h"
 #include "MaterialUniforms.h"
@@ -182,6 +181,25 @@ void GraphicsManager::InitializeBasicDescriptorSetLayout()
         main_texture_ui.StaticCastTo<UniformVariableDescriptor>()});
     SD_SREF(compositing_dsl).Initialize();
     m_basic_dsl_maps[sUniformDescriptorSetLayout_Compositing] = compositing_dsl;
+
+    //6. Compositing Material.
+    UniformBufferDescriptorStrongReferenceObject uvdatas_ubd = new UniformBufferDescriptor(sUniformBuffer_VRCompositing_UVDatas, 0);
+    SD_SREF(uvdatas_ubd).AddVariable("uvDatas", UniformBufferVariableType_VECTOR3F, 0);
+    SD_SREF(uvdatas_ubd).AddVariableDone();
+    UniformImagesDescriptorStrongReferenceObject vr_main_texture_ui = new UniformImagesDescriptor(sUniformImage_Compositing_Texture, 1);
+
+    DescriptorSetLayoutStrongReferenceObject vr_compositing_dsl = new DescriptorSetLayout(sUniformDescriptorSetLayout_VRCompositing);
+    SD_SREF(vr_compositing_dsl).AddUniformVariableDescriptors({
+        uvdatas_ubd.StaticCastTo<UniformVariableDescriptor>(),
+        vr_main_texture_ui.StaticCastTo<UniformVariableDescriptor>()});
+    SD_SREF(vr_compositing_dsl).Initialize();
+    m_basic_dsl_maps[sUniformDescriptorSetLayout_VRCompositing] = vr_compositing_dsl;
+    //
+    InitializeBasicDescriptorSetLayoutImpl();
+}
+
+void GraphicsManager::InitializeBasicDescriptorSetLayoutImpl()
+{
 }
 
 void GraphicsManager::InitializeBasicMaterialUniformDescriptors()
@@ -198,6 +216,12 @@ void GraphicsManager::InitializeBasicMaterialUniformDescriptors()
     UniformImagesDescriptorStrongReferenceObject mt_imgd = new UniformImagesDescriptor("textures", 1, 11);
     m_material_basic_uvd_maps[sUniformBuffer_Material] = mat_ubd.StaticCastTo<UniformVariableDescriptor>();
     m_material_basic_uvd_maps[sUniformImages_Material_Textures] = mt_imgd.StaticCastTo<UniformVariableDescriptor>();
+
+    InitializeBasicMaterialUniformDescriptorsImpl();
+}
+
+void GraphicsManager::InitializeBasicMaterialUniformDescriptorsImpl()
+{
 }
 
 void GraphicsManager::InitializeBasicShaderPrograms()
@@ -208,6 +232,12 @@ void GraphicsManager::InitializeBasicShaderPrograms()
     RegisterShaderProgram("GUIShader", "Common/ShaderProgram/GUIShading/GUIShading.json");
     RegisterShaderProgram("AlphaNoLightingShader", "Common/ShaderProgram/AlphaNoLightShading/AlphaNoLightShading.json");
     RegisterShaderProgram("LayerComposingShader", "Common/ShaderProgram/LayerComposing/LayerComposing.json");
+
+    InitializeBasicShaderProgramsImpl();
+}
+
+void GraphicsManager::InitializeBasicShaderProgramsImpl()
+{
 }
 
 /*

@@ -24,7 +24,6 @@ SOFTWARE.
 */
 
 #include "GraphicsManager.h"
-
 #include "Vec.h"
 #include "LogManager.h"
 
@@ -95,8 +94,13 @@ void GraphicsManager::InitializeDefaultPipelineInfos()
     m_default_va_location_descs[va_id].m_location = va_id;
     m_default_va_location_descs[va_id].m_format = VertexBufferFormat_X32Y32Z32W32_SFLOAT;
     m_default_va_location_descs[va_id].m_offset = 0;
+
+    InitializeDefaultPipelineInfosImpl();
 }
 
+void GraphicsManager::InitializeDefaultPipelineInfosImpl()
+{
+}
 
 void GraphicsManager::GetBasicVertexAttribInfos(
     std::vector<VertexAttribBindingDescription> &io_binds,

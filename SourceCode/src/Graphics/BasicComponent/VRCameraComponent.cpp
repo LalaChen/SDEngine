@@ -22,13 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+#include "VRCameraComponent.h"
 
 #include "BasicUniforms.h"
 #include "ECSManager.h"
 #include "GraphicsSystem.h"
 #include "GraphicsManager.h"
 #include "LogManager.h"
-#include "VRCameraComponent.h"
 
 using SDE::Basic::ECSManager;
 using SDE::Basic::MemberFunctionSlot;

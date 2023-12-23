@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "VulkanManager.h"
+
 #include "TextureType_Vulkan.h"
 #include "TextureFormat_Vulkan.h"
 #include "SamplerMipmapMode_Vulkan.h"
@@ -35,7 +37,6 @@ SOFTWARE.
 #include "SampleCount_Vulkan.h"
 #include "ManagerParam.h"
 #include "LogManager.h"
-#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

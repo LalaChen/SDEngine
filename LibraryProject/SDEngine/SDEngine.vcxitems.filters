@@ -1792,5 +1792,23 @@
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.frag.spv">
       <Filter>common\ShaderProgram\LayerComposing</Filter>
     </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\VRCompositorPass.json">
+      <Filter>common\RenderPass</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_Multiview_SP0.vert.spv">
+      <Filter>common\ShaderProgram\LayerComposing</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_Multiview_SP0.frag.spv">
+      <Filter>common\ShaderProgram\LayerComposing</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_Multiview_SP0.frag">
+      <Filter>common\ShaderProgram\LayerComposing</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_Multiview_SP0.vert">
+      <Filter>common\ShaderProgram\LayerComposing</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\WaveVRCompositorPass.json">
+      <Filter>common\RenderPass</Filter>
+    </None>
   </ItemGroup>
 </Project>

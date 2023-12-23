@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "VulkanManager.h"
 #include "IndexBufferFormat_Vulkan.h"
 #include "LogManager.h"
-#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

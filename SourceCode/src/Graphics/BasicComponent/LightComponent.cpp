@@ -23,9 +23,10 @@ SOFTWARE.
 
 */
 
+#include "LightComponent.h"
+
 #include "LogManager.h"
 #include "GraphicsManager.h"
-#include "LightComponent.h"
 
 using SDE::Basic::MemberFunctionSlot;
 

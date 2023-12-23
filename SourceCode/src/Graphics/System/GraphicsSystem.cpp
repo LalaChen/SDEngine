@@ -23,8 +23,6 @@ SOFTWARE.
 
 */
 
-#define NEW_FLOW
-
 #include "GraphicsSystem.h"
 
 #include "Application.h"
@@ -109,16 +107,8 @@ void GraphicsSystem::Update()
 
     GraphicsManager::GetRef().SubmitGraphicsCommands({ m_graphics_cb });
 
-#if defined(NEW_FLOW)
     GraphicsManager::GetRef().RenderLayersToSwapchain();
     GraphicsManager::GetRef().PresentSwapchain();
-#else
-    CameraComponentBaseWeakReferenceObject screen_camera = GetScreenCamera();
-
-    if (screen_camera.IsNull() == false) {
-        GraphicsManager::GetRef().RenderTextureToScreen(SD_WREF(screen_camera).GetColorBuffer());
-    }
-#endif
 }
 
 void GraphicsSystem::Destroy()
@@ -214,7 +204,7 @@ CameraComponentBaseWeakReferenceObject GraphicsSystem::GetScreenCamera() const
     
     if (camera_entity_list.empty() == false) {
         std::list<CameraComponentBaseWeakReferenceObject> camera_list;
-        for (EntityWeakReferenceObject& ce : camera_entity_list) {
+        for (EntityWeakReferenceObject &ce : camera_entity_list) {
             camera_list.push_back(SD_GET_COMP_WREF(ce, CameraComponentBase));
         }
         return (*camera_list.rbegin());

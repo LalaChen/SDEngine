@@ -24,7 +24,6 @@ SOFTWARE.
 */
 
 #include "BasicShapeCreator.h"
-
 #include "StaticIndexBuffer.h"
 #include "StaticVertexBuffer.h"
 

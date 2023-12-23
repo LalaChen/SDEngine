@@ -65,17 +65,6 @@ public:
      */
     virtual ~VulkanManager();
 public:
-    /*! \fn void InitializeGraphicsSystem(const EventArg &i_arg) override;
-     *  \param [in] i_arg Vulkan creating arguments.
-     *  \brief Initialize graphics API. (link dll, ...)
-     */
-    void InitializeGraphicsSystem(const EventArg &i_arg) override;
-
-    /*! \fn void ReleaseGraphicsSystem() override;
-     *  \brief Release graphics API.
-     */
-    void ReleaseGraphicsSystem() override;
-public:
     /*! \fn void PrintSystemInformation() override;
      *  \brief Print system information.
      */
@@ -183,8 +172,7 @@ public:
     void DestroyGraphicsSwapchain(GraphicsSwapchainIdentity &io_identity) override;
 public:
     Resolution GetScreenResolution() const override;
-public:
-    void Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
+
 protected:
 //------- Vulkan descriptor set and pool private Function ------
     VkResult CreateVkDescriptorSetLayout(
@@ -583,12 +571,23 @@ public:
     bool IsContainerNecessaryQueueFlags(VkQueueFlags i_flags);
     int32_t GetSuitableMemoryTypeID(const VkMemoryRequirements &i_mem_req, VkFlags i_mem_prop_flags);
 protected:
+    /*! \fn void InitializeGraphicsSystemImpl(const EventArg &i_arg) override;
+     *  \param [in] i_arg Vulkan creating arguments.
+     *  \brief Initialize graphics API. (link dll, ...)
+     */
+    void InitializeGraphicsSystemImpl(const EventArg &i_arg) override;
+
+    void ResizeImpl(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h) override;
+    /*! \fn void ReleaseGraphicsSystemImpl() override;
+     *  \brief Release graphics API.
+     */
+    void ReleaseGraphicsSystemImpl() override;
+protected:
 //-------------------- Vulkan Builder -------------------
     void InitializeVulkanEnvironment();
     void InitializeVulkanSurface();
     void InitializeSettings();
     void InitializeGraphicsQueues();
-    void InitializeSwapChain();
 protected:
     //configuration
     std::vector<VkQueueFlagBits> m_desired_queue_abilities;

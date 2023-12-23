@@ -23,10 +23,11 @@ SOFTWARE.
 
 */
 
+#include "BasicShapeCreator.h"
+
 #include "MathConstant.h"
 #include "StaticIndexBuffer.h"
 #include "StaticVertexBuffer.h"
-#include "BasicShapeCreator.h"
 
 using SDE::Math::PI;
 using SDE::Math::TWO_PI;

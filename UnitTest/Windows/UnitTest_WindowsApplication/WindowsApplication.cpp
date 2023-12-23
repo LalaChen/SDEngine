@@ -138,8 +138,6 @@ void WindowsApplication::InitializeGraphicsSystem()
 
         //
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
-        GraphicsManager::GetRef().InitializeBasicResource();
-
     }
     else if (m_adopt_library == GraphicsLibrary_Vulkan) {
         VkInstance instance = VK_NULL_HANDLE;
@@ -235,8 +233,6 @@ void WindowsApplication::InitializeGraphicsSystem()
         arg.m_instance = instance;
         arg.m_surface = surface;
         GraphicsManager::GetRef().InitializeGraphicsSystem(arg);
-        GraphicsManager::GetRef().InitializeBasicResource();
-
     } else {
         SDLOGE("Error engine type!!!");
         throw std::runtime_error("Error engine type!!!");
@@ -252,8 +248,6 @@ void WindowsApplication::ReleaseGraphicsSystem()
     SDLOG("Release Graphics System of Application.");
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
     IMGUIRenderer::GetRef().ReleaseGraphicsSystem();
-
-    GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
 }
 

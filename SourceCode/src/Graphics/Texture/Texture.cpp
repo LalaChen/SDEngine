@@ -252,6 +252,10 @@ void Texture::InitializeVRColorOrDepthBuffer(Size_ui32 i_width, Size_ui32 i_heig
 void Texture::InitializeWithSwapchainImage(CompHandle i_sw_image, CompHandle i_sw_image_view, Size_ui32 i_width, Size_ui32 i_height, TextureTypeEnum i_type, TextureViewTypeEnum i_view_type, TextureFormatEnum i_format)
 {
     if (m_tex_identity.m_handle == SD_NULL_HANDLE) {
+        uint32_t layer_count = 1;
+        if (i_type == TextureType_TEXTURE_2D_ARRAY) {
+            layer_count = 2;
+        }
         m_tex_identity.m_handle = i_sw_image;
         m_tex_identity.m_image_view = i_sw_image_view;
         m_tex_identity.m_texture_type = i_type;
@@ -261,7 +265,7 @@ void Texture::InitializeWithSwapchainImage(CompHandle i_sw_image, CompHandle i_s
         m_tex_identity.m_image_size.m_width = i_width;
         m_tex_identity.m_image_size.m_height = i_height;
         m_tex_identity.m_image_size.m_length = 1;
-        m_tex_identity.m_array_layers = 1;
+        m_tex_identity.m_array_layers = layer_count;
         m_tex_identity.m_aspect = ImageAspect_ASPECT_COLOR;
         m_tex_identity.m_init_layout = ImageLayout_COLOR_ATTACHMENT_OPTIMAL;
         m_tex_identity.m_image_usages.push_back(ImageUsage_COLOR_ATTACHMENT);

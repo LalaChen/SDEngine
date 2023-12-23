@@ -481,7 +481,9 @@
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\CompositorPass.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\ForwardPass.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\GUIPass.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\VRCompositorPass.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\VRForwardPass.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\RenderPass\WaveVRCompositorPass.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\AxesShading.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\AxesShading\ForwardAxesShader_Multiview_SP0.frag.spv" />
@@ -506,6 +508,10 @@
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShader_SP0.vert.spv" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\GUIShading\GUIShading.json" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposing.json" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_Multiview_SP0.frag" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_Multiview_SP0.frag.spv" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_Multiview_SP0.vert" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_Multiview_SP0.vert.spv" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.frag" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.frag.spv" />
     <None Include="$(MSBuildThisFileDirectory)..\..\Bin\Common\ShaderProgram\LayerComposing\LayerComposingShader_SP0.vert" />

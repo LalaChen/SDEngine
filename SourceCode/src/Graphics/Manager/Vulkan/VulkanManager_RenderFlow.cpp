@@ -23,6 +23,8 @@ SOFTWARE.
 
 */
 
+#include "VulkanManager.h"
+
 #include "ImageAspect_Vulkan.h"
 #include "TextureFormat_Vulkan.h"
 #include "SampleCount_Vulkan.h"
@@ -34,7 +36,6 @@ SOFTWARE.
 #include "DependencyScope_Vulkan.h"
 #include "ShaderKind_Vulkan.h"
 #include "LogManager.h"
-#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 //-------- RenderPass --------

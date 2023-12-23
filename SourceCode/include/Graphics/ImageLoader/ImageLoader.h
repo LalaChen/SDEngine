@@ -48,12 +48,12 @@ public:
     /*! \fn explicit ImageLoader();
      *  \brief Constructor of ImageLoader.
      */
-	explicit ImageLoader();
+    explicit ImageLoader();
 
     /*! \fn explicit ~ImageLoader();
      *  \brief Destructor of ImageLoader.
      */
-	virtual ~ImageLoader();
+    virtual ~ImageLoader();
 public:
     SD_SINGLETON_DECLARATION(ImageLoader);
 public:
@@ -66,7 +66,7 @@ public:
      *  \param [in] i_fp File path of image data.
      *  \brief Load data.
      */
-	virtual BitmapStrongReferenceObject ReadBitmap(const FilePathString &i_fp) const;
+    virtual BitmapStrongReferenceObject ReadBitmap(const FilePathString &i_fp) const;
 
     /*! \fn virtual BitmapStrongReferenceObject ReadBitmap(const FilePathString &i_fp) const = 0;
      *  \param [in] i_fp File path of image data.

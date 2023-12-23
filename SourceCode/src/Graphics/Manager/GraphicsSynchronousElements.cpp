@@ -23,8 +23,8 @@ SOFTWARE.
 
 */
 
-#include "GraphicsSynchronousElements.h"
 #include "GraphicsManager.h"
+#include "GraphicsSynchronousElements.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 

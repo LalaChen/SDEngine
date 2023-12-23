@@ -86,8 +86,6 @@ public:
      * \param [in] i_clear_value Clear value.
      */
     void RegisterBuffer(const TextureWeakReferenceObject &i_tex, uint32_t i_idx, const ClearValue &i_clear_value);
-public:
-    CompHandle GetHandle() const;
 protected:
 
     /* \var FrameBufferIdentity m_identity;
@@ -110,10 +108,5 @@ protected:
      */
     std::vector<TextureWeakReferenceObject> m_bufs;
 };
-
-inline CompHandle FrameBuffer::GetHandle() const
-{
-    return m_identity.m_handle;
-}
 
 ______________SD_END_GRAPHICS_NAMESPACE______________

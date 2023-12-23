@@ -23,7 +23,6 @@ SOFTWARE.
 
 */
 #include "GraphicsManager.h"
-
 #include "WorldGUISystem.h"
 #include "GraphicsSystem.h"
 #include "ECSManager.h"
@@ -55,32 +54,42 @@ GraphicsManager::~GraphicsManager()
 {
 }
 
-void GraphicsManager::InitializeBasicResource()
+void GraphicsManager::InitializeGraphicsSystem(const EventArg &i_arg)
 {
-    std::function<void(uint64_t i_count, double i_period_ms)> fps_cbk = 
-        std::function<void(uint64_t, double)>(
-            [this](uint64_t i_count, double i_period_ms) {
-                m_FPS = (static_cast<double>(i_count) / i_period_ms) * 1000.0;
-                //SDLOGD("FPS : %lf.", m_FPS);
-            }
-        );
-
-    SDLOG("Initialize Basic Resource Start!!!");
-
-    ECSManager::GetRef().RegisterSystem<WorldGUISystem>("WorldGUISystem");
-    ECSManager::GetRef().RegisterSystem<GraphicsSystem>("GraphicsSystem");
-
+    InitializeGraphicsSystemImpl(i_arg);
     InitializeBasicDescriptorSetLayout();
     InitializeBasicMaterialUniformDescriptors();
     InitializeDefaultRenderPasses();
     InitializeDefaultPipelineInfos();
     InitializeBasicShaderPrograms();
+    InitializeMainSwapchain();
+
+    std::function<void(uint64_t i_count, double i_period_ms)> fps_cbk =
+        std::function<void(uint64_t, double)>(
+            [this](uint64_t i_count, double i_period_ms) {
+                m_FPS = (static_cast<double>(i_count) / i_period_ms) * 1000.0;
+            }
+    );
+
+    ECSManager::GetRef().RegisterSystem<WorldGUISystem>("WorldGUISystem");
+    ECSManager::GetRef().RegisterSystem<GraphicsSystem>("GraphicsSystem");
 
     m_fps_counter.Start(1000.0, fps_cbk, false);
-    SDLOG("Initialize Basic Resource End!!!");
 }
 
-void GraphicsManager::ReleaseBasicResource()
+void GraphicsManager::InitializeMainSwapchain()
+{
+    m_swapchain = new GraphicsSwapchain("VulkanSwapchain", m_present_queue);
+    SD_SREF(m_swapchain).Initialize();
+}
+
+void GraphicsManager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
+{
+    ResizeImpl(i_new_surface, i_w, i_h);
+    InitializeMainSwapchain();
+}
+
+void GraphicsManager::ReleaseGraphicsSystem()
 {
     SDLOG("Release Basic Resource.");
     for (std::map<ObjectName, ShaderProgramStrongReferenceObject>::iterator sp_iter = m_shader_program_maps.begin();
@@ -105,6 +114,7 @@ void GraphicsManager::ReleaseBasicResource()
 
     ReleaseRenderPasses();
     m_fps_counter.Stop();
+    ReleaseGraphicsSystemImpl();
 }
 
 TextureFormatEnum GraphicsManager::GetDefaultDepthBufferFormat() const
@@ -148,6 +158,11 @@ bool GraphicsManager::IsSupportedColorBufferFormat(TextureFormatEnum i_fmt) cons
         }
     }
     return false;
+}
+
+TextureFormatEnum GraphicsManager::GetSurfaceColorBufferFormat() const
+{
+    return m_surface_color_format;
 }
 
 GraphicsLayerWeakReferenceObject GraphicsManager::RegisterLayer(

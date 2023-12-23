@@ -24,6 +24,29 @@
             "Number": 1
           }
         ]
+      },
+      {
+        "Name": "VRCompositing",
+        "CommonDSL": true,
+        "UniformDescriptors": [
+          {
+            "Name": "uvDatas",
+            "Type": "buffer",
+            "Number": 1,
+            "Member": [
+              {
+                "Name": "uvs",
+                "Type": "vec4",
+                "Number": 2
+              }
+            ]
+          },
+          {
+            "Name": "mainTexture",
+            "Type": "images",
+            "Number": 1
+          }
+        ]
       }
     ],
     "RenderPassInfos": [
@@ -95,6 +118,80 @@
                 },
                 "UsedDescriptorSetIDs": [
                   0
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "Name": "VRComposingPass",
+        "SubpassInfos": [
+          {
+            "Name": "VRCompose",
+            "Pipelines": [
+              {
+                "Name": "VRLayerComposing_P0",
+                "VertShader": "./LayerComposingShader_Multiview_SP0.vert.spv",
+                "TessCtrlShader": "",
+                "TessEstShader": "",
+                "GeoShader": "",
+                "FragShader": "./LayerComposingShader_Multiview_SP0.frag.spv",
+                "GraphicsParam": {
+                  "BindPoint": 0,
+                  "VertexLocationKind": 0,
+                  "PrimitiveInfo": {
+                    "Type": 3,
+                    "RestartEnable": false
+                  },
+                  "PatchCtrlPoints": 3,
+                  "RasterziationInfo": {
+                    "DiscardEnable": false,
+                    "PolygonMode": 0,
+                    "FrontFace": 0,
+                    "FaceCulling": 0,
+                    "DepthBias": false,
+                    "DepthBiasConstantFactor": 0,
+                    "DepthBiasSlopeFactor": 1,
+                    "DepthBiasClamp": 1,
+                    "LineWidth": 1
+                  },
+                  "DepthStencilInfo": {
+                    "DepthTest": false,
+                    "DepthWrite": false,
+                    "CompareOp": 3,
+                    "StencilTest": false
+                  },
+                  "ColorBlendState": {
+                    "LogicOutput": false,
+                    "LogicOp": 0,
+                    "BlendConstantR": 0,
+                    "BlendConstantG": 0,
+                    "BlendConstantB": 0,
+                    "BlendConstantA": 0,
+                    "ColorBlendAttachmentInfo": [
+                      {
+                        "ColorMaskR": true,
+                        "ColorMaskG": true,
+                        "ColorMaskB": true,
+                        "ColorMaskA": true,
+                        "Blending": true,
+                        "BlendingSrcColorFactor": 6,
+                        "BlendingDstColorFactor": 7,
+                        "BlendingColorOp": 0,
+                        "BlendingSrcAlphaFactor": 6,
+                        "BlendingDstAlphaFactor": 7,
+                        "BlendingAlphaOp": 0
+                      }
+                    ]
+                  },
+                  "DynamicState": [
+                    0,
+                    1
+                  ]
+                },
+                "UsedDescriptorSetIDs": [
+                  1
                 ]
               }
             ]

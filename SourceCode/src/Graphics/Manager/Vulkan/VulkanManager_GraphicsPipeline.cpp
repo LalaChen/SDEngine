@@ -23,6 +23,8 @@ SOFTWARE.
 
 */
 
+#include "VulkanManager.h"
+
 #include "VertexBufferFormat_Vulkan.h"
 #include "VertexInputRate_Vulkan.h"
 #include "Primitive_Vulkan.h"
@@ -41,7 +43,6 @@ SOFTWARE.
 #include "PipelineBindPoint_Vulkan.h"
 
 #include "LogManager.h"
-#include "VulkanManager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 //-------- ShaderModule --------

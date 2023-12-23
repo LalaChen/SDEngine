@@ -23,12 +23,13 @@ SOFTWARE.
 
 */
 
+#include "RenderPass.h"
+
 #include <nlohmann/json.hpp>
 
 #include "GraphicsManager.h"
 #include "LogManager.h"
 #include "FileResourceRequester.h"
-#include "RenderPass.h"
 
 using SDE::Basic::FileData;
 using SDE::Basic::FileResourceRequester;
@@ -69,12 +70,25 @@ void RenderPass::AddRenderPassDescriptionFromText(const std::string &i_rp_file)
             AttachmentDescription ad_desc;
             nlohmann::json &ad_root = ads_root.at(ad_id);
             bool is_color_attachment = ad_root.at("IsColorAttachment").get<bool>();
+
+            bool use_surface_color_format = false;
+            if (ad_root.find("UseSurfaceColorFormat") != ad_root.end()) {
+                use_surface_color_format = ad_root.at("UseSurfaceColorFormat").get<bool>();
+            }
+            else {
+                use_surface_color_format = false;
+            }
             
             int32_t format_type = ad_root.at("FormatType").get<int32_t>();
             
             if (format_type < 0) {
                 if (is_color_attachment == true) {
-                    ad_desc.m_format = GraphicsManager::GetRef().GetDefaultColorBufferFormat();
+                    if (use_surface_color_format == true) {
+                        ad_desc.m_format = GraphicsManager::GetRef().GetSurfaceColorBufferFormat();
+                    }
+                    else {
+                        ad_desc.m_format = GraphicsManager::GetRef().GetDefaultColorBufferFormat();
+                    }
                 }
                 else {
                     ad_desc.m_format = GraphicsManager::GetRef().GetDefaultDepthBufferFormat();

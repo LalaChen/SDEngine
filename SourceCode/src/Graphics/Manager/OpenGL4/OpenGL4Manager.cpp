@@ -23,11 +23,11 @@ SOFTWARE.
 */
 
 #if defined(_WIN32) || defined(_WIN64)
+#include "OpenGL4Manager.h"
 
 #include <GL/glew.h>
 
 #include "LogManager.h"
-#include "OpenGL4Manager.h"
 
 _____________SD_START_GRAPHICS_NAMESPACE_____________
 
@@ -42,18 +42,18 @@ OpenGL4Manager::~OpenGL4Manager()
     SDLOG("Delete OpenGL4Manager object.");
 }
 
-void OpenGL4Manager::InitializeGraphicsSystem(const EventArg &i_arg)
+void OpenGL4Manager::InitializeGraphicsSystemImpl(const EventArg &i_arg)
 {
     SDLOG("Initialize OpenGL4Manager.");
     glewInit();
 }
 
-void OpenGL4Manager::ReleaseGraphicsSystem()
+void OpenGL4Manager::ReleaseGraphicsSystemImpl()
 {
     SDLOG("Release OpenGL4Manager.");
 }
 
-void OpenGL4Manager::Resize(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
+void OpenGL4Manager::ResizeImpl(CompHandle i_new_surface, Size_ui32 i_w, Size_ui32 i_h)
 {
     glViewport(0, 0, i_w, i_h);
     glClearColor(0.2f, 0.5f, 0.8f, 1.0f);

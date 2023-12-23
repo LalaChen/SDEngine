@@ -8,12 +8,12 @@ using namespace SDE::Graphics;
 class WaveVRSwapchain : public GraphicsSwapchain
 {
 public:
-    explicit WaveVRSwapchain(const ObjectName &i_name, const GraphicsQueueWeakReferenceObject &i_queue, const Resolution &i_eye_buffer_size);
+    explicit WaveVRSwapchain(const ObjectName &i_name, const GraphicsQueueWeakReferenceObject &i_queue);
     virtual ~WaveVRSwapchain();
 public:
     void Initialize() override;
-    void RenderTextureToSwapchain(const TextureWeakReferenceObject &i_tex) override;
-
+    void RenderLayersToSwapchain(const std::list<GraphicsLayerStrongReferenceObject> &i_layers) override;
+    void Present() override;
 protected:
     WVR_TextureQueueHandle_t m_tex_queues[WVR_Eye_Both];
     std::vector<VkImage> m_tq_cb_handles[WVR_Eye_Both];

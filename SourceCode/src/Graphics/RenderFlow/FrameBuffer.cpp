@@ -45,8 +45,8 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::Initialize()
 {
-    const std::vector<SubpassDescription>& sp_descs = m_target_rp.GetConstRef().GetSubpassDescriptions();
-    const std::vector<AttachmentDescription> &att_descs = m_target_rp.GetConstRef().GetAttachmentDescriptions();
+    const std::vector<SubpassDescription>& sp_descs = SD_CONST_WREF(m_target_rp).GetSubpassDescriptions();
+    const std::vector<AttachmentDescription> &att_descs = SD_CONST_WREF(m_target_rp).GetAttachmentDescriptions();
 
     //1. resize fbg groups for following subpasses.
     m_fbg_identities.resize(sp_descs.size());
@@ -163,7 +163,7 @@ void FrameBuffer::Initialize()
 void FrameBuffer::RegisterTargetRenderPass(const RenderPassWeakReferenceObject &i_rp)
 {
     m_target_rp = i_rp;
-    m_identity.m_buffer_formats = i_rp.GetConstRef().CreateImageViewFormats();
+    m_identity.m_buffer_formats = SD_CONST_WREF(i_rp).CreateImageViewFormats();
     m_identity.m_clear_values.resize(m_identity.m_buffer_formats.size());
     m_bufs.resize(m_identity.m_buffer_formats.size());
 }
@@ -172,7 +172,7 @@ void FrameBuffer::RegisterBuffer(const TextureWeakReferenceObject &i_tex, uint32
 {
     if (i_idx < m_bufs.size()) {
         if (i_tex.IsNull() == false) {
-            TextureFormatEnum tex_format = i_tex.GetConstRef().GetTextureFormat();
+            TextureFormatEnum tex_format = SD_CONST_WREF(i_tex).GetTextureFormat();
             if (tex_format == m_identity.m_buffer_formats[i_idx]) {
                 m_bufs[i_idx] = i_tex;
                 m_identity.m_clear_values[i_idx] = i_clear_value;

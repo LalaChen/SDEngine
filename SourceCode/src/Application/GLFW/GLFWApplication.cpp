@@ -113,7 +113,6 @@ void GLFWApplication::InitializeGraphicsSystem()
     if (m_adopt_library == GraphicsLibrary_OpenGL4) {
         glfwMakeContextCurrent(m_window);
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
-        GraphicsManager::GetRef().InitializeBasicResource();
         glfwSwapInterval(1);
     }
     else if (m_adopt_library == GraphicsLibrary_Vulkan) {
@@ -203,13 +202,11 @@ void GLFWApplication::InitializeGraphicsSystem()
         arg.m_surface = surface;
 
         GraphicsManager::GetRef().InitializeGraphicsSystem(arg);
-        GraphicsManager::GetRef().InitializeBasicResource();
     }
     else 
     {
         glfwMakeContextCurrent(m_window);
         GraphicsManager::GetRef().InitializeGraphicsSystem(EventArg());
-        GraphicsManager::GetRef().InitializeBasicResource();
         glfwSwapInterval(1);
     }
 
@@ -224,8 +221,6 @@ void GLFWApplication::ReleaseGraphicsSystem()
        
     SD_WREF(m_app_event_notifier).NotifyEvent(sAppEventName, AppEventArg(AppEvent_GRAPHICS_RELESAED));
     IMGUIRenderer::GetRef().ReleaseGraphicsSystem();
-
-    GraphicsManager::GetRef().ReleaseBasicResource();
     GraphicsManager::GetRef().ReleaseGraphicsSystem();
 }
 
