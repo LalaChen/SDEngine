@@ -149,8 +149,18 @@ void GraphicsSwapchain::RenderLayersToSwapchain(const std::list<GraphicsLayerStr
 
 void GraphicsSwapchain::Present()
 {
-	if (m_tex_valids[m_current_slot_id] == true) {
-		SD_WREF(m_queue).Present(m_identity, m_current_slot_id, { m_present_sema });
+	int32_t ready_slot_idx = -1;
+
+	for (uint32_t slot_idx = 0; slot_idx < m_tex_valids.size(); ++slot_idx) {
+		int32_t target_slot_idx = (m_current_slot_id + slot_idx) % m_tex_valids.size();
+		if (m_tex_valids[target_slot_idx] == true) {
+			ready_slot_idx = slot_idx;
+			break;
+		}
+	}
+
+	if (ready_slot_idx != -1) {
+		SD_WREF(m_queue).Present(m_identity, ready_slot_idx, { m_present_sema });
 	}
 	else {
 		SD_WREF(m_queue).Present(m_identity, m_last_slot_id, { m_present_sema });

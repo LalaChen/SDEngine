@@ -106,7 +106,6 @@ void GraphicsSystem::Update()
     }
 
     GraphicsManager::GetRef().SubmitGraphicsCommands({ m_graphics_cb });
-
     GraphicsManager::GetRef().RenderLayersToSwapchain();
     GraphicsManager::GetRef().PresentSwapchain();
 }
@@ -180,7 +179,6 @@ void GraphicsSystem::RecordCommand()
     SD_SREF(m_graphics_cb).Begin();
     GraphicsManager::GetRef().SetViewport(m_graphics_cb, vp);
     GraphicsManager::GetRef().SetScissor(m_graphics_cb, sr);
-
     //2. update shadow map.
 
     //3. update stencil buffer. (To Do)
